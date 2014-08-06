@@ -6,8 +6,10 @@
 import os, platform, sys
 
 def setEnv():
-	os.environ['ICARUSVERSION'] = 'v0.6.6'
-	os.environ['PIPELINE'] = '/Volumes/hggl_SAN_1/RnD/icarus'
+	os.environ['ICARUSVERSION'] = 'v0.6.7'
+	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
+	icarusWorkingDir = icarusWorkingDir.replace('/core/ui', '')
+	os.environ['PIPELINE'] = icarusWorkingDir
 	os.environ['SHOTSROOTRELATIVEDIR'] = 'Vfx'
 	os.environ['DATAFILESRELATIVEDIR'] = '.icarus'
 	os.environ['JOBDATAFILE'] = 'jobData.py'
