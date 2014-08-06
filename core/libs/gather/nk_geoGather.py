@@ -36,11 +36,12 @@ def gather(gatherPath):
 		#creating readGeo
 		icSet = nuke.createNode('ReadGeo2', 'file {%s}' % assetPath)
 		
-		#making all items in geo hierarchy visible in scene view
-		sceneView = icSet['scene_view'] 
-		allItems = sceneView.getAllItems() 
-		sceneView.setImportedItems(allItems)
-		sceneView.setSelectedItems(allItems)		
+		#making all items in geo hierarchy visible in scene view if geo type is alembic
+		if assetExt == 'abc':
+			sceneView = icSet['scene_view'] 
+			allItems = sceneView.getAllItems() 
+			sceneView.setImportedItems(allItems)
+			sceneView.setSelectedItems(allItems)		
 				
 		#adding ICSet custom attributes
 		tileRGB = 0.316
