@@ -1,0 +1,24 @@
+//!/usr/bin/python
+//support	:Nuno Pereira - nuno.pereira@gps-ldn.com
+//title     	:icarus__main__
+//copyright	:Gramercy Park Studios
+
+//updating maya scene at startup
+python ("import mayaOps; mayaOps.update()");
+
+//setting up shortcuts to GPS Tools
+//New Scene
+nameCommand "GPSNew" -ann "GPS - New Scene" -c "source menus2Py; menus2Py.newScene()";
+hotkey -k "n" -n "GPSNew" -cmd;
+//Open Scene
+nameCommand "GPSOpen" -ann "GPS - Open Scene" -c "source menus2Py; menus2Py.openScene()";
+hotkey -k "o" -n "GPSOpen" -cmd;
+//Save Scene
+nameCommand "GPSSave" -ann "GPS - Save Scene" -c "source menus2Py; menus2Py.saveScene()";
+hotkey -k "s" -n "GPSSave" -cmd;
+//Save Scene As
+nameCommand "GPSSaveAs" -ann "GPS - Save Scene As" -c "source menus2Py; menus2Py.saveSceneAs()";
+hotkey -k "s" -n "GPSSaveAs" -cmd -alt;
+//Save scene incrementally
+nameCommand "GPSSaveIncremental" -ann "GPS - Save Scene Incrementally" -c "source menus2Py; menus2Py.incrementalSave()";
+hotkey -k "S" -n "GPSSaveIncremental" -cmd;

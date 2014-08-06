@@ -1,0 +1,14 @@
+mariVersion = "/Applications/Mari2.5v2/Contents/MacOS/Mari2.5v2"
+mayaVersion = "/Applications/Autodesk/maya2014/Maya.app/Contents/MacOS/Maya"
+mudboxVersion = "/Applications/Autodesk/Mudbox2014/Mudbox.app/Contents/MacOS/Mudbox"
+nukeVersion = "/Applications/Nuke8.0v4/NukeX8.0v4.app/NukeX8.0v4"
+hieroPlayerVersion = "/Applications/HieroPlayer1.8v2/HieroPlayer1.8v2.app/Contents/MacOS/HieroPlayer1.8v2"
+realflowVersion = "/Applications/RealFlow 2013/RealFlow.app/Contents/MacOS/RealFlow"
+timeFormat = "pal"
+fps = "25"
+angle = "deg"
+unit = "cm"
+trelloBoard = 'https://trello.com/b/19LmGqdC/betfair-bar'
+projectTools = 'https://trello.com/b/19LmGqdC/betfair-bar'
+frameViewer = '/Volumes/hggl_SAN_1/RnD/external_applications/djv/djv-0.9.0.app/Contents/MacOS/djv-0.9.0'
+elementsLibrary = '/Volumes/hggl_SAN_1/_Library/Asset_Library'

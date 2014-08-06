@@ -1,0 +1,53 @@
+global proc CurveFromMotion()
+{
+    string $selection[] = `ls -sl`;
+    int $SelectionSize = size($selection);
+    if($SelectionSize>0)
+    {
+        string $objectName = $selection[0];
+        float $startFrame = `floatField -q -v FirstFrame`;;
+        float $endFrame = `floatField -q -v LastFrame`;
+        
+        currentTime $startFrame; 
+        
+        float $Pos1[3];
+        float $Pos2[3];
+        
+        $Pos1 = `xform -worldSpace -query -translation $objectName`;
+        $Pos2 = `xform -worldSpace -query -translation $objectName`;
+        
+        string $curve = `curve -d 1 -p $Pos1[0] $Pos1[1] $Pos1[2] -p $Pos2[0] $Pos2[1] $Pos2[2] -n ($objectName + "_MotionCurve")`;
+        
+        for($i=($startFrame+1);$i<($endFrame+1);$i++)
+        {
+            currentTime $i; 
+            $Pos1 = `xform -worldSpace -query -translation $objectName`;
+            $Pos2 = `xform -worldSpace -query -translation $objectName`;
+            curve -d 1 -p $Pos1[0] $Pos1[1] $Pos1[2] -p $Pos2[0] $Pos2[1] $Pos2[2] -a $curve ;
+        }
+    }
+}
+
+
+//any existing gui is deleted to make way for any newly created ones.
+if (`window -exists CurveFromMotionWindow`)
+    {deleteUI CurveFromMotionWindow;}
+
+//Creates Window
+window -widthHeight 200 125 -t "Curve From Motion" CurveFromMotionWindow;
+rowColumnLayout -numberOfColumns 1;
+    rowColumnLayout -numberOfRows 1;
+        text -label "Start Frame";
+        floatField -value 0 FirstFrame;
+    setParent ..;
+    rowColumnLayout -numberOfRows 1;
+        text -label "End Frame";
+        floatField -value 100 LastFrame;
+    setParent ..;
+separator -height 20 -w 400 -style "out";
+
+scrollField -wordWrap true -height 30 -text "Select Object" -editable false;
+
+button -label "Create Curve" -command "CurveFromMotion()"; 
+  
+showWindow CurveFromMotionWindow;

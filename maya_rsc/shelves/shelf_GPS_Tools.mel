@@ -1,0 +1,320 @@
+global proc shelf_GPS_Tools () {
+    global string $gBuffStr;
+    global string $gBuffStr0;
+    global string $gBuffStr1;
+
+
+    shelfButton
+        -enableCommandRepeat 1
+        -enable 1
+        -width 35
+        -height 35
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "Extract faces from the currently selected object" 
+        -enableBackground 0
+        -align "center" 
+        -label "gpsExtractFaces" 
+        -labelOffset 0
+        -font "plainLabelFont" 
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.2 
+        -image "facesFromObject.png" 
+        -image1 "facesFromObject.png" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "import gpsExtractFaces; gpsExtractFaces.gpsExtractFaces().UI()" 
+        -sourceType "python" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+    shelfButton
+        -enableCommandRepeat 1
+        -enable 1
+        -width 35
+        -height 35
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "Procedural Pipes" 
+        -enableBackground 0
+        -align "center" 
+        -label "ProceduralPipes" 
+        -labelOffset 0
+        -font "plainLabelFont" 
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.2 
+        -image "proceduralPipes.png" 
+        -image1 "proceduralPipes.png" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "source proceduralPipes.mel" 
+        -sourceType "mel" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+    shelfButton
+        -enableCommandRepeat 1
+        -enable 1
+        -width 35
+        -height 35
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "Wireframe on Curve" 
+        -enableBackground 0
+        -align "center" 
+        -label "WireframeOnCurve" 
+        -labelOffset 0
+        -font "plainLabelFont" 
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.2 
+        -image "wireFrameOnCurve.png" 
+        -image1 "wireFrameOnCurve.png" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "source wireframeOnCurve.mel" 
+        -sourceType "mel" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+    shelfButton
+        -enableCommandRepeat 1
+        -enable 1
+        -width 35
+        -height 35
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "Wireframe On Geometry" 
+        -enableBackground 0
+        -align "center" 
+        -label "WireframeOnGeo" 
+        -labelOffset 0
+        -font "plainLabelFont" 
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.2 
+        -image "wireframeOnObj.png" 
+        -image1 "wireframeOnObj.png" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "source wireframeOnGeometry.mel" 
+        -sourceType "mel" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+    shelfButton
+        -enableCommandRepeat 1
+        -enable 1
+        -width 35
+        -height 35
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "Applies Houdini Ocean Toolkit deformer on selected mesh" 
+        -enableBackground 0
+        -align "center" 
+        -label "Ocean Deformer" 
+        -labelOffset 0
+        -font "plainLabelFont" 
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.2 
+        -image "oceanDeformer.png" 
+        -image1 "oceanDeformer.png" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "deformer -type hotOceanDeformer;" 
+        -sourceType "mel" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+    shelfButton
+        -enableCommandRepeat 1
+        -enable 1
+        -width 35
+        -height 35
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "Adds random deformation to object's vertices" 
+        -enableBackground 0
+        -align "center" 
+        -label "gpsRandomiseVertices" 
+        -labelOffset 0
+        -font "plainLabelFont" 
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.4 
+        -image "deformObjFromVtx.png" 
+        -image1 "deformObjFromVtx.png" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "import gpsRandomiseVertices; gpsRandomiseVertices.gpsRandomiseVertices().UI()" 
+        -sourceType "python" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+    shelfButton
+        -enableCommandRepeat 1
+        -enable 1
+        -width 35
+        -height 35
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "Periodic or random selection of objects" 
+        -enableBackground 0
+        -align "center" 
+        -label "gpsSelectionTools" 
+        -labelOffset 0
+        -font "plainLabelFont" 
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.4 
+        -image "randomizesSelection.png" 
+        -image1 "randomizesSelection.png" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "import gpsSelectionTools; gpsSelectionTools.gpsSelectionTools().UI()" 
+        -sourceType "python" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+    shelfButton
+        -enableCommandRepeat 1
+        -enable 1
+        -width 35
+        -height 35
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "Duplicates and randomly scatters selected objects" 
+        -enableBackground 0
+        -align "center" 
+        -label "gpsScatter" 
+        -labelOffset 0
+        -font "plainLabelFont" 
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.4 
+        -image "randomizeObjDistribution.png" 
+        -image1 "randomizeObjDistribution.png" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "import gpsScatter; gpsScatter.gpsScatter().UI()" 
+        -sourceType "python" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+    shelfButton
+        -enableCommandRepeat 1
+        -enable 1
+        -width 35
+        -height 35
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "Randomises Colour Of Selected Object" 
+        -enableBackground 0
+        -align "center" 
+        -label "ColourRandom" 
+        -labelOffset 0
+        -font "plainLabelFont" 
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.4 
+        -image "randomizeObjColor.png" 
+        -image1 "randomizeObjColor.png" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "source randomColor.mel" 
+        -sourceType "mel" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+    shelfButton
+        -enableCommandRepeat 1
+        -enable 1
+        -width 35
+        -height 35
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "Imports Point and Camera Cloud" 
+        -enableBackground 0
+        -align "center" 
+        -label "pointCloud" 
+        -labelOffset 0
+        -font "plainLabelFont" 
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.2 
+        -image "pointCloud.png" 
+        -image1 "pointCloud.png" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "import pointCloudImporter\n\npointCloudImporter.pointCloud().UI()" 
+        -sourceType "python" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+    shelfButton
+        -enableCommandRepeat 1
+        -enable 1
+        -width 35
+        -height 35
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "Launches Glyph UI" 
+        -enableBackground 0
+        -align "center" 
+        -label "Glyph" 
+        -labelOffset 0
+        -font "plainLabelFont" 
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.2 
+        -image "glyph.png" 
+        -image1 "glyph.png" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "source \"gs_mptk_UI.mel\";" 
+        -sourceType "mel" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+    shelfButton
+        -enableCommandRepeat 1
+        -enable 1
+        -width 34
+        -height 34
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "Creates diferent types of geo spheres" 
+        -enableBackground 0
+        -align "center" 
+        -label "geoSpheres" 
+        -labelOffset 0
+        -font "plainLabelFont" 
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.2 
+        -image "geoSpheres.png" 
+        -image1 "geoSpheres.png" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "source geoSpheres;" 
+        -sourceType "mel" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+
+} 

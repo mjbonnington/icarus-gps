@@ -1,0 +1,39 @@
+gsProjCamMix gs_projCamMixVRay {
+  "color_a"   texture   "color_a"     texture INPUT
+  "matte_a"   texture   "matte_a"     texture INPUT
+  "color_b"   texture   "color_b"     texture INPUT
+  "matte_b"   texture   "matte_b"     texture INPUT
+  ""              texture       "outColor"      color OUTPUT
+  ""              texture       "oc"            color OUTPUT
+  ""              texture_red   "outColorR"     number  OUTPUT
+  ""              texture_green "outColorG"     number  OUTPUT
+  ""              texture_blue  "outColorB"     number  OUTPUT
+  "outAlpha"      number       "outAlpha"      number OUTPUT
+  "outTransparency"      texture       "outTransparency"      texture OUTPUT
+  "outMatte"      texture       "outMatte"      texture OUTPUT
+}
+
+gsOcclusionMatte gs_occlusionMatteVRay {
+  "color"   texture   "color"     texture INPUT
+  "mask"    number    "mask"      number  INPUT
+  "colorOffset"   texture   "colorOffset"     texture INPUT
+  "placementMatrix" transform "placementMatrix"       transform INPUT
+  "passThrough"   number    "passThrough"   boolean INPUT
+  "distanceThreshold" number    "distanceThreshold" number  INPUT
+  "useShadowOcclusion"  number    "useShadowOcclusion"  boolean INPUT
+  "dilate"    number    "dilate"    number  INPUT
+  "samples"    number    "samples"    integer  INPUT
+  "softEdge"    number    "softEdge"    number  INPUT
+  "power"   number    "power"     integer  INPUT
+  "useFacingRatio"  number    "useFacingRatio"  boolean INPUT
+  "angleThreshold"  number    "angleThreshold"  number  INPUT
+  "labelExclude"  number    "labelExclude"    integer INPUT
+  "premult"  number    "premult"    boolean INPUT
+  ""              texture       "outColor"      texture OUTPUT
+  ""              texture       "oc"            color OUTPUT
+  ""              texture_red   "outColorR"     number  OUTPUT
+  ""              texture_green "outColorG"     number  OUTPUT
+  ""              texture_blue  "outColorB"     number  OUTPUT
+  ""              texture_alpha  "outAlpha"     number  OUTPUT
+  "outMatte"              texture       "outMatte"      texture OUTPUT
+}

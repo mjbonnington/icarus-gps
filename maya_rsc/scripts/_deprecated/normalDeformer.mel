@@ -1,0 +1,79 @@
+global proc NormalDeformer()
+{
+    string $selection[] = `ls -sl`;
+    int $SelectionSize = size( $selection );
+    if($SelectionSize==0)
+    {
+        print("Nothing Selected! \n");
+    }
+    if($SelectionSize>1)
+    {
+        print("Too Many Items Selected! \n");
+    }
+    if($SelectionSize==1)
+    {
+		string $select = $selection[0];
+
+		duplicate -rr -n ($select + "_Blendshape") $select;
+
+		duplicate -rr -n ($select + "_Temp") $select;
+
+		polySoftEdge -a 180 -ch 1 ($select + "_Temp");
+
+		int $VertexNumberArray[] = `polyEvaluate -v $select`;
+		int $VertexNumber = $VertexNumberArray[0];
+
+		for($i=0;$i<$VertexNumber;$i++)
+		{   
+		   float $normal[] = `polyNormalPerVertex -q -xyz ($select + "_Temp" + ".vtx[" + $i + "]")`;
+		   xform -r -t $normal[0] $normal[1] $normal[2] ($select + "_Blendshape" + ".vtx[" + $i + "]");
+		}
+
+		delete ($select + "_Temp");
+		setAttr ($select + "_Blendshape" + ".visibility") 0;
+		string $blendshape[] = `blendShape ($select + "_Blendshape") $select`;
+		
+		addAttr -ln "NormalDeform"  -at double  -min -1000 -max 1000 -dv 1 $select;
+		setAttr -e -keyable true ($select + ".NormalDeform");
+		connectAttr -f ($select + ".NormalDeform") ($blendshape[0] + "." + $select + "_Blendshape");
+		
+		if(`checkBox -q -value RandomDeformation`)
+		{
+			addAttr -ln "Deform_Random"  -at double  -min -10 -max 10 -dv 1 $select;
+			setAttr -e -keyable true ($select + ".Deform_Random");
+			
+			addAttr -ln "Offset"  -at double  -min -1000 -max 1000 -dv 1 $select;
+			setAttr -e -keyable true ($select + ".Offset");
+			
+			for($i=0;$i<$VertexNumber;$i++)
+			{
+				string $multNode = `shadingNode -asUtility multiplyDivide`;
+				string $minusNode = `shadingNode -asUtility plusMinusAverage`;
+				float $val = rand(0,1);
+				connectAttr -f ($select + ".Deform_Random") ($multNode + ".input1X");
+				expression -s ($multNode + ".input2X = " + $val + "*sin((" + $select + ".Offset + " + $i + "));") -o ($multNode + ".input2X") -ae 1 -uc all ;
+				//setAttr ($multNode + ".input2X") $val;
+				connectAttr -f ($multNode + ".outputX") ($minusNode+".input3D[1].input3Dx");		    
+				setAttr ($minusNode+".operation") 2;
+				setAttr ($minusNode+".input3D[0].input3Dx") 1;
+				connectAttr -f ($minusNode+".output3Dx") ($blendshape[0]+".inputTarget[0].inputTargetGroup[0].targetWeights[" + $i + "]");
+			}	
+		}
+	}
+}
+
+//any existing gui is deleted to make way for any newly created ones.
+if (`window -exists NormalDeformWindow`)
+    {deleteUI NormalDeformWindow;}
+
+//Creates Window
+window -widthHeight 250 100 -t "Normal Deformer" NormalDeformWindow;
+               
+    //Creates button and Checkbox to Create and delete existing
+    rowLayout -nc 4 -cw 1 20 -cw 2 50 MainRow3;
+    separator;
+    button -label "Deform" -command "NormalDeformer" createButton;
+	separator;
+	checkBox -label "Random Deformation" -value 1 RandomDeformation;
+    
+showWindow NormalDeformWindow;

@@ -1,0 +1,16 @@
+<RCC>
+  <qresource prefix="rsc">
+    <file>rsc/HieroPlayerIcon.png</file>
+    <file>rsc/realflowIcon.png</file>
+    <file>rsc/mariIcon.png</file>
+    <file>rsc/maya_icon.png</file>
+    <file>rsc/mudbox_icon.png</file>
+    <file>rsc/terminal.png</file>
+    <file>rsc/browseIcon.png</file>
+    <file>rsc/aeIcon.png</file>
+    <file>rsc/trelloIcon.png</file>
+    <file>rsc/icarusBanner.png</file>
+    <file>rsc/nukeIcon.png</file>
+    <file>rsc/psIcon.png</file>
+  </qresource>
+</RCC>

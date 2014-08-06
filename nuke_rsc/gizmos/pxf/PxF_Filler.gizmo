@@ -1,0 +1,522 @@
+#! /Applications/Nuke5.2v2/Nuke5.2v2.app/Contents/MacOS/Nuke5.2v2 -nx
+#PxF_Filler 2.0 - (c) 2009 - Xavier Bourque - www.pixelfudger.com
+version 5.2200
+Gizmo {
+ inputs 2
+ addUserKnob {20 User}
+ addUserKnob {41 size T Blur1.size}
+ addUserKnob {3 iterations t "Number of times the blur/divide combo is repeated. Maximum 7 iterations"}
+ iterations 1
+ addUserKnob {6 softEdges -STARTLINE}
+ softEdges true
+ addUserKnob {4 maskChannel M {Red Green Blue Alpha}}
+ maskChannel Alpha
+ addUserKnob {6 ignoreAlpha l "Don't process Alpha" -STARTLINE}
+}
+ Input {
+  inputs 0
+  name img
+  xpos 137
+  ypos -704
+  addUserKnob {20 User}
+  addUserKnob {7 blur R 0 500}
+  addUserKnob {3 iterations}
+ }
+ Dot {
+  name Dot9
+  xpos 171
+  ypos -661
+ }
+set N21c4df90 [stack 0]
+ Dot {
+  name Dot7
+  xpos -325
+  ypos 211
+ }
+ Dot {
+  name Dot6
+  xpos -346
+  ypos 860
+ }
+ Input {
+  inputs 0
+  name hole_mask
+  xpos 371
+  ypos -694
+  number 1
+ }
+ Dot {
+  name Dot8
+  xpos 405
+  ypos -647
+ }
+set N21c541f0 [stack 0]
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name Shuffle4
+  xpos 491
+  ypos -604
+ }
+push $N21c541f0
+ Shuffle {
+  red blue
+  green blue
+  alpha blue
+  name Shuffle3
+  xpos 407
+  ypos -605
+ }
+push $N21c541f0
+ Shuffle {
+  red green
+  blue green
+  alpha green
+  name Shuffle2
+  xpos 323
+  ypos -606
+ }
+push $N21c541f0
+ Shuffle {
+  green red
+  blue red
+  alpha red
+  name Shuffle1
+  xpos 242
+  ypos -605
+ }
+ Switch {
+  inputs 4
+  which {{maskChannel i}}
+  name Switch2
+  xpos 384
+  ypos -538
+ }
+ Dot {
+  name Dot5
+  xpos 344
+  ypos -465
+ }
+set N21c66080 [stack 0]
+ Dot {
+  name Dot3
+  xpos 633
+  ypos 53
+ }
+ Dot {
+  name Dot4
+  xpos 687
+  ypos 1454
+ }
+push $N21c4df90
+push $N21c66080
+ Merge2 {
+  inputs 2
+  operation out
+  name Merge1
+  xpos 137
+  ypos -358
+ }
+ Blur {
+  size 10
+  name Blur1
+  xpos 137
+  ypos -325
+ }
+ set C21c6ee30 [stack 0]
+set N21c6ee30 [stack 0]
+push $N21c66080
+ Invert {
+  name Invert1
+  xpos 310
+  ypos -396
+ }
+clone $C21c6ee30 {
+  xpos 310
+  ypos -357
+  selected false
+ }
+set N21c75e60 [stack 0]
+ Grade {
+  channels {rgba.red rgba.green rgba.blue rgba.alpha}
+  blackpoint {{"softEdges ? -0.0001 : 0" i}}
+  name Grade1
+  xpos 231
+  ypos -301
+ }
+ set C21c796d0 [stack 0]
+set N21c796d0 [stack 0]
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge2
+  xpos 137
+  ypos -223
+ }
+set N21c7dbc0 [stack 0]
+clone $C21c6ee30 {
+  xpos 137
+  ypos -153
+  selected false
+ }
+push $N21c75e60
+push $N21c796d0
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge3
+  xpos 310
+  ypos -233
+ }
+clone $C21c6ee30 {
+  xpos 318
+  ypos -157
+  selected false
+ }
+set N21c89b20 [stack 0]
+clone $C21c796d0 {
+  xpos 233
+  ypos -109
+  selected false
+ }
+set N21c8d430 [stack 0]
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge4
+  xpos 137
+  ypos -44
+ }
+set N21c91920 [stack 0]
+clone $C21c6ee30 {
+  xpos 137
+  ypos 12
+  selected false
+ }
+push $N21c89b20
+push $N21c8d430
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge6
+  xpos 318
+  ypos -45
+ }
+clone $C21c6ee30 {
+  xpos 318
+  ypos 8
+  selected false
+ }
+set N21c9d8d0 [stack 0]
+clone $C21c796d0 {
+  xpos 231
+  ypos 62
+  selected false
+ }
+set N21ca1120 [stack 0]
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge5
+  xpos 137
+  ypos 121
+ }
+set N21ca5620 [stack 0]
+clone $C21c6ee30 {
+  xpos 137
+  ypos 166
+  selected false
+ }
+push $N21c9d8d0
+push $N21ca1120
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge8
+  xpos 318
+  ypos 125
+ }
+clone $C21c6ee30 {
+  xpos 318
+  ypos 166
+  selected false
+ }
+set N21cb15d0 [stack 0]
+clone $C21c796d0 {
+  xpos 237
+  ypos 222
+  selected false
+ }
+set N21cb4f00 [stack 0]
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge7
+  xpos 137
+  ypos 274
+ }
+set N21cb9390 [stack 0]
+clone $C21c6ee30 {
+  xpos 137
+  ypos 316
+  selected false
+ }
+push $N21cb15d0
+push $N21cb4f00
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge10
+  xpos 318
+  ypos 274
+ }
+clone $C21c6ee30 {
+  xpos 318
+  ypos 312
+  selected false
+ }
+set N21cc5340 [stack 0]
+clone $C21c796d0 {
+  xpos 234
+  ypos 350
+  selected false
+ }
+set N21cc8ba0 [stack 0]
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge9
+  xpos 137
+  ypos 398
+ }
+set N21ccd090 [stack 0]
+clone $C21c6ee30 {
+  xpos 137
+  ypos 460
+  selected false
+ }
+push $N21cc5340
+push $N21cc8ba0
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge12
+  xpos 318
+  ypos 399
+ }
+clone $C21c6ee30 {
+  xpos 318
+  ypos 446
+  selected false
+ }
+set N21cd4b40 [stack 0]
+clone $C21c796d0 {
+  xpos 233
+  ypos 521
+  selected false
+ }
+set N21cdc8a0 [stack 0]
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge11
+  xpos 137
+  ypos 584
+ }
+set N21ce0d90 [stack 0]
+clone $C21c6ee30 {
+  xpos 137
+  ypos 628
+  selected false
+ }
+push $N21cd4b40
+push $N21cdc8a0
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge14
+  xpos 318
+  ypos 584
+ }
+clone $C21c6ee30 {
+  xpos 318
+  ypos 643
+  selected false
+ }
+set N21cecd40 [stack 0]
+clone $C21c796d0 {
+  xpos 233
+  ypos 684
+  selected false
+ }
+set N21cf0590 [stack 0]
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge13
+  xpos 137
+  ypos 718
+ }
+set N21ce8810 [stack 0]
+clone $C21c6ee30 {
+  xpos 137
+  ypos 846
+  selected false
+ }
+push $N21cecd40
+push $N21cf0590
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge16
+  xpos 318
+  ypos 798
+ }
+clone $C21c6ee30 {
+  xpos 318
+  ypos 844
+  selected false
+ }
+set N15a04800 [stack 0]
+clone $C21c796d0 {
+  xpos 229
+  ypos 899
+  selected false
+ }
+set N15a08200 [stack 0]
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge17
+  xpos 137
+  ypos 939
+ }
+set N15a08050 [stack 0]
+clone $C21c6ee30 {
+  xpos 132
+  ypos 1077
+  selected false
+ }
+push $N15a04800
+push $N15a08200
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge15
+  xpos 313
+  ypos 1029
+ }
+clone $C21c6ee30 {
+  xpos 313
+  ypos 1075
+  selected false
+ }
+set N15a14130 [stack 0]
+clone $C21c796d0 {
+  xpos 224
+  ypos 1130
+  selected false
+ }
+set N15a1bd20 [stack 0]
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge18
+  xpos 132
+  ypos 1170
+ }
+set N15a20210 [stack 0]
+clone $C21c6ee30 {
+  xpos 132
+  ypos 1288
+  selected false
+ }
+push $N15a14130
+push $N15a1bd20
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge19
+  xpos 313
+  ypos 1240
+ }
+clone $C21c6ee30 {
+  xpos 313
+  ypos 1286
+  selected false
+ }
+clone $C21c796d0 {
+  xpos 224
+  ypos 1341
+  selected false
+ }
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge20
+  xpos 132
+  ypos 1380
+ }
+set N15a33ee0 [stack 0]
+push $N15a20210
+push $N15a08050
+push $N21ce8810
+push $N21ce0d90
+push $N21ccd090
+push $N21cb9390
+push $N21ca5620
+push $N21c91920
+push $N21c7dbc0
+ Switch {
+  inputs 10
+  which {{"iterations - 1" i}}
+  name Switch1
+  xpos -157
+  ypos 1343
+ }
+push $N21c4df90
+ Dot {
+  name Dot1
+  xpos -236
+  ypos 604
+ }
+ Dot {
+  name Dot2
+  xpos -257
+  ypos 1664
+ }
+ Keymix {
+  inputs 3
+  name Keymix1
+  xpos -189
+  ypos 1677
+ }
+ ShuffleCopy {
+  inputs 2
+  name ShuffleCopy1
+  xpos -189
+  ypos 1764
+  disable {{"ignoreAlpha ? 0 : 1"}}
+ }
+ Output {
+  name Output1
+  xpos -189
+  ypos 1849
+ }
+push $N21c6ee30
+ Unpremult {
+  name Unpremult1
+  xpos 56
+  ypos -276
+ }
+push $N15a08050
+push $N15a33ee0
+ Viewer {
+  inputs 2
+  frame 19
+  name Viewer1
+  xpos -3
+  ypos -80
+ }
+end_group

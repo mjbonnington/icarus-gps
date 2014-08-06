@@ -1,0 +1,109 @@
+// Will keyframe unlocked Translation/Rotation attributes randomly between their transform limitations\\
+
+
+global proc timeLapseAnimation()
+{
+    string $selection[] = `ls -sl`;
+    int $selectionSize = size($selection);
+    int $lock;
+    float $frameSetRand;
+    float $rand;
+    string $attribute;
+    float $Probability = `floatField -query -v Probability`;
+    int $start = `playbackOptions -q -animationStartTime`;
+    int $end = `playbackOptions -q -animationEndTime`;
+    
+    for($j=$start;$j<($end+1);$j++)
+    {
+        currentTime $j;
+        $frameSetRand = rand(0,1);         
+        if($frameSetRand<$Probability)
+        {
+            for($i=0;$i<$selectionSize;$i++)
+            {   
+                //rotation
+                $attribute = ".rotateX";
+                $lock = `getAttr -lock ($selection[0]+$attribute)`;
+                if($lock==0)
+                {
+                    float $limits[] = `transformLimits -q -rotationX $selection[$i]`; 
+                    $rand = rand($limits[0],$limits[1]);
+                    setKeyframe -v $rand ($selection[$i]+$attribute);
+                    keyTangent -ott step;
+                }
+                
+                $attribute = ".rotateY";
+                $lock = `getAttr -lock ($selection[0]+$attribute)`;
+                if($lock==0)
+                {
+                    float $limits[] = `transformLimits -q -rotationY $selection[$i]`; 
+                    $rand = rand($limits[0],$limits[1]);
+                    setKeyframe -v $rand ($selection[$i]+$attribute);
+                    keyTangent -ott step;
+                }
+                
+                $attribute = ".rotateZ";
+                $lock = `getAttr -lock ($selection[0]+$attribute)`;
+                if($lock==0)
+                {
+                    float $limits[] = `transformLimits -q -rotationZ $selection[$i]`; 
+                    $rand = rand($limits[0],$limits[1]);
+                    setKeyframe -v $rand ($selection[$i]+$attribute);
+                    keyTangent -ott step;
+                }
+                
+                //Translation
+                $attribute = ".translateX";
+                $lock = `getAttr -lock ($selection[0]+$attribute)`;
+                if($lock==0)
+                {
+                    float $limits[] = `transformLimits -q -translationX $selection[$i]`; 
+                    $rand = rand($limits[0],$limits[1]);
+                    setKeyframe -v $rand ($selection[$i]+$attribute);
+                    keyTangent -ott step;
+                }
+                
+                $attribute = ".translateY";
+                $lock = `getAttr -lock ($selection[0]+$attribute)`;
+                if($lock==0)
+                {
+                    float $limits[] = `transformLimits -q -translationY $selection[$i]`; 
+                    $rand = rand($limits[0],$limits[1]);
+                    setKeyframe -v $rand ($selection[$i]+$attribute);
+                    keyTangent -ott step;
+                }
+                
+                $attribute = ".translateZ";
+                $lock = `getAttr -lock ($selection[0]+$attribute)`;
+                if($lock==0)
+                {
+                   
+                    float $limits[] = `transformLimits -q -translationZ $selection[$i]`; 
+                    $rand = rand($limits[0],$limits[1]);
+                    setKeyframe -v $rand ($selection[$i]+$attribute);
+                    keyTangent -ott step;
+                }
+            }
+        }
+    }
+}
+
+//any existing gui is deleted to make way for any newly created ones.
+if (`window -exists TimelapseAnimationWindow`)
+    {deleteUI TimelapseAnimationWindow;}
+
+//Creates Window
+window -widthHeight 270 125 -t "TimeLapse Animation" TimelapseAnimationWindow;
+rowColumnLayout -numberOfColumns 1;
+    rowColumnLayout -numberOfRows 1;
+        text -label "Movement Probability";
+       floatField -minValue -0 -maxValue 1 -value 0.75 Probability;
+    setParent ..;
+separator -height 20 -w 400 -style "out";
+
+scrollField -wordWrap true -height 30 -text "Select Objects" -editable false;
+
+button -label "Generare Keys" -command "timeLapseAnimation()"; 
+  
+showWindow TimelapseAnimationWindow;
+

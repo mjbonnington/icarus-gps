@@ -1,0 +1,282 @@
+global proc shelf_GPS_Lighting () {
+	global string $gBuffStr;
+	global string $gBuffStr0;
+	global string $gBuffStr1;
+
+
+	shelfButton
+		-enableCommandRepeat 1
+		-enable 1
+		-width 35
+		-height 35
+		-manage 1
+		-visible 1
+		-preventOverride 0
+		-annotation "Sets up vRay global settings" 
+		-enableBackground 0
+		-align "center" 
+		-label "vRaySettings" 
+		-labelOffset 0
+		-font "tinyBoldLabelFont" 
+		-overlayLabelColor 0.8 0.8 0.8 
+		-overlayLabelBackColor 0 0 0 0.2 
+		-image "vRaySettings.png" 
+		-image1 "vRaySettings.png" 
+		-style "iconOnly" 
+		-marginWidth 1
+		-marginHeight 1
+		-command "source gpsLighting.mel;gpsLighting.loadBaseSettings();" 
+		-sourceType "mel" 
+		-commandRepeatable 1
+		-flat 1
+		-mi "Load Base Settings" ( "source gpsLighting.mel;gpsLighting.loadBaseSettings()" )
+		-mi "Update Render Path" ( "source gpsLighting.mel;gpsLighting.setRenderPath()" )
+		-mi "Open Framebuffer" ( "vray showVFB;" )
+		-mi "Load Standard Elements" ( "import loadElements\n\nloadElements.addStdElements()" )
+		-mip 3
+		-mi "Load Data Elements" ( "import loadElements\n\nloadElements.addDataElements()" )
+		-mip 4
+	;
+	shelfButton
+		-enableCommandRepeat 1
+		-enable 1
+		-width 35
+		-height 35
+		-manage 1
+		-visible 1
+		-preventOverride 0
+		-annotation "Gamma workflow tools" 
+		-enableBackground 0
+		-align "center" 
+		-label "Gamma Tools" 
+		-labelOffset 0
+		-font "tinyBoldLabelFont" 
+		-overlayLabelColor 0.8 0.8 0.8 
+		-overlayLabelBackColor 0 0 0 0.2 
+		-image "gammaTools.png" 
+		-image1 "gammaTools.png" 
+		-style "iconOnly" 
+		-marginWidth 1
+		-marginHeight 1
+		-command "source gpsLighting.mel;gpsLighting.addVRayGamma();" 
+		-sourceType "mel" 
+		-commandRepeatable 1
+		-flat 1
+		-mi "Add vRay Gamma to Selected" ( "source gpsLighting.mel;gpsLighting.addVRayGamma();" )
+		-mi "Remove vRay Gamma from Selected" ( "source gpsLighting.mel;gpsLighting.removeVRayGamma();" )
+	;
+	shelfButton
+		-enableCommandRepeat 1
+		-enable 1
+		-width 35
+		-height 35
+		-manage 1
+		-visible 1
+		-preventOverride 0
+		-annotation "Creates Vray Shaders" 
+		-enableBackground 0
+		-align "center" 
+		-label "vRayShaders" 
+		-labelOffset 0
+		-font "plainLabelFont" 
+		-overlayLabelColor 0.8 0.8 0.8 
+		-overlayLabelBackColor 0 0 0 0.2 
+		-image "createShader.png" 
+		-image1 "createShader.png" 
+		-style "iconOnly" 
+		-marginWidth 1
+		-marginHeight 1
+		-sourceType "mel" 
+		-commandRepeatable 1
+		-flat 1
+		-mi "VRay Material" ( "source gpsLighting.mel;gpsLighting.createMaterial(\"VRayMtl\",\"vrayMaterial\")" )
+		-mi "VRay Material 2 Sided" ( "source gpsLighting.mel;gpsLighting.createMaterial(\"VRayMtl2Sided\",\"vray2Sided\")" )
+		-mi "VRay Material Wrapper" ( "source gpsLighting.mel;gpsLighting.createMaterial(\"VRayMtlWrapper\",\"wrapper\")" )
+		-mi "VRay Fast SSS 2" ( "source gpsLighting.mel;gpsLighting.createMaterial(\"VRayFastSSS2\",\"fastSSS2\")" )
+		-mi "VRay Car Paint" ( "source gpsLighting.mel;gpsLighting.createMaterial(\"VRayCarPaintMtl\",\"carPaint\")" )
+		-mi "VRay Blend Material" ( "source gpsLighting.mel;gpsLighting.createMaterial(\"VRayBlendMtl\",\"vrayBlend\")" )
+	;
+	shelfButton
+		-enableCommandRepeat 1
+		-enable 1
+		-width 35
+		-height 35
+		-manage 1
+		-visible 1
+		-preventOverride 0
+		-annotation "Creates vRay Lights" 
+		-enableBackground 0
+		-align "center" 
+		-label "vRayLights" 
+		-labelOffset 0
+		-font "plainLabelFont" 
+		-overlayLabelColor 0.8 0.8 0.8 
+		-overlayLabelBackColor 0 0 0 0.2 
+		-image "createLight.png" 
+		-image1 "createLight.png" 
+		-style "iconOnly" 
+		-marginWidth 1
+		-marginHeight 1
+		-sourceType "mel" 
+		-commandRepeatable 1
+		-flat 1
+		-mi "VRay Rect Light" ( "source gpsLighting.mel;gpsLighting.createLight(\"VRayLightRectShape\")" )
+		-mi "VRay Dome Light" ( "source gpsLighting.mel;gpsLighting.createLight(\"VRayLightDomeShape\")" )
+		-mi "VRay Sphere Light" ( "source gpsLighting.mel;gpsLighting.createLight(\"VRayLightSphereShape\")" )
+		-mi "Create Light Contribution Element" ( "import createLightSelPass\ncreateLightSelPass.lightSelPass()" )
+		-mip 3
+		;
+	shelfButton
+		-enableCommandRepeat 1
+		-enable 1
+		-width 35
+		-height 35
+		-manage 1
+		-visible 1
+		-preventOverride 0
+		-annotation "Submit Render Job to Deadline" 
+		-enableBackground 0
+		-align "center" 
+		-label "submitToDeadline" 
+		-labelOffset 0
+		-font "plainLabelFont" 
+		-overlayLabelColor 0.8 0.8 0.8 
+		-overlayLabelBackColor 0 0 0 0.2 
+		-image "subDs.png" 
+		-image1 "subDs.png" 
+		-style "iconOnly" 
+		-marginWidth 1
+		-marginHeight 1
+		-command "import vraySubDsMulti; vraySubDsMulti.subDivide(subDs = 4)" 
+		-sourceType "python" 
+		-commandRepeatable 1
+		-flat 1
+	;
+	shelfButton
+		-enableCommandRepeat 1
+		-enable 1
+		-width 35
+		-height 35
+		-manage 1
+		-visible 1
+		-preventOverride 0
+		-annotation "Creates Object IDs and Multimattes" 
+		-enableBackground 0
+		-align "center" 
+		-label "Multimatte" 
+		-labelOffset 0
+		-font "tinyBoldLabelFont" 
+		-overlayLabelColor 0.8 0.8 0.8 
+		-overlayLabelBackColor 0 0 0 0.2 
+		-image "createMultimattes.png" 
+		-image1 "createMultimattes.png" 
+		-style "iconOnly" 
+		-marginWidth 1
+		-marginHeight 1
+		-sourceType "mel" 
+		-commandRepeatable 1
+		-flat 1
+		-mi "Create Object ID Single" ( "import createMultimattes\ncreateMultimattes.objID(single=True)" )
+		-mip 0
+		-mi "Create Object ID Multiple" ( "import createMultimattes\ncreateMultimattes.objID(single=False)" )
+		-mip 1
+		-mi "Create Multimattes All" ( "import createMultimattes\ncreateMultimattes.multiMatte(all=True)" )
+		-mip 2
+		-mi "Create Multimattes Selection" ( "import createMultimattes\ncreateMultimattes.multiMatte(all=False)" )
+		-mip 3
+	;
+	shelfButton
+		-enableCommandRepeat 1
+		-enable 1
+		-width 35
+		-height 35
+		-manage 1
+		-visible 1
+		-preventOverride 0
+		-annotation "Create GPS Camera" 
+		-enableBackground 0
+		-align "center" 
+		-label "GPS Camera" 
+		-labelOffset 0
+		-font "tinyBoldLabelFont" 
+		-overlayLabelColor 0.8 0.8 0.8 
+		-overlayLabelBackColor 0 0 0 0.2 
+		-image "gpsCamera.png" 
+		-image1 "gpsCamera.png" 
+		-style "iconOnly" 
+		-marginWidth 1
+		-marginHeight 1
+		-sourceType "mel" 
+		-commandRepeatable 1
+		-flat 1
+	   -mi "GPS - Arri Alexa" ("source menus2Py; menus2Py.createGPSCamera(\"arriAlexa\")")
+	   -mi "GPS - Canon 5D" ("source menus2Py; menus2Py.createGPSCamera(\"canon5D\")")
+	   -mi "GPS - Epic X" ("source menus2Py; menus2Py.createGPSCamera(\"redEpicX\")")
+	   -mi "GPS - Red One" ("source menus2Py; menus2Py.createGPSCamera(\"redOne\")")
+	   -mi "GPS - Sony F55" ("source menus2Py; menus2Py.createGPSCamera(\"sonyF55\")")
+	   -mi "GPS - Default" ("source menus2Py; menus2Py.createGPSCamera(\"default\")")
+	   -mi "Add Physical Settings" ( "import createGPSCamera; createGPSCamera.addPhysical()" )
+		-mip 6
+	;
+	shelfButton
+		-enableCommandRepeat 1
+		-enable 1
+		-width 35
+		-height 35
+		-manage 1
+		-visible 1
+		-preventOverride 0
+		-annotation "Set test render resolution" 
+		-enableBackground 0
+		-align "center" 
+		-label "setTestResolution"
+		-labelOffset 0
+		-font "tinyBoldLabelFont"
+		-overlayLabelColor 0.8 0.8 0.8
+		-overlayLabelBackColor 0 0 0 0.2
+		-image "setTestResolution.png"
+		-image1 "setTestResolution.png"
+		-style "iconOnly" 
+		-marginWidth 1
+		-marginHeight 1
+		-command "setTestResolutionVar(1);" 
+		-sourceType "mel" 
+		-commandRepeatable 1
+		-flat 1
+		-mi "From Render Settings" ( "setTestResolutionVar(1);" )
+		-mi "10% Settings" ( "setTestResolutionVar(2);" )
+		-mi "25% Settings" ( "setTestResolutionVar(3);" )
+		-mi "50% Settings" ( "setTestResolutionVar(4);" )
+		-mi "75% Settings" ( "setTestResolutionVar(5);" )
+		-mi "110% Settings" ( "setTestResolutionVar(6);" )
+		-mi "125% Settings" ( "setTestResolutionVar(7);" )
+		-mi "150% Settings" ( "setTestResolutionVar(8);" )
+	;
+	shelfButton
+		-enableCommandRepeat 1
+		-enable 1
+		-width 35
+		-height 35
+		-manage 1
+		-visible 1
+		-preventOverride 0
+		-annotation "Submit Render Job to Deadline" 
+		-enableBackground 0
+		-align "center" 
+		-label "submitToDeadline" 
+		-labelOffset 0
+		-font "plainLabelFont" 
+		-overlayLabelColor 0.8 0.8 0.8 
+		-overlayLabelBackColor 0 0 0 0.2 
+		-image "submitToDeadline.png" 
+		-image1 "submitToDeadline.png" 
+		-style "iconOnly" 
+		-marginWidth 1
+		-marginHeight 1
+		-command "source SubmitMayaToDeadline; SubmitJobToDeadline()" 
+		-sourceType "mel" 
+		-commandRepeatable 1
+		-flat 1
+	;
+
+}

@@ -1,0 +1,27 @@
+global proc RandomiseColour()
+{
+    string $selection[] = `ls -sl`;
+    int $SelectionSize = size( $selection );
+    
+    string $LambertNode = `shadingNode -asShader lambert`;
+    string $LambertNodeSG = `sets -renderable true -noSurfaceShader true -empty -name ($LambertNode+"SG")`;
+    connectAttr -f ($LambertNode+".outColor") ($LambertNodeSG+".surfaceShader");
+    string $tripleSwitchNode = `shadingNode -asUtility tripleShadingSwitch`;
+    connectAttr -force ($tripleSwitchNode+".output") ($LambertNode+".color");
+    
+    for($i=0;$i<$SelectionSize;$i++)
+    {
+        string $multiplyDivide = `shadingNode -asUtility multiplyDivide`;
+        connectAttr -force ($multiplyDivide +".output") ($tripleSwitchNode+".input[" + $i + "].inTriple");
+        float $rand = rand(0,1);
+        setAttr ($multiplyDivide+".input1X") $rand;
+        setAttr ($multiplyDivide+".input1Y") $rand;
+        setAttr ($multiplyDivide+".input1Z") $rand;
+        sets -e -forceElement $LambertNodeSG $selection[$i];
+        
+        string $ObjectShapeNode[] = `pickWalk -d down $selection[$i]`;
+        connectAttr ($ObjectShapeNode[0] + ".instObjGroups[" + 0 + "]") ($tripleSwitchNode + ".input[" + $i + "].inShape");
+    }
+}
+
+RandomiseColour();

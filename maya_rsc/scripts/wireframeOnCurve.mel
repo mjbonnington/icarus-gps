@@ -1,0 +1,202 @@
+// Wireframe on Linear Curve
+// Matt Carter 21/08/2011
+// Version 2
+
+select -cl;
+
+global proc WirefromOnCurveMultipleObjects()
+{
+    string $select[] = `ls -sl`;
+    int $SelectionSize = size( $select );
+    for($i=0;$i<$SelectionSize;$i++)
+    {
+        WireframeOnCurve($select[$i], $i);
+    }
+}
+
+global proc WireframeOnCurve(string $select1, int $first)
+{
+    string $select[]; 
+	$select[0]	= $select1;
+    int $SelectionSize = size( $select );
+
+    if($SelectionSize==0)
+    {
+        print("Nothing Selected! \n");
+    }
+    if($SelectionSize>1)
+    {
+        print("Too Many Items Selected! \n");
+    }
+    if($SelectionSize==1)
+    {
+        select $select[0];
+        pickWalk -d down;
+        string $shapeNode[] = `ls -sl`;
+        string $nodeType = `nodeType $shapeNode[0]`;
+        if($nodeType=="nurbsCurve")
+        {
+            string $ObjectGeo[] = `ls -sl -tl 1`;
+            int $deleteExisting = `checkBox -q -value deleteExisting`;
+            if(($deleteExisting == 1)&&($first ==0))
+            {
+                string $deleteObject = $ObjectGeo[0] + "_WireframeGeo" + "*";
+                if(`objExists $deleteObject`)
+                {
+                   select $deleteObject; delete;
+                }
+            }   
+           
+            int $CVNumber = CurveCVnumber($select[0]);
+            group -em -n ($ObjectGeo[0]+"_WireframeGeo"); xform -os -piv 0 0 0;
+            addAttr -ln "Spherescale"  -at double -min 0 -dv 1 ($ObjectGeo[0]+"_WireframeGeo");
+            setAttr -e-keyable true ($ObjectGeo[0]+"_WireframeGeo.Spherescale");
+            addAttr -ln "Edgescale"  -at double -min 0 -dv 1 ($ObjectGeo[0]+"_WireframeGeo");
+            setAttr -e-keyable true ($ObjectGeo[0]+"_WireframeGeo.Edgescale");
+           
+            int $scaleSpheres = `checkBox -q -value scaleSpheres`;
+            int $EnableGrow = `checkBox -q -value EnableGrow`;
+           
+            if($EnableGrow == 1)
+            {
+                addAttr -ln "Grow"  -at double -min 0 -max 1 -dv 1 ($ObjectGeo[0]+"_WireframeGeo");
+                setAttr -e-keyable true ($ObjectGeo[0]+"_WireframeGeo.Grow");
+            }
+           
+            //vertexes
+            for($i=0;$i<$CVNumber;$i++)
+            {   
+                vector $pt = `pointPosition ($ObjectGeo[0] + ".cv[" + $i + "]")`;
+                polySphere -n ("VertexGeo" + $i );
+
+                scale 0.05 0.05 0.05;
+                if($scaleSpheres == 1)
+                { scale 0.01 0.01 0.01; }
+                makeIdentity -apply true -t 1 -r 1 -s 1 -n 0 ("VertexGeo" +$i);
+                string $group = `group -n ("Group_" + "VertexGeo" + $i ) ("VertexGeo" + $i )`;
+                expression -s ("vector $vertexPos=`pointPosition " + $ObjectGeo[0] + ".cv[" + $i + "]`;\ntranslateX = ($vertexPos.x);\ntranslateY = ($vertexPos.y);\ntranslateZ = ($vertexPos.z);") -o $group -ae 1 -uc all ;
+                parent $group ($ObjectGeo[0]+"_WireframeGeo");
+
+                // Links Scale to attribute
+                string $attributeScaleSphere = ($ObjectGeo[0]+"_WireframeGeo"+".Spherescale");
+                    expression -s (
+
+                "scaleX = " + $attributeScaleSphere +";\n" +
+                "scaleY = " + $attributeScaleSphere +";\n" +
+                "scaleZ = " + $attributeScaleSphere +";\n"
+                    ) -o $group  -ae 1 -uc all ;
+
+                //Links Visiblity to Grow
+                if($EnableGrow == 1)
+                {
+                    string $attributeGrow = ($ObjectGeo[0]+"_WireframeGeo"+".Grow");
+                    expression -s (
+                        "if(" + $attributeGrow + ">=0){"
+                        + "if((" + $CVNumber + "*" + $attributeGrow + ")>=" + (($CVNumber-$i)-1) + ")\n{" + "visibility = 1;" + "}\n" + "else{visibility = 0;}}"
+                        + "if(" + $attributeGrow + "==0){visibility = 0;}"
+                        ) -o ("VertexGeo"+$i) -ae 1 -uc all ;
+                }
+                RenameObjectsCalled("Group_VertexGeo", "_Group_VertexGeo");
+                RenameObjectsCalled("VertexGeo", "_VertexGeo");
+            }
+            //Edge Objects
+            for($i=0;$i<($CVNumber-1);$i++)
+            {
+                //creates vector for position Expression based on first edge vertex
+                vector $pt = `pointPosition ($ObjectGeo[0] + ".cv[" + $i  + " ]")`;
+                polyCylinder -n ("EdgeGeo" + $i );
+                scale 0.01 1 0.01;
+                
+                xform -r -t 0 1 0 ("EdgeGeo" +$i);
+                move -r 0 -1 0 ("EdgeGeo" + $i + ".scalePivot") ("EdgeGeo" + $i + ".rotatePivot ");
+                
+                makeIdentity -apply true -t 1 -r 1 -s 1 -n 0 ("EdgeGeo" +$i);
+                
+                string $group = `group -n ("Group_" + "EdgeGeo" + $i) ("EdgeGeo" +$i)`;
+                xform -os -piv 0 0 0 $group;
+                // Links Position to first edge virtex
+                expression -s ("vector $vertexPos=`pointPosition " + $ObjectGeo[0] + ".cv[" + $i + "]`;\ntranslateX = ($vertexPos.x);\ntranslateY = ($vertexPos.y);\ntranslateZ = ($vertexPos.z);") -o $group -ae 1 -uc all ;
+               
+                // Links Y Scale to Distance between two virtices
+                expression -s (
+                    "vector $vertexPos1=`pointPosition " + $ObjectGeo[0] + ".cv[" + $i + " ]`;\n"
+                    + "vector $vertexPos2=`pointPosition " + $ObjectGeo[0] + ".cv[" + ($i+1) + " ]`;\n"
+                    + " scaleY = 0.5*sqrt((($vertexPos1.x-$vertexPos2.x)*($vertexPos1.x-$vertexPos2.x))+(($vertexPos1.y-$vertexPos2.y)*($vertexPos1.y-$vertexPos2.y))+(($vertexPos1.z-$vertexPos2.z)*($vertexPos1.z-$vertexPos2.z)));"
+                    ) -o $group -ae 1 -uc all ;
+              
+                // Links Rotation to aim at Second Edge Vertex
+                expression -s (
+                "vector $vertexPos1=`pointPosition " + $ObjectGeo[0] + ".cv[" + $i + " ]`;\n"
+                + "vector $vertexPos2=`pointPosition " + $ObjectGeo[0] + ".cv[" + ($i+1) + " ]`;\n"
+                + "vector $vec = << ($vertexPos2.x-$vertexPos1.x), ($vertexPos2.y-$vertexPos1.y),($vertexPos2.z-$vertexPos1.z) >>;\n "
+                + "float $out[2]; float $xAngle, $zAngle, $xyLength, $vecLength;\n"
+                + "$xyLength = sqrt(($vec.x) * ($vec.x) +($vec.y) * ($vec.y));$vecLength = sqrt(($vec.x) * ($vec.x) +($vec.y) * ($vec.y) + ($vec.z) * ($vec.z));\n"
+                + "if($xyLength == 0){$zAngle = ($vec.x) > 0 ? deg_to_rad(90) : deg_to_rad(-90);}\n"
+                + "else{$zAngle = acos(($vec.y)/$xyLength);$xAngle = acos($xyLength/$vecLength);$xAngle = ($vec.z) > 0 ? $xAngle : -$xAngle;$out[0] = rad_to_deg($xAngle);$zAngle = ($vec.x) > 0 ? -$zAngle : $zAngle;$out[1] = rad_to_deg($zAngle);\n"
+                + "rotateX = $out[0];rotateZ = $out[1];}"
+                ) -o $group -ae 1 -uc all ;
+
+                //Links Visiblity to Grow
+                string $attributeScaleEdge = ($ObjectGeo[0]+"_WireframeGeo"+".Edgescale");
+                if($EnableGrow == 1)
+                {
+                    string $attributeGrow = ($ObjectGeo[0]+"_WireframeGeo"+".Grow");
+                    expression -s (
+                        "if(" + $attributeGrow + ">=0){"
+                        + "if((" + $CVNumber + "*" + $attributeGrow + ")>=" + (($CVNumber-$i)-1) + ")\n{" + "visibility = 1;" + "}\n" + "else{visibility = 0;}}"
+                        + "if(" + $attributeGrow + "==0){visibility = 0;}"
+                        ) -o ("EdgeGeo"+$i) -ae 1 -uc all ;
+                }
+                expression -s ("scaleX = " + $attributeScaleEdge +";\n" + "scaleZ = " + $attributeScaleEdge +";\n" ) -o ("EdgeGeo" + $i) -ae 1 -uc all ;
+                parent $group ($ObjectGeo[0]+"_WireframeGeo");
+                RenameObjectsCalled("Group_EdgeGeo", "_Group_EdgeGeo");
+                RenameObjectsCalled("EdgeGeo", "_EdgeGeo");
+            }   
+        }
+    }
+}
+
+global proc int CurveCVnumber(string $curve)
+{
+    int $numSpans = `getAttr ( $curve + ".spans" )`;
+    int $degree   = `getAttr ( $curve + ".degree" )`;
+    int $form     = `getAttr ( $curve + ".form" )`;
+    int $numCVs   = $numSpans + $degree;
+    return $numCVs;
+}
+
+//Procedure that deletes all object with a given prefix
+global proc RenameObjectsCalled(string $prefix, string $newName)
+{
+    string $Object = $prefix +"*";
+    if(`objExists $Object`)
+    {
+        select $Object;
+        string $select[] = `ls -sl`;
+        int $SelectionSize = size($select);
+        for($i=0;$i<$SelectionSize;$i++)
+        {
+            if(`objExists $select[$i]`)
+            {
+                rename $select[$i] $newName;
+            }
+        }
+    }
+}
+
+//any existing gui is deleted to make way for any newly created ones.
+if (`window -exists WireframeOnCurveWindow`)
+    {deleteUI WireframeOnCurveWindow;}
+
+//Creates Window
+window -widthHeight 400 50 -t "Wireframe Geometry On Curve Settings" WireframeOnCurveWindow;
+              
+    //Creates button and Checkbox to Create and delete existing
+    rowLayout -nc 5 -cw 1 80 -cw 4 150 MainRow3;
+    button -label "CREATE" -command "WirefromOnCurveMultipleObjects" createButton;
+    checkBox -label "Delete Existing" -value 1 deleteExisting;
+    checkBox -label "Scale Spheres" -value 0 scaleSpheres;
+    checkBox -label "Enable Grow" -value 0 EnableGrow;
+	
+   
+showWindow WireframeOnCurveWindow;

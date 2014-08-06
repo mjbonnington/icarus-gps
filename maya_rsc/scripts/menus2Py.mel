@@ -1,0 +1,140 @@
+//This module makes mel menus in maya communicate with custom python scripts
+
+
+global proc menus2Py.launchIcarus()
+{
+python("os.environ['ICARUSENVAWARE']='MAYA';reload(icarus__main__)");
+}
+
+
+global proc menus2Py.launchTrello()
+{
+python("import os, subprocess; subprocess.call('open %s' % os.environ['TRELLOBOARD'], shell=True)");
+}
+
+
+global proc menus2Py.projectTools()
+{
+python("import os, subprocess; subprocess.call('open %s' % os.environ['PROJECTTOOLS'], shell=True)");
+}
+
+
+global proc menus2Py.browseScenes()
+{
+python("import openDirs; openDirs.openMayaScenes()");
+}
+
+
+global proc menus2Py.browsePlayblasts()
+{
+python("import openDirs; openDirs.openMayaPlayblasts()");
+}
+
+
+global proc menus2Py.browseRenders()
+{
+python("import openDirs; openDirs.openMayaRenders()");
+}
+
+
+global proc menus2Py.browseSourceimages()
+{
+python("import openDirs; openDirs.openMayaSourceimages()");
+}
+
+
+global proc menus2Py.browseShot()
+{
+python("import openDirs; openDirs.openShot()");
+}
+
+
+global proc menus2Py.createGPSCamera(string $cam)
+{
+global string $camera;
+$camera = $cam;
+python "import maya.mel as mel";
+python "camera = mel.eval('$temp=$camera')";
+python("import createGPSCamera; createGPSCamera.createCamera(camera)");
+}
+
+global proc menus2Py.createGPSCameraRig(string $cam)
+{
+global string $camera;
+$camera = $cam;
+python "import maya.mel as mel";
+python "camera = mel.eval('$temp=$camera')";
+python("import createGPSCamera; createGPSCamera.createCamera(camera, rig=True)");
+}
+
+
+global proc menus2Py.openScene()
+{
+python("import mayaScnMng; mayaScnMng.openMayaScene()");
+global string $recentFile;
+$recentFile = `file -exn -q`;
+python "import maya.mel as mel";
+python "recentFile = mel.eval('$temp=$recentFile')";
+python("import recentScn; recentScn.updateLs(recentFile)");
+}
+
+
+global proc menus2Py.openRecent(string $menuSel)
+{
+global string $recentFile;
+$recentFile = $menuSel;
+python "import maya.mel as mel";
+python "recentFile = mel.eval('$temp=$recentFile')";
+python("import mayaScnMng; mayaScnMng.openMayaRecentScene(recentFile)");
+python("import recentScn; recentScn.updateLs(recentFile)");
+}
+
+
+global proc menus2Py.saveScene()
+{
+python("import mayaScnMng; mayaScnMng.saveMayaScene()");
+}
+
+
+global proc menus2Py.incrementalSave()
+{
+incrementalSave;
+global string $recentFile;
+$recentFile = `file -exn -q`;
+python "import maya.mel as mel";
+python "recentFile = mel.eval('$temp=$recentFile')";
+python("import recentScn; recentScn.updateLs(recentFile)");
+}
+
+
+global proc menus2Py.saveSceneAs()
+{
+python("import mayaScnMng; mayaScnMng.saveMayaSceneAs()");
+global string $recentFile;
+$recentFile = `file -exn -q`;
+python "import maya.mel as mel";
+python "recentFile = mel.eval('$temp=$recentFile')";
+python("import recentScn; recentScn.updateLs(recentFile)");
+}
+
+
+global proc menus2Py.newScene()
+{
+python("import mayaScnMng; mayaScnMng.newMayaScene()");
+}
+
+
+global proc menus2Py.bulkRename()
+{
+python("import gpsRenameTools; gpsRenameTools.gpsRenameTools().UI()");
+}
+
+
+global proc menus2Py.gpsPreview()
+{
+global string $env;
+$env = "MAYA";
+python "import maya.mel as mel";
+python "env = mel.eval('$temp=$env')";
+python("import gpsPreviewLauncher; gpsPreviewLauncher.launch(env)");
+}

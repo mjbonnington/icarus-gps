@@ -1,0 +1,70 @@
+// Batch ViewPort Render, for when regular batch rendering doesn't work 
+// Saves to tmp folder. Needs refining to copy files to specified location.
+
+global proc BatchRenderFromRenderView()
+{
+    int $firstFrame = `intField -q -v RenderFirstFrame`;
+    int $lastFrame = `intField -q -v RenderLastFrame`;
+    int $Reverse = `checkBox -q -v ReverseOrder`;
+    
+    if($Reverse==0)
+    {
+        for($i=$firstFrame;$i<=$lastFrame;$i++)
+        {
+            currentTime $i;
+            renderIntoNewWindow render;
+            string $FilePath = `textField -q -text FileLocation`;
+        }
+    }
+    
+    if($Reverse==1)
+    {
+        for($i=$lastFrame;$i>=$firstFrame;$i--)
+        {
+            currentTime $i;
+            renderIntoNewWindow render;
+            string $FilePath = `textField -q -text FileLocation`;
+        }
+    }
+}
+
+/*
+// Copy a scene to the new directory
+string $destWindows = "C:/temp/mayaStuff/myScene.mb.trash";
+string $srcWindows = "C:/maya/projects/default/scenes/myScene.mb";
+sysFile -copy $destWindows $srcWindows;         // Windows
+*/
+  
+  
+
+//any existing gui is deleted to make way for any newly created ones.
+if (`window -exists ViewPortBatchRenderWindow`)
+    {deleteUI ViewPortBatchRenderWindow;}
+
+//Creates Window
+window -widthHeight 410 210 -t "Render-View Batch Render" ViewPortBatchRenderWindow;
+rowColumnLayout -numberOfColumns 1;
+    rowColumnLayout -numberOfRows 1;
+        text -label " Start Frame     ";
+        intField -value 1 RenderFirstFrame;
+    setParent ..;
+    rowColumnLayout -numberOfRows 1;
+        text -label " End Frame       ";
+        intField -value 1 RenderLastFrame;
+    setParent ..;
+    separator -height 20 -w 400 -style "out";
+    rowLayout -nc 2 -cw 1 50 -cw 2 150 MainRow5;
+        text -label " File Path";
+        textField -w 340 -tx (`workspace -q -rd` + "images") FileLocation;
+    setParent ..;
+separator -height 20 -w 400 -style "out";
+
+scrollField -wordWrap true -height 50 -text "Renders and saves an image sequence using the render view. An alternative for when Batch Renderer fails." -editable false;
+
+rowLayout -nc 4 -cw 1 80 -cw 4 150 MainRow3;
+checkBox -label "Reverse Order" -value 0 ReverseOrder;
+setParent ..;
+
+button -label "START RENDER" -command "BatchRenderFromRenderView()"; 
+  
+showWindow ViewPortBatchRenderWindow;

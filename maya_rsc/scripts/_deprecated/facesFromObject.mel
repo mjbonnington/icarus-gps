@@ -1,0 +1,111 @@
+global proc FacesFromObject()
+{
+	string $select[] = `ls -sl`;
+    int $SelectionSize = size( $select );
+	
+    if($SelectionSize==0)
+    {
+        print("Nothing Selected! \n");
+    }
+    if($SelectionSize>1)
+    {
+        print("Too Many Items Selected! \n");
+    }
+    if($SelectionSize==1)
+    {
+		//Deletes Existing if set in GUI
+        int $deleteExisting = `checkBox -q -value deleteExisting`;
+        if($deleteExisting == 1)
+        {
+			deleteObjectsCalled(($select[0] + "_FaceObjects" + "_Group"));
+		}	
+		int $DynamicUpdate = `checkBox -q -value DynamicUpdate`;
+		int $FaceNumberArray[] = `polyEvaluate -f $select`;
+        int $FaceNumber = $FaceNumberArray[0];
+		group -em -n ($select[0]+"_FaceObjects");
+		for($i=0;$i<$FaceNumber;$i++)
+		{
+			string $face[] = `polyInfo -faceToVertex ($select[0] + ".f["+ $i + "]")`;
+			string $tokens[];
+			tokenize $face[0] " :\n\r" $tokens;
+			
+			//Triangles
+			if((size($tokens))==5)
+			{
+				int $tokenInt1 = $tokens[2]; int $tokenInt2 = $tokens[3]; int $tokenInt3 = $tokens[4];
+				float $Vertex1Position[] = `pointPosition ($select[0] + ".vtx[" + $tokenInt1 + "]")`;
+				float $Vertex2Position[] = `pointPosition ($select[0] + ".vtx[" + $tokenInt2 + "]")`;
+				float $Vertex3Position[] = `pointPosition ($select[0] + ".vtx[" + $tokenInt3 + "]")`;
+				polyCreateFacet -p $Vertex1Position[0] $Vertex1Position[1] $Vertex1Position[2] -p $Vertex2Position[0] $Vertex2Position[1] $Vertex2Position[2] -p $Vertex3Position[0] $Vertex3Position[1] $Vertex3Position[2] 
+					-n ("Face_" + $tokens[1]);
+			}
+			
+			//Quads
+			if((size($tokens))==6)
+			{
+				int $tokenInt1 = $tokens[2]; int $tokenInt2 = $tokens[3]; int $tokenInt3 = $tokens[4]; int $tokenInt4 = $tokens[5];
+				float $Vertex1Position[] = `pointPosition ($select[0] + ".vtx[" + $tokenInt1 + "]")`;
+				float $Vertex2Position[] = `pointPosition ($select[0] + ".vtx[" + $tokenInt2 + "]")`;
+				float $Vertex3Position[] = `pointPosition ($select[0] + ".vtx[" + $tokenInt3 + "]")`;
+				float $Vertex4Position[] = `pointPosition ($select[0] + ".vtx[" + $tokenInt4 + "]")`;
+				polyCreateFacet -p $Vertex1Position[0] $Vertex1Position[1] $Vertex1Position[2] -p $Vertex2Position[0] $Vertex2Position[1] $Vertex2Position[2] -p $Vertex3Position[0] $Vertex3Position[1] $Vertex3Position[2] -p $Vertex4Position[0] $Vertex4Position[1] $Vertex4Position[2]
+					-n ("Face_" + $tokens[1]);
+			}
+			xform -cp ("Face_" + $tokens[1]);
+			parent ("Face_" + $tokens[1]) ($select[0] + "_FaceObjects");
+			
+			if($DynamicUpdate==1)
+			{
+				//expression needs to go here
+			}
+		}
+		RenameObjectsCalled("Face_", "FACE_");
+		RenameObjectsCalled(($select[0] + "_FaceObjects"), ($select[0] + "_FaceObjects" + "_Group"));
+	}
+}
+
+//Procedure that deletes all object with a given prefix
+global proc RenameObjectsCalled(string $prefix, string $newName)
+{
+    string $Object = $prefix +"*";
+    if(`objExists $Object`)
+    {
+        select $Object;
+    	string $select[] = `ls -sl`;
+    	int $lastSelect = size($select);
+    	for($i=0;$i<$lastSelect;$i++)
+    	{
+    	    if(`objExists $select[$i]`)
+    	    {
+    	        rename $select[$i] $newName;
+    	    }
+    	}
+    }
+}    
+
+//Procedure that deletes all object with a given prefix
+global proc deleteObjectsCalled(string $prefix)
+{
+    string $Object = $prefix +"*";
+    if(`objExists $Object`)
+    {
+        select $Object; delete;
+    }
+}           
+
+
+//any existing gui is deleted to make way for any newly created ones.
+if (`window -exists FacesFromObjectWindow`)
+    {deleteUI FacesFromObjectWindow;}
+
+//Creates Window
+window -widthHeight 400 100 -t "Faces From Object Settings" FacesFromObjectWindow;
+               
+    //Creates button and Checkbox to Create and delete existing
+    rowLayout -nc 4 -cw 1 80 -cw 4 150 MainRow3;
+    button -label "CREATE" -command "FacesFromObject" createButton;
+    checkBox -label "Delete Existing" -value 1 deleteExisting;
+	checkBox -label "Dynamic Update" -value 0 DynamicUpdate;
+	checkBox -label "Orient Pivot" -value 0 OrientPivot;
+    
+showWindow FacesFromObjectWindow;

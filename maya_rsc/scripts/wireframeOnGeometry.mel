@@ -1,0 +1,272 @@
+// Wireframe On Geometry
+// Matt Carter 21/07/2011
+// Version 5
+
+select -cl;
+
+global proc WireframeOnGeo()
+{
+    string $select[] = `ls -sl`;
+    int $SelectionSize = size( $select );
+    if($SelectionSize==0)
+    {
+        print("Nothing Selected! \n");
+    }
+    if($SelectionSize>1)
+    {
+        print("Too Many Items Selected! \n");
+    }
+    if($SelectionSize==1)
+    {
+        //Deletes Existing if set in GUI
+        int $deleteExisting = `checkBox -q -value deleteExisting`;
+        if($deleteExisting == 1)
+        {
+	    string $deleteObject = "Vertex_Geometry*";
+	    if(`objExists $deleteObject`)
+    	    {
+    	       select $deleteObject; delete;
+    	    }
+	    $deleteObject = "Edge_Geometry*";
+	    if(`objExists $deleteObject`)
+    	    {
+    	       select $deleteObject; delete;
+    	    }
+        }
+
+        int $VertexNumberArray[] = `polyEvaluate -v $select`;
+        int $VertexNumber = $VertexNumberArray[0];
+        string $ObjectGeo[] = `ls -sl -tl 1`;
+        group -em -n ($ObjectGeo[0]+"_WireframeGeo"); xform -os -piv 0 0 0;
+	    addAttr -ln "Spherescale"  -at double -min 0 -max 10000 -dv 1 ($ObjectGeo[0]+"_WireframeGeo");
+	    setAttr -e-keyable true ($ObjectGeo[0]+"_WireframeGeo.Spherescale");
+	    addAttr -ln "Edgescale"  -at double -min 0 -max 10000 -dv 1 ($ObjectGeo[0]+"_WireframeGeo");
+	    setAttr -e-keyable true ($ObjectGeo[0]+"_WireframeGeo.Edgescale");
+
+         
+        int $scaleSpheres = `checkBox -q -value scaleSpheres`;
+
+        //Vertex Objects
+        for($i=0;$i<$VertexNumber;$i++)
+        {    
+            vector $pt = `pointPosition ($ObjectGeo[0] + ".pt[" + $i + "]")`;
+            polySphere -n ("VertexGeo" + $i );
+
+            scale 0.05 0.05 0.05;
+            if($scaleSpheres == 1)
+            { scale 0.01 0.01 0.01; }
+	        makeIdentity -apply true -t 1 -r 1 -s 1 -n 0 ("VertexGeo" +$i);
+	        string $group = `group -n ("Group_" + "VertexGeo" + $i ) ("VertexGeo" + $i )`;
+            expression -s ("vector $vertexPos=`pointPosition " + $ObjectGeo[0] + ".pt[" + $i + "]`;\ntranslateX = ($vertexPos.x);\ntranslateY = ($vertexPos.y);\ntranslateZ = ($vertexPos.z);") -o $group -ae 1 -uc all ;
+            parent $group ($ObjectGeo[0]+"_WireframeGeo");
+
+	        // Links Scale to attribute
+		    string $attributeScaleSphere = ($ObjectGeo[0]+"_WireframeGeo"+".Spherescale");
+            	expression -s (
+
+		    "scaleX = " + $attributeScaleSphere +";\n" + 
+		    "scaleY = " + $attributeScaleSphere +";\n" + 
+		    "scaleZ = " + $attributeScaleSphere +";\n" 
+                ) -o $group -ae 1 -uc all ;
+
+	        RenameObjectsCalled("Group_VertexGeo", "_Group_VertexGeo");
+            RenameObjectsCalled("VertexGeo", "_VertexGeo");
+        }
+        
+       
+        // How many Edges an object has
+
+        int $EdgeNumberArray[] = `polyEvaluate -e $select`;
+        int $EdgeNumber = $EdgeNumberArray[0];
+        
+        //Edge Objects
+        for($i=0;$i<$EdgeNumber;$i++)
+        {
+            //Finds number of edges, also returns virtexes that make up Edges
+            string $ftv[] = `polyInfo -edgeToVertex  ($ObjectGeo[0] + ".e[" + $i + "]")`;
+
+            string $tokens[];
+            tokenize $ftv[0] " :\n\r" $tokens;
+            int $EdgeVirtex1 = $tokens[2];
+            int $EdgeVirtex2 = $tokens[3];
+
+            //creates vector for position Expression based on first edge vertex
+            vector $pt = `pointPosition ($ObjectGeo[0] + ".pt[" + $EdgeVirtex1  + " ]")`;
+            polyCylinder -n ("EdgeGeo" + $i );
+            scale 0.01 1 0.01;
+
+            move -r 0 -1 0 ("EdgeGeo" + $i + ".scalePivot") ("EdgeGeo" + $i + ".rotatePivot ");
+            xform -r -t 0 1 0 ("EdgeGeo" +$i);
+            makeIdentity -apply true -t 1 -r 1 -s 1 -n 0 ("EdgeGeo" +$i);
+            
+            string $group = `group -n ("Group_" + "EdgeGeo" + $i) ("EdgeGeo" +$i)`;
+            xform -os -piv 0 0 0 $group;
+            
+            // Links Position to first edge virtex
+            expression -s ("vector $vertexPos=`pointPosition " + $ObjectGeo[0] + ".pt[" + $EdgeVirtex1 + "]`;\ntranslateX = ($vertexPos.x);\ntranslateY = ($vertexPos.y);\ntranslateZ = ($vertexPos.z);") -o $group -ae 1 -uc all ;
+            
+            // Links Y Scale to Distance between two virtices
+            expression -s (
+                "vector $vertexPos1=`pointPosition " + $ObjectGeo[0] + ".pt[" + $EdgeVirtex1 + " ]`;\n"
+                + "vector $vertexPos2=`pointPosition " + $ObjectGeo[0] + ".pt[" + $EdgeVirtex2 + " ]`;\n"
+                + " scaleY = 0.5*sqrt((($vertexPos1.x-$vertexPos2.x)*($vertexPos1.x-$vertexPos2.x))+(($vertexPos1.y-$vertexPos2.y)*($vertexPos1.y-$vertexPos2.y))+(($vertexPos1.z-$vertexPos2.z)*($vertexPos1.z-$vertexPos2.z)));"
+                ) -o $group -ae 1 -uc all ;
+           
+            // Links Rotation to aim at Second Edge Vertex
+            expression -s (
+            "vector $vertexPos1=`pointPosition " + $ObjectGeo[0] + ".pt[" + $EdgeVirtex1 + " ]`;\n"
+            + "vector $vertexPos2=`pointPosition " + $ObjectGeo[0] + ".pt[" + $EdgeVirtex2 + " ]`;\n"
+            + "vector $vec = << ($vertexPos2.x-$vertexPos1.x), ($vertexPos2.y-$vertexPos1.y),($vertexPos2.z-$vertexPos1.z) >>;\n "
+            + "float $out[2]; float $xAngle, $zAngle, $xyLength, $vecLength;\n"
+            + "$xyLength = sqrt(($vec.x) * ($vec.x) +($vec.y) * ($vec.y));$vecLength = sqrt(($vec.x) * ($vec.x) +($vec.y) * ($vec.y) + ($vec.z) * ($vec.z));\n"
+            + "if($xyLength == 0){$zAngle = ($vec.x) > 0 ? deg_to_rad(90) : deg_to_rad(-90);}\n"
+            + "else{$zAngle = acos(($vec.y)/$xyLength);$xAngle = acos($xyLength/$vecLength);$xAngle = ($vec.z) > 0 ? $xAngle : -$xAngle;$out[0] = rad_to_deg($xAngle);$zAngle = ($vec.x) > 0 ? -$zAngle : $zAngle;$out[1] = rad_to_deg($zAngle);\n"
+            + "rotateX = $out[0];rotateZ = $out[1];}"
+            ) -o $group -ae 1 -uc all ;
+
+
+	        string $attributeScaleEdge = ($ObjectGeo[0]+"_WireframeGeo"+".Edgescale");
+	        expression -s ("scaleX = " + $attributeScaleEdge +";\n" + "scaleZ = " + $attributeScaleEdge +";\n" ) -o ("EdgeGeo" + $i) -ae 1 -uc all ;
+            parent $group ($ObjectGeo[0]+"_WireframeGeo");
+            RenameObjectsCalled("Group_EdgeGeo", "_Group_EdgeGeo");
+            RenameObjectsCalled("EdgeGeo", "_EdgeGeo");
+       }
+    }
+}
+
+//Procedure that deletes all object with a given prefix
+global proc deleteObjectsCalled(string $prefix)
+{
+    string $Object = $prefix +"*";
+    if(`objExists $Object`)
+    {
+        select $Object; delete;
+    }
+    
+}           
+
+//Procedure that deletes all object with a given prefix
+global proc RenameObjectsCalled(string $prefix, string $newName)
+{
+    string $Object = $prefix +"*";
+    if(`objExists $Object`)
+    {
+        select $Object;
+    	string $select[] = `ls -sl`;
+    	int $SelectionSize = size($select);
+    	for($i=0;$i<$SelectionSize;$i++)
+    	{
+    	    if(`objExists $select[$i]`)
+    	    {
+    	        rename $select[$i] $newName;
+    	    }
+    	}
+    }
+}       
+
+global proc string[] SortVertexDistances(string $object[], string $locator)
+{
+    string $VertexNameArray[];
+    float $VertextDistanceArray[];
+    int $VertexNumberArray[] = `polyEvaluate -v $object`;
+    int $VertexNumber = $VertexNumberArray[0];    
+    float $positionLocator[] = `pointPosition $locator`;
+    vector $vertexPos1 = << $positionLocator[0], $positionLocator[1], $positionLocator[2] >>;
+    float $distanceHolder;
+    string $nameHolder;
+    float $distance;
+    vector $vertexPos2;
+    for($i=0;$i<$VertexNumber;$i++)
+    {
+        $vertexPos2 = `pointPosition ($object[0] + ".pt[" + $i + "]")`;
+        $distance = sqrt((($vertexPos1.x-$vertexPos2.x)*($vertexPos1.x-$vertexPos2.x))+(($vertexPos1.y-$vertexPos2.y)*($vertexPos1.y-$vertexPos2.y))+(($vertexPos1.z-$vertexPos2.z)*($vertexPos1.z-$vertexPos2.z)));
+        $VertexNameArray[$i]= ($object[0] + ".pt[" + $i + "]");
+        $VertextDistanceArray[$i] = $distance;
+    }
+   int $flag = 0;
+   while($flag == 0)
+   {
+       $flag = 1;
+       for($i=0;$i<($VertexNumber-1);$i++)
+       {
+           if($VertextDistanceArray[$i]>$VertextDistanceArray[($i+1)])
+           {
+               $nameHolder = $VertexNameArray[$i+1];
+               $VertexNameArray[$i+1]=$VertexNameArray[$i];
+               $VertexNameArray[$i]= $nameHolder;
+               
+               $distanceHolder = $VertextDistanceArray[$i+1];
+               $VertextDistanceArray[$i+1] = $VertextDistanceArray[$i];
+               $VertextDistanceArray[$i] = $distanceHolder;
+               
+               $flag = 0;
+           }
+       }
+   }
+   return $VertexNameArray;
+}
+
+global proc string[] SortEdgeDistances(string $object[], string $locator)
+{
+    string $VertexNameArray[];
+    float $VertextDistanceArray[];
+    int $VertexNumberArray[] = `polyEvaluate -e $object`;
+    int $VertexNumber = $VertexNumberArray[0];    
+    float $positionLocator[] = `pointPosition $locator`;
+    vector $vertexPos1 = << $positionLocator[0], $positionLocator[1], $positionLocator[2] >>;
+    float $distanceHolder;
+    string $nameHolder;
+    float $distance;
+    vector $vertexPos2;
+    for($i=0;$i<$VertexNumber;$i++)
+    {
+ 
+        float $positionEdge[] = `xform -q -ws -t ($object[0] + ".e[" + $i + "]")`;
+        float $position[3];
+        $position[0] = $positionEdge[3]-(($positionEdge[3]-$positionEdge[0])*0.5);
+        $position[1] = $positionEdge[4]-(($positionEdge[4]-$positionEdge[1])*0.5);
+        $position[2] = $positionEdge[5]-(($positionEdge[5]-$positionEdge[2])*0.5);
+        $vertexPos2 = <<$position[0], $position[1], $position[2]>>;
+       
+        $distance = sqrt((($vertexPos1.x-$vertexPos2.x)*($vertexPos1.x-$vertexPos2.x))+(($vertexPos1.y-$vertexPos2.y)*($vertexPos1.y-$vertexPos2.y))+(($vertexPos1.z-$vertexPos2.z)*($vertexPos1.z-$vertexPos2.z)));
+        $VertexNameArray[$i]= ($object[0] + ".e[" + $i + "]");
+        $VertextDistanceArray[$i] = $distance;
+    }
+   int $flag = 0;
+   while($flag == 0)
+   {
+       $flag = 1;
+       for($i=0;$i<($VertexNumber-1);$i++)
+       {
+           if($VertextDistanceArray[$i]>$VertextDistanceArray[($i+1)])
+           {
+               $nameHolder = $VertexNameArray[$i+1];
+               $VertexNameArray[$i+1]=$VertexNameArray[$i];
+               $VertexNameArray[$i]= $nameHolder;
+               
+               $distanceHolder = $VertextDistanceArray[$i+1];
+               $VertextDistanceArray[$i+1] = $VertextDistanceArray[$i];
+               $VertextDistanceArray[$i] = $distanceHolder;
+               
+               $flag = 0;
+           }
+       }
+   }  
+    return $VertexNameArray;
+}
+
+
+//any existing gui is deleted to make way for any newly created ones.
+if (`window -exists WireframeOnGeoWindow`)
+    {deleteUI WireframeOnGeoWindow;}
+
+//Creates Window
+window -widthHeight 400 50 -t "Wireframe Geometry Settings" WireframeOnGeoWindow;
+               
+    //Creates button and Checkbox to Create and delete existing
+    rowLayout -nc 4 -cw 1 80 -cw 4 150 MainRow3;
+    button -label "CREATE" -command "WireframeOnGeo" createButton;
+    checkBox -label "Delete Existing" -value 0 deleteExisting;
+    checkBox -label "Scale Spheres" -value 0 scaleSpheres;
+    
+showWindow WireframeOnGeoWindow;

@@ -1,0 +1,35 @@
+// gs_mptk projection vray compatibility
+//
+// This mel script will set all maya projection nodes to the bitmap resolution ratio.  
+//
+// This used to be necessary for V-Ray projections to render correctly,
+// but as of 2/20/13, Chaos Group has included a feature that allows the
+// Maya camera film gate to resize the bitmap it is projecting.
+//
+// This script is therefore now only necessary for situations where it
+// is desirable to conform the projection camera aspect to the bitmap aspect it is projecting.
+
+string $allProj[] = `lsType "projection"`;
+string $file[], $camera[];
+float $fWidth, $fHeight, $fRatio;
+string $width, $height;
+for ($x=0; $x < `size $allProj`; $x++) {
+    if ($allProj[$x] == "<done>") break;
+    setAttr ($allProj[$x]+".fitType") 2;
+    setAttr ($allProj[$x]+".fitFill") 1;  
+    $file = `listConnections -s on -d off -type "file" $allProj[$x]`;
+    $camera = `listConnections -s on -d off -type "camera" $allProj[$x]`;
+    
+    if ($file[0] != ""){
+        $fWidth = `getAttr ($file[0]+".outSizeX")`;
+        $fHeight = `getAttr ($file[0]+".outSizeY")`;
+    }
+    if ($fHeight != 0) {
+        $fRatio = $fWidth/$fHeight;
+        //setAttr ($camera[0]+".horizontalFilmAperture") $fRatio;
+        //setAttr ($camera[0]+".verticalFilmAperture") 1.0;
+    }
+}
+
+//setAttr "vraySettings.width" $fWidth;
+//setAttr "vraySettings.height" $fHeight;

@@ -1,0 +1,64 @@
+global proc MoveAlongNormal()
+{
+    string $selection[] = `ls -sl`;
+    int $SelectionSize = size( $selection );
+    float $distance = `floatField -q -v Distance`;
+    for($i=0;$i<$SelectionSize;$i++)
+    {
+       string $select = $selection[0];
+       string $test[] =  `polyInfo -fn ($selection[$i] + ".f[0]")`;
+       float $testVector[] = `translatePolyInfoNormal($test[0])`;
+       xform -r -t ($testVector[0]*$distance) ($testVector[1]*$distance) ($testVector[2]*$distance) $selection[$i];
+    }
+}
+
+global proc float[] translatePolyInfoNormal( string $pin )
+{
+  vector $normal;
+  float $x;
+  float $y;
+  float $z;
+
+  string $tokens[];
+  int $numTokens = `tokenize $pin " " $tokens`;
+
+  // Make sure we're looking at polyInfo data:
+  if ( ( $numTokens > 3 ) && ( $tokens[0] == "FACE_NORMAL" ) )
+  {
+    // Maya performs data-type conversion here.
+    $x = ($tokens[$numTokens-3]);
+    $y = ($tokens[$numTokens-2]);
+    $z = ($tokens[$numTokens-1]);
+
+    $normal = << $x, $y, $z >>;
+
+    // Normalize it.
+    $normal = `unit $normal`;
+  }
+
+  float $returner[];
+  $returner[0]= $x;
+  $returner[1]= $y;
+  $returner[2]= $z;
+
+  // Return it.
+  return $returner;
+}
+
+
+//any existing gui is deleted to make way for any newly created ones.
+if (`window -exists MoveAlongNormalWindow`)
+    {deleteUI MoveAlongNormalWindow;}
+
+//Creates Window
+window -widthHeight 200 100 -t "Move Along Normal" MoveAlongNormalWindow;
+rowColumnLayout -numberOfColumns 1;
+    rowColumnLayout -numberOfRows 1;
+        text -label "Move Distance";
+        floatField -value 1 Distance;
+    setParent ..;
+separator -height 20 -w 400 -style "out";
+
+button -label "Move" -command "MoveAlongNormal()"; 
+  
+showWindow MoveAlongNormalWindow;
