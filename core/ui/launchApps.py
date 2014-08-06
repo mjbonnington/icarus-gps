@@ -39,12 +39,6 @@ def realflow():
 	
 def hieroPlayer():
 	verbose.launchApp('HieroPlayer')
-	#hroxFile = os.path.join(os.path.split(os.environ['JOBPATH'])[0], 'Editorial', 'Hiero', '%s.hrox' % os.environ['JOB'])
-	#if os.path.isfile(hroxFile):
-	#	subprocess.Popen("$HIEROPLAYERVERSION -q %s" % hroxFile, shell=True)
-	#else:
-	#	verbose.noHrox('%s.hrox' % os.environ['JOB'])
-	#	subprocess.Popen("$HIEROPLAYERVERSION -q", shell=True)
 	subprocess.Popen("$HIEROPLAYERVERSION -q", shell=True)
 		
 	
