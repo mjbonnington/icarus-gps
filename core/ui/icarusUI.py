@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'icarusUI.ui'
 #
-# Created: Fri Jun 20 18:41:03 2014
+# Created: Thu Aug 28 11:03:32 2014
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -2181,6 +2181,7 @@ class Ui_Dialog(object):
         self.dailyPblType_comboBox.addItem("")
         self.dailyPblType_comboBox.addItem("")
         self.dailyPblType_comboBox.addItem("")
+        self.dailyPblType_comboBox.addItem("")
         self.dailyPbl_tableWidget = QtGui.QTableWidget(self.dailyPublishTab)
         self.dailyPbl_tableWidget.setGeometry(QtCore.QRect(17, 60, 582, 61))
         palette = QtGui.QPalette()
@@ -3329,10 +3330,11 @@ class Ui_Dialog(object):
         self.dailyPblAdd_pushButton.setText(QtGui.QApplication.translate("Dialog", "Add", None, QtGui.QApplication.UnicodeUTF8))
         self.dailyPblType_comboBox.setItemText(1, QtGui.QApplication.translate("Dialog", "previs", None, QtGui.QApplication.UnicodeUTF8))
         self.dailyPblType_comboBox.setItemText(2, QtGui.QApplication.translate("Dialog", "modeling", None, QtGui.QApplication.UnicodeUTF8))
-        self.dailyPblType_comboBox.setItemText(3, QtGui.QApplication.translate("Dialog", "anim", None, QtGui.QApplication.UnicodeUTF8))
-        self.dailyPblType_comboBox.setItemText(4, QtGui.QApplication.translate("Dialog", "lighting", None, QtGui.QApplication.UnicodeUTF8))
-        self.dailyPblType_comboBox.setItemText(5, QtGui.QApplication.translate("Dialog", "fx", None, QtGui.QApplication.UnicodeUTF8))
-        self.dailyPblType_comboBox.setItemText(6, QtGui.QApplication.translate("Dialog", "comp", None, QtGui.QApplication.UnicodeUTF8))
+        self.dailyPblType_comboBox.setItemText(3, QtGui.QApplication.translate("Dialog", "texturing", None, QtGui.QApplication.UnicodeUTF8))
+        self.dailyPblType_comboBox.setItemText(4, QtGui.QApplication.translate("Dialog", "anim", None, QtGui.QApplication.UnicodeUTF8))
+        self.dailyPblType_comboBox.setItemText(5, QtGui.QApplication.translate("Dialog", "lighting", None, QtGui.QApplication.UnicodeUTF8))
+        self.dailyPblType_comboBox.setItemText(6, QtGui.QApplication.translate("Dialog", "fx", None, QtGui.QApplication.UnicodeUTF8))
+        self.dailyPblType_comboBox.setItemText(7, QtGui.QApplication.translate("Dialog", "comp", None, QtGui.QApplication.UnicodeUTF8))
         self.dailyPbl_tableWidget.horizontalHeaderItem(0).setText(QtGui.QApplication.translate("Dialog", "sequence", None, QtGui.QApplication.UnicodeUTF8))
         self.dailyPbl_tableWidget.horizontalHeaderItem(1).setText(QtGui.QApplication.translate("Dialog", "path", None, QtGui.QApplication.UnicodeUTF8))
         self.dailyPbl_tableWidget.horizontalHeaderItem(2).setText(QtGui.QApplication.translate("Dialog", "type", None, QtGui.QApplication.UnicodeUTF8))

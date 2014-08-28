@@ -498,7 +498,7 @@ class icarusApp(QtGui.QDialog):
 	
 	#render master browse	
 	def dailyPblBrowse(self):
-		playblastDailies = ['modeling', 'animation', 'anim', 'fx', 'previs']
+		playblastDailies = ['modeling', 'texturing', 'animation', 'anim', 'fx', 'previs']
 		if self.dailyType in playblastDailies:
 			return self.fileDialog(os.environ['MAYAPLAYBLASTSDIR'])
 		elif self.dailyType == 'lighting':
