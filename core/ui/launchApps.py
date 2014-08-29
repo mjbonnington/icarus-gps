@@ -23,8 +23,7 @@ def nuke():
 	subprocess.Popen("$NUKEVERSION", shell=True)
 
 def terminal():
-	gpsrc = "$PIPELINE/icarus/ui/.gps_rc"
-	subprocess.Popen("bash --rcfile %s" % gpsrc, shell=True)
+	subprocess.Popen("bash --rcfile %s" % os.environ['GPS_RC'], shell=True)
 
 def trello():
 	subprocess.Popen('open %s' % os.environ['TRELLOBOARD'], shell=True)

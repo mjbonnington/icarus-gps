@@ -15,6 +15,8 @@ def setEnv(envVars):
 	import jobData, shotData
 	reload(jobData); reload(shotData)
 	sys.path.remove(jobDataPath); sys.path.remove(shotDataPath)
+	#TERMINAL
+	os.environ['GPS_RC'] = os.path.join(os.environ['PIPELINE'], 'core', 'ui', '.gps_rc')
 	#job env
 	os.environ['SHOTPATH'] = shotPath
 	os.environ['JOBPATH'] = os.path.split(shotPath)[0]
