@@ -459,24 +459,24 @@ class icarusApp(QtGui.QDialog):
 			dailyDic = pblOptsPrc.dailyPath_prc(dailyPath)
 			seqPath = dailyPath.replace(os.environ['SHOTPATH'], '$SHOTPATH')
 			seqPath = os.path.split(seqPath)[0]
-		if dailyDic:
-			seq = dailyDic.keys()[0]
-			seqItem = QtGui.QTableWidgetItem(seq)
-			pathItem = QtGui.QTableWidgetItem(seqPath)
-			mainItem = QtGui.QTableWidgetItem()
-			#deleting existent sequence
-			self.ui.dailyPbl_tableWidget.removeRow(0)
-			#adding items and locking table
-			newRow = self.ui.dailyPbl_tableWidget.insertRow(0)
-			self.ui.dailyPbl_tableWidget.setItem(0, 0, seqItem)
-			seqItem.setFlags(~QtCore.Qt.ItemIsEditable)
-			self.ui.dailyPbl_tableWidget.setItem(0, 1, pathItem)
-			pathItem.setFlags(~QtCore.Qt.ItemIsEditable)
-			self.ui.dailyPbl_tableWidget.setItem(0, 2, mainItem)
-			mainItem.setFlags(~QtCore.Qt.ItemIsEditable)
-			mainItem.setText(self.dailyType)
-		else:
-			verbose.noSeq(seqPath)
+			if dailyDic:
+				seq = dailyDic.keys()[0]
+				seqItem = QtGui.QTableWidgetItem(seq)
+				pathItem = QtGui.QTableWidgetItem(seqPath)
+				mainItem = QtGui.QTableWidgetItem()
+				#deleting existent sequence
+				self.ui.dailyPbl_tableWidget.removeRow(0)
+				#adding items and locking table
+				newRow = self.ui.dailyPbl_tableWidget.insertRow(0)
+				self.ui.dailyPbl_tableWidget.setItem(0, 0, seqItem)
+				seqItem.setFlags(~QtCore.Qt.ItemIsEditable)
+				self.ui.dailyPbl_tableWidget.setItem(0, 1, pathItem)
+				pathItem.setFlags(~QtCore.Qt.ItemIsEditable)
+				self.ui.dailyPbl_tableWidget.setItem(0, 2, mainItem)
+				mainItem.setFlags(~QtCore.Qt.ItemIsEditable)
+				mainItem.setText(self.dailyType)
+			else:
+				verbose.noSeq(seqPath)
 			
 	#sets the daily type and locks/unlocks the add and remove button accordingly
 	def setDailyType(self):

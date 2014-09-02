@@ -9,7 +9,7 @@ def mkDirs():
 	jobPath = os.environ['SHOTPATH']
 	
 	#maya
-	mayaDirLs = ['scenes', 'playblasts', 'renders', 'cache']
+	mayaDirLs = ['scenes', 'playblasts', 'sourceimages', 'renders', 'cache']
 	for mayaDir in mayaDirLs:
 		uDir = '%s/3D/maya/%s/%s' % (jobPath, mayaDir, userName)
 		if not os.path.isdir(uDir):
