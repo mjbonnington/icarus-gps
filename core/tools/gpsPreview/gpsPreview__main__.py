@@ -72,7 +72,7 @@ class previewUI(QtGui.QDialog):
 			self.pDialog.ui.end_lineEdit.setEnabled(False)
 			
 		self.getRange()
-		if self.frRange == 'timeline':
+		if self.frRange in ('timeline', 'current frame'):
 			self.pDialog.ui.start_lineEdit.setText('')
 			self.pDialog.ui.end_lineEdit.setText('')
 		else:
@@ -91,6 +91,8 @@ class previewUI(QtGui.QDialog):
 			self.guides = True
 		if self.pDialog.ui.slate_checkBox.checkState() == 2:
 			self.slate = True
+		if self.pDialog.ui.launchViewer_checkBox.checkState() == 2:
+			self.viewer = True
 		if self.pDialog.ui.createQuicktime_checkBox.checkState() == 2:
 			self.createQt = True
 		#getting frame range and resolution and testing for all inputs and integers
@@ -107,7 +109,7 @@ class previewUI(QtGui.QDialog):
 			verbose.integersInput('resolution')
 			return
 		#testing frame range for integers
-		if self.frRange is not 'timeline':
+		if self.frRange not in ('timeline', 'current frame'):
 			try:
 				self.frRange = (int(self.frRange[0]), int(self.frRange[1]))
 			except ValueError:	
@@ -137,8 +139,10 @@ class previewUI(QtGui.QDialog):
 			self.frRange = frRange
 		elif self.rangeType == 'custom':
 			self.frRange = (self.pDialog.ui.start_lineEdit.text(), self.pDialog.ui.end_lineEdit.text())
-		else:
+		elif self.rangeType == 'timeline':
 			self.frRange = 'timeline'
+		elif self.rangeType == 'current frame':
+			self.frRange = 'current frame'
 	
 	#saves UI options during the session
 	def saveOpts(self):
@@ -162,7 +166,8 @@ class previewUI(QtGui.QDialog):
 				self.outputDir, self.outputFile, self.frRange, self.ext = previewOutput
 				if self.createQt:
 					self.createQuicktime()
-				self.launchViewer()
+				if self.viewer:
+					self.launchViewer()
 			self.saveOpts()
 				
 	#creates a quicktime
