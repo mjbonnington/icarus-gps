@@ -6,7 +6,7 @@
 import os, platform, sys
 
 def setEnv():
-	os.environ['ICARUSVERSION'] = 'v0.6.7'
+	os.environ['ICARUSVERSION'] = 'v0.6.8'
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
 	icarusWorkingDir = icarusWorkingDir.replace('/core/ui', '')
 	os.environ['PIPELINE'] = icarusWorkingDir
