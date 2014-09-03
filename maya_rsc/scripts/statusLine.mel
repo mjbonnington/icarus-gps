@@ -2441,6 +2441,13 @@ registerUpdateRendererUIProc("updateStatusLineRendererSpecificUI");
 			-command ("source menus2Py; menus2Py.incrementalSave()")
 			-annotation "Save the current scene as new version"
 			saveScenePlusButton;
+			
+		//GPS - Save Scene As
+		iconTextButton -image1 "saveSceneAs.png"
+			-width $iconHeight -height $iconHeight
+			-command ("source menus2Py; menus2Py.saveSceneAs()")
+			-annotation "Save the current scene with new name"
+			saveSceneAsButton;
 
 		// Create the expand/collapse button separators
 		//

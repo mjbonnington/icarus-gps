@@ -14,6 +14,9 @@ class preview():
 		if frRange == 'timeline':
 			self.frRange = (int(mc.playbackOptions(min=True, q=True)), int(mc.playbackOptions(max=True, q=True)))
 			self.rangeType = frRange
+		elif frRange == 'current frame':
+			self.frRange = (int(mc.currentTime(q=True)), int(mc.currentTime(q=True)))
+			self.rangeType = frRange
 		else:
 			self.frRange = (int(frRange[0]), int(frRange[1]))
 			self.rangeType = self.frRange
