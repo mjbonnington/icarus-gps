@@ -13,6 +13,7 @@ dic = {
 '118156_Nestle_Moleson_TVC':'/Volumes/hggl_SAN_1/Project_Media/118156_Nestle_Moleson_TVC/2018111_Nestle_Moleson_PreVis',
 '118679_Dyson_Robot_360vision':'/Volumes/hggl_SAN_1/Project_Media/118679_Dyson_Robot_360vision/2018601_Dyson_X223_360eye',
 '119618_Dyson_N264':'/Volumes/hggl_SAN_1/Project_Media/119618_Dyson_N264/2019294_Dyson_N264',
+'607371_Schwartz_Flavour_Your_Way':'/Volumes/hggl_SAN_1/Project_Media/607371_Schwartz_Flavour_Your_Way/2009175_Schwartz_Flavour_Your_Way_UK_30',
 'RnD':'/Volumes/hggl_SAN_1/RnD/rnd_job'
 }
 
