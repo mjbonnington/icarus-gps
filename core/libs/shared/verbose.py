@@ -21,6 +21,9 @@ def animRequires(asset):
 def assetConflict():
 	print 'Asset already exists in scene'
 	
+def assetUpdateMatch():
+	print 'Assets do not match. Update canceled.'
+	
 def chkDirSize():
 	print 'Comparing directory sizes...'
 	

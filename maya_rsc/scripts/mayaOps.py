@@ -98,6 +98,14 @@ def cameraNodeCheck(obj):
 	except (TypeError, RuntimeError):
 		return
 	
+##########checks if obj is a icarus data set##############
+def chkIcDataSet(obj=None):
+	if not obj:
+		obj = mc.ls(sl=True)
+	if obj:
+		if 'icRefTag' in mc.listAttr(obj):
+			return obj
+	return
 ###########adds asset requirement tag as extra attr#######
 def compatibleTag(obj, compatibleTag):
 	comptTag = mc.listAttr(obj, st='icAssetCompatibility')
@@ -385,34 +393,37 @@ def groupManualLods(objLs, lodA, lodB, lodC):
 	return lodsMasterGrp
 
 #######################creates icarus data set#############
-def icDataSet(obj, icData):
-		#stores current selection
-		currentSlLs = mc.ls(sl=True)
+def icDataSet(obj, icData, update=None):
+	#stores current selection
+	currentSlLs = mc.ls(sl=True)
+	if update:
+		dataSet = update
+	else:
 		#clears current selection and selects all nodes gathered in objLs
 		mc.select(cl=True)
 		if mc.objExists(obj):
-   			mc.select(obj)
-   		#creates set with selection
+			mc.select(obj)
+		#creates set with selection
 		dataSet = createSet('ICSet_%s' % icData.assetPblName, rm=True)
-		#adds ic data to set
-		referenceTag(dataSet, icData.assetPblName)
-		#assetTag(dataSet, icData.asset)
-		assetTypeTag(dataSet, icData.assetType)
-		#assetExtTag(dataSet, icData.assetExt)
-		versionTag(dataSet, icData.version)
-		#asset version compatibility tag
-		try:
-			compatibleTag(dataSet, icData.compatible)
-		except AttributeError:
-			pass
-			
-		notesTag(dataSet, icData.notes)
-		#clears gather selection and restores original selection
-		mc.select(cl=True)
-		if currentSlLs:
-			for currentSl in currentSlLs:
-				mc.select(currentSl, add=True)
-		return dataSet
+	#adds ic data to set
+	referenceTag(dataSet, icData.assetPblName)
+	#assetTag(dataSet, icData.asset)
+	assetTypeTag(dataSet, icData.assetType)
+	#assetExtTag(dataSet, icData.assetExt)
+	versionTag(dataSet, icData.version)
+	#asset version compatibility tag
+	try:
+		compatibleTag(dataSet, icData.compatible)
+	except AttributeError:
+		pass
+
+	notesTag(dataSet, icData.notes)
+	#clears gather selection and restores original selection
+	mc.select(cl=True)
+	if currentSlLs:
+		for currentSl in currentSlLs:
+			mc.select(currentSl, add=True)
+	return dataSet
 
 ########################imports referenced nodes#################
 def importRefs(objLs):
@@ -615,6 +626,10 @@ def saveFileAs(filePath, extension):
 ################creates viewport snapshot##################
 def snapShot(pblDir):
 	pbFrame = mc.currentTime(q=True)
+	imgFmtLck = mc.getAttr('defaultRenderGlobals.outf', l=True)
+	imgFmt = int(mc.getAttr('defaultRenderGlobals.imageFormat'))
+	if imgFmtLck:
+		mc.setAttr('defaultRenderGlobals.outf', l=False)
 	mc.setAttr('defaultRenderGlobals.imageFormat', 8)
 	#mc.viewFit(f=1)
 	actSel=mc.ls(sl=True)
@@ -631,10 +646,13 @@ def snapShot(pblDir):
 	os=True, 
 	cc=True, 
 	orn=False)
-	mc.setAttr('defaultRenderGlobals.imageFormat', 7)
+	mc.setAttr('defaultRenderGlobals.imageFormat', imgFmt)
 	##RESELECTING USER ORIGINAL SELECTION##
 	for sel in actSel:
 		mc.select(sel, add=True)
+	##RESETING IMAGE FORMAT LOCK TO ORIGINAL STATE###
+	if imgFmtLck:
+		mc.setAttr('defaultRenderGlobals.outf', l=True)
 
 #################updates maya scene#######################
 def update():

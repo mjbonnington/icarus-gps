@@ -871,7 +871,7 @@ class icarusApp(QtGui.QDialog):
 				import ma_animGather
 				ma_animGather.gather(self.gatherPath)
 			else:
-				import ma_assetGather; reload(ma_assetGather)
+				import ma_assetGather
 				ma_assetGather.gather(self.gatherPath)
 		elif os.environ['ICARUSENVAWARE'] == 'NUKE':
 			if self.assetType in ('ic_geo', 'ic_pointCloud') :

@@ -4,7 +4,7 @@
 #copyright	:Gramercy Park Studios
 
 import os, sys, traceback
-import pblChk, verbose, pDialog, mayaOps
+import pblChk, verbose, pDialog, mayaOps, ma_geoCacheUpdate
 import maya.cmds as mc
 import maya.mel as mel
 
@@ -14,11 +14,6 @@ def gather(gatherPath):
 	sys.path.append(gatherPath)
 	import icData; reload(icData)
 	sys.path.remove(gatherPath)
-	
-	#check if objects with same name exist in scene
-	if mc.objExists(icData.asset):
-		verbose.nameConflict(icData.asset)
-		mayaOps.renameObj([icData.asset], '%s_' % icData.asset, oldName=False)
 	
 	try:	
 		#checks for prefered .ma or .mb extension
@@ -30,8 +25,8 @@ def gather(gatherPath):
 				assetExt = 'mb'
 				
 		#gets published asset from the gatherPath
-		gatherPath += '/%s.%s' % (icData.assetPblName, assetExt)
-		if not os.path.isfile(gatherPath):
+		assetPath = '%s/%s.%s' % (gatherPath, icData.assetPblName, assetExt)
+		if not os.path.isfile(assetPath):
 			verbose.noAsset()
 			return
 	
@@ -47,18 +42,28 @@ def gather(gatherPath):
 	
 		#gathering
 		if icData.assetType == 'ma_shot':
-			mayaOps.openScene(gatherPath, dialog=False)
+			mayaOps.openScene(assetPath, dialog=False)
 			mayaOps.redirectScene('%s/%s' % (os.environ['MAYASCENESDIR'], 'untitled'))
 			return
 		elif assetExt == 'vrmesh':
-			mel.eval('vrayCreateProxy -node "%s" -dir "%s" -existing -createProxyNode;' % (icData.asset, gatherPath))
+			chkNameConflict(icData)
+			mel.eval('vrayCreateProxy -node "%s" -dir "%s" -existing -createProxyNode;' % (icData.asset, assetPath))
 			vrmeshSG = mc.listSets(ets=True, t=1, object=icData.asset)[0]
 			vrmeshShd = mc.listConnections('%s.surfaceShader' % vrmeshSG, s=True, d=False)[0]
 			mc.delete(vrmeshSG)
 			mc.delete(vrmeshShd)
 			newNodeLs=[icData.asset]
+		elif assetExt == 'abc':
+			icSetSel = mayaOps.chkIcDataSet()
+			if icSetSel:
+				ma_geoCacheUpdate.update(gatherPath, icSetSel)
+				return
+			else:
+				chkNameConflict(icData)
+				newNodeLs = mc.file(assetPath, i=True, iv=True, rnn=True)
 		else:
-			newNodeLs = mc.file(gatherPath, i=True, iv=True, rnn=True)
+			chkNameConflict(icData)
+			newNodeLs = mc.file(assetPath, i=True, iv=True, rnn=True)
 	
 		#Bypasses maya not displaying shading groups in sets. Adds the material node to icSet instead
 		if icData.assetType == 'ma_shader':
@@ -86,3 +91,9 @@ def gather(gatherPath):
 		dialogMsg = 'Errors occured during asset update.\nPlease check console for details'
 		dialog = pDialog.dialog()
 		dialog.dialogWindow(dialogMsg, dialogTitle, conf=True)
+
+#check if objects with same name exist in scene
+def chkNameConflict(icData):
+	if mc.objExists(icData.asset):
+		verbose.nameConflict(icData.asset)
+		mayaOps.renameObj([icData.asset], '%s_' % icData.asset, oldName=False)
