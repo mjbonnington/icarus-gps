@@ -25,9 +25,11 @@ def version(vCtrlFolder, current=False):
 				##IF FOUND STRIPS v
 				if contentVrs.startswith("v"):
 					contentVrs = string.replace(contentVrs, "v", "")
-					##CHECKS FOR NUMERIC AND ADDS IT TO vrsLs.
-					if contentVrs.isdigit():
-						vrsLs.append(contentVrs)
+				elif contentVrs.startswith(".v"):
+					contentVrs = string.replace(contentVrs, ".v", "")
+				##CHECKS FOR NUMERIC AND ADDS IT TO vrsLs.
+				if contentVrs.isdigit():
+					vrsLs.append(contentVrs)
 			##SORTS vrsLs AND RETRIEVES LAST ITEM (HIGHEST DIGIT)##
 			vrsLs.sort()
 			currentVersion = int(vrsLs[-1])
