@@ -626,6 +626,10 @@ def saveFileAs(filePath, extension):
 ################creates viewport snapshot##################
 def snapShot(pblDir):
 	pbFrame = mc.currentTime(q=True)
+	imgFmtLck = mc.getAttr('defaultRenderGlobals.outf', l=True)
+	imgFmt = int(mc.getAttr('defaultRenderGlobals.imageFormat'))
+	if imgFmtLck:
+		mc.setAttr('defaultRenderGlobals.outf', l=False)
 	mc.setAttr('defaultRenderGlobals.imageFormat', 8)
 	#mc.viewFit(f=1)
 	actSel=mc.ls(sl=True)
@@ -642,10 +646,13 @@ def snapShot(pblDir):
 	os=True, 
 	cc=True, 
 	orn=False)
-	mc.setAttr('defaultRenderGlobals.imageFormat', 7)
+	mc.setAttr('defaultRenderGlobals.imageFormat', imgFmt)
 	##RESELECTING USER ORIGINAL SELECTION##
 	for sel in actSel:
 		mc.select(sel, add=True)
+	##RESETING IMAGE FORMAT LOCK TO ORIGINAL STATE###
+	if imgFmtLck:
+		mc.setAttr('defaultRenderGlobals.outf', l=True)
 
 #################updates maya scene#######################
 def update():
