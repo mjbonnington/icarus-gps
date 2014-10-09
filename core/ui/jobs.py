@@ -9,6 +9,7 @@ dic = {
 '110053_The_Louvre':'/Volumes/hggl_SAN_1/Project_Media/110053_The_Louvre/2009753_The_Louvre',
 '119618_Dyson_N264':'/Volumes/hggl_SAN_1/Project_Media/119618_Dyson_N264/2019294_Dyson_N264',
 '119488_Homebase_Xmas':'/Volumes/hggl_SAN_1/Project_Media/119488_Homebase_Xmas/2019374_Hombase_Xmas_30s',
+'607752_Sensodyne_SEA':'/Volumes/hggl_SAN_1/Project_Media/607752_Sensodyne_SEA/2009753_Real_Flow_Animation',
 'RnD':'/Volumes/hggl_SAN_1/RnD/rnd_job'
 }
 
