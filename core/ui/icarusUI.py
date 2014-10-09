@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'icarusUI.ui'
 #
-# Created: Thu Aug 28 11:03:32 2014
+# Created: Thu Oct  9 11:19:09 2014
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -3170,7 +3170,6 @@ class Ui_Dialog(object):
         QtCore.QObject.connect(self.animPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToShot_comboBox.setDisabled)
         QtCore.QObject.connect(self.animPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToJob_radioButton.setDisabled)
         QtCore.QObject.connect(self.animPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToShot_radioButton.setChecked)
-        QtCore.QObject.connect(self.shotPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToShot_comboBox.setDisabled)
         QtCore.QObject.connect(self.nk_compPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.nk_PblName_lineEdit.setDisabled)
         QtCore.QObject.connect(self.nk_compPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.nk_PblName_label.setDisabled)
         QtCore.QObject.connect(self.nk_preCompPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.nk_PblName_label.setEnabled)
