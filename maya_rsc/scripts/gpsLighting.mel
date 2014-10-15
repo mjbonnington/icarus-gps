@@ -20,6 +20,7 @@ global proc gpsLighting.loadBaseSettings()
 	vrayCreateVRaySettingsNode;
 	}
 
+	//VRAY
 	//Load defaults
 	//vray framebuffer
 	setAttr "vraySettings.vfbOn" 1;
@@ -92,6 +93,26 @@ global proc gpsLighting.loadBaseSettings()
 	//Dynamic memory limit
 	setAttr "vraySettings.sys_rayc_dynMemLimit" 3000;
 	
+	
+	//MAYA DEFAULT RENDER MENU
+	//image format to tiff
+	setAttr "defaultRenderGlobals.imageFormat" 3;
+	
+	//setting [frame].[padding.[ext]
+	setAttr defaultRenderGlobals.outFormatControl 0;
+	setAttr defaultRenderGlobals.animation 1;
+	setAttr defaultRenderGlobals.putFrameBeforeExt 1;
+	setAttr defaultRenderGlobals.extensionPadding 4;
+	
+	//Frame range
+	setAttr "defaultRenderGlobals.startFrame" $startFrame;
+	setAttr "defaultRenderGlobals.endFrame" $endFrame;
+	
+	//Resolution
+	setAttr "defaultResolution.w" $resX;
+	setAttr "defaultResolution.h" $resY;
+	
+	
 	//set render file name
 	gpsLighting.setRenderPath();
 	
@@ -102,8 +123,11 @@ global proc gpsLighting.setRenderPath()
 {
 	string $user = `getenv "USER"`;
 	string $SHOT = `getenv "SHOT"`;
+	//Vray
 	setAttr -l false { "vraySettings.fnprx" };
 	setAttr -type "string" "vraySettings.fileNamePrefix" ($user + "/%s/%l/" + $SHOT + "_%l");
+	//Maya Default Render menu
+	setAttr -type "string" "defaultRenderGlobals.ifp" ($user + "/%s/%l/" + $SHOT + "_%l");
 	//This cannot be lock otherwise renders submitted to deadline from maya submitter will fail.
 	//setAttr -l true { "vraySettings.fnprx" };
 }
