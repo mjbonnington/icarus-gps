@@ -20,8 +20,10 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 	
 	#checks if item is particle
 	objSh = mc.listRelatives(objLs[0])[0]
-	if mayaOps.nodetypeCheck(objSh) != 'particle':
+	objType = mayaOps.nodetypeCheck(objSh)
+	if objType not in ('particle', 'nParticle'):
 		verbose.pointCloudParticle()
+		print objType
 		return
 		
 	#defining main variables
@@ -117,7 +119,11 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 		#making publish visible
 		visiblePblDir = pblDir.replace(hiddenVersion, version)
 		os.system('mv %s %s' % (pblDir, visiblePblDir))
-		approvePbl.publish(apvDir, visiblePblDir, assetDir, version)
+		
+		#approving publish
+		if approved:
+			approvePbl.publish(apvDir, visiblePblDir, assetDir, version)
+		
 		verbose.pblFeed(end=True)
 
 	except:
