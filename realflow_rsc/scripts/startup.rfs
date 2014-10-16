@@ -10,8 +10,8 @@ import os, sys
 #appending realflow pipeline paths to sys
 sys.path.append(os.path.join(os.getenv('PIPELINE'), 'realflow_rsc', 'scripts'))
 sys.path.append(os.path.join(os.getenv('PIPELINE'), 'realflow_rsc', 'realflow__env__'))
-sys.path.append(os.path.join(os.getenv('PIPELINE'), 'icarus', 'ui'))
-sys.path.append(os.path.join(os.getenv('PIPELINE'), 'icarus', 'libs', 'shared'))
+sys.path.append(os.path.join(os.getenv('PIPELINE'), 'core', 'ui'))
+sys.path.append(os.path.join(os.getenv('PIPELINE'), 'core', 'libs', 'shared'))
 
 
 #setting shot settings
