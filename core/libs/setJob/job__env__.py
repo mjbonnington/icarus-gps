@@ -24,7 +24,7 @@ def setEnv(envVars):
 	os.environ['SHOTDATA'] = shotDataPath
 	os.environ['JOB'] = job
 	os.environ['SHOT'] = shot
-	os.environ['TRELLOBOARD'] = jobData.trelloBoard
+	os.environ['PRODBOARD'] = jobData.prodBoard
 	os.environ['PROJECTTOOLS'] = jobData.projectTools
 	os.environ['FRAMEVIEWER'] = jobData.frameViewer
 	os.environ['JOBAPPROVEDPUBLISHDIR'] = os.path.join(os.environ['JOBPATH'], 'Assets', '3D')
@@ -111,6 +111,7 @@ def setEnv(envVars):
 	os.environ['RF_STARTUP_PYTHON_SCRIPT_FILE_PATH'] = os.path.join(os.environ['PIPELINE'], 'realflow_rsc', 'scripts/startup.rfs')
 	os.environ['RFDEFAULTPROJECT'] = os.path.join(os.environ['REALFLOWSCENESDIR'], '%s_%s' % (os.environ['JOB'], os.environ['SHOT']))
 	os.environ['RFOBJECTSPATH'] = '%s/ma_geoCache/realflow' % os.environ['SHOTPUBLISHDIR']
+	os.environ['RF_RSC'] = os.path.join(os.environ['PIPELINE'], 'realflow_rsc')
 	os.environ['RF_COMMANDS_ORGANIZER_FILE_PATH'] = os.path.join(os.environ['REALFLOWSCENESDIR'] , '.cmdsOrg/commandsOrganizer.dat')
 	#DJV
 	os.environ['DJVCONVERTPATH'] = '%s/external_apps/djv/djv-0.8.2.app/Contents/Resources/bin' % os.environ['PIPELINE']

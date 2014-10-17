@@ -96,7 +96,11 @@ def publish(pblTo, slShot, geoType, textures, pblNotes, mail, approved):
 		
 		#making publish visible
 		os.system('mv %s %s' % (pblDir, visiblePblDir))
-		approvePbl.publish(apvDir, visiblePblDir, assetDir, version)
+		
+		#approving publish
+		if approved:
+			approvePbl.publish(apvDir, visiblePblDir, assetDir, assetType, version)
+			
 		verbose.pblFeed(end=True)
 
 	except:

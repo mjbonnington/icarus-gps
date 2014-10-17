@@ -25,8 +25,8 @@ def nuke():
 def terminal():
 	subprocess.Popen("bash --rcfile %s" % os.environ['GPS_RC'], shell=True)
 
-def trello():
-	subprocess.Popen('open %s' % os.environ['TRELLOBOARD'], shell=True)
+def prodBoard():
+	subprocess.Popen('open %s' % os.environ['PRODBOARD'], shell=True)
 
 def realflow():
 	sys.path.append(os.path.join(os.environ['PIPELINE'], 'realflow_rsc', 'scripts'))

@@ -19,7 +19,7 @@ openScriptsDir = 'import openDirs; openDirs.openNukeScripts()'
 openRendersDir = 'import openDirs; openDirs.openNukeRenders()'
 openElementsDir = 'import openDirs; openDirs.openNukeElements()'
 openShotDir = 'import openDirs; openDirs.openShot()'
-launchTrello  = 'import launchApps; launchApps.trello()'
+launchProdBoard  = 'import launchApps; launchApps.prodBoard()'
 launchNuke = 'import launchApps; launchApps.nuke()'
 launchIcarus = 'os.environ["ICARUSENVAWARE"]="NUKE";import icarus__main__;reload(icarus__main__)'
 versionUp = 'import switchVersion; switchVersion.versionUp()'
@@ -71,7 +71,7 @@ versionDownMenu_nodes = switchVersionMenu.addCommand('GPS - Version Down', versi
 #icarusUI
 icarusMenu_nodes = nodesMenu.addCommand('IcarusUI', launchIcarus, icon='icarus.png')
 #trello
-trelloMenu_nodes = nodesMenu.addCommand('Trello', launchTrello, icon='trello.png')
+trelloMenu_nodes = nodesMenu.addCommand('Production Board', launchProdBoard, icon='productionBoard.png')
 #browse
 browseMenu_nodes = nodesMenu.addMenu('Browse', icon='browse.png')
 browseMenu_nodes.addCommand('Browse Scripts', openScriptsDir)
@@ -93,7 +93,7 @@ icarusMenu_gps = gpsMenu.addCommand('IcarusUI', launchIcarus)
 #separator
 gpsMenu.addSeparator()
 #trello
-trelloMenu_gps = gpsMenu.addCommand('Trello', launchTrello)
+trelloMenu_gps = gpsMenu.addCommand('Production Board', launchProdBoard)
 #separator
 gpsMenu.addSeparator()
 #browse

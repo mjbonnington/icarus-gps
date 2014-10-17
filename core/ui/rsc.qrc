@@ -8,8 +8,8 @@
     <file>rsc/terminal.png</file>
     <file>rsc/browseIcon.png</file>
     <file>rsc/aeIcon.png</file>
-    <file>rsc/trelloIcon.png</file>
     <file>rsc/icarusBanner.png</file>
+    <file>rsc/productionBoard.png</file>
     <file>rsc/nukeIcon.png</file>
     <file>rsc/psIcon.png</file>
   </qresource>

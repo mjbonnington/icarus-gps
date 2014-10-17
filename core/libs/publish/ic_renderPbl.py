@@ -25,6 +25,9 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 	assetPblName, assetDir, pblDir = pblOptsPrc.prc(pblTo, subsetName, assetType, prefix, convention, suffix)
 	renderRootPblDir = pblDir
 	
+	#approved publish directory
+	apvDir = os.environ['SHOTAPPROVEDPUBLISHDIR']
+	
 	#version control
 	currentVersion = '%s' % vCtrl.version(pblDir, current=True)
 	version = '%s' % vCtrl.version(pblDir)
@@ -103,6 +106,7 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 				snapShot = True
 				mainLayerBody, mainLayerPadding, mainLayerExtension = pblOptsPrc.render_split(mainLayerFile)
 				mainLayerPaddingLs.append(mainLayerPadding)
+				
 		if snapShot:
 			startFrame = min(mainLayerPaddingLs)
 			endFrame = max(mainLayerPaddingLs)
@@ -116,17 +120,21 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 		assetPblName += '_%s' % version		
 		icPblData.writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, pblNotes)
 			
-		#inserts approval file
-		if approved:
-			apvFile = open('%s/approved.ic' % pblDir, 'w')
-			apvFile.write(str(approved))
-			apvFile.close
-			
-		verbose.pblFeed(pblResult)
+		
+		#inserting approval file
+		apvFile = open('%s/approved.ic' % pblDir, 'w')
+		apvFile.write(str(approved))
+		apvFile.close
 		
 		#making publish visible
 		visiblePblDir = pblDir.replace(hiddenVersion, version)
 		os.system('mv %s %s' % (pblDir, visiblePblDir))
+	
+		#Approving publish
+		if approved:
+			approvePbl.publish(apvDir, visiblePblDir, assetDir, assetType, version)
+			
+		
 		verbose.pblFeed(end=True)
 		
 	except:

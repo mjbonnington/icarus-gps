@@ -49,7 +49,7 @@ def createCamera(camera, rig=False):
 	mc.setAttr('%s.displayFilmOrigin' % camSh, 1)
 	#adding frustum
 	mc.select(cam, r=True)
-	mel.eval('source makeFrustum; makeFrustumProc();')
+	#mel.eval('source makeFrustum; makeFrustumProc();')
 	#renaming nodes
 	if camGrp:
 		camGrpName = mc.rename(camGrp, '%s_%s' % (camGrp, camera))

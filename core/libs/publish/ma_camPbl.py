@@ -92,7 +92,11 @@ def publish(pblTo, slShot, cameraType, pblNotes, mail, approved):
 		#making publish visible
 		visiblePblDir = pblDir.replace(hiddenVersion, version)
 		os.system('mv %s %s' % (pblDir, visiblePblDir))
-		approvePbl.publish(apvDir, visiblePblDir, assetDir, version)
+		
+		#approving publish
+		if approved:
+			approvePbl.publish(apvDir, visiblePblDir, assetDir, assetType, version)
+			
 		verbose.pblFeed(end=True)
 	
 	except:
