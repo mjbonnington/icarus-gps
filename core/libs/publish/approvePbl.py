@@ -8,34 +8,33 @@
 
 import os, verbose
 
-def publish(apvDir, pblDir, assetDir, version):
+def publish(apvDir, pblDir, assetDir, assetType, version):
 	verbose.approval(start=True)
 	approvedPblDir = str(os.path.join(apvDir, assetDir))
+	ignoreLs = ('approved.ic', 'icData.py')
 	
+	if assetType == 'render':
+		approvedPblDir = str(os.path.join(approvedPblDir, '3D', version))
+	else:
+		approvedPblDir = str(os.path.join(approvedPblDir, version))
 	
 	#Creating version directory
-	os.system('mkdir -p %s/%s' % (approvedPblDir, version))
-
+	os.system('mkdir -p %s' % approvedPblDir)
+	
 	#softlinking
 	#os.system('ln -Fs %s %s' % (pblDir, approvedPblDir))
-	
-
-	#Due to OS incompatibilities softlinking had been replace with creation of direcotry and hardlinking the contents.
-	#Any child directories other then textures will be copied. Textures are still hard linked
-	
-	#getting contents and hardlinking files. Folders will be copied
-	dirContents = os.listdir(pblDir)
-	for content in dirContents:
-		try:
-			contentPath = '%s/%s' % (pblDir, content)
-			if os.path.isfile(contentPath):
-				os.system('ln -f %s/%s %s/%s/%s' % (pblDir, content, approvedPblDir, version, content))
+	#Due to OS incompatibilities softlinking had been replace with replication of direcotry structures and hardlinking the contents.
+	for dirName, dirNames, fileNames in os.walk(pblDir):
+		#creating all direcotries and subdirectories
+		apvDir = dirName.replace(pblDir, approvedPblDir)
+		if not os.path.isdir(apvDir):
+			os.system('mkdir -p %s' % apvDir)
+		#hardlinking all files.
+		for fileName in fileNames:
+			#ignoring system files
+			if fileName in ignoreLs or fileName.startswith('.'):
 				continue
-			if os.path.isdir(contentPath):
-				os.system('cp -r %s %s/%s' % (contentPath, approvedPblDir, version))
-				continue
-		except OSError:
-			verbose.approvalOSError()
+			os.system('ln -f %s %s' % (os.path.join(dirName, fileName), os.path.join(apvDir, fileName)))
 	
 	verbose.approval(end=True)
 	

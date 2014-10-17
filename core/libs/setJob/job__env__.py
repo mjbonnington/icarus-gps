@@ -24,7 +24,7 @@ def setEnv(envVars):
 	os.environ['SHOTDATA'] = shotDataPath
 	os.environ['JOB'] = job
 	os.environ['SHOT'] = shot
-	os.environ['TRELLOBOARD'] = jobData.trelloBoard
+	os.environ['PRODBOARD'] = jobData.prodBoard
 	os.environ['PROJECTTOOLS'] = jobData.projectTools
 	os.environ['FRAMEVIEWER'] = jobData.frameViewer
 	os.environ['JOBAPPROVEDPUBLISHDIR'] = os.path.join(os.environ['JOBPATH'], 'Assets', '3D')

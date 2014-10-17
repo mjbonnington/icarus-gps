@@ -14,6 +14,9 @@ def approval(start=False, end=False):
 	if end:
 		print 'Approved.'
 		return
+	
+def approvalOSError():
+	print 'Some assets may not have gone trough the approval process. Some file links may be missing.'
 
 def animRequires(asset):
 	print 'Requires %s' % asset
@@ -140,7 +143,7 @@ def pblAssetReq():
 	print 'Animation can only be published from published assets'
 	
 def pointCloudParticle():
-	print 'pointCloud publishing requires a particle object'
+	print 'pointCloud publishing requires a particle or nParticle object'
 	
 def processing(asset=None):
 	print 'processing: %s...' % asset

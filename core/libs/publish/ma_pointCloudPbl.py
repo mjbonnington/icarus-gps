@@ -122,7 +122,7 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 		
 		#approving publish
 		if approved:
-			approvePbl.publish(apvDir, visiblePblDir, assetDir, version)
+			approvePbl.publish(apvDir, visiblePblDir, assetDir, assetType, version)
 		
 		verbose.pblFeed(end=True)
 

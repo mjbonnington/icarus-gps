@@ -3126,18 +3126,18 @@ registerUpdateRendererUIProc("updateStatusLineRendererSpecificUI");
 			-annotation "Launches Icarus UI"
 			launchIcarusButton;
 
-		// GPS - Launch Trello
-		iconTextButton -image1 "trello.png"
+		// GPS - Launch Production Board
+		iconTextButton -image1 "productionBoard.png"
 			-width $iconHeight -height $iconHeight
-			-command ("source menus2Py.mel;menus2Py.launchTrello;")
-			-annotation "Launches Trello Project in web browser"
-			launchTrelloButton;
+			-command ("source menus2Py.mel;menus2Py.launchProdBoard;")
+			-annotation "Opens the Production Board"
+			launchProdBoardButton;
 			
 		// GPS - Project Tools
 		iconTextButton -image1 "projectTools.png"
 			-width $iconHeight -height $iconHeight
 			-command ("source menus2Py.mel;menus2Py.projectTools;")
-			-annotation "Opens Trello Tools Card with available Project Tools"
+			-annotation "Accesses project specific tools"
 			projectToolsButton;
 		
 		//GPS - Browses Project Directories

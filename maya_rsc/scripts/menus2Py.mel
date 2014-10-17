@@ -7,9 +7,9 @@ python("os.environ['ICARUSENVAWARE']='MAYA';reload(icarus__main__)");
 }
 
 
-global proc menus2Py.launchTrello()
+global proc menus2Py.launchProdBoard()
 {
-python("import os, subprocess; subprocess.call('open %s' % os.environ['TRELLOBOARD'], shell=True)");
+python("import launchApps; launchApps.prodBoard()");
 }
 
 
