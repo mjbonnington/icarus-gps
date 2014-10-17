@@ -1315,7 +1315,7 @@
      <property name="title">
       <string/>
      </property>
-     <widget class="QPushButton" name="openTrello_pushButton">
+     <widget class="QPushButton" name="openProdBoard_pushButton">
       <property name="geometry">
        <rect>
         <x>12</x>
@@ -1373,12 +1373,12 @@
       </property>
       <property name="icon">
        <iconset resource="rsc.qrc">
-        <normaloff>:/rsc/rsc/trelloIcon.png</normaloff>:/rsc/rsc/trelloIcon.png</iconset>
+        <normaloff>:/rsc/rsc/productionBoard.png</normaloff>:/rsc/rsc/productionBoard.png</iconset>
       </property>
       <property name="iconSize">
        <size>
-        <width>50</width>
-        <height>50</height>
+        <width>58</width>
+        <height>58</height>
        </size>
       </property>
       <property name="flat">
@@ -9279,7 +9279,7 @@ p, li { white-space: pre-wrap; }
   <tabstop>mudbox_pushButton</tabstop>
   <tabstop>nuke_pushButton</tabstop>
   <tabstop>openTerminal_pushButton</tabstop>
-  <tabstop>openTrello_pushButton</tabstop>
+  <tabstop>openProdBoard_pushButton</tabstop>
   <tabstop>openJob_pushButton</tabstop>
   <tabstop>openShot_pushButton</tabstop>
   <tabstop>publishToShot_radioButton</tabstop>

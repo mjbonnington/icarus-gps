@@ -39,7 +39,7 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.nuke_pushButton, QtCore.SIGNAL('clicked()'), self.launchNuke)
 		QtCore.QObject.connect(self.ui.mari_pushButton, QtCore.SIGNAL('clicked()'), self.launchMari)
 		QtCore.QObject.connect(self.ui.realflow_pushButton, QtCore.SIGNAL('clicked()'), self.launchRealflow)
-		QtCore.QObject.connect(self.ui.openTrello_pushButton, QtCore.SIGNAL('clicked()'), launchApps.trello)
+		QtCore.QObject.connect(self.ui.openProdBoard_pushButton, QtCore.SIGNAL('clicked()'), launchApps.prodBoard)
 		QtCore.QObject.connect(self.ui.openHieroPlayer_pushButton, QtCore.SIGNAL('clicked()'), self.launchHieroPlayer)
 		QtCore.QObject.connect(self.ui.openTerminal_pushButton, QtCore.SIGNAL('clicked()'), self.launchTerminal)
 		QtCore.QObject.connect(self.ui.openJob_pushButton, QtCore.SIGNAL('clicked()'), openDirs.openJob)

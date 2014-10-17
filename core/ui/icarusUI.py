@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'icarusUI.ui'
 #
-# Created: Thu Oct  9 11:19:09 2014
+# Created: Fri Oct 17 11:37:04 2014
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -454,8 +454,8 @@ class Ui_Dialog(object):
         self.open_groupBox.setFont(font)
         self.open_groupBox.setTitle("")
         self.open_groupBox.setObjectName("open_groupBox")
-        self.openTrello_pushButton = QtGui.QPushButton(self.open_groupBox)
-        self.openTrello_pushButton.setGeometry(QtCore.QRect(12, 18, 51, 51))
+        self.openProdBoard_pushButton = QtGui.QPushButton(self.open_groupBox)
+        self.openProdBoard_pushButton.setGeometry(QtCore.QRect(12, 18, 51, 51))
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(51, 51, 51))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -466,19 +466,19 @@ class Ui_Dialog(object):
         brush = QtGui.QBrush(QtGui.QColor(106, 104, 100))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.ButtonText, brush)
-        self.openTrello_pushButton.setPalette(palette)
+        self.openProdBoard_pushButton.setPalette(palette)
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(12)
         font.setItalic(False)
-        self.openTrello_pushButton.setFont(font)
-        self.openTrello_pushButton.setText("")
+        self.openProdBoard_pushButton.setFont(font)
+        self.openProdBoard_pushButton.setText("")
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(":/rsc/rsc/trelloIcon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.openTrello_pushButton.setIcon(icon5)
-        self.openTrello_pushButton.setIconSize(QtCore.QSize(50, 50))
-        self.openTrello_pushButton.setFlat(True)
-        self.openTrello_pushButton.setObjectName("openTrello_pushButton")
+        icon5.addPixmap(QtGui.QPixmap(":/rsc/rsc/productionBoard.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.openProdBoard_pushButton.setIcon(icon5)
+        self.openProdBoard_pushButton.setIconSize(QtCore.QSize(58, 58))
+        self.openProdBoard_pushButton.setFlat(True)
+        self.openProdBoard_pushButton.setObjectName("openProdBoard_pushButton")
         self.openJob_pushButton = QtGui.QPushButton(self.open_groupBox)
         self.openJob_pushButton.setGeometry(QtCore.QRect(215, 20, 44, 44))
         palette = QtGui.QPalette()
@@ -3205,8 +3205,8 @@ class Ui_Dialog(object):
         Dialog.setTabOrder(self.maya_pushButton, self.mudbox_pushButton)
         Dialog.setTabOrder(self.mudbox_pushButton, self.nuke_pushButton)
         Dialog.setTabOrder(self.nuke_pushButton, self.openTerminal_pushButton)
-        Dialog.setTabOrder(self.openTerminal_pushButton, self.openTrello_pushButton)
-        Dialog.setTabOrder(self.openTrello_pushButton, self.openJob_pushButton)
+        Dialog.setTabOrder(self.openTerminal_pushButton, self.openProdBoard_pushButton)
+        Dialog.setTabOrder(self.openProdBoard_pushButton, self.openJob_pushButton)
         Dialog.setTabOrder(self.openJob_pushButton, self.openShot_pushButton)
         Dialog.setTabOrder(self.openShot_pushButton, self.publishToShot_radioButton)
         Dialog.setTabOrder(self.publishToShot_radioButton, self.publishToShot_comboBox)
