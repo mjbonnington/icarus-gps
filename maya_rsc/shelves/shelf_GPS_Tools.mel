@@ -246,7 +246,7 @@ global proc shelf_GPS_Tools () {
         -manage 1
         -visible 1
         -preventOverride 0
-        -annotation "Imports Point and Camera Cloud" 
+        -annotation "Import point cloud and corresponding camera positions" 
         -enableBackground 0
         -align "center" 
         -label "pointCloud" 
@@ -259,7 +259,7 @@ global proc shelf_GPS_Tools () {
         -style "iconOnly" 
         -marginWidth 1
         -marginHeight 1
-        -command "import pointCloudImporter\n\npointCloudImporter.pointCloud().UI()" 
+        -command "import gpsImportPointCloud; gpsImportPointCloud.gpsImportPointCloud().UI()" 
         -sourceType "python" 
         -commandRepeatable 1
         -flat 1
