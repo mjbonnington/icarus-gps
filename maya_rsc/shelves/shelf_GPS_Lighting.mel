@@ -12,7 +12,7 @@ global proc shelf_GPS_Lighting () {
 		-manage 1
 		-visible 1
 		-preventOverride 0
-		-annotation "Sets up vRay global settings" 
+		-annotation "Set up VRay global settings" 
 		-enableBackground 0
 		-align "center" 
 		-label "vRaySettings" 
@@ -62,8 +62,8 @@ global proc shelf_GPS_Lighting () {
 		-sourceType "mel" 
 		-commandRepeatable 1
 		-flat 1
-		-mi "Add vRay Gamma to Selected" ( "source gpsLighting.mel;gpsLighting.addVRayGamma();" )
-		-mi "Remove vRay Gamma from Selected" ( "source gpsLighting.mel;gpsLighting.removeVRayGamma();" )
+		-mi "Add VRay Gamma to Selected" ( "source gpsLighting.mel;gpsLighting.addVRayGamma();" )
+		-mi "Remove VRay Gamma from Selected" ( "source gpsLighting.mel;gpsLighting.removeVRayGamma();" )
 	;
 	shelfButton
 		-enableCommandRepeat 1
@@ -73,7 +73,7 @@ global proc shelf_GPS_Lighting () {
 		-manage 1
 		-visible 1
 		-preventOverride 0
-		-annotation "Creates Vray Shaders" 
+		-annotation "Create VRay Shaders" 
 		-enableBackground 0
 		-align "center" 
 		-label "vRayShaders" 
@@ -104,7 +104,7 @@ global proc shelf_GPS_Lighting () {
 		-manage 1
 		-visible 1
 		-preventOverride 0
-		-annotation "Creates vRay Lights" 
+		-annotation "Create VRay Lights" 
 		-enableBackground 0
 		-align "center" 
 		-label "vRayLights" 
@@ -134,10 +134,10 @@ global proc shelf_GPS_Lighting () {
 		-manage 1
 		-visible 1
 		-preventOverride 0
-		-annotation "Submit Render Job to Deadline" 
+		-annotation "Add VRay subdivision and displacement attributes" 
 		-enableBackground 0
 		-align "center" 
-		-label "submitToDeadline" 
+		-label "vraySubDsMulti" 
 		-labelOffset 0
 		-font "plainLabelFont" 
 		-overlayLabelColor 0.8 0.8 0.8 
@@ -160,7 +160,7 @@ global proc shelf_GPS_Lighting () {
 		-manage 1
 		-visible 1
 		-preventOverride 0
-		-annotation "Creates Object IDs and Multimattes" 
+		-annotation "Create Object IDs and Multimattes" 
 		-enableBackground 0
 		-align "center" 
 		-label "Multimatte" 
@@ -193,7 +193,7 @@ global proc shelf_GPS_Lighting () {
 		-manage 1
 		-visible 1
 		-preventOverride 0
-		-annotation "Create GPS Camera" 
+		-annotation "Create GPS Cameras" 
 		-enableBackground 0
 		-align "center" 
 		-label "GPS Camera" 
