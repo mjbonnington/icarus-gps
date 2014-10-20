@@ -298,7 +298,7 @@ global proc shelf_GPS_Tools () {
         -manage 1
         -visible 1
         -preventOverride 0
-        -annotation "Create diferent types of geodesic spheres" 
+        -annotation "Create different types of geodesic spheres" 
         -enableBackground 0
         -align "center" 
         -label "geoSpheres" 
