@@ -134,13 +134,8 @@ class gpsImportTerrain():
 	def __init__(self):
 		self.winTitle = "GPS Import Terrain Data"
 		self.winName = "gpsImportTerrain"
-		#self.gMainProgressBar = mel.eval('$tmp = $gMainProgressBar')
-		#self.data = []
-		#self.dim = 0
-		#self.lenX = 0
-		#self.lenY = 0
+
 		self.format = "ASCII X,Y,Z (*.xyz)"
-		#self.DEM = terrainMap((200,200), (600005,196005)) #
 		self.res = 0
 
 
@@ -179,7 +174,8 @@ class gpsImportTerrain():
 		mc.setParent(name)
 		mc.separator(height=2, style="none")
 		mc.rowLayout(numberOfColumns=2, columnAttach2=["left", "left"], columnAlign2=["both", "both"], columnOffset2=[4, 0])
-		mc.textField("filePath", text="/Volumes/hggl_SAN_1/RnD/rnd_job/Vfx/PC010/3D/maya/data/swiss_topo/swissalti3dxyzlv03/10m/swissALTI3D_.xyz", width=360, height=24)
+		# text="/Volumes/hggl_SAN_1/RnD/rnd_job/Vfx/PC010/3D/maya/data/swiss_topo/swissalti3dxyzlv03/10m/swissALTI3D_.xyz"
+		mc.textField("filePath", text="", width=360, height=24)
 		mc.symbolButton(image="fileOpen.png", width=26, height=26, command=lambda *args: self.fileBrowse())
 		mc.setParent(name)
 		mc.rowLayout(numberOfColumns=1, columnAttach1="left", columnOffset1=142)
@@ -227,10 +223,10 @@ class gpsImportTerrain():
 		mc.rowLayout(numberOfColumns=1, columnAttach1="left", columnAlign1="both", columnOffset1=142)
 		mc.checkBox("tileSplit", label="Split into tiles", value=1)
 		mc.setParent(name)
-		mc.intFieldGrp("tileSize", numberOfFields=2, label="Tile size: ", value=[1000, 1000, 0, 0], changeCommand=lambda *args: self.updateInfo())
-		mc.rowLayout(numberOfColumns=1, columnAttach1="left", columnAlign1="both", columnOffset1=142)
+		mc.intFieldGrp("tileSize", numberOfFields=2, label="Tile size: ", value=[1000, 1000, 0, 0], changeCommand=lambda *args: self.updateTileInfo())
+		#mc.rowLayout(numberOfColumns=1, columnAttach1="left", columnAlign1="both", columnOffset1=142)
 		#mc.checkBox("tileAlign", label="Align to grid", value=0)
-		mc.setParent(name)
+		#mc.setParent(name)
 		mc.textFieldGrp("tileInfo", label="Tiles to create: ", text="", editable=False)
 		mc.setParent(name)
 
@@ -238,8 +234,8 @@ class gpsImportTerrain():
 		mc.setParent(parent)
 
 
-	def updateInfo(self):
-		"""docstring for updateInfo"""
+	def updateTileInfo(self):
+		"""Updates info text box showing tiles to create."""
 
 		tileSize = mc.intFieldGrp("tileSize", query=True, value=True)
 		tilesX = int(math.ceil(self.DEM.size[0]/tileSize[0]))
@@ -317,6 +313,7 @@ class gpsImportTerrain():
 				self.DEM = terrainMap((dimX, dimY), (minX, minY), res)
 				self.DEM.compileFromXYZ(data)
 				self.DEM.printMap()
+				self.updateTileInfo()
 
 				# Complete progress bar and end clock
 				#mc.progressBar(self.gMainProgressBar, edit=True, endProgress=True) # Complete progress bar

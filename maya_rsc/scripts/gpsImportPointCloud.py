@@ -109,12 +109,12 @@ class gpsImportPointCloud():
 			camGroup = self.importCameraData(cameraDataPath)
 
 		# Parent cameras under point cloud group
-		if pCloudGroup and camGroup:
-			mc.parent(camGroup, pCloudGroup)
+		#if pCloudGroup and camGroup:
+			#mc.parent(camGroup, pCloudGroup)
 
 
 	def importPointCloud(self, filePath):
-		"""Read data from file"""
+		"""Read data from file and generate point cloud"""
 
 		if os.path.isfile(filePath): # Check file exists
 
@@ -163,7 +163,7 @@ class gpsImportPointCloud():
 
 
 	def importCameraData(self, filePath):
-		"""Read data from file"""
+		"""Read data from file and generate projection cameras"""
 
 		if os.path.isfile(filePath): # Check file exists
 
@@ -201,7 +201,10 @@ class gpsImportPointCloud():
 
 
 def createImagePlanes(self, arg):
-	"""docstring for createImagePlanes"""
+	"""NOT YET IMPLEMENTED
+    The idea is to find a way to store camera names in the .chan file from
+    Photoscan, based on the photo filename, then use that to automatically
+    create image planes with the appropriate images."""
 
 	path = "/Volumes/hggl_SAN_1/Project_Media/110053_The_Louvre/2009753_The_Louvre/Vfx/PC010/3D/photoscan/sourceImages/charles/atrium_Undistorted/atrium_undistorted/proxy"
 	portrait = True
@@ -227,7 +230,7 @@ def createImagePlanes(self, arg):
 
 
 	def importPointCloudX(self, filePath):
-		"""Read data from file"""
+		"""Read data from file - Old method"""
 
 		if os.path.isfile(filePath): # Check file exists
 

@@ -90,10 +90,10 @@ global proc shelf_GPS_Tools () {
         -manage 1
         -visible 1
         -preventOverride 0
-        -annotation "Wireframe On Geometry" 
+        -annotation "Create wireframe on geometry" 
         -enableBackground 0
         -align "center" 
-        -label "WireframeOnGeo" 
+        -label "gpsCreateWireframe" 
         -labelOffset 0
         -font "plainLabelFont" 
         -overlayLabelColor 0.8 0.8 0.8 
@@ -103,8 +103,8 @@ global proc shelf_GPS_Tools () {
         -style "iconOnly" 
         -marginWidth 1
         -marginHeight 1
-        -command "source wireframeOnGeometry.mel" 
-        -sourceType "mel" 
+        -command "import gpsCreateWireframe; gpsCreateWireframe.gpsCreateWireframe().UI()" 
+        -sourceType "python" 
         -commandRepeatable 1
         -flat 1
     ;
@@ -246,7 +246,7 @@ global proc shelf_GPS_Tools () {
         -manage 1
         -visible 1
         -preventOverride 0
-        -annotation "Imports Point and Camera Cloud" 
+        -annotation "Import point cloud and corresponding camera positions" 
         -enableBackground 0
         -align "center" 
         -label "pointCloud" 
@@ -259,7 +259,7 @@ global proc shelf_GPS_Tools () {
         -style "iconOnly" 
         -marginWidth 1
         -marginHeight 1
-        -command "import pointCloudImporter\n\npointCloudImporter.pointCloud().UI()" 
+        -command "import gpsImportPointCloud; gpsImportPointCloud.gpsImportPointCloud().UI()" 
         -sourceType "python" 
         -commandRepeatable 1
         -flat 1
@@ -272,7 +272,7 @@ global proc shelf_GPS_Tools () {
         -manage 1
         -visible 1
         -preventOverride 0
-        -annotation "Launches Glyph UI" 
+        -annotation "Launch Glyph Matte Painting Toolkit UI" 
         -enableBackground 0
         -align "center" 
         -label "Glyph" 
@@ -298,7 +298,7 @@ global proc shelf_GPS_Tools () {
         -manage 1
         -visible 1
         -preventOverride 0
-        -annotation "Creates diferent types of geo spheres" 
+        -annotation "Create different types of geodesic spheres" 
         -enableBackground 0
         -align "center" 
         -label "geoSpheres" 
