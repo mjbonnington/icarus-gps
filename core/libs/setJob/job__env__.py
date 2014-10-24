@@ -32,6 +32,7 @@ def setEnv(envVars):
 	os.environ['PUBLISHRELATIVEDIR'] = '.publish'
 	os.environ['JOBPUBLISHDIR'] = os.path.join(os.environ['JOBPATH'] , os.environ['PUBLISHRELATIVEDIR'])
 	os.environ['SHOTPUBLISHDIR'] = os.path.join(os.environ['SHOTPATH'], os.environ['PUBLISHRELATIVEDIR'])
+	os.environ['WIPSDIR'] = os.path.join(os.path.split(os.environ['JOBPATH'])[0], 'Deliverables', 'WIPS')
 	os.environ['ELEMENTSLIBRARY'] = jobData.elementsLibrary
 	os.environ['TIMEFORMAT'] = jobData.timeFormat	
 	os.environ['ANGLE'] = jobData.angle	
@@ -47,7 +48,6 @@ def setEnv(envVars):
 	os.environ['HRES'] = shotData.res[0]
 	os.environ['VRES'] = shotData.res[1]
 	os.environ['RECENTFILESDIR'] = '/Users/%s/.icRecentFiles' % os.environ['USERNAME']
-	os.environ['ELEMENTSLIBRARY'] = '/Volumes/hggl_SAN_1/_Library/Asset_Library'
 	#MARI
 	os.environ['MARIDIR'] = '%s/3D/mari' % shotPath
 	os.environ['MARISCENESDIR'] = '%s/scenes/%s' % (os.environ['MARIDIR'], os.environ['USERNAME'])
@@ -114,4 +114,4 @@ def setEnv(envVars):
 	os.environ['RF_RSC'] = os.path.join(os.environ['PIPELINE'], 'realflow_rsc')
 	os.environ['RF_COMMANDS_ORGANIZER_FILE_PATH'] = os.path.join(os.environ['REALFLOWSCENESDIR'] , '.cmdsOrg/commandsOrganizer.dat')
 	#DJV
-	os.environ['DJVCONVERTPATH'] = '%s/external_apps/djv/djv-0.8.2.app/Contents/Resources/bin' % os.environ['PIPELINE']
+	os.environ['DJVCONVERTPATH'] = '%s/external_apps/djv/djv-1.0.3-OSX-64.app/Contents/Resources/bin' % os.environ['PIPELINE']

@@ -20,3 +20,6 @@ Thumbs.db
 *.rar
 *.tar
 *.zip
+
+#External Apps
+/external_apps

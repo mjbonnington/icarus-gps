@@ -20,35 +20,53 @@ def removeAutoSave():
 	if os.path.isfile(hroxAutosave):
 		os.system('rm -rf %s' % hroxAutosave)
 
-def loadDailies():
+def loadDailies(cg=True, flame=True, edit=True):
 	#getting project
 	jobHrox = '%s/%s.hrox' % (os.environ['HIEROEDITORIALPATH'], os.environ['JOB'])
 	#opening jobHrox if exists
 	if os.path.isfile(jobHrox):
 		hieroProj = hc.openProject(jobHrox)	
+
+		#CG
+		if cg:
+			cgBin = hc.findItemsInProject(hieroProj, hc.Bin, 'CG', verbose=0)[0]
+			cgPath = os.path.join(os.environ['WIPSDIR'], 'CGI')
+			loadItems(cgPath, cgBin, emptyBin=True)
+			
+			
+		#Flame
+		if flame:
+			flameBin = hc.findItemsInProject(hieroProj, hc.Bin, 'Flame', verbose=0)[0]
+			flamePath = os.path.join(os.environ['WIPSDIR'], 'Flame')
+			loadItems(flamePath, flameBin, emptyBin=True)
+				
 		
-		#getting dailies bin
-		dailiesBin = hc.findItemsInProject(hieroProj, hc.Bin, 'Dailies', verbose=0)[0]
-
-		#removing dailies from bin
-		dailies = dailiesBin.items()
-		for daily in dailies:
-		    dailiesBin.removeItem(daily)
-
-		#detecting if dailies folder exsits. if not creates one
-		dailiesPath = '%s/dailies' % os.environ['HIEROEDITORIALPATH']
-		if os.path.isdir(dailiesPath):
-			#adding daily folders to dailies bin if dailies folder exists
-			dailiesFoldersLs = os.listdir(dailiesPath)
-			dailiesFoldersLs = sorted(dailiesFoldersLs, reverse=True)
-			for folder in dailiesFoldersLs:
-			    if os.path.isdir('%s/%s' % (dailiesPath, folder)):
-				   dailiesBin.importFolder('%s/%s' % (dailiesPath, folder))
-		else:
-			os.system('mkdir -p %s' % dailiesPath)
+		#Edit
+		if edit:
+			editBin = hc.findItemsInProject(hieroProj, hc.Bin, 'Edit', verbose=0)[0]
+			editPath = os.path.join(os.environ['WIPSDIR'], 'Edit')
+			loadItems(editPath, editBin, emptyBin=True)
+							
 	else:
 		verbose.noHrox(jobHrox)
-			
+		
+def loadItems(path, bin, emptyBin=True):
+	#emptying bin
+	if emptyBin:
+		binContents = bin.items()
+		for content in binContents:
+		    bin.removeItem(content)
+	#detecting if directories exsit. if not creates one
+	if os.path.isdir(path):
+		#adding path contents to bin if directory exists
+		itemsLs = os.listdir(path)
+		itemsLs = sorted(itemsLs, reverse=True)
+		for item in itemsLs:
+			itemPath = os.path.join(path, item)
+			if os.path.isdir(itemPath):
+			   bin.importFolder(itemPath)
+	else:
+		os.system('mkdir -p %s' % path)
 
 removeAutoSave()
 loadDailies()
