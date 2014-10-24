@@ -64,11 +64,12 @@ def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes, mail):
 		dailyFile = '%s.%s.jpg' % (dailyFileBody, startFrame)
 		input = '%s/%s' % (dailyPath, nameBody)
 		output = '%s/%s' % (pblDir, dailyFileBody)
-		djvOps.prcImg(input, output, startFrame, endFrame, extension, outExt='jpg', fps=os.environ['FPS'])
+		#djvOps.prcImg(input, output, startFrame, endFrame, extension, outExt='jpg', fps=os.environ['FPS'])
+		djvOps.prcQt(input, pblDir, startFrame, endFrame, extension, name='%s_%s' % (dailyFileBody, version))
 		#hard linking daily to dated folder in editorial
 		dailyFileLs = os.listdir(pblDir)
 		dailyDateDir = time.strftime('%Y_%m_%d')
-		dailyDatePath = os.path.join(os.environ['HIEROEDITORIALPATH'], 'dailies', dailyDateDir, '%s_%s_%s' % (os.environ['SHOT'], subsetName, version))
+		dailyDatePath = os.path.join(os.environ['WIPSDIR'], 'CGI', dailyDateDir, '%s_%s_%s' % (os.environ['SHOT'], subsetName, version))
 		os.system('mkdir -p %s' % dailyDatePath)
 		for dailyFile in dailyFileLs:
 			os.system('ln -f %s/%s %s/%s' % (pblDir, dailyFile, dailyDatePath, dailyFile))
