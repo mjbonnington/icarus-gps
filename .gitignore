@@ -23,3 +23,6 @@ Thumbs.db
 
 #External Apps
 /external_apps
+
+#Jobs File
+/core/ui/jobs.py
