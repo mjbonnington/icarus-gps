@@ -125,7 +125,8 @@ def preview(scene, EXECUTE_SHELL_COMMAND):
 	False, 
 	EXECUTE_SHELL_COMMAND)
 	#launching viewer
-	djvPath = os.environ['FRAMEVIEWER']
+	#Due to PNG incompatibility between DJV and realflow, for now it will fall back to version 0.9.0 instead of job default version of djv
+	djvPath = os.environ['DJV_PLAY_090']
 	firstFrame = os.listdir(imgPreviewDir); firstFrame = firstFrame[0] 
 	command = '%s %s/%s' % (djvPath, imgPreviewDir, firstFrame)
 	subprocess.Popen(command, shell=True)

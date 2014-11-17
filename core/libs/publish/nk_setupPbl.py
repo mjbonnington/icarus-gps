@@ -16,8 +16,12 @@ def publish(pblTo, slShot, pblType, pblName, pblNotes, mail, approved):
 	nodeLs = nuke.selectedNodes()
 	
 	#checks item count
-	if not pblChk.itemCount(nodeLs, mult=True):
-		return
+	if pblType == 'node':
+		if not pblChk.itemCount(nodeLs):
+			return
+	else:
+		if not pblChk.itemCount(nodeLs, mult=True):
+			return
 		
 	#defining main variables
 	shot_ = ''

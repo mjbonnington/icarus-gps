@@ -6,7 +6,7 @@
 
 #djv operations module
 
-import os
+import os, subprocess
 
 #processes image sequences
 def prcImg(input, output, startFrame, endFrame, inExt, outExt='jpg', fps=os.environ['FPS']):

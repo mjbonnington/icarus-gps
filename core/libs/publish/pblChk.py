@@ -57,7 +57,7 @@ def chkOpts(opts):
 	else:
 		return 1
 
-#checks selection. Accepts only one selected item per publish
+#checks selection. May accept only one item
 def itemCount(itemLs, mult=False):
 	if len(itemLs) == 0:
 		verbose.itemSel()
