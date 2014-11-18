@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:mdlPbl
+#title     	:nodePbl
 #copyright	:Gramercy Park Studios
 
 
@@ -8,8 +8,9 @@
 import os, sys, traceback
 import maya.cmds as mc
 import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose, approvePbl
+
 	
-def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
+def publish(pblTo, slShot, nodeType, subsetName, textures, pblNotes, mail, approved):
 	
 	#gets selection
 	objLs = mc.ls(sl=True)
@@ -19,17 +20,14 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 		return
 		
 	#defining main variables
-	assetType = 'ma_shader'
+	assetType = '%s_node' % nodeType
 	prefix = ''
 	convention = objLs[0]
-	suffix = '_shader'
-	fileType = 'mayaBinary'
-	extension = 'mb'
+	suffix = '_node'
+	fileType = 'mayaAscii'
+	extension = 'ma'
+	subsetName = mc.nodeType(objLs[0])
 		
-	#checking if selection is a valid shader
-	if mayaOps.nodetypeCheck(objLs[0]) != 'shadingEngine':
-		verbose.shaderSupport()
-		return
 
 	#check if asset to publish is referenced
 	if mc.referenceQuery(objLs[0], inr=True):
@@ -80,6 +78,15 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 		pathToPblAsset = '%s/%s.%s' % (pblDir, assetPblName, extension)
 		verbose.pblFeed(msg=assetPblName)
 		mayaOps.exportSelection(pathToPblAsset, fileType)
+		#writing nuke file if ic and file node type
+		if nodeType == 'ic':
+			if subsetName == 'file':
+				fileTypeLs = ('.jpg', '.jpeg', '.hdr', '.exr', '.tif', '.tiff', '.tga', '.png')
+				fileLs = os.listdir('%s/tx' % pblDir)
+				for file_ in fileLs:
+					if file_.endswith(fileTypeLs, -4):
+						fileName = file_
+				mayaOps.nkFileNodeExport(objLs, nodeType, fileName, pblDir, visiblePblDir, assetPblName, version)
 		
 		#published asset check
 		pblResult = pblChk.sucess(pathToPblAsset)

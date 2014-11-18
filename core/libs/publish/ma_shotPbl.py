@@ -54,11 +54,7 @@ def publish(pblTo, pblNotes, mail, approved):
 		txRelPath = txFullPath.replace(os.path.expandvars('$JOBPATH'), '$JOBPATH')
 		txPaths = (txFullPath, txRelPath)
 		mayaOps.relinkTexture(txPaths, updateMaya=False)
-		#relinking textures to pbl visible direcotry
-		txFullPath = '%s/tx' % visiblePblDir
-		txRelPath = txFullPath.replace(os.path.expandvars('$JOBPATH'), '$JOBPATH')
-		txPaths = (txFullPath, txRelPath)
-		mayaOps.relinkTexture(txPaths, copy=False)
+
 		
 		#snapshot
 		mayaOps.snapShot(pblDir)
@@ -76,6 +72,12 @@ def publish(pblTo, pblNotes, mail, approved):
 
 		#making publish visible and updating Maya
 		os.system('mv %s %s' % (pblDir, visiblePblDir))
+		
+		#relinking textures to pbl visible direcotry
+		txFullPath = '%s/tx' % visiblePblDir
+		txRelPath = txFullPath.replace(os.path.expandvars('$JOBPATH'), '$JOBPATH')
+		txPaths = (txFullPath, txRelPath)
+		mayaOps.relinkTexture(txPaths, copy=False)
 		
 		verbose.pblFeed(end=True)
 	

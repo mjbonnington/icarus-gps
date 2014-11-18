@@ -783,4 +783,21 @@ def nkCameraExport(objLs, pblDir, assetPblName, version):
 	nkFile.write(' name %s\n }' % assetPblName)
 	nkFile.close()
 	
+##############################.nk node export###########################
+def nkFileNodeExport(objLs, nodeType, fileName, pblDir, visiblePblDir, assetPblName, version):
+	pathtoPblAsset = '%s/%s.nk' % (pblDir, assetPblName)
+	filePath = os.path.join(visiblePblDir, 'tx', fileName)
+	#making filePath relative
+	if os.environ['SHOTPUBLISHDIR'] in filePath:
+		filePath = filePath.replace(os.environ['SHOTPUBLISHDIR'], '\[getenv SHOTPUBLISHDIR]')
+	nkFile = open(pathtoPblAsset, 'w')
+	nkFile.write('''Read {
+	inputs 0
+	file "%s"
+	cacheLocal always
+	name %s
+	selected true
+	cached true\n}''' % (filePath, assetPblName))
+	nkFile.close()
+	return
 	

@@ -139,6 +139,7 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.geoCachePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.uncheckSubset)
 		QtCore.QObject.connect(self.ui.geoPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.uncheckSubset)
 		QtCore.QObject.connect(self.ui.rigPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.uncheckSubset)
+		QtCore.QObject.connect(self.ui.nodePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.uncheckSubset)
 		QtCore.QObject.connect(self.ui.nk_compPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.adjustPblTypeUI)
 		QtCore.QObject.connect(self.ui.gatherFromShot_radioButton, QtCore.SIGNAL('clicked(bool)'), self.adjustMainUI)
 		QtCore.QObject.connect(self.ui.gatherFromJob_radioButton, QtCore.SIGNAL('clicked(bool)'), self.adjustMainUI)
@@ -498,7 +499,7 @@ class icarusApp(QtGui.QDialog):
 	
 	#render master browse	
 	def dailyPblBrowse(self):
-		playblastDailies = ['modeling', 'texturing', 'animation', 'anim', 'fx', 'previs']
+		playblastDailies = ['modeling', 'texturing', 'animation', 'anim', 'fx', 'previs', 'tracking']
 		if self.dailyType in playblastDailies:
 			return self.fileDialog(os.environ['MAYAPLAYBLASTSDIR'])
 		elif self.dailyType == 'lighting':
@@ -630,6 +631,11 @@ class icarusApp(QtGui.QDialog):
 			elif self.ui.shaderPbl_radioButton.isChecked() == True:
 				import ma_shdPbl
 				ma_shdPbl.publish(self.pblTo, self.slShot, self.subsetName, self.textures, self.pblNotes, self.mail, self.approved)
+			#node publish
+			elif self.ui.nodePbl_radioButton.isChecked() == True:
+				import ma_nodePbl
+				self.nodeType = self.ui.nodePbl_comboBox.currentText()
+				ma_nodePbl.publish(self.pblTo, self.slShot, self.nodeType, self.subsetName, self.textures, self.pblNotes, self.mail, self.approved)
 			#scene publish
 			elif self.ui.scenePbl_radioButton.isChecked() == True:
 				import ma_scnPbl
@@ -660,12 +666,12 @@ class icarusApp(QtGui.QDialog):
 				self.pblType = 'pointCloud'
 				nk_setupPbl.publish(self.pblTo, self.slShot, self.pblType, self.pblName, self.pblNotes, self.mail, self.approved)
 
-			elif self.ui.nk_scenePbl_radioButton.isChecked() == True:
+			elif self.ui.nk_nodePbl_radioButton.isChecked() == True:
 				self.get_nuke_assetPblOpts()
 				if not pblChk.chkOpts(self.chkLs):
 					return
 				import nk_setupPbl
-				self.pblType = 'scene'
+				self.pblType = 'node'
 				nk_setupPbl.publish(self.pblTo, self.slShot, self.pblType, self.pblName, self.pblNotes, self.mail, self.approved)
 
 			elif self.ui.nk_compPbl_radioButton.isChecked() == True:

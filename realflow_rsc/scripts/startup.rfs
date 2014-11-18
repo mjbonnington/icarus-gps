@@ -18,3 +18,15 @@ sys.path.append(os.path.join(os.getenv('PIPELINE'), 'core', 'libs', 'shared'))
 scene.setFps(int(os.environ['FPS']))
 maxFrame = (int(os.environ['ENDFRAME']) - int(os.environ['STARTFRAME']))
 scene.setMaxFrames(int(maxFrame))
+
+#setting export resources paths
+projectDir = scene.getRootPath()
+previewDir = os.path.join(projectDir, 'preview')
+#version = versionUp.vCtrl(previewDir)
+previewDir = os.path.join('$(SCENEDIR)', 'preview', 'latest_sim')
+scene.setExportResourcePath(EXPORT_PREVIEW, previewDir)
+scene.setExportResourceImageFormat(EXPORT_PREVIEW, IMAGE_FORMAT_JPG)
+#This has to be done True False True to circunvent a realflow bug of not picking up the first True state 
+scene.activeExportResource(EXPORT_PREVIEW, True)
+scene.activeExportResource(EXPORT_PREVIEW, False)
+scene.activeExportResource(EXPORT_PREVIEW, True)
