@@ -21,16 +21,8 @@ def autoDeploy():
 	except:
 		print '%s Failed' % outputMsg
 		
-def setupScene(scene):
+def setupScene(scene, EXPORT_PREVIEW, IMAGE_FORMAT_JPG):
 	#updating scene with shot settings
 	scene.setFps(int(os.environ['FPS']))
 	maxFrame = (int(os.environ['ENDFRAME']) - int(os.environ['STARTFRAME']))
 	scene.setMaxFrames(int(maxFrame))
-	
-
-	
-	
-	
-	
-	
-	

@@ -114,5 +114,5 @@ def setEnv(envVars):
 	os.environ['RF_RSC'] = os.path.join(os.environ['PIPELINE'], 'realflow_rsc')
 	os.environ['RF_COMMANDS_ORGANIZER_FILE_PATH'] = os.path.join(os.environ['REALFLOWSCENESDIR'] , '.cmdsOrg/commandsOrganizer.dat')
 	#DJV
-	os.environ['DJV_090'] = '%s/external_apps/djv/djv-0.9.0.app/Contents/MacOS/djv-0.9.0' % os.environ['PIPELINE'] 
-	os.environ['DJV_103'] = '%s/external_apps/djv/djv-1.0.3-OSX-64.app//Contents/MacOS/djv-1.0.3-OSX-64' % os.environ['PIPELINE']
+	os.environ['DJV_CONVERT'] = '%s/external_apps/djv/djv-1.0.4-OSX-64.app/Contents/Resources/bin' % os.environ['PIPELINE'] 
+	os.environ['DJV_PLAY'] = '%s/external_apps/djv/djv-1.0.4-OSX-64.app/Contents/MacOS/djv-1.0.4-OSX-64' % os.environ['PIPELINE']
