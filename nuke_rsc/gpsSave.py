@@ -54,7 +54,7 @@ def save(incr=False, saveAs=False):
 		version = 1
 		while not fileSaved:
 		   #file path
-		   nkPath = '%s/%s_%s_%s_v%03d.nk' % (os.environ['NUKESCRIPTSDIR'], os.environ['JOB'], os.environ['SHOT'], scriptName, version )
+		   nkPath = '%s/%s_%s_v%03d.nk' % (os.environ['NUKESCRIPTSDIR'], os.environ['SHOT'], scriptName, version )
 		   #versioning
 		   if os.path.isfile( nkPath ):
 			  version += 1
