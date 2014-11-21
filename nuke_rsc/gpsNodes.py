@@ -9,14 +9,16 @@ import gpsSave, vCtrl
 	
 #gps write
 def write_():
+	workingScript = os.path.split(nuke.root().name()[:-3])[-1]
+	print workingScript
 	scriptName = gpsSave.getWorkingScriptName()
 	if not scriptName:
 		scriptName = 'untitled'
 	paddingExt = '%04d.exr'
 	fileName = '%s_%s.%s' % (os.environ['SHOT'], scriptName, paddingExt)
-	writeDir = '%s/%s' % (os.environ['NUKERENDERSDIR'], scriptName)
-	version = vCtrl.version(writeDir)
-	filePath = os.path.join('[getenv NUKERENDERSDIR]', scriptName, version, fileName)
+	#writeDir = '%s/%s' % (os.environ['NUKERENDERSDIR'], workingScript)
+	#version = vCtrl.version(writeDir)
+	filePath = os.path.join('[getenv NUKERENDERSDIR]', workingScript, scriptName, fileName)
 	startFrame = os.environ['STARTFRAME']
 	endFrame = os.environ['ENDFRAME']
 	writeNode = nuke.createNode('Write', 'name GPS_Write')
