@@ -39,11 +39,11 @@ def assetExtTag(obj, assetExt):
 	
 ###################adds asset type tag as extra attr#######
 def assetTypeTag(obj, assetType):
-	refTag = mc.listAttr(obj, st='IcAssetType')
+	refTag = mc.listAttr(obj, st='icAssetType')
 	if not refTag:
-		mc.addAttr(obj, ln='IcAssetType', dt='string')
-	mc.setAttr('%s.IcAssetType' % obj, l=False)
-	mc.setAttr('%s.IcAssetType' % obj, assetType, typ='string', l=True)
+		mc.addAttr(obj, ln='icAssetType', dt='string')
+	mc.setAttr('%s.icAssetType' % obj, l=False)
+	mc.setAttr('%s.icAssetType' % obj, assetType, typ='string', l=True)
 
 #######################bakes camera anim###################
 def cameraBake(objLs, assetPblName):
@@ -394,6 +394,7 @@ def groupManualLods(objLs, lodA, lodB, lodC):
 
 #######################creates icarus data set#############
 def icDataSet(obj, icData, update=None):
+	mc.loadPlugin('gps_ICSet', qt=True)
 	#stores current selection
 	currentSlLs = mc.ls(sl=True)
 	if update:
@@ -404,20 +405,51 @@ def icDataSet(obj, icData, update=None):
 		if mc.objExists(obj):
 			mc.select(obj)
 		#creates set with selection
-		dataSet = createSet('ICSet_%s' % icData.assetPblName, rm=True)
+		dataSet = mc.createNode('ICSet', n='ICSet_%s' % icData.assetPblName)
+		mc.sets(obj, forceElement=dataSet, edit=True)
+		#Setting default component display
+		mc.setAttr('%s.overrideComponentDisplay' % dataSet, 1)
+		mc.setAttr('%s.icAssetDisplay' % dataSet, 2)
+		#Creating condition nodes for component display overrides
+		condition1 = mc.createNode('condition', n='%sCondition1' % dataSet)
+		mc.setAttr('%s.colorIfTrueR' % condition1, 1)
+		mc.setAttr('%s.colorIfTrueG' % condition1, 0)
+		mc.setAttr('%s.colorIfTrueB' % condition1, 0)
+		mc.setAttr('%s.colorIfFalseR' % condition1, 0)
+		mc.setAttr('%s.colorIfFalseG' % condition1, 0)
+		mc.setAttr('%s.colorIfFalseB' % condition1, 0)
+		condition2 = mc.createNode('condition', n='%sCondition2' % dataSet)
+		mc.setAttr('%s.secondTerm' % condition2, 1)
+		mc.setAttr('%s.colorIfTrueR' % condition2, 0)
+		mc.setAttr('%s.colorIfTrueG' % condition2, 0)
+		mc.setAttr('%s.colorIfTrueB' % condition2, 0)
+		mc.setAttr('%s.colorIfFalseR' % condition2, 1)
+		mc.setAttr('%s.colorIfFalseG' % condition2, 0)
+		mc.setAttr('%s.colorIfFalseB' % condition2, 0)
+		#connecting conditions to the dataSet
+		mc.connectAttr('%s.overrideComponentDisplay' % dataSet, '%s.drawOverride.overrideEnabled' % obj, f=True)
+		mc.connectAttr('%s.icAssetDisplay' % dataSet, '%s.firstTerm' % condition1, f=True)
+		mc.connectAttr('%s.outColorR' % condition1, '%s.overrideLevelOfDetail' % obj, f=True)
+		mc.connectAttr('%s.icAssetDisplay' % dataSet, '%s.firstTerm' % condition2, f=True)
+		mc.connectAttr('%s.outColorR' % condition2, '%s.overrideShading' % obj, f=True)
+		mc.connectAttr('%s.overrideComponentColor' % dataSet, '%s.drawOverride.overrideColor' % obj, f=True)
+	#removing any drawing overrides
+	allObjLs = mc.listRelatives(obj, ad=True, f=True, typ='transform')
+	for allObjs in allObjLs:
+	    mc.setAttr('%s.overrideEnabled' % allObjs, 0)
+	if allObjLs:
+			allObjLs.append(obj)
+	else:
+			allObjLs = [obj]
 	#adds ic data to set
 	referenceTag(dataSet, icData.assetPblName)
-	#assetTag(dataSet, icData.asset)
 	assetTypeTag(dataSet, icData.assetType)
-	#assetExtTag(dataSet, icData.assetExt)
 	versionTag(dataSet, icData.version)
-	#asset version compatibility tag
+	notesTag(dataSet, icData.notes)
 	try:
 		compatibleTag(dataSet, icData.compatible)
 	except AttributeError:
 		pass
-
-	notesTag(dataSet, icData.notes)
 	#clears gather selection and restores original selection
 	mc.select(cl=True)
 	if currentSlLs:
@@ -484,11 +516,11 @@ def nodetypeCheck(obj):
 
 ###############adds publish notes as custom attr##########
 def notesTag(obj, pblNotes):
-	notesAttr = mc.listAttr(obj, st='notes')
+	notesAttr = mc.listAttr(obj, st='Notes')
 	if not notesAttr:
-		mc.addAttr(obj, ln='notes', dt='string')
-	mc.setAttr('%s.notes' % obj, l=False)
-	mc.setAttr('%s.notes' % obj, pblNotes, typ='string', l=True)
+		mc.addAttr(obj, ln='Notes', dt='string')
+	mc.setAttr('%s.Notes' % obj, l=False)
+	mc.setAttr('%s.Notes' % obj, pblNotes, typ='string', l=True)
 	
 ###################opens maya file########################
 def openScene(filePath, extension=None, dialog=True):

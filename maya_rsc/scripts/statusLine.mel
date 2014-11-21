@@ -55,14 +55,20 @@ global proc toggleFileIcons (int $arg)
 		iconTextButton -edit -manage true newSceneButton;
 		iconTextButton -edit -manage true openSceneButton;
 		iconTextButton -edit -manage true saveSceneButton;
+		//GPS START
 		iconTextButton -edit -manage true saveScenePlusButton; // Added to make IC Incremental Save button respect collapse control
+		iconTextButton -edit -manage true saveSceneAsButton; // Added to make IC Save As button respect collapse control
+		//GPS END
 
 		iconTextButton -edit -i1 openBar.png fileCollapse;
 	} else {
 		iconTextButton -edit -manage false newSceneButton;
 		iconTextButton -edit -manage false openSceneButton;
 		iconTextButton -edit -manage false saveSceneButton;
+		//GPS START
 		iconTextButton -edit -manage false saveScenePlusButton; // Added to make IC Incremental Save button respect collapse control
+		iconTextButton -edit -manage false saveSceneAsButton; // Added to make IC Save As button respect collapse control
+		//GPS END
 
 		iconTextButton -edit -i1 closeBar.png fileCollapse;
 	}

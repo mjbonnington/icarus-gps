@@ -1,0 +1,49 @@
+global proc AEICSetNoScroll ( string $nodeName )
+{
+	editorTemplate -beginLayout "IC Set" -collapse 0;
+		editorTemplate -addControl "icRefTag";
+		editorTemplate -addControl "icAssetType";
+		editorTemplate -addControl "icVersion";
+		editorTemplate -addControl "icAssetCompatibility";
+		editorTemplate -addControl "Notes";
+		editorTemplate -addControl "overrideComponentDisplay";
+		editorTemplate -addControl "icAssetDisplay";
+			
+	editorTemplate -endLayout;
+
+	// include/call base class/node attributes (Node Behaviour Menu)
+	//AEentityTemplate $nodeName;
+
+	// supresses attributes
+	editorTemplate -suppress "annotation";
+	editorTemplate -suppress "partition";
+	editorTemplate -suppress "isLayer";
+	editorTemplate -suppress "verticesOnlySet";
+	editorTemplate -suppress "edgesOnlySet";
+	editorTemplate -suppress "facetsOnlySet";
+	editorTemplate -suppress "editPointsOnlySet";
+	editorTemplate -suppress "renderableOnlySet";
+	editorTemplate -suppress "dagSetMembers";
+	editorTemplate -suppress "dnSetMembers";
+	editorTemplate -suppress "groupNodes";
+	editorTemplate -suppress "usedBy";
+	editorTemplate -suppress "memberWireframeColor";
+	editorTemplate -suppress "caching";
+	editorTemplate -suppress "nodeState";
+	editorTemplate -suppress "overrideComponentColor";
+	AEcontainerNodeSuppress $nodeName; //supresses (deafaults from set type nodes)
+}
+
+
+
+global proc AEICSetTemplate ( string $nodeName )
+{
+	//editorTemplate -beginScrollLayout;
+		AEICSetNoScroll $nodeName;
+
+	editorTemplate -addExtraControls;
+	//editorTemplate -endScrollLayout;
+	
+	//AEabstractBaseCreateTemplate $nodeName;
+}
+
