@@ -9,7 +9,6 @@ import os, sys, traceback
 import maya.cmds as mc
 import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose, approvePbl
 
-reload(mayaOps)
 
 def publish(pblTo, slShot, mdlType, textures, pblNotes, mail, approved):
 	
@@ -44,6 +43,12 @@ def publish(pblTo, slShot, mdlType, textures, pblNotes, mail, approved):
 	if mc.nodeType(objLs[0]) == 'objectSet':
 		verbose.noSetsPbl()
 		return
+	
+	#check if asset to publish is an icSet
+	if mayaOps.chkIcDataSet(objLs[0]):
+		verbose.noICSetsPbl()
+		return
+
 
 	#check if asset to publish is referenced
 	for allObj in allObjLs: 

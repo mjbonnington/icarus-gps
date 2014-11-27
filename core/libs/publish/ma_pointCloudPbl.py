@@ -23,7 +23,6 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 	objType = mayaOps.nodetypeCheck(objSh)
 	if objType not in ('particle', 'nParticle'):
 		verbose.pointCloudParticle()
-		print objType
 		return
 		
 	#defining main variables
@@ -45,6 +44,12 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 	#check if asset to publish is a set
 	if mc.nodeType(objLs[0]) == 'objectSet':
 		verbose.noSetsPbl()
+		return
+		
+	#check if asset to publish is an icSet
+	if mayaOps.chkIcDataSet(objLs[0]):
+		verbose.noICSetsPbl()
+		return
 
 	#check if asset to publish is referenced
 	for allObj in allObjLs:

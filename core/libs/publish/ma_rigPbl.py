@@ -38,6 +38,11 @@ def publish(pblTo, slShot, rigType, textures, pblNotes, mail, approved):
 	if mc.nodeType(objLs[0]) == 'objectSet':
 		verbose.noSetsPbl()
 		return
+	
+	#check if asset to publish is an icSet
+	if mayaOps.chkIcDataSet(objLs[0]):
+		verbose.noICSetsPbl()
+		return
 
 	#check if asset to publish is referenced
 	for allObj in allObjLs: 
