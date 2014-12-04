@@ -18,9 +18,12 @@ def mudbox():
 	verbose.launchApp('Mudbox')
 	subprocess.Popen("$MUDBOXVERSION", shell=True)
 	
-def nuke():
-	verbose.launchApp('Nuke')
-	subprocess.Popen("$NUKEVERSION", shell=True)
+def nuke(nukeType):
+	verbose.launchApp(nukeType)
+	if nukeType == 'Nuke':
+		subprocess.Popen("$NUKEVERSION", shell=True)
+	elif nukeType == 'NukeX':
+		subprocess.Popen("$NUKEXVERSION", shell=True)
 
 def terminal():
 	subprocess.Popen("bash --rcfile %s" % os.environ['GPS_RC'], shell=True)

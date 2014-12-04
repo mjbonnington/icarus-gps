@@ -51,8 +51,18 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.dailyPblAdd_pushButton, QtCore.SIGNAL('clicked()'), self.dailyTableAdd)
 		QtCore.QObject.connect(self.ui.publish_pushButton, QtCore.SIGNAL('clicked()'), self.initPublish)
 		QtCore.QObject.connect(self.ui.tabWidget, QtCore.SIGNAL('currentChanged(int)'), self.adjustMainUI)
-						
-		
+	
+	########################################Adding right click menus to buttons#######################################
+	##################################################################################################################
+		#Nuke
+		self.ui.nuke_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+		self.actionNuke = QtGui.QAction("Nuke", None)
+		self.actionNuke.triggered.connect(self.launchNuke)
+		self.actionNukeX = QtGui.QAction("NukeX", None)
+		self.actionNukeX.triggered.connect(self.launchNukeX)
+		self.ui.nuke_pushButton.addAction(self.actionNuke)
+		self.ui.nuke_pushButton.addAction(self.actionNukeX)
+	
 	##########################################UI adapt environment awareness##########################################
 	##################################################################################################################
 		self.jobMngTab = self.ui.tabWidget.widget(0)
@@ -327,9 +337,14 @@ class icarusApp(QtGui.QDialog):
 		launchApps.mudbox()
 		self.showMinimized()
 		
-	#runs launch maya procedure and minimizes window
+	#runs launch nuke procedure and minimizes window
 	def launchNuke(self):
-		launchApps.nuke()
+		launchApps.nuke(nukeType='Nuke')
+		self.showMinimized()
+	
+	#runs launch nukex procedure and minimizes window
+	def launchNukeX(self):
+		launchApps.nuke(nukeType='NukeX')
 		self.showMinimized()
 	
 	#runs launch maya procedure and minimizes window
@@ -702,7 +717,7 @@ class icarusApp(QtGui.QDialog):
 		#############DAILY PUBLISH##############
 		#########################################
 		elif self.pblType == 'Daily':
-			import ic_dailyPbl; reload(ic_dailyPbl)
+			import ic_dailyPbl;
 			self.getDailyPblOpts()
 			if not pblChk.chkOpts(self.chkLs):
 				return
