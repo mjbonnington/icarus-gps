@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:rigPbl
+#title     	:ma_rigPbl
 #copyright	:Gramercy Park Studios
 
 

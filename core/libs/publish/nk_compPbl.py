@@ -7,7 +7,7 @@
 #nuke setup publish module
 import os, sys, traceback
 import nuke
-import pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose, approvePbl, nukeOps
+import pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose, nukeOps
 
 def publish(pblTo, slShot, pblType, pblNotes, mail, approved):
 	

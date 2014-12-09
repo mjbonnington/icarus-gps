@@ -2,7 +2,9 @@
 #support	:Nuno Pereira - nuno.pereira@hogarthww.com
 #title     	:icarus__main__
 
-import sys
+
+#laucnhes and controls a generic prompt dialog 
+
 from PySide import QtCore, QtGui
 from pDialogUI import *
 

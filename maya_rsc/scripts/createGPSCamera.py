@@ -1,8 +1,7 @@
 import os
 import maya.cmds as mc
 import maya.mel as mel
-import getFilmback
-reload(getFilmback)
+import getFilmback; reload(getFilmback)
 
 #creates a camera with correct film back factory settings.
 

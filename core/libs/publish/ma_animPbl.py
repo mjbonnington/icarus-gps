@@ -1,13 +1,13 @@
 #!/usr/bin/python
 #support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:animPbl
+#title     	:ma_animPbl
 #copyright	:Gramercy Park Studios
 
 
 #animation curve publish module
 import os, sys, traceback
 import maya.cmds as mc
-import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose, approvePbl
+import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose
 
 def publish(pblTo, slShot, pblNotes, mail, approved):
 	

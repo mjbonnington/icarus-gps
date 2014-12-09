@@ -3,6 +3,9 @@
 #title     	:launchApps
 #copyright	:Gramercy Park Studios
 
+#Launches software applications
+
+
 import os, sys, subprocess
 import verbose
 

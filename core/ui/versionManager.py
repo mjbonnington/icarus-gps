@@ -6,6 +6,8 @@ import os, sys
 from PySide import QtCore, QtGui
 from versionManagerUI import *
 
+#laucnhes and controls the Version Manager UI
+
 class dialog(QtGui.QDialog):
 	
 	def __init__(self, parent = None):

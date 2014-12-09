@@ -2,7 +2,7 @@
 #support		:Nuno Pereira - nuno.pereira@gps-ldn.com
 #title     	:gpsMayaPreview
 
-import maya.cmds as mc, maya.mel as mel
+import maya.cmds as mc
 import os, time
 
 

@@ -4,7 +4,7 @@
 #copyright	:Gramercy Park Studios
 
 #this file deploys realflow tools and commands organizer shelf
-import os, sys
+import os
 
 def autoDeploy():
 	rf_envPath = '%s/realflow_rsc/realflow__env__' % os.getenv('PIPELINE')

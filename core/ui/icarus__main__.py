@@ -10,6 +10,8 @@ from icarusUI import *
 import os, sys, env__init__
 
 
+#lauches and controls Icarus main UI
+
 #initializing icarus environment and adding libs to sysPath
 env__init__.setEnv()
 

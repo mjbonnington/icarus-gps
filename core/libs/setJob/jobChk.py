@@ -3,7 +3,7 @@
 #title     	:jobChk
 #copyright	:Gramercy Park Studios
 
-import os, sys
+import os
 
 #checks for jobData and shotData modules to ensure the specified shot is valid
 def chk(shotPath):	

@@ -4,10 +4,15 @@
 #copyright	:Gramercy Park Studios
 
 
-import os, sys
-import pblChk, verbose, vCtrl, pDialog
+import os
+import pblChk, verbose
 
 
+#Processes publish options arriving from the different publish modules
+
+
+#######################GENERIC PUBLISHING OPTIONS PROCESSING########################
+####################################################################################
 #processes publish options and naming convention variables
 def prc(pblTo, subset, assetType, prefix, convention, suffix):
 	assetPblName = prefix + convention + suffix
@@ -18,6 +23,9 @@ def prc(pblTo, subset, assetType, prefix, convention, suffix):
 	pblDir = "%s/%s" % (pblTo, assetDir)
 	return assetPblName, assetDir, pblDir
 
+
+###################RENDER PUBLISHING SPECIFIC OPTIONS PROCESSING####################
+####################################################################################
 #splits a sequence file and returns the different render components
 def render_split(file_):
 	if file_.startswith('.'):
@@ -27,8 +35,6 @@ def render_split(file_):
 	nameBody, padding, extension = file_.split('.')
 	return nameBody, padding, extension
 
-######################RENDER PUBLISHING SPECIFIC OPTIONS PRC########################
-####################################################################################
 
 #processes a dictionary contaning the format layer_pass:full/sequence/path. Returns the path with the old file name and with the name convention applied
 def renderName_prc(key, convention, file_):
@@ -71,8 +77,8 @@ def renderPath_prc(renderPath):
 	else:
 		return renderDic
 			
-
-######################DAILY PUBLISHING SPECIFIC OPTIONS PRC########################
+		
+####################DAILY PUBLISHING SPECIFIC OPTIONS PROCESSING####################
 ####################################################################################
 #processes the provided path and returns a dictionary of layer and respective full sequence path
 def dailyPath_prc(path):

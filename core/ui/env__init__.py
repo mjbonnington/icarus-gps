@@ -3,6 +3,8 @@
 #title     	:env__init__
 #copyright	:Gramercy Park Studios
 
+#Initializes main pipeline environment
+
 import os, platform, sys
 
 def setEnv():
