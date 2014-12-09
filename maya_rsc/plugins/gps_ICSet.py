@@ -1,6 +1,6 @@
 import maya.OpenMaya as OpenMaya
 import maya.OpenMayaMPx as OpenMayaMPx
-import math, sys
+import sys
 
 kNodeName = "ICSet"
 kNodeId = OpenMaya.MTypeId(0x00122580)
@@ -17,15 +17,23 @@ def nodeCreator():
 
 # initializer
 def nodeInitializer():
-	#Adding Attributes
+	#Storing Attribute types
+	icAsset = OpenMaya.MFnTypedAttribute()
+	icAssetRootDir = OpenMaya.MFnTypedAttribute()
 	icRefTagAttr = OpenMaya.MFnTypedAttribute()
 	icAssetTypeAttr = OpenMaya.MFnTypedAttribute()
 	icVersionAttr = OpenMaya.MFnTypedAttribute()
 	icAssetCompatibilityAttr = OpenMaya.MFnTypedAttribute()
+	icAssetExtAttr = OpenMaya.MFnTypedAttribute()
 	icNotesAttr = OpenMaya.MFnTypedAttribute()
 	icAssetDisplayAttr = OpenMaya.MFnEnumAttribute()
 	overrideComponentDisplayAttr = OpenMaya.MFnNumericAttribute()
 	overrideComponentColorAttr = OpenMaya.MFnNumericAttribute()
+	#Creating attributes
+	ICSet.icAsset = icRefTagAttr.create("icAsset", "asset", OpenMaya.MFnData.kString)
+	ICSet.addAttribute(ICSet.icAsset)
+	ICSet.icAssetRootDir = icAssetRootDir.create("icAssetRootDir", "rootDir", OpenMaya.MFnData.kString)
+	ICSet.addAttribute(ICSet.icAssetRootDir)
 	ICSet.icRefTag = icRefTagAttr.create("icRefTag", "tag", OpenMaya.MFnData.kString)
 	ICSet.addAttribute(ICSet.icRefTag)
 	ICSet.icAssetType = icAssetTypeAttr.create("icAssetType", "type", OpenMaya.MFnData.kString)
@@ -34,6 +42,8 @@ def nodeInitializer():
 	ICSet.addAttribute(ICSet.icVersion)
 	ICSet.icAssetCompatibility = icAssetCompatibilityAttr.create("icAssetCompatibility", "compatibility", OpenMaya.MFnData.kString)
 	ICSet.addAttribute(ICSet.icAssetCompatibility)
+	ICSet.icAssetExt = icAssetExtAttr.create("icAssetExt", "ext", OpenMaya.MFnData.kString)
+	ICSet.addAttribute(ICSet.icAssetExt)
 	ICSet.notes = icNotesAttr.create("Notes", "notes", OpenMaya.MFnData.kString)
 	ICSet.addAttribute(ICSet.notes)
 	ICSet.ICAssetDisplay = icAssetDisplayAttr.create("icAssetDisplay", "icAssetDisplay")
@@ -49,7 +59,7 @@ def nodeInitializer():
 
 # initialize the script plug-in
 def initializePlugin(mobject):
-	mplugin = OpenMayaMPx.MFnPlugin(mobject, "Autodesk", "1.0", "Any")
+	mplugin = OpenMayaMPx.MFnPlugin(mobject, "Gramercy Park Studios", "1.0", "Any")
 	try:
 		mplugin.registerNode(kNodeName, kNodeId, nodeCreator, nodeInitializer, OpenMayaMPx.MPxNode.kObjectSet)
 	except:

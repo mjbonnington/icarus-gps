@@ -23,19 +23,19 @@ def applyTransforms(obj, objT, objR, objS):
 
 #########adds asset name tag as extra attr################
 def assetTag(obj, assetName):
-	refTag = mc.listAttr(obj, st='asset')
+	refTag = mc.listAttr(obj, st='icAsset')
 	if not refTag:
 		mc.addAttr(obj, ln='asset', dt='string')
-	mc.setAttr('%s.asset' % obj, l=False)
-	mc.setAttr('%s.asset' % obj, assetName, typ='string', l=True)
+	mc.setAttr('%s.icAsset' % obj, l=False)
+	mc.setAttr('%s.icAsset' % obj, assetName, typ='string', l=True)
 	
 ###################adds asset type tag as extra attr#######
 def assetExtTag(obj, assetExt):
-	refTag = mc.listAttr(obj, st='assetExt')
+	refTag = mc.listAttr(obj, st='icAssetExt')
 	if not refTag:
 		mc.addAttr(obj, ln='assetExt', dt='string')
-	mc.setAttr('%s.assetExt' % obj, l=False)
-	mc.setAttr('%s.assetExt' % obj, assetExt, typ='string', l=True)
+	mc.setAttr('%s.icAssetExt' % obj, l=False)
+	mc.setAttr('%s.icAssetExt' % obj, assetExt, typ='string', l=True)
 	
 ###################adds asset type tag as extra attr#######
 def assetTypeTag(obj, assetType):
@@ -44,6 +44,14 @@ def assetTypeTag(obj, assetType):
 		mc.addAttr(obj, ln='icAssetType', dt='string')
 	mc.setAttr('%s.icAssetType' % obj, l=False)
 	mc.setAttr('%s.icAssetType' % obj, assetType, typ='string', l=True)
+
+#############adds asset root dir as extra attr###############
+def assetRootDir(obj, assetRootDir):
+	rootDir = mc.listAttr(obj, st='icAssetRootDir')
+	if not rootDir:
+		mc.addAttr(obj, ln='icAssetRootDir', dt='string')
+	mc.setAttr('%s.icAssetRootDir' % obj, l=False)
+	mc.setAttr('%s.icAssetRootDir' % obj, assetRootDir, typ='string', l=True)
 
 #######################bakes camera anim###################
 def cameraBake(objLs, assetPblName):
@@ -98,14 +106,28 @@ def cameraNodeCheck(obj):
 	except (TypeError, RuntimeError):
 		return
 	
+#######checks if ICSet contains icAssetRoot attr##########
+def chkIcAssetRootAttr(obj):
+	if not chkIcDataSet(obj):
+		return 
+	try:
+		mc.getAttr('%s.icAssetRootDir' % obj)
+		return 1
+	except ValueError:
+		return 
+
 ##########checks if obj is a icarus data set##############
 def chkIcDataSet(obj=None):
 	if not obj:
-		obj = mc.ls(sl=True)
+		try:
+			obj = mc.ls(sl=True)[0]
+		except:
+			pass
 	if obj:
-		if 'icRefTag' in mc.listAttr(obj):
+		if mc.nodeType(obj) == 'ICSet':
 			return obj
 	return
+
 ###########adds asset requirement tag as extra attr#######
 def compatibleTag(obj, compatibleTag):
 	comptTag = mc.listAttr(obj, st='icAssetCompatibility')
@@ -213,20 +235,17 @@ def deleteHist(objLs, partial=False):
 ###########deletes icSets connected to selection##############			
 def deleteICDataSet(objLs):
 	for obj in objLs:
-			objShdLs = mc.listSets(ets=True, t=1, object=obj)
-			if objShdLs:
-				for objShd in objShdLs:
-					if mc.objExists('%s.icARefTag' % objShd):
-						mc.setAttr('%s.icARefTag' % objShd,l=False)
-						mc.delete(mc.listConnections('%s.icARefTag' % objShd)[0])
-						mc.deleteAttr('%s.icARefTag' % objShd)	
-			if mc.objExists('%s.icARefTag' % obj):
-				mc.setAttr('%s.icARefTag' % obj,l=False)
-				try:
-					mc.delete(mc.listConnections('%s.icARefTag' % obj)[0])
-				except:
-					pass
-				mc.deleteAttr('%s.icARefTag' % obj)	
+		if mc.objExists('%s.icARefTag' % obj):
+			mc.setAttr('%s.icARefTag' % obj, l=False)
+			mc.deleteAttr('%s.icARefTag' % obj)
+		objSetLs = mc.listSets(o=obj)
+		if objSetLs:
+			for objSet in objSetLs:
+				if mc.nodeType(objSet) == 'ICSet':
+					mc.setAttr('%s.overrideComponentDisplay' % objSet, l=False)
+					mc.setAttr('%s.overrideComponentDisplay' % objSet, 0)
+					mc.delete(objSet)
+					break
 				
 #############deletes imgPlane from camera#####################
 def deleteIM(objLs):
@@ -350,6 +369,17 @@ def generateLods(objLs, lodLvl, reduceIter):
 			pass
 	return objLod
 
+
+###############gets all attributes in an ICSet############
+def getICSetAttrs(ICSet):
+	icSetAttrDic = {}
+	attrLs = ['icAsset', 'icAssetRootDir', 'icRefTag', 'icAssetType', 'icVersion', 'icAssetExt', 'icAssetCompatibility', 'Notes']
+	for attr in attrLs:
+		attrFullPath = '%s.%s' % (ICSet, attr)
+		if mc.objExists(attrFullPath):
+			icSetAttrDic[attr] = (mc.getAttr(attrFullPath))
+	return icSetAttrDic
+
 ################gets current maya file####################
 def getScene():
 	actFile = mc.file(exn=True, q=True)
@@ -433,19 +463,21 @@ def icDataSet(obj, icData, update=None):
 		mc.connectAttr('%s.icAssetDisplay' % dataSet, '%s.firstTerm' % condition2, f=True)
 		mc.connectAttr('%s.outColorR' % condition2, '%s.overrideShading' % obj, f=True)
 		mc.connectAttr('%s.overrideComponentColor' % dataSet, '%s.drawOverride.overrideColor' % obj, f=True)
-	#removing any drawing overrides
-	allObjLs = mc.listRelatives(obj, ad=True, f=True, typ='transform')
-	for allObjs in allObjLs:
-	    mc.setAttr('%s.overrideEnabled' % allObjs, 0)
-	if allObjLs:
-			allObjLs.append(obj)
-	else:
-			allObjLs = [obj]
+		#hidding auxiliary nodes
+		#auxNodeLs = (condition1, condition2)
+		#for auxNode in auxNodeLs:
+		#	mel.eval('hideNodeTypeAEFilter "%s";' % auxNode)
 	#adds ic data to set
+	assetTag(dataSet, icData.asset)
 	referenceTag(dataSet, icData.assetPblName)
 	assetTypeTag(dataSet, icData.assetType)
 	versionTag(dataSet, icData.version)
+	assetExtTag(dataSet, icData.assetExt)
 	notesTag(dataSet, icData.notes)
+	try:
+		assetRootDir(dataSet, icData.assetRootDir)
+	except AttributeError:
+		pass
 	try:
 		compatibleTag(dataSet, icData.compatible)
 	except AttributeError:
@@ -618,6 +650,79 @@ def relinkTexture(txPaths, txObjLs=None, updateMaya=True, copy=True):
 						#mc.setAttr(fileNode + '.fileTextureName', '%s/%s' % (txRelPath, fileName), type='string')
 						mc.setAttr(fileNode + '.fileTextureName', '%s/%s' % (txFullPath, fileName), type='string')
 
+
+####################removes drawing overrides##################
+#returns 0, if it does not override anything, 1 if objects cvould not be overriden because of display layers, 2 otherwise
+def removeDrawOverride(objLs=None, icSet=False, hierarchy=True, shapes=True, overrideLayers=False):
+	result = 2
+	if icSet:
+		hierarchy=True
+		shapes=True
+		#checks if selection is an icSet
+		if not objLs or mc.nodeType(objLs[0]) != 'ICSet':
+			result = 0
+			return result
+		else:
+			objLs = mc.sets(objLs[0], q=True)
+			if not objLs:
+				result = 0
+				return result
+	else:
+		if not objLs:
+			result = 0
+			return result
+
+	if hierarchy:
+		allObjLs = mc.listRelatives(objLs[0], ad=True, f=True, typ='transform')
+		if allObjLs:
+			allObjLs.append(objLs[0])
+		else:
+			allObjLs = list(objLs)
+	else:
+		allObjLs = list(objLs)
+
+	#Removing asset connected to icSet from allObjLs
+	if icSet:
+		try:
+			allObjLs.remove(objLs[0])
+		except ValueError:
+			pass
+	
+	#Overriding display in allObjLs
+	for allObjs in allObjLs:
+		#overriding transforms
+		displayLayer = mc.listConnections(allObjs, type="displayLayer")
+		if not overrideLayers and displayLayer:
+			result = 1
+			continue
+		else:
+			mc.editDisplayLayerMembers("defaultLayer", allObjs, noRecurse=True)
+		mc.setAttr('%s.overrideEnabled' % allObjs, l=False)
+		connectedAttr = mc.listConnections('%s.overrideEnabled' % allObjs, p=True)
+		if connectedAttr:
+		  mc.disconnectAttr(connectedAttr[0], '%s.overrideEnabled' % allObjs)
+		mc.setAttr('%s.overrideEnabled' % allObjs, 0)
+		#overriding shapes
+		if shapes:
+			objSh = mc.listRelatives(allObjs, s=True, f=True)
+			if objSh:
+				mc.setAttr('%s.overrideEnabled' % objSh[0], l=False)
+				connectedShAttr = mc.listConnections('%s.overrideEnabled' % objSh[0], p=True)
+				if connectedShAttr:
+					mc.disconnectAttr(connectedShAttr[0], '%s.overrideEnabled' % objSh[0])
+				mc.setAttr('%s.overrideEnabled' % objSh[0], 0)
+				
+	#lastly overriding shape of ICSet connected object
+	if shapes:
+		objSh = mc.listRelatives(objLs[0], s=True, f=True)
+		if objSh:
+			mc.setAttr('%s.overrideEnabled' % objSh[0], l=False)
+			connectedShAttr = mc.listConnections('%s.overrideEnabled' % objSh[0], p=True)
+			if connectedShAttr:
+				mc.disconnectAttr(connectedShAttr[0], '%s.overrideEnabled' % objSh[0])
+			mc.setAttr('%s.overrideEnabled' % objSh[0], 0)
+	return result
+	
 ####################renames paired hierarchy###################
 def renameHrq(hrq, suffix):
 	hrq = mc.listRelatives(hrq, ad=True, typ='transform')
@@ -626,11 +731,14 @@ def renameHrq(hrq, suffix):
 
 ####################renames objects in list####################
 def renameObj(objLs, newName, oldName=False):
+	renamedObjLs = []
 	for obj in objLs:
 		if oldName:
 			newName = obj.replace(oldName, newName)
-		mc.rename(obj, newName)
+		objRenamed = mc.rename(obj, newName)
 		newName = ''
+		renamedObjLs.append(objRenamed)
+	return renamedObjLs
 			
 #####################saves maya file######################
 def saveFile(fileType):
@@ -719,6 +827,15 @@ def update():
 	aet=endFrame, 
 	ps=0, 
 	mps=1)
+
+###################updates ic set version#################
+def updateIcDataSetVersion(version, ICSet=None):
+	if not ICSet:
+		ICSet = mc.ls(sl=True)
+	if not ICSet or mc.nodeType(ICSet)!= 'ICSet':
+		return
+	else:
+		return
 
 ###################adds version tag as extra attr#########
 def versionTag(obj, version):

@@ -4,9 +4,8 @@
 #copyright	:Gramercy Park Studios
 
 import os, sys, traceback
-import pblChk, verbose, pDialog, mayaOps
+import verbose, pDialog, mayaOps
 import maya.cmds as mc
-import maya.mel as mel
 
 def gather(gatherPath):
 
