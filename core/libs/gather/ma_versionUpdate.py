@@ -21,7 +21,7 @@ def update(ICSet):
 		#updating alembic geocaches
 		if ICSetAttrDic['icAssetExt'] == 'abc':
 			import ma_geoCacheUpdate
-			ma_geoCacheUpdate.alembic(ICSet, ICSetAttrDic, updatePath, updateVersion)
+			ma_geoCacheUpdate.alembic(ICSet, updatePath)
 		#all other geo types
 		else:
 			import ma_assetUpdate

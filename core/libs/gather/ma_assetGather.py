@@ -11,11 +11,11 @@ import maya.mel as mel
 def gather(gatherPath):
 
 	#retrieves icData from gatherPath
-	sys.path.append(gatherPath)
-	import icData
 	#removes specific icData attributes that do not consistently exist in all icData modules and
 	#are kept in memory even after a reload() or a del. Feels quite hacky and horrible but I've not found a way around this
 	#This is only needed temporarily though as older assets do not have this icData attr
+	sys.path.append(gatherPath)
+	import icData
 	try:
 		del icData.assetRootDir
 	except AttributeError:
@@ -49,6 +49,7 @@ def gather(gatherPath):
 		
 	
 		#gathering
+		drawOverrides = True
 		if icData.assetType == 'ma_shot':
 			mayaOps.openScene(assetPath, dialog=False)
 			mayaOps.redirectScene('%s/%s' % (os.environ['MAYASCENESDIR'], 'untitled'))
@@ -68,8 +69,9 @@ def gather(gatherPath):
 			chkNameConflict(icData.asset)
 			newNodeLs = mc.file(assetPath, i=True, iv=True, rnn=True)
 	
-		#Bypasses maya not displaying shading groups in sets. Adds the material node to icSet instead
+		#Bypasses maya not displaying shading groups in sets. Adds the material node to icSet instead. Sets draw overrides to False
 		if icData.assetType == 'ma_shader':
+			drawOverrides = False
 			connLs = mc.listConnections(icData.asset, p=True)
 			for conn in connLs:
 			    if '.outColor' in conn:
@@ -77,9 +79,13 @@ def gather(gatherPath):
 		else:
 			icSetAsset = icData.asset
 			
+		#Sets draw overrides to false if asset is node
+		if icData.assetType == 'ma_node' or icData.assetType == 'ic_node':
+			drawOverrides = False
+			
 		#generating icSet
 		chkNameConflict('ICSet_%s' % icData.assetPblName)
-		dataSet = mayaOps.icDataSet(icSetAsset, icData)
+		dataSet = mayaOps.icDataSet(icSetAsset, icData, update=None, drawOverrides=drawOverrides)
 		#connects original to icSet
 		if icData.assetType != 'ma_scene':
 			mc.select(icData.asset, r=True, ne=True)
