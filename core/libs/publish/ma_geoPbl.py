@@ -50,6 +50,7 @@ def publish(pblTo, slShot, geoType, textures, pblNotes, mail, approved):
 			verbose.noRefPbl()
 
 	#processing asset publish options
+	mayaOps.deleteICDataSet(allObjLs)
 	assetPblName, assetDir, pblDir = pblOptsPrc.prc(pblTo, subsetName, assetType, prefix, convention, suffix)
 	
 	#determining approved publish directory

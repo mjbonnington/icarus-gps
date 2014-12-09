@@ -58,6 +58,7 @@ def publish(pblTo, slShot, geoChType, pblNotes, mail, approved):
 			return
 		
 	#processing asset publish options
+	mayaOps.deleteICDataSet(allObjLs)
 	assetPblName, assetDir, pblDir = pblOptsPrc.prc(pblTo, subsetName, assetType, prefix, convention, suffix)
 	
 	#determining approved publish directory
