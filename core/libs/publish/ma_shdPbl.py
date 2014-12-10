@@ -1,10 +1,10 @@
 #!/usr/bin/python
 #support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:mdlPbl
+#title     	:ma_shdPbl
 #copyright	:Gramercy Park Studios
 
 
-#generic publish module
+#shader publish module
 import os, sys, traceback
 import maya.cmds as mc
 import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose, approvePbl

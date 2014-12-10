@@ -1,0 +1,89 @@
+source menus2py;
+
+//Adds Version Manager Button
+global proc add_vManagerButton (string $nodeName, string $icAssetRootDir)
+{
+	rowLayout -nc 2 -cw 2 150 "vManagerButtonColumnLayout";
+		separator -style "none";
+		//string $rootDir = $icAssetRootDir;
+		button -l "Version Manager..." -c ("menus2py.launchVersionManager " + $nodeName) -h 30 "updateManagerButton";
+		editVManagerButton($nodeName, $icAssetRootDir);
+
+}
+
+
+/*Edits the visibility attr of the updatemanagerButton in the current node attr based on AssetRootDir attr behing found in the node.
+This is a prevention method for older assets that were published before version manager being introduced not having AssetsRootDir attr that is 
+required by VersionManager */
+
+global proc editVManagerButton (string $nodeName, string $icAssetRootDir)
+{
+	if (`objExists $icAssetRootDir`)
+	{
+	button -e -c ("menus2py.launchVersionManager " + $nodeName) -vis true "updateManagerButton";
+	}
+	else
+	{
+	button -e -vis false "updateManagerButton";
+	}
+}
+
+
+//Adds force display override button
+global proc forceOverrideDisplayButton (string $nodeName)
+{
+	rowLayout -nc 2 -cw 2 150 "forceOverrideDisplay";
+		separator -style "none";
+		button -l "Force Display Override" -c ("menus2py.forceOverrideComponentDisplay " + $nodeName) -h 23 "forceOverrideDisplayButton";
+}
+	
+
+
+//Updates the display override button
+global proc updateOverrideDisplayButton (string $nodeName)
+{
+	button -e -c ("menus2py.forceOverrideComponentDisplay " + $nodeName) "forceOverrideDisplayButton";
+}
+
+
+//Main ICSet template
+global proc AEICSetTemplate ( string $nodeName )
+{
+	//global string $vManagerButton;
+	editorTemplate -beginLayout "IC Set" -collapse 0;
+		editorTemplate -addControl "icRefTag";
+		editorTemplate -addControl "icAssetType";
+		editorTemplate -addControl "icVersion";
+		editorTemplate -callCustom "add_vManagerButton" "editVManagerButton" $nodeName "icAssetRootDir";
+		editorTemplate -addControl "icAssetCompatibility";
+		editorTemplate -addControl "Notes";
+		editorTemplate -addSeparator;
+		editorTemplate -addControl "overrideComponentDisplay";
+		editorTemplate -callCustom "forceOverrideDisplayButton" "updateOverrideDisplayButton" $nodeName;
+		editorTemplate -addControl "icAssetDisplay";
+			
+	editorTemplate -endLayout;
+	
+	// supresses attributes
+	editorTemplate -suppress "annotation";
+	editorTemplate -suppress "partition";
+	editorTemplate -suppress "isLayer";
+	editorTemplate -suppress "verticesOnlySet";
+	editorTemplate -suppress "edgesOnlySet";
+	editorTemplate -suppress "facetsOnlySet";
+	editorTemplate -suppress "editPointsOnlySet";
+	editorTemplate -suppress "renderableOnlySet";
+	editorTemplate -suppress "dagSetMembers";
+	editorTemplate -suppress "dnSetMembers";
+	editorTemplate -suppress "groupNodes";
+	editorTemplate -suppress "usedBy";
+	editorTemplate -suppress "memberWireframeColor";
+	editorTemplate -suppress "caching";
+	editorTemplate -suppress "nodeState";
+	editorTemplate -suppress "overrideComponentColor";
+	AEcontainerNodeSuppress $nodeName; //supresses (deafaults from set type nodes)
+	
+	editorTemplate -addExtraControls;
+}
+
+

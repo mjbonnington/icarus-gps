@@ -5,7 +5,7 @@
 
 
 #render publish module
-import os, sys, traceback, time
+import os, sys, traceback
 import pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose, approvePbl, djvOps
 
 def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):

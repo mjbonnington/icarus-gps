@@ -4,7 +4,6 @@
 #copyright	:Gramercy Park Studios
 
 
-import os, sys
 import setDirs, setLog, job__env__, pathPrc
 
 def setup(job, shot):

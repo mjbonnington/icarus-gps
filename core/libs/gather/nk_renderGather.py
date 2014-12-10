@@ -3,8 +3,7 @@
 #title     	:nk_assetGather
 #copyright	:Gramercy Park Studios
 
-import os, sys, traceback
-import pblChk, verbose, pDialog, nukeOps
+import os
 import nuke
 
 def gather(gatherPath):

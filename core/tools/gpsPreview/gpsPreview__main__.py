@@ -7,6 +7,8 @@ from PySide import QtCore, QtGui
 from gpsPreviewUI import *
 import djvOps, verbose, appConnect
 
+#launches and controls GPS Preview UI
+
 class previewUI(QtGui.QDialog):
 	
 	def __init__(self, parent = None):

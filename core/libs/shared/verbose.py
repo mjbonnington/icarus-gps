@@ -3,8 +3,6 @@
 #title     	:verbose
 #copyright	:Gramercy Park Studios
 
-import os
-
 #this module processes verbosity printing
 
 def approval(start=False, end=False):
@@ -87,6 +85,9 @@ def noGetTranforms():
 def noHrox(hroxFile):
 	print '%s - File could not be found.' % hroxFile
 	
+def noICSetsPbl():
+	print 'ICSets cannot be selected for publishing'
+	
 def noMainLayer():
 	print 'Please set a main layer'
 	
@@ -122,6 +123,9 @@ def notCamera():
 	
 def noVersion():
 	print 'No versioning detected'
+	
+def notVersionManagerCompatible(icSet):
+	print 'The selected ICSet is not compatible with Version Manager'
 
 def pblFeed(msg=None, begin=None, end=None):
 	if msg:

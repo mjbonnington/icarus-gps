@@ -3,10 +3,12 @@
 #title     	:env__init__
 #copyright	:Gramercy Park Studios
 
+#Initializes main pipeline environment
+
 import os, platform, sys
 
 def setEnv():
-	os.environ['ICARUSVERSION'] = 'v0.7.2'
+	os.environ['ICARUSVERSION'] = 'v0.7.3'
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
 	icarusWorkingDir = icarusWorkingDir.replace('/core/ui', '')
 	os.environ['PIPELINE'] = icarusWorkingDir

@@ -8,6 +8,7 @@
 import os, time
 
 def set_(pblTo):
+	#allows two seconds of sleeping time to allow the server to update
 	time.sleep(2)
 	try:
 		os.system('chmod -R 777 %s' % pblTo)

@@ -4,6 +4,8 @@
 #copyright	:Gramercy Park Studios
 
 
+#lists all available shots in the specified directory
+
 import os
 import pathPrc, jobChk
 

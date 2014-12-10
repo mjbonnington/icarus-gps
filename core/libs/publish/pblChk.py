@@ -4,7 +4,7 @@
 #copyright	:Gramercy Park Studios
 
 
-import os, sys
+import os
 import verbose
 
 #checks if a publish for the same asset is currently under progress

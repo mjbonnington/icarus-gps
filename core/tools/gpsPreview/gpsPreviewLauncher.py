@@ -5,6 +5,7 @@
 import os
 import gpsPreview__main__; reload(gpsPreview__main__)
 	
+#launches GPS Preview UI based on environment
 def launch(env=None):
 	if not env:
 		return

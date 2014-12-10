@@ -4,7 +4,9 @@
 #copyright	:Gramercy Park Studios
 
 
-import os, sys
+#Writes and reads user log file for last used job and shot
+
+import os
 
 #reading from user log file	
 def read(entry=-1):

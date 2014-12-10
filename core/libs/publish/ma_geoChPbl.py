@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:geoChPbl
+#title     	:ma_geoChPbl
 #copyright	:Gramercy Park Studios
 
 
@@ -45,6 +45,11 @@ def publish(pblTo, slShot, geoChType, pblNotes, mail, approved):
 	if mc.nodeType(objLs[0]) == 'objectSet':
 		verbose.noSetsPbl()
 		return
+	
+	#check if asset to publish is an icSet
+	if mayaOps.chkIcDataSet(objLs[0]):
+		verbose.noICSetsPbl()
+		return
 
 	#check if asset to publish is referenced
 	for allObj in allObjLs: 
@@ -53,6 +58,7 @@ def publish(pblTo, slShot, geoChType, pblNotes, mail, approved):
 			return
 		
 	#processing asset publish options
+	mayaOps.deleteICDataSet(allObjLs)
 	assetPblName, assetDir, pblDir = pblOptsPrc.prc(pblTo, subsetName, assetType, prefix, convention, suffix)
 	
 	#determining approved publish directory

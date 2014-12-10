@@ -98,6 +98,7 @@ def setEnv(envVars):
 	os.environ['NUKESCRIPTSDIR'] = os.path.join(os.environ['NUKEDIR'], 'scripts', os.environ['USERNAME'])
 	os.environ['NUKERENDERSDIR'] = os.path.join(os.environ['NUKEDIR'], 'renders', os.environ['USERNAME'])
 	os.environ['NUKEVERSION'] = jobData.nukeVersion
+	os.environ['NUKEXVERSION'] = jobData.nukeXVersion
 	#HIERO ENV
 	os.environ['HIEROEDITORIALPATH'] = '%s/Editorial/Hiero/' % os.path.split(os.environ['JOBPATH'])[0]
 	os.environ['HIEROPLAYERVERSION'] = jobData.hieroPlayerVersion

@@ -4,15 +4,23 @@
 #copyright	:Gramercy Park Studios
 
 import os, sys, traceback
-import pblChk, verbose, pDialog, mayaOps, ma_geoCacheUpdate
+import verbose, pDialog, mayaOps
 import maya.cmds as mc
 import maya.mel as mel
 
 def gather(gatherPath):
 
 	#retrieves icData from gatherPath
+	#removes specific icData attributes that do not consistently exist in all icData modules and
+	#are kept in memory even after a reload() or a del. Feels quite hacky and horrible but I've not found a way around this
+	#This is only needed temporarily though as older assets do not have this icData attr
 	sys.path.append(gatherPath)
-	import icData; reload(icData)
+	import icData
+	try:
+		del icData.assetRootDir
+	except AttributeError:
+		pass
+	reload(icData)
 	sys.path.remove(gatherPath)
 	
 	try:	
@@ -41,12 +49,13 @@ def gather(gatherPath):
 		
 	
 		#gathering
+		drawOverrides = True
 		if icData.assetType == 'ma_shot':
 			mayaOps.openScene(assetPath, dialog=False)
 			mayaOps.redirectScene('%s/%s' % (os.environ['MAYASCENESDIR'], 'untitled'))
 			return
 		elif assetExt == 'vrmesh':
-			chkNameConflict(icData)
+			chkNameConflict(icData.asset)
 			mel.eval('vrayCreateProxy -node "%s" -dir "%s" -existing -createProxyNode;' % (icData.asset, assetPath))
 			vrmeshSG = mc.listSets(ets=True, t=1, object=icData.asset)[0]
 			vrmeshShd = mc.listConnections('%s.surfaceShader' % vrmeshSG, s=True, d=False)[0]
@@ -54,19 +63,15 @@ def gather(gatherPath):
 			mc.delete(vrmeshShd)
 			newNodeLs=[icData.asset]
 		elif assetExt == 'abc':
-			icSetSel = mayaOps.chkIcDataSet()
-			if icSetSel:
-				ma_geoCacheUpdate.update(gatherPath, icSetSel)
-				return
-			else:
-				chkNameConflict(icData)
-				newNodeLs = mc.file(assetPath, i=True, iv=True, rnn=True)
+			chkNameConflict(icData.asset)
+			newNodeLs = mc.file(assetPath, i=True, iv=True, rnn=True)
 		else:
-			chkNameConflict(icData)
+			chkNameConflict(icData.asset)
 			newNodeLs = mc.file(assetPath, i=True, iv=True, rnn=True)
 	
-		#Bypasses maya not displaying shading groups in sets. Adds the material node to icSet instead
+		#Bypasses maya not displaying shading groups in sets. Adds the material node to icSet instead. Sets draw overrides to False
 		if icData.assetType == 'ma_shader':
+			drawOverrides = False
 			connLs = mc.listConnections(icData.asset, p=True)
 			for conn in connLs:
 			    if '.outColor' in conn:
@@ -74,15 +79,21 @@ def gather(gatherPath):
 		else:
 			icSetAsset = icData.asset
 			
+		#Sets draw overrides to false if asset is node
+		if icData.assetType == 'ma_node' or icData.assetType == 'ic_node':
+			drawOverrides = False
+			
 		#generating icSet
-		dataSet = mayaOps.icDataSet(icSetAsset, icData)
-		
+		chkNameConflict('ICSet_%s' % icData.assetPblName)
+		dataSet = mayaOps.icDataSet(icSetAsset, icData, update=None, drawOverrides=drawOverrides)
 		#connects original to icSet
 		if icData.assetType != 'ma_scene':
 			mc.select(icData.asset, r=True, ne=True)
 			mc.addAttr(ln = 'icARefTag', dt='string')
 			mc.connectAttr('%s.icRefTag' % dataSet,  '%s.icARefTag' % icData.asset, f=True)
 			mayaOps.lockAttr([icData.asset], ['.icARefTag'], children=False)
+			
+			
 			
 	except:
 		exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -92,8 +103,15 @@ def gather(gatherPath):
 		dialog = pDialog.dialog()
 		dialog.dialogWindow(dialogMsg, dialogTitle, conf=True)
 
-#check if objects with same name exist in scene
-def chkNameConflict(icData):
-	if mc.objExists(icData.asset):
-		verbose.nameConflict(icData.asset)
-		mayaOps.renameObj([icData.asset], '%s_' % icData.asset, oldName=False)
+#check if objects with same name exist in scene. Checks for ICSets on those objects and renames it accordingly
+def chkNameConflict(obj):
+	if mc.objExists(obj):
+		verbose.nameConflict(obj)
+		objSetLs = mc.listSets(o=obj)
+		newObjName = mayaOps.renameObj([obj], '%s_' % obj, oldName=False)[0]
+		
+		
+		
+		
+		
+		

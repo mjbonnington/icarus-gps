@@ -5,7 +5,7 @@
 
 
 #crates publish directories
-import os, time
+import os
 
 def mkDirs(pblDir, version, textures=False):
 	pblDir = '%s/%s' % (pblDir, version)	

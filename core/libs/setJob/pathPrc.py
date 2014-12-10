@@ -8,10 +8,10 @@ import jobs
 #processes job and shot names and returns their full path
 def process(job, shot=False):
 	if shot:
-		shotPath = os.path.join(jobs.dic[job], os.environ['SHOTSROOTRELATIVEDIR'], shot)
+		path_ = os.path.join(jobs.dic[job], os.environ['SHOTSROOTRELATIVEDIR'], shot)
 	else:
-		shotPath = os.path.join(jobs.dic[job], os.environ['SHOTSROOTRELATIVEDIR'])
-	return shotPath
+		path_ = os.path.join(jobs.dic[job], os.environ['SHOTSROOTRELATIVEDIR'])
+	return path_
 
 
 

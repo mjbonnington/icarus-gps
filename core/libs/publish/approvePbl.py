@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:renderPbl
+#title     	:approvePbl
 #copyright	:Gramercy Park Studios
 
 

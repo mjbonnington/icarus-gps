@@ -3,7 +3,7 @@
 #title     	:assetGather
 #copyright	:Gramercy Park Studios
 
-import os, sys, traceback
+import os
 
 def getImg(gatherPath, forceExt=None):
 	gatherPathLs = os.listdir(gatherPath)

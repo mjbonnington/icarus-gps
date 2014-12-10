@@ -4,7 +4,7 @@
 #copyright	:Gramercy Park Studios
 
 import os, sys, traceback
-import pblChk, verbose, pDialog, nukeOps
+import verbose, pDialog, nukeOps
 import nuke
 
 def gather(gatherPath):
