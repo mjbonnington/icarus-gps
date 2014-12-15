@@ -8,10 +8,12 @@
 import os, platform, sys
 
 def setEnv():
-	os.environ['ICARUSVERSION'] = 'v0.7.3'
+	os.environ['ICARUSVERSION'] = 'v0.7.4'
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
-	icarusWorkingDir = icarusWorkingDir.replace('/core/ui', '')
-	os.environ['PIPELINE'] = icarusWorkingDir
+	os.environ['ICWORKINGDIR'] = icarusWorkingDir
+	icarusUIDir = os.path.join('core', 'ui')
+	os.environ['PIPELINE'] = icarusWorkingDir.replace(icarusUIDir, '')
+	os.environ['ICCONFIGDIR'] = os.path.join(os.environ['PIPELINE'], 'core', 'config')
 	os.environ['SHOTSROOTRELATIVEDIR'] = 'Vfx'
 	os.environ['DATAFILESRELATIVEDIR'] = '.icarus'
 	os.environ['JOBDATAFILE'] = 'jobData.py'
@@ -25,8 +27,8 @@ def setEnv():
 	appendSysPaths()
 	
 def appendSysPaths():
-	icarusLibs = 'core/libs'
-	icarusTools = 'core/tools'
+	icarusLibs = os.path.join('core', 'libs')
+	icarusTools = os.path.join('core', 'tools')
 	sys.path.append(os.environ['PIPELINE'])
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusTools, 'gpsPreview'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'gather'))

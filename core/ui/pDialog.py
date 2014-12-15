@@ -2,9 +2,9 @@
 #support	:Nuno Pereira - nuno.pereira@hogarthww.com
 #title     	:icarus__main__
 
-
 #laucnhes and controls a generic prompt dialog 
 
+import os, sys
 from PySide import QtCore, QtGui
 from pDialogUI import *
 
@@ -15,7 +15,12 @@ class dialog(QtGui.QDialog):
 		self.pDialog = self
 		self.pDialog.ui = Ui_Dialog()
 		self.pDialog.ui.setupUi(self)
-		
+
+		# Apply UI style sheet
+		qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
+		with open(qss, "r") as fh:
+			self.ui.main_frame.setStyleSheet(fh.read())
+
 	def dialogWindow(self, dialogMsg, dialogTitle, conf = False, modal=True):
 		self.pDialog.ui.message_textEdit.setText(dialogMsg)
 		self.pDialog.setWindowTitle(dialogTitle)
@@ -40,5 +45,3 @@ class dialog(QtGui.QDialog):
 		self.pDialogReturn = False
 		self.pDialog.accept()
 		return
-
-
