@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'icarusUI.ui'
 #
-# Created: Mon Dec 15 14:11:21 2014
+# Created: Mon Dec 15 20:10:10 2014
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -523,6 +523,14 @@ class Ui_Dialog(object):
         self.shotPbl_radioButton.setAutoExclusive(True)
         self.shotPbl_radioButton.setObjectName("shotPbl_radioButton")
         self.gridLayout.addWidget(self.shotPbl_radioButton, 3, 2, 1, 1)
+        self.nodePbl_radioButton = QtGui.QRadioButton(self.ma_assetTypes_frame)
+        self.nodePbl_radioButton.setObjectName("nodePbl_radioButton")
+        self.gridLayout.addWidget(self.nodePbl_radioButton, 3, 4, 1, 1)
+        self.nodePbl_comboBox = QtGui.QComboBox(self.ma_assetTypes_frame)
+        self.nodePbl_comboBox.setObjectName("nodePbl_comboBox")
+        self.nodePbl_comboBox.addItem("")
+        self.nodePbl_comboBox.addItem("")
+        self.gridLayout.addWidget(self.nodePbl_comboBox, 3, 5, 1, 1)
         self.horizontalLayout_9.addWidget(self.ma_assetTypes_frame)
         self.assetProcessing_groupBox = QtGui.QGroupBox(self.maAssetPublishTab)
         self.assetProcessing_groupBox.setEnabled(True)
@@ -1113,6 +1121,11 @@ class Ui_Dialog(object):
         QtCore.QObject.connect(self.scenePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.textures_checkBox.setEnabled)
         QtCore.QObject.connect(self.approved_checkBox, QtCore.SIGNAL("clicked(bool)"), self.mail_checkBox.setChecked)
         QtCore.QObject.connect(self.modelPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.textures_checkBox.setChecked)
+        QtCore.QObject.connect(self.nodePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.subSet_checkBox.setDisabled)
+        QtCore.QObject.connect(self.nodePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.scenePblName_lineEdit.setDisabled)
+        QtCore.QObject.connect(self.nodePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToShot_radioButton.setEnabled)
+        QtCore.QObject.connect(self.nodePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToJob_radioButton.setEnabled)
+        QtCore.QObject.connect(self.nodePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToShot_comboBox.setEnabled)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
         Dialog.setTabOrder(self.job_comboBox, self.openTerminal_pushButton)
         Dialog.setTabOrder(self.openTerminal_pushButton, self.openProdBoard_pushButton)
@@ -1211,6 +1224,9 @@ class Ui_Dialog(object):
         self.pointCloudPbl_radioButton.setText(QtGui.QApplication.translate("Dialog", "pointCloud", None, QtGui.QApplication.UnicodeUTF8))
         self.scenePbl_radioButton.setText(QtGui.QApplication.translate("Dialog", "scene", None, QtGui.QApplication.UnicodeUTF8))
         self.shotPbl_radioButton.setText(QtGui.QApplication.translate("Dialog", "shot", None, QtGui.QApplication.UnicodeUTF8))
+        self.nodePbl_radioButton.setText(QtGui.QApplication.translate("Dialog", "node", None, QtGui.QApplication.UnicodeUTF8))
+        self.nodePbl_comboBox.setItemText(0, QtGui.QApplication.translate("Dialog", "ma", None, QtGui.QApplication.UnicodeUTF8))
+        self.nodePbl_comboBox.setItemText(1, QtGui.QApplication.translate("Dialog", "ic", None, QtGui.QApplication.UnicodeUTF8))
         self.assetProcessing_groupBox.setTitle(QtGui.QApplication.translate("Dialog", "Processing", None, QtGui.QApplication.UnicodeUTF8))
         self.textures_checkBox.setText(QtGui.QApplication.translate("Dialog", "Textures", None, QtGui.QApplication.UnicodeUTF8))
         self.subSet_checkBox.setText(QtGui.QApplication.translate("Dialog", "Sub-Set", None, QtGui.QApplication.UnicodeUTF8))
