@@ -19,18 +19,23 @@ env__init__.setEnv()
 import launchApps, setJob, setLog, verbose, pblChk, pblOptsPrc, openDirs, setTerm, setPermissions, jobs, listShots
 
 class icarusApp(QtGui.QDialog):
-	def __init__(self, parent = None):			
-		super(icarusApp, self).__init__(parent)		
+	def __init__(self, parent = None):
+		super(icarusApp, self).__init__(parent)
 		self.ui = Ui_Dialog()
 		self.ui.setupUi(self)
-		
+
+		# Apply UI style sheet (disabled, being set for main app at bottom of file)
+		#qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
+		#with open(qss, "r") as fh:
+			#self.ui.main_frame.setStyleSheet(fh.read())
+
 		#defining phonon as preview player. Excepting import as Nuke does not include phonon its pySide compile
 		try:
 			from PySide.phonon import Phonon
 			self.previewPlayer = Phonon.VideoPlayer(parent = self.ui.gatherImgPreview_label)
 		except ImportError:
 			self.previewPlayer = None
-		
+
 	##########################################Connecting signals and slots##########################################
 	################################################################################################################
 		QtCore.QObject.connect(self.ui.job_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.populateShots)
@@ -53,6 +58,7 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.dailyPblAdd_pushButton, QtCore.SIGNAL('clicked()'), self.dailyTableAdd)
 		QtCore.QObject.connect(self.ui.publish_pushButton, QtCore.SIGNAL('clicked()'), self.initPublish)
 		QtCore.QObject.connect(self.ui.tabWidget, QtCore.SIGNAL('currentChanged(int)'), self.adjustMainUI)
+
 	
 	########################################Adding right click menus to buttons#######################################
 	##################################################################################################################
@@ -64,7 +70,7 @@ class icarusApp(QtGui.QDialog):
 		self.actionNukeX.triggered.connect(self.launchNukeX)
 		self.ui.nuke_pushButton.addAction(self.actionNuke)
 		self.ui.nuke_pushButton.addAction(self.actionNukeX)
-	
+
 	##########################################UI adapt environment awareness##########################################
 	##################################################################################################################
 		self.jobMngTab = self.ui.tabWidget.widget(0)
@@ -81,8 +87,7 @@ class icarusApp(QtGui.QDialog):
 		##############################################
 		if os.environ['ICARUSENVAWARE'] == 'STANDALONE':
 			#hides ui items relating to maya environment
-			uiHideLs = ['shotEnv_label_maya',
-			'setNewShot_pushButton']
+			uiHideLs = ['setNewShot_pushButton'] # Removed 'shotEnv_label_maya', 
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
@@ -107,8 +112,7 @@ class icarusApp(QtGui.QDialog):
 		##############MAYA ENVIRONMENT################
 		##############################################
 		elif os.environ['ICARUSENVAWARE'] == 'MAYA':
-			uiHideLs = ['icarusBanner',
-			'assetSubType_listWidget']
+			uiHideLs = ['assetSubType_listWidget'] # Removed 'icarusBanner', 
 			#hides UI items 
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
@@ -124,8 +128,7 @@ class icarusApp(QtGui.QDialog):
 		##############NUKE ENVIRONMENT################
 		##############################################
 		elif os.environ['ICARUSENVAWARE'] == 'NUKE':
-			uiHideLs = ['icarusBanner',
-			'assetSubType_listWidget']
+			uiHideLs = ['assetSubType_listWidget'] # Removed 'icarusBanner', 
 			#hides UI 
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
@@ -183,13 +186,13 @@ class icarusApp(QtGui.QDialog):
 		
 	#makes UI lock adjustments based on what publish type tab is currently selected
 	def adjustPblTypeUI(self):
-		tabText = self.ui.publishType_tabWidget.setGeometry(17, 80, 771, 215)
+		#tabText = self.ui.publishType_tabWidget.setGeometry(17, 80, 771, 215)
 		tabIndex = self.ui.publishType_tabWidget.currentIndex()
 		tabText = self.ui.publishType_tabWidget.tabText(tabIndex)
 		if tabText == 'ma Asset':
 			self.lockPublishTo()
 		if tabText == 'nk Asset':
-			tabText = self.ui.publishType_tabWidget.setGeometry(187, 80, 451, 215)
+			#tabText = self.ui.publishType_tabWidget.setGeometry(187, 80, 451, 215)
 			if self.ui.nk_compPbl_radioButton.isChecked() == True:
 				self.setDropDownToShotEnv()
 				self.lockPublishTo(lock=True)
@@ -327,7 +330,7 @@ class icarusApp(QtGui.QDialog):
 			self.job = os.environ['JOB']
 			self.shot = os.environ['SHOT']
 		self.ui.shotEnv_label.setText('%s - %s' % (self.job, self.shot))
-		self.ui.shotEnv_label_maya.setText('%s - %s' % (self.job, self.shot))
+		#self.ui.shotEnv_label_maya.setText('%s - %s' % (self.job, self.shot)) # This is now redundant as the current shot is always shown in the header.
 
 	#runs launch maya procedure and minimizes window
 	def launchMaya(self):
@@ -348,7 +351,9 @@ class icarusApp(QtGui.QDialog):
 	def launchNukeX(self):
 		launchApps.nuke(nukeType='NukeX')
 		self.showMinimized()
-	
+		launchApps.nuke()
+		self.showMinimized()
+
 	#runs launch maya procedure and minimizes window
 	def launchMari(self):
 		launchApps.mari()
@@ -439,11 +444,11 @@ class icarusApp(QtGui.QDialog):
 		for rowItem in range(0, self.ui.renderPbl_tableWidget.rowCount()):
 			mainItem = self.ui.renderPbl_tableWidget.item(rowItem, 2)
 			mainItem.setText('layer')
-			mainItem.setBackground(QtGui.QColor(255,255,255))
+			mainItem.setBackground(QtGui.QColor(34,34,34))
 			rowItem1 = self.ui.renderPbl_tableWidget.item(rowItem, 1)
-			rowItem1.setBackground(QtGui.QColor(255,255,255))
+			rowItem1.setBackground(QtGui.QColor(34,34,34))
 			rowItem0 = self.ui.renderPbl_tableWidget.item(rowItem, 0)
-			rowItem0.setBackground(QtGui.QColor(255,255,255))
+			rowItem0.setBackground(QtGui.QColor(34,34,34))
 		rowLs = []
 		if autoMainLayer:
 			selRow = self.ui.renderPbl_tableWidget.row(autoMainLayer)
@@ -457,13 +462,13 @@ class icarusApp(QtGui.QDialog):
 		if len(rowLs) == 1:
 			mainItem = self.ui.renderPbl_tableWidget.item(rowLs[0], 2)
 			mainItem.setText('main')
-			mainItem.setBackground(QtGui.QColor(181,213,255))
+			mainItem.setBackground(QtGui.QColor(60,75,40))
 			passItem = self.ui.renderPbl_tableWidget.item(rowLs[0], 1)
 			passName = passItem.text()
-			passItem.setBackground(QtGui.QColor(181,213,255))
+			passItem.setBackground(QtGui.QColor(60,75,40))
 			layerItem = self.ui.renderPbl_tableWidget.item(rowLs[0], 0)
 			layerName = passItem.text()
-			layerItem.setBackground(QtGui.QColor(181,213,255))
+			layerItem.setBackground(QtGui.QColor(60,75,40))
 		#app hide and show forces thw window to update
 		app.hide()
 		app.show()
@@ -530,7 +535,7 @@ class icarusApp(QtGui.QDialog):
 	#gets main publish options
 	def getMainPblOpts(self):
 		self.approved, self.mail = '', ''
-		self.pblNotes = self.ui.notes_textEdit.toPlainText()
+		self.pblNotes = self.ui.notes_textEdit.text() #.toPlainText() # Edited line as notes box is now line edit widget, not text edit
 		self.pblType = self.getPblTab()[1]
 		self.slShot = self.ui.publishToShot_comboBox.currentText()
 		#gets path to publish to. if selected shot doesn't match shot the correct publish path is assigned based on the selected shot
@@ -795,12 +800,12 @@ class icarusApp(QtGui.QDialog):
 		vItemsPath = os.path.join(self.gatherFrom, self.assetType, self.assetName)
 		if not pblChk.versionedItems(vItemsPath, vb=False):
 			self.subType = True
-			self.ui.assetName_listWidget.setGeometry(QtCore.QRect(140, 15, 129, 242))
+			#self.ui.assetName_listWidget.setGeometry(QtCore.QRect(140, 15, 129, 242)) # Removed so it doesn't break improved UI
 			self.ui.assetSubType_listWidget.show()
 			self.updateAssetSubTypeCol()
 		else:
 			self.subType = None
-			self.ui.assetName_listWidget.setGeometry(QtCore.QRect(140, 15, 261, 242))
+			#self.ui.assetName_listWidget.setGeometry(QtCore.QRect(140, 15, 261, 242)) # Removed so it doesn't break improved UI
 			self.ui.assetSubType_listWidget.hide()
 			self.updateAssetVersionCol()
 
@@ -917,6 +922,12 @@ verbose.icarusLaunch(os.environ['ICARUSVERSION'])
 if os.environ['ICARUSENVAWARE'] == 'MAYA' or os.environ['ICARUSENVAWARE'] == 'NUKE':
 	app = icarusApp()
 	app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint)
+
+	# Apply UI style sheet
+	qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
+	with open(qss, "r") as fh:
+		app.setStyleSheet(fh.read())
+
 	app.show()
 
 #CLARISSE ENV - Waiting until clarisse purchase
@@ -935,9 +946,13 @@ else:
 	if __name__ == '__main__':
 		mainApp = QtGui.QApplication(sys.argv)
 		mainApp.setApplicationName('Icarus')
+
+		# Apply UI style sheet
+		qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
+		with open(qss, "r") as fh:
+			mainApp.setStyleSheet(fh.read())
+
 		app = icarusApp()
 		app.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint)
 		app.show()
 		sys.exit(mainApp.exec_())
-
-
