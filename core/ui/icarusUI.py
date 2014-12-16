@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'icarusUI.ui'
 #
-# Created: Mon Dec 15 20:10:10 2014
+# Created: Tue Dec 16 12:02:42 2014
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -599,12 +599,12 @@ class Ui_Dialog(object):
         self.nk_pointCloudPbl_radioButton.setAutoExclusive(True)
         self.nk_pointCloudPbl_radioButton.setObjectName("nk_pointCloudPbl_radioButton")
         self.gridLayout_2.addWidget(self.nk_pointCloudPbl_radioButton, 1, 0, 1, 1)
-        self.nk_scenePbl_radioButton = QtGui.QRadioButton(self.frame_5)
-        self.nk_scenePbl_radioButton.setEnabled(True)
-        self.nk_scenePbl_radioButton.setAutoFillBackground(False)
-        self.nk_scenePbl_radioButton.setAutoExclusive(True)
-        self.nk_scenePbl_radioButton.setObjectName("nk_scenePbl_radioButton")
-        self.gridLayout_2.addWidget(self.nk_scenePbl_radioButton, 1, 1, 1, 1)
+        self.nk_nodePbl_radioButton = QtGui.QRadioButton(self.frame_5)
+        self.nk_nodePbl_radioButton.setEnabled(True)
+        self.nk_nodePbl_radioButton.setAutoFillBackground(False)
+        self.nk_nodePbl_radioButton.setAutoExclusive(True)
+        self.nk_nodePbl_radioButton.setObjectName("nk_nodePbl_radioButton")
+        self.gridLayout_2.addWidget(self.nk_nodePbl_radioButton, 1, 1, 1, 1)
         self.nk_preCompPbl_radioButton = QtGui.QRadioButton(self.frame_5)
         self.nk_preCompPbl_radioButton.setEnabled(True)
         self.nk_preCompPbl_radioButton.setAutoFillBackground(False)
@@ -1038,14 +1038,14 @@ class Ui_Dialog(object):
         self.tabWidget.setCurrentIndex(0)
         self.publishType_tabWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.nk_setupPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToShot_comboBox.setEnabled)
-        QtCore.QObject.connect(self.nk_scenePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToShot_comboBox.setEnabled)
+        QtCore.QObject.connect(self.nk_nodePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToShot_comboBox.setEnabled)
         QtCore.QObject.connect(self.nk_cardPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToShot_comboBox.setEnabled)
         QtCore.QObject.connect(self.nk_preCompPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToShot_comboBox.setEnabled)
         QtCore.QObject.connect(self.nk_pointCloudPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToShot_comboBox.setEnabled)
         QtCore.QObject.connect(self.nk_compPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToShot_comboBox.setDisabled)
         QtCore.QObject.connect(self.nk_setupPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToJob_radioButton.setEnabled)
         QtCore.QObject.connect(self.nk_cardPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToJob_radioButton.setEnabled)
-        QtCore.QObject.connect(self.nk_scenePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToJob_radioButton.setEnabled)
+        QtCore.QObject.connect(self.nk_nodePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToJob_radioButton.setEnabled)
         QtCore.QObject.connect(self.nk_pointCloudPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToJob_radioButton.setEnabled)
         QtCore.QObject.connect(self.nk_cardPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.nk_PblName_lineEdit.setEnabled)
         QtCore.QObject.connect(self.nk_cardPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.nk_PblName_label.setEnabled)
@@ -1055,8 +1055,8 @@ class Ui_Dialog(object):
         QtCore.QObject.connect(self.nk_preCompPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToJob_radioButton.setEnabled)
         QtCore.QObject.connect(self.nk_pointCloudPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.nk_PblName_label.setEnabled)
         QtCore.QObject.connect(self.nk_pointCloudPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.nk_PblName_lineEdit.setEnabled)
-        QtCore.QObject.connect(self.nk_scenePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.nk_PblName_lineEdit.setEnabled)
-        QtCore.QObject.connect(self.nk_scenePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.nk_PblName_label.setEnabled)
+        QtCore.QObject.connect(self.nk_nodePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.nk_PblName_lineEdit.setEnabled)
+        QtCore.QObject.connect(self.nk_nodePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.nk_PblName_label.setEnabled)
         QtCore.QObject.connect(self.nk_preCompPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.nk_PblName_label.setEnabled)
         QtCore.QObject.connect(self.animPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToShot_radioButton.setChecked)
         QtCore.QObject.connect(self.nk_compPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.nk_PblName_lineEdit.setDisabled)
@@ -1235,7 +1235,7 @@ class Ui_Dialog(object):
         self.nk_setupPbl_radioButton.setText(QtGui.QApplication.translate("Dialog", "setup", None, QtGui.QApplication.UnicodeUTF8))
         self.nk_cardPbl_radioButton.setText(QtGui.QApplication.translate("Dialog", "card", None, QtGui.QApplication.UnicodeUTF8))
         self.nk_pointCloudPbl_radioButton.setText(QtGui.QApplication.translate("Dialog", "pointCloud", None, QtGui.QApplication.UnicodeUTF8))
-        self.nk_scenePbl_radioButton.setText(QtGui.QApplication.translate("Dialog", "scene", None, QtGui.QApplication.UnicodeUTF8))
+        self.nk_nodePbl_radioButton.setText(QtGui.QApplication.translate("Dialog", "node", None, QtGui.QApplication.UnicodeUTF8))
         self.nk_preCompPbl_radioButton.setText(QtGui.QApplication.translate("Dialog", "preComp", None, QtGui.QApplication.UnicodeUTF8))
         self.nk_compPbl_radioButton.setText(QtGui.QApplication.translate("Dialog", "comp", None, QtGui.QApplication.UnicodeUTF8))
         self.nk_PblName_label.setText(QtGui.QApplication.translate("Dialog", "Publish Name:", None, QtGui.QApplication.UnicodeUTF8))

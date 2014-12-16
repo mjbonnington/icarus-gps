@@ -1260,7 +1260,7 @@ QLineEdit {
                   </widget>
                  </item>
                  <item row="1" column="1">
-                  <widget class="QRadioButton" name="nk_scenePbl_radioButton">
+                  <widget class="QRadioButton" name="nk_nodePbl_radioButton">
                    <property name="enabled">
                     <bool>true</bool>
                    </property>
@@ -1268,7 +1268,7 @@ QLineEdit {
                     <bool>false</bool>
                    </property>
                    <property name="text">
-                    <string>scene</string>
+                    <string>node</string>
                    </property>
                    <property name="autoExclusive">
                     <bool>true</bool>
@@ -2350,7 +2350,7 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>nk_scenePbl_radioButton</sender>
+   <sender>nk_nodePbl_radioButton</sender>
    <signal>clicked(bool)</signal>
    <receiver>publishToShot_comboBox</receiver>
    <slot>setEnabled(bool)</slot>
@@ -2462,7 +2462,7 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>nk_scenePbl_radioButton</sender>
+   <sender>nk_nodePbl_radioButton</sender>
    <signal>clicked(bool)</signal>
    <receiver>publishToJob_radioButton</receiver>
    <slot>setEnabled(bool)</slot>
@@ -2622,7 +2622,7 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>nk_scenePbl_radioButton</sender>
+   <sender>nk_nodePbl_radioButton</sender>
    <signal>clicked(bool)</signal>
    <receiver>nk_PblName_lineEdit</receiver>
    <slot>setEnabled(bool)</slot>
@@ -2638,7 +2638,7 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>nk_scenePbl_radioButton</sender>
+   <sender>nk_nodePbl_radioButton</sender>
    <signal>clicked(bool)</signal>
    <receiver>nk_PblName_label</receiver>
    <slot>setEnabled(bool)</slot>
