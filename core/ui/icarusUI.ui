@@ -14,13 +14,6 @@
     <height>640</height>
    </rect>
   </property>
-  <property name="font">
-   <font>
-    <pointsize>11</pointsize>
-    <weight>75</weight>
-    <bold>true</bold>
-   </font>
-  </property>
   <property name="windowTitle">
    <string notr="true">Icarus</string>
   </property>
@@ -148,7 +141,7 @@ QLineEdit {
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <property name="elideMode">
          <enum>Qt::ElideRight</enum>
@@ -772,7 +765,7 @@ QLineEdit {
              <bool>true</bool>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="maAssetPublishTab">
              <attribute name="title">
@@ -1330,6 +1323,9 @@ QLineEdit {
                    </property>
                    <property name="readOnly">
                     <bool>false</bool>
+                   </property>
+                   <property name="mandatoryField" stdset="0">
+                    <bool>true</bool>
                    </property>
                   </widget>
                  </item>

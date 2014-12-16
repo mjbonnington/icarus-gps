@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'icarusUI.ui'
 #
-# Created: Tue Dec 16 12:02:42 2014
+# Created: Tue Dec 16 12:14:56 2014
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,11 +14,6 @@ class Ui_Dialog(object):
         Dialog.setObjectName("Dialog")
         Dialog.setEnabled(True)
         Dialog.resize(800, 640)
-        font = QtGui.QFont()
-        font.setPointSize(11)
-        font.setWeight(75)
-        font.setBold(True)
-        Dialog.setFont(font)
         Dialog.setWindowTitle("Icarus")
         Dialog.setStyleSheet("")
         self.verticalLayout = QtGui.QVBoxLayout(Dialog)
@@ -626,6 +621,7 @@ class Ui_Dialog(object):
         self.nk_PblName_lineEdit.setText("")
         self.nk_PblName_lineEdit.setFrame(True)
         self.nk_PblName_lineEdit.setReadOnly(False)
+        self.nk_PblName_lineEdit.setProperty("mandatoryField", True)
         self.nk_PblName_lineEdit.setObjectName("nk_PblName_lineEdit")
         self.gridLayout_2.addWidget(self.nk_PblName_lineEdit, 3, 1, 1, 1)
         self.horizontalLayout_19.addWidget(self.frame_5)
@@ -1035,8 +1031,8 @@ class Ui_Dialog(object):
         self.verticalLayout.addWidget(self.main_frame)
 
         self.retranslateUi(Dialog)
-        self.tabWidget.setCurrentIndex(0)
-        self.publishType_tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
+        self.publishType_tabWidget.setCurrentIndex(1)
         QtCore.QObject.connect(self.nk_setupPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToShot_comboBox.setEnabled)
         QtCore.QObject.connect(self.nk_nodePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToShot_comboBox.setEnabled)
         QtCore.QObject.connect(self.nk_cardPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToShot_comboBox.setEnabled)
