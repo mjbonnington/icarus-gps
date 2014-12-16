@@ -154,9 +154,5 @@ python("import gpsRenameTools; gpsRenameTools.gpsRenameTools().UI()");
 
 global proc menus2Py.gpsPreview()
 {
-global string $env;
-$env = "MAYA";
-python "import maya.mel as mel";
-python "env = mel.eval('$temp=$env')";
-python("import gpsPreviewLauncher; gpsPreviewLauncher.launch(env)");
+python("import gpsPreviewLauncher; gpsPreviewLauncher.launch(env='MAYA')");
 }
