@@ -10,7 +10,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>803</width>
     <height>640</height>
    </rect>
   </property>
@@ -141,7 +141,7 @@ QLineEdit {
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <property name="elideMode">
          <enum>Qt::ElideRight</enum>
@@ -349,7 +349,8 @@ QLineEdit {
                </property>
                <property name="icon">
                 <iconset resource="rsc.qrc">
-                 <normaloff>:/rsc/rsc/maya_icon.png</normaloff>:/rsc/rsc/maya_icon.png</iconset>
+                 <normaloff>:/rsc/rsc/app_icon_maya.png</normaloff>
+                 <disabledoff>:/rsc/rsc/app_icon_maya_disabled.png</disabledoff>:/rsc/rsc/app_icon_maya.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -375,7 +376,8 @@ QLineEdit {
                </property>
                <property name="icon">
                 <iconset resource="rsc.qrc">
-                 <normaloff>:/rsc/rsc/mudbox_icon.png</normaloff>:/rsc/rsc/mudbox_icon.png</iconset>
+                 <normaloff>:/rsc/rsc/app_icon_mudbox.png</normaloff>
+                 <disabledoff>:/rsc/rsc/app_icon_mudbox_disabled.png</disabledoff>:/rsc/rsc/app_icon_mudbox.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -401,7 +403,8 @@ QLineEdit {
                </property>
                <property name="icon">
                 <iconset resource="rsc.qrc">
-                 <normaloff>:/rsc/rsc/nukeIcon.png</normaloff>:/rsc/rsc/nukeIcon.png</iconset>
+                 <normaloff>:/rsc/rsc/app_icon_nuke.png</normaloff>
+                 <disabledoff>:/rsc/rsc/app_icon_nuke_disabled.png</disabledoff>:/rsc/rsc/app_icon_nuke.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -427,7 +430,8 @@ QLineEdit {
                </property>
                <property name="icon">
                 <iconset resource="rsc.qrc">
-                 <normaloff>:/rsc/rsc/mariIcon.png</normaloff>:/rsc/rsc/mariIcon.png</iconset>
+                 <normaloff>:/rsc/rsc/app_icon_mari.png</normaloff>
+                 <disabledoff>:/rsc/rsc/app_icon_mari_disabled.png</disabledoff>:/rsc/rsc/app_icon_mari.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -453,7 +457,8 @@ QLineEdit {
                </property>
                <property name="icon">
                 <iconset resource="rsc.qrc">
-                 <normaloff>:/rsc/rsc/realflowIcon.png</normaloff>:/rsc/rsc/realflowIcon.png</iconset>
+                 <normaloff>:/rsc/rsc/app_icon_realflow.png</normaloff>
+                 <disabledoff>:/rsc/rsc/app_icon_realflow_disabled.png</disabledoff>:/rsc/rsc/app_icon_realflow.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -500,7 +505,8 @@ QLineEdit {
                </property>
                <property name="icon">
                 <iconset resource="rsc.qrc">
-                 <normaloff>:/rsc/rsc/productionBoard.png</normaloff>:/rsc/rsc/productionBoard.png</iconset>
+                 <normaloff>:/rsc/rsc/icon_productionBoard.png</normaloff>
+                 <disabledoff>:/rsc/rsc/icon_productionBoard_disabled.png</disabledoff>:/rsc/rsc/icon_productionBoard.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -526,7 +532,8 @@ QLineEdit {
                </property>
                <property name="icon">
                 <iconset resource="rsc.qrc">
-                 <normaloff>:/rsc/rsc/HieroPlayerIcon.png</normaloff>:/rsc/rsc/HieroPlayerIcon.png</iconset>
+                 <normaloff>:/rsc/rsc/app_icon_hieroPlayer.png</normaloff>
+                 <disabledoff>:/rsc/rsc/app_icon_hieroPlayer_disabled.png</disabledoff>:/rsc/rsc/app_icon_hieroPlayer.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -552,7 +559,8 @@ QLineEdit {
                </property>
                <property name="icon">
                 <iconset resource="rsc.qrc">
-                 <normaloff>:/rsc/rsc/terminal.png</normaloff>:/rsc/rsc/terminal.png</iconset>
+                 <normaloff>:/rsc/rsc/app_icon_terminal.png</normaloff>
+                 <disabledoff>:/rsc/rsc/app_icon_terminal_disabled.png</disabledoff>:/rsc/rsc/app_icon_terminal.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -578,7 +586,8 @@ QLineEdit {
                </property>
                <property name="icon">
                 <iconset resource="rsc.qrc">
-                 <normaloff>:/rsc/rsc/browseIcon.png</normaloff>:/rsc/rsc/browseIcon.png</iconset>
+                 <normaloff>:/rsc/rsc/icon_folder.png</normaloff>
+                 <disabledoff>:/rsc/rsc/icon_folder_disabled.png</disabledoff>:/rsc/rsc/icon_folder.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -604,7 +613,8 @@ QLineEdit {
                </property>
                <property name="icon">
                 <iconset resource="rsc.qrc">
-                 <normaloff>:/rsc/rsc/browseIcon.png</normaloff>:/rsc/rsc/browseIcon.png</iconset>
+                 <normaloff>:/rsc/rsc/icon_folder.png</normaloff>
+                 <disabledoff>:/rsc/rsc/icon_folder_disabled.png</disabledoff>:/rsc/rsc/icon_folder.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -765,7 +775,7 @@ QLineEdit {
              <bool>true</bool>
             </property>
             <property name="currentIndex">
-             <number>1</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="maAssetPublishTab">
              <attribute name="title">

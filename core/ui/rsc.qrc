@@ -1,17 +1,23 @@
 <RCC>
   <qresource prefix="rsc">
-    <file>rsc/HieroPlayerIcon.png</file>
-    <file>rsc/realflowIcon.png</file>
-    <file>rsc/mariIcon.png</file>
-    <file>rsc/maya_icon.png</file>
-    <file>rsc/mudbox_icon.png</file>
-    <file>rsc/terminal.png</file>
-    <file>rsc/browseIcon.png</file>
-    <file>rsc/aeIcon.png</file>
-    <file>rsc/icarusBanner.png</file>
-    <file>rsc/productionBoard.png</file>
-    <file>rsc/nukeIcon.png</file>
-    <file>rsc/psIcon.png</file>
+    <file>rsc/app_icon_hieroPlayer_disabled.png</file>
+    <file>rsc/app_icon_hieroPlayer.png</file>
+    <file>rsc/app_icon_mari_disabled.png</file>
+    <file>rsc/app_icon_mari.png</file>
+    <file>rsc/app_icon_nuke_disabled.png</file>
+    <file>rsc/app_icon_nuke.png</file>
+    <file>rsc/app_icon_realflow_disabled.png</file>
+    <file>rsc/app_icon_maya_disabled.png</file>
+    <file>rsc/app_icon_maya.png</file>
+    <file>rsc/app_icon_realflow.png</file>
+    <file>rsc/app_icon_terminal_disabled.png</file>
+    <file>rsc/icon_folder_disabled.png</file>
+    <file>rsc/icon_folder.png</file>
+    <file>rsc/app_icon_terminal.png</file>
+    <file>rsc/app_icon_mudbox_disabled.png</file>
+    <file>rsc/app_icon_mudbox.png</file>
+    <file>rsc/icon_productionBoard_disabled.png</file>
+    <file>rsc/icon_productionBoard.png</file>
   </qresource>
   <qresource>
     <file>images/arrow_down_disabled.png</file>
