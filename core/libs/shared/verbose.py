@@ -132,7 +132,7 @@ def pblFeed(msg=None, begin=None, end=None):
 		print msg
 		return
 	if begin:
-		print 'Publising...'
+		print 'Publishing...'
 		return
 	if end:
 		print 'Done.'
