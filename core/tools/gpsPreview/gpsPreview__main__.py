@@ -16,13 +16,19 @@ class previewUI(QtGui.QDialog):
 		self.pDialog = self
 		self.pDialog.ui = Ui_Dialog()
 		self.pDialog.ui.setupUi(self)
+
+		# Apply UI style sheet
+		qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
+		with open(qss, "r") as fh:
+			self.pDialog.setStyleSheet(fh.read())
+
 		#connecting signals and slots
 		QtCore.QObject.connect(self.pDialog.ui.preview_pushButton, QtCore.SIGNAL("clicked()"), self.preview)
 		QtCore.QObject.connect(self.pDialog.ui.resolution_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.updateResGrp)
 		QtCore.QObject.connect(self.pDialog.ui.range_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.updateRangeGrp)
 		
 		#populating UI with env vars
-		self.setupUI()		
+		self.setupUI()
 			
 		#launching UI window
 		self.pDialog.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint)

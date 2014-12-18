@@ -3,7 +3,7 @@
  */
 
 QMainWindow, QDialog { /* main background colour */
-	background-color: #3c3c3c;
+	background-color: #404040; /*#3c3c3c;*/
 	/*etch-disabled-text: 1;*/
 }
 
@@ -136,21 +136,25 @@ QMenu::item:selected {
 	color: #fff*/
 }
 
+QMenu::item:selected:disabled {
+	background: #666;
+	color: #333;
+}
+
 QMenu::icon:checked { /* appearance of a 'checked' icon */
 	/*border-color: #709e32;
 	background: #709e32;
-     position: absolute;
-     top: 1px;
-     right: 1px;
-     bottom: 1px;
-     left: 1px;*/
+	position: absolute;
+	top: 1px;
+	right: 1px;
+	bottom: 1px;
+	left: 1px;*/
 }
 
 QMenu::separator {
-	height: 2px;
-	border: 2px groove #333;
-	/*margin-left: 10px;
-	margin-right: 5px;*/
+	margin: 4px 0px;
+	height: 0px;
+	border-bottom: 2px groove #2a2a2a;
 }
 
 QMenu::indicator {
@@ -158,39 +162,39 @@ QMenu::indicator {
 	height: 11px;
 }
 
- /* non-exclusive indicator = check box style indicator (see QActionGroup::setExclusive) */
-/* QMenu::indicator:non-exclusive:unchecked {
-     image: url(:/images/checkbox_unchecked.png);
- }
+/* non-exclusive indicator = check box style indicator (see QActionGroup::setExclusive) */
+QMenu::indicator:non-exclusive:unchecked {
+	image: url(:/images/checkbox_unchecked.png);
+}
 
- QMenu::indicator:non-exclusive:unchecked:selected {
-     image: url(:/images/checkbox_unchecked_hover.png);
- }
+QMenu::indicator:non-exclusive:unchecked:selected {
+	image: url(:/images/checkbox_unchecked_hover.png);
+}
 
- QMenu::indicator:non-exclusive:checked {
-     image: url(:/images/checkbox_checked.png);
- }
+QMenu::indicator:non-exclusive:checked {
+	image: url(:/images/checkbox_checked.png);
+}
 
- QMenu::indicator:non-exclusive:checked:selected {
-     image: url(:/images/checkbox_checked_hover.png);
- }*/
+QMenu::indicator:non-exclusive:checked:selected {
+	image: url(:/images/checkbox_checked_hover.png);
+}
 
- /* exclusive indicator = radio button style indicator (see QActionGroup::setExclusive) */
-/* QMenu::indicator:exclusive:unchecked {
-     image: url(:/images/radiobutton_unchecked.png);
- }
+/* exclusive indicator = radio button style indicator (see QActionGroup::setExclusive) */
+QMenu::indicator:exclusive:unchecked {
+	image: url(:/images/radiobutton_unchecked.png);
+}
 
- QMenu::indicator:exclusive:unchecked:selected {
-     image: url(:/images/radiobutton_unchecked_hover.png);
- }
+QMenu::indicator:exclusive:unchecked:selected {
+	image: url(:/images/radiobutton_unchecked_hover.png);
+}
 
- QMenu::indicator:exclusive:checked {
-     image: url(:/images/radiobutton_checked.png);
- }
+QMenu::indicator:exclusive:checked {
+	image: url(:/images/radiobutton_checked.png);
+}
 
- QMenu::indicator:exclusive:checked:selected {
-     image: url(:/images/radiobutton_checked_hover.png);
- }*/
+QMenu::indicator:exclusive:checked:selected {
+	image: url(:/images/radiobutton_checked_hover.png);
+}
 
 /* End Menu */
 
@@ -687,6 +691,10 @@ QComboBox:!editable, QComboBox::drop-down:editable {
 	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #666, stop: 1 #555);
 }
 
+QComboBox:!editable:hover, QComboBox::drop-down:editable:hover {
+	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #777, stop: 1 #666);
+}
+
 /* QComboBox gets the "on" state when the popup is open */
 QComboBox:!editable:on, QComboBox::drop-down:editable:on {
 	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #4c4c4c, stop: 1 #555);
@@ -724,22 +732,44 @@ QComboBox::down-arrow:on {
 	left: 1px;
 }
 
-QComboBox QAbstractItemView {
-	/*margin-top: 0px;
-	margin-bottom: 0px;*/
-	border: 1px solid #222;
-	/*border-radius: 0px;*/
+/* Background color of popup-list.*/ 
+QComboBox QListView{
+	padding: 1px 3px;
+	/*padding-left: 5px;*/
+	/*border: 1px solid #222;*/
 	background: #333;
-	/*selection-background-color: #709e32;*/
 }
 
-/*QComboBox QAbstractItemView::item {
-	border-bottom: 5px solid white; margin:3px;
+QComboBox::item {
+	background: transparent;
 }
 
-QComboBox QAbstractItemView::item:selected {
-	border-bottom: 5px solid black; margin:3px;
+/* Needed to complete the rule set. */
+QComboBox::item:alternate {
+	background: transparent;
+}
+
+/* Color of the selected list item. */
+QComboBox::item:selected {
 	background: #709e32;
+	color: #fff;
+	border: 1px solid transparent;
+}
+
+/* Indicator will shine through the label text if you don't make it hidden. */
+QComboBox::indicator{
+	background-color:transparent;
+	selection-background-color:transparent;
+	color:transparent;
+	selection-color:transparent;
+}
+
+/*QComboBox::indicator:checked {
+	image: url(:/images/checkbox_checked.png);
+}
+
+QComboBox::indicator:checked:disabled {
+	image: url(:/images/checkbox_checked_disabled.png);
 }*/
 
 /* End Combo Box */
