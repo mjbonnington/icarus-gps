@@ -342,10 +342,10 @@ class icarusApp(QtGui.QDialog):
 	def setMinimiseOnAppLaunch(self, state):
 		if state == QtCore.Qt.Checked:
 			self.boolMinimiseOnAppLaunch = True
-			print "Minimise on launch enabled"
+			#print "Minimise on launch enabled"
 		else:
 			self.boolMinimiseOnAppLaunch = False
-			print "Minimise on launch disabled"
+			#print "Minimise on launch disabled"
 
 	#runs launch maya procedure and minimizes window
 	def launchMaya(self):
