@@ -59,7 +59,9 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.publish_pushButton, QtCore.SIGNAL('clicked()'), self.initPublish)
 		QtCore.QObject.connect(self.ui.tabWidget, QtCore.SIGNAL('currentChanged(int)'), self.adjustMainUI)
 
-	
+		self.ui.minimise_checkBox.stateChanged.connect(self.setMinimiseOnAppLaunch)
+		self.boolMinimiseOnAppLaunch = True
+
 	########################################Adding right click menus to buttons#######################################
 	##################################################################################################################
 		#Nuke
@@ -78,10 +80,12 @@ class icarusApp(QtGui.QDialog):
 		self.gatherTab = self.ui.tabWidget.widget(2)
 		self.publishAssetTab = self.ui.publishType_tabWidget.widget(0)
 		self.publishRenderTab = self.ui.publishType_tabWidget.widget(1)
-		self.ui.renderPbl_tableWidget.setColumnWidth(1,358)
-		self.ui.renderPbl_tableWidget.setColumnWidth(2,74)
-		self.ui.dailyPbl_tableWidget.setColumnWidth(1,366)
-		self.ui.dailyPbl_tableWidget.setColumnWidth(2,86)		
+		self.ui.renderPbl_tableWidget.setColumnWidth(0,120)
+		self.ui.renderPbl_tableWidget.setColumnWidth(1,380)
+		self.ui.renderPbl_tableWidget.setColumnWidth(2,81)
+		self.ui.dailyPbl_tableWidget.setColumnWidth(0,120)
+		self.ui.dailyPbl_tableWidget.setColumnWidth(1,380)
+		self.ui.dailyPbl_tableWidget.setColumnWidth(2,81)
 			
 		###########STANDALONE ENVIRONMENT#############
 		##############################################
@@ -289,6 +293,7 @@ class icarusApp(QtGui.QDialog):
 		self.ui.shotSetup_groupBox.setEnabled(False)
 		self.ui.launchApp_groupBox.setEnabled(True)
 		self.ui.open_groupBox.setEnabled(True)
+		self.ui.launchOptions_groupBox.setEnabled(True)
 		self.ui.tabWidget.insertTab(1, self.publishTab, 'Publish')
 		self.ui.tabWidget.insertTab(2, self.gatherTab, 'Assets')
 		self.ui.gather_pushButton.hide()
@@ -301,6 +306,7 @@ class icarusApp(QtGui.QDialog):
 		self.ui.shotSetup_groupBox.setEnabled(True)
 		self.ui.launchApp_groupBox.setEnabled(False)
 		self.ui.open_groupBox.setEnabled(False)
+		self.ui.launchOptions_groupBox.setEnabled(False)
 		#removing publish and assets tab
 		self.ui.tabWidget.removeTab(1); self.ui.tabWidget.removeTab(1)
 		for row in range(self.ui.renderPbl_tableWidget.rowCount()):
@@ -332,49 +338,66 @@ class icarusApp(QtGui.QDialog):
 		self.ui.shotEnv_label.setText('%s - %s' % (self.job, self.shot))
 		#self.ui.shotEnv_label_maya.setText('%s - %s' % (self.job, self.shot)) # This is now redundant as the current shot is always shown in the header.
 
+	# Sets state of minimise on app launch variable
+	def setMinimiseOnAppLaunch(self, state):
+		if state == QtCore.Qt.Checked:
+			self.boolMinimiseOnAppLaunch = True
+			#print "Minimise on launch enabled"
+		else:
+			self.boolMinimiseOnAppLaunch = False
+			#print "Minimise on launch disabled"
+
 	#runs launch maya procedure and minimizes window
 	def launchMaya(self):
 		launchApps.maya()
-		self.showMinimized()
-		
+		if self.boolMinimiseOnAppLaunch:
+			self.showMinimized()
+
 	#runs launch mudbox procedure and minimizes window
 	def launchMudbox(self):
 		launchApps.mudbox()
-		self.showMinimized()
-		
+		if self.boolMinimiseOnAppLaunch:
+			self.showMinimized()
+
 	#runs launch nuke procedure and minimizes window
 	def launchNuke(self):
 		launchApps.nuke(nukeType='Nuke')
-		self.showMinimized()
-	
+		if self.boolMinimiseOnAppLaunch:
+			self.showMinimized()
+
 	#runs launch nukex procedure and minimizes window
 	def launchNukeX(self):
 		launchApps.nuke(nukeType='NukeX')
-		self.showMinimized()
-		launchApps.nuke()
-		self.showMinimized()
+		if self.boolMinimiseOnAppLaunch:
+			self.showMinimized()
+		#launchApps.nuke()
+		#self.showMinimized()
 
-	#runs launch maya procedure and minimizes window
+	#runs launch mari procedure and minimizes window
 	def launchMari(self):
 		launchApps.mari()
-		self.showMinimized()
-	
-	#runs launch maya procedure and minimizes window
+		if self.boolMinimiseOnAppLaunch:
+			self.showMinimized()
+
+	#runs launch realflow procedure and minimizes window
 	def launchRealflow(self):
 		launchApps.realflow()
-		self.showMinimized()
+		if self.boolMinimiseOnAppLaunch:
+			self.showMinimized()
 
 	#launches terminal locks button and minimizes window
 	def launchTerminal(self):
 		launchApps.terminal()
 		self.ui.openTerminal_pushButton.setEnabled(False)
 		self.ui.setNewShot_pushButton.setEnabled(False)
-		self.showMinimized()
-		
+		if self.boolMinimiseOnAppLaunch:
+			self.showMinimized()
+
 	#Launches HieroPlayer with and tries to load the job Hrox automatically
 	def launchHieroPlayer(self):
 		launchApps.hieroPlayer()
-		self.showMinimized()
+		if self.boolMinimiseOnAppLaunch:
+			self.showMinimized()
 
 
 	##################################################Publish tab###################################################
