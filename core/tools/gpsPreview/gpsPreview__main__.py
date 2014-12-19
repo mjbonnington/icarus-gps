@@ -15,15 +15,20 @@ class previewUI(QtGui.QDialog):
 		super(previewUI, self).__init__(parent)
 		self.ui = Ui_Dialog()
 		self.ui.setupUi(self)
-		
+
+		# Apply UI style sheet
+		qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
+		with open(qss, "r") as fh:
+			self.ui.main_frame.setStyleSheet(fh.read())
+
 		#connecting signals and slots
 		QtCore.QObject.connect(self.ui.preview_pushButton, QtCore.SIGNAL("clicked()"), self.preview)
 		QtCore.QObject.connect(self.ui.resolution_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.updateResGrp)
 		QtCore.QObject.connect(self.ui.range_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.updateRangeGrp)
-		
+
 		#populating UI with env vars
 		self.setupUI()
-			
+
 	############################################################## UI ##############################################################
 	################################################################################################################################
 	

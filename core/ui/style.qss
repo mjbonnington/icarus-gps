@@ -3,7 +3,7 @@
  */
 
 QMainWindow, QDialog { /* main background colour */
-	background-color: #3c3c3c;
+	background-color: #404040; /*#3c3c3c;*/
 	/*etch-disabled-text: 1;*/
 }
 
@@ -11,7 +11,7 @@ QWidget {
 	/*margin: 0;*/
 	/*padding: 0;*/
 	/*background: #444;*/
-	color: #ccc;
+	color: rgba(204, 204, 204, 100%);
 	selection-background-color: #709e32; /*#00b2ee;*/
 	selection-color: #fff;
 	alternate-background-color: rgba(255, 255, 255, 2%);
@@ -21,7 +21,7 @@ QWidget {
 
 QWidget:disabled {
 	background: transparent;
-	color: #666; /* rgba(204, 204, 204, 50%);*/
+	color: rgba(102, 102, 102, 100%);
 	selection-background-color: #666;
 	selection-color: #333;
 	text-decoration: none;
@@ -136,21 +136,25 @@ QMenu::item:selected {
 	color: #fff*/
 }
 
+QMenu::item:selected:disabled {
+	background: #666;
+	color: #333;
+}
+
 QMenu::icon:checked { /* appearance of a 'checked' icon */
 	/*border-color: #709e32;
 	background: #709e32;
-     position: absolute;
-     top: 1px;
-     right: 1px;
-     bottom: 1px;
-     left: 1px;*/
+	position: absolute;
+	top: 1px;
+	right: 1px;
+	bottom: 1px;
+	left: 1px;*/
 }
 
 QMenu::separator {
-	height: 2px;
-	border: 2px groove #333;
-	/*margin-left: 10px;
-	margin-right: 5px;*/
+	margin: 4px 0px;
+	height: 0px;
+	border-bottom: 2px groove #2a2a2a;
 }
 
 QMenu::indicator {
@@ -158,39 +162,39 @@ QMenu::indicator {
 	height: 11px;
 }
 
- /* non-exclusive indicator = check box style indicator (see QActionGroup::setExclusive) */
-/* QMenu::indicator:non-exclusive:unchecked {
-     image: url(:/images/checkbox_unchecked.png);
- }
+/* non-exclusive indicator = check box style indicator (see QActionGroup::setExclusive) */
+QMenu::indicator:non-exclusive:unchecked {
+	image: url(:/images/checkbox_unchecked.png);
+}
 
- QMenu::indicator:non-exclusive:unchecked:selected {
-     image: url(:/images/checkbox_unchecked_hover.png);
- }
+QMenu::indicator:non-exclusive:unchecked:selected {
+	image: url(:/images/checkbox_unchecked_hover.png);
+}
 
- QMenu::indicator:non-exclusive:checked {
-     image: url(:/images/checkbox_checked.png);
- }
+QMenu::indicator:non-exclusive:checked {
+	image: url(:/images/checkbox_checked.png);
+}
 
- QMenu::indicator:non-exclusive:checked:selected {
-     image: url(:/images/checkbox_checked_hover.png);
- }*/
+QMenu::indicator:non-exclusive:checked:selected {
+	image: url(:/images/checkbox_checked_hover.png);
+}
 
- /* exclusive indicator = radio button style indicator (see QActionGroup::setExclusive) */
-/* QMenu::indicator:exclusive:unchecked {
-     image: url(:/images/radiobutton_unchecked.png);
- }
+/* exclusive indicator = radio button style indicator (see QActionGroup::setExclusive) */
+QMenu::indicator:exclusive:unchecked {
+	image: url(:/images/radiobutton_unchecked.png);
+}
 
- QMenu::indicator:exclusive:unchecked:selected {
-     image: url(:/images/radiobutton_unchecked_hover.png);
- }
+QMenu::indicator:exclusive:unchecked:selected {
+	image: url(:/images/radiobutton_unchecked_hover.png);
+}
 
- QMenu::indicator:exclusive:checked {
-     image: url(:/images/radiobutton_checked.png);
- }
+QMenu::indicator:exclusive:checked {
+	image: url(:/images/radiobutton_checked.png);
+}
 
- QMenu::indicator:exclusive:checked:selected {
-     image: url(:/images/radiobutton_checked_hover.png);
- }*/
+QMenu::indicator:exclusive:checked:selected {
+	image: url(:/images/radiobutton_checked_hover.png);
+}
 
 /* End Menu */
 
@@ -311,11 +315,11 @@ QToolButton[popupMode="1"] { /* only for MenuButtonPopup */
 
 /* the subcontrols below are used only in the MenuButtonPopup mode */
 QToolButton::menu-button {
-     border-left: 1px solid #444;
-     /*border-top-right-radius: 6px;
-     border-bottom-right-radius: 6px;*/
-     /* 16px width + 4px for border = 20px allocated above */
-     width: 17px;
+	border-left: 1px solid #444;
+	/*border-top-right-radius: 6px;*/
+	/*border-bottom-right-radius: 6px;*/
+	/* 16px width + 4px for border = 20px allocated above */
+	width: 17px;
 }
 
 QToolButton::menu-arrow {
@@ -509,26 +513,6 @@ QListWidget {
 	show-decoration-selected: 1;
 }
 
-/*QListWidget::item:selected {
-	background: #00b2ee;
-	color: #fff;
-}*/
-
- /*QListWidget::item:selected:!active {
-     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #ABAFE5, stop: 1 #8588B2);
- }
-
- QListWidget::item:selected:active {
-     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #6a6ea9, stop: 1 #888dd9);
- }
-
- QListWidget::item:hover {
-     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #FAFBFE, stop: 1 #DCDEF1);
- }*/
-
 /* End List View/Widget */
 
 
@@ -558,9 +542,13 @@ QGroupBox::title {
 	bottom: 1.5ex;
 	/*subcontrol-origin: margin;
 	subcontrol-position: top center;*/
-	background: none;
+	background: #444; /* needed to prevent text 'etching' effect with plastique style */
 	/*color: #aaa;*/
 }
+
+/*QGroupBox::title:disabled {
+	color: #666;
+}*/
 
 QGroupBox::indicator {
 	width: 11px;
@@ -608,19 +596,19 @@ QTabBar::tab { /* Style the tab using the tab sub-control. Note that it reads QT
 	border: 1px solid #222;
 	border-top-left-radius: 2px;
 	border-top-right-radius: 2px;
-	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #777, stop: 0.1 #4c4c4c, stop: 1 #444);
+	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #555, stop: 0.1 #444, stop: 1 #3c3c3c);
 }
 
 QTabBar::tab:hover {
-	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #709e32, stop: 0.15 #4c4c4c, stop: 1 #444);
+	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #709e32, stop: 0.15 #444, stop: 1 #3c3c3c);
 }
 
 QTabBar::tab:selected {
 	min-height: 2.5ex; /* need to test this on Windows / OS X and check single tab doesn't change height */
 	border-top-left-radius: 3px;
 	border-top-right-radius: 3px;
-	border-bottom-color: #555; /* same as pane color */
-	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #777, stop: 0.15 #666, stop: 0.85 #555);
+	border-bottom-color: #444; /* same as pane color */
+	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #666, stop: 0.15 #555, stop: 1 #444);
 }
 
 QTabBar::tab:!selected {
@@ -658,7 +646,7 @@ QFrame:no-frame {
 	border: none;
 }*/
 
-/* End Tab Widget */
+/* End Frame */
 
 
 
@@ -685,6 +673,10 @@ QComboBox:editable {
 
 QComboBox:!editable, QComboBox::drop-down:editable {
 	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #666, stop: 1 #555);
+}
+
+QComboBox:!editable:hover, QComboBox::drop-down:editable:hover {
+	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #777, stop: 1 #666);
 }
 
 /* QComboBox gets the "on" state when the popup is open */
@@ -724,22 +716,44 @@ QComboBox::down-arrow:on {
 	left: 1px;
 }
 
-QComboBox QAbstractItemView {
-	/*margin-top: 0px;
-	margin-bottom: 0px;*/
-	border: 1px solid #222;
-	/*border-radius: 0px;*/
+/* Background color of popup-list.*/ 
+QComboBox QListView{
+	/*padding: 1px;*/
+	/*padding-left: 5px;*/
+	/*border: 1px solid #222;*/
 	background: #333;
-	/*selection-background-color: #709e32;*/
 }
 
-/*QComboBox QAbstractItemView::item {
-	border-bottom: 5px solid white; margin:3px;
+QComboBox::item {
+	background: transparent;
 }
 
-QComboBox QAbstractItemView::item:selected {
-	border-bottom: 5px solid black; margin:3px;
+/* Needed to complete the rule set. */
+QComboBox::item:alternate {
+	background: transparent;
+}
+
+/* Color of the selected list item. */
+QComboBox::item:selected {
 	background: #709e32;
+	color: #fff;
+	border: none;
+}
+
+/* Indicator will shine through the label text if you don't make it hidden. */
+QComboBox::indicator{
+	background-color:transparent;
+	selection-background-color:transparent;
+	color:transparent;
+	selection-color:transparent;
+}
+
+/*QComboBox::indicator:checked {
+	image: url(:/images/checkbox_checked.png);
+}
+
+QComboBox::indicator:checked:disabled {
+	image: url(:/images/checkbox_checked_disabled.png);
 }*/
 
 /* End Combo Box */

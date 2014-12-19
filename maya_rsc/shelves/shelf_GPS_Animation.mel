@@ -142,6 +142,36 @@ global proc shelf_GPS_Animation () {
         -manage 1
         -visible 1
         -preventOverride 0
+        -annotation "iDeform" 
+        -enableBackground 0
+        -align "center" 
+        -label "iDeform" 
+        -labelOffset 0
+        -font "plainLabelFont" 
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.25 
+        -image "iDeform.png" 
+        -image1 "iDeform.png" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "loadPlugin -qt iDeform;" 
+        -sourceType "mel" 
+        -commandRepeatable 1
+        -flat 1
+	   -mi "iCollide" ( "loadPlugin -qt iDeform; iCollide new" )
+	   -mi "iDisplace" ( "loadPlugin -qt iDeform; iDisplace()" )
+	   -mi "iSkinDefrom Attract" ( "loadPlugin -qt iDeform; iSkinDeform new 0" )
+	   -mi "iSkinDefrom Slide" ( "loadPlugin -qt iDeform; iSkinDeform new 1" )
+    ;
+    shelfButton
+        -enableCommandRepeat 1
+        -enable 1
+        -width 35
+        -height 35
+        -manage 1
+        -visible 1
+        -preventOverride 0
         -annotation "Offset keyframes on selected objects" 
         -enableBackground 0
         -align "center" 

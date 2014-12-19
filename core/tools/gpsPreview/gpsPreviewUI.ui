@@ -7,487 +7,346 @@
     <x>0</x>
     <y>0</y>
     <width>480</width>
-    <height>340</height>
+    <height>360</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>GPS - Preview</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_3">
+  <layout class="QVBoxLayout" name="verticalLayout_4">
    <property name="margin">
     <number>8</number>
    </property>
    <item>
-    <widget class="QLabel" name="jobShot_label">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="Line" name="h_line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QFrame" name="frame_4">
+    <widget class="QFrame" name="main_frame">
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <layout class="QVBoxLayout" name="verticalLayout_3">
       <property name="margin">
        <number>0</number>
       </property>
       <item>
-       <widget class="QLabel" name="file_label">
+       <widget class="QLabel" name="jobShot_label">
         <property name="text">
-         <string>File:</string>
+         <string/>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="file_lineEdit">
-        <property name="palette">
-         <palette>
-          <active>
-           <colorrole role="WindowText">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>38</red>
-              <green>38</green>
-              <blue>38</blue>
-             </color>
-            </brush>
-           </colorrole>
-           <colorrole role="Text">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>76</red>
-              <green>76</green>
-              <blue>76</blue>
-             </color>
-            </brush>
-           </colorrole>
-           <colorrole role="BrightText">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>38</red>
-              <green>38</green>
-              <blue>38</blue>
-             </color>
-            </brush>
-           </colorrole>
-           <colorrole role="ButtonText">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>38</red>
-              <green>38</green>
-              <blue>38</blue>
-             </color>
-            </brush>
-           </colorrole>
-           <colorrole role="Base">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>200</red>
-              <green>125</green>
-              <blue>127</blue>
-             </color>
-            </brush>
-           </colorrole>
-          </active>
-          <inactive>
-           <colorrole role="WindowText">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>38</red>
-              <green>38</green>
-              <blue>38</blue>
-             </color>
-            </brush>
-           </colorrole>
-           <colorrole role="Text">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>76</red>
-              <green>76</green>
-              <blue>76</blue>
-             </color>
-            </brush>
-           </colorrole>
-           <colorrole role="BrightText">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>38</red>
-              <green>38</green>
-              <blue>38</blue>
-             </color>
-            </brush>
-           </colorrole>
-           <colorrole role="ButtonText">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>38</red>
-              <green>38</green>
-              <blue>38</blue>
-             </color>
-            </brush>
-           </colorrole>
-           <colorrole role="Base">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>200</red>
-              <green>125</green>
-              <blue>127</blue>
-             </color>
-            </brush>
-           </colorrole>
-          </inactive>
-          <disabled>
-           <colorrole role="WindowText">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>69</red>
-              <green>69</green>
-              <blue>69</blue>
-             </color>
-            </brush>
-           </colorrole>
-           <colorrole role="Text">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>69</red>
-              <green>69</green>
-              <blue>69</blue>
-             </color>
-            </brush>
-           </colorrole>
-           <colorrole role="BrightText">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>38</red>
-              <green>38</green>
-              <blue>38</blue>
-             </color>
-            </brush>
-           </colorrole>
-           <colorrole role="ButtonText">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>106</red>
-              <green>104</green>
-              <blue>100</blue>
-             </color>
-            </brush>
-           </colorrole>
-           <colorrole role="Base">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>102</red>
-              <green>102</green>
-              <blue>102</blue>
-             </color>
-            </brush>
-           </colorrole>
-          </disabled>
-         </palette>
-        </property>
-        <property name="mandatoryField" stdset="0">
-         <bool>true</bool>
+       <widget class="Line" name="upper_h_line">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QFrame" name="frame_3">
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
-      <property name="margin">
-       <number>0</number>
-      </property>
       <item>
-       <widget class="QGroupBox" name="resolution_groupBox">
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
         </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="file_horizontalLayout">
+        <item>
+         <widget class="QLabel" name="file_label">
+          <property name="text">
+           <string>File:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="file_lineEdit">
+          <property name="mandatoryField" stdset="0">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="res_range_horizontalLayout">
+        <item>
+         <widget class="QGroupBox" name="resolution_groupBox">
+          <property name="layoutDirection">
+           <enum>Qt::LeftToRight</enum>
+          </property>
+          <property name="title">
+           <string>Resolution</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+          <property name="checkable">
+           <bool>false</bool>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <widget class="QComboBox" name="resolution_comboBox">
+             <property name="currentIndex">
+              <number>3</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>150%</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>125%</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>110%</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>shot default</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>75%</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>50%</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>25%</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>10%</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>custom</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="res_horizontalLayout">
+             <item>
+              <widget class="QLineEdit" name="x_lineEdit">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="x_label">
+               <property name="text">
+                <string>x</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="y_lineEdit">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="range_groupBox">
+          <property name="title">
+           <string>Frame Range</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <widget class="QComboBox" name="range_comboBox">
+             <property name="currentIndex">
+              <number>0</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>shot default</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>timeline</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>custom</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>current frame</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="range_horizontalLayout">
+             <item>
+              <widget class="QLineEdit" name="start_lineEdit">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="range_label">
+               <property name="text">
+                <string>-</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="end_lineEdit">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="options_groupBox">
         <property name="title">
-         <string>Resolution</string>
+         <string>Options</string>
         </property>
-        <property name="flat">
-         <bool>false</bool>
-        </property>
-        <property name="checkable">
-         <bool>false</bool>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <widget class="QComboBox" name="resolution_comboBox">
-           <property name="currentIndex">
-            <number>3</number>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="0">
+          <widget class="QCheckBox" name="offscreen_checkBox">
+           <property name="text">
+            <string>Offscreen</string>
            </property>
-           <item>
-            <property name="text">
-             <string>150%</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>125%</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>110%</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>shot default</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>75%</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>50%</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>25%</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>10%</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>custom</string>
-            </property>
-           </item>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
-         <item>
-          <widget class="QFrame" name="frame">
-           <property name="frameShape">
-            <enum>QFrame::NoFrame</enum>
+         <item row="0" column="1">
+          <widget class="QCheckBox" name="guides_checkBox">
+           <property name="text">
+            <string>Guides</string>
            </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
+           <property name="checked">
+            <bool>true</bool>
            </property>
-           <layout class="QHBoxLayout" name="horizontalLayout">
-            <property name="margin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLineEdit" name="x_lineEdit">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="x_label">
-              <property name="text">
-               <string>x</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="y_lineEdit">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QCheckBox" name="launchViewer_checkBox">
+           <property name="text">
+            <string>Launch Viewer</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QCheckBox" name="noSelection_checkBox">
+           <property name="text">
+            <string>No Selection</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QCheckBox" name="slate_checkBox">
+           <property name="text">
+            <string>Slate</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QCheckBox" name="createQuicktime_checkBox">
+           <property name="text">
+            <string>Create QuickTime</string>
+           </property>
           </widget>
          </item>
         </layout>
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="range_groupBox">
-        <property name="title">
-         <string>Frame Range</string>
+       <spacer name="verticalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_2">
-         <item>
-          <widget class="QComboBox" name="range_comboBox">
-           <property name="currentIndex">
-            <number>0</number>
-           </property>
-           <item>
-            <property name="text">
-             <string>shot default</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>timeline</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>custom</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>current frame</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item>
-          <widget class="QFrame" name="frame_2">
-           <property name="frameShape">
-            <enum>QFrame::NoFrame</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
-           </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <property name="margin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLineEdit" name="start_lineEdit">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="range_label">
-              <property name="text">
-               <string>-</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="end_lineEdit">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-        </layout>
-       </widget>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
       </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="groupBox">
-     <property name="title">
-      <string>Options</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="offscreen_checkBox">
-        <property name="text">
-         <string>Offscreen</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
+      <item>
+       <widget class="Line" name="lower_h_line">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QCheckBox" name="guides_checkBox">
+      <item>
+       <widget class="QPushButton" name="preview_pushButton">
         <property name="text">
-         <string>Guides</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QCheckBox" name="launchViewer_checkBox">
-        <property name="text">
-         <string>Launch Viewer</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="noSelection_checkBox">
-        <property name="text">
-         <string>No Selection</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QCheckBox" name="slate_checkBox">
-        <property name="text">
-         <string>Slate</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QCheckBox" name="createQuicktime_checkBox">
-        <property name="text">
-         <string>Create QuickTime</string>
+         <string>Preview</string>
         </property>
        </widget>
       </item>
      </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="Line" name="h_line1">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="preview_pushButton">
-     <property name="text">
-      <string>Preview</string>
-     </property>
+     <zorder>jobShot_label</zorder>
+     <zorder>upper_h_line</zorder>
+     <zorder>horizontalLayoutWidget</zorder>
+     <zorder>horizontalLayoutWidget_2</zorder>
+     <zorder>range_groupBox</zorder>
+     <zorder>options_groupBox</zorder>
+     <zorder>lower_h_line</zorder>
+     <zorder>preview_pushButton</zorder>
+     <zorder>verticalSpacer_2</zorder>
+     <zorder>verticalSpacer_3</zorder>
     </widget>
    </item>
   </layout>

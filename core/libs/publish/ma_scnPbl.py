@@ -103,7 +103,7 @@ def publish(pblTo, slShot, scnName, subsetName, textures, pblNotes, mail, approv
 			txFullPath = '%s/tx' % visiblePblDir
 			txRelPath = txFullPath.replace(os.path.expandvars('$JOBPATH'), '$JOBPATH')
 			txPaths = (txFullPath, txRelPath)
-			mayaOps.relinkTexture(txPaths, txObjLs=objLs, copy=False)
+			mayaOps.relinkTexture(txPaths, txObjLs=allObjLs, copy=False)
 			
 		verbose.pblFeed(end=True)
 	
