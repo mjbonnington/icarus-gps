@@ -16,6 +16,11 @@ class dialog(QtGui.QDialog):
 		self.vManager.ui = Ui_Dialog()
 		self.vManager.ui.setupUi(self)
 		
+		# Apply UI style sheet
+		qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
+		with open(qss, "r") as fh:
+			self.vManager.ui.main_frame.setStyleSheet(fh.read())
+
 		#defining phonon as preview player. Excepting import as Nuke does not include phonon its pySide compile
 		try:
 			from PySide.phonon import Phonon
@@ -90,7 +95,7 @@ class dialog(QtGui.QDialog):
 		#gets list of all asset versions
 		self.vColumn = self.ui.assetVersion_listWidget
 		versionLs = os.listdir(icData.assetRootDir)
-		versionLs = sorted(versionLs)
+		versionLs = sorted(versionLs, reverse=True)
 		#clears version column
 		for i in range(0, self.vColumn.count()):
 			self.vColumn.takeItem(0)
