@@ -316,5 +316,31 @@ global proc shelf_GPS_Tools () {
         -commandRepeatable 1
         -flat 1
     ;
+    shelfButton
+        -enableCommandRepeat 1
+        -enable 1
+        -width 34
+        -height 34
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "Fix orthographic cameras - automatically set their clipping planes to fit selected object(s)" 
+        -enableBackground 0
+        -align "center" 
+        -label "orthoCam" 
+        -labelOffset 0
+        -font "plainLabelFont" 
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.2 
+        -image "orthoCamClipPlanes.png" 
+        -image1 "orthoCamClipPlanes.png" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "import gpsOrthoCamFix; gpsOrthoCamFix.gpsOrthoCamFix().orthoCamFix()" 
+        -sourceType "python" 
+        -commandRepeatable 1
+        -flat 1
+    ;
 
 } 

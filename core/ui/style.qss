@@ -588,7 +588,7 @@ QTabWidget::tab-bar {
 }
 
 QTabBar::tab { /* Style the tab using the tab sub-control. Note that it reads QTabBar _not_ QTabWidget */
-	min-width: 4em;
+	min-width: 3em;
 	min-height: 2ex;
 	margin-left: -1px;
 	margin-right: -1px;
