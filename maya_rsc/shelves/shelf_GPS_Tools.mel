@@ -129,10 +129,16 @@ global proc shelf_GPS_Tools () {
         -style "iconOnly" 
         -marginWidth 1
         -marginHeight 1
-        -command "deformer -type hotOceanDeformer;" 
-        -sourceType "mel" 
-        -commandRepeatable 1
-        -flat 1
+	   -command "import GPS_oceanDeformers; GPS_oceanDeformers.createOcean(type = 'maya')" 
+	   -sourceType "python" 
+	   -commandRepeatable 1
+	   -flat 1
+	   -mi "Vray Ocean Deformer" ( "import GPS_oceanDeformers; GPS_oceanDeformers.createOcean(type = 'vray')" )
+	   -mip 0
+	   -mi "Maya Ocean Deformer" ( "import GPS_oceanDeformers; GPS_oceanDeformers.createOcean(type = 'maya')" )
+	   -mip 1
+	   -mi "Houdini Ocean Toolkit (not in use)" ( "import GPS_oceanDeformers; GPS_oceanDeformers.createOcean(type = 'hot')" )
+	   -mip 2
     ;
     shelfButton
         -enableCommandRepeat 1

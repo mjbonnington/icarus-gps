@@ -1,11 +1,12 @@
 # GPS Rename Tools
-# v0.4
+# v0.45
 #
-# Michael Bonnington 2014
+# Michael Bonnington 2014-2015
 # Gramercy Park Studios
 
 import maya.cmds as mc
 import maya.mel as mel
+import pymel.core as pm
 import string, re, time
 
 
@@ -16,9 +17,15 @@ class gpsRenameTools():
 		self.winName = "gpsRenameToolsWindow"
 		self.gMainProgressBar = mel.eval('$tmp = $gMainProgressBar')
 
+		# Presets for renaming - will add more as and when we think of them
+		self.presetItemList = ["None", "Clean up mangled FBX node names"]
+
 
 	def renameUnique(self, obj, newName):
-		"""Rename object - perhaps move this function to external module?"""
+		"""Rename object
+		Now takes pymel object, rather than string, as first argument.
+		Perhaps this function should be moved to an external module?
+		"""
 
 		# Set flags for shape node renaming behaviour
 		ignoreShape = False
@@ -31,13 +38,14 @@ class gpsRenameTools():
 
 		# Rename shape node(s) if applicable
 		if renameShapes == "renameShapesForce":
-			if mc.nodeType(obj) == "transform":
-				shapeLs = mc.listRelatives(obj, shapes=True, fullPath=True)
+			objName = str(obj) # Cast pymel object to string for the following code to work
+			if mc.nodeType(objName) == "transform":
+				shapeLs = mc.listRelatives(objName, shapes=True, fullPath=True)
 				for shape in shapeLs:
 					mc.rename(shape, newNameTuple[2] + "Shape")
 
 		# Rename node
-		mc.rename(obj, newNameTuple[2], ignoreShape=ignoreShape)
+		obj.rename(newNameTuple[2], ignoreShape=ignoreShape)
 
 
 	def replaceTextRE(self):
@@ -53,7 +61,7 @@ class gpsRenameTools():
 			pattern = re.compile(findStr)
 
 		# Get current selection
-		objLs = mc.ls(selection=True, long=True)
+		objLs = pm.ls(selection=True, long=True) # Changed to pymel version of ls to return objects instead of names
 		if objLs:
 
 			# Check input is valid
@@ -90,14 +98,14 @@ class gpsRenameTools():
 		autopad = mc.checkBox("autopad", query=True, value=True)
 
 		# Get current selection
-		selLs = mc.ls(selection=True)
+		selLs = pm.ls(selection=True) # Changed to pymel version of ls to return objects instead of names
 		if selLs:
 
 			# Initialise progress bar and start clock
 			mc.progressBar(self.gMainProgressBar, edit=True, beginProgress=True, isInterruptable=True, maxValue=2*len(selLs)) # Initialise progress bar
 			startTime = time.time()
 
-			# Calculate padding...
+			# Calculate padding automatically...
 			if autopad:
 				numLs = []
 
@@ -118,14 +126,14 @@ class gpsRenameTools():
 
 				padding = len(str(maxNum))
 
-			# ...or use specified value
+			# ...or use user specified padding value
 			else:
 				padding = mc.intSliderGrp("padding", query=True, value=True)
 
 			# Loop twice to prevent renumbering to a pre-existing number
 			for i in range(2):
 				index = start
-				objLs = mc.ls(selection=True) # Get selection again as names will have changed
+				objLs = pm.ls(selection=True) # Get selection again as names will have changed
 
 				if preserve:
 					for obj in objLs:
@@ -164,6 +172,16 @@ class gpsRenameTools():
 		mc.intSliderGrp("padding", edit=True, enable=option)
 
 
+	def fillPresets(self):
+		preset = mc.optionMenuGrp("renamePresets", query=True, value=True)
+		if preset == self.presetItemList[0]:
+			mc.textFieldGrp("findStr", edit=True, text=r"")
+			mc.textFieldGrp("replaceStr", edit=True, text=r"")
+		elif preset == self.presetItemList[1]:
+			mc.textFieldGrp("findStr", edit=True, text=r"(FBXASC\d{3})+")
+			mc.textFieldGrp("replaceStr", edit=True, text=r"_")
+
+
 	def UI(self):
 
 		# Check if UI window already exists
@@ -192,17 +210,26 @@ class gpsRenameTools():
 
 		mc.frameLayout(width=400, collapsable=True, cl=collapse, borderStyle="etchedIn", label="Find and Replace")
 		mc.columnLayout(name)
+
 		mc.separator(height=4, style="none")
+		mc.optionMenuGrp("renamePresets", label="Preset: ", changeCommand=lambda *args: self.fillPresets())
+		for item in self.presetItemList:
+			mc.menuItem(label=item)
+
+		mc.separator(width=396, height=12, style="in")
 		mc.textFieldGrp("findStr", label="Find: ")
 		mc.textFieldGrp("replaceStr", label="Replace: ")
+
 		mc.separator(height=8, style="none")
 		mc.rowLayout(numberOfColumns=2, columnAttach2=["left", "left"], columnAlign2=["both", "both"], columnOffset2=[142, 8])
 		mc.checkBox("ignoreCase", label="Ignore case", value=0)
 		mc.setParent(name)
+
 		mc.separator(height=4, style="none")
 		mc.rowLayout(numberOfColumns=1, columnAttach1="left", columnAlign1="both", columnOffset1=142)
 		mc.button(width=116, label="Replace Text", command=lambda *args: self.replaceTextRE())
 		mc.setParent(name)
+
 		mc.separator(height=4, style="none")
 		mc.setParent(parent)
 

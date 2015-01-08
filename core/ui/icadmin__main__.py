@@ -31,8 +31,8 @@ class icadminApp(QtGui.QMainWindow):
 		jobLs = j.joblist.keys()
 		jobLs = sorted(jobLs)
 		for job in jobLs:
-			#self.ui.listWidget_jobs.addItem(job)
-			item = QtGui.QListWidgetItem(self.ui.listWidget_jobs)
+			#self.ui.jobs_listWidget.addItem(job)
+			item = QtGui.QListWidgetItem(self.ui.jobs_listWidget)
 			item.setText(job)
 			item.setFlags(QtCore.Qt.ItemIsSelectable|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled|QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
 			item.setCheckState(QtCore.Qt.Checked)
