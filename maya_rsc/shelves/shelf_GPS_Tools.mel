@@ -343,7 +343,7 @@ global proc shelf_GPS_Tools () {
         -style "iconOnly" 
         -marginWidth 1
         -marginHeight 1
-        -command "import gpsOrthoCamFix; gpsOrthoCamFix.gpsOrthoCamFix().orthoCamFix()" 
+        -command "import gpsOrthoCamFix; gpsOrthoCamFix.gpsOrthoCamFix()" 
         -sourceType "python" 
         -commandRepeatable 1
         -flat 1

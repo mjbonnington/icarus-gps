@@ -13,9 +13,20 @@ import maya.cmds as mc
 class gpsOrthoCamFix():
 
 	def __init__(self):
-		self.winTitle = "GPS Ortho Cam Fix"
-		self.winName = "gpsOrthoCamFix"
+		#self.winTitle = "GPS Ortho Cam Fix"
+		#self.winName = "gpsOrthoCamFix"
 		#self.gMainProgressBar = mel.eval('$tmp = $gMainProgressBar')
+
+		# Selection list should only contain DAG nodes
+		sel = mc.ls(long=True, selection=True, type='dagNode')
+		if sel:
+			#print "Fit to selection"
+			self.orthoCamFix()
+		else:
+			#print "Fit to all"
+			mc.select(allDagObjects=True)
+			self.orthoCamFix()
+			mc.select(clear=True)
 
 	def orthoCamFix(self):
 		bbox = mc.exactWorldBoundingBox()
