@@ -2,6 +2,10 @@
   <qresource prefix="rsc">
     <file>rsc/app_icon_hieroPlayer_disabled.png</file>
     <file>rsc/app_icon_hieroPlayer.png</file>
+    <file>rsc/icon_add_disabled.png</file>
+    <file>rsc/icon_add.png</file>
+    <file>rsc/icon_delete_disabled.png</file>
+    <file>rsc/icon_delete.png</file>
     <file>rsc/app_icon_mari_disabled.png</file>
     <file>rsc/app_icon_mari.png</file>
     <file>rsc/app_icon_nuke_disabled.png</file>

@@ -1541,6 +1541,11 @@ QLineEdit {
                       </item>
                       <item>
                        <property name="text">
+                        <string>tracking</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
                         <string>modeling</string>
                        </property>
                       </item>

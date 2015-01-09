@@ -1,8 +1,8 @@
 #!/usr/bin/python
 
 # icadmin__main__.py
-# support	:Michael Bonnington - mike.bonnington@gps-ldn.com
-# copyright	:Gramercy Park Studios
+# support	: Michael Bonnington - mike.bonnington@gps-ldn.com
+# copyright	: Gramercy Park Studios
 
 
 import os, sys
@@ -28,14 +28,18 @@ class icadminApp(QtGui.QMainWindow):
 		# create instance of jobs class; load from xml file
 		j = jobs.jobs(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'jobs.xml'))
 
-		jobLs = j.joblist.keys()
-		jobLs = sorted(jobLs)
-		for job in jobLs:
+		#jobLs = j.joblist.keys()
+		#jobLs = sorted(jobLs)
+		for i in range(len(j.joblist)):
 			#self.ui.jobs_listWidget.addItem(job)
-			item = QtGui.QListWidgetItem(self.ui.jobs_listWidget)
-			item.setText(job)
-			item.setFlags(QtCore.Qt.ItemIsSelectable|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled|QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
-			item.setCheckState(QtCore.Qt.Checked)
+			item = QtGui.QTreeWidgetItem(self.ui.jobs_treeWidget)
+			item.setText(0, j.joblist.keys()[i]) # populate name column
+			item.setText(1, j.joblist.values()[i][0]) # populate path column
+			#item.setFlags(QtCore.Qt.ItemIsSelectable|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled|QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
+			if j.joblist.values()[i][1] == 'True':
+				item.setCheckState(0, QtCore.Qt.Checked)
+			else:
+				item.setCheckState(0, QtCore.Qt.Unchecked)
 
 
 if __name__ == "__main__":
