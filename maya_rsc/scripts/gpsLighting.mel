@@ -259,3 +259,25 @@ global proc gpsLighting.removeVRayGamma()
 		}
 	}
 }
+
+//adds vRay allow negative colors attribute on selection
+global proc gpsLighting.addVRayNegCol()
+{
+	string $objLs[] = `ls -sl`;
+	for($obj in $objLs){
+		if (`nodeType $obj`=="file"){
+			vray addAttributesFromGroup $obj vray_file_allow_neg_colors 1;
+		}
+	}
+}
+
+//removes vRay allow negative colors attribute on selection
+global proc gpsLighting.removeVRayNegCol()
+{
+	string $objLs[] = `ls -sl`;
+	for($obj in $objLs){
+		if (`nodeType $obj`=="file"){
+			vray addAttributesFromGroup $obj vray_file_allow_neg_colors 0;
+		}
+	}
+}

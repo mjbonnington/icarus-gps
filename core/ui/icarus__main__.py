@@ -262,16 +262,26 @@ class icarusApp(QtGui.QDialog):
 			self.ui.shot_comboBox.removeItem(0)
 		selJob = self.ui.job_comboBox.currentText()
 		shotLs = listShots.list_(selJob)
-		for shot in shotLs:
-			self.ui.shot_comboBox.insertItem(0, shot)
-		self.ui.shot_comboBox.setCurrentIndex(0)				
-		
+		if shotLs:
+			for shot in shotLs:
+				self.ui.shot_comboBox.insertItem(0, shot)
+			self.ui.shot_comboBox.setCurrentIndex(0)
+			self.ui.shot_comboBox.setEnabled(True)
+			self.ui.setShot_label.setEnabled(True)
+			self.ui.setShot_pushButton.setEnabled(True)
+		else:
+			self.ui.shot_comboBox.insertItem(0, '[None]')
+			self.ui.shot_comboBox.setEnabled(False)
+			self.ui.setShot_label.setEnabled(False)
+			self.ui.setShot_pushButton.setEnabled(False)
+
 	#populates publish shot drop down menu	
 	def populatePblShotLs(self):
 		shotLs = listShots.list_(os.environ['JOB'])
-		for shot in shotLs:
-			self.ui.publishToShot_comboBox.insertItem(0, shot)
-		self.ui.publishToShot_comboBox.setCurrentIndex(self.ui.publishToShot_comboBox.findText(os.environ['SHOT']))
+		if shotLs:
+			for shot in shotLs:
+				self.ui.publishToShot_comboBox.insertItem(0, shot)
+			self.ui.publishToShot_comboBox.setCurrentIndex(self.ui.publishToShot_comboBox.findText(os.environ['SHOT']))
 
 	#updates job tab ui with shot selection
 	def updateJobUI(self):

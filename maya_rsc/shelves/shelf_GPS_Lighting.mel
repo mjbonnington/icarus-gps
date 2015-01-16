@@ -64,6 +64,8 @@ global proc shelf_GPS_Lighting () {
 		-flat 1
 		-mi "Add VRay Gamma to Selected" ( "source gpsLighting.mel;gpsLighting.addVRayGamma();" )
 		-mi "Remove VRay Gamma from Selected" ( "source gpsLighting.mel;gpsLighting.removeVRayGamma();" )
+		-mi "Add VRay Allow Negative Colours to Selected" ( "source gpsLighting.mel;gpsLighting.addVRayNegCol();" )
+		-mi "Remove VRay Allow Negative Colours from Selected" ( "source gpsLighting.mel;gpsLighting.removeVRayNegCol();" )
 	;
 	shelfButton
 		-enableCommandRepeat 1
@@ -184,6 +186,32 @@ global proc shelf_GPS_Lighting () {
 		-mip 2
 		-mi "Create Multimattes Selection" ( "import createMultimattes\ncreateMultimattes.multiMatte(all=False)" )
 		-mip 3
+	;
+	shelfButton
+		-enableCommandRepeat 1
+		-enable 1
+		-width 35
+		-height 35
+		-manage 1
+		-visible 1
+		-preventOverride 0
+		-annotation "Create shading networks for UDIM multi-tile textures" 
+		-enableBackground 0
+		-align "center" 
+		-label "gpsCreateUDIM" 
+		-labelOffset 0
+		-font "plainLabelFont" 
+		-overlayLabelColor 0.8 0.8 0.8 
+		-overlayLabelBackColor 0 0 0 0.2 
+		-image "udim.png" 
+		-image1 "udim.png" 
+		-style "iconOnly" 
+		-marginWidth 1
+		-marginHeight 1
+		-command "import gpsCreateUDIM; gpsCreateUDIM.gpsCreateUDIM().UI()" 
+		-sourceType "python" 
+		-commandRepeatable 1
+		-flat 1
 	;
 	shelfButton
 		-enableCommandRepeat 1
