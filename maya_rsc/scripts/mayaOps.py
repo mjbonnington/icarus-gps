@@ -423,7 +423,7 @@ def groupManualLods(objLs, lodA, lodB, lodC):
 	return lodsMasterGrp
 
 #######################creates icarus data set#############
-def icDataSet(obj, icData, update=None, drawOverrides=True):
+def icDataSet(obj, icData, update=None, drawOverrides=True, addElements=True):
 	mc.loadPlugin('gps_ICSet', qt=True)
 	#stores current selection
 	currentSlLs = mc.ls(sl=True)
@@ -436,7 +436,8 @@ def icDataSet(obj, icData, update=None, drawOverrides=True):
 			mc.select(obj)
 		#creates set with selection
 		dataSet = mc.createNode('ICSet', n='ICSet_%s' % icData.assetPblName)
-		mc.sets(obj, forceElement=dataSet, edit=True)
+		if addElements:
+			mc.sets(obj, forceElement=dataSet, edit=True)
 		if drawOverrides:
 			#Setting default component display
 			mc.setAttr('%s.overrideComponentDisplay' % dataSet, 1)
