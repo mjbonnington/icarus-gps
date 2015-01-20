@@ -1,5 +1,5 @@
 # GPS Create UDIM
-# v0.1
+# v0.2
 #
 # Michael Bonnington 2015
 # Gramercy Park Studios
@@ -18,8 +18,7 @@ class gpsCreateUDIM():
 		self.winName = "gpsCreateUDIM"
 		#self.gMainProgressBar = mel.eval('$tmp = $gMainProgressBar')
 
-		#self.txTypeItemList = ["+/- Average", "Layered Texture"]
-		self.txTypeItemList = ['plusMinusAverage', 'layeredTexture']
+		self.txTypeItemList = ['layeredTexture', 'plusMinusAverage']
 
 		self.imageFileTypes = "*.exr *.tif *.tiff *.tga *.jpg *.jpeg *.png *.gif *.iff *.sgi *.rla *.bmp"
 		self.txDir = ""
@@ -95,7 +94,7 @@ class gpsCreateUDIM():
 
 
 	def fileBrowse(self, value, format):
-		"""Browse for a data file."""
+		"""Browse for an image file."""
 
 		# If no file is specified, start in the project's sourceimages directory
 		currentDir = os.path.dirname(mc.textField(value, query=True, text=True))
@@ -111,6 +110,8 @@ class gpsCreateUDIM():
 
 
 	def detectUDIM(self):
+		"""Detect all other UDIM tiles from the selected filename."""
+
 		self.lsUDIM = [] # Clear UDIM file list
 		filePath = mc.textField("txPath", query=True, text=True)
 
@@ -119,11 +120,11 @@ class gpsCreateUDIM():
 		if fileCheckPass:
 			self.txDir = os.path.dirname(filePath)
 
-			#prefix = os.path.basename(filePath).rsplit(".")[0]
-			prefix = self.splitFilename(os.path.basename(filePath))[0]
+			prefix = os.path.basename(filePath).split(".")[0]
+			ext = os.path.splitext(os.path.basename(filePath))
 
 			for item in os.listdir(self.txDir):
-				if item.startswith(prefix):
+				if item.startswith(prefix) and item.endswith(ext):
 					self.lsUDIM.append(item)
 
 		msg = "Found %d UDIM tiles:" %len(self.lsUDIM)
@@ -153,27 +154,6 @@ class gpsCreateUDIM():
 			return False
 
 
-	def splitFilename(self, filename):
-		"""Split filename into elements."""
-
-		#try:
-		#	root, ext = os.path.splitext(filename)
-		#	ext = ext.rsplit(".")[1]
-
-		#	match = re.search(r"\.\d{4}$", root)
-		#	udim = match.group().rsplit(".")[1]
-
-		#	prefix = root.rsplit(".")[0]
-
-		#	return prefix, udim, ext
-
-		#except AttributeError:
-		#	mc.error("Bad filename. Filenames must conform to the following format: name.####.ext")
-		#	return False
-
-		return filename.split(".")
-
-
 	def getUVOffset(self, udim):
 		"""Convert UDIM to UV offset."""
 
@@ -183,13 +163,8 @@ class gpsCreateUDIM():
 
 
 	def createUDIM(self):
-		prefix, udim, ext = self.splitFilename(self.lsUDIM[0])
+		prefix, udim, ext = self.lsUDIM[0].split(".")
 
-		#txOpt = mc.optionMenuGrp("txType", query=True, value=True)
-		#if txOpt == self.txTypeItemList[0]: # "+/- Average"
-		#	txCombinedNodeType = 'plusMinusAverage'
-		#elif txOpt == self.txTypeItemList[0]: # "Layered Texture"
-		#	txCombinedNodeType = 'layeredTexture'
 		txCombinedNodeType = mc.optionMenuGrp("txType", query=True, value=True)
 		if txCombinedNodeType == 'plusMinusAverage':
 			txCombinedNode = mc.shadingNode(txCombinedNodeType, name=prefix+'_UDIM_'+ext, asUtility=True)
@@ -198,7 +173,7 @@ class gpsCreateUDIM():
 
 
 		for i, item in enumerate(self.lsUDIM):
-			prefix, udim, ext = self.splitFilename(item)
+			prefix, udim, ext = item.split(".")
 
 			# Create place2dTexture nodes
 			nodeType = 'place2dTexture'
