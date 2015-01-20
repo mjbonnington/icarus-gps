@@ -1,13 +1,13 @@
 source menus2py;
 
 //Adds Version Manager Button
-global proc add_vManagerButton (string $nodeName, string $icAssetRootDir)
+global proc add_vManagerButton (string $nodeName, string $icAssetRootDir, string $icAssetType)
 {
 	rowLayout -nc 2 -cw 2 150 "vManagerButtonColumnLayout";
 		separator -style "none";
 		//string $rootDir = $icAssetRootDir;
 		button -l "Version Manager..." -c ("menus2py.launchVersionManager " + $nodeName) -h 30 "updateManagerButton";
-		editVManagerButton($nodeName, $icAssetRootDir);
+		editVManagerButton($nodeName, $icAssetRootDir, $icAssetType);
 
 }
 
@@ -16,9 +16,13 @@ global proc add_vManagerButton (string $nodeName, string $icAssetRootDir)
 This is a prevention method for older assets that were published before version manager being introduced not having AssetsRootDir attr that is 
 required by VersionManager */
 
-global proc editVManagerButton (string $nodeName, string $icAssetRootDir)
+global proc editVManagerButton (string $nodeName, string $icAssetRootDir, string $icAssetType)
 {
-	if (`objExists $icAssetRootDir`)
+	if (`getAttr $icAssetType` == "ma_scene")
+	{
+	button -e -vis false "updateManagerButton";
+	}
+	else if (`objExists $icAssetRootDir`)
 	{
 	button -e -c ("menus2py.launchVersionManager " + $nodeName) -vis true "updateManagerButton";
 	}
@@ -54,7 +58,7 @@ global proc AEICSetTemplate ( string $nodeName )
 		editorTemplate -addControl "icRefTag";
 		editorTemplate -addControl "icAssetType";
 		editorTemplate -addControl "icVersion";
-		editorTemplate -callCustom "add_vManagerButton" "editVManagerButton" $nodeName "icAssetRootDir";
+		editorTemplate -callCustom "add_vManagerButton" "editVManagerButton" $nodeName "icAssetRootDir" "icAssetType";
 		editorTemplate -addControl "icAssetCompatibility";
 		editorTemplate -addControl "Notes";
 		editorTemplate -addSeparator;

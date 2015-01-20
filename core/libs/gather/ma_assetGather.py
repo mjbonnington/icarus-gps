@@ -85,14 +85,17 @@ def gather(gatherPath):
 			
 		#generating icSet
 		chkNameConflict('ICSet_%s' % icData.assetPblName)
-		dataSet = mayaOps.icDataSet(icSetAsset, icData, update=None, drawOverrides=drawOverrides)
+		
 		#connects original to icSet
 		if icData.assetType != 'ma_scene':
+			dataSet = mayaOps.icDataSet(icSetAsset, icData, update=None, drawOverrides=drawOverrides, addElements=True)
 			mc.select(icData.asset, r=True, ne=True)
 			mc.addAttr(ln = 'icARefTag', dt='string')
 			mc.connectAttr('%s.icRefTag' % dataSet,  '%s.icARefTag' % icData.asset, f=True)
 			mayaOps.lockAttr([icData.asset], ['.icARefTag'], children=False)
-			
+		else:
+			drawOverrides = False
+			mayaOps.icDataSet(icSetAsset, icData, update=None, drawOverrides=drawOverrides, addElements=False)
 			
 			
 	except:
