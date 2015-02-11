@@ -6,6 +6,9 @@
 //updating maya scene at startup
 python ("import mayaOps; mayaOps.update()");
 
+//building GPS menus
+source gps_buildMenus;
+
 //setting up shortcuts to GPS Tools
 //New Scene
 nameCommand "GPSNew" -ann "GPS - New Scene" -c "source menus2Py; menus2Py.newScene()";

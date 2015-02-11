@@ -124,7 +124,7 @@ python("import mayaScnMng; mayaScnMng.newMayaScene()");
 }
 
 
-global proc menus2py.launchVersionManager(string $nodeName)
+global proc menus2Py.launchVersionManager(string $nodeName)
 {
 global string $icSetNodeName;
 $icSetNodeName = $nodeName;
@@ -135,7 +135,7 @@ python "icSetNodeName = mel.eval('$temp=$icSetNodeName'); icSetNodeName=icSetNod
 python("import ma_versionUpdate; ma_versionUpdate.update(ICSet=icSetNodeName)");
 }
 
-global proc menus2py.forceOverrideComponentDisplay(string $nodeName)
+global proc menus2Py.forceOverrideComponentDisplay(string $nodeName)
 {
 global string $icSetNodeName;
 $icSetNodeName = $nodeName;

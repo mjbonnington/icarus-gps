@@ -10,7 +10,7 @@ import os
 
 #reading from user log file	
 def read(entry=-1):
-	uHome = '/Users/%s' % os.environ['USERNAME']
+	uHome = os.environ['HOME']
 	try:
 		logFile = open('%s/.setlog' % uHome , 'r')
 		entryLs = logFile.read().split('\n')
@@ -25,7 +25,7 @@ def read(entry=-1):
 
 #writing to user log file. allows max of 5 entries
 def write(newEntry):
-	uHome = '/Users/%s' % os.environ['USERNAME']
+	uHome = os.environ['HOME']
 	try:
 		logFile = open('%s/.setlog' % uHome , 'r+')
 		#limiting entry list

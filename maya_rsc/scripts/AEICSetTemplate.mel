@@ -1,4 +1,4 @@
-source menus2py;
+source menus2Py;
 
 //Adds Version Manager Button
 global proc add_vManagerButton (string $nodeName, string $icAssetRootDir, string $icAssetType)
@@ -6,7 +6,7 @@ global proc add_vManagerButton (string $nodeName, string $icAssetRootDir, string
 	rowLayout -nc 2 -cw 2 150 "vManagerButtonColumnLayout";
 		separator -style "none";
 		//string $rootDir = $icAssetRootDir;
-		button -l "Version Manager..." -c ("menus2py.launchVersionManager " + $nodeName) -h 30 "updateManagerButton";
+		button -l "Version Manager..." -c ("menus2Py.launchVersionManager " + $nodeName) -h 30 "updateManagerButton";
 		editVManagerButton($nodeName, $icAssetRootDir, $icAssetType);
 
 }
@@ -24,7 +24,7 @@ global proc editVManagerButton (string $nodeName, string $icAssetRootDir, string
 	}
 	else if (`objExists $icAssetRootDir`)
 	{
-	button -e -c ("menus2py.launchVersionManager " + $nodeName) -vis true "updateManagerButton";
+	button -e -c ("menus2Py.launchVersionManager " + $nodeName) -vis true "updateManagerButton";
 	}
 	else
 	{
@@ -38,7 +38,7 @@ global proc forceOverrideDisplayButton (string $nodeName)
 {
 	rowLayout -nc 2 -cw 2 150 "forceOverrideDisplay";
 		separator -style "none";
-		button -l "Force Display Override" -c ("menus2py.forceOverrideComponentDisplay " + $nodeName) -h 23 "forceOverrideDisplayButton";
+		button -l "Force Display Override" -c ("menus2Py.forceOverrideComponentDisplay " + $nodeName) -h 23 "forceOverrideDisplayButton";
 }
 	
 
@@ -46,7 +46,7 @@ global proc forceOverrideDisplayButton (string $nodeName)
 //Updates the display override button
 global proc updateOverrideDisplayButton (string $nodeName)
 {
-	button -e -c ("menus2py.forceOverrideComponentDisplay " + $nodeName) "forceOverrideDisplayButton";
+	button -e -c ("menus2Py.forceOverrideComponentDisplay " + $nodeName) "forceOverrideDisplayButton";
 }
 
 

@@ -7,7 +7,7 @@
 #maya scene publish module
 import os, sys, traceback
 import maya.cmds as mc
-import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose, approvePbl
+import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose, approvePbl, inProgress
 
 
 def publish(pblTo, slShot, scnName, subsetName, textures, pblNotes, mail, approved):
@@ -47,7 +47,6 @@ def publish(pblTo, slShot, scnName, subsetName, textures, pblNotes, mail, approv
 	version = '%s' % vCtrl.version(pblDir)
 	if approved:
 		version += '_apv'
-	hiddenVersion = '.%s' % version
 
 	#confirmation dialog
 	dialogTitle = 'Publishing'
@@ -59,10 +58,13 @@ def publish(pblTo, slShot, scnName, subsetName, textures, pblNotes, mail, approv
 	#publishing
 	try:	
 		verbose.pblFeed(begin=True)
+
 		#creating publish directories
-		pblDir = mkPblDirs.mkDirs(pblDir, hiddenVersion, textures=True)
-		visiblePblDir = pblDir.replace(hiddenVersion, version)
-	
+		pblDir = mkPblDirs.mkDirs(pblDir, version, textures=True)
+
+		#creating in progress tmp file
+		inProgress.start(pblDir)
+
 		#ic publish data file
 		icPblData.writeData(pblDir, assetPblName, scnName, assetType, extension, version, pblNotes)
 	
@@ -79,7 +81,7 @@ def publish(pblTo, slShot, scnName, subsetName, textures, pblNotes, mail, approv
 			txFullPath = '%s/tx' % pblDir
 			txRelPath = txFullPath.replace(os.path.expandvars('$JOBPATH'), '$JOBPATH')
 			txPaths = (txFullPath, txRelPath)
-			mayaOps.relinkTexture(txPaths, updateMaya=False)
+			mayaOps.relinkTexture(txPaths, updateMaya=True)
 			
 		#snapshot
 		mayaOps.snapShot(pblDir)
@@ -92,18 +94,11 @@ def publish(pblTo, slShot, scnName, subsetName, textures, pblNotes, mail, approv
 		mayaOps.saveFile(fileType)
 		mayaOps.redirectScene(activeScene)
 
+		#deleting in progress tmp file
+		inProgress.end(pblDir)
+
 		#published asset check
-		pblResult = pblChk.sucess(pathToPblAsset)
-		
-		#making publish visible
-		os.system('mv %s %s' % (pblDir, visiblePblDir))
-		
-		#relinking textures to pbl visible direcotry
-		if textures:
-			txFullPath = '%s/tx' % visiblePblDir
-			txRelPath = txFullPath.replace(os.path.expandvars('$JOBPATH'), '$JOBPATH')
-			txPaths = (txFullPath, txRelPath)
-			mayaOps.relinkTexture(txPaths, txObjLs=allObjLs, copy=False)
+		pblResult = pblChk.success(pathToPblAsset)
 			
 		verbose.pblFeed(end=True)
 	
@@ -112,7 +107,7 @@ def publish(pblTo, slShot, scnName, subsetName, textures, pblNotes, mail, approv
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		pathToPblAsset = ''
 		os.system('rm -rf %s' % pblDir)
-		pblResult = pblChk.sucess(pathToPblAsset)
+		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += verbose.pblRollback()
 	
 	#publish result dialog

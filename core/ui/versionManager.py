@@ -33,7 +33,8 @@ class dialog(QtGui.QDialog):
 		QtCore.QObject.connect(self.vManager.ui.update_pushButton, QtCore.SIGNAL("clicked()"), self.update)
 		QtCore.QObject.connect(self.vManager.ui.cancel_pushButton, QtCore.SIGNAL("clicked()"), self.cancel)
 		QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.reloadVersionDetails)
-		self.vManager.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint)
+		self.vManager.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WindowCloseButtonHint)
+		self.vManager.move(QtGui.QDesktopWidget().availableGeometry(1).center() - self.vManager.frameGeometry().center())
 		
 		
 		#loading ICData for current asset verion

@@ -47,7 +47,7 @@ def setEnv(envVars):
 	os.environ['ASPECTRATIO'] = '%s' % float(float(shotData.res[0]) / float(shotData.res[1]))
 	os.environ['HRES'] = shotData.res[0]
 	os.environ['VRES'] = shotData.res[1]
-	os.environ['RECENTFILESDIR'] = '/Users/%s/.icRecentFiles' % os.environ['USERNAME']
+	os.environ['RECENTFILESDIR'] = os.path.join(os.environ['HOME'], os.environ['USERNAME'], '.icRecentFiles')
 	#MARI
 	os.environ['MARIDIR'] = '%s/3D/mari' % shotPath
 	os.environ['MARISCENESDIR'] = '%s/scenes/%s' % (os.environ['MARIDIR'], os.environ['USERNAME'])
@@ -76,7 +76,10 @@ def setEnv(envVars):
 	os.environ['MI_LIBRARY_PATH'] = '%s/maya_rsc/shaders:' % os.environ['PIPELINE']
 	os.environ['VRAY_FOR_MAYA_SHADERS'] = '%s/maya_rsc/shaders/' % os.environ['PIPELINE']
 	os.environ['VRAY_FOR_MAYA2014_PLUGINS_x64'] = '%s:%s/maya_rsc/plugins' % (os.environ['VRAY_FOR_MAYA2014_PLUGINS_x64'], os.environ['PIPELINE'])
-	os.environ['XBMLANGPATH'] = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'icons')
+	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+		os.environ['XBMLANGPATH'] = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'icons')
+	else:
+		os.environ['XBMLANGPATH'] = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'icons', '%B')
 	os.environ['MAYA_PRESET_PATH'] = '%s/maya_rsc/presets' % os.environ['PIPELINE']
 	os.environ['MAYADIR'] = '%s/3D/maya' % shotPath
 	os.environ['MAYASCENESDIR'] = '%s/scenes/%s' % (os.environ['MAYADIR'], os.environ['USERNAME'])
@@ -115,6 +118,11 @@ def setEnv(envVars):
 	os.environ['RF_RSC'] = os.path.join(os.environ['PIPELINE'], 'realflow_rsc')
 	os.environ['RF_COMMANDS_ORGANIZER_FILE_PATH'] = os.path.join(os.environ['REALFLOWSCENESDIR'] , '.cmdsOrg/commandsOrganizer.dat')
 	#DJV
-	os.environ['DJV_LIB'] = '%s/external_apps/djv/djv-1.0.4-OSX-64.app/Contents/Resources/lib' % os.environ['PIPELINE']
-	os.environ['DJV_CONVERT'] = '%s/external_apps/djv/djv-1.0.4-OSX-64.app/Contents/Resources/bin' % os.environ['PIPELINE'] 
-	os.environ['DJV_PLAY'] = '%s/external_apps/djv/djv-1.0.4-OSX-64.app/Contents/MacOS/djv-1.0.4-OSX-64' % os.environ['PIPELINE']
+	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+		os.environ['DJV_LIB'] = '%s/external_apps/djv/djv-1.0.4-OSX-64.app/Contents/Resources/lib' % os.environ['PIPELINE']
+		os.environ['DJV_CONVERT'] = '%s/external_apps/djv/djv-1.0.4-OSX-64.app/Contents/Resources/bin' % os.environ['PIPELINE'] 
+		os.environ['DJV_PLAY'] = '%s/external_apps/djv/djv-1.0.4-OSX-64.app/Contents/MacOS/djv-1.0.4-OSX-64' % os.environ['PIPELINE']
+	else:
+		os.environ['DJV_LIB'] = '%s/external_apps/djv/djv-1.0.5-Linux-64/lib' % os.environ['PIPELINE']
+		os.environ['DJV_CONVERT'] = '%s/external_apps/djv/djv-1.0.5-Linux-64/bin/djv_convert' % os.environ['PIPELINE']
+		os.environ['DJV_PLAY'] = '%s/external_apps/djv/djv-1.0.5-Linux-64/bin/djv_view' % os.environ['PIPELINE']

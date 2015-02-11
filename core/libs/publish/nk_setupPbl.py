@@ -7,7 +7,7 @@
 #nuke setup publish module
 import os, sys, traceback
 import nuke
-import pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose, nukeOps
+import pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose, nukeOps, inProgress
 
 
 def publish(pblTo, slShot, pblType, pblName, pblNotes, mail, approved):
@@ -45,7 +45,6 @@ def publish(pblTo, slShot, pblType, pblName, pblNotes, mail, approved):
 	version = '%s' % vCtrl.version(pblDir)
 	if approved:
 		version += '_apv'
-	hiddenVersion = '.%s' % version
 
 	#confirmation dialog
 	dialogTitle = 'Publishing'
@@ -56,8 +55,12 @@ def publish(pblTo, slShot, pblType, pblName, pblNotes, mail, approved):
 
 	try:	
 		verbose.pblFeed(begin=True)
+
 		#creating publish directories
-		pblDir = mkPblDirs.mkDirs(pblDir, hiddenVersion)
+		pblDir = mkPblDirs.mkDirs(pblDir, version)
+
+		#creating in progress tmp file
+		inProgress.start(pblDir)
 
 		#ic publish data file
 		icPblData.writeData(pblDir, assetPblName, assetPblName, assetType, extension, version, pblNotes)
@@ -75,12 +78,12 @@ def publish(pblTo, slShot, pblType, pblName, pblNotes, mail, approved):
 		#viewer snapshot
 		nukeOps.viewerSnapshot(pblDir)
 
+		#deleting in progress tmp file
+		inProgress.end(pblDir)
+
 		#published asset check
-		pblResult = pblChk.sucess(pathToPblAsset)
+		pblResult = pblChk.success(pathToPblAsset)
 		
-		#making publish visible
-		visiblePblDir = pblDir.replace(hiddenVersion, version)
-		os.system('mv %s %s' % (pblDir, visiblePblDir))
 		verbose.pblFeed(end=True)
 	
 	except:
@@ -88,7 +91,7 @@ def publish(pblTo, slShot, pblType, pblName, pblNotes, mail, approved):
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		pathToPblAsset = ''
 		os.system('rm -rf %s' % pblDir)
-		pblResult = pblChk.sucess(pathToPblAsset)
+		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += verbose.pblRollback()
 
 	#publish result dialog

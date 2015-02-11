@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'icarusUI.ui'
+# Form implementation generated from reading ui file '/Volumes/hggl_SAN_1/RnD/icarus_linux__dev__/icarus__dev__/core/ui/icarusUI.ui'
 #
-# Created: Fri Jan  9 16:56:16 2015
+# Created: Tue Feb  3 18:23:41 2015
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -737,6 +737,8 @@ class Ui_Dialog(object):
         self.dailyPblType_comboBox.addItem("")
         self.dailyPblType_comboBox.addItem("")
         self.dailyPblType_comboBox.addItem("")
+        self.dailyPblType_comboBox.addItem("")
+        self.dailyPblType_comboBox.addItem("")
         self.verticalLayout_9.addWidget(self.dailyPblType_comboBox)
         self.dailyPblAdd_pushButton = QtGui.QPushButton(self.dailyPblSequenceType_groupBox)
         self.dailyPblAdd_pushButton.setEnabled(False)
@@ -1312,11 +1314,13 @@ class Ui_Dialog(object):
         self.dailyPblType_comboBox.setItemText(1, QtGui.QApplication.translate("Dialog", "previs", None, QtGui.QApplication.UnicodeUTF8))
         self.dailyPblType_comboBox.setItemText(2, QtGui.QApplication.translate("Dialog", "tracking", None, QtGui.QApplication.UnicodeUTF8))
         self.dailyPblType_comboBox.setItemText(3, QtGui.QApplication.translate("Dialog", "modeling", None, QtGui.QApplication.UnicodeUTF8))
-        self.dailyPblType_comboBox.setItemText(4, QtGui.QApplication.translate("Dialog", "texturing", None, QtGui.QApplication.UnicodeUTF8))
-        self.dailyPblType_comboBox.setItemText(5, QtGui.QApplication.translate("Dialog", "anim", None, QtGui.QApplication.UnicodeUTF8))
-        self.dailyPblType_comboBox.setItemText(6, QtGui.QApplication.translate("Dialog", "lighting", None, QtGui.QApplication.UnicodeUTF8))
-        self.dailyPblType_comboBox.setItemText(7, QtGui.QApplication.translate("Dialog", "fx", None, QtGui.QApplication.UnicodeUTF8))
-        self.dailyPblType_comboBox.setItemText(8, QtGui.QApplication.translate("Dialog", "comp", None, QtGui.QApplication.UnicodeUTF8))
+        self.dailyPblType_comboBox.setItemText(4, QtGui.QApplication.translate("Dialog", "rigging", None, QtGui.QApplication.UnicodeUTF8))
+        self.dailyPblType_comboBox.setItemText(5, QtGui.QApplication.translate("Dialog", "texturing", None, QtGui.QApplication.UnicodeUTF8))
+        self.dailyPblType_comboBox.setItemText(6, QtGui.QApplication.translate("Dialog", "shading", None, QtGui.QApplication.UnicodeUTF8))
+        self.dailyPblType_comboBox.setItemText(7, QtGui.QApplication.translate("Dialog", "anim", None, QtGui.QApplication.UnicodeUTF8))
+        self.dailyPblType_comboBox.setItemText(8, QtGui.QApplication.translate("Dialog", "lighting", None, QtGui.QApplication.UnicodeUTF8))
+        self.dailyPblType_comboBox.setItemText(9, QtGui.QApplication.translate("Dialog", "fx", None, QtGui.QApplication.UnicodeUTF8))
+        self.dailyPblType_comboBox.setItemText(10, QtGui.QApplication.translate("Dialog", "comp", None, QtGui.QApplication.UnicodeUTF8))
         self.dailyPblAdd_pushButton.setText(QtGui.QApplication.translate("Dialog", "Add", None, QtGui.QApplication.UnicodeUTF8))
         self.publishType_tabWidget.setTabText(self.publishType_tabWidget.indexOf(self.dailyPublishTab), QtGui.QApplication.translate("Dialog", "Daily", None, QtGui.QApplication.UnicodeUTF8))
         self.renderPbl_tableWidget.horizontalHeaderItem(0).setText(QtGui.QApplication.translate("Dialog", "layer", None, QtGui.QApplication.UnicodeUTF8))
@@ -1342,7 +1346,7 @@ class Ui_Dialog(object):
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Lucida Grande\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Helvetica\'; font-size:11pt;\"><br /></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Helvetica\'; font-size:11pt;\"><br /></span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.gather_pushButton.setText(QtGui.QApplication.translate("Dialog", "Gather", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.gather_tab), QtGui.QApplication.translate("Dialog", "Gather", None, QtGui.QApplication.UnicodeUTF8))
 

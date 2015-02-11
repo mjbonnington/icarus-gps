@@ -23,16 +23,20 @@ def mudbox():
 	
 def nuke(nukeType):
 	verbose.launchApp(nukeType)
-	if nukeType == 'Nuke':
+	if nukeType in ('nuke', 'Nuke'):
 		subprocess.Popen("$NUKEVERSION", shell=True)
-	elif nukeType == 'NukeX':
+	elif nukeType in ('nukex', 'NukeX'):
 		subprocess.Popen("$NUKEXVERSION", shell=True)
 
 def terminal():
 	subprocess.Popen("bash --rcfile %s" % os.environ['GPS_RC'], shell=True)
 
 def prodBoard():
-	subprocess.Popen('open %s' % os.environ['PRODBOARD'], shell=True)
+	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+		subprocess.Popen('open %s' % os.environ['PRODBOARD'], shell=True)
+	else:
+		subprocess.Popen('xdg-open %s' % os.environ['PRODBOARD'], shell=True)
+
 
 def realflow():
 	sys.path.append(os.path.join(os.environ['PIPELINE'], 'realflow_rsc', 'scripts'))

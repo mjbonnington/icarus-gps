@@ -7,7 +7,7 @@
 #pointCloud publish module
 import os, sys, traceback
 import maya.cmds as mc
-import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose, approvePbl
+import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose, approvePbl, inProgress
 
 def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 	
@@ -73,7 +73,6 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 	version = '%s' % vCtrl.version(pblDir)
 	if approved:
 		version += '_apv'
-	hiddenVersion = '.%s' % version
 
 	#confirmation dialog
 	dialogTitle = 'Publishing'
@@ -85,8 +84,12 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 	#publishing
 	try:	
 		verbose.pblFeed(begin=True)
+
 		#creating publish directories
-		pblDir = mkPblDirs.mkDirs(pblDir, hiddenVersion, textures)
+		pblDir = mkPblDirs.mkDirs(pblDir, version, textures)
+
+		#creating in progress tmp file
+		inProgress.start(pblDir)
 
 		#ic publish data file
 		icPblData.writeData(pblDir, assetPblName, objLs[0], assetType, extension, version, pblNotes)
@@ -96,7 +99,8 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 			txFullPath = '%s/tx' % pblDir
 			txRelPath = txFullPath.replace(pblTo, pblRelDir)
 			txPaths = (txFullPath, txRelPath)
-			mayaOps.relinkTexture(txPaths, txObjLs=allObjLs)
+			mayaOps.relinkTexture(txPaths, txObjLs=allObjLs, updateMaya=True)
+
 		#getting tranforms, writting to file and zeroing obj out
 		objTrs = mayaOps.getTransforms(objLs[0])
 		if objTrs:
@@ -117,17 +121,16 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 		mayaOps.exportGeo(objLs, geoType, pathToPblAsset)
 		#reapplying original tranforms to object
 		mayaOps.applyTransforms(objLs[0], objT, objR, objS)
-
-		#published asset check
-		pblResult = pblChk.sucess(pathToPblAsset)
-		
-		#making publish visible
-		visiblePblDir = pblDir.replace(hiddenVersion, version)
-		os.system('mv %s %s' % (pblDir, visiblePblDir))
 		
 		#approving publish
 		if approved:
-			approvePbl.publish(apvDir, visiblePblDir, assetDir, assetType, version)
+			approvePbl.publish(apvDir, pblDir, assetDir, assetType, version)
+
+		#deleting in progress tmp file
+		inProgress.end(pblDir)
+
+		#published asset check
+		pblResult = pblChk.success(pathToPblAsset)
 		
 		verbose.pblFeed(end=True)
 
@@ -136,7 +139,7 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		pathToPblAsset = ''
 		os.system('rm -rf %s' % pblDir)
-		pblResult = pblChk.sucess(pathToPblAsset)
+		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += verbose.pblRollback()
 
 	#publish result dialog

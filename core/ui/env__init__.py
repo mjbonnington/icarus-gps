@@ -19,13 +19,16 @@ def setEnv():
 	os.environ['JOBDATAFILE'] = 'jobData.py'
 	os.environ['SHOTDATAFILE'] = 'shotData.py'
 	if platform.system() == 'Darwin':
+		os.environ['ICARUS_RUNNING_OS'] = 'Darwin'
 		os.environ['USERNAME'] = os.environ['USER']
+	else:
+		os.environ['ICARUS_RUNNING_OS'] = 'Linux'
 	try:
 		os.environ['ICARUSENVAWARE']
 	except KeyError:
 		os.environ['ICARUSENVAWARE'] = 'STANDALONE'
 	appendSysPaths()
-	
+
 def appendSysPaths():
 	icarusLibs = os.path.join('core', 'libs')
 	icarusTools = os.path.join('core', 'tools')

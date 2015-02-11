@@ -1,0 +1,112 @@
+
+//Window Menu//
+///////////////
+
+string $windowMenu = "MayaWindow|mainWindowMenu";
+buildViewMenu($windowMenu);
+string $mainWindow_menu = `menu -exists $windowMenu`;
+string $mainWindow_menuItems[] = `menu -ia -q $windowMenu`;
+
+//deleting menu default entries
+//playblast
+deleteUI -mi $mainWindow_menuItems[18];
+
+
+//File Menu//
+/////////////
+
+string $fileMenu = "MayaWindow|mainFileMenu";
+buildFileMenu();
+string $fileWindow_menu = `menu -exists $fileMenu`;
+string $fileWindow_menuItems[] = `menu -ia -q $fileMenu`;
+
+//deleting menu default entries
+//new scene
+deleteUI -mi $fileWindow_menuItems[0];
+//open scene
+deleteUI -mi $fileWindow_menuItems[2];
+//save scene
+deleteUI -mi $fileWindow_menuItems[5];
+//save scene as
+deleteUI -mi $fileWindow_menuItems[7];
+//incremental save
+deleteUI -mi $fileWindow_menuItems[9];
+//archive scene
+deleteUI -mi $fileWindow_menuItems[10];
+//save preferences
+deleteUI -mi $fileWindow_menuItems[12];
+//project window
+deleteUI -mi $fileWindow_menuItems[37];
+//set project
+deleteUI -mi $fileWindow_menuItems[38];
+//recent files
+menu -en false -e $fileWindow_menuItems[39];
+//recent increments
+menu -en false -e $fileWindow_menuItems[40];
+//recent projects
+menu -en false -e $fileWindow_menuItems[41];
+
+//adding GPS entries
+setParent -m $fileMenu;
+		//GPS Launches Icarus
+		menuItem -ia "" -label "GPS - Icarus"
+			-annotation ("Launches Icarus UI")
+			-command ("source menus2Py;menus2Py.launchIcarus()");
+
+		menuItem -ia "" -divider true;
+
+		//GPS Save Scene As
+		menuItem -ia "" -label "GPS - Save As"
+			-annotation ("Saves scene with name")
+			-command ("source menus2Py; menus2Py.saveSceneAs()");
+
+		//GPS Save Scene
+		menuItem -ia "" -label "GPS - Save"
+			-annotation ("Saves current scene")
+			-command ("source menus2Py; menus2Py.saveScene()");
+
+		//GPS - Creates a  menu on the open recent scenes button for different scenes
+		string $menu = `menuItem -subMenu true -ia "" -l "GPS - Open Recent"`;
+		string $fileName = (`getenv JOB` + "_" + `getenv SHOT` + "_mayaScnLs.ic"); 
+		string $filePath = (`getenv RECENTFILESDIR` + "/" + $fileName);
+		$fileHandle = `fopen $filePath "r"`;
+		while (! `feof $fileHandle`) 
+			{
+			string $menuSelRaw = `fgetline $fileHandle`;
+			string $menuSel = `substitute "\n" $menuSelRaw ""`;
+			menuItem -l $menuSel -c ("source menus2Py; menus2Py.openRecent(\""+$menuSel+"\")")  -p $menu $menuSel;
+			}	
+		fclose $fileHandle;
+		setParent -m ..;
+
+		//GPS Load Scene
+		menuItem -ia "" -label "GPS - Open"
+			-annotation ("Opens a Scene")
+			-command ("source menus2Py; menus2Py.openScene()");
+
+		//GPS New Scene
+		menuItem -ia "" -label "GPS - New"
+			-annotation ("Creates a New Scene")
+			-command ("source menus2Py; menus2Py.newScene()");
+			
+			
+			
+//Time Slider menu//
+////////////////////
+
+string $timelineMenu = "MayaWindow|toolBar6|MainTimeSliderLayout|formLayout9|TimeSliderMenu";
+updateTimeSliderMenu $timelineMenu;
+menu -exists $timelineMenu;
+string $timeline_menuItems[] = `menu -ia -q $timelineMenu`;
+
+//deleting menu default entries
+//playblast
+deleteUI -mi $timeline_menuItems[15];
+
+//Adding GPS entries
+setParent -m $timelineMenu;
+	menuItem -divider true;
+	menuItem -label ("GPS - Preview")  
+				-command ("source menus2Py; menus2Py.gpsPreview()") 
+				-annotation ("Launches GPS Preview") 
+				GPSPlayblastItem;

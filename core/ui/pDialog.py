@@ -29,7 +29,10 @@ class dialog(QtGui.QDialog):
 			self.pDialog.ui.cancel_pushButton.hide()
 		QtCore.QObject.connect(self.pDialog.ui.ok_pushButton, QtCore.SIGNAL("clicked()"), self.ok)
 		QtCore.QObject.connect(self.pDialog.ui.cancel_pushButton, QtCore.SIGNAL("clicked()"), self.cancel)
-		self.pDialog.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint)
+		self.pDialog.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WindowCloseButtonHint)
+		self.move(QtGui.QDesktopWidget().availableGeometry(1).center() - self.frameGeometry().center())
+
+
 		if modal:
 			self.pDialog.exec_()
 			return self.pDialogReturn

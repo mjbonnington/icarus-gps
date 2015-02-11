@@ -3,10 +3,15 @@
 #title     	:menu
 #copyright	:Gramercy Park Studios
 
-
 #third party gizmos and plugins menu build
 import pixelfudger
 import J_Ops_menu
+
+#getting if running app is Nuke or Nukex
+if nuke.env['nukex']:
+	nukeType = 'nukex'
+else:
+	nukeType = 'nuke'
 
 #commands
 readNode = 'import gpsNodes; gpsNodes.read_()'
@@ -20,7 +25,7 @@ openRendersDir = 'import openDirs; openDirs.openNukeRenders()'
 openElementsDir = 'import openDirs; openDirs.openNukeElements()'
 openShotDir = 'import openDirs; openDirs.openShot()'
 launchProdBoard  = 'import launchApps; launchApps.prodBoard()'
-launchNuke = 'import launchApps; launchApps.nuke()'
+launchNuke = 'import launchApps; launchApps.nuke("%s")' % nukeType
 launchIcarus = 'os.environ["ICARUSENVAWARE"]="NUKE";import icarus__main__;reload(icarus__main__)'
 versionUp = 'import switchVersion; switchVersion.versionUp()'
 versionDown = 'import switchVersion; switchVersion.versionDown()'
