@@ -225,30 +225,36 @@ class icarusApp(QtGui.QDialog):
 		self.ui.publishToShot_comboBox.setCurrentIndex(self.ui.publishToShot_comboBox.findText(os.environ['SHOT']))
 		
 	#file dialog
-	#the env check puts the main window in the background so dialog pop up can return properly when running inside certain softwares
+	#the env check puts the main window in the background so dialog pop up can return properly when running inside certain applications
+	#the window flags bypass a mac bug that made the dialog always appear under the Icarus window. This is ignored in a Linux env
 	def fileDialog(self, dialogHome):
 		envOverride = ['MAYA', 'NUKE']
 		if os.environ['ICARUSENVAWARE'] in envOverride:
-			#app.setWindowFlags(QtCore.Qt.WindowStaysOnBottomHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
-			#app.show()
+			if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+				app.setWindowFlags(QtCore.Qt.WindowStaysOnBottomHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+				app.show()
 			dialog = QtGui.QFileDialog.getOpenFileName(app, self.tr('Files'), dialogHome, 'All files (*.*)')
-			#app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
-			#app.show()
+			if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+				app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+				app.show()
 		else:
 			dialog = QtGui.QFileDialog.getOpenFileName(app, self.tr('Files'), dialogHome, 'All files (*.*)')
 		return dialog[0]
 	
 	#fodler dialog
-	#the env check puts the main window in the background so dialog pop up can return properly
+	#the env check puts the main window in the background so dialog pop up can return properly when running inside certain applications
+	#the window flags bypass a mac bug that made the dialog always appear under the Icarus window. This is ignored in a Linux env
 	def folderDialog(self, dialogHome):
 		envOverride = ['MAYA', 'NUKE']
 		if os.environ['ICARUSENVAWARE'] in envOverride:
-			#app.setWindowFlags(QtCore.Qt.WindowStaysOnBottomHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
-			#app.show()
-			dialog = QtGui.QFileDialog.getExistingDirectory(self, self.tr('Directory'), dialogHome,
-			QtGui.QFileDialog.DontResolveSymlinks | QtGui.QFileDialog.ShowDirsOnly)
-			#app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
-			#app.show()
+			#this window flags bypass a mac bug that made the dialog always appear under the Icarus window. This is ignored in a Linux env
+			if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+				app.setWindowFlags(QtCore.Qt.WindowStaysOnBottomHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+				app.show()
+			dialog = QtGui.QFileDialog.getExistingDirectory(self, self.tr('Directory'), dialogHome, QtGui.QFileDialog.DontResolveSymlinks | QtGui.QFileDialog.ShowDirsOnly)
+			if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+				app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+				app.show()
 		else:
 			dialog = QtGui.QFileDialog.getExistingDirectory(self, self.tr('Directory'), dialogHome,
 			QtGui.QFileDialog.DontResolveSymlinks | QtGui.QFileDialog.ShowDirsOnly)
@@ -837,12 +843,10 @@ class icarusApp(QtGui.QDialog):
 		vItemsPath = os.path.join(self.gatherFrom, self.assetType, self.assetName)
 		if not pblChk.versionedItems(vItemsPath, vb=False):
 			self.subType = True
-			#self.ui.assetName_listWidget.setGeometry(QtCore.QRect(140, 15, 129, 242)) # Removed so it doesn't break improved UI
 			self.ui.assetSubType_listWidget.show()
 			self.updateAssetSubTypeCol()
 		else:
 			self.subType = None
-			#self.ui.assetName_listWidget.setGeometry(QtCore.QRect(140, 15, 261, 242)) # Removed so it doesn't break improved UI
 			self.ui.assetSubType_listWidget.hide()
 			self.updateAssetVersionCol()
 
@@ -856,7 +860,7 @@ class icarusApp(QtGui.QDialog):
 		self.clearColumn(self.aVersionCol)
 		self.ui.gatherInfo_textEdit.setText('')
 		self.previewPlayerCtrl(hide=True)
-		#self.ui.gatherImgPreview_label.setPixmap(None)
+		self.ui.gatherImgPreview_label.setPixmap(None)
 		self.fillColumn(self.aTypeCol, self.gatherFrom)
 	
 	#updates assetName column
@@ -868,7 +872,7 @@ class icarusApp(QtGui.QDialog):
 		self.clearColumn(self.aVersionCol)
 		self.ui.gatherInfo_textEdit.setText('')
 		self.previewPlayerCtrl(hide=True)
-		#self.ui.gatherImgPreview_label.setPixmap(None)
+		self.ui.gatherImgPreview_label.setPixmap(None)
 		searchPath = os.path.join(self.gatherFrom, self.assetType)
 		self.fillColumn(self.aNameCol, searchPath)
 
@@ -879,7 +883,7 @@ class icarusApp(QtGui.QDialog):
 		self.clearColumn(self.aVersionCol)
 		self.ui.gatherInfo_textEdit.setText('')
 		self.previewPlayerCtrl(hide=True)
-		#self.ui.gatherImgPreview_label.setPixmap(None)
+		self.ui.gatherImgPreview_label.setPixmap(None)
 		searchPath = os.path.join(self.gatherFrom, self.assetType, self.assetName)
 		self.fillColumn(self.aSubTypeCol, searchPath)
 
@@ -893,7 +897,7 @@ class icarusApp(QtGui.QDialog):
 			self.assetSubType = ''
 		self.ui.gatherInfo_textEdit.setText('')
 		self.previewPlayerCtrl(hide=True)
-		#self.ui.gatherImgPreview_label.setPixmap(None)
+		self.ui.gatherImgPreview_label.setPixmap(None)
 		searchPath = os.path.join(self.gatherFrom, self.assetType, self.assetName, self.assetSubType)
 		self.fillColumn(self.aVersionCol, searchPath)
 
@@ -965,7 +969,13 @@ if os.environ['ICARUSENVAWARE'] == 'MAYA' or os.environ['ICARUSENVAWARE'] == 'NU
 	with open(qss, "r") as fh:
 		app.setStyleSheet(fh.read())
 
-	app.setWindowFlags(QtCore.Qt.WindowCloseButtonHint)
+	#setting qt windows flags based on running OS
+	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+		app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint)
+	else:
+		app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WindowCloseButtonHint)
+
+	#centering window
 	app.move(QtGui.QDesktopWidget().availableGeometry(1).center() - app.frameGeometry().center())
 	app.show()
 
@@ -992,10 +1002,12 @@ else:
 			mainApp.setStyleSheet(fh.read())
 
 		app = icarusApp()
-		#app.setWindowFlags(QtCore.Qt.X11BypassWindowManagerHint)
-		#app.setWindowFlags(QtCore.Qt.WindowSystemMenuHint)
+
+		#passing window flags
 		app.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint)
-		#app.setWindowFlags(QtCore.Qt.WindowMaximizeButtonHint)
+
+		#centering window
 		app.move(QtGui.QDesktopWidget().availableGeometry(1).center() - app.frameGeometry().center())
+
 		app.show()
 		sys.exit(mainApp.exec_())
