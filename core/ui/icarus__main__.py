@@ -16,13 +16,16 @@ import os, sys, env__init__
 env__init__.setEnv()
 
 #note: publish modules are imported on demand rather than all at once at beggining of file
-import launchApps, setJob, parseUserPrefs, verbose, pblChk, pblOptsPrc, openDirs, setTerm, setPermissions, jobs, listShots
+import launchApps, setJob, userPrefs, verbose, pblChk, pblOptsPrc, openDirs, setTerm, setPermissions, jobs, listShots
 
 class icarusApp(QtGui.QDialog):
 	def __init__(self, parent = None):
 		super(icarusApp, self).__init__(parent)
 		self.ui = Ui_Dialog()
 		self.ui.setupUi(self)
+
+		# User prefs config file will be created if it doesn't already exist
+		userPrefs.create()
 
 		#defining phonon as preview player if icarus is standalone
 		if os.environ['ICARUSENVAWARE'] == 'STANDALONE':
@@ -54,7 +57,7 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.publish_pushButton, QtCore.SIGNAL('clicked()'), self.initPublish)
 		QtCore.QObject.connect(self.ui.tabWidget, QtCore.SIGNAL('currentChanged(int)'), self.adjustMainUI)
 
-		self.boolMinimiseOnAppLaunch = parseUserPrefs.config.getboolean('main', 'minimiseonlaunch')
+		self.boolMinimiseOnAppLaunch = userPrefs.config.getboolean('main', 'minimiseonlaunch')
 		self.ui.minimise_checkBox.setChecked(self.boolMinimiseOnAppLaunch)
 		self.ui.minimise_checkBox.stateChanged.connect(self.setMinimiseOnAppLaunch)
 
@@ -92,7 +95,7 @@ class icarusApp(QtGui.QDialog):
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
 			#populates job and shot drop down menus
-			entryLs = parseUserPrefs.read('lastjob').split(',')
+			entryLs = userPrefs.config.get('main', 'lastjob').split(',')
 			jobLs = jobs.dic.keys()
 			jobLs = sorted(jobLs, reverse=True)
 			for job in jobLs:
@@ -354,11 +357,11 @@ class icarusApp(QtGui.QDialog):
 	def setMinimiseOnAppLaunch(self, state):
 		if state == QtCore.Qt.Checked:
 			self.boolMinimiseOnAppLaunch = True
-			parseUserPrefs.edit('minimiseonlaunch', 'True')
+			userPrefs.edit('main', 'minimiseonlaunch', 'True')
 			#print "Minimise on launch enabled"
 		else:
 			self.boolMinimiseOnAppLaunch = False
-			parseUserPrefs.edit('minimiseonlaunch', 'False')
+			userPrefs.edit('main', 'minimiseonlaunch', 'False')
 			#print "Minimise on launch disabled"
 
 	#runs launch maya procedure and minimizes window
