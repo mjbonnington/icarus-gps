@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'gpsPreviewUI.ui'
 #
-# Created: Thu Dec 18 13:58:54 2014
+# Created: Thu Feb 12 16:47:28 2015
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -152,7 +152,7 @@ class Ui_Dialog(object):
 
         self.retranslateUi(Dialog)
         self.resolution_comboBox.setCurrentIndex(3)
-        self.range_comboBox.setCurrentIndex(0)
+        self.range_comboBox.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):

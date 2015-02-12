@@ -24,16 +24,11 @@ class icarusApp(QtGui.QDialog):
 		self.ui = Ui_Dialog()
 		self.ui.setupUi(self)
 
-		# Apply UI style sheet (disabled, being set for main app at bottom of file)
-		#qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
-		#with open(qss, "r") as fh:
-			#self.ui.main_frame.setStyleSheet(fh.read())
-
-		#defining phonon as preview player. Excepting import as Nuke does not include phonon its pySide compile
-		try:
+		#defining phonon as preview player if icarus is standalone
+		if os.environ['ICARUSENVAWARE'] == 'STANDALONE':
 			from PySide.phonon import Phonon
 			self.previewPlayer = Phonon.VideoPlayer(parent = self.ui.gatherImgPreview_label)
-		except ImportError:
+		else:
 			self.previewPlayer = None
 
 	##########################################Connecting signals and slots##########################################
@@ -863,7 +858,8 @@ class icarusApp(QtGui.QDialog):
 		self.clearColumn(self.aVersionCol)
 		self.ui.gatherInfo_textEdit.setText('')
 		self.previewPlayerCtrl(hide=True)
-		self.ui.gatherImgPreview_label.setPixmap(None)
+		pixmap = QtGui.QPixmap(None)
+		self.ui.gatherImgPreview_label.setPixmap(pixmap)
 		self.fillColumn(self.aTypeCol, self.gatherFrom)
 	
 	#updates assetName column
@@ -875,7 +871,8 @@ class icarusApp(QtGui.QDialog):
 		self.clearColumn(self.aVersionCol)
 		self.ui.gatherInfo_textEdit.setText('')
 		self.previewPlayerCtrl(hide=True)
-		self.ui.gatherImgPreview_label.setPixmap(None)
+		pixmap = QtGui.QPixmap(None)
+		self.ui.gatherImgPreview_label.setPixmap(pixmap)
 		searchPath = os.path.join(self.gatherFrom, self.assetType)
 		self.fillColumn(self.aNameCol, searchPath)
 
@@ -886,7 +883,8 @@ class icarusApp(QtGui.QDialog):
 		self.clearColumn(self.aVersionCol)
 		self.ui.gatherInfo_textEdit.setText('')
 		self.previewPlayerCtrl(hide=True)
-		self.ui.gatherImgPreview_label.setPixmap(None)
+		pixmap = QtGui.QPixmap(None)
+		self.ui.gatherImgPreview_label.setPixmap(pixmap)
 		searchPath = os.path.join(self.gatherFrom, self.assetType, self.assetName)
 		self.fillColumn(self.aSubTypeCol, searchPath)
 
@@ -900,7 +898,8 @@ class icarusApp(QtGui.QDialog):
 			self.assetSubType = ''
 		self.ui.gatherInfo_textEdit.setText('')
 		self.previewPlayerCtrl(hide=True)
-		self.ui.gatherImgPreview_label.setPixmap(None)
+		pixmap = QtGui.QPixmap(None)
+		self.ui.gatherImgPreview_label.setPixmap(pixmap)
 		searchPath = os.path.join(self.gatherFrom, self.assetType, self.assetName, self.assetSubType)
 		self.fillColumn(self.aVersionCol, searchPath)
 
@@ -919,12 +918,14 @@ class icarusApp(QtGui.QDialog):
 		import previewImg
 		imgPath = ''
 		self.previewPlayerCtrl(hide=True)
-		self.ui.gatherImgPreview_label.setPixmap(None)
+		pixmap = QtGui.QPixmap(None)
+		self.ui.gatherImgPreview_label.setPixmap(pixmap)
 		if self.previewPlayer:
 			imgPath = previewImg.getImg(self.gatherPath, forceExt='mov')
 			if imgPath:
 					self.previewPlayerCtrl(hide=True)
-					self.ui.gatherImgPreview_label.setPixmap(None)
+					pixmap = QtGui.QPixmap(None)
+					self.ui.gatherImgPreview_label.setPixmap(pixmap)
 					self.previewPlayerCtrl(loadImg=imgPath)
 					self.previewPlayerCtrl(show=True)
 					self.previewPlayerCtrl(play=True)
@@ -932,9 +933,11 @@ class icarusApp(QtGui.QDialog):
 			imgPath = previewImg.getImg(self.gatherPath, forceExt='jpg')
 			if imgPath:
 				self.previewPlayerCtrl(hide=True)
-				self.ui.gatherImgPreview_label.setPixmap(None)
+				pixmap = QtGui.QPixmap(None)
+				self.ui.gatherImgPreview_label.setPixmap(pixmap)
+				pixmap = QtGui.QPixmap(imgPath)
 				self.ui.gatherImgPreview_label.setScaledContents(True)
-				self.ui.gatherImgPreview_label.setPixmap(imgPath)		
+				self.ui.gatherImgPreview_label.setPixmap(pixmap)		
 
 	##################intializes gather################
 	def initGather(self):
