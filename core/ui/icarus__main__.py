@@ -16,7 +16,7 @@ import os, sys, env__init__
 env__init__.setEnv()
 
 #note: publish modules are imported on demand rather than all at once at beggining of file
-import launchApps, setJob, setLog, verbose, pblChk, pblOptsPrc, openDirs, setTerm, setPermissions, jobs, listShots
+import launchApps, setJob, parseUserPrefs, verbose, pblChk, pblOptsPrc, openDirs, setTerm, setPermissions, jobs, listShots
 
 class icarusApp(QtGui.QDialog):
 	def __init__(self, parent = None):
@@ -59,8 +59,9 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.publish_pushButton, QtCore.SIGNAL('clicked()'), self.initPublish)
 		QtCore.QObject.connect(self.ui.tabWidget, QtCore.SIGNAL('currentChanged(int)'), self.adjustMainUI)
 
+		self.boolMinimiseOnAppLaunch = parseUserPrefs.config.getboolean('main', 'minimiseonlaunch')
+		self.ui.minimise_checkBox.setChecked(self.boolMinimiseOnAppLaunch)
 		self.ui.minimise_checkBox.stateChanged.connect(self.setMinimiseOnAppLaunch)
-		self.boolMinimiseOnAppLaunch = True
 
 	########################################Adding right click menus to buttons#######################################
 	##################################################################################################################
@@ -96,7 +97,7 @@ class icarusApp(QtGui.QDialog):
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
 			#populates job and shot drop down menus
-			entryLs = setLog.read()
+			entryLs = parseUserPrefs.read('lastjob').split(',')
 			jobLs = jobs.dic.keys()
 			jobLs = sorted(jobLs, reverse=True)
 			for job in jobLs:
@@ -358,9 +359,11 @@ class icarusApp(QtGui.QDialog):
 	def setMinimiseOnAppLaunch(self, state):
 		if state == QtCore.Qt.Checked:
 			self.boolMinimiseOnAppLaunch = True
+			parseUserPrefs.edit('minimiseonlaunch', 'True')
 			#print "Minimise on launch enabled"
 		else:
 			self.boolMinimiseOnAppLaunch = False
+			parseUserPrefs.edit('minimiseonlaunch', 'False')
 			#print "Minimise on launch disabled"
 
 	#runs launch maya procedure and minimizes window
