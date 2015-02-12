@@ -20,8 +20,8 @@ export GREP_OPTIONS='--color=auto'
 
 
 ##echoing shot info##
-clear; echo -e "GRAMERCY PARK STUDIOS - $JOB | $SHOT";echo
-PS1="\[\033[32;2m\][\u-$SHOT: ./\W]\[\033[0m\]"
+clear; echo -e "GRAMERCY PARK STUDIOS - $JOB | $SHOT"; echo
+PS1="\[\033[32;2m\][\u-$SHOT: ./\W]\[\033[0m\] "
 
 
 ##cd into shot dir##

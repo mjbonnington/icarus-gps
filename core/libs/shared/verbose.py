@@ -34,8 +34,9 @@ def concurrentPublish():
 def gpsPreview_uiValues():
 	print 'Not all GPS Preview UI values could be read'
 
-def icarusLaunch(icarusVersion):
+def icarusLaunch(icarusVersion, icarusLocation):
 	print 'GRAMERCY PARK STUDIOS - ICARUS %s\n' % icarusVersion
+	print 'Running from %s\n' % icarusLocation
 	
 def ignored(asset):
 	print '%s ignored' % asset
