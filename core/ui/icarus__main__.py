@@ -957,7 +957,7 @@ class icarusApp(QtGui.QDialog):
 ##############################RUNS ICARUS WITH ENVIRONMENT AWARENESS##############################
 ##################################################################################################
 #version verbosity
-verbose.icarusLaunch(os.environ['ICARUSVERSION'])
+verbose.icarusLaunch(os.environ['ICARUSVERSION'], os.environ['ICWORKINGDIR']) #os.environ['PIPELINE'])
 
 #detecting environment and runnig application
 if os.environ['ICARUSENVAWARE'] == 'MAYA' or os.environ['ICARUSENVAWARE'] == 'NUKE':
