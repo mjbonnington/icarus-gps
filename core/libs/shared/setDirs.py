@@ -15,7 +15,7 @@ def mkDirs():
 		if not os.path.isdir(uDir):
 			os.system('mkdir -p %s'  % uDir)
 			os.system('chmod -R 775 %s' % uDir)
-			
+
 	#recent working files
 	uDir = os.environ['RECENTFILESDIR']
 	filePrefix = '%s_%s' % (os.environ['JOB'], os.environ['SHOT'])
@@ -31,7 +31,7 @@ def mkDirs():
 			fileHandle = open(uFilePath, "w")
 			fileHandle.close()
 			os.system('chmod -R 775 %s' % uFilePath)
-			
+
 	#mudbox
 	mudboxDirLs = ['scenes', 'models', 'sourceimages']
 	for mudboxDir in mudboxDirLs:

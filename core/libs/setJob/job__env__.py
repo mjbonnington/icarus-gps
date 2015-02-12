@@ -47,7 +47,8 @@ def setEnv(envVars):
 	os.environ['ASPECTRATIO'] = '%s' % float(float(shotData.res[0]) / float(shotData.res[1]))
 	os.environ['HRES'] = shotData.res[0]
 	os.environ['VRES'] = shotData.res[1]
-	os.environ['RECENTFILESDIR'] = os.path.join(os.environ['HOME'], os.environ['USERNAME'], '.icRecentFiles')
+	os.environ['RECENTFILESDIR'] = os.path.join(os.environ['ICUSERPREFS'], 'recentFiles')
+
 	#MARI
 	os.environ['MARIDIR'] = '%s/3D/mari' % shotPath
 	os.environ['MARISCENESDIR'] = '%s/scenes/%s' % (os.environ['MARIDIR'], os.environ['USERNAME'])

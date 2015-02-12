@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#support		:Nuno Pereira - nuno.pereira@gps-ldn.com
+#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
 #title     	:env__init__
 #copyright	:Gramercy Park Studios
 
@@ -14,6 +14,10 @@ def setEnv():
 	icarusUIDir = os.path.join('core', 'ui')
 	os.environ['PIPELINE'] = icarusWorkingDir.replace(icarusUIDir, '')
 	os.environ['ICCONFIGDIR'] = os.path.join(os.environ['PIPELINE'], 'core', 'config')
+
+	os.environ['ICUSERPREFS'] = os.path.join(os.environ['ICCONFIGDIR'], 'users', os.environ['USER']) # User prefs stored on server
+	#os.environ['ICUSERPREFS'] = os.path.join(os.environ['HOME'], '.icarus') # User prefs stored in user home folder
+
 	os.environ['SHOTSROOTRELATIVEDIR'] = 'Vfx'
 	os.environ['DATAFILESRELATIVEDIR'] = '.icarus'
 	os.environ['JOBDATAFILE'] = 'jobData.py'
