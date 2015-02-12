@@ -12,14 +12,13 @@ class dialog(QtGui.QDialog):
 	
 	def __init__(self, parent = None):
 		QtGui.QDialog.__init__(self, parent)
-		self.vManager = self
-		self.vManager.ui = Ui_Dialog()
-		self.vManager.ui.setupUi(self)
+		self.ui = Ui_Dialog()
+		self.ui.setupUi(self)
 		
 		# Apply UI style sheet
 		qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
 		with open(qss, "r") as fh:
-			self.vManager.ui.main_frame.setStyleSheet(fh.read())
+			self.ui.main_frame.setStyleSheet(fh.read())
 
 		#defining phonon as preview player. Excepting import as Nuke does not include phonon its pySide compile
 		try:
@@ -30,11 +29,16 @@ class dialog(QtGui.QDialog):
 		
 	def dialogWindow(self, assetRootDir, version, modal=True):
 		#connecting signals and slots and setting window flags
-		QtCore.QObject.connect(self.vManager.ui.update_pushButton, QtCore.SIGNAL("clicked()"), self.update)
-		QtCore.QObject.connect(self.vManager.ui.cancel_pushButton, QtCore.SIGNAL("clicked()"), self.cancel)
+		QtCore.QObject.connect(self.ui.update_pushButton, QtCore.SIGNAL("clicked()"), self.update)
+		QtCore.QObject.connect(self.ui.cancel_pushButton, QtCore.SIGNAL("clicked()"), self.cancel)
 		QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.reloadVersionDetails)
-		self.vManager.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WindowCloseButtonHint)
-		self.vManager.move(QtGui.QDesktopWidget().availableGeometry(1).center() - self.vManager.frameGeometry().center())
+		#Qt window flags
+		if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+			self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+		else:
+			self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WindowCloseButtonHint)
+		#centering window
+		self.move(QtGui.QDesktopWidget().availableGeometry(1).center() - self.frameGeometry().center())
 		
 		
 		#loading ICData for current asset verion
@@ -44,7 +48,7 @@ class dialog(QtGui.QDialog):
 		sys.path.remove(assetDir)
 		
 		#Setting asset label text
-		self.vManager.ui.asset_label.setText(icData.assetPblName)
+		self.ui.asset_label.setText(icData.assetPblName)
 		
 		self.updateVersion = ''
 		self.assetRootDir = icData.assetRootDir		
@@ -53,10 +57,10 @@ class dialog(QtGui.QDialog):
 		
 		#running dialog based on modality flag
 		if modal:
-			self.vManager.exec_()
+			self.exec_()
 			return self.updateVersion
 		else:
-			self.vManager.show()
+			self.show()
 			
 			
 			
@@ -144,10 +148,10 @@ class dialog(QtGui.QDialog):
 	#dialog acceptance function		
 	def update(self):
 		self.updateVersion = self.vColumn.currentItem().text()
-		self.vManager.accept()
+		self.accept()
 		return 
 
 	#dialog cancel function
 	def cancel(self):
-		self.vManager.accept()
+		self.accept()
 		return

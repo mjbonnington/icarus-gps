@@ -12,9 +12,8 @@ class dialog(QtGui.QDialog):
 	
 	def __init__(self, parent = None):
 		QtGui.QDialog.__init__(self, parent)
-		self.pDialog = self
-		self.pDialog.ui = Ui_Dialog()
-		self.pDialog.ui.setupUi(self)
+		self.ui = Ui_Dialog()
+		self.ui.setupUi(self)
 
 		# Apply UI style sheet
 		qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
@@ -22,29 +21,34 @@ class dialog(QtGui.QDialog):
 			self.ui.main_frame.setStyleSheet(fh.read())
 
 	def dialogWindow(self, dialogMsg, dialogTitle, conf = False, modal=True):
-		self.pDialog.ui.message_textEdit.setText(dialogMsg)
-		self.pDialog.setWindowTitle(dialogTitle)
+		self.ui.message_textEdit.setText(dialogMsg)
+		self.setWindowTitle(dialogTitle)
 		self.pDialogReturn = False
 		if conf:
-			self.pDialog.ui.cancel_pushButton.hide()
-		QtCore.QObject.connect(self.pDialog.ui.ok_pushButton, QtCore.SIGNAL("clicked()"), self.ok)
-		QtCore.QObject.connect(self.pDialog.ui.cancel_pushButton, QtCore.SIGNAL("clicked()"), self.cancel)
-		self.pDialog.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WindowCloseButtonHint)
+			self.ui.cancel_pushButton.hide()
+		QtCore.QObject.connect(self.ui.ok_pushButton, QtCore.SIGNAL("clicked()"), self.ok)
+		QtCore.QObject.connect(self.ui.cancel_pushButton, QtCore.SIGNAL("clicked()"), self.cancel)
+		#Qt window flags
+		if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+			self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+		else:
+			self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WindowCloseButtonHint)
+		#centering window
 		self.move(QtGui.QDesktopWidget().availableGeometry(1).center() - self.frameGeometry().center())
 
 
 		if modal:
-			self.pDialog.exec_()
+			self.exec_()
 			return self.pDialogReturn
 		else:
-			self.pDialog.show()
+			self.show()
 
 	def ok(self):
 		self.pDialogReturn = True
-		self.pDialog.accept()
+		self.accept()
 		return
 
 	def cancel(self):
 		self.pDialogReturn = False
-		self.pDialog.accept()
+		self.accept()
 		return

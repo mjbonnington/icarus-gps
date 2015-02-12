@@ -201,6 +201,12 @@ class previewUI(QtGui.QDialog):
 #launching UI window
 if os.environ['ICARUSENVAWARE'] == 'MAYA':
 	gpsPreviewApp = previewUI()
-	gpsPreviewApp.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WindowCloseButtonHint)
+	#Qt window flags
+	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+		gpsPreviewApp.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+	else:
+		gpsPreviewApp.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WindowCloseButtonHint)
+	#centering window
 	gpsPreviewApp.move(QtGui.QDesktopWidget().availableGeometry(1).center() - gpsPreviewApp.frameGeometry().center())
+
 	gpsPreviewApp.show()
