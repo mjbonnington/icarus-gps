@@ -4,7 +4,7 @@
 #copyright	:Gramercy Park Studios
 
 
-import setDirs, setLog, job__env__, pathPrc
+import setDirs, userPrefs, job__env__, pathPrc
 
 def setup(job, shot):
 	shotPath = pathPrc.process(job, shot)
@@ -12,7 +12,4 @@ def setup(job, shot):
 	job__env__.setEnv(envVars)
 	setDirs.mkDirs()
 	newEntry = '%s,%s' % (job, shot)
-	setLog.write(newEntry)
-	setLog.read()
-	
-
+	userPrefs.edit('main', 'lastjob', newEntry)

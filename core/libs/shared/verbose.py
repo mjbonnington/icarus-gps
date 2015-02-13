@@ -36,7 +36,7 @@ def gpsPreview_uiValues():
 
 def icarusLaunch(icarusVersion, icarusLocation):
 	print 'GRAMERCY PARK STUDIOS - ICARUS %s\n' % icarusVersion
-	print 'Running from %s\n' % icarusLocation
+	#print 'Running from %s\n' % icarusLocation
 	
 def ignored(asset):
 	print '%s ignored' % asset
