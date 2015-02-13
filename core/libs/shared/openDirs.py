@@ -47,7 +47,7 @@ def openShot():
 
 
 def openJob():
-	jobRoot = os.environ['JOBPATH']
+	jobRoot = os.path.split(os.environ['JOBPATH'])[0]
 	if os.path.isdir(jobRoot):
 		os.system('%s %s' % (sysCommand, jobRoot))
 	return

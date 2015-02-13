@@ -3170,6 +3170,7 @@ registerUpdateRendererUIProc("updateStatusLineRendererSpecificUI");
 			menuItem -label "Browse renders" -c "source menus2Py;menus2Py.browseRenders()";
 			menuItem -label "Browse sourceimages" -c "source menus2Py;menus2Py.browseSourceimages()";
 			menuItem -label "Browse shot" -c "source menus2Py;menus2Py.browseShot()";
+			menuItem -label "Browse job" -c "source menus2Py;menus2Py.browseJob()";
 
 		// GPS - Current Job and Shot info
 		string $jobInfo = `getenv JOB` + " - " + `getenv SHOT`;
