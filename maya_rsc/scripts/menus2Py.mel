@@ -48,6 +48,10 @@ global proc menus2Py.browseShot()
 python("import openDirs; openDirs.openShot()");
 }
 
+global proc menus2Py.browseJob()
+{
+python("import openDirs; openDirs.openJob()");
+}
 
 global proc menus2Py.createGPSCamera(string $cam)
 {

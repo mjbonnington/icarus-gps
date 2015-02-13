@@ -24,6 +24,7 @@ openScriptsDir = 'import openDirs; openDirs.openNukeScripts()'
 openRendersDir = 'import openDirs; openDirs.openNukeRenders()'
 openElementsDir = 'import openDirs; openDirs.openNukeElements()'
 openShotDir = 'import openDirs; openDirs.openShot()'
+openJobDir = 'import openDirs; openDirs.openJob()'
 launchProdBoard  = 'import launchApps; launchApps.prodBoard()'
 launchNuke = 'import launchApps; launchApps.nuke("%s")' % nukeType
 launchIcarus = 'os.environ["ICARUSENVAWARE"]="NUKE";import icarus__main__;reload(icarus__main__)'
@@ -83,6 +84,7 @@ browseMenu_nodes.addCommand('Browse Scripts', openScriptsDir)
 browseMenu_nodes.addCommand('Browse Renders', openRendersDir)
 browseMenu_nodes.addCommand('Browse Elements', openElementsDir)
 browseMenu_nodes.addCommand('Browse Shot', openShotDir)
+browseMenu_nodes.addCommand('Browse Job', openJobDir)
 
 
 #GPS MENU
