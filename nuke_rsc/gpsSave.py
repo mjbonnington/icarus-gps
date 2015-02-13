@@ -14,8 +14,10 @@ def getWorkingScriptName():
 	try:
 		#spliting path and getting file name only
 		scriptName = os.path.split(workingScript)[1]
-		#getting rid of all conventions
-		scriptName = scriptName.split('_')[-2]
+		#getting rid of all naming conventions to get script name only
+		scriptName = scriptName.split('%s_' % os.environ['SHOT'])[-1]
+		version = scriptName.split('_')[-1]
+		scriptName = scriptName.split('_%s' % version)[0]
 		#getting rid of padding and extension
 		scriptName = scriptName.split('.')[0]
 		return scriptName
