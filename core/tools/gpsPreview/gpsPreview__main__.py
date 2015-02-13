@@ -26,6 +26,14 @@ class previewUI(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.resolution_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.updateResGrp)
 		QtCore.QObject.connect(self.ui.range_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.updateRangeGrp)
 
+		self.ui.offscreen_checkBox.stateChanged.connect(self.setOffscreen)
+		self.ui.noSelection_checkBox.stateChanged.connect(self.setNoSelection)
+		self.ui.guides_checkBox.stateChanged.connect(self.setGuides)
+		self.ui.slate_checkBox.stateChanged.connect(self.setSlate)
+		self.ui.launchViewer_checkBox.stateChanged.connect(self.setLaunchViewer)
+		self.ui.createQuicktime_checkBox.stateChanged.connect(self.setCreateQuicktime)
+
+		# Read values from config file and apply to checkboxes
 		userPrefs.read()
 		self.ui.offscreen_checkBox.setChecked(userPrefs.config.getboolean('gpspreview', 'offscreen'))
 		self.ui.noSelection_checkBox.setChecked(userPrefs.config.getboolean('gpspreview', 'noselection'))
@@ -33,13 +41,6 @@ class previewUI(QtGui.QDialog):
 		self.ui.slate_checkBox.setChecked(userPrefs.config.getboolean('gpspreview', 'slate'))
 		self.ui.launchViewer_checkBox.setChecked(userPrefs.config.getboolean('gpspreview', 'launchviewer'))
 		self.ui.createQuicktime_checkBox.setChecked(userPrefs.config.getboolean('gpspreview', 'createqt'))
-
-		self.ui.offscreen_checkBox.stateChanged.connect(self.setOffscreen)
-		self.ui.noSelection_checkBox.stateChanged.connect(self.setNoSelection)
-		self.ui.guides_checkBox.stateChanged.connect(self.setGuides)
-		self.ui.slate_checkBox.stateChanged.connect(self.setSlate)
-		self.ui.launchViewer_checkBox.stateChanged.connect(self.setLaunchViewer)
-		self.ui.createQuicktime_checkBox.stateChanged.connect(self.setCreateQuicktime)
 
 		#populating UI with env vars
 		self.setupUI()

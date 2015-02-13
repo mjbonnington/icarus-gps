@@ -20,6 +20,7 @@ sys.path.append(os.path.join(os.environ['PIPELINE'], 'core/ui'))
 import env__init__
 env__init__.appendSysPaths()
 import icarus__main__, gpsNodes
+os.environ['ICARUSENVAWARE'] = 'NUKE'
 
 #thirdparty initializations
 import J_Ops_init; import J_Ops

@@ -26,7 +26,7 @@ openElementsDir = 'import openDirs; openDirs.openNukeElements()'
 openShotDir = 'import openDirs; openDirs.openShot()'
 launchProdBoard  = 'import launchApps; launchApps.prodBoard()'
 launchNuke = 'import launchApps; launchApps.nuke("%s")' % nukeType
-launchIcarus = 'os.environ["ICARUSENVAWARE"]="NUKE";import icarus__main__;reload(icarus__main__)'
+launchIcarus = 'reload(icarus__main__)'
 versionUp = 'import switchVersion; switchVersion.versionUp()'
 versionDown = 'import switchVersion; switchVersion.versionDown()'
 versionLatest = 'import switchVersion; switchVersion.versionLatest()'

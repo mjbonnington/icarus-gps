@@ -3,7 +3,7 @@
 
 global proc menus2Py.launchIcarus()
 {
-python("os.environ['ICARUSENVAWARE']='MAYA';reload(icarus__main__)");
+python("reload(icarus__main__)");
 }
 
 
@@ -71,11 +71,11 @@ python("import createGPSCamera; createGPSCamera.createCamera(camera, rig=True)")
 global proc menus2Py.openScene()
 {
 python("import mayaScnMng; mayaScnMng.openMayaScene()");
-global string $recentFile;
+/*global string $recentFile;
 $recentFile = `file -exn -q`;
 python "import maya.mel as mel";
 python "recentFile = mel.eval('$temp=$recentFile')";
-python("import recentScn; recentScn.updateLs(recentFile)");
+python("import recentScn; recentScn.updateLs(recentFile)");*/
 }
 
 
@@ -86,7 +86,7 @@ $recentFile = $menuSel;
 python "import maya.mel as mel";
 python "recentFile = mel.eval('$temp=$recentFile')";
 python("import mayaScnMng; mayaScnMng.openMayaRecentScene(recentFile)");
-python("import recentScn; recentScn.updateLs(recentFile)");
+/*python("import recentScn; recentScn.updateLs(recentFile)");*/
 }
 
 
@@ -110,11 +110,11 @@ python("import recentScn; recentScn.updateLs(recentFile)");
 global proc menus2Py.saveSceneAs()
 {
 python("import mayaScnMng; mayaScnMng.saveMayaSceneAs()");
-global string $recentFile;
+/*global string $recentFile;
 $recentFile = `file -exn -q`;
 python "import maya.mel as mel";
 python "recentFile = mel.eval('$temp=$recentFile')";
-python("import recentScn; recentScn.updateLs(recentFile)");
+python("import recentScn; recentScn.updateLs(recentFile)");*/
 }
 
 

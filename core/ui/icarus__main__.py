@@ -24,8 +24,8 @@ class icarusApp(QtGui.QDialog):
 		self.ui = Ui_Dialog()
 		self.ui.setupUi(self)
 
-		# User prefs config file will be created if it doesn't already exist
-		userPrefs.create()
+		# Read user prefs config file file - if it doesn't exist it will be created
+		userPrefs.read()
 
 		#defining phonon as preview player if icarus is standalone
 		if os.environ['ICARUSENVAWARE'] == 'STANDALONE':
@@ -57,9 +57,10 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.publish_pushButton, QtCore.SIGNAL('clicked()'), self.initPublish)
 		QtCore.QObject.connect(self.ui.tabWidget, QtCore.SIGNAL('currentChanged(int)'), self.adjustMainUI)
 
+		self.ui.minimise_checkBox.stateChanged.connect(self.setMinimiseOnAppLaunch)
+
 		self.boolMinimiseOnAppLaunch = userPrefs.config.getboolean('main', 'minimiseonlaunch')
 		self.ui.minimise_checkBox.setChecked(self.boolMinimiseOnAppLaunch)
-		self.ui.minimise_checkBox.stateChanged.connect(self.setMinimiseOnAppLaunch)
 
 	########################################Adding right click menus to buttons#######################################
 	##################################################################################################################
