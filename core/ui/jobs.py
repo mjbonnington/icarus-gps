@@ -6,18 +6,21 @@
 
 #This file holds the jobs running in the CG Department
 
-import os
+import os, sys
 import xml.etree.ElementTree as ET
 
 
 # Legacy code to work with current icarus implementation
 dic = {}
-tree = ET.parse(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'jobs.xml'))
-root = tree.getroot()
-for job in root.findall('job'):
-	if job.get('active') == 'True': # Only add jobs tagged as 'active'
-		if os.path.exists(job.find('path').text): # Only add jobs which exist on disk
-			dic[job.find('name').text] = job.find('path').text
+try:
+	tree = ET.parse(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'jobs.xml'))
+	root = tree.getroot()
+	for job in root.findall('job'):
+		if job.get('active') == 'True': # Only add jobs tagged as 'active'
+			if os.path.exists(job.find('path').text): # Only add jobs which exist on disk
+				dic[job.find('name').text] = job.find('path').text
+except:
+	sys.exit("ERROR: Jobs file not found.")
 
 
 class jobs():

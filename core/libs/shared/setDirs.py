@@ -23,8 +23,8 @@ def mkDirs():
 	#nukeFile = '%s_nukeScrLs.ic' % filePrefix
 	#uFiles = [mayaFile, nukeFile]
 	if not os.path.isdir(uDir):
-			os.system('mkdir -p %s'  % uDir)
-			os.system('chmod -R 775 %s' % uDir)
+		os.system('mkdir -p %s'  % uDir)
+		os.system('chmod -R 775 %s' % uDir)
 	#for uFile in uFiles:
 	#	uFilePath = '%s/%s' % (uDir, uFile)
 	#	if not os.path.isfile(uFilePath):

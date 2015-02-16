@@ -32,6 +32,12 @@ def write():
 def create():
 	"""Create config file if it doesn't exist and populate with with defaults"""
 
+	userPrefsDir = os.environ['ICUSERPREFS']
+
+	if not os.path.exists(userPrefsDir):
+		os.system('mkdir -p %s' % userPrefsDir)
+		os.system('chmod -R 775 %s' % userPrefsDir)
+
 	config.add_section('main')
 	config.set('main', 'lastjob', '')
 	config.set('main', 'numrecentfiles', '10')
