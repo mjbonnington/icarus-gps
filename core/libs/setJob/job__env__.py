@@ -76,7 +76,7 @@ def setEnv(envVars):
 	os.environ['MI_CUSTOM_SHADER_PATH'] = '%s/maya_rsc/shaders/include' % os.environ['PIPELINE']
 	os.environ['MI_LIBRARY_PATH'] = '%s/maya_rsc/shaders:' % os.environ['PIPELINE']
 	os.environ['VRAY_FOR_MAYA_SHADERS'] = '%s/maya_rsc/shaders/' % os.environ['PIPELINE']
-	os.environ['VRAY_FOR_MAYA2014_PLUGINS_x64'] = '%s:%s/maya_rsc/plugins' % (os.getenv['VRAY_FOR_MAYA2014_PLUGINS_x64'], os.environ['PIPELINE'])
+	os.environ['VRAY_FOR_MAYA2014_PLUGINS_x64'] = '%s:%s/maya_rsc/plugins' % (os.getenv('VRAY_FOR_MAYA2014_PLUGINS_x64'), os.environ['PIPELINE'])
 	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
 		os.environ['XBMLANGPATH'] = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'icons')
 	else:
