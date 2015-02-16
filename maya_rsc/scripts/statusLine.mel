@@ -2418,33 +2418,12 @@ registerUpdateRendererUIProc("updateStatusLineRendererSpecificUI");
 			-command ("source menus2Py; menus2Py.openScene()")
 			-annotation "Open scene. Right click for recent files."
 			openSceneButton;
-			
 
-		//GPS - Creates a  menu on the open recent scenes button for different scenes
-		string $menu = `popupMenu -b 3 -p openSceneButton`;
+		//GPS - Creates a menu on the open recent scenes button for different scenes
+		popupMenu -parent openSceneButton OpenSceneButtonRecentFileItems;
+			menu -edit -postMenuCommand "source menus2Py; menus2Py.updateRecentFilesMenu(\"OpenSceneButtonRecentFileItems\")" OpenSceneButtonRecentFileItems;
+		setParent -menu ..;
 
-		python( "import recentScn" );
-		string $fileLs[] = python( "recentScn.populateMenu()" );
-		for ( $item in $fileLs )
-		{
-			menuItem -l $item -c ("source menus2Py; menus2Py.openRecent(\"" + `getenv SHOTPATH` + $item + "\")")  -p $menu $item;
-		}
-
-		/*string $fileName = (`getenv JOB` + "_" + `getenv SHOT` + "_mayaScnLs.ic"); 
-		string $filePath = (`getenv RECENTFILESDIR` + "/" + $fileName);
-		$fileHandle = `fopen $filePath "r"`;
-		while (! `feof $fileHandle`) 
-			{
-			string $menuSelRaw = `fgetline $fileHandle`;
-			string $menuSel = `substitute "\n" $menuSelRaw ""`;
-			menuItem -l $menuSel -c ("source menus2Py; menus2Py.openRecent(\""+$menuSel+"\")")  -p $menu $menuSel;
-			}	
-		fclose $fileHandle;*/
-
-		/*string $pyCmd = "python( \"import recentScn; recentScn.updateMenu(" + $menu + ")\" );";
-		eval($pyCmd);*/
-
-		
 		//GPS - Save Scene
 		iconTextButton -image1 "saveScene.png"
 			-width $iconHeight -height $iconHeight
@@ -2458,7 +2437,7 @@ registerUpdateRendererUIProc("updateStatusLineRendererSpecificUI");
 			-command ("source menus2Py; menus2Py.incrementalSave()")
 			-annotation "Save the current scene as new version"
 			saveScenePlusButton;
-			
+
 		//GPS - Save Scene As
 		iconTextButton -image1 "saveSceneAs.png"
 			-width $iconHeight -height $iconHeight

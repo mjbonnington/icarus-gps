@@ -1,5 +1,6 @@
 #!/usr/bin/python
 #support	:Nuno Pereira - nuno.pereira@gps-ldn.com
+#support	:Mike Bonnington - mike.bonnington@gps-ldn.com
 #title		:recentScn
 #copyright	:Gramercy Park Studios
 
@@ -56,7 +57,7 @@ def updateLs(newEntry):
 		fileLs.remove(newEntry)
 	fileLs.insert(0, newEntry) # prepend entry to the list
 
-	while len(fileLs) > 7: # limit list to 7 entries
+	while len(fileLs) > 10: # limit list to ten entries
 		fileLs.pop()
 
 	config.set(os.environ['SHOT'], os.environ['ICARUSENVAWARE'], '; '.join(str(n) for n in fileLs))
@@ -64,7 +65,7 @@ def updateLs(newEntry):
 	write()
 
 
-def populateMenu():
+def populateRecentFileList():
 	"""Read recent file list and return string to be processed by MEL"""
 
 	read()
@@ -81,31 +82,32 @@ def populateMenu():
 #	""""""
 #
 #	import maya.cmds as mc
-#	import menus2py
+#	#import menus2py
 #
-#	fileLs = populateMenu()
+#	fileLs = populateRecentFileList()
 #	for item in fileLs:
 #		#menuItem -l $item -c ("source menus2Py; menus2Py.openRecent(\"" + `getenv SHOTPATH` + $item + "\")")  -p $menu $item;
 #		mc.menuItem(item, label=item, parent=menu, command=menus2Py.openRecent(os.path.join(os.environ['SHOTDIR'], item)))
+#		#mc.optionVar["RecentFilesList"]
 
 
 #updates recent files list - CURRENTLY DISABLED
-def _updateLs(newEntry):
-	filePath = os.path.join(os.environ['RECENTFILESDIR'], '%s_%s_mayaScnLs.ic' %(os.environ['JOB'], os.environ['SHOT']))
-
-	entryExists = False
-	#limiting list to 7 entries
-	scnFile = open(filePath, 'r')
-	fileLs = scnFile.readlines()
-	while len(fileLs) >= 7:
-		fileLs.pop()
-	scnFile.close()
-	#writing previous entries and adding new at the end if doesn't exist
-	scnFile = open(filePath, 'w')
-	scnFile.write('%s' % newEntry)
-	for fileEntry in fileLs:
-		fileEntry = fileEntry.replace('\n', '')
-		if fileEntry != newEntry:
-			scnFile.write('\n%s' % fileEntry)
-	scnFile.close()
+#def _updateLs(newEntry):
+#	filePath = os.path.join(os.environ['RECENTFILESDIR'], '%s_%s_mayaScnLs.ic' %(os.environ['JOB'], os.environ['SHOT']))
+#
+#	entryExists = False
+#	#limiting list to 7 entries
+#	scnFile = open(filePath, 'r')
+#	fileLs = scnFile.readlines()
+#	while len(fileLs) >= 7:
+#		fileLs.pop()
+#	scnFile.close()
+#	#writing previous entries and adding new at the end if doesn't exist
+#	scnFile = open(filePath, 'w')
+#	scnFile.write('%s' % newEntry)
+#	for fileEntry in fileLs:
+#		fileEntry = fileEntry.replace('\n', '')
+#		if fileEntry != newEntry:
+#			scnFile.write('\n%s' % fileEntry)
+#	scnFile.close()
 

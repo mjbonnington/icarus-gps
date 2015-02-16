@@ -22,7 +22,7 @@ Thumbs.db
 *.zip
 
 #External Apps
-/external_apps
+external_apps
 
 #Icarus Config Dir
-core/config/*
+core/config

@@ -94,6 +94,23 @@ python("import mayaScnMng; mayaScnMng.openMayaRecentScene(recentFile)");
 }
 
 
+global proc menus2Py.updateRecentFilesMenu(string $menu)
+{
+	// Get the recent file list and store it in an array
+	python( "import recentScn" );
+	string $fileLs[] = python( "recentScn.populateRecentFileList()" );
+
+	// Delete all items in the pop-up menu
+	menu -edit -deleteAllItems $menu;
+
+	// Re-populate the items in the pop-up menu
+	for ( $item in $fileLs )
+	{
+		menuItem -label $item -command ("menus2Py.openRecent(\"" + `getenv SHOTPATH` + $item + "\")")  -parent $menu $item;
+	}
+}
+
+
 global proc menus2Py.saveScene()
 {
 python("import mayaScnMng; mayaScnMng.saveMayaScene()");
