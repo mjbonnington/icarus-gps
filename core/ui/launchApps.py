@@ -15,6 +15,7 @@ def mari():
 
 def maya():
 	verbose.launchApp('Maya')
+	#subprocess.Popen("export ICARUSENVAWARE='MAYA'; $MAYAVERSION -proj $SHOTPATH/3D/maya", shell=True)
 	subprocess.Popen("$MAYAVERSION -proj $SHOTPATH/3D/maya", shell=True)
 	
 def mudbox():

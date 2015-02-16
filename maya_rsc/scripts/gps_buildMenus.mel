@@ -67,7 +67,15 @@ setParent -m $fileMenu;
 
 		//GPS - Creates a  menu on the open recent scenes button for different scenes
 		string $menu = `menuItem -subMenu true -ia "" -l "GPS - Open Recent"`;
-		string $fileName = (`getenv JOB` + "_" + `getenv SHOT` + "_mayaScnLs.ic"); 
+
+		python( "import recentScn" );
+		string $fileLs[] = python( "recentScn.populateMenu()" );
+		for ( $item in $fileLs )
+		{
+			menuItem -l $item -c ("source menus2Py; menus2Py.openRecent(\"" + `getenv SHOTPATH` + $item + "\")")  -p $menu $item;
+		}
+
+		/*string $fileName = (`getenv JOB` + "_" + `getenv SHOT` + "_mayaScnLs.ic"); 
 		string $filePath = (`getenv RECENTFILESDIR` + "/" + $fileName);
 		$fileHandle = `fopen $filePath "r"`;
 		while (! `feof $fileHandle`) 
@@ -76,7 +84,7 @@ setParent -m $fileMenu;
 			string $menuSel = `substitute "\n" $menuSelRaw ""`;
 			menuItem -l $menuSel -c ("source menus2Py; menus2Py.openRecent(\""+$menuSel+"\")")  -p $menu $menuSel;
 			}	
-		fclose $fileHandle;
+		fclose $fileHandle;*/
 		setParent -m ..;
 
 		//GPS Load Scene
