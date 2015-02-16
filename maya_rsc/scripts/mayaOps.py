@@ -5,7 +5,7 @@
 
 
 #maya operations module
-import os, shutil, recentScn
+import os, shutil, recentFiles
 import maya.cmds as mc
 import maya.mel as mel
 
@@ -562,7 +562,7 @@ def openScene(filePath, extension=None, dialog=True):
 		else:
 			openFolder = [filePath]
 		filename = mc.file(openFolder[0], open=True, force=True, ignoreVersion=True)
-		recentScn.updateLs(filename)
+		recentFiles.updateLs(filename)
 
 ######parent constraints two identical hierarchies########
 def parentCnstrHrq(obj1, obj2):
@@ -746,7 +746,7 @@ def saveFile(fileType):
 	elif fileType == 'mb':
 		fileType = 'mayaBinary'
 	filename = mc.file(options='v=0', force=True, save=True, type=fileType)
-	recentScn.updateLs(filename)
+	recentFiles.updateLs(filename)
 
 ###################saves maya file as#####################
 def saveFileAs(filePath, extension):
@@ -762,7 +762,7 @@ def saveFileAs(filePath, extension):
 			
 		mc.file(rename=saveFolder[0])
 		filename = mc.file(options='v=0', force=True, save=True, type=fileType)
-		recentScn.updateLs(filename)
+		recentFiles.updateLs(filename)
 		
 ################creates viewport snapshot##################
 def snapShot(pblDir):

@@ -72,33 +72,33 @@ python("import createGPSCamera; createGPSCamera.createCamera(camera, rig=True)")
 }
 
 
+global proc menus2Py.newScene()
+{
+	python("import mayaScnMng; mayaScnMng.newMayaScene()");
+}
+
+
 global proc menus2Py.openScene()
 {
-python("import mayaScnMng; mayaScnMng.openMayaScene()");
-/*global string $recentFile;
-$recentFile = `file -exn -q`;
-python "import maya.mel as mel";
-python "recentFile = mel.eval('$temp=$recentFile')";
-python("import recentScn; recentScn.updateLs(recentFile)");*/
+	python("import mayaScnMng; mayaScnMng.openMayaScene()");
 }
 
 
 global proc menus2Py.openRecent(string $menuSel)
 {
-global string $recentFile;
-$recentFile = $menuSel;
-python "import maya.mel as mel";
-python "recentFile = mel.eval('$temp=$recentFile')";
-python("import mayaScnMng; mayaScnMng.openMayaRecentScene(recentFile)");
-/*python("import recentScn; recentScn.updateLs(recentFile)");*/
+	global string $recentFile;
+	$recentFile = $menuSel;
+	python "import maya.mel as mel";
+	python "recentFile = mel.eval('$temp=$recentFile')";
+	python("import mayaScnMng; mayaScnMng.openMayaRecentScene(recentFile)");
 }
 
 
 global proc menus2Py.updateRecentFilesMenu(string $menu)
 {
 	// Get the recent file list and store it in an array
-	python( "import recentScn" );
-	string $fileLs[] = python( "recentScn.populateRecentFileList()" );
+	python( "import recentFiles" );
+	string $fileLs[] = python( "recentFiles.getLs()" );
 
 	// Delete all items in the pop-up menu
 	menu -edit -deleteAllItems $menu;
@@ -113,35 +113,19 @@ global proc menus2Py.updateRecentFilesMenu(string $menu)
 
 global proc menus2Py.saveScene()
 {
-python("import mayaScnMng; mayaScnMng.saveMayaScene()");
+	python("import mayaScnMng; mayaScnMng.saveMayaScene()");
 }
 
 
 global proc menus2Py.incrementalSave()
 {
-incrementalSave;
-global string $recentFile;
-$recentFile = `file -exn -q`;
-python "import maya.mel as mel";
-python "recentFile = mel.eval('$temp=$recentFile')";
-python("import recentScn; recentScn.updateLs(recentFile)");
+	incrementalSave; // rewrite this function in python?
 }
 
 
 global proc menus2Py.saveSceneAs()
 {
-python("import mayaScnMng; mayaScnMng.saveMayaSceneAs()");
-/*global string $recentFile;
-$recentFile = `file -exn -q`;
-python "import maya.mel as mel";
-python "recentFile = mel.eval('$temp=$recentFile')";
-python("import recentScn; recentScn.updateLs(recentFile)");*/
-}
-
-
-global proc menus2Py.newScene()
-{
-python("import mayaScnMng; mayaScnMng.newMayaScene()");
+	python("import mayaScnMng; mayaScnMng.saveMayaSceneAs()");
 }
 
 

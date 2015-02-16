@@ -16,15 +16,15 @@ def mkDirs():
 			os.system('mkdir -p %s'  % uDir)
 			os.system('chmod -R 775 %s' % uDir)
 
-	#recent working files
-	uDir = os.environ['RECENTFILESDIR']
+	#recent working files - no longer needed as handled by recentFiles.py
+	#uDir = os.environ['RECENTFILESDIR']
 	#filePrefix = '%s_%s' % (os.environ['JOB'], os.environ['SHOT'])
 	#mayaFile = '%s_mayaScnLs.ic' % filePrefix
 	#nukeFile = '%s_nukeScrLs.ic' % filePrefix
 	#uFiles = [mayaFile, nukeFile]
-	if not os.path.isdir(uDir):
-		os.system('mkdir -p %s'  % uDir)
-		os.system('chmod -R 775 %s' % uDir)
+	#if not os.path.isdir(uDir):
+	#	os.system('mkdir -p %s'  % uDir)
+	#	os.system('chmod -R 775 %s' % uDir)
 	#for uFile in uFiles:
 	#	uFilePath = '%s/%s' % (uDir, uFile)
 	#	if not os.path.isfile(uFilePath):
