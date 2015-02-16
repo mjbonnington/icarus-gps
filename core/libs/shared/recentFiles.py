@@ -38,8 +38,9 @@ def create():
 		os.system('mkdir -p %s'  % recentFilesDir)
 		os.system('chmod -R 775 %s' % recentFilesDir)
 
-	config.add_section(os.environ['SHOT'])
-	config.set(os.environ['SHOT'], os.environ['ICARUSENVAWARE'], '')
+	if not config.has_section(os.environ['SHOT']): # create shot section if it doesn't exist
+		config.add_section(os.environ['SHOT'])
+		config.set(os.environ['SHOT'], os.environ['ICARUSENVAWARE'], '')
 
 	write()
 
@@ -48,6 +49,8 @@ def updateLs(newEntry):
 	"""Update recent files list and save config file to disk"""
 
 	read()
+	create() # create section for the current shot
+
 	fileLs = [] # Clear recent file list
 
 	if newEntry.startswith(os.environ['SHOTPATH']): # only add files in the current shot
@@ -59,7 +62,6 @@ def updateLs(newEntry):
 			fileLs = fileStr.split('; ')
 		else:
 			fileLs = []
-
 
 		if newEntry in fileLs: # if the entry already exists in the list, delete it
 			fileLs.remove(newEntry)
@@ -78,6 +80,7 @@ def getLs():
 	"""Read recent file list and return list/array to be processed by MEL"""
 
 	read()
+	create() # create section for the current shot
 
 	try:
 		fileLs = config.get(os.environ['SHOT'], os.environ['ICARUSENVAWARE']).split('; ')
