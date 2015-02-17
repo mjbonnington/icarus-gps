@@ -1,15 +1,22 @@
+// This function suppresses recent menus...
+global proc checkGPSFileMenu()
+{
+	$enable = true;
 
-//Window Menu//
-///////////////
+	// Get the recent file list and store it in an array
+	python( "import recentFiles" );
+	string $fileLs[] = python( "recentFiles.getLs()" );
 
-string $windowMenu = "MayaWindow|mainWindowMenu";
-buildViewMenu($windowMenu);
-string $mainWindow_menu = `menu -exists $windowMenu`;
-string $mainWindow_menuItems[] = `menu -ia -q $windowMenu`;
+	// If recent file list contains no entries, disable menu
+	if (size($fileLs)==0) $enable = false;
+	if (size($fileLs)==1 && $fileLs[0]=="") $enable = false;
+	menuItem -edit -enable $enable GPSFileMenuRecentFileItems;
 
-//deleting menu default entries
-//playblast
-deleteUI -mi $mainWindow_menuItems[18];
+	// Create "Send To" menu items for one-click
+	// interop with available applications.
+	//
+	buildSendToSubMenus;
+}
 
 
 //File Menu//
@@ -20,84 +27,121 @@ buildFileMenu();
 string $fileWindow_menu = `menu -exists $fileMenu`;
 string $fileWindow_menuItems[] = `menu -ia -q $fileMenu`;
 
-//deleting menu default entries
-//new scene
-deleteUI -mi $fileWindow_menuItems[0];
-//open scene
-deleteUI -mi $fileWindow_menuItems[2];
-//save scene
-deleteUI -mi $fileWindow_menuItems[5];
-//save scene as
-deleteUI -mi $fileWindow_menuItems[7];
-//incremental save
-deleteUI -mi $fileWindow_menuItems[9];
-//archive scene
-deleteUI -mi $fileWindow_menuItems[10];
-//save preferences
-deleteUI -mi $fileWindow_menuItems[12];
-//project window
-deleteUI -mi $fileWindow_menuItems[37];
-//set project
-deleteUI -mi $fileWindow_menuItems[38];
-//recent files
-menu -en false -e $fileWindow_menuItems[39];
-//recent increments
-menu -en false -e $fileWindow_menuItems[40];
-//recent projects
-menu -en false -e $fileWindow_menuItems[41];
+menu -edit -postMenuCommand checkGPSFileMenu $fileMenu;
+
+// Delete file menu entries up to item number 12
+for ($i=0; $i<=12; $i++) deleteUI -mi $fileWindow_menuItems[$i];
+
+// Delete project window and set project menu items
+deleteUI -menuItem projectWindowFileItem;
+deleteUI -menuItem setProjectFileItem;
+
+// Delete recent increments and projects menu items
+deleteUI -menuItem FileMenuRecentFileItems;
+deleteUI -menuItem FileMenuRecentBackupItems;
+deleteUI -menuItem FileMenuRecentProjectItems;
 
 //adding GPS entries
-setParent -m $fileMenu;
-		//GPS Launches Icarus
-		menuItem -ia "" -label "GPS - Icarus"
-			-annotation ("Launches Icarus UI")
-			-command ("source menus2Py;menus2Py.launchIcarus()");
+setParent -menu $fileMenu;
 
-		menuItem -ia "" -divider true;
+	// GPS New Scene
+	menuItem -insertAfter ""
+			 -label "GPS - New"
+			 -annotation ("Create a new scene")
+			 -command ("source menus2Py; menus2Py.newScene()")
+			 GPSNewScene;
 
-		//GPS Save Scene As
-		menuItem -ia "" -label "GPS - Save As"
-			-annotation ("Saves scene with name")
-			-command ("source menus2Py; menus2Py.saveSceneAs()");
+	// GPS Open Scene
+	menuItem -insertAfter GPSNewScene
+			 -label "GPS - Open..."
+			 -annotation ("Open a saved scene")
+			 -command ("source menus2Py; menus2Py.openScene()")
+			 GPSOpenScene; // tmpMenu;
 
-		//GPS Save Scene
-		menuItem -ia "" -label "GPS - Save"
-			-annotation ("Saves current scene")
-			-command ("source menus2Py; menus2Py.saveScene()");
+	// GPS Open Recent Scene (edit the existing menu item)
+	menuItem -insertAfter GPSOpenScene
+			 -subMenu true
+			 -label "GPS - Open Recent"
+			 -postMenuCommand "source menus2Py; menus2Py.updateRecentFilesMenu(\"GPSFileMenuRecentFileItems\")"
+			 GPSFileMenuRecentFileItems;
+	setParent -menu ..;
 
-		//GPS - Creates a  menu on the open recent scenes button for different scenes
-		string $menu = `menuItem -subMenu true -insertAfter "" -label "GPS - Open Recent"`;
-			menu -edit -postMenuCommand "source menus2Py; menus2Py.updateRecentFilesMenu($menu)" $menu;
-		setParent -menu ..;
+	menuItem -insertAfter GPSFileMenuRecentFileItems
+			 -divider true
+			 GPSFileDivider;
 
-		//GPS Load Scene
-		menuItem -ia "" -label "GPS - Open"
-			-annotation ("Opens a Scene")
-			-command ("source menus2Py; menus2Py.openScene()");
+	// GPS Save Scene
+	menuItem -insertAfter GPSFileDivider
+			 -label "GPS - Save"
+			 -annotation ("Save the current scene")
+			 -command ("source menus2Py; menus2Py.saveScene()")
+			 GPSSaveScene;
 
-		//GPS New Scene
-		menuItem -ia "" -label "GPS - New"
-			-annotation ("Creates a New Scene")
-			-command ("source menus2Py; menus2Py.newScene()");
-			
-			
-			
+	// GPS Save Scene As
+	menuItem -insertAfter GPSSaveScene
+			 -label "GPS - Save As..."
+			 -annotation ("Save scene with a new name")
+			 -command ("source menus2Py; menus2Py.saveSceneAs()")
+			 GPSSaveSceneAs;
+
+	// GPS - Incremental Save
+	menuItem -insertAfter GPSSaveSceneAs
+			 -label "GPS - Incremental Save"
+			 -annotation "Save the current scene as new version"
+			 -command ("source menus2Py; menus2Py.incrementalSave()")
+			 GPSIncrementalSave;
+
+	// GPS Launch Icarus UI
+	//menuItem -divider true;
+	menuItem -label "GPS - Icarus UI..."
+			 -annotation ("Launch Icarus UI")
+			 -command ("source menus2Py;menus2Py.launchIcarus()")
+			 GPSLaunchIcarusUI;
+
+checkGPSFileMenu();
+
+
+//Window Menu//
+///////////////
+
+string $windowMenu = "MayaWindow|mainWindowMenu";
+buildViewMenu($windowMenu);
+//string $mainWindow_menu = `menu -exists $windowMenu`;
+//$mainWindow_menuItems[] = `menu -ia -q $windowMenu`;
+
+//deleting menu default entries
+//playblast
+//deleteUI -mi $mainWindow_menuItems[18];
+//deleteUI -menuItem playblastItem;
+
+setParent -menu $windowMenu;
+	menuItem -edit
+			 -label ("GPS - Preview")
+			 -command ("source menus2Py; menus2Py.gpsPreview()")
+			 -annotation ("Launches GPS Preview")
+			 playblastItem;
+	menuItem -edit
+			 -command ("source menus2Py; menus2Py.gpsPreview()")
+			 playblastDialogItem;
+
+
 //Time Slider menu//
 ////////////////////
 
 string $timelineMenu = "MayaWindow|toolBar6|MainTimeSliderLayout|formLayout9|TimeSliderMenu";
 updateTimeSliderMenu $timelineMenu;
-menu -exists $timelineMenu;
-string $timeline_menuItems[] = `menu -ia -q $timelineMenu`;
+//menu -exists $timelineMenu;
+//string $timeline_menuItems[] = `menu -ia -q $timelineMenu`;
 
 //deleting menu default entries
 //playblast
-deleteUI -mi $timeline_menuItems[15];
+//deleteUI -mi $timeline_menuItems[15];
+deleteUI -menuItem timeSliderPlayblastItem;
 
 //Adding GPS entries
-setParent -m $timelineMenu;
+setParent -menu $timelineMenu;
 	menuItem -divider true;
-	menuItem -label ("GPS - Preview")  
-				-command ("source menus2Py; menus2Py.gpsPreview()") 
-				-annotation ("Launches GPS Preview") 
-				GPSPlayblastItem;
+	menuItem -label ("GPS - Preview...")
+			 -command ("source menus2Py; menus2Py.gpsPreview()")
+			 -annotation ("Launches GPS Preview")
+			 GPSPlayblastItem;

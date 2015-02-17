@@ -25,8 +25,12 @@ def read():
 def write():
 	"""Write config file to disk"""
 
-	with open(configFile, 'w') as f:
-		config.write(f)
+	try:
+		with open(configFile, 'w') as f:
+			config.write(f)
+
+	except IOError:
+		print '[Icarus] Warning: unable to write user prefs configuration file.'
 
 
 def create():

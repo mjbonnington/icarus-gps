@@ -8,7 +8,7 @@
 import os, platform, sys
 
 def setEnv():
-	os.environ['ICARUSVERSION'] = 'v0.7.8'
+	os.environ['ICARUSVERSION'] = 'v0.7.9'
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
 	os.environ['ICWORKINGDIR'] = icarusWorkingDir
 	icarusUIDir = os.path.join('core', 'ui')
