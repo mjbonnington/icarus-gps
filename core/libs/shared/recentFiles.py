@@ -25,8 +25,12 @@ def read():
 def write():
 	"""Write config file to disk"""
 
-	with open(configFile, 'w') as f:
-		config.write(f)
+	try:
+		with open(configFile, 'w') as f:
+			config.write(f)
+
+	except IOError:
+		print '[Icarus] Warning: unable to write recent files configuration file.'
 
 
 def create():
@@ -40,6 +44,7 @@ def create():
 
 	if not config.has_section(os.environ['SHOT']): # create shot section if it doesn't exist
 		config.add_section(os.environ['SHOT'])
+	if not config.has_option(os.environ['SHOT'], os.environ['ICARUSENVAWARE']): # create current app option if it doesn't exist
 		config.set(os.environ['SHOT'], os.environ['ICARUSENVAWARE'], '')
 
 	write()
