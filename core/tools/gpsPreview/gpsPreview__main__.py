@@ -41,7 +41,7 @@ class previewUI(QtGui.QDialog):
 		self.ui.slate_checkBox.setChecked(userPrefs.config.getboolean('gpspreview', 'slate'))
 		self.ui.launchViewer_checkBox.setChecked(userPrefs.config.getboolean('gpspreview', 'launchviewer'))
 		self.ui.createQuicktime_checkBox.setChecked(userPrefs.config.getboolean('gpspreview', 'createqt'))
-
+	
 		#populating UI with env vars
 		self.setupUI()
 
@@ -66,7 +66,7 @@ class previewUI(QtGui.QDialog):
 			self.ui.y_lineEdit.setText(os.environ['GPSPREVIEW_VRES'])
 		except KeyError:
 			pass
-	
+
 	#updates resolution group UI based on combo box selection
 	def updateResGrp(self):
 		resType = self.ui.resolution_comboBox.currentText()
@@ -101,69 +101,70 @@ class previewUI(QtGui.QDialog):
 
 	def setOffscreen(self, state):
 		if state == QtCore.Qt.Checked:
-			self.offscreen = True
+			#self.offscreen = True
 			userPrefs.edit('gpspreview', 'offscreen', 'True')
 		else:
-			self.offscreen = False
+			#self.offscreen = False
 			userPrefs.edit('gpspreview', 'offscreen', 'False')
 
 	def setNoSelection(self, state):
 		if state == QtCore.Qt.Checked:
-			self.noSelect = True
+			#self.noSelect = True
 			userPrefs.edit('gpspreview', 'noselection', 'True')
 		else:
-			self.noSelect = False
+			#self.noSelect = False
 			userPrefs.edit('gpspreview', 'noselection', 'False')
 
 	def setGuides(self, state):
 		if state == QtCore.Qt.Checked:
-			self.guides = True
+			#self.guides = True
 			userPrefs.edit('gpspreview', 'guides', 'True')
 		else:
-			self.guides = False
+			#self.guides = False
 			userPrefs.edit('gpspreview', 'guides', 'False')
 
 	def setSlate(self, state):
 		if state == QtCore.Qt.Checked:
-			self.slate = True
+			#self.slate = True
 			userPrefs.edit('gpspreview', 'slate', 'True')
 		else:
-			self.slate = False
+			#self.slate = False
 			userPrefs.edit('gpspreview', 'slate', 'False')
 
 	def setLaunchViewer(self, state):
 		if state == QtCore.Qt.Checked:
-			self.viewer = True
+			#self.viewer = True
 			userPrefs.edit('gpspreview', 'launchviewer', 'True')
 		else:
-			self.viewer = False
+			#self.viewer = False
 			userPrefs.edit('gpspreview', 'launchviewer', 'False')
 
 	def setCreateQuicktime(self, state):
 		if state == QtCore.Qt.Checked:
-			self.createQt = True
+			#self.createQt = True
 			userPrefs.edit('gpspreview', 'createqt', 'True')
 		else:
-			self.createQt = False
+			#self.createQt = False
 			userPrefs.edit('gpspreview', 'createqt', 'False')
 
 
 	#getting UI options
 	def getOpts(self):
 		self.fileInput = self.ui.file_lineEdit.text()
-		#self.offscreen, self.noSelect, self.guides, self.slate, self.createQt = False, False, False, False, False
-		#if self.ui.offscreen_checkBox.checkState() == 2:
-		#	self.offscreen = True
-		#if self.ui.noSelection_checkBox.checkState() == 2:
-		#	self.noSelect = True
-		#if self.ui.guides_checkBox.checkState() == 2:
-		#	self.guides = True
-		#if self.ui.slate_checkBox.checkState() == 2:
-		#	self.slate = True
-		#if self.ui.launchViewer_checkBox.checkState() == 2:
-		#	self.viewer = True
-		#if self.ui.createQuicktime_checkBox.checkState() == 2:
-		#	self.createQt = True
+
+		self.offscreen, self.noSelect, self.guides, self.slate, self.viewer, self.createQt = False, False, False, False, False, False
+		if self.ui.offscreen_checkBox.checkState() == 2:
+			self.offscreen = True
+		if self.ui.noSelection_checkBox.checkState() == 2:
+			self.noSelect = True
+		if self.ui.guides_checkBox.checkState() == 2:
+			self.guides = True
+		if self.ui.slate_checkBox.checkState() == 2:
+			self.slate = True
+		if self.ui.launchViewer_checkBox.checkState() == 2:
+			self.viewer = True
+		if self.ui.createQuicktime_checkBox.checkState() == 2:
+			self.createQt = True
 
 		#getting frame range and resolution and testing for all inputs and integers
 		self.getRes()

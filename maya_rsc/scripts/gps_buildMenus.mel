@@ -68,10 +68,10 @@ setParent -menu $fileMenu;
 
 	menuItem -insertAfter GPSFileMenuRecentFileItems
 			 -divider true
-			 GPSFileDivider;
+			 GPSFileDivider1;
 
 	// GPS Save Scene
-	menuItem -insertAfter GPSFileDivider
+	menuItem -insertAfter GPSFileDivider1
 			 -label "GPS - Save"
 			 -annotation ("Save the current scene")
 			 -command ("source menus2Py; menus2Py.saveScene()")
@@ -91,9 +91,13 @@ setParent -menu $fileMenu;
 			 -command ("source menus2Py; menus2Py.incrementalSave()")
 			 GPSIncrementalSave;
 
+	menuItem -insertAfter GPSIncrementalSave
+			 -divider true
+			 GPSFileDivider2;
+
 	// GPS Launch Icarus UI
-	//menuItem -divider true;
-	menuItem -label "GPS - Icarus UI..."
+	menuItem -insertAfter GPSFileDivider2
+			 -label "GPS - Icarus UI..."
 			 -annotation ("Launch Icarus UI")
 			 -command ("source menus2Py;menus2Py.launchIcarus()")
 			 GPSLaunchIcarusUI;
