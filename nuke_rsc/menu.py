@@ -19,7 +19,7 @@ writeNode = 'import gpsNodes; gpsNodes.write_()'
 save = 'import gpsSave; gpsSave.save(incr=False)'
 saveAs = 'import gpsSave; gpsSave.save(saveAs=True)'
 incrSave = 'import gpsSave; gpsSave.save(incr=True)'
-openScript = 'nuke.scriptOpen("%s/" % os.environ["NUKESCRIPTSDIR"])'
+openScript = 'import gpsSave; gpsSave.openScript()'
 openScriptsDir = 'import openDirs; openDirs.openNukeScripts()'
 openRendersDir = 'import openDirs; openDirs.openNukeRenders()'
 openElementsDir = 'import openDirs; openDirs.openNukeElements()'
@@ -27,10 +27,12 @@ openShotDir = 'import openDirs; openDirs.openShot()'
 openJobDir = 'import openDirs; openDirs.openJob()'
 launchProdBoard  = 'import launchApps; launchApps.prodBoard()'
 launchNuke = 'import launchApps; launchApps.nuke("%s")' % nukeType
+#launchNuke = 'nuke.scriptClear()'
 launchIcarus = 'reload(icarus__main__)'
 versionUp = 'import switchVersion; switchVersion.versionUp()'
 versionDown = 'import switchVersion; switchVersion.versionDown()'
 versionLatest = 'import switchVersion; switchVersion.versionLatest()'
+
 
 #NUKE MENU
 nukeMenu = nuke.menu('Nuke')
@@ -41,24 +43,6 @@ gpsMenu = nukeMenu.addMenu('GPS', index=6)
 nodesMenu = nuke.menu('Nodes')
 
 
-#IMAGE MENU
-imageMenu = nodesMenu.menu('Image')
-imageMenu.addCommand('GPS - Read', readNode, 'r', icon='newScript.png', index=0)
-imageMenu.addCommand('GPS - Write', writeNode, 'w', icon='newScript.png', index=1)
-
-#FILE MENU
-fileMenu = nukeMenu.menu('File')
-#new
-newMenu_gps = fileMenu.addCommand('GPS - New', launchNuke, '^n', index=0)
-#open
-openMenu_gps = fileMenu.addCommand('GPS - Open', openScript, '^o', index=1)
-#save
-saveMenu_gps =  fileMenu.addCommand('GPS - Save', save, '^s', index=2)
-saveAsMenu_gps =  fileMenu.addCommand('GPS - Save As', saveAs, '^alt+s', index=3)
-#separator
-fileMenu.addSeparator()
-
-
 #GPS NODES MENU
 #separator
 nodesMenu.addSeparator()
@@ -67,7 +51,7 @@ newMenu_nodes = nodesMenu.addCommand('GPS - New', launchNuke, '^n', icon='newScr
 #open
 openMenu_nodes = nodesMenu.addCommand('GPS - Open', openScript, '^o', icon='openScript.png')
 #save
-incrementalSaveMenu_nodes =  nodesMenu.addCommand('GPS - Incremental Save', incrSave, '^+s', icon='incrementalSave.png')
+incrementalSaveMenu_nodes =  nodesMenu.addCommand('GPS - Incremental Save', incrSave, 'alt+shift+s', icon='incrementalSave.png')
 saveMenu_nodes =  nodesMenu.addCommand('GPS - Save', save, '^s', icon='saveScript.png')
 #switch version
 switchVersionMenu = nodesMenu.addMenu('Switch Version', icon='switchVersion.png')
@@ -75,7 +59,7 @@ versionLatestMenu_nodes = switchVersionMenu.addCommand('GPS - Version To Latest'
 versionUpMenu_nodes = switchVersionMenu.addCommand('GPS - Version Up', versionUp, 'alt+up', icon='versionUp.png')
 versionDownMenu_nodes = switchVersionMenu.addCommand('GPS - Version Down', versionDown, 'alt+down', icon='versionDown.png')
 #icarusUI
-icarusMenu_nodes = nodesMenu.addCommand('IcarusUI', launchIcarus, icon='icarus.png')
+icarusMenu_nodes = nodesMenu.addCommand('Icarus UI', launchIcarus, icon='icarus.png')
 #trello
 trelloMenu_nodes = nodesMenu.addCommand('Production Board', launchProdBoard, icon='productionBoard.png')
 #browse
@@ -96,7 +80,7 @@ versionUpMenu_gps = switchVersionMenu_gps.addCommand('GPS - Version Down', versi
 #separator
 gpsMenu.addSeparator()
 #icarusUI
-icarusMenu_gps = gpsMenu.addCommand('IcarusUI', launchIcarus)
+icarusMenu_gps = gpsMenu.addCommand('Icarus UI...', launchIcarus)
 #separator
 gpsMenu.addSeparator()
 #trello
@@ -108,6 +92,33 @@ browseMenu_gps = gpsMenu.addMenu('Browse')
 browseMenu_gps.addCommand('Browse Scripts', openScriptsDir)
 browseMenu_gps.addCommand('Browse Renders', openRendersDir)
 browseMenu_gps.addCommand('Browse Elements', openElementsDir)
+
+
+#IMAGE MENU
+imageMenu = nodesMenu.menu('Image')
+imageMenu.addCommand('GPS - Read', readNode, 'r', icon='newScript.png', index=0)
+imageMenu.addCommand('GPS - Write', writeNode, 'w', icon='newScript.png', index=1)
+
+
+#FILE MENU
+fileMenu = nukeMenu.menu('File')
+#new
+newMenu_gps = fileMenu.addCommand('GPS - New', launchNuke, '^n', index=0)
+#open
+openMenu_gps = fileMenu.addCommand('GPS - Open...', openScript, '^o', index=1)
+#open recent
+openRecentMenu_gps = fileMenu.addMenu('GPS - Open Recent', index=2)
+import gpsSave; gpsSave.updateRecentFilesMenu(openRecentMenu_gps)
+#separator
+fileMenu.addSeparator(index=3)
+#save
+saveMenu_gps =  fileMenu.addCommand('GPS - Save', save, '^s', index=4)
+#save as
+saveAsMenu_gps =  fileMenu.addCommand('GPS - Save As...', saveAs, '^shift+s', index=5)
+#incremental save
+saveIncrementalMenu_gps =  fileMenu.addCommand('GPS - Incremental Save', incrSave, 'alt+shift+s', index=6)
+#separator
+fileMenu.addSeparator(index=7)
 
 
 #removing default menu items
