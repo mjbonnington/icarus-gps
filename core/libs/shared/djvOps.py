@@ -12,7 +12,16 @@ import os, subprocess
 def prcImg(input, output, startFrame, endFrame, inExt, outExt='jpg', fps=os.environ['FPS']):
 	cmdInput = '%s.%s-%s.%s' % (input, startFrame, endFrame, inExt)
 	cmdOutput = '%s.%s.%s' % (output, startFrame, outExt)
-	djvCmd = 'export DYLD_FALLBACK_LIBRARY_PATH=%s; %s/djv_convert %s %s -speed %s' % (os.environ['DJV_LIB'], os.environ['DJV_CONVERT'], cmdInput, cmdOutput, fps)
+
+	#exporting path to djv codec libraries according to os
+	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+		ldLibExport = 'export DYLD_FALLBACK_LIBRARY_PATH=%s' % os.environ['DJV_LIB']
+	else:
+		ldLibExport = 'export LD_LIBRARY_PATH=%s' % os.environ['DJV_LIB']
+
+	#setting djv command
+	djvCmd = '%s; %s/djv_convert %s %s -speed %s' % (ldLibExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, fps)
+
 	os.system(djvCmd)
 
 #processes quicktime movies
@@ -22,8 +31,17 @@ def prcQt(input, output, startFrame, endFrame, inExt, name='preview', fps=os.env
 		cmdOutput = '%s/%s.mov' % (output, name)
 	else:
 		cmdOutput = '%s.mov' % output
-	if resize:
-		djvCmd = 'export DYLD_FALLBACK_LIBRARY_PATH=%s; %s/djv_convert %s %s -resize %s %s -speed %s' % (os.environ['DJV_LIB'], os.environ['DJV_CONVERT'], cmdInput, cmdOutput, resize[0], resize[1], fps)
+
+	#exporting path to djv codec libraries according to os
+	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+		ldLibExport = 'export DYLD_FALLBACK_LIBRARY_PATH=%s' % os.environ['DJV_LIB']
 	else:
-		djvCmd = 'export DYLD_FALLBACK_LIBRARY_PATH=%s; %s/djv_convert %s %s -speed %s' % (os.environ['DJV_LIB'], os.environ['DJV_CONVERT'], cmdInput, cmdOutput, fps)
+		ldLibExport = 'export LD_LIBRARY_PATH=%s' % os.environ['DJV_LIB']
+
+	#setting djv command
+	if resize:
+		djvCmd = '%s; %s/djv_convert %s %s -resize %s %s -speed %s' % (ldLibExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, resize[0], resize[1], fps)
+	else:
+		djvCmd = '%s; %s/djv_convert %s %s -speed %s' % (ldLibExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, fps)
+
 	os.system(djvCmd)
