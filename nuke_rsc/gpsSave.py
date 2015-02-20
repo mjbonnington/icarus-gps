@@ -1,6 +1,6 @@
 #!/usr/bin/python
-#support		:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:gpsSave
+#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
+#title		:gpsSave
 #copyright	:Gramercy Park Studios
 
 import os
@@ -19,7 +19,8 @@ def updateRecentFilesMenu(menu):
 
 	# Re-populate the items in the pop-up menu
 	for item in fileLs:
-		menu.addCommand(item.replace('/', '\/'), lambda: openRecent('%s%s' %(os.environ["SHOTPATH"], item))) # forward slashes need escaping to prevent Nuke from interpreting them as sub-menus
+		openRecentCmdStr = 'nuke.scriptOpen(\"%s%s\")' %(os.environ["SHOTPATH"], item)
+		menu.addCommand(item.replace('/', '\/'), openRecentCmdStr) # forward slashes need escaping to prevent Nuke from interpreting them as sub-menus
 
 	# If recent file list contains no entries, disable menu
 	if len(fileLs)==0:
@@ -27,6 +28,18 @@ def updateRecentFilesMenu(menu):
 	if len(fileLs)==1 and fileLs[0]=="":
 		enable = False
 	menu.setEnabled(enable)
+
+
+def updateRecentFiles(script=None):
+	"""Adds a script to the recent files list config file. If script is not specified use current script name"""
+
+	if script == None:
+		script = os.path.abspath( nuke.value("root.name") )
+
+	#nuke.tprint('Adding script %s to recent files list.' %script)
+
+	recentFiles.updateLs( script )
+	updateRecentFilesMenu( nuke.menu('Nuke').menu('File').menu('GPS - Open Recent') )
 
 
 #strips all naming conventions and returns script name
@@ -62,24 +75,6 @@ def getInputName():
 		return
 
 
-#opens script
-def openScript():
-	nuke.scriptOpen( '%s/' %os.environ["NUKESCRIPTSDIR"] )
-	#update recent file list
-	recentFiles.updateLs( os.path.abspath(nuke.value("root.name")) ) # this adds the name of the currently open script - may not work as expected
-	#update recent file menu
-	updateRecentFilesMenu( nuke.menu('Nuke').menu('File').menu('GPS - Open Recent') )
-
-
-#opens recent script
-def openRecent(nkPath):
-	nuke.scriptOpen( nkPath )
-	#update recent file list
-	recentFiles.updateLs( nkPath )
-	#update recent file menu
-	updateRecentFilesMenu( nuke.menu('Nuke').menu('File').menu('GPS - Open Recent') )
-
-
 #saves script, saves As or incremental
 def save(incr=False, saveAs=False):
 	#getting script name
@@ -106,10 +101,8 @@ def save(incr=False, saveAs=False):
 				continue
 			#saving script
 			nuke.scriptSaveAs( nkPath )
-			#update recent file list
-			recentFiles.updateLs( nkPath )
-			#update recent file menu
-			updateRecentFilesMenu( nuke.menu('Nuke').menu('File').menu('GPS - Open Recent') )
+			#updating recent files list
+			updateRecentFiles( nkPath )
 			fileSaved = True
 
 	else:

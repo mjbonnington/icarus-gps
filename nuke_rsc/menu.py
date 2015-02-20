@@ -1,11 +1,14 @@
 #!/usr/bin/python
-#support		:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:menu
+#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
+#title		:menu
 #copyright	:Gramercy Park Studios
 
 #third party gizmos and plugins menu build
 import pixelfudger
 import J_Ops_menu
+
+import gpsSave
+
 
 #getting if running app is Nuke or Nukex
 if nuke.env['nukex']:
@@ -13,21 +16,22 @@ if nuke.env['nukex']:
 else:
 	nukeType = 'nuke'
 
-#commands
+
+#command strings
 readNode = 'import gpsNodes; gpsNodes.read_()'
 writeNode = 'import gpsNodes; gpsNodes.write_()'
 save = 'import gpsSave; gpsSave.save(incr=False)'
 saveAs = 'import gpsSave; gpsSave.save(saveAs=True)'
 incrSave = 'import gpsSave; gpsSave.save(incr=True)'
-openScript = 'import gpsSave; gpsSave.openScript()'
+openScript = 'nuke.scriptOpen(\"%s/\")' %os.environ["NUKESCRIPTSDIR"]
 openScriptsDir = 'import openDirs; openDirs.openNukeScripts()'
 openRendersDir = 'import openDirs; openDirs.openNukeRenders()'
 openElementsDir = 'import openDirs; openDirs.openNukeElements()'
 openShotDir = 'import openDirs; openDirs.openShot()'
 openJobDir = 'import openDirs; openDirs.openJob()'
 launchProdBoard  = 'import launchApps; launchApps.prodBoard()'
-launchNuke = 'import launchApps; launchApps.nuke("%s")' % nukeType
-#launchNuke = 'nuke.scriptClear()'
+launchNuke = 'import launchApps; launchApps.nuke("%s")' %nukeType
+#launchNuke = 'nuke.scriptClear()' # New scrips won't open a new instance of Nuke
 launchIcarus = 'reload(icarus__main__)'
 versionUp = 'import switchVersion; switchVersion.versionUp()'
 versionDown = 'import switchVersion; switchVersion.versionDown()'
@@ -108,7 +112,6 @@ newMenu_gps = fileMenu.addCommand('GPS - New', launchNuke, '^n', index=0)
 openMenu_gps = fileMenu.addCommand('GPS - Open...', openScript, '^o', index=1)
 #open recent
 openRecentMenu_gps = fileMenu.addMenu('GPS - Open Recent', index=2)
-import gpsSave; gpsSave.updateRecentFilesMenu(openRecentMenu_gps)
 #separator
 fileMenu.addSeparator(index=3)
 #save
@@ -129,3 +132,11 @@ fileMenu.removeItem('Save')
 fileMenu.removeItem('Save As...')
 fileMenu.removeItem('Save New Version')
 fileMenu.removeItem('Recent Files')
+
+
+# Initialise recent files menu...
+gpsSave.updateRecentFilesMenu(openRecentMenu_gps)
+
+
+# Add callback function to add script to recent files on script load...
+nuke.addOnScriptLoad( gpsSave.updateRecentFiles )
