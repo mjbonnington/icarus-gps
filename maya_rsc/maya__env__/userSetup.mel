@@ -1,6 +1,5 @@
-//!/usr/bin/python
 //support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-//title     	:icarus__main__
+//title		:icarus__main__
 //copyright	:Gramercy Park Studios
 
 //updating maya scene at startup
@@ -12,16 +11,21 @@ source gps_buildMenus;
 //setting up shortcuts to GPS Tools
 //New Scene
 nameCommand "GPSNew" -ann "GPS - New Scene" -c "source menus2Py; menus2Py.newScene()";
-hotkey -k "n" -n "GPSNew" -cmd;
+hotkey -cmd -k "n" -n "GPSNew";
+hotkey -ctl -k "n" -n "GPSNew";
 //Open Scene
 nameCommand "GPSOpen" -ann "GPS - Open Scene" -c "source menus2Py; menus2Py.openScene()";
-hotkey -k "o" -n "GPSOpen" -cmd;
+hotkey -cmd -k "o" -n "GPSOpen";
+hotkey -ctl -k "o" -n "GPSOpen";
 //Save Scene
 nameCommand "GPSSave" -ann "GPS - Save Scene" -c "source menus2Py; menus2Py.saveScene()";
-hotkey -k "s" -n "GPSSave" -cmd;
+hotkey -cmd -k "s" -n "GPSSave";
+hotkey -ctl -k "s" -n "GPSSave";
 //Save Scene As
 nameCommand "GPSSaveAs" -ann "GPS - Save Scene As" -c "source menus2Py; menus2Py.saveSceneAs()";
-hotkey -k "s" -n "GPSSaveAs" -cmd -alt;
-//Save scene incrementally
+hotkey -cmd -k "S" -n "GPSSaveAs";
+hotkey -ctl -k "S" -n "GPSSaveAs";
+//Incremental save
 nameCommand "GPSSaveIncremental" -ann "GPS - Save Scene Incrementally" -c "source menus2Py; menus2Py.incrementalSave()";
-hotkey -k "S" -n "GPSSaveIncremental" -cmd;
+hotkey -cmd -alt -k "s" -n "GPSSaveIncremental";
+hotkey -ctl -alt -k "s" -n "GPSSaveIncremental";

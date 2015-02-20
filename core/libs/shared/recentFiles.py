@@ -73,7 +73,7 @@ def updateLs(newEntry):
 
 		fileLs.insert(0, newEntry) # prepend entry to the list
 
-		while len(fileLs) > 10: # limit list to ten entries
+		while len(fileLs) > 10: # limit list to ten entries - currently hard-coded, but could be saved in user prefs?
 			fileLs.pop()
 
 		config.set(os.environ['SHOT'], os.environ['ICARUSENVAWARE'], '; '.join(n for n in fileLs))
