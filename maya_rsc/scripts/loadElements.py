@@ -4,7 +4,7 @@ import maya.mel as mel
 
 def addStdElements():
 	stdElementDict = {'vrayRE_Diffuse':'diffuseChannel','vrayRE_Reflection':'reflectChannel','vrayRE_Lighting':'lightingChannel',
-	'vrayRE_Matte_shadow':'matteShadowChannel'}
+	'vrayRE_Shadow':'shadowChannel'}
 
 	if mc.getAttr("vraySettings.giOn"):
 		stdElementDict['vrayRE_GI'] = 'giChannel'

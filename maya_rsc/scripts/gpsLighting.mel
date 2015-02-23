@@ -74,7 +74,7 @@ global proc gpsLighting.loadBaseSettings()
 	};
 	
 	//setting DMC sampler
-	gpsLighting.loadADMCSettings();
+	gpsLighting.loadDMCSettings();
 	
 	//lower max transparency
 	setAttr "vraySettings.globopt_mtl_transpMaxLevels" 10;
@@ -133,14 +133,16 @@ global proc gpsLighting.setRenderPath()
 }
 
 //Load Adaptive DMC settings
-global proc gpsLighting.loadADMCSettings()
+global proc gpsLighting.loadDMCSettings()
 {
 	setAttr "vraySettings.samplerType" 1;
-     setAttr "vraySettings.dmcs_adaptiveAmount" 0.85;
+    setAttr "vraySettings.dmcs_adaptiveAmount" 0.85;
 	setAttr "vraySettings.dmcs_adaptiveThreshold" 0.010;
 	setAttr "vraySettings.dmcMinSubdivs" 1;
-	setAttr "vraySettings.dmcMaxSubdivs" 4;
-	setAttr "vraySettings.dmcThreshold" 0.02;
+	setAttr "vraySettings.dmcMaxSubdivs" 100;
+	setAttr "vraySettings.dmcThreshold" 0.03;
+
+	setAttr "vraySettings.aaFilterOn" 0;
 
 	// setup basic GI settings
 	//setAttr "vraySettings.primaryEngine" 2;
