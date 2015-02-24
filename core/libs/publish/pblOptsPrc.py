@@ -16,11 +16,11 @@ import pblChk, verbose
 #processes publish options and naming convention variables
 def prc(pblTo, subset, assetType, prefix, convention, suffix):
 	assetPblName = prefix + convention + suffix
-	if subset:
-		assetDir = "%s/%s/%s" % (assetType, subset, assetPblName)
-	else:
-		assetDir = "%s/%s" % (assetType, assetPblName)
-	pblDir = "%s/%s" % (pblTo, assetDir)
+	#if subset:
+	assetDir = os.path.join(assetType, subset, convention)
+	#else:
+	#	assetDir = os.path.join(assetType, assetPblName)
+	pblDir = os.path.join(pblTo, assetDir)
 	return assetPblName, assetDir, pblDir
 
 

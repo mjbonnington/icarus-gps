@@ -21,9 +21,9 @@ def publish(pblTo, slShot, geoChType, pblNotes, mail, approved):
 	#defining main variables
 	assetType = 'ma_geoCache'
 	subsetName = geoChType
-	prefix = objLs[0]
-	convention = '_%s' % geoChType
-	suffix = '_geoCache'
+	prefix = ''
+	convention = objLs[0] 
+	suffix = '_%s_geoCache' % geoChType
 	if geoChType == 'vrmesh':
 		fileType = 'vrmesh'
 		extension = 'vrmesh'

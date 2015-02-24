@@ -21,9 +21,9 @@ def publish(pblTo, slShot, rigType, textures, pblNotes, mail, approved):
 	#defining main variables
 	assetType = 'ma_rig'
 	subsetName = rigType
-	prefix = objLs[0]
-	convention = '_%s' % rigType
-	suffix = '_rig'
+	prefix = ''
+	convention = objLs[0]
+	suffix = '_%s_rig' % rigType
 	fileType='mayaBinary'
 	extension = 'mb'
 		

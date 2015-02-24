@@ -28,9 +28,9 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 	#defining main variables
 	geoType = 'abc'
 	assetType = 'ic_pointCloud'
-	prefix = objLs[0]
-	convention = '_pointCloud'
-	suffix = ''
+	prefix = ''
+	convention = objLs[0]
+	suffix = '_pointCloud'
 	ma_fileType = 'mayaBinary'
 	extension = geoType
 		
