@@ -19,6 +19,9 @@ nuke.pluginAddPath('./plugins/J_Ops')
 sys.path.append(os.path.join(os.environ['PIPELINE'], 'core/ui'))
 import env__init__
 env__init__.appendSysPaths()
+#Nuke opens a entire new Nuke process with 'File>New Script' and doesn't simply create and empty script in the current env.
+#The icarus env has to be set temporarily as NUKE_TMP to avoid icarus detecting an existing NUKE env and opening automatically it's UI
+os.environ['ICARUSENVAWARE'] = 'NUKE_TMP'
 import icarus__main__, gpsNodes
 os.environ['ICARUSENVAWARE'] = 'NUKE'
 
