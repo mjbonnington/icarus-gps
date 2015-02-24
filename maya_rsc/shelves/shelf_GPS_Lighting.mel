@@ -94,7 +94,8 @@ global proc shelf_GPS_Lighting () {
 		-mi "VRay Material" ( "source gpsLighting.mel;gpsLighting.createMaterial(\"VRayMtl\",\"vrayMaterial\")" )
 		-mi "VRay Material 2 Sided" ( "source gpsLighting.mel;gpsLighting.createMaterial(\"VRayMtl2Sided\",\"vray2Sided\")" )
 		-mi "VRay Material Wrapper" ( "source gpsLighting.mel;gpsLighting.createMaterial(\"VRayMtlWrapper\",\"wrapper\")" )
-		-mi "VRay Fast SSS 2" ( "source gpsLighting.mel;gpsLighting.createMaterial(\"VRayFastSSS2\",\"fastSSS2\")" )
+		-mi "VRay Skin Material" ( "source gpsLighting.mel;gpsLighting.createMaterial(\"VRaySkinMtl\",\"vraySkin\")" )
+		-mi "VRay Light Material" ( "source gpsLighting.mel;gpsLighting.createMaterial(\"VRayLightMtl\",\"vrayLight\")" )
 		-mi "VRay Car Paint" ( "source gpsLighting.mel;gpsLighting.createMaterial(\"VRayCarPaintMtl\",\"carPaint\")" )
 		-mi "VRay Blend Material" ( "source gpsLighting.mel;gpsLighting.createMaterial(\"VRayBlendMtl\",\"vrayBlend\")" )
 	;
@@ -122,11 +123,17 @@ global proc shelf_GPS_Lighting () {
 		-sourceType "mel" 
 		-commandRepeatable 1
 		-flat 1
-		-mi "VRay Rect Light" ( "source gpsLighting.mel;gpsLighting.createLight(\"VRayLightRectShape\")" )
-		-mi "VRay Dome Light" ( "source gpsLighting.mel;gpsLighting.createLight(\"VRayLightDomeShape\")" )
-		-mi "VRay Sphere Light" ( "source gpsLighting.mel;gpsLighting.createLight(\"VRayLightSphereShape\")" )
-		-mi "Create Light Contribution Element" ( "import createLightSelPass\ncreateLightSelPass.lightSelPass()" )
+		-mi "VRay Rect Light" ("import createVRayLights; createVRayLights.create('VRayLightRectShape', 'VRayLightRect')")
+		-mip 0
+		-mi "VRay Dome Light" ("import createVRayLights; createVRayLights.create('VRayLightDomeShape', 'VRayLightDome')")
+		-mip 1
+		-mi "VRay Sphere Light" ("import createVRayLights; createVRayLights.create('VRayLightSphereShape', 'VRayLightSphere')")
+		-mip 2
+		-mi "VRay IES Light" ("import createVRayLights; createVRayLights.create('VRayLightIESShape', 'VRayLightIES')")
 		-mip 3
+		-mi "VRay Sun" ("vrayCreateVRaySun;")
+		-mi "Create Light Contribution Element" ("import createLightSelPass\ncreateLightSelPass.lightSelPass()")
+		-mip 5
 		;
 	shelfButton
 		-enableCommandRepeat 1
