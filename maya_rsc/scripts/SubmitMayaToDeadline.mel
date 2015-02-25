@@ -3966,7 +3966,7 @@ global proc SubmitJobToDeadline()
 								setParent ..;
 								
 								rowLayout -numberOfColumns 2 -cw2 240 160 -ct2 "left" "left";
-									checkBox -label "Strict Error Checking" -align "left" -v 0 -changeCommand SavePersistentDeadlineOptions -annotation "If checked, Deadline will fail the render job if any error message is detected" frw_strictErrorChecking;
+									checkBox -label "Strict Error Checking" -align "left" -v 1 -changeCommand SavePersistentDeadlineOptions -annotation "If checked, Deadline will fail the render job if any error message is detected" frw_strictErrorChecking;
 									checkBox -label "Enable Local Rendering" -align "left" -v $localRendering -changeCommand SavePersistentDeadlineOptions -annotation "If this option is set to true, the slaves will render locally, and then copy the images to the network output directory on completion" -vis false frw_localRendering;
 								setParent ..;
 								
