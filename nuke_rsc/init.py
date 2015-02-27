@@ -13,7 +13,6 @@ nuke.pluginAddPath('./scripts')
 nuke.pluginAddPath('./plugins')
 #thirdparty locations
 nuke.pluginAddPath('./gizmos/pxf')
-nuke.pluginAddPath('./plugins/J_Ops')
 
 #Nuke seems to ditch the main root environent where it has been called from so the path needs to be appended again
 sys.path.append(os.path.join(os.environ['PIPELINE'], 'core/ui'))
@@ -25,8 +24,8 @@ os.environ['ICARUSENVAWARE'] = 'NUKE_TMP'
 import icarus__main__, gpsNodes
 os.environ['ICARUSENVAWARE'] = 'NUKE'
 
-#thirdparty initializations
-import J_Ops_init; import J_Ops
+#thirdparty initializations go here
+
 
 #SHOT DIRECTORIES
 nuke.addFavoriteDir('Elements', os.environ['NUKEELEMENTSDIR'])
