@@ -134,6 +134,15 @@ fileMenu.removeItem('Save As...')
 fileMenu.removeItem('Save New Version')
 fileMenu.removeItem('Recent Files')
 
+#updated names for nuke 9 menus
+fileMenu.removeItem('New Comp...')
+fileMenu.removeItem('Open Comp...')
+fileMenu.removeItem('Open Recent Comp')
+fileMenu.removeItem('Close Comp')
+fileMenu.removeItem('Save Comp')
+fileMenu.removeItem('Save Comp As...')
+fileMenu.removeItem('Save New Comp Version')
+
 
 # Initialise recent files menu...
 gpsSave.updateRecentFilesMenu(openRecentMenu_gps)
