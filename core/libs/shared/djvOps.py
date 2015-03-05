@@ -20,7 +20,7 @@ def prcImg(input, output, startFrame, endFrame, inExt, outExt='jpg', fps=os.envi
 		ldLibExport = 'export LD_LIBRARY_PATH=%s' % os.environ['DJV_LIB']
 
 	#setting djv command
-	djvCmd = '%s; %s/djv_convert %s %s -speed %s' % (ldLibExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, fps)
+	djvCmd = '%s; %s %s %s -speed %s' % (ldLibExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, fps)
 
 	os.system(djvCmd)
 
@@ -40,8 +40,8 @@ def prcQt(input, output, startFrame, endFrame, inExt, name='preview', fps=os.env
 
 	#setting djv command
 	if resize:
-		djvCmd = '%s; %s/djv_convert %s %s -resize %s %s -speed %s' % (ldLibExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, resize[0], resize[1], fps)
+		djvCmd = '%s; %s %s %s -resize %s %s -speed %s' % (ldLibExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, resize[0], resize[1], fps)
 	else:
-		djvCmd = '%s; %s/djv_convert %s %s -speed %s' % (ldLibExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, fps)
+		djvCmd = '%s; %s %s %s -speed %s' % (ldLibExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, fps)
 
 	os.system(djvCmd)
