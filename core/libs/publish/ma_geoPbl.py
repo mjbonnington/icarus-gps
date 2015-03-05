@@ -21,9 +21,9 @@ def publish(pblTo, slShot, geoType, textures, pblNotes, mail, approved):
 	#defining main variables
 	assetType = 'ic_geo'
 	subsetName = geoType
-	prefix = objLs[0]
-	convention = '_%s' % geoType
-	suffix = '_geo'
+	prefix = ''
+	convention = objLs[0]
+	suffix = '_%s_geo' % geoType
 	fileType = geoType
 	extension = geoType
 		

@@ -6,7 +6,7 @@
 
 #daily publish module
 import os, sys, traceback, time
-import pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose, djvOps
+import pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose, djvOps, inProgress
 
 def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes, mail):
 	
@@ -28,7 +28,6 @@ def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes, mail):
 	#version control
 	currentVersion = '%s' % vCtrl.version(pblDir, current=True)
 	version = '%s' % vCtrl.version(pblDir)
-	hiddenVersion = '.%s' % version
 	
 	#confirmation dialog
 	dialogMsg = ''
@@ -42,7 +41,10 @@ def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes, mail):
 		verbose.pblFeed(begin=True)
 		pblResult = 'SUCCESS'
 		#creating publish directories
-		pblDir = mkPblDirs.mkDirs(pblDir, hiddenVersion)
+		pblDir = mkPblDirs.mkDirs(pblDir, version)
+
+		#creating in progress tmp file
+		inProgress.start(pblDir)
 		
 		#file operations
 		dailyPath = os.path.expandvars(dailyPath)
@@ -73,7 +75,10 @@ def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes, mail):
 		os.system('mkdir -p %s' % dailyDatePath)
 		for dailyFile in dailyFileLs:
 			os.system('ln -f %s/%s %s/%s' % (pblDir, dailyFile, dailyDatePath, dailyFile))
-			
+			 
+		#setting open permissions on directory to fix a temp issue with permissions on server
+		os.system('chmod -R 777 %s' % dailyDatePath)
+
 		#creating daily snapshot
 		previewOutput = '%s/preview' % pblDir
 		djvOps.prcImg(input, previewOutput, midFrame, midFrame, extension, outExt='jpg')
@@ -82,12 +87,14 @@ def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes, mail):
 		#ic publishData files
 		assetPblName += '_%s' % version		
 		icPblData.writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, pblNotes)
-			
-		verbose.pblFeed(pblResult)
 		
-		#making publish visible
-		visiblePblDir = pblDir.replace(hiddenVersion, version)
-		os.system('mv %s %s' % (pblDir, visiblePblDir))
+		#published asset check
+		pblResult = pblChk.success('%s/%s' % (dailyDatePath, dailyFile))
+
+		#deleting in progress tmp file from .publish and wips folder
+		inProgress.end(pblDir)
+		inProgress.end(dailyDatePath)
+
 		verbose.pblFeed(end=True)
 		
 	except:
@@ -95,7 +102,7 @@ def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes, mail):
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		pathToPblAsset = ''
 		os.system('rm -rf %s' % pblDir)
-		pblResult = pblChk.sucess(pathToPblAsset)
+		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += verbose.pblRollback()
 	
 	#publish result dialog

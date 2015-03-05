@@ -48,8 +48,8 @@ def read_():
 				startFrame, endFrame = os.environ['STARTFRAME'], os.environ['ENDFRAME']
 				
 			#making filePath relative
-			if os.environ['SHOTPATH'] in filePath:
-				filePath = filePath.replace(os.environ['SHOTPATH'], '[getenv SHOTPATH]')
+			if os.environ['JOBPATH'] in filePath:
+				filePath = filePath.replace(os.environ['JOBPATH'], '[getenv JOBPATH]')
 				
 			readNode = nuke.createNode('Read', 'name GPS_Read')
 			readNode.knob('file').setValue(filePath)

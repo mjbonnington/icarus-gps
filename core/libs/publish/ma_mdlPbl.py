@@ -22,9 +22,9 @@ def publish(pblTo, slShot, mdlType, textures, pblNotes, mail, approved):
 	#defining main variables
 	assetType = 'ma_model'
 	subsetName = mdlType
-	prefix = objLs[0]
-	convention = '_%s' % mdlType
-	suffix = '_model'
+	prefix = ''
+	convention = objLs[0]
+	suffix = '_%s_model' % mdlType
 	fileType = 'mayaBinary'
 	extension = 'mb'
 	autoLods = False

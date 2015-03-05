@@ -20,8 +20,8 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 		
 	#defining main variables
 	assetType = 'ma_fx'
-	prefix = objLs[0]
-	convention = ''
+	prefix = ''
+	convention = objLs[0]
 	suffix = '_fx'
 	fileType='mayaBinary'
 	extension = 'mb'
