@@ -5,7 +5,6 @@
 
 #third party gizmos and plugins menu build
 import pixelfudger
-import J_Ops_menu
 
 import gpsSave
 
@@ -23,7 +22,7 @@ writeNode = 'import gpsNodes; gpsNodes.write_()'
 save = 'import gpsSave; gpsSave.save(incr=False)'
 saveAs = 'import gpsSave; gpsSave.save(saveAs=True)'
 incrSave = 'import gpsSave; gpsSave.save(incr=True)'
-openScript = 'nuke.scriptOpen(\"%s/\")' %os.environ["NUKESCRIPTSDIR"]
+openScript = 'nuke.scriptOpen(\"%s/\")' % os.environ["NUKESCRIPTSDIR"]
 openScriptsDir = 'import openDirs; openDirs.openNukeScripts()'
 openRendersDir = 'import openDirs; openDirs.openNukeRenders()'
 openElementsDir = 'import openDirs; openDirs.openNukeElements()'
@@ -47,6 +46,9 @@ nodesMenu = nuke.menu('Nodes')
 
 
 #GPS NODES MENU
+#gps
+gpsMenu_nodes = nodesMenu.addMenu('GPS', icon='gps.png')
+deflickerVelocity_cmd = gpsMenu_nodes.addCommand('Deflicker Velocity', "nuke.createNode('deflickerVelocity')", icon='newScript.png')
 #separator
 nodesMenu.addSeparator()
 #new
@@ -131,6 +133,15 @@ fileMenu.removeItem('Save')
 fileMenu.removeItem('Save As...')
 fileMenu.removeItem('Save New Version')
 fileMenu.removeItem('Recent Files')
+
+#updated names for nuke 9 menus
+fileMenu.removeItem('New Comp...')
+fileMenu.removeItem('Open Comp...')
+fileMenu.removeItem('Open Recent Comp')
+fileMenu.removeItem('Close Comp')
+fileMenu.removeItem('Save Comp')
+fileMenu.removeItem('Save Comp As...')
+fileMenu.removeItem('Save New Comp Version')
 
 
 # Initialise recent files menu...
