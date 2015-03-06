@@ -161,3 +161,8 @@ global proc menus2Py.gpsPreview()
 {
 python("import gpsPreviewLauncher; gpsPreviewLauncher.launch(env='MAYA')");
 }
+
+global proc menus2Py.launchDjv()
+{
+python("import djvOps; djvOps.viewer()");
+}

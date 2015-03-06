@@ -3129,11 +3129,11 @@ registerUpdateRendererUIProc("updateStatusLineRendererSpecificUI");
 			-annotation "Opens the Production Board"
 			launchProdBoardButton;
 			
-		// GPS - Project Tools
-		iconTextButton -image1 "projectTools.png"
+		// GPS - DJV
+		iconTextButton -image1 "djv.png"
 			-width $iconHeight -height $iconHeight
-			-command ("source menus2Py.mel;menus2Py.projectTools;")
-			-annotation "Accesses project specific tools"
+			-command ("source menus2Py.mel;menus2Py.launchDjv;")
+			-annotation "Launches DJV frame viewer"
 			projectToolsButton;
 		
 		//GPS - Browses Project Directories

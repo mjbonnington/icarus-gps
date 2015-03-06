@@ -255,16 +255,8 @@ class previewUI(QtGui.QDialog):
 
 	#launches viewer
 	def launchViewer(self):
-		djvPath = os.environ['DJV_PLAY']
-		#exporting correct path for djv Libraries based on icarus running OS
-		if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-			djvLib = 'export DYLD_FALLBACK_LIBRARY_PATH=%s' % os.environ['DJV_LIB']
-		else:
-			djvLib = 'export LD_LIBRARY_PATH=%s' % os.environ['DJV_LIB']
 		input = '%s/%s.%s.%s' % (self.outputDir, self.outputFile, self.frRange[0], self.ext)
-		command = '%s; %s %s' % (djvLib, djvPath, input)
-		subprocess.Popen(command, shell=True)
-
+		djvOps.viewer(input)
 
 #launching UI window
 if os.environ['ICARUSENVAWARE'] == 'MAYA':
