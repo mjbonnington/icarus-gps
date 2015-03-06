@@ -10,18 +10,20 @@ fi
 PATH="/usr/bin/python:${PATH}"
 export PATH
 
+
+
 ################################
 
 ##JOB AND SHOT TERMINAL SETUP##
 #Changing prompt color
-export CLICOLOR=1
-export LSCOLORS=cxfxexdxbxegedabagacad
-export GREP_OPTIONS='--color=auto'
+#export CLICOLOR=1
+#export LSCOLORS=cxfxexdxbxegedabagacad
+#export GREP_OPTIONS='--color=auto'
 
 
 ##echoing shot info##
 clear; echo -e "GRAMERCY PARK STUDIOS - $JOB | $SHOT"; echo
-PS1="\[\033[32;2m\][\u-$SHOT: ./\W]\[\033[0m\] "
+PS1="\[\033[32;2m\][\u-$JOB-$SHOT: ./\W]\[\033[0m\] "
 
 
 ##cd into shot dir##
@@ -29,12 +31,17 @@ cd $SHOTPATH
 
 
 ##software aliases##
-alias maya="$MAYAVERSION -proj $JOBPATH/3D/maya"
-alias nuke="$NUKEVERSION"
-alias mudbox="$MUDBOXVERSION"
-alias mari="$MARIVERSION"
-alias realflow="'$REALFLOWVERSION'"
-
+alias maya="$MAYAVERSION -proj $JOBPATH/3D/maya &"
+alias nuke="$NUKEVERSION &"
+alias nukex="$NUKEXVERSION &"
+alias mudbox="$MUDBOXVERSION &"
+alias mari="$MARIVERSION &"
+alias realflow="'$REALFLOWVERSION' &"
+if [[ $ICARUS_RUNNING_OS == 'Linux' ]]; then
+	alias djv="export LD_LIBRARY_PATH=$DJV_LIB; $DJV_PLAY &"
+else
+	alias djv="export DYLD_FALLBACK_LIBRARY_PATH=$DJV_LIB; $DJV_PLAY &"
+fi
 
 ##other aliases
 # Add bash aliases.
