@@ -16,7 +16,7 @@ import os, sys, env__init__
 env__init__.setEnv()
 
 #note: publish modules are imported on demand rather than all at once at beggining of file
-import launchApps, setJob, userPrefs, verbose, pblChk, pblOptsPrc, openDirs, setTerm, setPermissions, jobs, listShots
+import launchApps, setJob, userPrefs, verbose, pblChk, pblOptsPrc, openDirs, setTerm, jobs, listShots
 
 class icarusApp(QtGui.QDialog):
 	def __init__(self, parent = None):

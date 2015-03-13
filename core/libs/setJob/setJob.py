@@ -4,12 +4,12 @@
 #copyright	:Gramercy Park Studios
 
 
-import setDirs, userPrefs, job__env__, pathPrc
+import defaultDirs, userPrefs, job__env__, pathPrc
 
 def setup(job, shot):
 	shotPath = pathPrc.process(job, shot)
 	envVars = job, shot, shotPath
 	job__env__.setEnv(envVars)
-	setDirs.mkDirs()
+	defaultDirs.create()
 	newEntry = '%s,%s' % (job, shot)
 	userPrefs.edit('main', 'lastjob', newEntry)

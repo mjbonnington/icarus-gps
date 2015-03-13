@@ -7,7 +7,7 @@
 #animation curve publish module
 import os, sys, traceback
 import maya.cmds as mc
-import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose
+import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose
 
 def publish(pblTo, slShot, pblNotes, mail, approved):
 	
@@ -73,7 +73,6 @@ def publish(pblTo, slShot, pblNotes, mail, approved):
 	version = '%s' % vCtrl.version(pblDir)
 	if approved:
 		version += '_apv'
-	hiddenVersion = '.%s' % version
 
 	#confirmation dialog
 	dialogTitle = 'Publishing'
@@ -86,7 +85,10 @@ def publish(pblTo, slShot, pblNotes, mail, approved):
 	try:	
 		verbose.pblFeed(begin=True)
 		#creating publish directories
-		pblDir = mkPblDirs.mkDirs(pblDir, hiddenVersion)
+		pblDir = osOps.createDir(os.path.join(pblDir, version))
+
+		#creating in progress tmp file
+		inProgress.start(pblDir)
 
 		#ic publish data file
 		requires = mc.getAttr('%s.icRefTag' % ICSetConn[0])
@@ -94,23 +96,23 @@ def publish(pblTo, slShot, pblNotes, mail, approved):
 		icPblData.writeData(pblDir, assetPblName, objLs[0], assetType, extension, version, pblNotes, requires, compatible)
 		
 		#file operations
-		pathToPblAsset = '%s/%s.%s' % (pblDir, assetPblName, extension)
+		pathToPblAsset = os.path.join(pblDir, '%s.%s' % (assetPblName, extension))
 		verbose.pblFeed(msg=assetPblName)
 		mayaOps.exportAnimation(pathToPblAsset, pblDir, objLs)
 
 		#published asset check
 		pblResult = pblChk.sucess(pathToPblAsset)
-		
-		#making publish visible
-		visiblePblDir = pblDir.replace(hiddenVersion, version)
-		os.system('mv %s %s' % (pblDir, visiblePblDir))
+
+		#deleting in progress tmp file
+		inProgress.end(pblDir)
+
 		verbose.pblFeed(end=True)
 
 	except:
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		pathToPblAsset = ''
-		os.system('rm -rf %s' % pblDir)
+		osOps.recurseRemove(pblDir)
 		pblResult = pblChk.sucess(pathToPblAsset)
 		pblResult += verbose.pblRollback()
 	

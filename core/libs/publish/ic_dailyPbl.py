@@ -6,7 +6,7 @@
 
 #daily publish module
 import os, sys, traceback, time
-import pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose, djvOps, inProgress
+import pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, djvOps, inProgress
 
 def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes, mail):
 	
@@ -26,8 +26,8 @@ def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes, mail):
 	renderRootPblDir = pblDir
 	
 	#version control
-	currentVersion = '%s' % vCtrl.version(pblDir, current=True)
-	version = '%s' % vCtrl.version(pblDir)
+	currentVersion = vCtrl.version(pblDir, current=True)
+	version = vCtrl.version(pblDir)
 	
 	#confirmation dialog
 	dialogMsg = ''
@@ -41,7 +41,7 @@ def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes, mail):
 		verbose.pblFeed(begin=True)
 		pblResult = 'SUCCESS'
 		#creating publish directories
-		pblDir = mkPblDirs.mkDirs(pblDir, version)
+		pblDir = osOps.createDir(os.path.join(pblDir, version))
 
 		#creating in progress tmp file
 		inProgress.start(pblDir)
@@ -64,23 +64,20 @@ def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes, mail):
 		#passing arguments to djv to process the files in djvOps
 		dailyFileBody = '%s_daily_%s' % (os.environ['SHOT'], subsetName)
 		dailyFile = '%s.%s.jpg' % (dailyFileBody, startFrame)
-		input = '%s/%s' % (dailyPath, nameBody)
-		output = '%s/%s' % (pblDir, dailyFileBody)
+		input = os.path.join(dailyPath, nameBody)
+		output = os.path.join(pblDir, dailyFileBody)
 		#djvOps.prcImg(input, output, startFrame, endFrame, extension, outExt='jpg', fps=os.environ['FPS'])
 		djvOps.prcQt(input, pblDir, startFrame, endFrame, extension, name='%s_%s' % (dailyFileBody, version))
 		#hard linking daily to dated folder in editorial
 		dailyFileLs = os.listdir(pblDir)
 		dailyDateDir = time.strftime('%Y_%m_%d')
 		dailyDatePath = os.path.join(os.environ['WIPSDIR'], 'CGI', dailyDateDir, '%s_%s_%s' % (os.environ['SHOT'], subsetName, version))
-		os.system('mkdir -p %s' % dailyDatePath)
+		osOps.createDir(dailyDatePath)
 		for dailyFile in dailyFileLs:
-			os.system('ln -f %s/%s %s/%s' % (pblDir, dailyFile, dailyDatePath, dailyFile))
-			 
-		#setting open permissions on directory to fix a temp issue with permissions on server
-		os.system('chmod -R 777 %s' % dailyDatePath)
+			osOps.hardLink(os.path.join(pblDir, dailyFile), os.path.join(dailyDatePath, dailyFile))			 
 
 		#creating daily snapshot
-		previewOutput = '%s/preview' % pblDir
+		previewOutput = os.path.join(pblDir, 'preview')
 		djvOps.prcImg(input, previewOutput, midFrame, midFrame, extension, outExt='jpg')
 		djvOps.prcQt(input, pblDir, startFrame, endFrame, extension, resize=(255, 143))
 				
@@ -89,7 +86,7 @@ def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes, mail):
 		icPblData.writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, pblNotes)
 		
 		#published asset check
-		pblResult = pblChk.success('%s/%s' % (dailyDatePath, dailyFile))
+		pblResult = pblChk.success(os.path.join(dailyDatePath, dailyFile))
 
 		#deleting in progress tmp file from .publish and wips folder
 		inProgress.end(pblDir)
@@ -101,7 +98,7 @@ def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes, mail):
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		pathToPblAsset = ''
-		os.system('rm -rf %s' % pblDir)
+		osOps.recurseRemove(pblDir)
 		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += verbose.pblRollback()
 	
