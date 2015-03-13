@@ -50,6 +50,7 @@ def write_create():
 	writeNode.addKnob(gps_presets_tab)
 	writeNode.addKnob(gps_write_presets)
 	writeNode['knobChanged'].setValue('gpsNodes.w_presets_callback()')
+	writeNode.knob('write_presets').setValue('Precomp')
 	writeNode.knob('beforeRender').setValue('gpsNodes.w_create_dir()')
 	return writeNode
 
@@ -90,7 +91,7 @@ def w_global_preset(writeNode, presetType):
 	writeNode.knob('last').setValue(int(endFrame))
 
 #filePath preset
-def w_path_preset(writeNode, presetType):
+def w_path_preset(writeNode, presetType='Precomp'):
 	if 'Plate_' in presetType:
 		presetType = presetType.replace('Plate_', '')
 		filePath = os.path.join('[getenv SHOTPATH]', 'Plate', presetType)
