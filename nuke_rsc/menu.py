@@ -17,8 +17,8 @@ else:
 
 
 #command strings
-readNode = 'import gpsNodes; gpsNodes.read_()'
-writeNode = 'import gpsNodes; gpsNodes.write_()'
+readNode = 'import gpsNodes; gpsNodes.read_create()'
+writeNode = 'import gpsNodes; gpsNodes.write_create()'
 save = 'import gpsSave; gpsSave.save(incr=False)'
 saveAs = 'import gpsSave; gpsSave.save(saveAs=True)'
 incrSave = 'import gpsSave; gpsSave.save(incr=True)'
