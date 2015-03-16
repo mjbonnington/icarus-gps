@@ -128,7 +128,9 @@ saveIncrementalMenu_gps =  fileMenu.addCommand('GPS - Incremental Save', incrSav
 fileMenu.addSeparator(index=7)
 
 
-#removing default menu items
+# Remove default file menu items...
+
+# Nuke 8.x
 fileMenu = nukeMenu.findItem('File')
 fileMenu.removeItem('New')
 fileMenu.removeItem('Open...')
@@ -137,7 +139,7 @@ fileMenu.removeItem('Save As...')
 fileMenu.removeItem('Save New Version')
 fileMenu.removeItem('Recent Files')
 
-#updated names for nuke 9 menus
+# Nuke 9.x
 fileMenu.removeItem('New Comp...')
 fileMenu.removeItem('Open Comp...')
 fileMenu.removeItem('Open Recent Comp')

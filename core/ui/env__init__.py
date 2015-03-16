@@ -8,20 +8,6 @@
 import os, platform, sys
 
 def setEnv():
-	os.environ['ICARUSVERSION'] = 'v0.8.0'
-	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
-	os.environ['ICWORKINGDIR'] = icarusWorkingDir
-	icarusUIDir = os.path.join('core', 'ui')
-	os.environ['PIPELINE'] = icarusWorkingDir.replace(icarusUIDir, '')
-	os.environ['ICCONFIGDIR'] = os.path.join(os.environ['PIPELINE'], 'core', 'config')
-
-	os.environ['ICUSERPREFS'] = os.path.join(os.environ['ICCONFIGDIR'], 'users', os.environ['USER']) # User prefs stored on server
-	#os.environ['ICUSERPREFS'] = os.path.join(os.environ['HOME'], '.icarus') # User prefs stored in user home folder
-
-	os.environ['SHOTSROOTRELATIVEDIR'] = 'Vfx'
-	os.environ['DATAFILESRELATIVEDIR'] = '.icarus'
-	os.environ['JOBDATAFILE'] = 'jobData.py'
-	os.environ['SHOTDATAFILE'] = 'shotData.py'
 	if platform.system() == 'Darwin':
 		os.environ['ICARUS_RUNNING_OS'] = 'Darwin'
 		os.environ['USERNAME'] = os.environ['USER']
@@ -31,6 +17,20 @@ def setEnv():
 		os.environ['ICARUSENVAWARE']
 	except KeyError:
 		os.environ['ICARUSENVAWARE'] = 'STANDALONE'
+
+	os.environ['ICARUSVERSION'] = 'v0.8.0'
+	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
+	os.environ['ICWORKINGDIR'] = icarusWorkingDir
+	icarusUIDir = os.path.join('core', 'ui')
+	os.environ['PIPELINE'] = icarusWorkingDir.replace(icarusUIDir, '')
+	os.environ['ICCONFIGDIR'] = os.path.join(os.environ['PIPELINE'], 'core', 'config')
+	os.environ['ICUSERPREFS'] = os.path.join(os.environ['ICCONFIGDIR'], 'users', os.environ['USERNAME']) # User prefs stored on server
+	#os.environ['ICUSERPREFS'] = os.path.join(os.environ['HOME'], '.icarus') # User prefs stored in user home folder
+
+	os.environ['SHOTSROOTRELATIVEDIR'] = 'Vfx'
+	os.environ['DATAFILESRELATIVEDIR'] = '.icarus'
+	os.environ['JOBDATAFILE'] = 'jobData.py'
+	os.environ['SHOTDATAFILE'] = 'shotData.py'
 	appendSysPaths()
 
 def appendSysPaths():
