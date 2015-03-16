@@ -16,7 +16,7 @@ import os, sys, env__init__
 env__init__.setEnv()
 
 #note: publish modules are imported on demand rather than all at once at beggining of file
-import launchApps, setJob, userPrefs, verbose, pblChk, pblOptsPrc, openDirs, setTerm, setPermissions, jobs, listShots
+import launchApps, setJob, userPrefs, verbose, pblChk, pblOptsPrc, openDirs, setTerm, jobs, listShots
 
 class icarusApp(QtGui.QDialog):
 	def __init__(self, parent = None):
@@ -562,10 +562,9 @@ class icarusApp(QtGui.QDialog):
 	
 	#render master browse	
 	def dailyPblBrowse(self):
-		playblastDailies = ['modeling', 'texturing', 'animation', 'anim', 'fx', 'previs', 'tracking']
-		if self.dailyType in playblastDailies:
+		if self.dailyType in ('modeling', 'texturing', 'animation', 'anim', 'fx', 'previs', 'tracking', 'rigging'):
 			return self.fileDialog(os.environ['MAYAPLAYBLASTSDIR'])
-		elif self.dailyType == 'lighting':
+		elif self.dailyType in ('lighting', 'shading'):
 			return self.fileDialog(os.environ['MAYARENDERSDIR'])
 		elif self.dailyType == 'comp':
 			return self.fileDialog(os.environ['NUKERENDERSDIR'])

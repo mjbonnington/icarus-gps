@@ -7,7 +7,7 @@
 #nuke setup publish module
 import os, sys, traceback
 import nuke
-import pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose, nukeOps, inProgress
+import pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, nukeOps, inProgress
 
 
 def publish(pblTo, slShot, pblType, pblName, pblNotes, mail, approved):
@@ -57,7 +57,7 @@ def publish(pblTo, slShot, pblType, pblName, pblNotes, mail, approved):
 		verbose.pblFeed(begin=True)
 
 		#creating publish directories
-		pblDir = mkPblDirs.mkDirs(pblDir, version)
+		pblDir = osOps.createDir(os.path.join(pblDir, version))
 
 		#creating in progress tmp file
 		inProgress.start(pblDir)
@@ -70,7 +70,7 @@ def publish(pblTo, slShot, pblType, pblName, pblNotes, mail, approved):
 		icSet['selected'].setValue(True)
 
 		#file operations
-		pathToPblAsset = '%s/%s.%s' % (pblDir, assetPblName, extension)
+		pathToPblAsset = os.path.join(pblDir, '%s.%s' % (assetPblName, extension))
 		verbose.pblFeed(msg=assetPblName)
 		nukeOps.exportSelection(pathToPblAsset)
 		nuke.delete(icSet)
@@ -90,7 +90,7 @@ def publish(pblTo, slShot, pblType, pblName, pblNotes, mail, approved):
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		pathToPblAsset = ''
-		os.system('rm -rf %s' % pblDir)
+		osOps.recurseRemove(pblDir)
 		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += verbose.pblRollback()
 
