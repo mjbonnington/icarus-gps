@@ -5,37 +5,12 @@
 
 import os
 import nuke
-import gpsSave, vCtrl
+import gpsSave, vCtrl, osOps
 	
-#gps write
-def write_():
-	workingScript = os.path.split(nuke.root().name()[:-3])[-1]
-	print workingScript
-	scriptName = gpsSave.getWorkingScriptName()
-	if not scriptName:
-		scriptName = 'untitled'
-	paddingExt = '%04d.exr'
-	fileName = '%s_%s.%s' % (os.environ['SHOT'], scriptName, paddingExt)
-	#writeDir = '%s/%s' % (os.environ['NUKERENDERSDIR'], workingScript)
-	#version = vCtrl.version(writeDir)
-	filePath = os.path.join('[getenv NUKERENDERSDIR]', workingScript, scriptName, fileName)
-	startFrame = os.environ['STARTFRAME']
-	endFrame = os.environ['ENDFRAME']
-	writeNode = nuke.createNode('Write', 'name GPS_Write')
-	writeNode.knob('file').setValue(filePath)
-	writeNode.knob('beforeRender').setValue('gpsNodes.createWriteDir()')
-	writeNode.knob('channels').setValue('rgba')
-	writeNode.knob('file_type').setValue('exr')
-	writeNode.knob('datatype').setValue('16 bit half')
-	writeNode.knob('compression').setValue('Zip (16 scanlines)')
-	writeNode.knob('use_limit').setValue('True')
-	writeNode.knob('first').setValue(int(startFrame))
-	writeNode.knob('last').setValue(int(endFrame))
-	
-	return writeNode
-	
-#gps read
-def read_():
+
+##########################################GPS READ#############################################
+###############################################################################################
+def read_create():
 	readDir = '%s/' % os.environ['SHOTPATH']
 	dialogPathLs = nuke.getClipname('Read File(s)', default=readDir, multiple=True)
 	if dialogPathLs:
@@ -59,14 +34,106 @@ def read_():
 			readNode.knob('last').setValue(int(endFrame))
 	
 		return readNode
-			
+
+
+##########################################GPS Write############################################
+###############################################################################################
+def write_create():
+	if not gpsSave.getWorkingScriptName():
+		nuke.message('Please save your script first')
+		return
+	writeNode = nuke.createNode('Write', 'name GPS_Write')
+	presetLs = ['Comp', 'CG_Comp', 'Precomp', 'Roto', 'Elements', 'Plate_Raw', 'Plate_Graded', 'Plate_CG']
+	gps_presets_tab = nuke.Tab_Knob('gps_presets', 'GPS_Write_Presets')
+	gps_write_presets = nuke.Enumeration_Knob('write_presets', 'Write Preset', presetLs)
+	writeNode.addKnob(gps_presets_tab)
+	writeNode.addKnob(gps_write_presets)
+	writeNode['knobChanged'].setValue('gpsNodes.w_presets_callback()')
+	writeNode.knob('write_presets').setValue('Precomp')
+	writeNode.knob('beforeRender').setValue('gpsNodes.w_create_dir()')
+	writeNode.knob('afterRender').setValue('gpsNodes.w_openPermissions()')
+	return writeNode
+
+
+#callback function to fill write nodes automatically with standard GPS presets
+def w_presets_callback():
+	writeNode = nuke.thisNode()
+	if nuke.thisKnob().name() == 'write_presets':
+		presetType = nuke.thisKnob().value()
+		w_global_preset(writeNode, presetType)
+		filePath = w_path_preset(writeNode, presetType)
+		if presetType in ('CG_Comp', 'Precomp', 'Roto', 'Elements'):
+			w_fileName_preset(writeNode, filePath, presetType, 'exr', proxy=True)
+			w_exr_preset(writeNode)
+		elif presetType in ('Comp', 'Plate_Raw', 'Plate_Graded'):
+			w_fileName_preset(writeNode, filePath, presetType, 'dpx', proxy=True)
+			w_dpx_preset(writeNode)
+		elif presetType == 'Plate_CG':
+			w_fileName_preset(writeNode, filePath, presetType, 'jpg', proxy=True)
+			w_jpg_preset(writeNode)
+		return presetType
+
+
 #creates write node directory	
-def createWriteDir():
+def w_create_dir():
 	path = os.path.dirname(nuke.filename(nuke.thisNode()))
 	if not os.path.isdir(path):
-		os.system('mkdir -p %s' % path)
-	
+		osOps.createDir(path)
+	return path
 
+#opens up the permissions for all written files
+def w_openPermissions():
+	path = os.path.dirname(nuke.filename(nuke.thisNode()))
+	osOps.setPermissions(path)
 
+#sets the default presets on the write node
+def w_global_preset(writeNode, presetType):
+	startFrame = os.environ['STARTFRAME']
+	endFrame = os.environ['ENDFRAME']
+	writeNode = nuke.thisNode()
+	writeNode.knob('use_limit').setValue('True')
+	writeNode.knob('first').setValue(int(startFrame))
+	writeNode.knob('last').setValue(int(endFrame))
 
-	
+#filePath preset
+def w_path_preset(writeNode, presetType='Precomp'):
+	if 'Plate_' in presetType:
+		presetType = presetType.replace('Plate_', '')
+		filePath = os.path.join('[getenv SHOTPATH]', 'Plate', presetType)
+		fullPath = os.path.join(os.environ['SHOTPATH'], 'Plate', presetType)
+	else:
+		filePath = os.path.join('[getenv NUKERENDERSDIR]', presetType)
+		fullPath = os.path.join(os.environ['NUKERENDERSDIR'], presetType)
+	version = vCtrl.version(fullPath)
+	filePath = os.path.join(filePath, version)
+	return filePath
+
+#fileName preset
+def w_fileName_preset(writeNode, filePath, presetType, ext, proxy=True):
+	fileName = '%s_%s.%s.%s' % (os.environ['SHOT'], presetType, '%04d', ext)
+	fullPath = os.path.join(filePath, 'full', fileName)
+	writeNode.knob('file').setValue(fullPath)
+	if proxy:
+		proxyPath = os.path.join(filePath, 'proxy', fileName)
+		writeNode.knob('proxy').setValue(proxyPath)
+
+#exr type specific presets
+def w_exr_preset(writeNode):
+	writeNode.knob('channels').setValue('rgba')
+	writeNode.knob('file_type').setValue('exr')
+	writeNode.knob('datatype').setValue('16 bit half')
+	writeNode.knob('compression').setValue('Zip (16 scanlines)')
+
+#exr type specific presets
+def w_dpx_preset(writeNode):
+	writeNode.knob('channels').setValue('rgb')
+	writeNode.knob('file_type').setValue('dpx')
+	writeNode.knob('datatype').setValue('10 bit')
+	writeNode.knob('colorspace').setValue('sRGB')
+
+#jpg type specific presets
+def w_jpg_preset(writeNode):
+	writeNode.knob('channels').setValue('rgb')
+	writeNode.knob('file_type').setValue('jpeg')
+	writeNode.knob('_jpeg_quality').setValue(0.75)
+	writeNode.knob('colorspace').setValue('sRGB')

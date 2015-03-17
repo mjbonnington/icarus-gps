@@ -28,7 +28,7 @@ def prcImg(input, output, startFrame, endFrame, inExt, outExt='jpg', fps=os.envi
 def prcQt(input, output, startFrame, endFrame, inExt, name='preview', fps=os.environ['FPS'], resize=None):
 	cmdInput = '%s.%s-%s.%s' % (input, startFrame, endFrame, inExt)
 	if name:
-		cmdOutput = '%s/%s.mov' % (output, name)
+		cmdOutput = os.path.join(output, '%s.mov' % name)
 	else:
 		cmdOutput = '%s.mov' % output
 

@@ -4,9 +4,9 @@
 #copyright	:Gramercy Park Studios
 
 import autoDeploy, maya.cmds as mc, os, sys
-sys.path.append("%s/core/libs/shared" % os.environ["PIPELINE"])
-sys.path.append("%s/core/ui" % os.environ["PIPELINE"])
-import icarus__main__
+sys.path.append(os.path.join(os.environ['PIPELINE'], 'core', 'ui'))
+import icarus__main__, env__init__
+env__init__.appendSysPaths()
 os.environ['ICARUSENVAWARE'] = 'MAYA'
 import mayaOps
 #autodeploying maya tools and env files.
@@ -23,6 +23,4 @@ ma_pluginLs = [
 'tiffFloatReader.bundle']
 
 for ma_plugin in ma_pluginLs:
-	mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins/%s' % ma_plugin), qt=True)
-
-
+	mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins', ma_plugin), qt=True)

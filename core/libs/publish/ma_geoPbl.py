@@ -7,7 +7,7 @@
 #geometry publish module
 import os, sys, traceback
 import maya.cmds as mc
-import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose, approvePbl, inProgress
+import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, approvePbl, inProgress
 
 def publish(pblTo, slShot, geoType, textures, pblNotes, mail, approved):
 	
@@ -78,7 +78,9 @@ def publish(pblTo, slShot, geoType, textures, pblNotes, mail, approved):
 		verbose.pblFeed(begin=True)
 
 		#creating publish directories
-		pblDir = mkPblDirs.mkDirs(pblDir, version, textures)
+		pblDir = osOps.createDir(os.path.join(pblDir, version))
+		if textures:
+			osOps.createDir(os.path.join(pblDir, 'tx'))
 
 		#creating in progress tmp file
 		inProgress.start(pblDir)
@@ -90,14 +92,14 @@ def publish(pblTo, slShot, geoType, textures, pblNotes, mail, approved):
 		#maya operations
 		if textures:
 			#copying textures to pbl direcotry
-			txFullPath = '%s/tx' % pblDir
+			txFullPath = os.path.join(pblDir, 'tx')
 			txRelPath = txFullPath.replace(os.path.expandvars('$JOBPATH'), '$JOBPATH')
 			txPaths = (txFullPath, txRelPath)
 			mayaOps.relinkTexture(txPaths, txObjLs=allObjLs, updateMaya=False)
 		mayaOps.snapShot(pblDir)
 
 		#file operations
-		pathToPblAsset = '%s/%s.%s' % (pblDir, assetPblName, extension)
+		pathToPblAsset = os.path.join(pblDir, '%s.%s' % (assetPblName, extension))
 		verbose.pblFeed(msg=assetPblName)
 		mayaOps.exportGeo(objLs, geoType, pathToPblAsset)
 		
@@ -117,7 +119,7 @@ def publish(pblTo, slShot, geoType, textures, pblNotes, mail, approved):
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		pathToPblAsset = ''
-		os.system('rm -rf %s' % pblDir)
+		osOps.recurseRemove(pblDir)
 		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += verbose.pblRollback()
 

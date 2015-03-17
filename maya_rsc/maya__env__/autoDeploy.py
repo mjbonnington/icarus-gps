@@ -1,11 +1,15 @@
 #!/usr/bin/python
-#support		:Nuno Pereira - nuno.pereira@gps-ldn.com
+#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
 #title     	:autoDeploy
 #copyright	:Gramercy Park Studios
 
 
 import os, sys
+sys.path.append(os.path.join(os.environ['PIPELINE'], 'core', 'ui'))
+import env__init__
+env__init__.appendSysPaths()
 import maya.cmds as mc, maya.mel as mel
+import verbose, osOps
 
 def deploy():
 	#Getting Maya Home
@@ -17,20 +21,19 @@ def deploy():
 		else:
 	 		mayaVersion = mayaVersion.replace(' ', '-')
 	if sys.platform == 'darwin':
-		mayaHome = '/Users/%s/Library/Preferences/Autodesk/maya/%s' % (os.environ['USERNAME'], mayaVersion)
+		mayaHome = os.path.join('Users', os.environ['USERNAME'], 'Library', 'Preferences', 'Autodesk', 'maya', mayaVersion)
 	else:
-		mayaHome = '%s/maya/%s' % (mel.eval('getenv HOME'), mayaVersion)
+		mayaHome = os.path.join(mel.eval('getenv HOME'), 'maya', mayaVersion)
 	
 	#Pipeline Resources Paths
 	#shelves
-	shelf_resources = '%s/maya_rsc/shelves' % os.environ['PIPELINE']
-	mayaShelvesDir = "%s/prefs/shelves/" % mayaHome
+	shelf_resources = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'shelves')
+	mayaShelvesDir = os.path.join(mayaHome, 'prefs', 'shelves')
 	
 	#Copying files
-	outputMsg = 'Deploying GPS tools - '
 	try:
-		os.system('cp %s/* %s/' % (shelf_resources, mayaShelvesDir))
-		print '%s Ok' % outputMsg 
+		osOps.copyDirContents(shelf_resources, mayaShelvesDir)
+		verbose.gpsToolDeploy('Ok')
 	except:
-		print '%s Failed' % outputMsg
+		verbose.gpsToolDeploy('Failed')
 		

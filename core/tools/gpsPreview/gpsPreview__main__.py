@@ -5,7 +5,7 @@
 import os, subprocess
 from PySide import QtCore, QtGui
 from gpsPreviewUI import *
-import djvOps, verbose, appConnect, userPrefs
+import djvOps, verbose, appConnect, userPrefs, osOps
 
 #launches and controls GPS Preview UI
 
@@ -240,13 +240,14 @@ class previewUI(QtGui.QDialog):
 				if self.viewer:
 					self.launchViewer()
 			self.saveOpts()
+			osOps.setPermissions(self.outputDir)
 				
 	#creates a quicktime
 	def createQuicktime(self):
 		#deletes qt file if exists in outputDir
-		input = '%s/%s' % (self.outputDir, self.outputFile)
+		input = os.path.join(self.outputDir, self.outputFile)
 		if os.path.isfile('%s.mov' % input):
-			os.system('rm -f %s.mov' % input)
+			osOps.recurseRemove(input)
 		output = self.outputDir
 		startFrame = self.frRange[0]
 		endFrame = self.frRange[1]
@@ -255,7 +256,7 @@ class previewUI(QtGui.QDialog):
 
 	#launches viewer
 	def launchViewer(self):
-		input = '%s/%s.%s.%s' % (self.outputDir, self.outputFile, self.frRange[0], self.ext)
+		input = os.path.join(self.outputDir, '%s.%s.%s' % (self.outputFile, self.frRange[0], self.ext))
 		djvOps.viewer(input)
 
 #launching UI window

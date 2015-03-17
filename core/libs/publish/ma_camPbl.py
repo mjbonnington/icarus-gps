@@ -7,7 +7,7 @@
 #camera publish module
 import os, sys, traceback
 import maya.cmds as mc
-import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose, approvePbl, inProgress
+import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, approvePbl, inProgress
 
 def publish(pblTo, slShot, cameraType, pblNotes, mail, approved):
 	
@@ -66,7 +66,7 @@ def publish(pblTo, slShot, cameraType, pblNotes, mail, approved):
 	try:
 		verbose.pblFeed(begin=True)
 		#creating publish directories
-		pblDir = mkPblDirs.mkDirs(pblDir, version)
+		pblDir = osOps.createDir(os.path.join(pblDir, version))
 
 		#creating in progress tmp file
 		inProgress.start(pblDir)
@@ -82,11 +82,12 @@ def publish(pblTo, slShot, cameraType, pblNotes, mail, approved):
 		mayaOps.lockAttr(objLs, attrLs)
 
 		#file operations
-		pathToPblAsset = '%s/%s.%s' % (pblDir, assetPblName, extension)
+		pathToPblAsset = os.path.join(pblDir, '%s.%s' % (assetPblName, extension))
 		verbose.pblFeed(msg=assetPblName)
 		mayaOps.exportSelection(pathToPblAsset, fileType)
 		mayaOps.nkCameraExport(objLs, pblDir, assetPblName, version)
 		mayaOps.exportGeo(objLs, 'fbx', pathToPblAsset)
+		osOps.setPermissions(os.path.join(pblDir, '*'))
 
 		#approving publish
 		if approved:
@@ -98,6 +99,9 @@ def publish(pblTo, slShot, cameraType, pblNotes, mail, approved):
 
 		#published asset check
 		pblResult = pblChk.success(pathToPblAsset)
+
+		#deleting in progress tmp file
+		inProgress.end(pblDir)
 			
 		verbose.pblFeed(end=True)
 	
@@ -105,7 +109,7 @@ def publish(pblTo, slShot, cameraType, pblNotes, mail, approved):
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		pathToPblAsset = ''
-		os.system('rm -rf %s' % pblDir)
+		osOps.recurseRemove(pblDir)
 		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += verbose.pblRollback()
 

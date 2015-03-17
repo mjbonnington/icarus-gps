@@ -7,7 +7,7 @@
 #lists all available shots in the specified directory
 
 import os
-import pathPrc, jobChk
+import pathPrc, jobChk, verbose
 
 def list_(job):
 	shotsPath = pathPrc.process(job)
@@ -28,9 +28,9 @@ def list_(job):
 			shotLs.sort(); shotLs.reverse()
 			return shotLs
 		else:
-			print "ERROR: No valid shots found in job path '%s'." %shotsPath
+			verbose.noShot(shotsPath)
 			return False
 
 	else:
-		print "ERROR: The job path '%s' does not exist. The job may have been archived, moved or deleted." %shotsPath
+		verbose.noJob(shotsPath)
 		return False

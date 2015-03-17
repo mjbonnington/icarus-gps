@@ -6,7 +6,7 @@
 
 #render publish module
 import os, sys, traceback
-import pblChk, pblOptsPrc, vCtrl, pDialog, mkPblDirs, icPblData, verbose, approvePbl, djvOps
+import pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, approvePbl, djvOps, inProgress
 
 def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 	
@@ -31,7 +31,6 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 	#version control
 	currentVersion = '%s' % vCtrl.version(pblDir, current=True)
 	version = '%s' % vCtrl.version(pblDir)
-	hiddenVersion = '.%s' % version
 	
 	#checks if no main layer was set and cancels publish if publishin first version
 	if version == 'v001':
@@ -55,7 +54,10 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 		verbose.pblFeed(begin=True)
 		pblResult = 'SUCCESS'
 		#creating publish directories
-		pblDir = mkPblDirs.mkDirs(pblDir, hiddenVersion)
+		pblDir = osOps.createDir(os.path.join(pblDir, version))
+
+		#creating in progress tmp file
+		inProgress.start(pblDir)
 		
 		#file operations
 		if not mainLayer:
@@ -70,13 +72,13 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 				for currentPblLayer in currentPblLayerLs:
 					#creating respective layer folder in new version
 					if os.path.isdir(os.path.join(renderRootPblDir, currentVersion, currentPblLayer)):
-						os.system('mkdir %s/%s' % (pblDir, currentPblLayer))
+						osOps.createDir(os.path.join(pblDir, currentPblLayer))
 						#getting all files in current layer
 						currentLayerFileLs = sorted(os.listdir(os.path.join(renderRootPblDir, currentVersion, currentPblLayer)))
 						#hard linking files to new version
 						for currentLayerFile in currentLayerFileLs:
 							verbose.pblFeed(msg='Processing %s' % currentLayerFile)
-							os.system('ln -f %s/%s/%s/%s %s/%s' % (renderRootPblDir, currentVersion, currentPblLayer, currentLayerFile, pblDir, currentPblLayer))
+							osOps.hardLink(os.path.join(renderRootPblDir, currentVersion, currentPblLayer, currentLayerFile), os.path.join(pblDir, currentPblLayer))
 			
 		#processing all new layers and passes
 		for key in renderDic.keys():
@@ -85,16 +87,15 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 			for file_ in dirContents:
 				verbose.pblFeed(msg='Processing %s' % file_)
 				if key == mainLayer:
-					if not os.path.isdir('%s/%s' % (pblDir, 'main')):
-						os.system('mkdir %s/%s' % (pblDir, 'main'))
+					osOps.createDir(os.path.join(pblDir, 'main'))
 					if os.path.isfile(os.path.join(outputDir, file_)):
 						prcFile = pblOptsPrc.renderName_prc(key, 'main', file_)
 						if prcFile:
-							os.system('ln -f %s/%s %s/main/%s' % (outputDir, file_, pblDir, prcFile))
+							osOps.hardLink(os.path.join(outputDir, file_), os.path.join(pblDir, 'main', prcFile))
 				else:
-					if not os.path.isdir('%s/%s' % (pblDir, key)):
-						os.system('mkdir %s/%s' % (pblDir, key))
-					os.system('ln -f %s/%s %s/%s' % (outputDir, file_, pblDir, key))
+					if not os.path.isdir(os.path.join(pblDir, key)):
+						osOps.createDir(os.path.join(pblDir, key))
+					osOps.hardLink(os.path.join(outputDir, file_), os.path.join(pblDir, key))
 		
 		#creating publish snapshot from main layer new version
 		mainLayerDir = os.path.join(pblDir, 'main')
@@ -111,8 +112,8 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 			startFrame = min(mainLayerPaddingLs)
 			endFrame = max(mainLayerPaddingLs)
 			midFrame = int((int(startFrame) + int(endFrame))/2)
-			input = '%s/%s' % (mainLayerDir, mainLayerBody)
-			output = '%s/preview' % pblDir
+			input = os.path.join(mainLayerDir, mainLayerBody)
+			output = os.path.join(pblDir, 'preview')
 			djvOps.prcImg(input, output, midFrame,  midFrame, mainLayerExtension, outExt='jpg')
 			djvOps.prcQt(input, pblDir, startFrame, endFrame, mainLayerExtension, resize=(255, 143))
 				
@@ -122,18 +123,16 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 			
 		
 		#inserting approval file
-		apvFile = open('%s/approved.ic' % pblDir, 'w')
+		apvFile = open(os.path.join(pblDir, 'approved.ic'), 'w')
 		apvFile.write(str(approved))
 		apvFile.close
-		
-		#making publish visible
-		visiblePblDir = pblDir.replace(hiddenVersion, version)
-		os.system('mv %s %s' % (pblDir, visiblePblDir))
-	
+			
 		#Approving publish
 		if approved:
-			approvePbl.publish(apvDir, visiblePblDir, assetDir, assetType, version)
-			
+			approvePbl.publish(apvDir, pblDir, assetDir, assetType, version)
+
+		#deleting in progress tmp file
+		inProgress.end(pblDir)			
 		
 		verbose.pblFeed(end=True)
 		
@@ -141,8 +140,8 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		pathToPblAsset = ''
-		os.system('rm -rf %s' % pblDir)
-		pblResult = pblChk.sucess(pathToPblAsset)
+		osOps.recurseRemove(pblDir)
+		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += verbose.pblRollback()
 	
 	#publish result dialog

@@ -5,6 +5,7 @@
 
 
 import os
+import osOps
 
 #Publish in progress tmp file manager
 
@@ -15,4 +16,4 @@ def start(pblDir):
 def end(pblDir):
 	in_progressFile = os.path.join(pblDir, 'in_progress.tmp')
 	if os.path.isfile(in_progressFile):
-		os.system('rm -f %s' % in_progressFile)
+		osOps.recurseRemove(in_progressFile)

@@ -34,6 +34,9 @@ def concurrentPublish():
 def gpsPreview_uiValues():
 	print 'Not all GPS Preview UI values could be read'
 
+def gpsToolDeploy(status):
+	print 'Deploying GPS tools - %s' % status
+
 def icarusLaunch(icarusVersion, icarusLocation):
 	print 'GRAMERCY PARK STUDIOS - ICARUS %s\n' % icarusVersion
 	#print 'Running from %s\n' % icarusLocation
@@ -88,6 +91,9 @@ def noHrox(hroxFile):
 	
 def noICSetsPbl():
 	print 'ICSets cannot be selected for publishing'
+
+def noJob(job):
+	print 'ERROR: The job path "%s" does not exist. The job may have been archived, moved or deleted.' % job
 	
 def noMainLayer():
 	print 'Please set a main layer'
@@ -118,6 +124,9 @@ def noSeq(dir):
 	
 def noSetsPbl():
 	print 'Sets cannot be selected for publishing'
+
+def noShot(shot):
+	print 'ERROR: No valid shots found in job path "%s".' % shot
 
 def notCamera():
 	print 'The current selection is not a camera'
@@ -168,4 +177,7 @@ def shaderLinkError(shaderRelinkResult):
 
 def shaderSupport():
 	print 'The specified node is not a shading group'
+
+def userPrefs_notWritten():
+	print '[Icarus] Warning: unable to write user prefs configuration file.'
 	

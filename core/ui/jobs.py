@@ -1,10 +1,11 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#support	:Michael Bonnington - mike.bonnington@gps-ldn.com
-#title    	:jobLs
-#copyright	:Gramercy Park Studios
 
-#This file holds the jobs running in the CG Department
+# jobs.py
+# support	: Michael Bonnington - mike.bonnington@gps-ldn.com
+# copyright	: Gramercy Park Studios
+
+# This file holds the jobs running in the CG department.
+
 
 import os, sys
 import xml.etree.ElementTree as ET
@@ -25,46 +26,65 @@ except:
 
 class jobs():
 	"""Deals with the current jobs database.
-	Add and remove jobs, make jobs active or inactive, modify job properties."""
-
-	def __init__(self, datafile, active=True):
+	   Add and remove jobs, make jobs active or inactive, modify job properties.
+	"""
+	def __init__(self, datafile):
 		self.joblist = {}
-		#self.datafile = os.path.join(os.environ['PIPELINE'], 'core', 'config', 'jobs.xml')
 		self.datafile = datafile
-		self.readjobs()
 
-		tree = ET.parse(datafile)
-		self.root = tree.getroot()
+		try:
+			self.tree = ET.parse(self.datafile)
+			self.root = self.tree.getroot()
+		except (IOError, ET.ParseError):
+			print "Warning: XML data file is invalid or doesn't exist."
+			self.root = ET.Element('root')
+			self.tree = ET.ElementTree(self.root)
+
 
 	def ls(self):
-		"""Print job database in a human-readable pretty format - NOT YET IMPLEMENTED"""
+		"""Print job database in a human-readable pretty format. - NOT YET IMPLEMENTED
+		"""
+
+
+#	def getPath(self, jobName):
+#		"""Get path
+#		"""
+#		path = self.root.find('job')
+#		return path.find('path').text
+
 
 	def readjobs(self):
-		"""Read job database from XML file and store active jobs in dictionary"""
-
-		tree = ET.parse(self.datafile)
-		root = tree.getroot()
+		"""Read job database from XML file and store active jobs in dictionary.
+		"""
 		for job in root.findall('job'):
 			self.joblist[job.find('name').text] = job.find('path').text, job.get('active')
 
+
 	def writejobs(self):
-		"""Write job database to XML file - NOT YET IMPLEMENTED"""
+		"""Write job database to XML file. - NOT YET IMPLEMENTED
+		"""
+
 
 	def refresh(self):
-		"""Reload job database"""
-
+		"""Reload job database. - REDUNDANT?
+		"""
 		self.readjobs()
 
-	def add(self, jobName, jobPath):
-		"""Add a new job to the database"""
 
+	def add(self, jobName, jobPath):
+		"""Add a new job to the database.
+		"""
 		self.joblistactive[jobName] = jobPath
 
-	def rm(self, jobName):
-		"""Remove a job from the database"""
 
+	def rm(self, jobName):
+		"""Remove a job from the database.
+		"""
 		#del self.joblist[jobName]
+		print 'deleting %s' %jobName
+
 
 	def modify(self, jobName, jobPath, active):
-		"""Modify job properties, currently name, path, and active status"""
+		"""Modify job properties, currently name, path, and active status.
+		"""
 

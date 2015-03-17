@@ -8,21 +8,20 @@
 import hiero.core as hc
 import os, sys
 #just like nuke hiero seems to ditch the main root environent where it has been called from so the path needs to be appended again
-sys.path.append(os.path.join(os.environ['PIPELINE'], 'core/ui'))
+sys.path.append(os.path.join(os.environ['PIPELINE'], 'core', 'ui'))
 import env__init__
 env__init__.appendSysPaths()
-
-import verbose
+import verbose, osOps
 
 def removeAutoSave():
 	#getting project
-	hroxAutosave = '%s/%s.hrox.autosave' % (os.environ['HIEROEDITORIALPATH'], os.environ['JOB'])
+	hroxAutosave = os.path.join(os.environ['HIEROEDITORIALPATH'], '%s.hrox.autosave' %  os.environ['JOB'])
 	if os.path.isfile(hroxAutosave):
-		os.system('rm -rf %s' % hroxAutosave)
+		osOps.recurseRemove(hroxAutosave)
 
 def loadDailies(cg=True, flame=True, edit=True):
 	#getting project
-	jobHrox = '%s/%s.hrox' % (os.environ['HIEROEDITORIALPATH'], os.environ['JOB'])
+	jobHrox = os.path.join(os.environ['HIEROEDITORIALPATH'], '%s.hrox' %  os.environ['JOB'])
 	#opening jobHrox if exists
 	if os.path.isfile(jobHrox):
 		hieroProj = hc.openProject(jobHrox)	
@@ -66,7 +65,7 @@ def loadItems(path, bin, emptyBin=True):
 			if os.path.isdir(itemPath):
 			   bin.importFolder(itemPath)
 	else:
-		os.system('mkdir -p %s' % path)
+		osOps.createDir(path)
 
 removeAutoSave()
 loadDailies()

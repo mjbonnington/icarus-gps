@@ -24,14 +24,14 @@ def gather(gatherPath):
 			mc.delete('ICSet_%s' % icData.assetPblName)
 		
 		#gets published asset from the gatherPath
-		animFile = '%s/%s.%s' % (gatherPath, icData.assetPblName, icData.assetExt)
+		animFile = os.path.join(gatherPath, '%s.%s' (icData.assetPblName, icData.assetExt))
 		if not os.path.isfile(animFile):
 			verbose.noAsset()
 			return
 	
 		#loading ATOM animation plugin if needed
 		mayaAppPath = os.path.split(os.environ['MAYAVERSION'])[0]
-		mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins/atomImportExport.bundle'), qt=True)
+		mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins', 'atomImportExport.bundle'), qt=True)
 		
 		#gathering
 		allObjLs = mc.listRelatives(icData.asset, ad=True, f=True, typ='transform')

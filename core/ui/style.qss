@@ -14,7 +14,8 @@ QWidget {
 	color: rgba(204, 204, 204, 100%);
 	selection-background-color: #709e32; /*#00b2ee;*/
 	selection-color: #fff;
-	alternate-background-color: rgba(255, 255, 255, 2%);
+	alternate-background-color: #262626;
+	/*alternate-background-color: rgba(255, 255, 255, 2%);*/
 	/*font-family: 'Helvetica, Arial, sans-serif';*/
 	font-size: 11px;
 	font-weight: normal;
@@ -43,6 +44,7 @@ QWidget:focus { /* add highlight for input focus */
 }*/
 
 QAbstractScrollArea {
+	/*padding: 2px;*/
 	background: #222;
 	border: 1px solid #555;
 	border-radius: 0px; /* 3px where there are scroll bars if possible */
@@ -55,6 +57,10 @@ QAbstractScrollArea:disabled {
 *[mandatoryField="true"] { /* custom background colour for mandatory fields */
 	background: #de727a;
 	color: #222;
+}
+
+*[noBackground="true"] { /* no background colour */
+	background: transparent;
 }
 
 /* End Generic Elements */
@@ -443,6 +449,66 @@ QRadioButton::indicator:pressed {
 
 
 
+/* Abstract Item View
+ * (inherited by QHeaderView, QTreeView, QTreeWidget, QHelpContentWidget, QColumnView, QTableView, QTableWidget, QListView, QHelpIndexWidget, QUndoView, QListWidget)
+ */
+
+QAbstractItemView {
+	show-decoration-selected: 1;
+}
+
+QAbstractItemView::item {
+	padding: 2px;
+}
+
+QAbstractItemView::indicator {
+	width: 11px;
+	height: 11px;
+	background: #222;
+	border: 1px solid #333;
+	border-radius: 2px;
+}
+
+QAbstractItemView::indicator:hover {
+	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #333, stop: 1 #3c4b27);
+	background-image: url(:/images/checkbox_hover.png);
+}
+
+QAbstractItemView::indicator:checked {
+	image: url(:/images/checkbox_checked.png);
+}
+
+QAbstractItemView::indicator:checked:disabled {
+	image: url(:/images/checkbox_checked_disabled.png);
+}
+
+QAbstractItemView::indicator:indeterminate {
+	image: url(:/images/checkbox_indeterminate.png);
+}
+
+QAbstractItemView::indicator:indeterminate:disabled {
+	image: url(:/images/checkbox_indeterminate_disabled.png);
+}
+
+/* End Abstract Item View */
+
+
+
+/* List View/Widget
+ *
+ */
+
+QListWidget {
+	/*border: 1px solid #222;
+	background: #222;*/
+	/*alternate-background-color: #2a2a2a;*/
+	/*show-decoration-selected: 1;*/
+}
+
+/* End List View/Widget */
+
+
+
 /* Tree View/Widget
  *
  */
@@ -453,27 +519,27 @@ QTreeView {
 }
 
 QTreeView::branch:has-siblings:!adjoins-item {
-	/*border-image: url(vline.png) 0;*/
+	image: url(:/images/vline.png);
 }
 
 QTreeView::branch:has-siblings:adjoins-item {
-	/*border-image: url(branch-more.png) 0;*/
+	image: url(:/images/branch-more.png);
 }
 
 QTreeView::branch:!has-children:!has-siblings:adjoins-item {
-	/*border-image: url(branch-end.png) 0;*/
+	image: url(:/images/branch-end.png);
 }
 
 QTreeView::branch:has-children:!has-siblings:closed,
 QTreeView::branch:closed:has-children:has-siblings {
 	border-image: none;
-	image: url(:/images/arrow_right_disabled.png);
+	image: url(:/images/arrow_right.png);
 }
 
 QTreeView::branch:open:has-children:!has-siblings,
 QTreeView::branch:open:has-children:has-siblings  {
 	border-image: none;
-	image: url(:/images/arrow_down_disabled.png);
+	image: url(:/images/arrow_down.png);
 }
 
 /* End Tree View/Widget */
@@ -500,21 +566,6 @@ QTableView QTableCornerButton::section:pressed {
 }
 
 /* End Table View/Widget */
-
-
-
-/* List View/Widget
- *
- */
-
-QListWidget {
-	/*border: 1px solid #222;
-	background: #222;*/
-	/*alternate-background-color: #2a2a2a;*/
-	show-decoration-selected: 1;
-}
-
-/* End List View/Widget */
 
 
 
@@ -665,7 +716,8 @@ QComboBox {
 }
 
 QComboBox:editable {
-	padding-left: 1px;
+	/*padding-left: 1px;*/
+	padding: 1px 6px 2px 1px;
 	background: #222;
 	/*border-top-left-radius: 0px;*/
 	/*border-bottom-left-radius: 0px;*/
@@ -1058,6 +1110,34 @@ QScrollBar::down-arrow:vertical:disabled {
 }
 
 /* End Scrollbar */
+
+
+
+/* Slider
+ *
+ */
+
+QSlider {
+	background: #444;
+}
+
+/*QSlider::groove {
+	background: #666;
+	border: 1px solid #999999;*/
+	/*height: 8px;*/ /* the groove expands to the size of the slider by default. by giving it a height, it has a fixed size */
+	/*background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #B1B1B1, stop:1 #c4c4c4);
+	/*margin: 2px 0;*/
+/*}
+
+QSlider::handle {
+    background: #666;
+    border: 1px solid #5c5c5c;
+    width: 18px;*/
+    /*margin: -2px 0;*/ /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
+    /*border-radius: 3px;
+}*/
+
+/* End Slider */
 
 
 

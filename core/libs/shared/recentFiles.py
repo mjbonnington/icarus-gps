@@ -6,10 +6,10 @@
 
 from ConfigParser import SafeConfigParser
 import os
-
+import osOps
 
 config = SafeConfigParser()
-configFile = os.path.join(os.environ['RECENTFILESDIR'], '%s.ini' %os.environ['JOB'])
+configFile = os.path.join(os.environ['RECENTFILESDIR'], '%s.ini' % os.environ['JOB'])
 
 
 def read():
@@ -39,9 +39,7 @@ def create():
 	recentFilesDir = os.environ['RECENTFILESDIR']
 
 	if not os.path.isdir(recentFilesDir):
-		os.system('mkdir -p %s'  % recentFilesDir)
-		os.system('chmod -R 775 %s' % recentFilesDir)
-
+		osOps.createDir(recentFilesDir)
 	if not config.has_section(os.environ['SHOT']): # create shot section if it doesn't exist
 		config.add_section(os.environ['SHOT'])
 	if not config.has_option(os.environ['SHOT'], os.environ['ICARUSENVAWARE']): # create current app option if it doesn't exist

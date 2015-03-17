@@ -24,7 +24,7 @@ class connect(object):
 	#detecting enviro
 	def appPreview(self):
 		if os.environ['ICARUSENVAWARE'] == 'MAYA':
-			self.outputDir = '%s/%s' % (os.environ['MAYAPLAYBLASTSDIR'], self.fileInput)
+			self.outputDir = os.path.join(os.environ['MAYAPLAYBLASTSDIR'], self.fileInput)
 			mayaPreviewOutput = self.mayaPreview()
 			if mayaPreviewOutput:
 				self.frRange, ext = mayaPreviewOutput
