@@ -100,9 +100,11 @@ def w_path_preset(writeNode, presetType='Precomp'):
 	if 'Plate_' in presetType:
 		presetType = presetType.replace('Plate_', '')
 		filePath = os.path.join('[getenv SHOTPATH]', 'Plate', presetType)
+		fullPath = os.path.join(os.environ['SHOTPATH'], 'Plate', presetType)
 	else:
 		filePath = os.path.join('[getenv NUKERENDERSDIR]', presetType)
-	version = vCtrl.version(filePath)
+		fullPath = os.path.join(os.environ['NUKERENDERSDIR'], presetType)
+	version = vCtrl.version(fullPath)
 	filePath = os.path.join(filePath, version)
 	return filePath
 
