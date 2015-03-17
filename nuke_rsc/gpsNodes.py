@@ -40,9 +40,8 @@ def read_create():
 ###############################################################################################
 def write_create():
 	if not gpsSave.getWorkingScriptName():
-		scriptName = 'untitled'
-		#nuke.message('Please save your script first')
-		#return
+		nuke.message('Please save your script first')
+		return
 	writeNode = nuke.createNode('Write', 'name GPS_Write')
 	presetLs = ['Comp', 'CG_Comp', 'Precomp', 'Roto', 'Elements', 'Plate_Raw', 'Plate_Graded', 'Plate_CG']
 	gps_presets_tab = nuke.Tab_Knob('gps_presets', 'GPS_Write_Presets')
@@ -52,6 +51,7 @@ def write_create():
 	writeNode['knobChanged'].setValue('gpsNodes.w_presets_callback()')
 	writeNode.knob('write_presets').setValue('Precomp')
 	writeNode.knob('beforeRender').setValue('gpsNodes.w_create_dir()')
+	writeNode.knob('afterRender').setValue('gpsNodes.w_openPermissions()')
 	return writeNode
 
 
@@ -80,6 +80,11 @@ def w_create_dir():
 	if not os.path.isdir(path):
 		osOps.createDir(path)
 	return path
+
+#opens up the permissions for all written files
+def w_openPermissions():
+	path = os.path.dirname(nuke.filename(nuke.thisNode()))
+	osOps.setPermissions(path)
 
 #sets the default presets on the write node
 def w_global_preset(writeNode, presetType):

@@ -8,6 +8,7 @@
 import os, shutil, recentFiles
 import maya.cmds as mc
 import maya.mel as mel
+import osOps
 
 
 
@@ -747,6 +748,7 @@ def saveFile(fileType):
 		fileType = 'mayaBinary'
 	filename = mc.file(options='v=0', force=True, save=True, type=fileType)
 	recentFiles.updateLs(filename)
+	osOps.setPermissions(filename)
 
 ###################saves maya file as#####################
 def saveFileAs(filePath, extension):
@@ -763,6 +765,7 @@ def saveFileAs(filePath, extension):
 		mc.file(rename=saveFolder[0])
 		filename = mc.file(options='v=0', force=True, save=True, type=fileType)
 		recentFiles.updateLs(filename)
+		osOps.setPermissions(filename)
 		
 ################creates viewport snapshot##################
 def snapShot(pblDir):

@@ -101,6 +101,7 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 		pathToPblAsset = os.path.join(pblDir, '%s.%s' % (assetPblName, extension))
 		verbose.pblFeed(msg=assetPblName)
 		mayaOps.exportSelection(pathToPblAsset, fileType)
+		osOps.setPermissions(os.path.join(pblDir, '*'))
 		
 		#published asset check
 		pblResult = pblChk.success(pathToPblAsset)

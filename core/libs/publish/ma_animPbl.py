@@ -99,6 +99,7 @@ def publish(pblTo, slShot, pblNotes, mail, approved):
 		pathToPblAsset = os.path.join(pblDir, '%s.%s' % (assetPblName, extension))
 		verbose.pblFeed(msg=assetPblName)
 		mayaOps.exportAnimation(pathToPblAsset, pblDir, objLs)
+		osOps.setPermissions(os.path.join(pblDir, '*'))
 
 		#published asset check
 		pblResult = pblChk.sucess(pathToPblAsset)

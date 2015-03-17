@@ -87,6 +87,7 @@ def publish(pblTo, slShot, cameraType, pblNotes, mail, approved):
 		mayaOps.exportSelection(pathToPblAsset, fileType)
 		mayaOps.nkCameraExport(objLs, pblDir, assetPblName, version)
 		mayaOps.exportGeo(objLs, 'fbx', pathToPblAsset)
+		osOps.setPermissions(os.path.join(pblDir, '*'))
 
 		#approving publish
 		if approved:

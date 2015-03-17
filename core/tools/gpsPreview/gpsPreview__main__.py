@@ -240,6 +240,7 @@ class previewUI(QtGui.QDialog):
 				if self.viewer:
 					self.launchViewer()
 			self.saveOpts()
+			osOps.setPermissions(self.outputDir)
 				
 	#creates a quicktime
 	def createQuicktime(self):

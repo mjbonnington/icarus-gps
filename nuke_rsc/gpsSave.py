@@ -104,6 +104,8 @@ def save(incr=False, saveAs=False):
 			#updating recent files list
 			updateRecentFiles( nkPath )
 			fileSaved = True
+			#opening permissions on written file
+			osOps.setPermissions(nkPath)
 
 	else:
 		nuke.scriptSave()
