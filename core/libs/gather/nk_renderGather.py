@@ -13,7 +13,7 @@ def gather(gatherPath):
 			try:
 				filePath, frameRange = dialogPath.split(' ')
 				startFrame, endFrame = frameRange.split('-')
-				filePathTail = filePath.split('/')[-1]
+				filePathTail = os.path.split(filePath)[-1]
 				fileName = 'GPS_%s' % filePathTail.split('.')[0]
 			except ValueError:
 				filePath = dialogPath

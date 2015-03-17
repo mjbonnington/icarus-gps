@@ -27,3 +27,6 @@ def hardLink(source, destination, umask='000'):
 def recurseRemove(path):
 	os.system('rm -rf %s' % path)
 	return path
+
+def copyDirContents(source, destination, umask='000'):
+	os.system('umask %s; cp -rf %s %s' % (umask, os.path.join(source, '*'), destination))

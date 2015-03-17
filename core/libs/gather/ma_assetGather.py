@@ -33,7 +33,7 @@ def gather(gatherPath):
 				assetExt = 'mb'
 				
 		#gets published asset from the gatherPath
-		assetPath = '%s/%s.%s' % (gatherPath, icData.assetPblName, assetExt)
+		assetPath = os.path.join(gatherPath, '%s.%s' % (icData.assetPblName, assetExt))
 		if not os.path.isfile(assetPath):
 			verbose.noAsset()
 			return
@@ -41,18 +41,18 @@ def gather(gatherPath):
 		#loads the appropriate plugin if needed
 		mayaAppPath = os.path.split(os.environ['MAYAVERSION'])[0]
 		if assetExt == 'abc':
-			mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins/AbcImport.bundle'), qt=True)
+			mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins', 'AbcImport.bundle'), qt=True)
 		elif assetExt == 'fbx':
-			mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins/fbxmaya.bundle'), qt=True)
+			mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins', 'fbxmaya.bundle'), qt=True)
 		elif assetExt == 'obj':
-			mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins/objExport.bundle'), qt=True)
+			mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins', 'objExport.bundle'), qt=True)
 		
 	
 		#gathering
 		drawOverrides = True
 		if icData.assetType == 'ma_shot':
 			mayaOps.openScene(assetPath, dialog=False)
-			mayaOps.redirectScene('%s/%s' % (os.environ['MAYASCENESDIR'], 'untitled'))
+			mayaOps.redirectScene(os.path.join(os.environ['MAYASCENESDIR'], 'untitled'))
 			return
 		elif assetExt == 'vrmesh':
 			chkNameConflict(icData.asset)

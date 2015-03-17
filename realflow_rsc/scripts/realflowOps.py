@@ -4,6 +4,7 @@
 #copyright	:Gramercy Park Studios
 
 import os, subprocess
+import osOps, djvOps
 	
 	
 def importObj(scene, GUIFilePickerDialog, FILE_PICKER_LOAD):
@@ -31,7 +32,7 @@ def saveScene(scene):
 		sceneName = os.path.split(projPath)[-1]
 	if not sceneName.endswith('.flw'):
 		sceneName += '.flw'
-	scene.save('%s/%s' % (projPath, sceneName))
+	scene.save(os.path.join(projPath, sceneName))
 	scene.message('GPS - Scene Saved.')
 
 	
@@ -63,7 +64,7 @@ def purgeScene(scene, GUIFormDialog, particles=True, meshes=True, preview=True):
 		for particle in particleLs:
 				if particle not in inUseParticleLs:
 					scene.message(str(particle))
-					os.system('rm -rf %s/%s' % (particleDir,  particle))
+					osOps.recurseRemove(os.path.join(particleDir,  particle))
 	
 	#purges meshes
 	if meshes:
@@ -85,12 +86,12 @@ def purgeScene(scene, GUIFormDialog, particles=True, meshes=True, preview=True):
 		for meshFile in meshFileLs:
 			if meshFile not in inUseMeshLs:
 				scene.message(str(meshFile))
-				os.system('rm -rf %s/%s' % (meshFileDir,  meshFile))
+				osOps.recurseRemove(os.path.join(meshFileDir,  meshFile))
 				
 	#purges preivew
 	if preview:
 		previewDir = os.path.join(scene.getRootPath(), 'preview')
-		os.system('rm -rf %s/*' % previewDir)
+		osOps.recurseRemove(previewDir)
 		
 def preview(scene, EXECUTE_SHELL_COMMAND):
 	import versionUp
@@ -113,8 +114,9 @@ def preview(scene, EXECUTE_SHELL_COMMAND):
 	startFrame = int(scene.getMinFrame())
 	endFrame = int(scene.getLastCachedFrame())
 	#creating directories
-	os.system('mkdir -p %s %s' % (imgPreviewDir, movPreviewDir))
-	scene.videoPreview('%s/%s' % (movPreviewDir, sceneName), 
+	osOps.createDir(imgPreviewDir)
+	osOps.createDir(movPreviewDir)
+	scene.videoPreview(os.path.join(movPreviewDir, sceneName), 
 	imgPreviewDir, 
 	width, 
 	height, 
@@ -125,8 +127,5 @@ def preview(scene, EXECUTE_SHELL_COMMAND):
 	False, 
 	EXECUTE_SHELL_COMMAND)
 	#launching viewer
-	#Due to PNG incompatibility between DJV and realflow, for now it will fall back to version 0.9.0 instead of job default version of djv
-	djvPath = os.path.join(os.environ['PIPELINE'], 'external_apps/djv/djv-0.9.0.app/Contents/MacOS/djv-0.9.0')
 	firstFrame = os.listdir(imgPreviewDir); firstFrame = firstFrame[0] 
-	command = '%s %s/%s' % (djvPath, imgPreviewDir, firstFrame)
-	subprocess.Popen(command, shell=True)
+	djvOps.viewer(os.path.join(imgPreviewDir, firstFrame))

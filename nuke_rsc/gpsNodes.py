@@ -5,7 +5,7 @@
 
 import os
 import nuke
-import gpsSave, vCtrl
+import gpsSave, vCtrl, osOps
 	
 
 ##########################################GPS READ#############################################
@@ -58,11 +58,11 @@ def write_create():
 #callback function to fill write nodes automatically with standard GPS presets
 def w_presets_callback():
 	writeNode = nuke.thisNode()
-	presetType = nuke.thisKnob().value()
-	w_global_preset(writeNode, presetType)
-	filePath = w_path_preset(writeNode, presetType)
 	if nuke.thisKnob().name() == 'write_presets':
-		if presetType in ('CG Comp', 'Precomp', 'Roto', 'Elements'):
+		presetType = nuke.thisKnob().value()
+		w_global_preset(writeNode, presetType)
+		filePath = w_path_preset(writeNode, presetType)
+		if presetType in ('CG_Comp', 'Precomp', 'Roto', 'Elements'):
 			w_fileName_preset(writeNode, filePath, presetType, 'exr', proxy=True)
 			w_exr_preset(writeNode)
 		elif presetType in ('Comp', 'Plate_Raw', 'Plate_Graded'):
@@ -71,14 +71,14 @@ def w_presets_callback():
 		elif presetType == 'Plate_CG':
 			w_fileName_preset(writeNode, filePath, presetType, 'jpg', proxy=True)
 			w_jpg_preset(writeNode)
-	return presetType
+		return presetType
 
 
 #creates write node directory	
 def w_create_dir():
 	path = os.path.dirname(nuke.filename(nuke.thisNode()))
 	if not os.path.isdir(path):
-		os.system('mkdir -p %s' % path)
+		osOps.createDir(path)
 	return path
 
 #sets the default presets on the write node

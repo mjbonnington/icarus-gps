@@ -15,7 +15,7 @@ def mari():
 
 def maya():
 	verbose.launchApp('Maya')
-	subprocess.Popen("$MAYAVERSION -proj $SHOTPATH/3D/maya", shell=True)
+	subprocess.Popen("$MAYAVERSION -proj %s" % os.path.join('$SHOTPATH', '3D', 'maya'), shell=True)
 	
 def mudbox():
 	verbose.launchApp('Mudbox')

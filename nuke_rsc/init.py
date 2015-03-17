@@ -15,7 +15,7 @@ nuke.pluginAddPath('./plugins')
 nuke.pluginAddPath('./gizmos/pxf')
 
 #Nuke seems to ditch the main root environent where it has been called from so the path needs to be appended again
-sys.path.append(os.path.join(os.environ['PIPELINE'], 'core/ui'))
+sys.path.append(os.path.join(os.environ['PIPELINE'], 'core', 'ui'))
 import env__init__
 env__init__.appendSysPaths()
 #Nuke opens a entire new Nuke process with 'File>New Script' and doesn't simply create and empty script in the current env.

@@ -5,6 +5,7 @@
 
 
 #nuke opeartions module
+import os
 import nuke
 
 #creates a custom backdrop for selection
@@ -60,7 +61,7 @@ def saveAs(pathToPblAsset):
 def viewerSnapshot(pblPath):
 	try:
 		writeNode = ''
-		pblPath += '/preview.%04d.jpg'
+		pblPath = os.path.join(pblPath, 'preview.%04d.jpg')
 		#getting viewer to set as write input
 		viewer = nuke.activeViewer()
 		actFrame = int(nuke.knob("frame"))

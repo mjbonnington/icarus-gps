@@ -5,7 +5,7 @@
 
 import os
 import nuke
-import recentFiles
+import recentFiles, osOps
 
 
 def updateRecentFilesMenu(menu):
@@ -94,7 +94,7 @@ def save(incr=False, saveAs=False):
 		version = 1
 		while not fileSaved:
 			#file path
-			nkPath = '%s/%s_%s_v%03d.nk' % (os.environ['NUKESCRIPTSDIR'], os.environ['SHOT'], scriptName, version )
+			nkPath = os.path.join(os.environ['NUKESCRIPTSDIR'], '%s_%s_v%03d.nk' % (os.environ['SHOT'], scriptName, version))
 			#versioning
 			if os.path.isfile( nkPath ):
 				version += 1

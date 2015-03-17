@@ -30,8 +30,7 @@ def write():
 			config.write(f)
 
 	except IOError:
-		print '[Icarus] Warning: unable to write user prefs configuration file.'
-
+		verbose.userPrefs_notWritten()
 
 def create():
 	"""Create config file if it doesn't exist and populate with with defaults"""
@@ -39,8 +38,7 @@ def create():
 	userPrefsDir = os.environ['ICUSERPREFS']
 
 	if not os.path.exists(userPrefsDir):
-		os.system('mkdir -p %s' % userPrefsDir)
-		os.system('chmod -R 775 %s' % userPrefsDir)
+		osOps.createDir(recentFilesDir)
 
 	config.add_section('main')
 	config.set('main', 'lastjob', '')

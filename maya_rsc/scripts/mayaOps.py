@@ -582,7 +582,7 @@ def relinkCache(cacheLs, cachePath, asset, version):
 		cacheFile_ls = os.listdir(originalcachePath)
 		if len(cacheFile_ls) > 1:
 			for cacheFile in cacheFile_ls:
-				filePath = '%s/%s' % (originalcachePath, cacheFile)
+				filePath = os.path.join(originalcachePath, cacheFile)
 				shutil.copy(filePath, cachePath)
 			mc.setAttr(cacheLs[0]+'.cachePath', cachePath, type='string')
 			mc.rename(cacheLs[0], asset  + '_%s' % version)
@@ -646,8 +646,8 @@ def relinkTexture(txPaths, txObjLs=None, updateMaya=True, copy=True):
 						shutil.copy(filePath, txFullPath)
 					if updateMaya:
 						#vray does not support relative path env vars in texures. Until this changes full path is written
-						#mc.setAttr(fileNode + '.fileTextureName', '%s/%s' % (txRelPath, fileName), type='string')
-						mc.setAttr(fileNode + '.fileTextureName', '%s/%s' % (txFullPath, fileName), type='string')
+						#mc.setAttr(fileNode + '.fileTextureName', os.path.join(txRelPath, fileName), type='string')
+						mc.setAttr(fileNode + '.fileTextureName', os.path.join(txFullPath, fileName), type='string')
 
 
 ####################removes drawing overrides##################
@@ -775,7 +775,7 @@ def snapShot(pblDir):
 	#mc.viewFit(f=1)
 	actSel=mc.ls(sl=True)
 	mc.select(cl=True)
-	mc.playblast(f='%s/preview' % (pblDir), 
+	mc.playblast(f=os.path.join(pblDir, 'preview'), 
 	fr=(pbFrame), 
 	fp=1, 
 	w=512, 
@@ -848,7 +848,7 @@ def versionTag(obj, version):
 
 #########################.nk camera export####################
 def nkCameraExport(objLs, pblDir, assetPblName, version):
-	pathtoPblAsset = '%s/%s.nk' % (pblDir, assetPblName)
+	pathtoPblAsset = os.path.join(pblDir, '%s.nk' % assetPblName)
 	objlsShape = mc.listRelatives(objLs[0], s=True)
 	minFrame = int(mc.playbackOptions(min=True, q=True))
 	maxFrame = int(mc.playbackOptions(max=True, q=True))
@@ -935,7 +935,7 @@ def nkCameraExport(objLs, pblDir, assetPblName, version):
 	
 ##############################.nk node export###########################
 def nkFileNodeExport(objLs, nodeType, fileName, pblDir, visiblePblDir, assetPblName, version):
-	pathtoPblAsset = '%s/%s.nk' % (pblDir, assetPblName)
+	pathtoPblAsset = os.path.join(pblDir, '%s.nk' % assetPblName)
 	filePath = os.path.join(visiblePblDir, 'tx', fileName)
 	#making filePath relative
 	if os.environ['SHOTPUBLISHDIR'] in filePath:
