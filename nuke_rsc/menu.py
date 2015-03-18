@@ -31,7 +31,8 @@ openJobDir = 'import openDirs; openDirs.openJob()'
 launchProdBoard  = 'import launchApps; launchApps.prodBoard()'
 launchNuke = 'import launchApps; launchApps.nuke("%s")' % nukeType
 launchIcarus = 'reload(icarus__main__)'
-launchDjv = 'import djvOps; djvOps.viewer()'
+launchDjv = 'import launchApps; launchApps.djv()'
+launchHieroPlayer = 'import launchApps; launchApps.hieroPlayer()'
 versionUp = 'import switchVersion; switchVersion.versionUp()'
 versionDown = 'import switchVersion; switchVersion.versionDown()'
 versionLatest = 'import switchVersion; switchVersion.versionLatest()'
@@ -69,7 +70,9 @@ icarusMenu_nodes = nodesMenu.addCommand('Icarus UI', launchIcarus, icon='icarus.
 #production board
 productionBoardMenu_nodes = nodesMenu.addCommand('Production Board', launchProdBoard, icon='productionBoard.png')
 #djv
-djvMenu_nodes = nodesMenu.addCommand('Launch DJV', launchDjv, icon='djv.png')
+reviewMenu = nodesMenu.addMenu('Review', icon='review.png')
+hieroPlayerMenu_nodes = reviewMenu.addCommand('Hiero Player', launchHieroPlayer, icon='hieroPlayer.png')
+djvMenu_nodes = reviewMenu.addCommand('Djv', launchDjv, icon='djv.png')
 #browse
 browseMenu_nodes = nodesMenu.addMenu('Browse', icon='browse.png')
 browseMenu_nodes.addCommand('Browse Scripts', openScriptsDir)

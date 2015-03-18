@@ -164,5 +164,11 @@ python("import gpsPreviewLauncher; gpsPreviewLauncher.launch(env='MAYA')");
 
 global proc menus2Py.launchDjv()
 {
-python("import djvOps; djvOps.viewer()");
+python("import launchApps; launchApps.djv()");
+}
+
+
+global proc menus2Py.launchHieroPlayer()
+{
+python("import launchApps; launchApps.hieroPlayer()");
 }

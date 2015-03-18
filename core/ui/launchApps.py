@@ -46,9 +46,13 @@ def realflow():
 	startup.autoDeploy()
 	subprocess.Popen('%s; "$REALFLOWVERSION"' % osOps.setUmask(), shell=True)
 
-	
 def hieroPlayer():
 	verbose.launchApp('HieroPlayer')
 	subprocess.Popen("%s; $HIEROPLAYERVERSION -q" % osOps.setUmask(), shell=True)
+
+def djv():
+	verbose.launchApp('Djv')
+	import djvOps
+	djvOps.viewer()
 		
 	

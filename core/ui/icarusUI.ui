@@ -526,7 +526,7 @@ QLineEdit {
                 </widget>
                </item>
                <item>
-                <widget class="QToolButton" name="openHieroPlayer_pushButton">
+                <widget class="QToolButton" name="openReview_pushButton">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -538,8 +538,8 @@ QLineEdit {
                  </property>
                  <property name="icon">
                   <iconset resource="rsc.qrc">
-                   <normaloff>:/rsc/rsc/app_icon_hieroPlayer.png</normaloff>
-                   <disabledoff>:/rsc/rsc/app_icon_hieroPlayer_disabled.png</disabledoff>:/rsc/rsc/app_icon_hieroPlayer.png</iconset>
+                   <normaloff>:/rsc/rsc/review.png</normaloff>
+                   <disabledoff>:/rsc/rsc/review_disabled.png</disabledoff>:/rsc/rsc/review.png</iconset>
                  </property>
                  <property name="iconSize">
                   <size>
@@ -2359,7 +2359,7 @@ p, li { white-space: pre-wrap; }
   <tabstop>mari_pushButton</tabstop>
   <tabstop>realflow_pushButton</tabstop>
   <tabstop>openProdBoard_pushButton</tabstop>
-  <tabstop>openHieroPlayer_pushButton</tabstop>
+  <tabstop>openReview_pushButton</tabstop>
   <tabstop>openTerminal_pushButton</tabstop>
   <tabstop>openJob_pushButton</tabstop>
   <tabstop>openShot_pushButton</tabstop>

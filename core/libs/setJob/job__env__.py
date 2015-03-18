@@ -19,8 +19,8 @@ def setEnv(envVars):
 	os.environ['GPS_RC'] = os.path.join(os.environ['PIPELINE'], 'core', 'ui', '.gps_rc')
 	#job env
 	os.environ['SHOTPATH'] = shotPath
-	os.environ['JOBPATH'] = os.path.split(shotPath)[0]
-	os.environ['JOBDATA'] = jobDataPath
+	os.environ['JOBPATH'] = os.path.split(os.environ['SHOTPATH'])[0]
+	os.environ['JOBDATA'] = os.path.join(os.environ['JOBPATH'], os.environ['DATAFILESRELATIVEDIR'])
 	os.environ['SHOTDATA'] = shotDataPath
 	os.environ['JOB'] = job
 	os.environ['SHOT'] = shot
@@ -38,15 +38,16 @@ def setEnv(envVars):
 	os.environ['ANGLE'] = jobData.angle	
 	os.environ['UNIT'] = jobData.unit
 	os.environ['FPS'] = jobData.fps
-	os.environ['FRAMERANGE'] = '%s-%s' % (shotData.frRange[0], shotData.frRange[1])
 	os.environ['STARTFRAME'] = shotData.frRange[0]
 	os.environ['ENDFRAME'] = shotData.frRange[1]
-	os.environ['RESOLUTION'] = '%sx%s' % (shotData.res[0], shotData.res[1])
+	os.environ['FRAMERANGE'] = '%s-%s' % (os.environ['STARTFRAME'], os.environ['ENDFRAME'])
 	os.environ['RESOLUTIONX'] = shotData.res[0]
 	os.environ['RESOLUTIONY'] = shotData.res[1]
-	os.environ['ASPECTRATIO'] = '%s' % float(float(shotData.res[0]) / float(shotData.res[1]))
-	os.environ['HRES'] = shotData.res[0]
-	os.environ['VRES'] = shotData.res[1]
+	os.environ['RESOLUTION'] = '%sx%s' % (os.environ['RESOLUTIONX'], os.environ['RESOLUTIONY'])
+	os.environ['PROXY_RESOLUTIONX'] = str(int(os.environ['RESOLUTIONX'])/2)
+	os.environ['PROXY_RESOLUTIONY'] = str(int(os.environ['RESOLUTIONY'])/2)
+	os.environ['PROXY_RESOLUTION'] = '%sx%s' % (os.environ['PROXY_RESOLUTIONX'], os.environ['PROXY_RESOLUTIONY'])
+	os.environ['ASPECTRATIO'] = '%s' % float(float(os.environ['RESOLUTIONX']) / float(os.environ['RESOLUTIONY']))
 	os.environ['RECENTFILESDIR'] = os.path.join(os.environ['ICUSERPREFS'], 'recentFiles')
 #MARI
 	os.environ['MARIDIR'] = os.path.join(os.environ['SHOTPATH'] , '3D', 'mari')
