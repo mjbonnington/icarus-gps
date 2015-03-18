@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="rsc">
+    <file>rsc/review_disabled.png</file>
+    <file>rsc/review.png</file>
     <file>rsc/app_icon_hieroPlayer_disabled.png</file>
     <file>rsc/app_icon_hieroPlayer.png</file>
     <file>rsc/icon_add_disabled.png</file>

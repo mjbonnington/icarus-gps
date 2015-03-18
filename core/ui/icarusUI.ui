@@ -538,8 +538,8 @@ QLineEdit {
                  </property>
                  <property name="icon">
                   <iconset resource="rsc.qrc">
-                   <normaloff>:/rsc/rsc/app_icon_hieroPlayer.png</normaloff>
-                   <disabledoff>:/rsc/rsc/app_icon_hieroPlayer_disabled.png</disabledoff>:/rsc/rsc/app_icon_hieroPlayer.png</iconset>
+                   <normaloff>:/rsc/rsc/review.png</normaloff>
+                   <disabledoff>:/rsc/rsc/review_disabled.png</disabledoff>:/rsc/rsc/review.png</iconset>
                  </property>
                  <property name="iconSize">
                   <size>
