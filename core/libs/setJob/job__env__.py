@@ -9,6 +9,7 @@ import os, sys
 #sets job and shot environment variables
 def setEnv(envVars):
 	job, shot, shotPath = envVars
+	jobDataPath = os.path.join(os.path.split(shotPath)[0], os.environ['DATAFILESRELATIVEDIR'])
 	shotDataPath = os.path.join(shotPath, os.environ['DATAFILESRELATIVEDIR'])
 	sys.path.append(jobDataPath); sys.path.append(shotDataPath)
 	import jobData, shotData

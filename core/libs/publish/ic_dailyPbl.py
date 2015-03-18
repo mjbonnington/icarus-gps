@@ -73,8 +73,11 @@ def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes, mail):
 		dailyDateDir = time.strftime('%Y_%m_%d')
 		dailyDatePath = os.path.join(os.environ['WIPSDIR'], 'CGI', dailyDateDir, '%s_%s_%s' % (os.environ['SHOT'], subsetName, version))
 		osOps.createDir(dailyDatePath)
-		for dailyFile in dailyFileLs:
-			osOps.hardLink(os.path.join(pblDir, dailyFile), os.path.join(dailyDatePath, dailyFile))			 
+		excludeLs = ['in_progress.tmp']
+		for file_ in dailyFileLs:
+			if file_ not in excludeLs:
+				osOps.hardLink(os.path.join(pblDir, file_), os.path.join(dailyDatePath, file_))
+				dailyFile = file_
 
 		#creating daily snapshot
 		previewOutput = os.path.join(pblDir, 'preview')
@@ -85,12 +88,17 @@ def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes, mail):
 		assetPblName += '_%s' % version		
 		icPblData.writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, pblNotes)
 		
-		#published asset check
-		pblResult = pblChk.success(os.path.join(dailyDatePath, dailyFile))
-
 		#deleting in progress tmp file from .publish and wips folder
 		inProgress.end(pblDir)
 		inProgress.end(dailyDatePath)
+
+		#published asset check
+		pblDirResult = pblChk.success(os.path.join(pblDir, dailyFile)) 
+		dailyDirResult = pblChk.success(os.path.join(dailyDatePath, dailyFile))
+		pblResult = 'SUCCESS'
+		if pblDirResult != pblResult or dailyDirResult != pblResult:
+			pblResult = 'FAIL'
+			raise Exception(verbose.dailyFail())
 
 		verbose.pblFeed(end=True)
 		
@@ -99,6 +107,7 @@ def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes, mail):
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		pathToPblAsset = ''
 		osOps.recurseRemove(pblDir)
+		osOps.recurseRemove(dailyDatePath)
 		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += verbose.pblRollback()
 	
