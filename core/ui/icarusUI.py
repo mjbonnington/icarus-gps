@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/Volumes/hggl_SAN_1/RnD/icarus_linux__dev__/icarus__dev__/core/ui/icarusUI.ui'
+# Form implementation generated from reading ui file 'icarusUI.ui'
 #
-# Created: Tue Feb  3 18:23:41 2015
+# Created: Wed Mar 18 15:59:57 2015
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -297,8 +297,8 @@ class Ui_Dialog(object):
         sizePolicy.setHeightForWidth(self.openHieroPlayer_pushButton.sizePolicy().hasHeightForWidth())
         self.openHieroPlayer_pushButton.setSizePolicy(sizePolicy)
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_hieroPlayer.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon6.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_hieroPlayer_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        icon6.addPixmap(QtGui.QPixmap(":/rsc/rsc/review.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon6.addPixmap(QtGui.QPixmap(":/rsc/rsc/review_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
         self.openHieroPlayer_pushButton.setIcon(icon6)
         self.openHieroPlayer_pushButton.setIconSize(QtCore.QSize(48, 48))
         self.openHieroPlayer_pushButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
