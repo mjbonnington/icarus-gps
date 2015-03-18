@@ -28,16 +28,20 @@ os.environ['ICARUSENVAWARE'] = 'NUKE'
 
 
 #SHOT DIRECTORIES
-nuke.addFavoriteDir('Elements', os.environ['NUKEELEMENTSDIR'])
 nuke.addFavoriteDir('Scripts', os.environ['NUKESCRIPTSDIR'])
 nuke.addFavoriteDir('Renders', os.environ['NUKERENDERSDIR'])
+nuke.addFavoriteDir('Elements', os.environ['NUKEELEMENTSDIR'])
+nuke.addFavoriteDir('Plate', os.path.join('[getenv SHOTPATH]', 'Plate'))
 nuke.addFavoriteDir('Elements Library', os.environ['ELEMENTSLIBRARY'])
 
 #PLATE FORMAT
-shotId = '_%s_%s' % (os.environ['JOB'], os.environ['SHOT'])
-plateFormat = '%s %s %s' % (os.environ['HRES'], os.environ['VRES'], shotId)
-nuke.addFormat( plateFormat)
-nuke.knobDefault('Root.format', shotId)
+plateFormat = '%s %s %s' % (os.environ['RESOLUTIONX'], os.environ['RESOLUTIONY'], os.environ['SHOT'])
+proxyFormat = '%s %s %s' % (int(os.environ['PROXY_RESOLUTIONX']),int(os.environ['PROXY_RESOLUTIONY']), '%s_proxy' % os.environ['SHOT'])
+nuke.addFormat(plateFormat)
+nuke.addFormat(proxyFormat)
+nuke.knobDefault('Root.format', os.environ['SHOT'])
+nuke.knobDefault('Root.proxy_type', 'format')
+nuke.knobDefault('Root.proxy_format', '%s_proxy' % os.environ['SHOT'])
 nuke.knobDefault('Root.fps', os.environ['FPS'])
 nuke.knobDefault('Root.first_frame', os.environ['STARTFRAME'])
 nuke.knobDefault('Root.last_frame', os.environ['ENDFRAME'])
