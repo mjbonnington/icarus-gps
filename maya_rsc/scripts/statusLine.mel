@@ -3129,12 +3129,17 @@ registerUpdateRendererUIProc("updateStatusLineRendererSpecificUI");
 			-annotation "Opens the Production Board"
 			launchProdBoardButton;
 			
-		// GPS - DJV
-		iconTextButton -image1 "djv.png"
+		// GPS - Review
+		iconTextButton -image1 "review.png"
 			-width $iconHeight -height $iconHeight
-			-command ("source menus2Py.mel;menus2Py.launchDjv;")
-			-annotation "Launches DJV frame viewer"
-			projectToolsButton;
+			-command ("source menus2Py.mel;menus2Py.launchHieroPlayer;")
+			-annotation "Launches Hiero Player"
+			reviewButton;
+
+		// GPS - Creates a  menu on the review button for different review softwares
+		string $menu = `popupMenu -b 1 -p reviewButton`;
+			menuItem -label "Hiero Player" -c "source menus2Py;menus2Py.launchHieroPlayer";
+			menuItem -label "Djv" -c "source menus2Py;menus2Py.launchDjv";
 		
 		//GPS - Browses Project Directories
 		iconTextButton -image1 "browse.png"

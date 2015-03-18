@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'icarusUI.ui'
 #
-# Created: Wed Mar 18 15:59:57 2015
+# Created: Wed Mar 18 16:11:00 2015
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -290,20 +290,20 @@ class Ui_Dialog(object):
         self.openProdBoard_pushButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
         self.openProdBoard_pushButton.setObjectName("openProdBoard_pushButton")
         self.horizontalLayout_22.addWidget(self.openProdBoard_pushButton)
-        self.openHieroPlayer_pushButton = QtGui.QToolButton(self.open_groupBox)
+        self.openReview_pushButton = QtGui.QToolButton(self.open_groupBox)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.openHieroPlayer_pushButton.sizePolicy().hasHeightForWidth())
-        self.openHieroPlayer_pushButton.setSizePolicy(sizePolicy)
+        sizePolicy.setHeightForWidth(self.openReview_pushButton.sizePolicy().hasHeightForWidth())
+        self.openReview_pushButton.setSizePolicy(sizePolicy)
         icon6 = QtGui.QIcon()
         icon6.addPixmap(QtGui.QPixmap(":/rsc/rsc/review.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         icon6.addPixmap(QtGui.QPixmap(":/rsc/rsc/review_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        self.openHieroPlayer_pushButton.setIcon(icon6)
-        self.openHieroPlayer_pushButton.setIconSize(QtCore.QSize(48, 48))
-        self.openHieroPlayer_pushButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
-        self.openHieroPlayer_pushButton.setObjectName("openHieroPlayer_pushButton")
-        self.horizontalLayout_22.addWidget(self.openHieroPlayer_pushButton)
+        self.openReview_pushButton.setIcon(icon6)
+        self.openReview_pushButton.setIconSize(QtCore.QSize(48, 48))
+        self.openReview_pushButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
+        self.openReview_pushButton.setObjectName("openReview_pushButton")
+        self.horizontalLayout_22.addWidget(self.openReview_pushButton)
         self.openTerminal_pushButton = QtGui.QToolButton(self.open_groupBox)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -1163,8 +1163,8 @@ class Ui_Dialog(object):
         Dialog.setTabOrder(self.nuke_pushButton, self.mari_pushButton)
         Dialog.setTabOrder(self.mari_pushButton, self.realflow_pushButton)
         Dialog.setTabOrder(self.realflow_pushButton, self.openProdBoard_pushButton)
-        Dialog.setTabOrder(self.openProdBoard_pushButton, self.openHieroPlayer_pushButton)
-        Dialog.setTabOrder(self.openHieroPlayer_pushButton, self.openTerminal_pushButton)
+        Dialog.setTabOrder(self.openProdBoard_pushButton, self.openReview_pushButton)
+        Dialog.setTabOrder(self.openReview_pushButton, self.openTerminal_pushButton)
         Dialog.setTabOrder(self.openTerminal_pushButton, self.openJob_pushButton)
         Dialog.setTabOrder(self.openJob_pushButton, self.openShot_pushButton)
         Dialog.setTabOrder(self.openShot_pushButton, self.tabWidget)
@@ -1248,7 +1248,7 @@ class Ui_Dialog(object):
         self.open_groupBox.setToolTip(QtGui.QApplication.translate("Dialog", "<html><head/><body><p>Launches applications to work within the job environment.</p><p>This section becomes available once the job and shot environment is set.</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.open_groupBox.setTitle(QtGui.QApplication.translate("Dialog", "Open", None, QtGui.QApplication.UnicodeUTF8))
         self.openProdBoard_pushButton.setText(QtGui.QApplication.translate("Dialog", "Board", None, QtGui.QApplication.UnicodeUTF8))
-        self.openHieroPlayer_pushButton.setText(QtGui.QApplication.translate("Dialog", "Review", None, QtGui.QApplication.UnicodeUTF8))
+        self.openReview_pushButton.setText(QtGui.QApplication.translate("Dialog", "Review", None, QtGui.QApplication.UnicodeUTF8))
         self.openTerminal_pushButton.setText(QtGui.QApplication.translate("Dialog", "Terminal", None, QtGui.QApplication.UnicodeUTF8))
         self.openJob_pushButton.setText(QtGui.QApplication.translate("Dialog", "Job", None, QtGui.QApplication.UnicodeUTF8))
         self.openShot_pushButton.setText(QtGui.QApplication.translate("Dialog", "Shot", None, QtGui.QApplication.UnicodeUTF8))

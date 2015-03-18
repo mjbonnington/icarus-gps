@@ -45,7 +45,7 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.mari_pushButton, QtCore.SIGNAL('clicked()'), self.launchMari)
 		QtCore.QObject.connect(self.ui.realflow_pushButton, QtCore.SIGNAL('clicked()'), self.launchRealflow)
 		QtCore.QObject.connect(self.ui.openProdBoard_pushButton, QtCore.SIGNAL('clicked()'), launchApps.prodBoard)
-		QtCore.QObject.connect(self.ui.openHieroPlayer_pushButton, QtCore.SIGNAL('clicked()'), self.launchHieroPlayer)
+		QtCore.QObject.connect(self.ui.openReview_pushButton, QtCore.SIGNAL('clicked()'), self.launchHieroPlayer)
 		QtCore.QObject.connect(self.ui.openTerminal_pushButton, QtCore.SIGNAL('clicked()'), self.launchTerminal)
 		QtCore.QObject.connect(self.ui.openJob_pushButton, QtCore.SIGNAL('clicked()'), openDirs.openJob)
 		QtCore.QObject.connect(self.ui.openShot_pushButton, QtCore.SIGNAL('clicked()'), openDirs.openShot)
@@ -72,6 +72,14 @@ class icarusApp(QtGui.QDialog):
 		self.actionNukeX.triggered.connect(self.launchNukeX)
 		self.ui.nuke_pushButton.addAction(self.actionNuke)
 		self.ui.nuke_pushButton.addAction(self.actionNukeX)
+		#Review
+		self.ui.openReview_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+		self.actionHieroPlayer = QtGui.QAction("HieroPlayer", None)
+		self.actionHieroPlayer.triggered.connect(self.launchHieroPlayer)
+		self.actionDjv = QtGui.QAction("Djv", None)
+		self.actionDjv.triggered.connect(self.launchDjv)
+		self.ui.openReview_pushButton.addAction(self.actionHieroPlayer)
+		self.ui.openReview_pushButton.addAction(self.actionDjv)
 
 	##########################################UI adapt environment awareness##########################################
 	##################################################################################################################
@@ -365,25 +373,25 @@ class icarusApp(QtGui.QDialog):
 			userPrefs.edit('main', 'minimiseonlaunch', 'False')
 			#print "Minimise on launch disabled"
 
-	#runs launch maya procedure and minimizes window
+	#runs launch maya procedure
 	def launchMaya(self):
 		launchApps.maya()
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
 
-	#runs launch mudbox procedure and minimizes window
+	#runs launch mudbox procedure
 	def launchMudbox(self):
 		launchApps.mudbox()
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
 
-	#runs launch nuke procedure and minimizes window
+	#runs launch nuke procedure
 	def launchNuke(self):
 		launchApps.nuke(nukeType='Nuke')
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
 
-	#runs launch nukex procedure and minimizes window
+	#runs launch nukex procedure
 	def launchNukeX(self):
 		launchApps.nuke(nukeType='NukeX')
 		if self.boolMinimiseOnAppLaunch:
@@ -391,19 +399,19 @@ class icarusApp(QtGui.QDialog):
 		#launchApps.nuke()
 		#self.showMinimized()
 
-	#runs launch mari procedure and minimizes window
+	#runs launch mari procedure
 	def launchMari(self):
 		launchApps.mari()
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
 
-	#runs launch realflow procedure and minimizes window
+	#runs launch realflow procedure
 	def launchRealflow(self):
 		launchApps.realflow()
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
 
-	#launches terminal locks button and minimizes window
+	#launches terminal locks button
 	def launchTerminal(self):
 		launchApps.terminal()
 		self.ui.openTerminal_pushButton.setEnabled(False)
@@ -417,6 +425,11 @@ class icarusApp(QtGui.QDialog):
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
 
+	#Laucnhes DJV
+	def launchDjv(self):
+		launchApps.djv()
+		if self.boolMinimiseOnAppLaunch:
+			self.showMinimized()
 
 	##################################################Publish tab###################################################
 	################################################################################################################
