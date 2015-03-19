@@ -6,6 +6,7 @@
 
 from ConfigParser import SafeConfigParser
 import os
+import osOps, verbose
 
 
 config = SafeConfigParser()
@@ -32,13 +33,14 @@ def write():
 	except IOError:
 		verbose.userPrefs_notWritten()
 
+
 def create():
 	"""Create config file if it doesn't exist and populate with with defaults"""
 
 	userPrefsDir = os.environ['ICUSERPREFS']
 
 	if not os.path.exists(userPrefsDir):
-		osOps.createDir(recentFilesDir)
+		osOps.createDir(userPrefsDir)
 
 	config.add_section('main')
 	config.set('main', 'lastjob', '')
