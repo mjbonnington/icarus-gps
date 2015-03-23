@@ -1,11 +1,10 @@
 # GPS Create Tiled Texture
-# v0.3
+# v0.3.6
 #
 # Michael Bonnington 2015
 # Gramercy Park Studios
 
 import re, os
-import operator
 import maya.cmds as mc
 import maya.mel as mel
 #from pymel.core import *
@@ -20,14 +19,14 @@ class gpsCreateTiledTx():
 		#self.gMainProgressBar = mel.eval('$tmp = $gMainProgressBar')
 
 		self.txTypeItemList = ['layeredTexture', 'plusMinusAverage']
-		self.tileMethodItemList = ['UDIM (Mari)', 'UV offset base 1 (Mudbox)', 'UV offset base 0']
 
 		self.imageFileTypes = "*.exr *.tif *.tiff *.tga *.jpg *.jpeg *.png *.gif *.iff *.sgi *.rla *.bmp"
-		self.txDir = ""
 		self.lsTiles = []
+		self.txDir = ""
 		self.prefix = ""
-		#self.tileRE = ""
 		self.ext = ""
+		self.tileRegex = ""
+		self.method = "Not detected"
 
 
 	def UI(self):
@@ -61,18 +60,13 @@ class gpsCreateTiledTx():
 		mc.columnLayout(name)
 
 		mc.separator(height=4, style="none")
-		mc.optionMenuGrp("tileMethod", label="Tiling Method: ", changeCommand=lambda *args: self.detectTiles())
-		for item in self.tileMethodItemList:
-			mc.menuItem(label=item)
-
-		mc.separator(width=396, height=12, style="in")
 		mc.rowLayout(numberOfColumns=1, columnAttach1="left", columnAlign1="both", columnOffset1=4)
 		mc.text(label="Texture File: (tiles will be detected automatically)", wordWrap=True, align="left", width=392)
 		mc.setParent(name)
 
 		mc.separator(height=2, style="none")
 		mc.rowLayout(numberOfColumns=2, columnAttach2=["left", "left"], columnAlign2=["both", "both"], columnOffset2=[4, 0])
-		mc.textField("txPath", text="", width=360, height=24, changeCommand=lambda *args: self.detectTiles())
+		mc.textField("txPath", text="", width=360, height=24, changeCommand=lambda *args: self.detectTileMethod())
 		mc.symbolButton(image="navButtonBrowse.png", width=26, height=26, command=lambda *args: self.fileBrowse("txPath", "Image files (%s)" %self.imageFileTypes))
 		mc.setParent(name)
 
@@ -86,6 +80,11 @@ class gpsCreateTiledTx():
 		mc.iconTextScrollList("txList", width=360, height=108, allowMultiSelection=True, enable=False)
 		mc.setParent(name)
 
+		mc.separator(width=396, height=12, style="in")
+		mc.textFieldGrp("tileMethod", label="Tiling Method: ", text=self.method, editable=False)
+		mc.radioButtonGrp("uvOffset", label="UV Tile Coordinates: ", labelArray2=['0-based', '1-based'], numberOfRadioButtons=2, columnWidth3=[140, 78, 156], select=2, 
+		                  annotation="Select 0-based if the UV tile numbering starts from zero, or 1-based if is starts from one", enable=False, 
+		                  changeCommand=lambda *args: self.detectTiles())
 		mc.separator(height=8, style="none")
 		mc.setParent(parent)
 
@@ -102,7 +101,8 @@ class gpsCreateTiledTx():
 		mc.setParent(name)
 
 		mc.separator(width=396, height=12, style="in")
-		mc.checkBoxGrp("vrayAttr", label="Add Vray Attributes: ", labelArray2=['Gamma', 'Negative Colours'], valueArray2=[False, False], numberOfCheckBoxes=2, columnWidth3=[140, 78, 156])
+		mc.checkBoxGrp("vrayAttr", label="Add Vray Attributes: ", labelArray2=['Gamma', 'Negative Colours'], valueArray2=[False, False], 
+		               numberOfCheckBoxes=2, columnWidth3=[140, 78, 156])
 
 		mc.separator(height=4, style="none")
 		mc.optionMenuGrp("txType", label="Combined Texture: ")
@@ -126,29 +126,114 @@ class gpsCreateTiledTx():
 		filePath = mc.fileDialog2(dialogStyle=2, fileMode=1, dir=startingDir, fileFilter=format)
 		if filePath:
 			mc.textField(value, edit=True, text=filePath[0])
-			self.detectTiles()
+			self.detectTileMethod()
+
+
+	def detectTileMethod(self):
+		"""Attempt to auto-detect texture tiling method.
+		"""
+		filepath = mc.textField("txPath", query=True, text=True)
+		filename = os.path.basename(filepath)
+		self.txDir = os.path.dirname(filepath)
+
+		# Compile Regular Expressions to match each texture tiling method
+		reUDIM = re.compile(r"^[\.\w-]+\.\d{4}$")
+		reUV = re.compile(r"^[\.\w-]+_[uU]\d+_[vV]\d+$")
+
+		# Store filename root and extension
+		root, self.ext = os.path.splitext(filename)
+		self.prefix = root
+
+		# Check file exists
+		fileExists = os.path.isfile(filepath)
+		if fileExists:
+
+			# UDIM method:
+			if reUDIM.match(root) is not None:
+				self.tileRegex = r'\.\d{4}$'
+				tileRE = re.compile(self.tileRegex)
+				match = tileRE.search(root)
+
+				# Store filename prefix
+				if match is not None:
+					self.prefix = root[:root.rfind(match.group())]
+
+				# Set tiling method to UDIM
+				self.method = "UDIM"
+
+				mc.radioButtonGrp("uvOffset", edit=True, enable=False)
+				print "Auto-detected UDIM texture tiling method."
+
+	 		# UV offset method:
+			elif reUV.match(root) is not None:
+				self.tileRegex = r'_[uU]\d+_[vV]\d+$'
+				tileRE = re.compile(self.tileRegex)
+				match = tileRE.search(root)
+
+				# Store filename prefix
+				if match is not None:
+					self.prefix = root[:root.rfind(match.group())]
+
+				# Set tiling method to UV
+				self.method = "UV"
+
+				# Detect numbering start based on selected file
+				temp = match.group().split('_')
+				u = int(temp[1][1:])
+				v = int(temp[2][1:])
+
+				# Base 1:
+				if u or v:
+					mc.radioButtonGrp("uvOffset", edit=True, select=2, enable=True)
+					print "Auto-detected UV (1-based) texture tiling method."
+
+				# Base 0:
+				else:
+					mc.radioButtonGrp("uvOffset", edit=True, select=1, enable=True)
+					print "Auto-detected UV (0-based) texture tiling method."
+
+			# Method could not be determined:
+			else:
+				self.tileRegex = ""
+				mc.radioButtonGrp("uvOffset", edit=True, enable=False)
+				self.method = "Not detected"
+				mc.warning("Unable to auto-detect texture tiling method.")
+
+		# File doesn't exist:
+		else:
+			self.tileRegex = ""
+			mc.radioButtonGrp("uvOffset", edit=True, enable=False)
+			self.method = "Not detected"
+			mc.warning("File doesn't exist: %s" %filepath)
+
+		# Find other texture tiles
+		fileCheckPass = self.detectTiles()
+
+		# Update UI elements
+		mc.text("labelTiles", edit=True, enable=fileCheckPass)
+		mc.iconTextScrollList("txList", edit=True, enable=fileCheckPass)
+		mc.textFieldGrp("tileMethod", edit=True, text=self.method)
+		mc.button("btnCreate", edit=True, enable=fileCheckPass)
+
+		# Select Vray Gamma checkbox if filetype is not OpenEXR
+		if(self.ext == '.exr'):
+			mc.checkBoxGrp("vrayAttr", edit=True, value1=False)
+		else:
+			mc.checkBoxGrp("vrayAttr", edit=True, value1=True)
+
+		#print "[Exists: %s] %s/ %s <%s> %s [%d]" %(fileExists, self.txDir, self.prefix, self.method, self.ext, fileCheckPass)
 
 
 	def detectTiles(self):
 		"""Detect all other texture tiles from the selected filename.
 		"""
-		self.lsTiles = [] # Clear list of tiles
-		lsTilesDisplay = [] # Create a new list purely for viewing to display the UV offset coords
-		filePath = mc.textField("txPath", query=True, text=True)
-		method = mc.optionMenuGrp("tileMethod", query=True, value=True)
-		if method.startswith('UDIM'): # UDIM method
-			tileRegex = r'\.\d{4}$'
-		elif method.startswith('UV'): # UV offset method
-			tileRegex = r'_[uU]\d+_[vV]\d+$'
-		self.tileRE = re.compile(tileRegex)
+		self.lsTiles = []   # Clear list of texture tiles
+		lsTilesDisplay = [] # Create a new list purely to display the UV offset coords
 
-		fileCheckPass = self.checkFilename(filePath, tileRegex) # Check filename conforms
-
-		if fileCheckPass:
-			self.txDir = os.path.dirname(filePath)
-
+		# List directory contents and find tiles relating to current file
+		if self.method != "Not detected":
 			for item in os.listdir(self.txDir):
-				if self.checkTile(item, tileRegex):
+				if self.checkTile(item):
 					self.lsTiles.append(item)
 					lsTilesDisplay.append(item + ' [%d, %d]' %self.getUVOffset(item))
 
@@ -157,61 +242,42 @@ class gpsCreateTiledTx():
 		self.lsTiles.sort()
 		lsTilesDisplay.sort()
 
-		# Feed back to UI elements
-		mc.text("labelTiles", edit=True, label=msg, enable=fileCheckPass)
+		# Update UI elements
+		mc.text("labelTiles", edit=True, label=msg)
 		mc.iconTextScrollList("txList", edit=True, removeAll=True, deselectAll=True)
-		mc.iconTextScrollList("txList", edit=True, append=lsTilesDisplay, enable=fileCheckPass)
-		mc.button("btnCreate", edit=True, enable=fileCheckPass)
-		if(self.ext == '.exr'):
-			mc.checkBoxGrp("vrayAttr", edit=True, value1=False)
-		else:
-			mc.checkBoxGrp("vrayAttr", edit=True, value1=True)
+		mc.iconTextScrollList("txList", edit=True, append=lsTilesDisplay)
+
+		return len(self.lsTiles)
 
 
-	def checkFilename(self, pathname, regex):
-		"""Check specified file a) exists and b) is correctly formatted for the specified tiling method.
-		"""
-		if os.path.isfile(pathname): # Make sure file exists
-			filename = os.path.basename(pathname)
-			root, self.ext = os.path.splitext(filename)
-			match = self.tileRE.search(root)
-			if match is not None:
-				self.prefix = root[:root.rfind(match.group())]
-			rootRE = re.compile(r"^[\w-]+" + regex)
-			return rootRE.match(root) is not None # Return True if the filename matches the criteria
-		else:
-			return False # Always return False if the file does not exist
-
-
-	def checkTile(self, filename, regex):
-		"""Check specified file is a tile connected to the user selected file.
+	def checkTile(self, filename):
+		"""Check specified file is a tile related to the user selected file.
 		"""
 		if filename.endswith(self.ext): # Make sure only files with the same extension are included
 			root = os.path.splitext(filename)[0]
-			rootRE = re.compile(r"^" + self.prefix + regex)
-			return rootRE.match(root) is not None # Return True if the filename matches the criteria
+			rootRE = re.compile(r"^" + self.prefix + self.tileRegex)
+			return rootRE.match(root) is not None
 		else:
-			return False # Always return False if the extension does not match
+			return False
 
 
 	def getUVOffset(self, filename):
 		"""Get UV offset from tile filename. Presumes filenames conform to naming convention.
 		"""
+		tileRE = re.compile(self.tileRegex)
 		root = os.path.splitext(filename)[0]
-		match = self.tileRE.search(root)
+		match = tileRE.search(root)
 
-		method = mc.optionMenuGrp("tileMethod", query=True, value=True)
-		if method == 'UDIM (Mari)':
+		if self.method == "UDIM":
 			temp = match.group().split('.')
 			u, v = self.UDIMtoUV(int(temp[1]))
-		elif method == 'UV offset base 1 (Mudbox)':
+		elif self.method == "UV":
 			temp = match.group().split('_')
-			u = int(temp[1][1:]) - 1
-			v = int(temp[2][1:]) - 1
-		elif method == 'UV offset base 0':
-			temp = match.group().split('_')
-			u = int(temp[1][1:])
-			v = int(temp[2][1:])
+			offset = mc.radioButtonGrp("uvOffset", query=True, select=True) - 1
+			u = int(temp[1][1:]) - offset
+			v = int(temp[2][1:]) - offset
+		elif self.method == "Not detected":
+			return False
 
 		return u, v
 
@@ -233,11 +299,10 @@ class gpsCreateTiledTx():
 	def genTiledTx(self):
 		"""Generate shading network for tiled texture.
 		"""
+		commonName = self.sanitise(self.prefix+self.ext)
 
 		# Create combined texture node
 		txCombinedNodeType = mc.optionMenuGrp("txType", query=True, value=True)
-		commonName = self.sanitise(self.prefix+self.ext)
-
 		if txCombinedNodeType == 'plusMinusAverage':
 			txCombinedNode = mc.shadingNode(txCombinedNodeType, name=txCombinedNodeType+'_'+commonName, asUtility=True)
 		elif txCombinedNodeType == 'layeredTexture':
@@ -278,7 +343,12 @@ class gpsCreateTiledTx():
 
 		# Create asset container then remove combined texture node from container for easy connections to shaders
 		if mc.checkBox("asset", query=True, value=True):
-			containerNode = mc.container(name='tiles_'+commonName, addNode=txCombinedNode, includeNetwork=True, includeShaders=True, includeHierarchyAbove=True, includeHierarchyBelow=True)
+			containerNode = mc.container(name='tiles_'+commonName, 
+			                             addNode=txCombinedNode, 
+			                             includeNetwork=True, 
+			                             includeShaders=True, 
+			                             includeHierarchyAbove=True, 
+			                             includeHierarchyBelow=True)
 			mc.container(containerNode, edit=True, removeNode=txCombinedNode)
 
 		mc.select(txCombinedNode)

@@ -29,7 +29,6 @@ def recurseRemove(path):
 	return path
 
 def copyDirContents(source, destination, umask='000'):
-	print '%s; cp -rf %s %s' % (setUmask(umask), os.path.join(source, '*'), destination)
 	os.system('%s; cp -rf %s %s' % (setUmask(umask), os.path.join(source, '*'), destination))
 
 def setUmask(umask='000'):
