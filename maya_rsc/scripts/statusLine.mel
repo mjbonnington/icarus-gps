@@ -516,8 +516,8 @@ global proc updateSelectionIcons( string $selectMode )
 		// Make sure that the select by component
 		// type button is the only one on.
 		iconTextCheckBox -e -v 0 selectBtnHierComb;
-		iconTextCheckBox -e -v 0 selectBtnObject;
 		iconTextCheckBox -e -v 1 selectBtnComponent;
+		iconTextCheckBox -e -v 0 selectBtnObject;
 
 		//
 		// Flip the visibility of the object
@@ -2381,30 +2381,6 @@ registerUpdateRendererUIProc("updateStatusLineRendererSpecificUI");
 			-c ("toggleFileIcons(-1)")
 			fileCollapse;
 
-		// Create the New/Open/Save buttons
-		//iconTextButton -image1 "fileNew.png"
-		//	-width ($iconHeight-4) -height $iconHeight 	//skinny icon
-		//	-command ("NewScene")
-		//	-annotation (uiRes("m_statusLine.kNewSceneAnnot"))
-		//	newSceneButton;
-
-		//iconTextButton -image1 "fileOpen.png"
-		//	-width $iconHeight -height $iconHeight
-		//	-command ("OpenScene")
-		//	-annotation (uiRes("m_statusLine.kOpenSceneAnnot"))
-		//	openSceneButton;
-
-		// Attach a recent files menu to open scene button
-		//popupMenu -parent openSceneButton OpenSceneButtonRecentFileItems;
-		//	menu -edit -postMenuCommand "buildRecentFileMenu OpenSceneButtonRecentFileItems" OpenSceneButtonRecentFileItems;
-		//setParent -menu ..;
-
-		//iconTextButton -image1 "fileSave.png"
-		//	-width $iconHeight -height $iconHeight
-		//	-command ("SaveScene")
-		//	-annotation (uiRes("m_statusLine.kSaveSceneAnnot"))
-		//	saveSceneButton;
-
 		//GPS - New Scene
 		iconTextButton -image1 "newScene.png"
 			-width $iconHeight -height $iconHeight
@@ -2520,18 +2496,18 @@ registerUpdateRendererUIProc("updateStatusLineRendererSpecificUI");
 				-cc "changeSelectMode -hierarchical"
 				-annotation (uiRes("m_statusLine.kSelectHierarchyAnnot"))
 				selectBtnHierComb;
-			iconTextCheckBox -i1 "pickObjByType.png"
-				-w $iconHeight -h $iconHeight
-				-v $isObject
-				-cc "changeSelectMode -object"
-				-annotation (uiRes("m_statusLine.kSelectObjectAnnot"))
-				selectBtnObject;
 			iconTextCheckBox -i1 "pickCompByType.png"
 				-w $iconHeight -h $iconHeight
 				-v $isComponent
 				-cc "changeSelectMode -component"
 				-annotation (uiRes("m_statusLine.kSelectComponentAnnot"))
 				selectBtnComponent;
+			iconTextCheckBox -i1 "pickObjByType.png"
+				-w $iconHeight -h $iconHeight
+				-v $isObject
+				-cc "changeSelectMode -object"
+				-annotation (uiRes("m_statusLine.kSelectObjectAnnot"))
+				selectBtnObject;
 		setParent ..;
 
 		// Layout the icons, by attaching them to themselves
