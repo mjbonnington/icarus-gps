@@ -165,6 +165,9 @@ def pointCloudParticle():
 def processing(asset=None):
 	print 'processing: %s...' % asset
 	
+def recentFiles_notWritten():
+	print '[Icarus] Warning: unable to write recent files configuration file.'
+	
 def redFields():
 	print 'All fields in red are mandatory'
 	

@@ -6,7 +6,8 @@
 
 from ConfigParser import SafeConfigParser
 import os
-import osOps
+import osOps, verbose
+
 
 config = SafeConfigParser()
 configFile = os.path.join(os.environ['RECENTFILESDIR'], '%s.ini' % os.environ['JOB'])
@@ -30,7 +31,7 @@ def write():
 			config.write(f)
 
 	except IOError:
-		print '[Icarus] Warning: unable to write recent files configuration file.'
+		verbose.recentFiles_notWritten()
 
 
 def create():

@@ -21,7 +21,7 @@ def deploy():
 		else:
 	 		mayaVersion = mayaVersion.replace(' ', '-')
 	if sys.platform == 'darwin':
-		mayaHome = os.path.join('Users', os.environ['USERNAME'], 'Library', 'Preferences', 'Autodesk', 'maya', mayaVersion)
+		mayaHome = os.path.join(mel.eval('getenv HOME'), 'Library', 'Preferences', 'Autodesk', 'maya', mayaVersion)
 	else:
 		mayaHome = os.path.join(mel.eval('getenv HOME'), 'maya', mayaVersion)
 	
