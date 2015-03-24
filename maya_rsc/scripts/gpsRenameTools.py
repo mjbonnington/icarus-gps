@@ -1,13 +1,13 @@
 # GPS Rename Tools
-# v0.45
+# v0.5
 #
 # Michael Bonnington 2014-2015
 # Gramercy Park Studios
 
+import string, re, time
 import maya.cmds as mc
 import maya.mel as mel
 import pymel.core as pm
-import string, re, time
 
 
 class gpsRenameTools():
@@ -18,7 +18,7 @@ class gpsRenameTools():
 		self.gMainProgressBar = mel.eval('$tmp = $gMainProgressBar')
 
 		# Presets for renaming - will add more as and when we think of them
-		self.presetItemList = ["None", "Clean up mangled FBX node names"]
+		self.presetItemList = ["None", "Clean up mangled FBX node names", "Clean up pasted node names"]
 
 
 	def renameUnique(self, obj, newName):
@@ -41,11 +41,16 @@ class gpsRenameTools():
 			objName = str(obj) # Cast pymel object to string for the following code to work
 			if mc.nodeType(objName) == "transform":
 				shapeLs = mc.listRelatives(objName, shapes=True, fullPath=True)
-				for shape in shapeLs:
-					mc.rename(shape, newNameTuple[2] + "Shape")
+				if shapeLs is not None:
+					for shape in shapeLs:
+						mc.rename(shape, newNameTuple[2] + "Shape")
 
 		# Rename node
-		obj.rename(newNameTuple[2], ignoreShape=ignoreShape)
+		try:
+			obj.rename(newNameTuple[2], ignoreShape=ignoreShape)
+		except RuntimeError:
+			mc.warning("Cannot rename node: %s" %str(obj))
+			return False
 
 
 	def replaceTextRE(self):
@@ -60,8 +65,12 @@ class gpsRenameTools():
 		else:
 			pattern = re.compile(findStr)
 
-		# Get current selection
-		objLs = pm.ls(selection=True, long=True) # Changed to pymel version of ls to return objects instead of names
+		# Get current selection, or everything, depending on scope
+		if mc.radioButtonGrp("scope", query=True, select=True) == 1:
+			objLs = pm.ls(selection=True, long=True) # Changed to pymel version of ls to return objects instead of names
+		else:
+			objLs = pm.ls(long=True)
+
 		if objLs:
 
 			# Check input is valid
@@ -97,8 +106,13 @@ class gpsRenameTools():
 		step = mc.intSliderGrp("step", query=True, value=True)
 		autopad = mc.checkBox("autopad", query=True, value=True)
 
-		# Get current selection
-		selLs = pm.ls(selection=True) # Changed to pymel version of ls to return objects instead of names
+		# Get current selection, or everything, depending on scope
+		if mc.radioButtonGrp("scope", query=True, select=True) == 1:
+			selLs = pm.ls(selection=True) # Changed to pymel version of ls to return objects instead of names
+		else:
+			selLs = pm.ls()
+		objLs = list(selLs)
+
 		if selLs:
 
 			# Initialise progress bar and start clock
@@ -133,7 +147,7 @@ class gpsRenameTools():
 			# Loop twice to prevent renumbering to a pre-existing number
 			for i in range(2):
 				index = start
-				objLs = pm.ls(selection=True) # Get selection again as names will have changed
+				#objLs = pm.ls(selection=True) # Get selection again as names will have changed - no longer required as now copying object list at start of function
 
 				if preserve:
 					for obj in objLs:
@@ -172,6 +186,12 @@ class gpsRenameTools():
 		mc.intSliderGrp("padding", edit=True, enable=option)
 
 
+	def tglShapeNodeControls(self, option):
+		mc.radioButton("renameShapesAuto", edit=True, select=True, enable=option)
+		mc.radioButton("renameShapesForce", edit=True, enable=option)
+		mc.radioButton("renameShapesOff", edit=True, enable=option)
+
+
 	def fillPresets(self):
 		preset = mc.optionMenuGrp("renamePresets", query=True, value=True)
 		if preset == self.presetItemList[0]:
@@ -180,6 +200,9 @@ class gpsRenameTools():
 		elif preset == self.presetItemList[1]:
 			mc.textFieldGrp("findStr", edit=True, text=r"(FBXASC\d{3})+")
 			mc.textFieldGrp("replaceStr", edit=True, text=r"_")
+		elif preset == self.presetItemList[2]:
+			mc.textFieldGrp("findStr", edit=True, text=r"(pasted__)+")
+			mc.textFieldGrp("replaceStr", edit=True, text=r"")
 
 
 	def UI(self):
@@ -194,6 +217,7 @@ class gpsRenameTools():
 		# Create controls
 		#setUITemplate -pushTemplate gpsToolsTemplate;
 		mc.columnLayout("windowRoot")
+		self.scopePanelUI("scopePanel", "windowRoot")
 		self.findReplacePanelUI("findReplacePanel", "windowRoot")
 		self.renumberPanelUI("renumberPanel", "windowRoot")
 		self.advOptPanelUI("advOptPanel", "windowRoot", collapse=True)
@@ -203,6 +227,20 @@ class gpsRenameTools():
 		#setUITemplate -popTemplate;
 
 		mc.showWindow(self.winName)
+
+
+	def scopePanelUI(self, name, parent, collapse=False):
+		"""Create scope panel UI controls"""
+		mc.frameLayout(width=400, collapsable=True, cl=collapse, borderStyle="etchedIn", label="Scope")
+		mc.columnLayout(name)
+
+		mc.separator(height=4, style="none")
+		mc.radioButtonGrp("scope", label="Scope: ", labelArray2=['Selection', 'Entire Scene'], numberOfRadioButtons=2, columnWidth3=[140, 78, 156], select=1, 	
+		                  annotation="Choose whether to rename only the selected objects, or all nodes in the scene (use this option with care)", 
+		                  onCommand1=lambda *args: self.tglShapeNodeControls(True), onCommand2=lambda *args: self.tglShapeNodeControls(False))
+
+		mc.separator(height=4, style="none")
+		mc.setParent(parent)
 
 
 	def findReplacePanelUI(self, name, parent, collapse=False):
