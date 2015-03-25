@@ -3106,7 +3106,7 @@ registerUpdateRendererUIProc("updateStatusLineRendererSpecificUI");
 			menuItem -label "Graph Editor" -c "GraphEditor";
 			menuItem -label "Dope Sheet" -c "DopeSheetEditor";
 
-		// GPS - Icarus Launcher
+		// GPS - Launch Icarus UI
 		iconTextButton -image1 "icarus.png"
 			-width $iconHeight -height $iconHeight
 			-command ("source menus2Py;menus2Py.launchIcarus()")
@@ -3119,7 +3119,7 @@ registerUpdateRendererUIProc("updateStatusLineRendererSpecificUI");
 			-command ("source menus2Py.mel;menus2Py.launchProdBoard;")
 			-annotation "Open the Production Board"
 			launchProdBoardButton;
-			
+
 		// GPS - Review
 		iconTextButton -image1 "review.png"
 			-width $iconHeight -height $iconHeight
@@ -3127,18 +3127,18 @@ registerUpdateRendererUIProc("updateStatusLineRendererSpecificUI");
 			-annotation "Launch review app"
 			reviewButton;
 
-		// GPS - Creates a  menu on the review button for different review softwares
+		// GPS - Create a menu on the review button for different review software
 		string $menu = `popupMenu -b 1 -p reviewButton`;
 			menuItem -label "HieroPlayer" -c "source menus2Py;menus2Py.launchHieroPlayer";
 			menuItem -label "djv_view" -c "source menus2Py;menus2Py.launchDjv";
 
-		// GPS - Browses Project Directories
+		// GPS - Browse Project Directories
 		iconTextButton -image1 "browse.png"
 			-width $iconHeight -height $iconHeight
 			-annotation "Browse project directories"
 			browseDirsButton;
 
-		// GPS - Creates a  menu on the browse dir button for different directories
+		// GPS - Create a  menu on the browse dir button for different directories
 		string $menu = `popupMenu -b 1 -p browseDirsButton`;
 			menuItem -label "Browse scenes" -c "source menus2Py;menus2Py.browseScenes()";
 			menuItem -label "Browse playblasts" -c "source menus2Py;menus2Py.browsePlayblasts()";
