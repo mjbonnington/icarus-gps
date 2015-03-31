@@ -17,13 +17,6 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 	#checks item count
 	if not pblChk.itemCount(objLs):
 		return
-	
-	#checks if item is particle
-	objSh = mc.listRelatives(objLs[0])[0]
-	objType = mayaOps.nodetypeCheck(objSh)
-	if objType not in ('particle', 'nParticle'):
-		verbose.pointCloudParticle()
-		return
 		
 	#defining main variables
 	geoType = 'abc'
@@ -33,21 +26,34 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 	suffix = '_pointCloud'
 	ma_fileType = 'mayaBinary'
 	extension = geoType
+
+	#sanitizes selection charatcers
+	cleanObj = osOps.sanitize(convention)
+	if cleanObj != convention:
+		verbose.illegalCharacters(convention)
+		return
+
+	#checks if item is particle
+	objSh = mc.listRelatives(objLs[0])[0]
+	objType = mayaOps.nodetypeCheck(objSh)
+	if objType not in ('particle', 'nParticle'):
+		verbose.pointCloudParticle()
+		return
 		
 	#gets all dependants	
-	allObjLs = mc.listRelatives(objLs[0], ad=True, f=True, typ='transform')
+	allObjLs = mc.listRelatives(convention, ad=True, f=True, typ='transform')
 	if allObjLs:
-		allObjLs.append(objLs[0])
+		allObjLs.append(convention)
 	else:
-		allObjLs = [objLs[0]]
+		allObjLs = [convention]
 		
 	#check if asset to publish is a set
-	if mc.nodeType(objLs[0]) == 'objectSet':
+	if mc.nodeType(convention) == 'objectSet':
 		verbose.noSetsPbl()
 		return
 		
 	#check if asset to publish is an icSet
-	if mayaOps.chkIcDataSet(objLs[0]):
+	if mayaOps.chkIcDataSet(convention):
 		verbose.noICSetsPbl()
 		return
 
@@ -94,7 +100,7 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 		inProgress.start(pblDir)
 
 		#ic publish data file
-		icPblData.writeData(pblDir, assetPblName, objLs[0], assetType, extension, version, pblNotes)
+		icPblData.writeData(pblDir, assetPblName, convention, assetType, extension, version, pblNotes)
 	
 		#maya operations
 		if textures:
@@ -104,7 +110,7 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 			mayaOps.relinkTexture(txPaths, txObjLs=allObjLs, updateMaya=True)
 
 		#getting tranform data, writting to file and zeroing obj out
-		objTrs = mayaOps.getTransforms(objLs[0])
+		objTrs = mayaOps.getTransforms(convention)
 		if objTrs:
 			objT, objR, objS = objTrs
 		else:
@@ -113,7 +119,7 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 		trsDataFile = open('%s/trsData.py' % (pblDir), 'w')
 		trsDataFile.write('t=%s\nr=%s\ns=%s' % (objT, objR, objS))
 		trsDataFile.close()
-		mayaOps.applyTransforms(objLs[0], [0,0,0], [0,0,0], [1,1,1])
+		mayaOps.applyTransforms(convention, [0,0,0], [0,0,0], [1,1,1])
 		mayaOps.snapShot(pblDir)
 
 		#file operations
@@ -122,7 +128,7 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 		mayaOps.exportSelection(pathToPblAsset, ma_fileType)
 		mayaOps.exportGeo(objLs, geoType, pathToPblAsset)
 		#reapplying original tranforms to object
-		mayaOps.applyTransforms(objLs[0], objT, objR, objS)
+		mayaOps.applyTransforms(convention, objT, objR, objS)
 		
 		#approving publish
 		if approved:

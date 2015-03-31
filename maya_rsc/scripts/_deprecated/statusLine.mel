@@ -154,7 +154,6 @@ global proc toggleInputField (int $arg)
 
 	int $edging = 2;
 	if ($state) {
-		iconTextButton -edit -manage true bulkRenameButton; //  Added to make IC Bulk Rename button respect collapse control
 		iconTextButton -edit -manage true statusFieldButton;
 
 		if ("quickRename.png" == $image || "quickSelect.png" == $image) {
@@ -173,7 +172,6 @@ global proc toggleInputField (int $arg)
 		iconTextButton -edit -i1 openBar.png inputFieldCollapse;
 
 	} else {
-		iconTextButton -edit -manage false bulkRenameButton; //  Added to make IC Bulk Rename button respect collapse control
 		iconTextButton -edit -manage false statusFieldButton;
 
 		if ("quickRename.png" == $image || "quickSelect.png" == $image) {
@@ -516,8 +514,8 @@ global proc updateSelectionIcons( string $selectMode )
 		// Make sure that the select by component
 		// type button is the only one on.
 		iconTextCheckBox -e -v 0 selectBtnHierComb;
-		iconTextCheckBox -e -v 0 selectBtnObject;
 		iconTextCheckBox -e -v 1 selectBtnComponent;
+		iconTextCheckBox -e -v 0 selectBtnObject;
 
 		//
 		// Flip the visibility of the object
@@ -2381,30 +2379,6 @@ registerUpdateRendererUIProc("updateStatusLineRendererSpecificUI");
 			-c ("toggleFileIcons(-1)")
 			fileCollapse;
 
-		// Create the New/Open/Save buttons
-		//iconTextButton -image1 "fileNew.png"
-		//	-width ($iconHeight-4) -height $iconHeight 	//skinny icon
-		//	-command ("NewScene")
-		//	-annotation (uiRes("m_statusLine.kNewSceneAnnot"))
-		//	newSceneButton;
-
-		//iconTextButton -image1 "fileOpen.png"
-		//	-width $iconHeight -height $iconHeight
-		//	-command ("OpenScene")
-		//	-annotation (uiRes("m_statusLine.kOpenSceneAnnot"))
-		//	openSceneButton;
-
-		// Attach a recent files menu to open scene button
-		//popupMenu -parent openSceneButton OpenSceneButtonRecentFileItems;
-		//	menu -edit -postMenuCommand "buildRecentFileMenu OpenSceneButtonRecentFileItems" OpenSceneButtonRecentFileItems;
-		//setParent -menu ..;
-
-		//iconTextButton -image1 "fileSave.png"
-		//	-width $iconHeight -height $iconHeight
-		//	-command ("SaveScene")
-		//	-annotation (uiRes("m_statusLine.kSaveSceneAnnot"))
-		//	saveSceneButton;
-
 		//GPS - New Scene
 		iconTextButton -image1 "newScene.png"
 			-width $iconHeight -height $iconHeight
@@ -2520,18 +2494,18 @@ registerUpdateRendererUIProc("updateStatusLineRendererSpecificUI");
 				-cc "changeSelectMode -hierarchical"
 				-annotation (uiRes("m_statusLine.kSelectHierarchyAnnot"))
 				selectBtnHierComb;
-			iconTextCheckBox -i1 "pickObjByType.png"
-				-w $iconHeight -h $iconHeight
-				-v $isObject
-				-cc "changeSelectMode -object"
-				-annotation (uiRes("m_statusLine.kSelectObjectAnnot"))
-				selectBtnObject;
 			iconTextCheckBox -i1 "pickCompByType.png"
 				-w $iconHeight -h $iconHeight
 				-v $isComponent
 				-cc "changeSelectMode -component"
 				-annotation (uiRes("m_statusLine.kSelectComponentAnnot"))
 				selectBtnComponent;
+			iconTextCheckBox -i1 "pickObjByType.png"
+				-w $iconHeight -h $iconHeight
+				-v $isObject
+				-cc "changeSelectMode -object"
+				-annotation (uiRes("m_statusLine.kSelectObjectAnnot"))
+				selectBtnObject;
 		setParent ..;
 
 		// Layout the icons, by attaching them to themselves
@@ -3060,13 +3034,6 @@ registerUpdateRendererUIProc("updateStatusLineRendererSpecificUI");
 			-i1 openBar.png  -c ("toggleInputField(-1)")
 			inputFieldCollapse;
 
-		// GPS - Rename Tools
-		iconTextButton -image1 "bulkRename.png"
-			-width $iconHeight -height $iconHeight
-			-command ("source menus2Py.mel;menus2Py.bulkRename()")
-			-annotation "Advanced renaming of objects"
-			bulkRenameButton;
-
 		//
 		// Create the selection fields
 		//
@@ -3115,39 +3082,63 @@ registerUpdateRendererUIProc("updateStatusLineRendererSpecificUI");
 			setQuickFieldMode `optionVar -query "quickFieldMode"`;
 		}
 
-		// GPS - Icarus Launcher
+		// GPS - Rename Tools
+		iconTextButton -image1 "bulkRename.png"
+			-width $iconHeight -height $iconHeight
+			-command ("source menus2Py.mel;menus2Py.bulkRename()")
+			-annotation "Advanced renaming of objects"
+			bulkRenameButton;
+
+		// GPS - Common Editors
+		iconTextButton -image1 "editor.png"
+			-width $iconHeight -height $iconHeight
+			-annotation "Open commonly used editor windows"
+			editorsButton;
+
+		// GPS - Add popup menu for common editors
+		string $menu = `popupMenu -b 1 -p editorsButton`;
+			menuItem -label "Outliner" -c "OutlinerWindow";
+			menuItem -label "Node Editor" -c "NodeEditorWindow";
+			menuItem -divider true;
+			menuItem -label "Hypershade" -c "HypershadeWindow";
+			menuItem -label "UV Texture Editor" -c "TextureViewWindow";
+			menuItem -divider true;
+			menuItem -label "Graph Editor" -c "GraphEditor";
+			menuItem -label "Dope Sheet" -c "DopeSheetEditor";
+
+		// GPS - Launch Icarus UI
 		iconTextButton -image1 "icarus.png"
 			-width $iconHeight -height $iconHeight
 			-command ("source menus2Py;menus2Py.launchIcarus()")
-			-annotation "Launches Icarus UI"
+			-annotation "Launch Icarus UI"
 			launchIcarusButton;
 
 		// GPS - Launch Production Board
 		iconTextButton -image1 "productionBoard.png"
 			-width $iconHeight -height $iconHeight
 			-command ("source menus2Py.mel;menus2Py.launchProdBoard;")
-			-annotation "Opens the Production Board"
+			-annotation "Open the Production Board"
 			launchProdBoardButton;
-			
+
 		// GPS - Review
 		iconTextButton -image1 "review.png"
 			-width $iconHeight -height $iconHeight
 			-command ("source menus2Py.mel;menus2Py.launchHieroPlayer;")
-			-annotation "Launches Hiero Player"
+			-annotation "Launch review app"
 			reviewButton;
 
-		// GPS - Creates a  menu on the review button for different review softwares
+		// GPS - Create a menu on the review button for different review software
 		string $menu = `popupMenu -b 1 -p reviewButton`;
-			menuItem -label "Hiero Player" -c "source menus2Py;menus2Py.launchHieroPlayer";
-			menuItem -label "Djv" -c "source menus2Py;menus2Py.launchDjv";
-		
-		//GPS - Browses Project Directories
+			menuItem -label "HieroPlayer" -c "source menus2Py;menus2Py.launchHieroPlayer";
+			menuItem -label "djv_view" -c "source menus2Py;menus2Py.launchDjv";
+
+		// GPS - Browse Project Directories
 		iconTextButton -image1 "browse.png"
 			-width $iconHeight -height $iconHeight
-			-annotation "Browses project directories"
+			-annotation "Browse project directories"
 			browseDirsButton;
 
-		// GPS - Creates a  menu on the browse dir button for different directories
+		// GPS - Create a  menu on the browse dir button for different directories
 		string $menu = `popupMenu -b 1 -p browseDirsButton`;
 			menuItem -label "Browse scenes" -c "source menus2Py;menus2Py.browseScenes()";
 			menuItem -label "Browse playblasts" -c "source menus2Py;menus2Py.browsePlayblasts()";

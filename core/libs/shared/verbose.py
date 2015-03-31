@@ -46,6 +46,9 @@ def icarusLaunch(icarusVersion, icarusLocation):
 	
 def ignored(asset):
 	print '%s ignored' % asset
+
+def illegalCharacters(string=''):
+	print '"%s" contains illegal characters.' % string
 	
 def integersInput(input):
 	print '%s input must be integers' % input

@@ -20,6 +20,12 @@ def publish(pblTo, slShot, scnName, subsetName, textures, pblNotes, mail, approv
 	suffix = '_scene'
 	fileType = 'mayaAscii'
 	extension = 'ma'
+
+	#sanitizes selection charatcers
+	cleanObj = osOps.sanitize(convention)
+	if cleanObj != convention:
+		verbose.illegalCharacters(convention)
+		return
 	
 	#gets all dependants
 	allObjLs = mc.ls(tr=True)
@@ -68,7 +74,7 @@ def publish(pblTo, slShot, scnName, subsetName, textures, pblNotes, mail, approv
 		inProgress.start(pblDir)
 
 		#ic publish data file
-		icPblData.writeData(pblDir, assetPblName, scnName, assetType, extension, version, pblNotes)
+		icPblData.writeData(pblDir, assetPblName, convention, assetType, extension, version, pblNotes)
 	
 		#publish operations
 		try:

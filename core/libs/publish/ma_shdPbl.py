@@ -25,14 +25,20 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 	suffix = '_shader'
 	fileType = 'mayaBinary'
 	extension = 'mb'
+	
+	#sanitizes selection charatcers
+	cleanObj = osOps.sanitize(convention)
+	if cleanObj != convention:
+		verbose.illegalCharacters(convention)
+		return
 		
 	#checking if selection is a valid shader
-	if mayaOps.nodetypeCheck(objLs[0]) != 'shadingEngine':
+	if mayaOps.nodetypeCheck(convention) != 'shadingEngine':
 		verbose.shaderSupport()
 		return
 
 	#check if asset to publish is referenced
-	if mc.referenceQuery(objLs[0], inr=True):
+	if mc.referenceQuery(convention, inr=True):
 		verbose.noRefPbl()
 		return
 			
@@ -69,7 +75,7 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 		inProgress.start(pblDir)
 		
 		#ic publish data file
-		icPblData.writeData(pblDir, assetPblName, objLs[0], assetType, extension, version, pblNotes)
+		icPblData.writeData(pblDir, assetPblName, convention, assetType, extension, version, pblNotes)
 	
 		#maya operations
 		mayaOps.deleteICDataSet(objLs)

@@ -33,6 +33,11 @@ def publish(pblTo, slShot, pblType, pblName, pblNotes, mail, approved):
 	fileType='nk'
 	extension = 'nk'
 	
+	#sanitizes selection charatcers
+	cleanObj = osOps.sanitize(convention)
+	if cleanObj != convention:
+		verbose.illegalCharacters(convention)
+		return
 
 	#processing asset publish options
 	assetPblName, assetDir, pblDir = pblOptsPrc.prc(pblTo, subsetName, assetType, prefix, convention, suffix)
