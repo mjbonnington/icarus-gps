@@ -262,3 +262,12 @@ string $jobInfo = `getenv JOB` + " - " + `getenv SHOT`;
 text -label "   ";
 text -label $jobInfo -h 27;
 setParent -menu ..;
+
+// Swap Object Mode / Component Mode buttons (fix for Maya 2014 only)
+//if (getApplicationVersionAsFloat == 2014) {
+	formLayout -edit
+	           -af selectBtnComponent right 0
+	           -ac selectBtnObject right 0 selectBtnComponent
+	           -ac selectBtnHierComb right 0 selectBtnObject
+	           masksForm;
+//}

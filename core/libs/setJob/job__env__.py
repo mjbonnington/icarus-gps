@@ -78,7 +78,7 @@ def setEnv(envVars):
 	os.environ['VRAY_FOR_MAYA_SHADERS'] = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'shaders')
 	try:
 		os.environ['VRAY_FOR_MAYA2014_PLUGINS_x64'] = os.path.join('%s:%s' % (os.environ['VRAY_FOR_MAYA2014_PLUGINS_x64'], os.environ['PIPELINE']), 'maya_rsc', 'plugins')
-	except AttributeError:
+	except (AttributeError, KeyError):
 		pass
 	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
 		os.environ['XBMLANGPATH'] = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'icons')
