@@ -26,21 +26,26 @@ def publish(pblTo, slShot, nodeType, subsetName, textures, pblNotes, mail, appro
 	suffix = '_node'
 	fileType = 'mayaAscii'
 	extension = 'ma'
-	subsetName = mc.nodeType(objLs[0])
+	subsetName = mc.nodeType(convention)
 		
-
+	#sanitizes selection charatcers
+	cleanObj = osOps.sanitize(convention)
+	if cleanObj != convention:
+		verbose.illegalCharacters(convention)
+		return
+		
 	#check if asset to publish is a set
-	if mc.nodeType(objLs[0]) == 'objectSet':
+	if mc.nodeType(convention) == 'objectSet':
 		verbose.noSetsPbl()
 		return
 	
 	#check if asset to publish is an icSet
-	if mayaOps.chkIcDataSet(objLs[0]):
+	if mayaOps.chkIcDataSet(convention):
 		verbose.noICSetsPbl()
 		return	
 		
 	#check if asset to publish is referenced
-	if mc.referenceQuery(objLs[0], inr=True):
+	if mc.referenceQuery(convention, inr=True):
 		verbose.noRefPbl()
 		return
 			
@@ -77,7 +82,7 @@ def publish(pblTo, slShot, nodeType, subsetName, textures, pblNotes, mail, appro
 		inProgress.start(pblDir)
 
 		#ic publish data file
-		icPblData.writeData(pblDir, assetPblName, objLs[0], assetType, extension, version, pblNotes)
+		icPblData.writeData(pblDir, assetPblName, convention, assetType, extension, version, pblNotes)
 	
 		#maya operations
 		mayaOps.deleteICDataSet(objLs)

@@ -28,24 +28,36 @@ def publish(pblTo, slShot, mdlType, textures, pblNotes, mail, approved):
 	fileType = 'mayaBinary'
 	extension = 'mb'
 	autoLods = False
+	
+	#sanitizes selection charatcers
+	cleanObj = osOps.sanitize(convention)
+	if cleanObj != convention:
+		verbose.illegalCharacters(convention)
+		return
 		
+	#sanitizes selection charatcers
+	cleanObj = osOps.sanitize(convention)
+	if cleanObj != convention:
+		verbose.illegalCharacters(convention)
+		return
+
 	#gets all dependants. Createsa group for lods with just dependants 
-	allObjLs = mc.listRelatives(objLs[0], ad=True, f=True, typ='transform')
+	allObjLs = mc.listRelatives(convention, ad=True, f=True, typ='transform')
 	objLodLs = allObjLs
 	##adds original selection to allObj if no dependants are found
 	if allObjLs:
-		allObjLs.append(objLs[0])
+		allObjLs.append(convention)
 	else:
-		allObjLs = [objLs[0]]
-		objLodLs = [objLs[0]]
+		allObjLs = [convention]
+		objLodLs = [convention]
 		
 	#check if asset to publish is a set
-	if mc.nodeType(objLs[0]) == 'objectSet':
+	if mc.nodeType(convention) == 'objectSet':
 		verbose.noSetsPbl()
 		return
 	
 	#check if asset to publish is an icSet
-	if mayaOps.chkIcDataSet(objLs[0]):
+	if mayaOps.chkIcDataSet(convention):
 		verbose.noICSetsPbl()
 		return
 
@@ -89,7 +101,7 @@ def publish(pblTo, slShot, mdlType, textures, pblNotes, mail, approved):
 		inProgress.start(pblDir)
 
 		#ic publish data file
-		icPblData.writeData(pblDir, assetPblName, objLs[0], assetType, extension, version, pblNotes)
+		icPblData.writeData(pblDir, assetPblName, convention, assetType, extension, version, pblNotes)
 
 		#publish operations
 		mayaOps.deleteICDataSet(allObjLs)
@@ -121,7 +133,7 @@ def publish(pblTo, slShot, mdlType, textures, pblNotes, mail, approved):
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		pathToPblAsset = ''
-		osOps.recurseRemove(pblDir)
+		#osOps.recurseRemove(pblDir)
 		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += verbose.pblRollback()
 	

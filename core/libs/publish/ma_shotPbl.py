@@ -21,7 +21,6 @@ def publish(pblTo, pblNotes, mail, approved):
 	fileType = 'mayaAscii'
 	extension = 'ma'
 
-
 	#processing asset publish options
 	assetPblName, assetDir, pblDir = pblOptsPrc.prc(pblTo, subsetName, assetType, prefix, convention, suffix)
 	

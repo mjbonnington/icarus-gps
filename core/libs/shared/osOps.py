@@ -5,7 +5,7 @@
 
 
 #manages OS operations
-import os
+import os, re
 
 #creates directory for the specified path with the specified umask
 def createDir(path, umask='000'):
@@ -33,3 +33,7 @@ def copyDirContents(source, destination, umask='000'):
 
 def setUmask(umask='000'):
 	return 'umask %s' % umask
+
+#sanitizes characters in string. Default replaces all non-alphanumeric characters with nothing.
+def sanitize(instr, pattern='\W', replace=''):
+		return re.sub(pattern, replace, instr)

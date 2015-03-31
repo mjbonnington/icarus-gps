@@ -28,22 +28,28 @@ def publish(pblTo, slShot, pblNotes, mail, approved):
 	fileType = 'atomExport'
 	extension = 'atom'
 		
+	#sanitizes selection charatcers
+	cleanObj = osOps.sanitize(convention)
+	if cleanObj != convention:
+		verbose.illegalCharacters(convention)
+		return
+	
 	#gets all dependants
-	allObjLs = mc.listRelatives(objLs[0], ad=True, f=True)
+	allObjLs = mc.listRelatives(convention, ad=True, f=True)
 	
 	##adds original selection to allObj if no dependants are found
 	if allObjLs:
-		allObjLs.append(objLs[0])
+		allObjLs.append(convention)
 	else:
-		allObjLs = [objLs[0]]
+		allObjLs = [convention]
 	
 	#check if asset to publish is a set
-	if mc.nodeType(objLs[0]) == 'objectSet':
+	if mc.nodeType(convention) == 'objectSet':
 		verbose.noSetsPbl()
 		return
 	
 	#check if asset to publish is an icSet
-	if mayaOps.chkIcDataSet(objLs[0]):
+	if mayaOps.chkIcDataSet(convention):
 		verbose.noICSetsPbl()
 		return
 
@@ -55,7 +61,7 @@ def publish(pblTo, slShot, pblNotes, mail, approved):
 		
 	#check if selected asset is a published asset and matches the asset name
 	try:
-		ICSetConn = mc.listConnections('%s.icARefTag' % objLs[0])
+		ICSetConn = mc.listConnections('%s.icARefTag' % convention)
 		if not ICSetConn[0].startswith('ICSet'):
 			raise RuntimeError('ICSet')
 	except:
@@ -93,7 +99,7 @@ def publish(pblTo, slShot, pblNotes, mail, approved):
 		#ic publish data file
 		requires = mc.getAttr('%s.icRefTag' % ICSetConn[0])
 		compatible = '%s_%s' % (requires, mc.getAttr('ICSet_%s.icVersion' % requires))
-		icPblData.writeData(pblDir, assetPblName, objLs[0], assetType, extension, version, pblNotes, requires, compatible)
+		icPblData.writeData(pblDir, assetPblName, convention, assetType, extension, version, pblNotes, requires, compatible)
 		
 		#file operations
 		pathToPblAsset = os.path.join(pblDir, '%s.%s' % (assetPblName, extension))
