@@ -19,7 +19,7 @@ def isMesh(obj):
 	"""
 
 	if mc.nodeType(obj) == "transform":
-		shapeLs = mc.listRelatives(obj, shapes=True)
+		shapeLs = mc.listRelatives(obj, shapes=True, fullPath=True)
 		if shapeLs == None:
 			return False
 		else:
