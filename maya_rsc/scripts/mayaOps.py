@@ -295,7 +295,7 @@ def exportGeo(objLs, geoType, pathToPblAsset):
 		pathToPblAsset = pathToPblAsset.split('/')[:-1]
 		pathToPblAsset = '/'.join(pathToPblAsset)
 		mel.eval('''vrayCreateProxy -exportType 1 -previewFaces 75000 -dir "%s" -fname "%s" -animOn -animType 1 
-		-velocityOn -velocityIntervalStart 0.0 -velocityIntervalEnd 0.05;''' % (pathToPblAsset, objLs[0]))
+		-velocityOn -velocityIntervalStart -0.5 -velocityIntervalEnd 0.5;''' % (pathToPblAsset, objLs[0])) # Changed velocity values to default, was 0 & 0.05
 		return
 	if geoType == 'sd':
 		plugin = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'plugins', 'realflow.bundle')
