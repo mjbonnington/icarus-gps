@@ -18,7 +18,7 @@ class gpsRenameTools():
 		self.gMainProgressBar = mel.eval('$tmp = $gMainProgressBar')
 
 		# Presets for renaming - will add more as and when we think of them
-		self.presetItemList = ["None", "Clean up mangled FBX node names", "Clean up pasted node names"]
+		self.presetItemList = ["None", "Clean up mangled FBX node names", "Clean up copy & pasted nodes", "Remove trailing numbers"]
 
 
 	def renameUnique(self, obj, newName):
@@ -201,7 +201,10 @@ class gpsRenameTools():
 			mc.textFieldGrp("findStr", edit=True, text=r"(FBXASC\d{3})+")
 			mc.textFieldGrp("replaceStr", edit=True, text=r"_")
 		elif preset == self.presetItemList[2]:
-			mc.textFieldGrp("findStr", edit=True, text=r"(pasted__)+")
+			mc.textFieldGrp("findStr", edit=True, text=r"^(pasted__)+")
+			mc.textFieldGrp("replaceStr", edit=True, text=r"")
+		elif preset == self.presetItemList[3]:
+			mc.textFieldGrp("findStr", edit=True, text=r"\d+$")
 			mc.textFieldGrp("replaceStr", edit=True, text=r"")
 
 
