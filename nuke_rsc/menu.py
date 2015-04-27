@@ -5,7 +5,7 @@
 
 #third party gizmos and plugins menu build
 import pixelfudger
-
+#
 import gpsSave
 
 
@@ -57,7 +57,7 @@ nodesMenu.addSeparator()
 #new
 newMenu_nodes = nodesMenu.addCommand('GPS - New', launchNuke, '^n', icon='newScript.png')
 #open
-openMenu_nodes = nodesMenu.addCommand('GPS - Open', openScript, '^o', icon='openScript.png')
+openRecentMenu_nodes = nodesMenu.addMenu('Open', icon='openScript.png')
 #save
 incrementalSaveMenu_nodes =  nodesMenu.addCommand('GPS - Incremental Save', incrSave, 'alt+shift+s', icon='incrementalSave.png')
 saveMenu_nodes =  nodesMenu.addCommand('GPS - Save', save, '^s', icon='saveScript.png')
@@ -159,6 +159,9 @@ fileMenu.removeItem('Save New Comp Version')
 
 # Initialise recent files menu...
 gpsSave.updateRecentFilesMenu(openRecentMenu_gps)
+gpsSave.updateRecentFilesMenu(openRecentMenu_nodes)
+#update recent files clears the menu. Generic open dialog needs to be added to nodes menu after updating
+openRecentMenu_nodes.addCommand('GPS - Open...', openScript, '^o', index=0)
 
 
 # Add callback function to add script to recent files on script load...
