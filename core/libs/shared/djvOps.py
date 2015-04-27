@@ -15,12 +15,12 @@ def prcImg(input, output, startFrame, endFrame, inExt, outExt='jpg', fps=os.envi
 
 	#exporting path to djv codec libraries according to os
 	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-		ldLibExport = 'export DYLD_FALLBACK_LIBRARY_PATH=%s' % os.environ['DJV_LIB']
+		libsExport = 'export DYLD_FALLBACK_LIBRARY_PATH=%s' % os.environ['DJV_LIB']
 	else:
-		ldLibExport = 'export LD_LIBRARY_PATH=%s' % os.environ['DJV_LIB']
+		libsExport = 'export LD_LIBRARY_PATH=%s; export LIBQUICKTIME_PLUGIN_DIR=%s' % (os.environ['DJV_LIB'], os.path.join(os.environ['DJV_LIB'],'libquicktime'))
 
 	#setting djv command
-	djvCmd = '%s; %s %s %s -speed %s' % (ldLibExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, fps)
+	djvCmd = '%s; %s %s %s -speed %s' % (libsExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, fps)
 
 	os.system(djvCmd)
 
@@ -34,15 +34,15 @@ def prcQt(input, output, startFrame, endFrame, inExt, name='preview', fps=os.env
 
 	#exporting path to djv codec libraries according to os
 	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-		ldLibExport = 'export DYLD_FALLBACK_LIBRARY_PATH=%s' % os.environ['DJV_LIB']
+		libsExport = 'export DYLD_FALLBACK_LIBRARY_PATH=%s' % os.environ['DJV_LIB']
 	else:
-		ldLibExport = 'export LD_LIBRARY_PATH=%s' % os.environ['DJV_LIB']
+		libsExport = 'export LD_LIBRARY_PATH=%s; export LIBQUICKTIME_PLUGIN_DIR=%s' % (os.environ['DJV_LIB'], os.path.join(os.environ['DJV_LIB'],'libquicktime'))
 
 	#setting djv command
 	if resize:
-		djvCmd = '%s; %s %s %s -resize %s %s -speed %s' % (ldLibExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, resize[0], resize[1], fps)
+		djvCmd = '%s; %s %s %s -resize %s %s -speed %s' % (libsExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, resize[0], resize[1], fps)
 	else:
-		djvCmd = '%s; %s %s %s -speed %s' % (ldLibExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, fps)
+		djvCmd = '%s; %s %s %s -speed %s' % (libsExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, fps)
 
 	os.system(djvCmd)
 
@@ -50,10 +50,10 @@ def prcQt(input, output, startFrame, endFrame, inExt, name='preview', fps=os.env
 def viewer(path=''):
 	#exporting path to djv codec libraries according to os
 	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-		ldLibExport = 'export DYLD_FALLBACK_LIBRARY_PATH=%s' % os.environ['DJV_LIB']
+		libsExport = 'export DYLD_FALLBACK_LIBRARY_PATH=%s' % os.environ['DJV_LIB']
 	else:
-		ldLibExport = 'export LD_LIBRARY_PATH=%s' % os.environ['DJV_LIB']
-	
-	command = '%s; %s %s' % (ldLibExport, os.environ['DJV_PLAY'], path)
+		libsExport = 'export LD_LIBRARY_PATH=%s; export LIBQUICKTIME_PLUGIN_DIR=%s' % (os.environ['DJV_LIB'], os.path.join(os.environ['DJV_LIB'],'libquicktime'))
+		
+	command = '%s; %s %s' % (libsExport, os.environ['DJV_PLAY'], path)
 	#calling command with subprocess in order not to lock the system while djv is running
 	subprocess.Popen(command, shell=True)
