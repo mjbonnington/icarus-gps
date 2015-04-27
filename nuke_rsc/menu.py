@@ -28,6 +28,7 @@ openRendersDir = 'import openDirs; openDirs.openNukeRenders()'
 openElementsDir = 'import openDirs; openDirs.openNukeElements()'
 openShotDir = 'import openDirs; openDirs.openShot()'
 openJobDir = 'import openDirs; openDirs.openJob()'
+openElementsLibDir = 'import openDirs; openDirs.openElementsLib()'
 launchProdBoard  = 'import launchApps; launchApps.prodBoard()'
 launchNuke = 'import launchApps; launchApps.nuke("%s")' % nukeType
 launchIcarus = 'reload(icarus__main__)'
@@ -80,6 +81,7 @@ browseMenu_nodes.addCommand('Browse Renders', openRendersDir)
 browseMenu_nodes.addCommand('Browse Elements', openElementsDir)
 browseMenu_nodes.addCommand('Browse Shot', openShotDir)
 browseMenu_nodes.addCommand('Browse Job', openJobDir)
+browseMenu_nodes.addCommand('Browse Elements Library', openElementsLibDir)
 
 
 #GPS MENU
@@ -103,6 +105,9 @@ browseMenu_gps = gpsMenu.addMenu('Browse')
 browseMenu_gps.addCommand('Browse Scripts', openScriptsDir)
 browseMenu_gps.addCommand('Browse Renders', openRendersDir)
 browseMenu_gps.addCommand('Browse Elements', openElementsDir)
+browseMenu_gps.addCommand('Browse Shot', openShotDir)
+browseMenu_gps.addCommand('Browse Job', openJobDir)
+browseMenu_gps.addCommand('Browse Elements Library', openElementsLibDir)
 
 
 #IMAGE MENU
