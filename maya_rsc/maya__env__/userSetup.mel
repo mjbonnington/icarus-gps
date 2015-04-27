@@ -5,6 +5,11 @@
 //updating maya scene at startup
 python ("import mayaOps; mayaOps.update()");
 
+//set up path remapping for cross-platform support
+dirmap -en true;
+dirmap -m "/Volumes/hggl_SAN_1/" "//hgglapsv06/hggl_SAN_1/";
+dirmap -m "//hgglapsv06/hggl_SAN_1/" "/Volumes/hggl_SAN_1/";
+
 //building GPS menus
 source gps_buildMenus;
 

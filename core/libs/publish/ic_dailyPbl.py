@@ -82,7 +82,7 @@ def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes, mail):
 		#creating daily snapshot
 		previewOutput = os.path.join(pblDir, 'preview')
 		djvOps.prcImg(input, previewOutput, midFrame, midFrame, extension, outExt='jpg')
-		djvOps.prcQt(input, pblDir, startFrame, endFrame, extension, resize=(255, 143))
+		djvOps.prcQt(input, pblDir, startFrame, endFrame, extension, resize=(256, 144))
 				
 		#ic publishData files
 		assetPblName += '_%s' % version		
