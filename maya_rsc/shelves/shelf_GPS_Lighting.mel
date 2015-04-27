@@ -189,9 +189,9 @@ global proc shelf_GPS_Lighting () {
 		-mip 0
 		-mi "Create Object ID Multiple" ( "import createMultimattes\ncreateMultimattes.objID(single=False)" )
 		-mip 1
-		-mi "Create Multimattes All" ( "import createMultimattes\ncreateMultimattes.multiMatte(all=True)" )
+		-mi "Create Object Multimattes All" ( "import createMultimattes\ncreateMultimattes.objMultiMatte(all=True)" )
 		-mip 2
-		-mi "Create Multimattes Selection" ( "import createMultimattes\ncreateMultimattes.multiMatte(all=False)" )
+		-mi "Create Object Multimattes Selection" ( "import createMultimattes\ncreateMultimattes.objMultiMatte(all=False)" )
 		-mip 3
 	;
 	shelfButton
