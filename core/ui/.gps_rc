@@ -20,18 +20,21 @@ export PATH
 #export LSCOLORS=cxfxexdxbxegedabagacad
 #export GREP_OPTIONS='--color=auto'
 
+NO_COLOUR="\[\033[0m\]"
+function EXT_COLOR () { echo -ne "\[\033[38;5;$1m\]"; }
 
 ##echoing shot info##
 clear; echo -e "GRAMERCY PARK STUDIOS - $JOB | $SHOT"; echo
-PS1="\[\033[32;2m\][\u-$JOB-$SHOT: ./\W]\[\033[0m\] "
-
+PS1="`EXT_COLOR 64`[\u $JOB-$SHOT \W]\$ ${NO_COLOUR}"
+#PS1="\[\033[38;5;64m\][\u@\h \W]\$\[\033[0m\] "
 
 ##cd into shot dir##
 cd $SHOTPATH
 
 
 ##software aliases##
-alias maya="$MAYAVERSION -proj $JOBPATH/3D/maya &"
+alias maya="$MAYAVERSION -proj $SHOTPATH/3D/maya &"
+alias mayarender="$MAYARENDERVERSION -proj $SHOTPATH/3D/maya"
 alias nuke="$NUKEVERSION &"
 alias nukex="$NUKEXVERSION &"
 alias mudbox="$MUDBOXVERSION &"
@@ -40,7 +43,7 @@ alias realflow="'$REALFLOWVERSION' &"
 if [[ $ICARUS_RUNNING_OS == 'Linux' ]]; then
 	alias djv="export LD_LIBRARY_PATH=$DJV_LIB; $DJV_PLAY &"
 else
-	alias djv="export DYLD_FALLBACK_LIBRARY_PATH=$DJV_LIB; $DJV_PLAY &"
+	alias djv="$DJV_PLAY"
 fi
 
 ##other aliases

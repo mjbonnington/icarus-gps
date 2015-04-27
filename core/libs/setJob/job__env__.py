@@ -92,6 +92,7 @@ def setEnv(envVars):
 	os.environ['MAYASOURCEIMAGESDIR'] = os.path.join(os.environ['MAYADIR'], 'sourceimages', os.environ['USERNAME'])
 	os.environ['MAYARENDERSDIR'] = os.path.join(os.environ['MAYADIR'], 'renders', os.environ['USERNAME'])
 	os.environ['MAYAVERSION'] = jobData.mayaVersion
+	os.environ['MAYARENDERVERSION'] = os.path.join(os.path.dirname(jobData.mayaVersion), 'Render')
 	#MUDBOXENV
 	os.environ['MUDBOXDIR'] = os.path.join(os.environ['SHOTPATH'], '3D', 'mudbox')
 	os.environ['MUDBOXSCENESDIR'] = os.path.join(os.environ['MUDBOXDIR'], 'scenes', os.environ['USERNAME'])
@@ -123,9 +124,9 @@ def setEnv(envVars):
 	os.environ['RF_COMMANDS_ORGANIZER_FILE_PATH'] = os.path.join(os.environ['REALFLOWSCENESDIR'] , '.cmdsOrg', 'commandsOrganizer.dat')
 	#DJV
 	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-		os.environ['DJV_LIB'] = '%s/external_apps/djv/djv-1.0.4-OSX-64.app/Contents/Resources/lib' % os.environ['PIPELINE']
-		os.environ['DJV_CONVERT'] = '%s/external_apps/djv/djv-1.0.4-OSX-64.app/Contents/Resources/bin/djv_convert' % os.environ['PIPELINE'] 
-		os.environ['DJV_PLAY'] = '%s/external_apps/djv/djv-1.0.4-OSX-64.app/Contents/MacOS/djv-1.0.4-OSX-64' % os.environ['PIPELINE']
+		os.environ['DJV_LIB'] = '%s/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/Resources/lib' % os.environ['PIPELINE']
+		os.environ['DJV_CONVERT'] = '%s/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/Resources/bin/djv_convert' % os.environ['PIPELINE'] 
+		os.environ['DJV_PLAY'] = '%s/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/Resources/bin/djv_view.sh' % os.environ['PIPELINE']
 	else:
 		os.environ['DJV_LIB'] = '%s/external_apps/djv/djv-1.0.5-Linux-64/lib' % os.environ['PIPELINE']
 		os.environ['DJV_CONVERT'] = '%s/external_apps/djv/djv-1.0.5-Linux-64/bin/djv_convert' % os.environ['PIPELINE']
