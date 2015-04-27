@@ -970,7 +970,9 @@ class icarusApp(QtGui.QDialog):
 				nk_geoGather.gather(self.gatherPath)
 			elif self.assetType == 'render':
 				import nk_renderGather
+				app.hide()
 				nk_renderGather.gather(self.gatherPath)
+				app.show()
 			else:
 				import nk_assetGather
 				nk_assetGather.gather(self.gatherPath)
