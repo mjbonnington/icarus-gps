@@ -984,7 +984,6 @@ verbose.icarusLaunch(os.environ['ICARUSVERSION'], os.environ['ICWORKINGDIR']) #o
 #detecting environment and runnig application
 if os.environ['ICARUSENVAWARE'] == 'MAYA' or os.environ['ICARUSENVAWARE'] == 'NUKE':
 	app = icarusApp()
-	#app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint)
 
 	# Apply UI style sheet
 	qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")

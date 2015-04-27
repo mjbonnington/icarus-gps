@@ -198,6 +198,8 @@ class preview():
 		    cameraShape = [activeCamera]
 		    if mc.nodeType(activeCamera) != 'camera':
 		        cameraShape = mc.listRelatives(activeCamera, s=True)
+		    pre_safeAction = mc.getAttr('%s.displaySafeAction' % cameraShape)
+			pre_safeTitle = mc.getAttr('%s.displaySafeTitle' % cameraShape)
 			mc.setAttr("%s.displaySafeAction" % cameraShape[0], 1)
 			mc.setAttr("%s.displaySafeTitle" % cameraShape[0], 1)
 			
@@ -224,9 +226,13 @@ class preview():
 				mc.select(sl, add=True)
 		
 		#restoring guides
+		print pre_safeAction
+		print pre_safeTitle
 		if self.guides:
-			mc.setAttr("%s.displaySafeAction" % cameraShape[0], 0)
-			mc.setAttr("%s.displaySafeTitle" % cameraShape[0], 0)
+			if not pre_safeAction:
+				mc.setAttr("%s.displaySafeAction" % cameraShape[0], 0)
+			if not pre_safeTitle:
+				mc.setAttr("%s.displaySafeTitle" % cameraShape[0], 0)
 			
 			
 		#returns frRange and file extension
