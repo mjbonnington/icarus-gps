@@ -28,6 +28,9 @@ def assetUpdateMatch():
 def chkDirSize():
 	print 'Comparing directory sizes...'
 	
+def chooseCameraPreview():
+	print 'Please choose a camera view to preview from'
+	
 def concurrentPublish():
 	return 'Another publish for the same asset is currently under progress. Please check your settings or try again later.'
 
@@ -42,7 +45,6 @@ def gpsToolDeploy(status):
 
 def icarusLaunch(icarusVersion, icarusLocation):
 	print 'GRAMERCY PARK STUDIOS - ICARUS %s\n' % icarusVersion
-	#print 'Running from %s\n' % icarusLocation
 	
 def ignored(asset):
 	print '%s ignored' % asset

@@ -36,4 +36,4 @@ def setUmask(umask='000'):
 
 #sanitizes characters in string. Default replaces all non-alphanumeric characters with nothing.
 def sanitize(instr, pattern='\W', replace=''):
-		return re.sub(pattern, replace, instr)
+	return re.sub(pattern, replace, instr)
