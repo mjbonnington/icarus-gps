@@ -151,7 +151,9 @@ class previewUI(QtGui.QDialog):
 	#getting UI options
 	def getOpts(self):
 		self.fileInput = self.ui.file_lineEdit.text()
-
+		if self.fileInput != osOps.sanitize(self.fileInput, pattern='[^\w/]'):
+			verbose.illegalCharacters(string='File input')
+			return
 		self.offscreen, self.noSelect, self.guides, self.slate, self.viewer, self.createQt = False, False, False, False, False, False
 		if self.ui.offscreen_checkBox.checkState() == 2:
 			self.offscreen = True
@@ -239,8 +241,8 @@ class previewUI(QtGui.QDialog):
 					self.createQuicktime()
 				if self.viewer:
 					self.launchViewer()
+				osOps.setPermissions(self.outputDir)
 			self.saveOpts()
-			osOps.setPermissions(self.outputDir)
 				
 	#creates a quicktime
 	def createQuicktime(self):

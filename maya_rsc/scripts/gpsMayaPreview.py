@@ -4,6 +4,7 @@
 
 import maya.cmds as mc
 import os, time
+import verbose
 
 
 class preview():
@@ -194,10 +195,12 @@ class preview():
 
 		#turns guides on
 		if self.guides:
-		    activeCamera = self.getActiveCamera()
-		    cameraShape = [activeCamera]
-		    if mc.nodeType(activeCamera) != 'camera':
-		        cameraShape = mc.listRelatives(activeCamera, s=True)
+			activeCamera = self.getActiveCamera()
+			cameraShape = [activeCamera]
+			if mc.nodeType(activeCamera) != 'camera':
+				cameraShape = mc.listRelatives(activeCamera, s=True)
+			pre_safeAction = mc.getAttr('%s.displaySafeAction' % cameraShape[0])
+			pre_safeTitle = mc.getAttr('%s.displaySafeTitle' % cameraShape[0])
 			mc.setAttr("%s.displaySafeAction" % cameraShape[0], 1)
 			mc.setAttr("%s.displaySafeTitle" % cameraShape[0], 1)
 			
@@ -225,8 +228,10 @@ class preview():
 		
 		#restoring guides
 		if self.guides:
-			mc.setAttr("%s.displaySafeAction" % cameraShape[0], 0)
-			mc.setAttr("%s.displaySafeTitle" % cameraShape[0], 0)
+			if not pre_safeAction:
+				mc.setAttr("%s.displaySafeAction" % cameraShape[0], 0)
+			if not pre_safeTitle:
+				mc.setAttr("%s.displaySafeTitle" % cameraShape[0], 0)
 			
 			
 		#returns frRange and file extension
@@ -253,7 +258,7 @@ class preview():
 			activeCamera = mc.modelPanel(mc.getPanel(wf=True), cam=True, q=True)
 			return activeCamera
 		except RuntimeError:
-			print 'Please choose a camera view to preview from'
+			verbose.chooseCameraPreview()
 			
 			
 	#runs playblast

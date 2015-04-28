@@ -970,7 +970,9 @@ class icarusApp(QtGui.QDialog):
 				nk_geoGather.gather(self.gatherPath)
 			elif self.assetType == 'render':
 				import nk_renderGather
+				app.hide()
 				nk_renderGather.gather(self.gatherPath)
+				app.show()
 			else:
 				import nk_assetGather
 				nk_assetGather.gather(self.gatherPath)
@@ -984,7 +986,6 @@ verbose.icarusLaunch(os.environ['ICARUSVERSION'], os.environ['ICWORKINGDIR']) #o
 #detecting environment and runnig application
 if os.environ['ICARUSENVAWARE'] == 'MAYA' or os.environ['ICARUSENVAWARE'] == 'NUKE':
 	app = icarusApp()
-	#app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint)
 
 	# Apply UI style sheet
 	qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")

@@ -115,7 +115,7 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 			input = os.path.join(mainLayerDir, mainLayerBody)
 			output = os.path.join(pblDir, 'preview')
 			djvOps.prcImg(input, output, midFrame,  midFrame, mainLayerExtension, outExt='jpg')
-			djvOps.prcQt(input, pblDir, startFrame, endFrame, mainLayerExtension, resize=(255, 143))
+			djvOps.prcQt(input, pblDir, startFrame, endFrame, mainLayerExtension, resize=(256, 144))
 				
 		#ic publishData files
 		assetPblName += '_%s' % version		

@@ -9,10 +9,28 @@ if sys.platform == 'darwin':
 else:
 	sysCommand = 'nautilus'
 	
+	
+def openElementsLib():
+	elementsLibDir = os.environ['ELEMENTSLIBRARY']
+	if os.path.isdir(elementsLibDir):
+		os.system('%s %s' % (sysCommand, elementsLibDir))
+	
+def openJob():
+	jobRoot = os.path.split(os.environ['JOBPATH'])[0]
+	if os.path.isdir(jobRoot):
+		os.system('%s %s' % (sysCommand, jobRoot))
+	return
+	
 def openMaya():
 	mayaDir = os.environ['MAYADIR']
 	if os.path.isdir(mayaDir):
 		os.system('%s %s' % (sysCommand, mayaDir))
+	return
+
+def openMayaPlayblasts():
+	plbDir =  os.environ["MAYAPLAYBLASTSDIR"]
+	if os.path.isdir(plbDir):
+		os.system('%s %s' % (sysCommand, plbDir))
 	return
 
 def openMayaRenders():
@@ -31,25 +49,6 @@ def openMayaSourceimages():
 	cachesDir =  os.environ["MAYASOURCEIMAGESDIR"]
 	if os.path.isdir(cachesDir):
 		os.system('%s %s' % (sysCommand, cachesDir))
-	return
-
-def openMayaPlayblasts():
-	plbDir =  os.environ["MAYAPLAYBLASTSDIR"]
-	if os.path.isdir(plbDir):
-		os.system('%s %s' % (sysCommand, plbDir))
-	return
-
-def openShot():
-	jobPath = os.environ['SHOTPATH']
-	if os.path.isdir(jobPath):
-		os.system('%s %s' % (sysCommand, jobPath))
-	return
-
-
-def openJob():
-	jobRoot = os.path.split(os.environ['JOBPATH'])[0]
-	if os.path.isdir(jobRoot):
-		os.system('%s %s' % (sysCommand, jobRoot))
 	return
 
 def openNuke():
@@ -80,4 +79,10 @@ def openRealflowScenes():
 	realflowDir = os.environ['REALFLOWSCENESDIR']
 	if os.path.isdir(realflowDir):
 		os.system('%s %s' % (sysCommand, realflowDir))
+	return
+
+def openShot():
+	jobPath = os.environ['SHOTPATH']
+	if os.path.isdir(jobPath):
+		os.system('%s %s' % (sysCommand, jobPath))
 	return

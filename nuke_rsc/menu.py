@@ -5,7 +5,7 @@
 
 #third party gizmos and plugins menu build
 import pixelfudger
-
+#
 import gpsSave
 
 
@@ -28,6 +28,7 @@ openRendersDir = 'import openDirs; openDirs.openNukeRenders()'
 openElementsDir = 'import openDirs; openDirs.openNukeElements()'
 openShotDir = 'import openDirs; openDirs.openShot()'
 openJobDir = 'import openDirs; openDirs.openJob()'
+openElementsLibDir = 'import openDirs; openDirs.openElementsLib()'
 launchProdBoard  = 'import launchApps; launchApps.prodBoard()'
 launchNuke = 'import launchApps; launchApps.nuke("%s")' % nukeType
 launchIcarus = 'reload(icarus__main__)'
@@ -56,7 +57,7 @@ nodesMenu.addSeparator()
 #new
 newMenu_nodes = nodesMenu.addCommand('GPS - New', launchNuke, '^n', icon='newScript.png')
 #open
-openMenu_nodes = nodesMenu.addCommand('GPS - Open', openScript, '^o', icon='openScript.png')
+openRecentMenu_nodes = nodesMenu.addMenu('Open', icon='openScript.png')
 #save
 incrementalSaveMenu_nodes =  nodesMenu.addCommand('GPS - Incremental Save', incrSave, 'alt+shift+s', icon='incrementalSave.png')
 saveMenu_nodes =  nodesMenu.addCommand('GPS - Save', save, '^s', icon='saveScript.png')
@@ -80,6 +81,7 @@ browseMenu_nodes.addCommand('Browse Renders', openRendersDir)
 browseMenu_nodes.addCommand('Browse Elements', openElementsDir)
 browseMenu_nodes.addCommand('Browse Shot', openShotDir)
 browseMenu_nodes.addCommand('Browse Job', openJobDir)
+browseMenu_nodes.addCommand('Browse Elements Library', openElementsLibDir)
 
 
 #GPS MENU
@@ -103,6 +105,9 @@ browseMenu_gps = gpsMenu.addMenu('Browse')
 browseMenu_gps.addCommand('Browse Scripts', openScriptsDir)
 browseMenu_gps.addCommand('Browse Renders', openRendersDir)
 browseMenu_gps.addCommand('Browse Elements', openElementsDir)
+browseMenu_gps.addCommand('Browse Shot', openShotDir)
+browseMenu_gps.addCommand('Browse Job', openJobDir)
+browseMenu_gps.addCommand('Browse Elements Library', openElementsLibDir)
 
 
 #IMAGE MENU
@@ -154,6 +159,9 @@ fileMenu.removeItem('Save New Comp Version')
 
 # Initialise recent files menu...
 gpsSave.updateRecentFilesMenu(openRecentMenu_gps)
+gpsSave.updateRecentFilesMenu(openRecentMenu_nodes)
+#update recent files clears the menu. Generic open dialog needs to be added to nodes menu after updating
+openRecentMenu_nodes.addCommand('GPS - Open...', openScript, '^o', index=0)
 
 
 # Add callback function to add script to recent files on script load...

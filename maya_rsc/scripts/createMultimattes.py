@@ -33,7 +33,7 @@ def objID(single=False):
 			pass
 
 ###############creates vRay multimattes#################
-def multiMatte(all=False):
+def objMultiMatte(all=False):
 	idLs = []
 	if all:
 		objLs = mc.ls(tr=True, l=True)
@@ -55,19 +55,19 @@ def multiMatte(all=False):
 		mm.sort()
 		mmElement = mel.eval("vrayAddRenderElement MultiMatteElement")
 		mc.setAttr('%s.vray_redid_multimatte' % mmElement, mm[0])
-		mc.setAttr('%s.vray_name_multimatte' % mmElement, 'idR%s' % mm[0], typ='string')
+		mc.setAttr('%s.vray_name_multimatte' % mmElement, 'oIDR%s' % mm[0], typ='string')
 		mc.setAttr('%s.vray_considerforaa_multimatte' % mmElement, 1)
-		mmElement = mc.rename(mmElement, 'idR%s' % mm[0])
+		mmElement = mc.rename(mmElement, 'oIDR%s' % mm[0])
 		try:
 			mc.setAttr('%s.vray_greenid_multimatte' % mmElement, mm[1])
-			mc.setAttr('%s.vray_name_multimatte' % mmElement, 'idR%sG%s' % (mm[0], mm[1]), typ='string')
-			mmElement = mc.rename(mmElement, 'idR%sG%s' % (mm[0], mm[1]))
+			mc.setAttr('%s.vray_name_multimatte' % mmElement, 'oIDR%sG%s' % (mm[0], mm[1]), typ='string')
+			mmElement = mc.rename(mmElement, 'oIDR%sG%s' % (mm[0], mm[1]))
 		except:
 			mc.setAttr('%s.vray_greenon_multimatte' % mmElement, 0)
 		try:
 			mc.setAttr('%s.vray_blueid_multimatte' % mmElement, mm[2])
-			mc.setAttr('%s.vray_name_multimatte' % mmElement, 'idR%sG%sB%s' % (mm[0], mm[1], mm[2]), typ='string')
-			mmElement = mc.rename(mmElement, 'idR%sG%sB%s' % (mm[0], mm[1], mm[2]))
+			mc.setAttr('%s.vray_name_multimatte' % mmElement, 'oIDR%sG%sB%s' % (mm[0], mm[1], mm[2]), typ='string')
+			mmElement = mc.rename(mmElement, 'oIDR%sG%sB%s' % (mm[0], mm[1], mm[2]))
 		except:
 			mc.setAttr('%s.vray_blueon_multimatte' % mmElement, 0)
 
