@@ -5,7 +5,8 @@
 
 import autoDeploy, maya.cmds as mc, os, sys
 sys.path.append(os.path.join(os.environ['PIPELINE'], 'core', 'ui'))
-import icarus__main__, env__init__
+#import icarus__main__, env__init__
+import env__init__
 env__init__.appendSysPaths()
 os.environ['ICARUSENVAWARE'] = 'MAYA'
 import mayaOps
