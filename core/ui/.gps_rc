@@ -35,6 +35,7 @@ cd $SHOTPATH
 ##software aliases##
 alias maya="$MAYAVERSION -proj $SHOTPATH/3D/maya &"
 alias mayarender="$MAYARENDERVERSION -proj $SHOTPATH/3D/maya"
+alias Render="$MAYARENDERVERSION -proj $SHOTPATH/3D/maya"
 alias nuke="$NUKEVERSION &"
 alias nukex="$NUKEXVERSION &"
 alias mudbox="$MUDBOXVERSION &"
@@ -51,6 +52,7 @@ fi
 alias shot="cd $SHOTPATH"
 alias cls="clear"
 alias ll="ls -ltr"
+alias lseq="$PIPELINE/core/libs/shared/sequenceLs.py"
 
 #############################
 # Sourcing user own aliases
