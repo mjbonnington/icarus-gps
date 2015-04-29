@@ -856,8 +856,9 @@ class icarusApp(QtGui.QDialog):
 		#making in progress publishes not visible
 		if column == self.aVersionCol:
 			for item in itemLs:
-				if 'in_progress.tmp' in os.listdir(os.path.join(searchPath, item)):
-					itemLs.remove(item)
+				if os.path.isdir(os.path.join(searchPath, item)):
+					if 'in_progress.tmp' in os.listdir(os.path.join(searchPath, item)):
+						itemLs.remove(item)
 			#reversing order to facilitate user gather
 			itemLs.reverse()
 		if column == self.aTypeCol:
