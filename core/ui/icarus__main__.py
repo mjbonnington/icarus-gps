@@ -133,6 +133,7 @@ class icarusApp(QtGui.QDialog):
 			#update shot label in maya env
 			self.connectNewSignalsSlots()
 			self.populatePblShotLs()
+			self.populateGatherShotLs()
 			self.updateJobLabel()
 			self.ui.tabWidget.removeTab(0)
 			
@@ -148,6 +149,7 @@ class icarusApp(QtGui.QDialog):
 			#update shot label in maya env
 			self.connectNewSignalsSlots()
 			self.populatePblShotLs()
+			self.populateGatherShotLs()
 			self.updateJobLabel()
 			self.ui.tabWidget.removeTab(0)
 			#deletes Asset publish tabs
@@ -169,6 +171,7 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.nodePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.uncheckSubset)
 		QtCore.QObject.connect(self.ui.nk_compPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.adjustPblTypeUI)
 		QtCore.QObject.connect(self.ui.gatherFromShot_radioButton, QtCore.SIGNAL('clicked(bool)'), self.adjustMainUI)
+		QtCore.QObject.connect(self.ui.gatherFromShot_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.adjustMainUI)
 		QtCore.QObject.connect(self.ui.gatherFromJob_radioButton, QtCore.SIGNAL('clicked(bool)'), self.adjustMainUI)
 		QtCore.QObject.connect(self.ui.gather_pushButton, QtCore.SIGNAL('clicked(bool)'), self.initGather)
 		QtCore.QObject.connect(self.ui.assetType_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateAssetNameCol)
@@ -195,7 +198,7 @@ class icarusApp(QtGui.QDialog):
 		if mainTabName == 'Gather' or mainTabName == 'Assets' :
 			self.defineColumns()
 			self.updateAssetTypeCol()
-		
+			
 	#makes UI lock adjustments based on what publish type tab is currently selected
 	def adjustPblTypeUI(self):
 		#tabText = self.ui.publishType_tabWidget.setGeometry(17, 80, 771, 215)
@@ -215,7 +218,7 @@ class icarusApp(QtGui.QDialog):
 			self.setDropDownToShotEnv()
 		if tabText == 'Daily':
 			self.lockPublishTo(lock=True)
-		
+			self.setDropDownToShotEnv()		
 			
 	#locks Publish To section of UI based on selection		
 	def lockPublishTo(self, lock=False):
@@ -291,11 +294,21 @@ class icarusApp(QtGui.QDialog):
 
 	#populates publish shot drop down menu	
 	def populatePblShotLs(self):
+		self.ui.publishToShot_comboBox.clear()
 		shotLs = listShots.list_(os.environ['JOB'])
 		if shotLs:
 			for shot in shotLs:
 				self.ui.publishToShot_comboBox.insertItem(0, shot)
 			self.ui.publishToShot_comboBox.setCurrentIndex(self.ui.publishToShot_comboBox.findText(os.environ['SHOT']))
+	
+	#populates gather shot drop down menu	
+	def populateGatherShotLs(self):
+		self.ui.gatherFromShot_comboBox.clear()
+		shotLs = listShots.list_(os.environ['JOB'])
+		if shotLs:
+			for shot in shotLs:
+				self.ui.gatherFromShot_comboBox.insertItem(0, shot)
+			self.ui.gatherFromShot_comboBox.setCurrentIndex(self.ui.gatherFromShot_comboBox.findText(os.environ['SHOT']))
 
 	#updates job tab ui with shot selection
 	def updateJobUI(self):
@@ -308,6 +321,7 @@ class icarusApp(QtGui.QDialog):
 		setJob.setup(self.job, self.shot)
 		self.adjustPblTypeUI()
 		self.populatePblShotLs()
+		self.populateGatherShotLs()
 		self.connectNewSignalsSlots()
 		self.lockJobUI()
 
@@ -803,8 +817,14 @@ class icarusApp(QtGui.QDialog):
 
 	#gets gather from
 	def getGatherFrom(self):
-		self.gatherFrom = os.environ['SHOTPUBLISHDIR']
-		if self.ui.gatherFromShot_radioButton.isChecked() == False:
+		slShot = self.ui.gatherFromShot_comboBox.currentText()
+		#gets path to gather from. if selected shot doesn't match shot the correct publish path is assigned based on the selected shot
+		if self.ui.gatherFromShot_radioButton.isChecked() == 1:
+			if slShot == os.environ['SHOT']:
+				self.gatherFrom = os.environ['SHOTPUBLISHDIR']
+			else:
+				self.gatherFrom = os.path.join(os.environ['JOBPATH'], slShot, os.environ["PUBLISHRELATIVEDIR"])
+		else:
 			self.gatherFrom = os.environ['JOBPUBLISHDIR']
 			
 	###################columns system, info and preview img update##################

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'icarusUI.ui'
 #
-# Created: Wed Mar 18 16:11:00 2015
+# Created: Wed Apr 29 15:06:29 2015
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -905,6 +905,9 @@ class Ui_Dialog(object):
         self.gatherFromShot_radioButton.setAutoExclusive(True)
         self.gatherFromShot_radioButton.setObjectName("gatherFromShot_radioButton")
         self.horizontalLayout_12.addWidget(self.gatherFromShot_radioButton)
+        self.gatherFromShot_comboBox = QtGui.QComboBox(self.gatherFrom_groupBox)
+        self.gatherFromShot_comboBox.setObjectName("gatherFromShot_comboBox")
+        self.horizontalLayout_12.addWidget(self.gatherFromShot_comboBox)
         self.horizontalLayout_14.addWidget(self.gatherFrom_groupBox)
         spacerItem5 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_14.addItem(spacerItem5)
@@ -1109,11 +1112,11 @@ class Ui_Dialog(object):
         QtCore.QObject.connect(self.cameraPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToJob_radioButton.setDisabled)
         QtCore.QObject.connect(self.shotPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToJob_radioButton.setDisabled)
         QtCore.QObject.connect(self.geoPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.scenePblName_lineEdit.setDisabled)
-        QtCore.QObject.connect(self.publishToShot_radioButton, QtCore.SIGNAL("clicked(bool)"), self.cameraPbl_radioButton.setEnabled)
+        QtCore.QObject.connect(self.publishToShot_radioButton, QtCore.SIGNAL("toggled(bool)"), self.cameraPbl_radioButton.setEnabled)
         QtCore.QObject.connect(self.fxPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.scenePblName_lineEdit.setDisabled)
         QtCore.QObject.connect(self.modelPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.subSet_checkBox.setDisabled)
-        QtCore.QObject.connect(self.publishToShot_radioButton, QtCore.SIGNAL("clicked(bool)"), self.shotPbl_radioButton.setEnabled)
-        QtCore.QObject.connect(self.publishToShot_radioButton, QtCore.SIGNAL("clicked(bool)"), self.cameraPbl_comboBox.setEnabled)
+        QtCore.QObject.connect(self.publishToShot_radioButton, QtCore.SIGNAL("toggled(bool)"), self.shotPbl_radioButton.setEnabled)
+        QtCore.QObject.connect(self.publishToShot_radioButton, QtCore.SIGNAL("toggled(bool)"), self.cameraPbl_comboBox.setEnabled)
         QtCore.QObject.connect(self.geoPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.subSet_checkBox.setDisabled)
         QtCore.QObject.connect(self.nk_preCompPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.nk_PblName_lineEdit.setEnabled)
         QtCore.QObject.connect(self.cameraPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.textures_checkBox.setDisabled)
@@ -1153,6 +1156,13 @@ class Ui_Dialog(object):
         QtCore.QObject.connect(self.nodePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToShot_radioButton.setEnabled)
         QtCore.QObject.connect(self.nodePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToJob_radioButton.setEnabled)
         QtCore.QObject.connect(self.nodePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToShot_comboBox.setEnabled)
+        QtCore.QObject.connect(self.publishToShot_radioButton, QtCore.SIGNAL("toggled(bool)"), self.publishToShot_comboBox.setEnabled)
+        QtCore.QObject.connect(self.publishToJob_radioButton, QtCore.SIGNAL("toggled(bool)"), self.publishToShot_comboBox.setDisabled)
+        QtCore.QObject.connect(self.gatherFromShot_radioButton, QtCore.SIGNAL("toggled(bool)"), self.gatherFromShot_comboBox.setEnabled)
+        QtCore.QObject.connect(self.gatherFromJob_radioButton, QtCore.SIGNAL("toggled(bool)"), self.gatherFromShot_comboBox.setDisabled)
+        QtCore.QObject.connect(self.pointCloudPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToJob_radioButton.setEnabled)
+        QtCore.QObject.connect(self.pointCloudPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToShot_radioButton.setEnabled)
+        QtCore.QObject.connect(self.pointCloudPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.publishToShot_comboBox.setEnabled)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
         Dialog.setTabOrder(self.job_comboBox, self.shot_comboBox)
         Dialog.setTabOrder(self.shot_comboBox, self.setShot_pushButton)
