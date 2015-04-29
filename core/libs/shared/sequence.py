@@ -3,7 +3,7 @@
 import re
 
 
-def numList(num_range_str):
+def numList(num_range_str, quiet=False):
 	""" Takes a formatted string describing a range of numbers and returns a sorted integer list.
 		e.g. '1-5, 20, 24, 1001-1002'
 		returns [1, 2, 3, 4, 5, 20, 24, 1001, 1002]
@@ -25,8 +25,9 @@ def numList(num_range_str):
 			seq = re.split(r'-', grp)
 			first = int(seq[0])
 			last = int(seq[1])
-			if first >= last:
-				print "ERROR: The first number (%d) in the sequence must be smaller than the last (%d)." %(first, last)
+			if first > last:
+				if not quiet:
+					print "ERROR: The last number (%d) in the sequence cannot be smaller than the first (%d)." %(last, first)
 				return False
 			else:
 				int_list = list(range(first, last+1))
@@ -34,14 +35,15 @@ def numList(num_range_str):
 					num_int_list.append(num)
 
 		else:
-			print "ERROR: Sequence format is invalid."
+			if not quiet:
+				print "ERROR: Sequence format is invalid."
 			return False
 
 	# remove duplicates & sort list
 	return sorted(list(set(num_int_list)), key=int)
 
 
-def numRange(num_int_list):
+def numRange(num_int_list, quiet=False):
 	""" Takes a list of integer values and returns a formatted string describing the range of numbers.
 		e.g. [1, 2, 3, 4, 5, 20, 24, 1001, 1002]
 		returns '1-5, 20, 24, 1001-1002'
@@ -52,7 +54,8 @@ def numRange(num_int_list):
 	try:
 		sorted_list = sorted(list(set(num_int_list)), key=int)
 	except (ValueError, TypeError):
-		print "ERROR: Number list only works woth integer values."
+		if not quiet:
+			print "ERROR: Number list only works with integer values."
 		return False
 		
 
@@ -64,17 +67,44 @@ def numRange(num_int_list):
 		elif x == last+1:
 			last = x
 		else:
-			#yield first, last
 			if first == last:
 				num_range_str = num_range_str + "%d, " %first
 			else:
 				num_range_str = num_range_str + "%d-%d, " %(first, last)
 			first = last = x
 	if first is not None:
-		#yield first, last
 		if first == last:
 			num_range_str = num_range_str + "%d" %first
 		else:
 			num_range_str = num_range_str + "%d-%d" %(first, last)
 
 	return num_range_str
+
+
+def seqRange(sorted_list, gen_range=False):
+	""" Generate first and last values, or ranges of values, from sequences
+	"""
+	first = None
+	for x in sorted_list:
+		if first is None:
+			first = last = x
+		elif x == last+1:
+			last = x
+		else:
+			if gen_range:
+				yield range(first, last+1)
+			else:
+				yield first, last
+			first = last = x
+	if first is not None:
+		if gen_range:
+			yield range(first, last+1)
+		else:
+			yield first, last
+
+
+def chunks(l, n):
+    """ Yield successive n-sized chunks from l.
+    """
+    for i in xrange(0, len(l), n):
+        yield l[i:i+n]
