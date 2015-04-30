@@ -1,0 +1,18 @@
+First place the AdvancedSkeleton4 folder where you want it to be.
+for example: "C:/Users/YOU/Documents/maya/scripts/AdvancedSkeleton4".
+
+This folder is a good place to keep it, but it can be anywhere.
+If you want to share AdvancedSkeleton with other users over the network, you place it on a network drive.
+
+Once you have the AdvancedSkeleton4 folder where you want it to be,
+then just drag`n`drop the "install.mel" file into Maya (drop in any viewport).
+
+This will add the AdvancedSkeleton4 tool to the current shelf.
+
+AdvancedSkeleton4 works with all versions of Maya, on Windows, Mac & linux.
+
+For support, go to: www.facebook.com/AdvancedSkeleton
+
+Or email: support@animationstudios.com.au
+
+For lisence information, read the eula.txt file.
