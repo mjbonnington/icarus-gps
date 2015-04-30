@@ -3,7 +3,7 @@
 
 global proc menus2Py.launchIcarus()
 {
-python("reload(icarus__main__)");
+python("import icarus__main__; reload(icarus__main__)");
 }
 
 
