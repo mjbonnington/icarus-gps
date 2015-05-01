@@ -61,7 +61,7 @@ def publish(pblTo, slShot, geoType, textures, pblNotes, mail, approved):
 	
 	#determining approved publish directory
 	#determining publish env var for relative directory
-	if pblTo == os.environ['SHOTPUBLISHDIR']:
+	if pblTo != os.environ['JOBPUBLISHDIR']:
 		assetPblName += '_%s' % slShot
 		apvDir = os.environ['SHOTAPPROVEDPUBLISHDIR']
 	else:
