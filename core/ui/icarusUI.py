@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'icarusUI.ui'
 #
-# Created: Wed Apr 29 15:06:29 2015
+# Created: Fri May  1 18:30:05 2015
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -536,6 +536,7 @@ class Ui_Dialog(object):
         self.scenePblName_lineEdit.setText("")
         self.scenePblName_lineEdit.setFrame(True)
         self.scenePblName_lineEdit.setReadOnly(False)
+        self.scenePblName_lineEdit.setProperty("mandatoryField", True)
         self.scenePblName_lineEdit.setObjectName("scenePblName_lineEdit")
         self.gridLayout.addWidget(self.scenePblName_lineEdit, 3, 1, 1, 1)
         self.shotPbl_radioButton = QtGui.QRadioButton(self.ma_assetTypes_frame)
@@ -576,6 +577,7 @@ class Ui_Dialog(object):
         self.subSetName_lineEdit.setText("")
         self.subSetName_lineEdit.setFrame(True)
         self.subSetName_lineEdit.setReadOnly(False)
+        self.subSetName_lineEdit.setProperty("mandatoryField", True)
         self.subSetName_lineEdit.setObjectName("subSetName_lineEdit")
         self.verticalLayout_5.addWidget(self.subSetName_lineEdit)
         self.subSetWarning_textEdit = QtGui.QPlainTextEdit(self.assetProcessing_groupBox)
@@ -670,6 +672,7 @@ class Ui_Dialog(object):
         self.nk_subSetName_lineEdit.setText("")
         self.nk_subSetName_lineEdit.setFrame(True)
         self.nk_subSetName_lineEdit.setReadOnly(False)
+        self.nk_subSetName_lineEdit.setProperty("mandatoryField", True)
         self.nk_subSetName_lineEdit.setObjectName("nk_subSetName_lineEdit")
         self.verticalLayout_3.addWidget(self.nk_subSetName_lineEdit)
         self.nk_subSetWarning_textEdit = QtGui.QPlainTextEdit(self.nk_assetProcessing_groupBox)

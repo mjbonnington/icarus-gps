@@ -554,7 +554,7 @@ def notesTag(obj, pblNotes):
 	mc.setAttr('%s.Notes' % obj, pblNotes, typ='string', l=True)
 	
 ###################opens maya file########################
-def openScene(filePath, extension=None, dialog=True):
+def openScene(filePath, extension=None, dialog=True, updateRecentFiles=True):
 	if mel.eval('saveChanges("")'):
 		if dialog:
 			openFolder = mc.fileDialog2(ds=2, fm=1, ff=extension, dir=filePath, cap='Gramercy Park Studios - Open', okc='Open')
@@ -563,7 +563,8 @@ def openScene(filePath, extension=None, dialog=True):
 		else:
 			openFolder = [filePath]
 		filename = mc.file(openFolder[0], open=True, force=True, ignoreVersion=True)
-		recentFiles.updateLs(filename)
+		if updateRecentFiles:
+			recentFiles.updateLs(filename)
 
 ######parent constraints two identical hierarchies########
 def parentCnstrHrq(obj1, obj2):
@@ -741,17 +742,18 @@ def renameObj(objLs, newName, oldName=False):
 	return renamedObjLs
 			
 #####################saves maya file######################
-def saveFile(fileType):
+def saveFile(fileType, updateRecentFiles=True):
 	if fileType == 'ma':
 		fileType = 'mayaAscii'
 	elif fileType == 'mb':
 		fileType = 'mayaBinary'
 	filename = mc.file(options='v=0', force=True, save=True, type=fileType)
-	recentFiles.updateLs(filename)
+	if updateRecentFiles:
+		recentFiles.updateLs(filename)
 	osOps.setPermissions(filename)
 
 ###################saves maya file as#####################
-def saveFileAs(filePath, extension):
+def saveFileAs(filePath, extension, updateRecentFiles=True):
 	saveFolder = mc.fileDialog2(ds=2, fm=0, ff=extension, dir=filePath, cap='Gramercy Park Studios - Save As', okc='Save')
 	if saveFolder == None:
 		return
@@ -764,7 +766,8 @@ def saveFileAs(filePath, extension):
 			
 		mc.file(rename=saveFolder[0])
 		filename = mc.file(options='v=0', force=True, save=True, type=fileType)
-		recentFiles.updateLs(filename)
+		if updateRecentFiles:
+			recentFiles.updateLs(filename)
 		osOps.setPermissions(filename)
 		
 ################creates viewport snapshot##################
