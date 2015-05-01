@@ -14,6 +14,7 @@ def gather(gatherPath):
 	#removes specific icData attributes that do not consistently exist in all icData modules and
 	#are kept in memory even after a reload() or a del. Feels quite hacky and horrible but I've not found a way around this
 	#This is only needed temporarily though as older assets do not have this icData attr
+	gatherPath = os.path.expandvars(gatherPath)
 	sys.path.append(gatherPath)
 	import icData
 	try:

@@ -8,6 +8,7 @@ import ma_assetGather
 import maya.cmds as mc
 
 def update(ICSet, updatePath):
+	updatePath = os.path.expandvars(updatePath)
 	version = os.path.split(updatePath)[1]
 	assetObj = mc.sets(ICSet, q=True)
 	if assetObj:

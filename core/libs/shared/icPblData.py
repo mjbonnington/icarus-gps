@@ -9,6 +9,7 @@ import os, time, verbose
 
 def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, pblNotes, requires=None, compatible=None):
 	assetRootDir = os.path.split(pblDir)[0]
+	assetRootDir = assetRootDir.replace(os.environ['JOBPATH'], '$JOBPATH')
 	pblTime = time.ctime()
 	userName = os.environ['USERNAME']
 	publishTime = time.ctime()

@@ -42,6 +42,7 @@ class dialog(QtGui.QDialog):
 		
 		
 		#loading ICData for current asset verion
+		assetRootDir = os.path.expandvars(assetRootDir)
 		assetDir = os.path.join(assetRootDir, version)
 		sys.path.append(assetDir)
 		import icData;	reload(icData)
@@ -51,7 +52,7 @@ class dialog(QtGui.QDialog):
 		self.ui.asset_label.setText(icData.assetPblName)
 		
 		self.updateVersion = ''
-		self.assetRootDir = icData.assetRootDir		
+		self.assetRootDir = os.path.expandvars(icData.assetRootDir)
 		self.updateAssetVersionCol(icData, setCurrentVersion=True)
 		self.reloadVersionDetails()
 		
@@ -99,7 +100,7 @@ class dialog(QtGui.QDialog):
 	def updateAssetVersionCol(self, icData, setCurrentVersion=False):
 		#gets list of all asset versions
 		self.vColumn = self.ui.assetVersion_listWidget
-		versionLs = os.listdir(icData.assetRootDir)
+		versionLs = os.listdir(self.assetRootDir)
 		versionLs = sorted(versionLs, reverse=True)
 		#clears version column
 		for i in range(0, self.vColumn.count()):

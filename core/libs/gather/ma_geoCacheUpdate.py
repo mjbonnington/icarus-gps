@@ -8,6 +8,9 @@ import verbose, mayaOps
 import maya.cmds as mc
 
 def alembic(ICSet, updatePath):
+	
+		updatePath = os.path.expandvars(updatePath)
+		
 		sys.path.append(updatePath)
 		import icData; reload(icData)
 		sys.path.remove(updatePath)
