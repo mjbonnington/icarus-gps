@@ -52,7 +52,7 @@ def gather(gatherPath):
 		#gathering
 		drawOverrides = True
 		if icData.assetType == 'ma_shot':
-			mayaOps.openScene(assetPath, dialog=False)
+			mayaOps.openScene(assetPath, dialog=False, updateRecentFiles=False)
 			mayaOps.redirectScene(os.path.join(os.environ['MAYASCENESDIR'], 'untitled'))
 			return
 		elif assetExt == 'vrmesh':

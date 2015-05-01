@@ -66,7 +66,7 @@ def publish(pblTo, pblNotes, mail, approved):
 		verbose.pblFeed(msg=assetPblName)
 		activeScene = mayaOps.getScene()
 		mayaOps.redirectScene(pathToPblAsset)
-		mayaOps.saveFile(fileType)
+		mayaOps.saveFile(fileType, updateRecentFiles=False)
 		mayaOps.redirectScene(activeScene)
 
 		#deleting in progress tmp file
