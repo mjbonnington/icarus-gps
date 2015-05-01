@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'gpsPreviewUI.ui'
 #
-# Created: Thu Feb 12 16:47:28 2015
+# Created: Fri May  1 18:34:21 2015
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -69,6 +69,7 @@ class Ui_Dialog(object):
         self.x_lineEdit = QtGui.QLineEdit(self.resolution_groupBox)
         self.x_lineEdit.setEnabled(False)
         self.x_lineEdit.setText("")
+        self.x_lineEdit.setProperty("mandatoryField", True)
         self.x_lineEdit.setObjectName("x_lineEdit")
         self.res_horizontalLayout.addWidget(self.x_lineEdit)
         self.x_label = QtGui.QLabel(self.resolution_groupBox)
@@ -77,6 +78,7 @@ class Ui_Dialog(object):
         self.y_lineEdit = QtGui.QLineEdit(self.resolution_groupBox)
         self.y_lineEdit.setEnabled(False)
         self.y_lineEdit.setText("")
+        self.y_lineEdit.setProperty("mandatoryField", True)
         self.y_lineEdit.setObjectName("y_lineEdit")
         self.res_horizontalLayout.addWidget(self.y_lineEdit)
         self.verticalLayout.addLayout(self.res_horizontalLayout)
@@ -97,6 +99,7 @@ class Ui_Dialog(object):
         self.start_lineEdit = QtGui.QLineEdit(self.range_groupBox)
         self.start_lineEdit.setEnabled(False)
         self.start_lineEdit.setText("")
+        self.start_lineEdit.setProperty("mandatoryField", True)
         self.start_lineEdit.setObjectName("start_lineEdit")
         self.range_horizontalLayout.addWidget(self.start_lineEdit)
         self.range_label = QtGui.QLabel(self.range_groupBox)
@@ -105,6 +108,7 @@ class Ui_Dialog(object):
         self.end_lineEdit = QtGui.QLineEdit(self.range_groupBox)
         self.end_lineEdit.setEnabled(False)
         self.end_lineEdit.setText("")
+        self.end_lineEdit.setProperty("mandatoryField", True)
         self.end_lineEdit.setObjectName("end_lineEdit")
         self.range_horizontalLayout.addWidget(self.end_lineEdit)
         self.verticalLayout_2.addLayout(self.range_horizontalLayout)

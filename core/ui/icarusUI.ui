@@ -1101,6 +1101,9 @@ QLineEdit {
                    <property name="readOnly">
                     <bool>false</bool>
                    </property>
+                   <property name="mandatoryField" stdset="0">
+                    <bool>true</bool>
+                   </property>
                   </widget>
                  </item>
                  <item row="3" column="2">
@@ -1191,6 +1194,9 @@ QLineEdit {
                    </property>
                    <property name="readOnly">
                     <bool>false</bool>
+                   </property>
+                   <property name="mandatoryField" stdset="0">
+                    <bool>true</bool>
                    </property>
                   </widget>
                  </item>
@@ -1413,6 +1419,9 @@ QLineEdit {
                    </property>
                    <property name="readOnly">
                     <bool>false</bool>
+                   </property>
+                   <property name="mandatoryField" stdset="0">
+                    <bool>true</bool>
                    </property>
                   </widget>
                  </item>
