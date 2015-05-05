@@ -46,7 +46,7 @@ def publish(pblTo, slShot, scnName, subsetName, textures, pblNotes, mail, approv
 	
 	#adding shot name to assetPblName if asset is being publish to a shot
 	#determining publish env var for relative directory
-	if pblTo == os.environ['SHOTPUBLISHDIR']:
+	if pblTo != os.environ['JOBPUBLISHDIR']:
 		assetPblName += '_%s' % slShot
 	
 	#version control	
@@ -99,7 +99,7 @@ def publish(pblTo, slShot, scnName, subsetName, textures, pblNotes, mail, approv
 		verbose.pblFeed(msg=assetPblName)
 		activeScene = mayaOps.getScene()
 		mayaOps.redirectScene(pathToPblAsset)
-		mayaOps.saveFile(fileType)
+		mayaOps.saveFile(fileType, updateRecentFiles=False)
 		mayaOps.redirectScene(activeScene)
 
 		#deleting in progress tmp file

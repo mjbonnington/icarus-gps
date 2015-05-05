@@ -61,7 +61,7 @@ def publish(pblTo, slShot, rigType, textures, pblNotes, mail, approved):
 	
 	#adding shot name to assetPblName if asset is being publish to a shot
 	#determining publish env var for relative directory
-	if pblTo == os.environ['SHOTPUBLISHDIR']:
+	if pblTo != os.environ['JOBPUBLISHDIR']:
 		assetPblName += '_%s' % slShot
 	
 	#version control	

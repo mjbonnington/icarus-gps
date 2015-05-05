@@ -1101,6 +1101,9 @@ QLineEdit {
                    <property name="readOnly">
                     <bool>false</bool>
                    </property>
+                   <property name="mandatoryField" stdset="0">
+                    <bool>true</bool>
+                   </property>
                   </widget>
                  </item>
                  <item row="3" column="2">
@@ -1191,6 +1194,9 @@ QLineEdit {
                    </property>
                    <property name="readOnly">
                     <bool>false</bool>
+                   </property>
+                   <property name="mandatoryField" stdset="0">
+                    <bool>true</bool>
                    </property>
                   </widget>
                  </item>
@@ -1413,6 +1419,9 @@ QLineEdit {
                    </property>
                    <property name="readOnly">
                     <bool>false</bool>
+                   </property>
+                   <property name="mandatoryField" stdset="0">
+                    <bool>true</bool>
                    </property>
                   </widget>
                  </item>
@@ -1941,6 +1950,9 @@ QLineEdit {
                    <bool>true</bool>
                   </property>
                  </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="gatherFromShot_comboBox"/>
                 </item>
                </layout>
               </widget>
@@ -2931,8 +2943,8 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>127</x>
-     <y>479</y>
+     <x>150</x>
+     <y>478</y>
     </hint>
     <hint type="destinationlabel">
      <x>251</x>
@@ -3011,8 +3023,8 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>127</x>
-     <y>479</y>
+     <x>150</x>
+     <y>478</y>
     </hint>
     <hint type="destinationlabel">
      <x>87</x>
@@ -3124,7 +3136,7 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>331</x>
-     <y>479</y>
+     <y>478</y>
     </hint>
     <hint type="destinationlabel">
      <x>87</x>
@@ -3144,13 +3156,13 @@ p, li { white-space: pre-wrap; }
     </hint>
     <hint type="destinationlabel">
      <x>268</x>
-     <y>479</y>
+     <y>478</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>publishToShot_radioButton</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>cameraPbl_radioButton</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
@@ -3176,7 +3188,7 @@ p, li { white-space: pre-wrap; }
     </hint>
     <hint type="destinationlabel">
      <x>268</x>
-     <y>479</y>
+     <y>478</y>
     </hint>
    </hints>
   </connection>
@@ -3198,7 +3210,7 @@ p, li { white-space: pre-wrap; }
   </connection>
   <connection>
    <sender>publishToShot_radioButton</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>shotPbl_radioButton</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
@@ -3208,13 +3220,13 @@ p, li { white-space: pre-wrap; }
     </hint>
     <hint type="destinationlabel">
      <x>331</x>
-     <y>479</y>
+     <y>478</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>publishToShot_radioButton</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>cameraPbl_comboBox</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
@@ -3288,7 +3300,7 @@ p, li { white-space: pre-wrap; }
     </hint>
     <hint type="destinationlabel">
      <x>268</x>
-     <y>479</y>
+     <y>478</y>
     </hint>
    </hints>
   </connection>
@@ -3300,7 +3312,7 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>331</x>
-     <y>479</y>
+     <y>478</y>
     </hint>
     <hint type="destinationlabel">
      <x>147</x>
@@ -3316,7 +3328,7 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>331</x>
-     <y>479</y>
+     <y>478</y>
     </hint>
     <hint type="destinationlabel">
      <x>742</x>
@@ -3384,7 +3396,7 @@ p, li { white-space: pre-wrap; }
     </hint>
     <hint type="destinationlabel">
      <x>268</x>
-     <y>479</y>
+     <y>478</y>
     </hint>
    </hints>
   </connection>
@@ -3400,7 +3412,7 @@ p, li { white-space: pre-wrap; }
     </hint>
     <hint type="destinationlabel">
      <x>268</x>
-     <y>479</y>
+     <y>478</y>
     </hint>
    </hints>
   </connection>
@@ -3428,11 +3440,11 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>331</x>
-     <y>479</y>
+     <y>478</y>
     </hint>
     <hint type="destinationlabel">
      <x>268</x>
-     <y>479</y>
+     <y>478</y>
     </hint>
    </hints>
   </connection>
@@ -3448,7 +3460,7 @@ p, li { white-space: pre-wrap; }
     </hint>
     <hint type="destinationlabel">
      <x>268</x>
-     <y>479</y>
+     <y>478</y>
     </hint>
    </hints>
   </connection>
@@ -3459,12 +3471,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>129</x>
-     <y>479</y>
+     <x>150</x>
+     <y>478</y>
     </hint>
     <hint type="destinationlabel">
      <x>268</x>
-     <y>479</y>
+     <y>478</y>
     </hint>
    </hints>
   </connection>
@@ -3476,7 +3488,7 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>150</x>
-     <y>479</y>
+     <y>478</y>
     </hint>
     <hint type="destinationlabel">
      <x>742</x>
@@ -3608,7 +3620,7 @@ p, li { white-space: pre-wrap; }
     </hint>
     <hint type="destinationlabel">
      <x>268</x>
-     <y>479</y>
+     <y>478</y>
     </hint>
    </hints>
   </connection>
@@ -3636,7 +3648,7 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>331</x>
-     <y>479</y>
+     <y>478</y>
     </hint>
     <hint type="destinationlabel">
      <x>742</x>
@@ -3652,7 +3664,7 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>331</x>
-     <y>479</y>
+     <y>478</y>
     </hint>
     <hint type="destinationlabel">
      <x>742</x>
@@ -3667,8 +3679,8 @@ p, li { white-space: pre-wrap; }
    <slot>setChecked(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>145</x>
-     <y>479</y>
+     <x>150</x>
+     <y>478</y>
     </hint>
     <hint type="destinationlabel">
      <x>742</x>
@@ -3704,7 +3716,7 @@ p, li { white-space: pre-wrap; }
     </hint>
     <hint type="destinationlabel">
      <x>733</x>
-     <y>297</y>
+     <y>296</y>
     </hint>
    </hints>
   </connection>
@@ -3731,8 +3743,8 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>138</x>
-     <y>479</y>
+     <x>150</x>
+     <y>478</y>
     </hint>
     <hint type="destinationlabel">
      <x>742</x>
@@ -3796,7 +3808,7 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>525</x>
-     <y>479</y>
+     <y>478</y>
     </hint>
     <hint type="destinationlabel">
      <x>211</x>
@@ -3828,7 +3840,7 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>525</x>
-     <y>479</y>
+     <y>478</y>
     </hint>
     <hint type="destinationlabel">
      <x>67</x>
@@ -3849,6 +3861,118 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>241</x>
      <y>132</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>publishToShot_radioButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>publishToShot_comboBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>135</x>
+     <y>137</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>178</x>
+     <y>139</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>publishToJob_radioButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>publishToShot_comboBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>68</x>
+     <y>132</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>172</x>
+     <y>134</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>gatherFromShot_radioButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>gatherFromShot_comboBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>129</x>
+     <y>134</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>180</x>
+     <y>134</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>gatherFromJob_radioButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>gatherFromShot_comboBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>66</x>
+     <y>139</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>175</x>
+     <y>140</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pointCloudPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>publishToJob_radioButton</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>442</x>
+     <y>403</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>79</x>
+     <y>138</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pointCloudPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>publishToShot_radioButton</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>465</x>
+     <y>403</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>144</x>
+     <y>137</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pointCloudPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>publishToShot_comboBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>490</x>
+     <y>405</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>230</x>
+     <y>142</y>
     </hint>
    </hints>
   </connection>
