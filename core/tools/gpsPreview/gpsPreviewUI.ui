@@ -348,6 +348,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../ui/rsc.qrc"/>
+ </resources>
  <connections/>
 </ui>

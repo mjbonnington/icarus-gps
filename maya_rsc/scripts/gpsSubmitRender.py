@@ -10,7 +10,6 @@
 # TODO: skipExistingFrames flag not working
 # TODO: Batch rendering sometimes exits after rendering only one frame
 # TODO: Add support for Deadline and Smedge submission
-# TODO: Add warning if submitting a render and scene has been modified
 
 import os, signal, subprocess
 import maya.cmds as mc
@@ -43,11 +42,13 @@ class gpsSubmitRender():
 		#self.specificOptUI("specificOptPanel", "windowRoot")
 		mc.separator(height=8, style="none")
 		mc.rowLayout(numberOfColumns=3)
+		#mc.iconTextButton("btnSubmitIcon", width=131, height=28, image="checkboxOn.png", label="Submit", flat=False, style="iconAndTextHorizontal")
 		mc.button("btnSubmit", width=131, height=28, label="Submit", command=lambda *args: self.submit())
 		mc.button("btnKill", width=132, height=28, label="Kill/Complete", command=lambda *args: self.kill())
 		mc.button("btnClose", width=131, height=28, label="Close", command=lambda *args: mc.deleteUI(self.winName))
 		#setUITemplate -popTemplate;
 
+		self.tglChkMod()
 		self.tglFrameRange(False)
 		mc.showWindow(self.winName)
 
@@ -102,6 +103,16 @@ class gpsSubmitRender():
 		mc.button("btnKill", edit=True, enable=option)
 
 
+	def tglChkMod(self):
+		if mc.file(query=True, modified=True):
+			msg = "Scene has been modified. Remember to save the scene before submitting, otherwise the last saved version of the scene will be rendered."
+			mc.warning(msg)
+			#mc.button("btnSubmit", edit=True, label="Submit*", annotation=msg)
+		else:
+			msg = "Scene is saved."
+			#mc.button("btnSubmit", edit=True, label="Submit", annotation=msg)
+
+
 	def tglFrameRange(self, option):
 		mc.textFieldGrp("frameRange", edit=True, enable=option)
 		mc.intSliderGrp("taskSize", edit=True, enable=option)
@@ -138,7 +149,8 @@ class gpsSubmitRender():
 		self.numList = seq.numList(mc.textFieldGrp("frameRange", query=True, text=True))
 		taskSize = mc.intSliderGrp("taskSize", query=True, value=True)
 		if self.numList == False:
-			mc.warning("Invalid entry for frame range.")
+			if not quiet:
+				mc.warning("Invalid entry for frame range.")
 			self.tglSubmit(False)
 		else:
 			self.tglSubmit(True)
@@ -163,20 +175,12 @@ class gpsSubmitRender():
 			#print self.taskList
 
 
-	def sceneCheck(self):
-		"""Return True if the scene has been saved
-		"""
-		if mc.file(query=True, sceneName=True): # and not mc.file(query=True, modified=True):
-			return True
-		else:
-			return False
-
-
 	def kill(self):
 		"""Kill the rendering process
 		"""
 		try:
 			os.killpg(self.renderProcess.pid, signal.SIGTERM)
+			#os.killpg(int(os.environ['MAYARENDERPID']), signal.SIGTERM)
 		except (OSError, AttributeError):
 			mc.warning("Cannot kill rendering process as there is no render in progress.")
 
@@ -195,29 +199,31 @@ class gpsSubmitRender():
 		except KeyError:
 			mc.error("Path to Maya Render command executable not found. This can be set with the environment variable 'MAYARENDERVERSION'.")
 
+		cmdStr = ""
 		args = "-proj %s" %mc.workspace(query=True, rootDirectory=True)
-		farg = ""
+		frameRangeArgs = ""
 
 		# Additional command-line arguments
 		#if mc.checkBox("skipExistingFrames", query=True, value=True):
 		#	args = args + " -skipExistingFrames true"
 
 		sceneName = mc.file(query=True, sceneName=True)
-		cmdStr = ""
 
-		if self.sceneCheck():
+		# Check we're not working in an unsaved scene
+		if sceneName:
 
 			if mc.checkBox("overrideFrameRange", query=True, value=True):
 				for frame in self.taskList:
-					farg = "-s %d -e %d" %(frame[0], frame[1])
+					frameRangeArgs = "-s %d -e %d" %(frame[0], frame[1])
 
-					cmdStr = cmdStr + "%s %s %s %s; " %(renderCmd, args, farg, sceneName)
+					cmdStr = cmdStr + "%s %s %s %s; " %(renderCmd, args, frameRangeArgs, sceneName)
 
 			else:
 				cmdStr = "%s %s %s" %(renderCmd, args, sceneName)
 
 			print cmdStr
 			self.renderProcess = subprocess.Popen(cmdStr, stdout=subprocess.PIPE, shell=True, preexec_fn=os.setsid)
+			#os.environ['MAYARENDERPID'] = str(self.renderProcess.pid)
 
 			# Disable UI to prevent new renders being submitted
 			mc.button("btnSubmit", edit=True, enable=False)

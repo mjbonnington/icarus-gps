@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'gpsPreviewUI.ui'
 #
-# Created: Thu Feb 12 16:47:28 2015
+# Created: Tue May  5 12:38:43 2015
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -184,3 +184,4 @@ class Ui_Dialog(object):
         self.createQuicktime_checkBox.setText(QtGui.QApplication.translate("Dialog", "Create QuickTime", None, QtGui.QApplication.UnicodeUTF8))
         self.preview_pushButton.setText(QtGui.QApplication.translate("Dialog", "Preview", None, QtGui.QApplication.UnicodeUTF8))
 
+import rsc_rc
