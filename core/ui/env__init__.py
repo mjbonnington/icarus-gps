@@ -37,6 +37,7 @@ def appendSysPaths():
 	icarusLibs = os.path.join('core', 'libs')
 	icarusTools = os.path.join('core', 'tools')
 	sys.path.append(os.environ['PIPELINE'])
+	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusTools, 'gpsSubmit'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusTools, 'gpsPreview'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'ui'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'gather'))

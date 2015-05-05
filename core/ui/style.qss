@@ -3,7 +3,7 @@
  */
 
 QMainWindow, QDialog { /* main background colour */
-	background-color: #404040; /*#3c3c3c;*/
+	background-color: #444; /*#404040; #3c3c3c;*/
 	/*etch-disabled-text: 1;*/
 }
 
@@ -42,6 +42,10 @@ QWidget:focus { /* add highlight for input focus */
 	selection-background-color: #666;
 	selection-color: #333;
 }*/
+
+QFrame {
+	background: #444;
+}
 
 QAbstractScrollArea {
 	/*padding: 2px;*/
@@ -1138,6 +1142,18 @@ QSlider::handle {
 }*/
 
 /* End Slider */
+
+
+
+/* Line
+ *
+ */
+
+/*QFrame[frameShadow="Sunken"] {
+	border: 1px inset #333;
+}*/
+
+/* End Line */
 
 
 

@@ -36,6 +36,7 @@ cd $SHOTPATH
 alias maya="$MAYAVERSION -proj $SHOTPATH/3D/maya &"
 alias mayarender="$MAYARENDERVERSION -proj $SHOTPATH/3D/maya"
 alias Render="$MAYARENDERVERSION -proj $SHOTPATH/3D/maya"
+alias submit="$PIPELINE/core/tools/gpsSubmit/submit__main__.py"
 alias nuke="$NUKEVERSION &"
 alias nukex="$NUKEXVERSION &"
 alias mudbox="$MUDBOXVERSION &"

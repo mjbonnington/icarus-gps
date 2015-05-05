@@ -80,14 +80,17 @@ def updateLs(newEntry):
 		write()
 
 
-def getLs():
+def getLs(env=None):
 	"""Read recent file list and return list/array to be processed by MEL"""
+
+	if env is None:
+		env = os.environ['ICARUSENVAWARE']
 
 	read()
 	create() # create section for the current shot
 
 	try:
-		fileLs = config.get(os.environ['SHOT'], os.environ['ICARUSENVAWARE']).split('; ')
+		fileLs = config.get(os.environ['SHOT'], env).split('; ')
 	except:
 		fileLs = []
 
