@@ -91,9 +91,9 @@ class icarusApp(QtGui.QDialog):
 		#Render
 		self.ui.render_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 		self.actionDeadlineMonitor = QtGui.QAction("Deadline Monitor", None)
-		self.actionDeadlineMonitor.triggered.connect(openDirs.openShot)
+		self.actionDeadlineMonitor.triggered.connect(self.launchDeadlineMonitor)
 		self.actionDeadlineSlave = QtGui.QAction("Deadline Slave", None)
-		self.actionDeadlineSlave.triggered.connect(openDirs.openShot)
+		self.actionDeadlineSlave.triggered.connect(self.launchDeadlineSlave)
 		self.actionSubmitLocal = QtGui.QAction("Submit Maya command-line render (local)", None)
 		self.actionSubmitLocal.triggered.connect(self.launchSubmitRender)
 		self.ui.render_pushButton.addAction(self.actionDeadlineMonitor)
@@ -459,6 +459,18 @@ class icarusApp(QtGui.QDialog):
 	#Launches DJV
 	def launchDjv(self):
 		launchApps.djv()
+		if self.boolMinimiseOnAppLaunch:
+			self.showMinimized()
+
+	#Launches Deadline Monitor
+	def launchDeadlineMonitor(self):
+		launchApps.deadlineMonitor()
+		if self.boolMinimiseOnAppLaunch:
+			self.showMinimized()
+
+	#Launches Deadline Slave
+	def launchDeadlineSlave(self):
+		launchApps.deadlineSlave()
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
 

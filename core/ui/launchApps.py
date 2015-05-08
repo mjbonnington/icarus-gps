@@ -17,7 +17,6 @@ def maya():
 	verbose.launchApp('Maya')
 	subprocess.Popen("%s; $MAYAVERSION -proj %s" % (osOps.setUmask(), os.environ['MAYADIR']), shell=True)
 	#subprocess.Popen("%s; $MAYAVERSION -proj %s" % (osOps.setUmask(), os.path.join('$SHOTPATH', '3D', 'maya')), shell=True)
-	#subprocess.Popen("$MAYAVERSION -proj %s" % os.path.join('$SHOTPATH', '3D', 'maya'), shell=True)
 
 def mudbox():
 	verbose.launchApp('Mudbox')
@@ -42,7 +41,7 @@ def prodBoard():
 def realflow():
 	sys.path.append(os.path.join(os.environ['PIPELINE'], 'realflow_rsc', 'scripts'))
 	import startup
-	verbose.launchApp('Realflow')
+	verbose.launchApp('RealFlow')
 	startup.autoDeploy()
 	subprocess.Popen('%s; "$REALFLOWVERSION"' % osOps.setUmask(), shell=True)
 
@@ -51,6 +50,14 @@ def hieroPlayer():
 	subprocess.Popen("%s; $HIEROPLAYERVERSION -q" % osOps.setUmask(), shell=True)
 
 def djv():
-	verbose.launchApp('Djv')
+	verbose.launchApp('djv_view')
 	import djvOps
 	djvOps.viewer()
+
+def deadlineMonitor():
+	verbose.launchApp('Deadline Monitor')
+	subprocess.Popen("%s; $DEADLINEMONITORVERSION" % osOps.setUmask(), shell=True)
+
+def deadlineSlave():
+	verbose.launchApp('Deadline Slave')
+	subprocess.Popen("%s; $DEADLINESLAVEVERSION" % osOps.setUmask(), shell=True)

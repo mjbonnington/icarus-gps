@@ -131,3 +131,7 @@ def setEnv(envVars):
 		os.environ['DJV_LIB'] = '%s/external_apps/djv/djv-1.0.5-Linux-64/lib' % os.environ['PIPELINE']
 		os.environ['DJV_CONVERT'] = '%s/external_apps/djv/djv-1.0.5-Linux-64/bin/djv_convert' % os.environ['PIPELINE']
 		os.environ['DJV_PLAY'] = '%s/external_apps/djv/djv-1.0.5-Linux-64/bin/djv_view' % os.environ['PIPELINE']
+
+	# Temp declaration until appPaths.xml, and jobData / shotData implementation changed
+	os.environ['DEADLINEMONITORVERSION'] = '/Applications/Thinkbox/Deadline7/DeadlineMonitor7.app/Contents/MacOS/DeadlineMonitor7'
+	os.environ['DEADLINESLAVEVERSION'] = '/Applications/Thinkbox/Deadline7/DeadlineSlave7.app/Contents/MacOS/DeadlineSlave7'
