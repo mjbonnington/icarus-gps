@@ -47,8 +47,8 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.openProdBoard_pushButton, QtCore.SIGNAL('clicked()'), launchApps.prodBoard)
 		QtCore.QObject.connect(self.ui.openReview_pushButton, QtCore.SIGNAL('clicked()'), self.launchHieroPlayer)
 		QtCore.QObject.connect(self.ui.openTerminal_pushButton, QtCore.SIGNAL('clicked()'), self.launchTerminal)
-		QtCore.QObject.connect(self.ui.openJob_pushButton, QtCore.SIGNAL('clicked()'), openDirs.openJob)
-		QtCore.QObject.connect(self.ui.openShot_pushButton, QtCore.SIGNAL('clicked()'), openDirs.openShot)
+		QtCore.QObject.connect(self.ui.browse_pushButton, QtCore.SIGNAL('clicked()'), openDirs.openShot)
+		QtCore.QObject.connect(self.ui.render_pushButton, QtCore.SIGNAL('clicked()'), self.launchSubmitRender)
 		QtCore.QObject.connect(self.ui.renderPblAdd_pushButton, QtCore.SIGNAL('clicked()'), self.renderTableAdd)
 		QtCore.QObject.connect(self.ui.renderPblRemove_pushButton, QtCore.SIGNAL('clicked()'), self.renderTableRm)
 		QtCore.QObject.connect(self.ui.renderPblSetMain_pushButton, QtCore.SIGNAL('clicked()'), self.setLayerAsMain)
@@ -76,10 +76,29 @@ class icarusApp(QtGui.QDialog):
 		self.ui.openReview_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 		self.actionHieroPlayer = QtGui.QAction("HieroPlayer", None)
 		self.actionHieroPlayer.triggered.connect(self.launchHieroPlayer)
-		self.actionDjv = QtGui.QAction("Djv", None)
+		self.actionDjv = QtGui.QAction("djv_view", None)
 		self.actionDjv.triggered.connect(self.launchDjv)
 		self.ui.openReview_pushButton.addAction(self.actionHieroPlayer)
 		self.ui.openReview_pushButton.addAction(self.actionDjv)
+		#Browse
+		self.ui.browse_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+		self.actionOpenShot = QtGui.QAction("Shot", None)
+		self.actionOpenShot.triggered.connect(openDirs.openShot)
+		self.actionOpenJob = QtGui.QAction("Job", None)
+		self.actionOpenJob.triggered.connect(openDirs.openJob)
+		self.ui.browse_pushButton.addAction(self.actionOpenShot)
+		self.ui.browse_pushButton.addAction(self.actionOpenJob)
+		#Render
+		self.ui.render_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+		self.actionDeadlineMonitor = QtGui.QAction("Deadline Monitor", None)
+		self.actionDeadlineMonitor.triggered.connect(openDirs.openShot)
+		self.actionDeadlineSlave = QtGui.QAction("Deadline Slave", None)
+		self.actionDeadlineSlave.triggered.connect(openDirs.openShot)
+		self.actionSubmitLocal = QtGui.QAction("Submit Maya command-line render (local)", None)
+		self.actionSubmitLocal.triggered.connect(self.launchSubmitRender)
+		self.ui.render_pushButton.addAction(self.actionDeadlineMonitor)
+		self.ui.render_pushButton.addAction(self.actionDeadlineSlave)
+		self.ui.render_pushButton.addAction(self.actionSubmitLocal)
 
 	##########################################UI adapt environment awareness##########################################
 	##################################################################################################################
@@ -330,7 +349,6 @@ class icarusApp(QtGui.QDialog):
 		self.updateJobLabel()
 		self.ui.shotSetup_groupBox.setEnabled(False)
 		self.ui.launchApp_groupBox.setEnabled(True)
-		self.ui.open_groupBox.setEnabled(True)
 		self.ui.launchOptions_groupBox.setEnabled(True)
 		self.ui.tabWidget.insertTab(1, self.publishTab, 'Publish')
 		self.ui.tabWidget.insertTab(2, self.gatherTab, 'Assets')
@@ -343,7 +361,6 @@ class icarusApp(QtGui.QDialog):
 	def unlockJobUI(self):
 		self.ui.shotSetup_groupBox.setEnabled(True)
 		self.ui.launchApp_groupBox.setEnabled(False)
-		self.ui.open_groupBox.setEnabled(False)
 		self.ui.launchOptions_groupBox.setEnabled(False)
 		#removing publish and assets tab
 		self.ui.tabWidget.removeTab(1); self.ui.tabWidget.removeTab(1)
@@ -439,11 +456,18 @@ class icarusApp(QtGui.QDialog):
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
 
-	#Laucnhes DJV
+	#Launches DJV
 	def launchDjv(self):
 		launchApps.djv()
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
+
+	#Launches GPS command-line render script
+	def launchSubmitRender(self):
+		import submit__main__; reload(submit__main__)
+		#gpsSubmitRenderApp = submit__main__.gpsSubmitRender(parent=app)
+		#gpsSubmitRenderApp.setWindowFlags(QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinMaxButtonsHint )
+		#gpsSubmitRenderApp.show()
 
 	##################################################Publish tab###################################################
 	################################################################################################################
@@ -1054,4 +1078,4 @@ else:
 		app.move(QtGui.QDesktopWidget().availableGeometry(1).center() - app.frameGeometry().center())
 
 		app.show()
-		sys.exit(mainApp.exec_())
+		sys.exit(app.exec_())

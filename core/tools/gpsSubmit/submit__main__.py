@@ -1,17 +1,12 @@
 #!/usr/bin/python
 
-# style__main__.py
-# Template for PySide / Qt GUI application written in Python
+# GPS Submit Render
+# v0.31
 #
-# Directions for use:
-# 
-# Create your UI in Qt Designer and save as 'style.ui'
-# Compile UI to Python with command: 'pyside-uic style.ui -o style_ui.py'
-# 
-# Save your resources file as 'style_rc.qrc'
-# Compile resources to Python with command: 'pyside-rcc style.qrc -o style_rc.py'
-# 
-# Run with command: 'python style__main__.py'
+# Michael Bonnington 2015
+# Gramercy Park Studios
+#
+# Front end for submitting command-line renders
 
 
 from PySide import QtCore, QtGui
@@ -22,7 +17,8 @@ sys.path.append(os.environ['ICWORKINGDIR'])
 import env__init__
 env__init__.appendSysPaths()
 import sequence as seq
-import recentFiles #; reload(recentFiles)
+import recentFiles; reload(recentFiles)
+
 
 class gpsSubmitRender(QtGui.QDialog):
 
@@ -31,10 +27,23 @@ class gpsSubmitRender(QtGui.QDialog):
 		self.ui = Ui_Dialog()
 		self.ui.setupUi(self)
 
-		self.init()
+		self.relativeScenesDir = os.path.join(os.environ['MAYADIR'], 'scenes')
+		self.relativeScenesToken = '...' # representative string to replace the path specified above
+		self.numList = []
+		self.resetFrameList()
+
+		# Clear scene menu and populate with recent scenes
+		self.ui.scene_comboBox.clear()
+		for filePath in recentFiles.getLs('maya'):
+			fullPath = os.environ['SHOTPATH'] + filePath
+			relPath = self.relativePath(fullPath)
+			if relPath:
+				self.ui.scene_comboBox.addItem(relPath)
 
 		# Connect signals and slots
-		QtCore.QObject.connect(self.ui.frameRange_lineEdit, QtCore.SIGNAL('textEdited()'), self.validateFrameList)
+		QtCore.QObject.connect(self.ui.sceneBrowse_toolButton, QtCore.SIGNAL('clicked()'), self.sceneBrowse)
+
+		#QtCore.QObject.connect(self.ui.frameRange_lineEdit, QtCore.SIGNAL('textEdited()'), self.validateFrameList) # can't get this to work
 		QtCore.QObject.connect(self.ui.frameRange_lineEdit, QtCore.SIGNAL('editingFinished()'), self.calcFrameList)
 		QtCore.QObject.connect(self.ui.taskSize_spinBox, QtCore.SIGNAL('valueChanged()'), self.calcFrameList)
 
@@ -43,25 +52,10 @@ class gpsSubmitRender(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.close_pushButton, QtCore.SIGNAL('clicked()'), self.exit)
 
 
-	def init(self):
-		self.numList = []
-		self.resetFrameList()
-
-		# Clear scene menu and populate with apps
-		self.ui.scene_comboBox.clear()
-
-		# List all Maya scenes in the current working directory
-		#path = os.getcwd()
-		#ls = os.listdir(path)
-		#ls.sort()
-		#filterRE = re.compile(r'(?i)\.m[ab]$')
-		#for filename in ls:
-		#	if filterRE.search(filename):
-		#		self.ui.scene_comboBox.addItem(filename)
-
-		for filename in recentFiles.getLs('maya'):
-			self.ui.scene_comboBox.addItem(filename)
-
+	def tglUI(self, option):
+		self.ui.main_frame.setEnabled(option)
+		self.ui.submit_pushButton.setEnabled(option)
+		self.ui.close_pushButton.setEnabled(option)
 
 
 	def tglSubmit(self, option):
@@ -69,8 +63,39 @@ class gpsSubmitRender(QtGui.QDialog):
 		self.ui.killComplete_pushButton.setEnabled(option)
 
 
+	def relativePath(self, absPath):
+		if absPath.startswith(self.relativeScenesDir):
+			return absPath.replace(self.relativeScenesDir, self.relativeScenesToken)
+		else:
+			return False
+
+
+	def absolutePath(self, relPath):
+		return relPath.replace(self.relativeScenesToken, self.relativeScenesDir)
+
+
+	def sceneBrowse(self):
+		""" Browse for a scene file
+		"""
+		currentDir = os.path.dirname(self.absolutePath(self.ui.scene_comboBox.currentText()))
+		if os.path.exists(currentDir):
+			startingDir = currentDir
+		else:
+			startingDir = os.environ['MAYASCENESDIR']
+
+		filePath = QtGui.QFileDialog.getOpenFileName(gpsSubmitRenderApp, self.tr('Files'), startingDir, 'Maya files (*.ma *.mb)')
+		if filePath[0]:
+			newEntry = self.relativePath(filePath[0])
+			if newEntry:
+				self.ui.scene_comboBox.removeItem(self.ui.scene_comboBox.findText(newEntry)) # if the entry already exists in the list, delete it
+				self.ui.scene_comboBox.insertItem(0, newEntry)
+				self.ui.scene_comboBox.setCurrentIndex(0) # always insert the new entry at the top of the list and select it
+			else:
+				print "Warning: Only scenes belonging to the current shot can be submitted."
+
+
 	def resetFrameList(self):
-		"""Get frame range from shot settings
+		""" Get frame range from shot settings
 		"""
 		rgStartFrame = int(os.environ['STARTFRAME'])
 		rgEndFrame = int(os.environ['ENDFRAME'])
@@ -82,7 +107,7 @@ class gpsSubmitRender(QtGui.QDialog):
 
 
 	def validateFrameList(self):
-		"""Validate the frame range list in realtime as the text field is edited
+		""" Validate the frame range list in realtime as the text field is edited
 		"""
 		self.numList = seq.numList(self.ui.frameRange_lineEdit.text(), quiet=True)
 		if self.numList == False:
@@ -92,7 +117,7 @@ class gpsSubmitRender(QtGui.QDialog):
 
 
 	def calcFrameList(self, quiet=True):
-		"""Calculate list of frames to be rendered
+		""" Calculate list of frames to be rendered
 		"""
 		self.numList = seq.numList(self.ui.frameRange_lineEdit.text())
 		taskSize = self.ui.taskSize_spinBox.value()
@@ -126,7 +151,7 @@ class gpsSubmitRender(QtGui.QDialog):
 
 
 	def kill(self):
-		"""Kill the rendering process
+		""" Kill the rendering process
 		"""
 		try:
 			os.killpg(self.renderProcess.pid, signal.SIGTERM)
@@ -135,18 +160,16 @@ class gpsSubmitRender(QtGui.QDialog):
 			print "Warning: Cannot kill rendering process as there is no render in progress."
 
 		# Re-enable UI
-		self.ui.submit_pushButton.setEnabled(True)
-		self.ui.overrideFrameRange_groupBox.setEnabled(True)
-		self.ui.scene_horizontalLayout.setEnabled(True)
+		self.tglUI(True)
 
 
 	def submit(self):
-		"""Submit render
+		""" Submit render
 		"""
 		self.calcFrameList(quiet=False)
 
 		try:
-			renderCmd = os.environ["MAYARENDERVERSION"]
+			renderCmd = os.environ['MAYARENDERVERSION']
 		except KeyError:
 			print "ERROR: Path to Maya Render command executable not found. This can be set with the environment variable 'MAYARENDERVERSION'."
 
@@ -158,7 +181,7 @@ class gpsSubmitRender(QtGui.QDialog):
 		#if mc.checkBox("skipExistingFrames", query=True, value=True):
 		#	args = args + " -skipExistingFrames true"
 
-		sceneName = os.environ['SHOTPATH'] + self.ui.scene_comboBox.currentText()
+		sceneName = self.absolutePath(self.ui.scene_comboBox.currentText())
 
 		# Check we're not working in an unsaved scene
 		if sceneName:
@@ -170,23 +193,25 @@ class gpsSubmitRender(QtGui.QDialog):
 					cmdStr = cmdStr + "%s %s %s %s; " %(renderCmd, args, frameRangeArgs, sceneName)
 
 			else:
-				cmdStr = "%s %s %s" %(renderCmd, args, sceneName)
+				cmdStr = "%s %s %s; " %(renderCmd, args, sceneName)
 
-			print cmdStr
+			#cmdStr = cmdStr + "unset MAYARENDERPID" # Linux & OS X only: unset the env var when rendering is finished
+			#print cmdStr
 			self.renderProcess = subprocess.Popen(cmdStr, stdout=subprocess.PIPE, shell=True, preexec_fn=os.setsid)
 			#os.environ['MAYARENDERPID'] = str(self.renderProcess.pid)
 
 			# Disable UI to prevent new renders being submitted
-			self.ui.submit_pushButton.setEnabled(False)
-			self.ui.overrideFrameRange_groupBox.setEnabled(False)
-			self.ui.scene_horizontalLayout.setEnabled(False)
+			self.tglUI(False)
 
 		else:
 			print "ERROR: Scene not specified."
 
 
 	def exit(self):
-		sys.exit()
+		if __name__ == "__main__":
+			sys.exit()
+		else:
+			gpsSubmitRenderApp.hide()
 
 
 if __name__ == "__main__":
@@ -200,6 +225,14 @@ if __name__ == "__main__":
 	with open(qss, "r") as fh:
 		app.setStyleSheet(fh.read())
 
-	myApp = gpsSubmitRender()
-	myApp.show()
-	sys.exit(app.exec_())
+	gpsSubmitRenderApp = gpsSubmitRender()
+	gpsSubmitRenderApp.setWindowFlags(QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinMaxButtonsHint )
+
+	gpsSubmitRenderApp.show()
+	sys.exit(gpsSubmitRenderApp.exec_())
+
+else:
+	gpsSubmitRenderApp = gpsSubmitRender()
+	gpsSubmitRenderApp.setWindowFlags(QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinMaxButtonsHint )
+
+	gpsSubmitRenderApp.show()

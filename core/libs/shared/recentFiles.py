@@ -1,7 +1,13 @@
 #!/usr/bin/python
-#support	:Mike Bonnington - mike.bonnington@gps-ldn.com
-#title		:recentFiles
-#copyright	:Gramercy Park Studios
+
+# GPS Submit Render
+# v0.1
+#
+# Michael Bonnington 2015
+# Gramercy Park Studios
+#
+# Manage recent file lists for various applications within the pipeline.
+# updateLs() and getLs() are the publicly accessible functions.
 
 
 from ConfigParser import SafeConfigParser
@@ -13,19 +19,19 @@ config = SafeConfigParser()
 configFile = os.path.join(os.environ['RECENTFILESDIR'], '%s.ini' % os.environ['JOB'])
 
 
-def read():
-	"""Read config file - create it if it doesn't exist"""
-
+def _read(env):
+	""" Read config file - create it if it doesn't exist
+	"""
 	if os.path.exists(configFile):
 		config.read(configFile)
 
 	else:
-		create()
+		_create(env)
 
 
-def write():
-	"""Write config file to disk"""
-
+def _write():
+	""" Write config file to disk
+	"""
 	try:
 		with open(configFile, 'w') as f:
 			config.write(f)
@@ -34,33 +40,33 @@ def write():
 		verbose.recentFiles_notWritten()
 
 
-def create():
-	"""Create config file if it doesn't exist and populate with with defaults"""
-
+def _create(env):
+	""" Create config file if it doesn't exist and populate with with defaults
+	"""
 	recentFilesDir = os.environ['RECENTFILESDIR']
 
 	if not os.path.isdir(recentFilesDir):
 		osOps.createDir(recentFilesDir)
 	if not config.has_section(os.environ['SHOT']): # create shot section if it doesn't exist
 		config.add_section(os.environ['SHOT'])
-	if not config.has_option(os.environ['SHOT'], os.environ['ICARUSENVAWARE']): # create current app option if it doesn't exist
-		config.set(os.environ['SHOT'], os.environ['ICARUSENVAWARE'], '')
+	if not config.has_option(os.environ['SHOT'], env): # create current app option if it doesn't exist
+		config.set(os.environ['SHOT'], env, '')
 
-	write()
+	_write()
 
 
-def updateLs(newEntry):
-	"""Update recent files list and save config file to disk"""
+def updateLs(newEntry, env=os.environ['ICARUSENVAWARE']):
+	""" Update recent files list and save config file to disk
+	"""
+	_read(env)
+	_create(env) # create section for the current shot
 
-	read()
-	create() # create section for the current shot
-
-	fileLs = [] # Clear recent file list
+	fileLs = [] # clear recent file list
 
 	if newEntry.startswith(os.environ['SHOTPATH']): # only add files in the current shot
 		newEntry = newEntry.replace(os.environ['SHOTPATH'], '')
 
-		fileStr = config.get(os.environ['SHOT'], os.environ['ICARUSENVAWARE'])
+		fileStr = config.get(os.environ['SHOT'], env)
 
 		if not fileStr=='':
 			fileLs = fileStr.split('; ')
@@ -75,19 +81,16 @@ def updateLs(newEntry):
 		while len(fileLs) > 10: # limit list to ten entries - currently hard-coded, but could be saved in user prefs?
 			fileLs.pop()
 
-		config.set(os.environ['SHOT'], os.environ['ICARUSENVAWARE'], '; '.join(n for n in fileLs))
+		config.set(os.environ['SHOT'], env, '; '.join(n for n in fileLs))
 
-		write()
+		_write()
 
 
-def getLs(env=None):
-	"""Read recent file list and return list/array to be processed by MEL"""
-
-	if env is None:
-		env = os.environ['ICARUSENVAWARE']
-
-	read()
-	create() # create section for the current shot
+def getLs(env=os.environ['ICARUSENVAWARE']):
+	""" Read recent file list and return list/array to be processed by MEL
+	"""
+	_read(env)
+	_create(env) # create section for the current shot
 
 	try:
 		fileLs = config.get(os.environ['SHOT'], env).split('; ')

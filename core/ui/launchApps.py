@@ -15,13 +15,14 @@ def mari():
 
 def maya():
 	verbose.launchApp('Maya')
-	subprocess.Popen("%s; $MAYAVERSION -proj %s" % (osOps.setUmask(), os.path.join('$SHOTPATH', '3D', 'maya')), shell=True)
+	subprocess.Popen("%s; $MAYAVERSION -proj %s" % (osOps.setUmask(), os.environ['MAYADIR']), shell=True)
+	#subprocess.Popen("%s; $MAYAVERSION -proj %s" % (osOps.setUmask(), os.path.join('$SHOTPATH', '3D', 'maya')), shell=True)
 	#subprocess.Popen("$MAYAVERSION -proj %s" % os.path.join('$SHOTPATH', '3D', 'maya'), shell=True)
-	
+
 def mudbox():
 	verbose.launchApp('Mudbox')
 	subprocess.Popen("%s; $MUDBOXVERSION" % osOps.setUmask(), shell=True)
-	
+
 def nuke(nukeType):
 	verbose.launchApp(nukeType)
 	if nukeType in ('nuke', 'Nuke'):
@@ -38,7 +39,6 @@ def prodBoard():
 	else:
 		subprocess.Popen('xdg-open %s' % os.environ['PRODBOARD'], shell=True)
 
-
 def realflow():
 	sys.path.append(os.path.join(os.environ['PIPELINE'], 'realflow_rsc', 'scripts'))
 	import startup
@@ -54,5 +54,3 @@ def djv():
 	verbose.launchApp('Djv')
 	import djvOps
 	djvOps.viewer()
-		
-	
