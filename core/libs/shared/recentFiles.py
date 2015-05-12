@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# GPS Submit Render
+# Recent Files
 # v0.1
 #
 # Michael Bonnington 2015

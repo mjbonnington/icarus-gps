@@ -56,6 +56,7 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.dailyPblAdd_pushButton, QtCore.SIGNAL('clicked()'), self.dailyTableAdd)
 		QtCore.QObject.connect(self.ui.publish_pushButton, QtCore.SIGNAL('clicked()'), self.initPublish)
 		QtCore.QObject.connect(self.ui.tabWidget, QtCore.SIGNAL('currentChanged(int)'), self.adjustMainUI)
+		QtCore.QObject.connect(self.ui.settings_toolButton, QtCore.SIGNAL('clicked()'), self.about)
 
 		self.ui.minimise_checkBox.stateChanged.connect(self.setMinimiseOnAppLaunch)
 
@@ -99,6 +100,17 @@ class icarusApp(QtGui.QDialog):
 		self.ui.render_pushButton.addAction(self.actionDeadlineMonitor)
 		self.ui.render_pushButton.addAction(self.actionDeadlineSlave)
 		self.ui.render_pushButton.addAction(self.actionSubmitLocal)
+		#Settings
+		#self.ui.settings_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+		#self.actionAbout = QtGui.QAction("About", None)
+		#self.actionAbout.triggered.connect(openDirs.openShot)
+		#self.actionAdmin = QtGui.QAction("Administration", None)
+		#self.actionAdmin.triggered.connect(openDirs.openShot)
+		#self.actionPrefs = QtGui.QAction("User Preferences", None)
+		#self.actionPrefs.triggered.connect(openDirs.openShot)
+		#self.ui.settings_toolButton.addAction(self.actionAbout)
+		#self.ui.settings_toolButton.addAction(self.actionAdmin)
+		#self.ui.settings_toolButton.addAction(self.actionPrefs)
 
 	##########################################UI adapt environment awareness##########################################
 	##################################################################################################################
@@ -403,6 +415,21 @@ class icarusApp(QtGui.QDialog):
 			self.boolMinimiseOnAppLaunch = False
 			userPrefs.edit('main', 'minimiseonlaunch', 'False')
 			#print "Minimise on launch disabled"
+
+
+	# Show about dialog
+	def about(self):
+		about_msg = """
+I   C   A   R   U   S
+
+%s
+
+(c) 2013-2015 Gramercy Park Studios
+""" %os.environ['ICARUSVERSION']
+		import about
+		about = about.aboutDialog()
+		about.msg(about_msg)
+
 
 	#runs launch maya procedure
 	def launchMaya(self):

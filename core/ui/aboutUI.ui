@@ -34,68 +34,43 @@
   <property name="modal">
    <bool>true</bool>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="margin">
-    <number>0</number>
+  <widget class="QLabel" name="icBG_label">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>640</width>
+     <height>320</height>
+    </rect>
    </property>
-   <item>
-    <widget class="QPushButton" name="aboutIcarus_pushButton">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">/* Push Button
- *
- */
-
-QPushButton {
-	margin: 0px;
-	/*padding:  0px 2px 1px 0px;*/
-	background-color: transparent;
-	border-color: transparent;
-	/*border-radius: 0px;*/
-	/*color: #709e32;
-	font-family: &quot;Helvetica, Arial, sans-serif&quot;;
-	font-size: 28pt*/
-}
-
-/*QPushButton:hover {
-	color: #ccc;
-}
-
-QPushButton:pressed {
-	padding: 1px 1px 0px 1px;
-}
-
-QPushButton:default {
-	border-color: transparent;
-}*/
-
-/* End Push Button */
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="about.qrc">:/bg/rsc/icarus_about_bg.jpg</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="aboutMessage_label">
+   <property name="geometry">
+    <rect>
+     <x>16</x>
+     <y>16</y>
+     <width>608</width>
+     <height>288</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background: transparent;
+color: #FFF;
 </string>
-     </property>
-     <property name="text">
-      <string notr="true">I    C    A    R    U    S</string>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-     <property name="default">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-  </layout>
+   </property>
+   <property name="text">
+    <string>I   C   A   R   U   S</string>
+   </property>
+  </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="about.qrc"/>
+ </resources>
  <connections/>
 </ui>

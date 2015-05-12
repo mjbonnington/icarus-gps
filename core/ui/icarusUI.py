@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'icarusUI.ui'
 #
-# Created: Thu May  7 11:23:47 2015
+# Created: Mon May 11 15:20:44 2015
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,7 +13,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.setEnabled(True)
-        Dialog.resize(803, 640)
+        Dialog.resize(832, 640)
         Dialog.setWindowTitle("Icarus")
         Dialog.setStyleSheet("")
         self.verticalLayout = QtGui.QVBoxLayout(Dialog)
@@ -30,7 +30,15 @@ class Ui_Dialog(object):
 "    font-size: 28pt\n"
 "}\n"
 "\n"
-"QPushButton, QToolButton {\n"
+"QLineEdit {\n"
+"    background: transparent;\n"
+"    border-color: transparent;\n"
+"    color: #ccc;\n"
+"    selection-background-color: #709e32; /*#00b2ee;*/\n"
+"    selection-color: #FFF;\n"
+"}\n"
+"\n"
+"/*QPushButton, QToolButton {\n"
 "    margin: 0px;\n"
 "    padding:  0px 2px 1px 0px;\n"
 "    background-color: transparent;\n"
@@ -45,30 +53,21 @@ class Ui_Dialog(object):
 "}\n"
 "\n"
 "QPushButton:pressed, QToolButton:pressed {\n"
-"    /*background-color: rgba(51, 51, 51, 33%);*/\n"
 "    padding: 1px 1px 0px 1px;\n"
 "}\n"
 "\n"
 "QPushButton:default, QToolButton:default {\n"
 "    border-color: transparent;\n"
-"}\n"
-"\n"
-"QLineEdit {\n"
-"    background: transparent;\n"
-"    border-color: transparent;\n"
-"    color: #ccc;\n"
-"    selection-background-color: #709e32; /*#00b2ee;*/\n"
-"    selection-color: #FFF;\n"
-"}\n"
-"")
+"}*/")
         self.header_frame.setFrameShape(QtGui.QFrame.NoFrame)
         self.header_frame.setObjectName("header_frame")
-        self.horizontalLayout_16 = QtGui.QHBoxLayout(self.header_frame)
-        self.horizontalLayout_16.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_16.setObjectName("horizontalLayout_16")
+        self.horizontalLayout_3 = QtGui.QHBoxLayout(self.header_frame)
+        self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.icarusHeader_label = QtGui.QLabel(self.header_frame)
+        self.icarusHeader_label.setPixmap(QtGui.QPixmap(":/rsc/rsc/icarus_header.png"))
         self.icarusHeader_label.setObjectName("icarusHeader_label")
-        self.horizontalLayout_16.addWidget(self.icarusHeader_label)
+        self.horizontalLayout_3.addWidget(self.icarusHeader_label)
         self.shotEnv_label = QtGui.QLineEdit(self.header_frame)
         self.shotEnv_label.setCursor(QtCore.Qt.ArrowCursor)
         self.shotEnv_label.setLayoutDirection(QtCore.Qt.LeftToRight)
@@ -78,7 +77,14 @@ class Ui_Dialog(object):
         self.shotEnv_label.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.shotEnv_label.setReadOnly(True)
         self.shotEnv_label.setObjectName("shotEnv_label")
-        self.horizontalLayout_16.addWidget(self.shotEnv_label)
+        self.horizontalLayout_3.addWidget(self.shotEnv_label)
+        self.settings_toolButton = QtGui.QToolButton(self.header_frame)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_settings.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_settings_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        self.settings_toolButton.setIcon(icon)
+        self.settings_toolButton.setObjectName("settings_toolButton")
+        self.horizontalLayout_3.addWidget(self.settings_toolButton)
         self.verticalLayout.addWidget(self.header_frame)
         self.main_frame = QtGui.QFrame(Dialog)
         self.main_frame.setFrameShape(QtGui.QFrame.NoFrame)
@@ -198,10 +204,10 @@ class Ui_Dialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.mari_pushButton.sizePolicy().hasHeightForWidth())
         self.mari_pushButton.setSizePolicy(sizePolicy)
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_mari.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_mari_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        self.mari_pushButton.setIcon(icon)
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_mari.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_mari_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        self.mari_pushButton.setIcon(icon1)
         self.mari_pushButton.setIconSize(QtCore.QSize(48, 48))
         self.mari_pushButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
         self.mari_pushButton.setObjectName("mari_pushButton")
@@ -212,10 +218,10 @@ class Ui_Dialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.realflow_pushButton.sizePolicy().hasHeightForWidth())
         self.realflow_pushButton.setSizePolicy(sizePolicy)
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_realflow.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon1.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_realflow_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        self.realflow_pushButton.setIcon(icon1)
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_realflow.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_realflow_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        self.realflow_pushButton.setIcon(icon2)
         self.realflow_pushButton.setIconSize(QtCore.QSize(48, 48))
         self.realflow_pushButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
         self.realflow_pushButton.setObjectName("realflow_pushButton")
@@ -226,10 +232,10 @@ class Ui_Dialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.maya_pushButton.sizePolicy().hasHeightForWidth())
         self.maya_pushButton.setSizePolicy(sizePolicy)
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_maya.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon2.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_maya_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        self.maya_pushButton.setIcon(icon2)
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_maya.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_maya_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        self.maya_pushButton.setIcon(icon3)
         self.maya_pushButton.setIconSize(QtCore.QSize(48, 48))
         self.maya_pushButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
         self.maya_pushButton.setObjectName("maya_pushButton")
@@ -240,10 +246,10 @@ class Ui_Dialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.mudbox_pushButton.sizePolicy().hasHeightForWidth())
         self.mudbox_pushButton.setSizePolicy(sizePolicy)
-        icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_mudbox.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon3.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_mudbox_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        self.mudbox_pushButton.setIcon(icon3)
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_mudbox.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_mudbox_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        self.mudbox_pushButton.setIcon(icon4)
         self.mudbox_pushButton.setIconSize(QtCore.QSize(48, 48))
         self.mudbox_pushButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
         self.mudbox_pushButton.setObjectName("mudbox_pushButton")
@@ -254,10 +260,10 @@ class Ui_Dialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.nuke_pushButton.sizePolicy().hasHeightForWidth())
         self.nuke_pushButton.setSizePolicy(sizePolicy)
-        icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_nuke.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon4.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_nuke_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        self.nuke_pushButton.setIcon(icon4)
+        icon5 = QtGui.QIcon()
+        icon5.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_nuke.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_nuke_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        self.nuke_pushButton.setIcon(icon5)
         self.nuke_pushButton.setIconSize(QtCore.QSize(48, 48))
         self.nuke_pushButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
         self.nuke_pushButton.setObjectName("nuke_pushButton")
@@ -268,10 +274,10 @@ class Ui_Dialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.openProdBoard_pushButton.sizePolicy().hasHeightForWidth())
         self.openProdBoard_pushButton.setSizePolicy(sizePolicy)
-        icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_productionBoard.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon5.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_productionBoard_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        self.openProdBoard_pushButton.setIcon(icon5)
+        icon6 = QtGui.QIcon()
+        icon6.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_productionBoard.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon6.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_productionBoard_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        self.openProdBoard_pushButton.setIcon(icon6)
         self.openProdBoard_pushButton.setIconSize(QtCore.QSize(48, 48))
         self.openProdBoard_pushButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
         self.openProdBoard_pushButton.setObjectName("openProdBoard_pushButton")
@@ -282,10 +288,10 @@ class Ui_Dialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.openReview_pushButton.sizePolicy().hasHeightForWidth())
         self.openReview_pushButton.setSizePolicy(sizePolicy)
-        icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_review.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon6.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_review_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        self.openReview_pushButton.setIcon(icon6)
+        icon7 = QtGui.QIcon()
+        icon7.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_review.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon7.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_review_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        self.openReview_pushButton.setIcon(icon7)
         self.openReview_pushButton.setIconSize(QtCore.QSize(48, 48))
         self.openReview_pushButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
         self.openReview_pushButton.setObjectName("openReview_pushButton")
@@ -296,10 +302,10 @@ class Ui_Dialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.openTerminal_pushButton.sizePolicy().hasHeightForWidth())
         self.openTerminal_pushButton.setSizePolicy(sizePolicy)
-        icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_terminal.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon7.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_terminal_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        self.openTerminal_pushButton.setIcon(icon7)
+        icon8 = QtGui.QIcon()
+        icon8.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_terminal.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon8.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_terminal_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        self.openTerminal_pushButton.setIcon(icon8)
         self.openTerminal_pushButton.setIconSize(QtCore.QSize(48, 48))
         self.openTerminal_pushButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
         self.openTerminal_pushButton.setObjectName("openTerminal_pushButton")
@@ -310,10 +316,10 @@ class Ui_Dialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.browse_pushButton.sizePolicy().hasHeightForWidth())
         self.browse_pushButton.setSizePolicy(sizePolicy)
-        icon8 = QtGui.QIcon()
-        icon8.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_folder.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon8.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_folder_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        self.browse_pushButton.setIcon(icon8)
+        icon9 = QtGui.QIcon()
+        icon9.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_folder.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon9.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_folder_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        self.browse_pushButton.setIcon(icon9)
         self.browse_pushButton.setIconSize(QtCore.QSize(48, 48))
         self.browse_pushButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
         self.browse_pushButton.setObjectName("browse_pushButton")
@@ -324,10 +330,10 @@ class Ui_Dialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.render_pushButton.sizePolicy().hasHeightForWidth())
         self.render_pushButton.setSizePolicy(sizePolicy)
-        icon9 = QtGui.QIcon()
-        icon9.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_render.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon9.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_render_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        self.render_pushButton.setIcon(icon9)
+        icon10 = QtGui.QIcon()
+        icon10.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_render.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon10.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_render_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        self.render_pushButton.setIcon(icon10)
         self.render_pushButton.setIconSize(QtCore.QSize(48, 48))
         self.render_pushButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
         self.render_pushButton.setObjectName("render_pushButton")
@@ -1226,8 +1232,8 @@ class Ui_Dialog(object):
         Dialog.setTabOrder(self.gather_pushButton, self.approved_checkBox)
 
     def retranslateUi(self, Dialog):
-        self.icarusHeader_label.setText(QtGui.QApplication.translate("Dialog", "I    C    A    R    U    S", None, QtGui.QApplication.UnicodeUTF8))
         self.shotEnv_label.setToolTip(QtGui.QApplication.translate("Dialog", "Current job and shot", None, QtGui.QApplication.UnicodeUTF8))
+        self.settings_toolButton.setText(QtGui.QApplication.translate("Dialog", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.shotSetupParent_groupBox.setTitle(QtGui.QApplication.translate("Dialog", "Shot Setup", None, QtGui.QApplication.UnicodeUTF8))
         self.setJob_label.setText(QtGui.QApplication.translate("Dialog", "Job:", None, QtGui.QApplication.UnicodeUTF8))
         self.setShot_label.setText(QtGui.QApplication.translate("Dialog", "Shot:", None, QtGui.QApplication.UnicodeUTF8))

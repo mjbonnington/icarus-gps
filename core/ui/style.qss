@@ -61,6 +61,7 @@ QAbstractScrollArea:disabled {
 *[mandatoryField="true"] { /* custom background colour for mandatory fields */
 	background: #de727a;
 	color: #222;
+	/*border-color: #de727a;*/
 }
 
 *[noBackground="true"] { /* no background colour */
@@ -1183,3 +1184,4 @@ QProgressBar::chunk:disabled {
 }
 
 /* End Progress Bar */
+

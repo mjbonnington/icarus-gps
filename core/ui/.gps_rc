@@ -36,7 +36,6 @@ cd $SHOTPATH
 alias maya="$MAYAVERSION -proj $SHOTPATH/3D/maya &"
 alias mayarender="$MAYARENDERVERSION -proj $SHOTPATH/3D/maya"
 alias Render="$MAYARENDERVERSION -proj $SHOTPATH/3D/maya"
-alias submit="$PIPELINE/core/tools/gpsSubmit/submit__main__.py"
 alias nuke="$NUKEVERSION &"
 alias nukex="$NUKEXVERSION &"
 alias mudbox="$MUDBOXVERSION &"
@@ -54,6 +53,7 @@ alias shot="cd $SHOTPATH"
 alias cls="clear"
 alias ll="ls -ltr"
 alias lseq="$PIPELINE/core/libs/shared/sequenceLs.py"
+alias submit="$PIPELINE/core/tools/gpsSubmit/submit__main__.py"
 
 #############################
 # Sourcing user own aliases

@@ -10,7 +10,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>803</width>
+    <width>832</width>
     <height>640</height>
    </rect>
   </property>
@@ -43,7 +43,15 @@
 	font-size: 28pt
 }
 
-QPushButton, QToolButton {
+QLineEdit {
+	background: transparent;
+	border-color: transparent;
+	color: #ccc;
+	selection-background-color: #709e32; /*#00b2ee;*/
+	selection-color: #FFF;
+}
+
+/*QPushButton, QToolButton {
 	margin: 0px;
 	padding:  0px 2px 1px 0px;
 	background-color: transparent;
@@ -58,34 +66,24 @@ QPushButton:hover, QToolButton:hover {
 }
 
 QPushButton:pressed, QToolButton:pressed {
-	/*background-color: rgba(51, 51, 51, 33%);*/
 	padding: 1px 1px 0px 1px;
 }
 
 QPushButton:default, QToolButton:default {
 	border-color: transparent;
-}
-
-QLineEdit {
-	background: transparent;
-	border-color: transparent;
-	color: #ccc;
-	selection-background-color: #709e32; /*#00b2ee;*/
-	selection-color: #FFF;
-}
-</string>
+}*/</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_16">
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
       <property name="margin">
        <number>0</number>
       </property>
       <item>
        <widget class="QLabel" name="icarusHeader_label">
-        <property name="text">
-         <string>I    C    A    R    U    S</string>
+        <property name="pixmap">
+         <pixmap resource="rsc.qrc">:/rsc/rsc/icarus_header.png</pixmap>
         </property>
        </widget>
       </item>
@@ -114,6 +112,18 @@ QLineEdit {
         </property>
         <property name="readOnly">
          <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="settings_toolButton">
+        <property name="text">
+         <string>...</string>
+        </property>
+        <property name="icon">
+         <iconset resource="rsc.qrc">
+          <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
+          <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
         </property>
        </widget>
       </item>
