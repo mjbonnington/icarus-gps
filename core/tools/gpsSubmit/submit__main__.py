@@ -13,9 +13,11 @@ from PySide import QtCore, QtGui
 from submit_ui import *
 import os, re, signal, subprocess, sys
 
+# Initialise Icarus environment
 sys.path.append(os.environ['ICWORKINGDIR'])
 import env__init__
 env__init__.appendSysPaths()
+
 import sequence as seq
 import recentFiles; reload(recentFiles)
 
@@ -208,10 +210,9 @@ class gpsSubmitRender(QtGui.QDialog):
 
 
 	def exit(self):
-		if __name__ == "__main__":
-			sys.exit()
-		else:
-			gpsSubmitRenderApp.hide()
+		""" Exit the dialog
+		"""
+		self.hide()
 
 
 if __name__ == "__main__":

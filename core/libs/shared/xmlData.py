@@ -14,16 +14,27 @@ import xml.etree.ElementTree as ET
 
 class xmlData():
 
-	def __init__(self, datafile):
+	def __init__(self):
+		pass
+
+		#print "Attempting to load %s" %datafile
+		#self.loadXML()
+
+
+	def loadXML(self, datafile):
+		""" Load XML data
+		"""
 		self.datafile = datafile
 
 		try:
 			self.tree = ET.parse(self.datafile)
 			self.root = self.tree.getroot()
+			return True
 		except (IOError, ET.ParseError):
 			print "Warning: XML data file is invalid or doesn't exist."
 			self.root = ET.Element('root')
 			self.tree = ET.ElementTree(self.root)
+			return False
 
 
 	def indent(self, elem, level=0):

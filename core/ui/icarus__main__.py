@@ -56,7 +56,7 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.dailyPblAdd_pushButton, QtCore.SIGNAL('clicked()'), self.dailyTableAdd)
 		QtCore.QObject.connect(self.ui.publish_pushButton, QtCore.SIGNAL('clicked()'), self.initPublish)
 		QtCore.QObject.connect(self.ui.tabWidget, QtCore.SIGNAL('currentChanged(int)'), self.adjustMainUI)
-		QtCore.QObject.connect(self.ui.settings_toolButton, QtCore.SIGNAL('clicked()'), self.about)
+		QtCore.QObject.connect(self.ui.about_toolButton, QtCore.SIGNAL('clicked()'), self.about)
 
 		self.ui.minimise_checkBox.stateChanged.connect(self.setMinimiseOnAppLaunch)
 
@@ -100,16 +100,13 @@ class icarusApp(QtGui.QDialog):
 		self.ui.render_pushButton.addAction(self.actionDeadlineMonitor)
 		self.ui.render_pushButton.addAction(self.actionDeadlineSlave)
 		self.ui.render_pushButton.addAction(self.actionSubmitLocal)
-		#Settings
+
 		#self.ui.settings_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 		#self.actionAbout = QtGui.QAction("About", None)
-		#self.actionAbout.triggered.connect(openDirs.openShot)
-		#self.actionAdmin = QtGui.QAction("Administration", None)
-		#self.actionAdmin.triggered.connect(openDirs.openShot)
+		#self.actionAbout.triggered.connect(self.about)
+		#self.ui.settings_toolButton.addAction(self.actionAbout)
 		#self.actionPrefs = QtGui.QAction("User Preferences", None)
 		#self.actionPrefs.triggered.connect(openDirs.openShot)
-		#self.ui.settings_toolButton.addAction(self.actionAbout)
-		#self.ui.settings_toolButton.addAction(self.actionAdmin)
 		#self.ui.settings_toolButton.addAction(self.actionPrefs)
 
 	##########################################UI adapt environment awareness##########################################
@@ -130,7 +127,7 @@ class icarusApp(QtGui.QDialog):
 		##############################################
 		if os.environ['ICARUSENVAWARE'] == 'STANDALONE':
 			#hides ui items relating to maya environment
-			uiHideLs = ['setNewShot_pushButton'] # Removed 'shotEnv_label_maya', 
+			uiHideLs = ['setNewShot_pushButton', 'shotEnv_label'] # Removed 'shotEnv_label_maya', 
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
@@ -150,8 +147,19 @@ class icarusApp(QtGui.QDialog):
 			#deletes Asset, NK Asset publish tabs
 			for i in range(0,2):
 				self.ui.publishType_tabWidget.removeTab(0)
-				
-				
+
+			# Apply job/shot settings pop-up menu to shotEnv label (only in standalone mode)
+			self.ui.shotEnv_label.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+
+			self.actionJobSettings = QtGui.QAction("Job Settings...", None)
+			self.actionJobSettings.triggered.connect(self.jobSettings)
+			self.ui.shotEnv_label.addAction(self.actionJobSettings)
+
+			self.actionShotSettings = QtGui.QAction("Shot Settings...", None)
+			self.actionShotSettings.triggered.connect(self.shotSettings)
+			self.ui.shotEnv_label.addAction(self.actionShotSettings)
+
+
 		##############MAYA ENVIRONMENT################
 		##############################################
 		elif os.environ['ICARUSENVAWARE'] == 'MAYA':
@@ -366,6 +374,7 @@ class icarusApp(QtGui.QDialog):
 		self.ui.tabWidget.insertTab(2, self.gatherTab, 'Assets')
 		self.ui.gather_pushButton.hide()
 		self.ui.setShot_pushButton.hide()
+		self.ui.shotEnv_label.show()
 		self.ui.setNewShot_pushButton.show()
 		verbose.jobSet(self.job, self.shot)
 	
@@ -382,6 +391,7 @@ class icarusApp(QtGui.QDialog):
 		self.ui.dailyPbl_tableWidget.removeRow(0)
 		self.ui.dailyPbl_tableWidget.clearContents()
 		self.ui.shotEnv_label.setText('')
+		self.ui.shotEnv_label.hide()
 		self.ui.setNewShot_pushButton.hide()
 		self.ui.setShot_pushButton.show()
 		
@@ -429,6 +439,25 @@ I   C   A   R   U   S
 		import about
 		about = about.aboutDialog()
 		about.msg(about_msg)
+
+
+	# Open job settings dialog
+	def jobSettings(self):
+		import job_settings__main__
+		reload(job_settings__main__)
+		setJobSettings = job_settings__main__.jobSettingsDialog()
+		setJobSettings.show()
+		setJobSettings.exec_()
+
+
+	# Open shot settings dialog
+	def shotSettings(self):
+		pass
+#		import shot_settings__main__
+#		reload(shot_settings__main__)
+#		setShotSettings = shot_settings__main__.shotSettingsDialog()
+#		setShotSettings.show()
+#		setShotSettings.exec_()
 
 
 	#runs launch maya procedure
@@ -503,7 +532,8 @@ I   C   A   R   U   S
 
 	#Launches GPS command-line render script
 	def launchSubmitRender(self):
-		import submit__main__; reload(submit__main__)
+		import submit__main__
+		reload(submit__main__)
 		#gpsSubmitRenderApp = submit__main__.gpsSubmitRender(parent=app)
 		#gpsSubmitRenderApp.setWindowFlags(QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinMaxButtonsHint )
 		#gpsSubmitRenderApp.show()

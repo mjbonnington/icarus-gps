@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="rsc">
+    <file>rsc/icon_info_disabled.png</file>
+    <file>rsc/icon_info.png</file>
     <file>rsc/icon_settings_disabled.png</file>
     <file>rsc/icon_settings.png</file>
     <file>rsc/icarus_header.png</file>

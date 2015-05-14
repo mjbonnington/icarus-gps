@@ -49,7 +49,7 @@ def setEnv(envVars):
 	os.environ['PROXY_RESOLUTION'] = '%sx%s' % (os.environ['PROXY_RESOLUTIONX'], os.environ['PROXY_RESOLUTIONY'])
 	os.environ['ASPECTRATIO'] = '%s' % float(float(os.environ['RESOLUTIONX']) / float(os.environ['RESOLUTIONY']))
 	os.environ['RECENTFILESDIR'] = os.path.join(os.environ['ICUSERPREFS'], 'recentFiles')
-#MARI
+	#MARI
 	os.environ['MARIDIR'] = os.path.join(os.environ['SHOTPATH'] , '3D', 'mari')
 	os.environ['MARISCENESDIR'] = os.path.join(os.environ['MARIDIR'], 'scenes', os.environ['USERNAME'])
 	os.environ['MARIGEODIR'] = os.path.join(os.environ['MARIDIR'], 'geo', os.environ['USERNAME'])

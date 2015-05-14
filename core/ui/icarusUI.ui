@@ -32,6 +32,18 @@
    </property>
    <item>
     <widget class="QFrame" name="header_frame">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>24</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>24</height>
+      </size>
+     </property>
      <property name="styleSheet">
       <string notr="true">QLabel {
 	margin: 0px;
@@ -51,14 +63,14 @@ QLineEdit {
 	selection-color: #FFF;
 }
 
-/*QPushButton, QToolButton {
+QPushButton, QToolButton {
 	margin: 0px;
-	padding:  0px 2px 1px 0px;
+	/*padding:  0px 1px 1px 0px;*/
 	background-color: transparent;
-	border-color: transparent;
-	color: #709e32;
-	font-family: &quot;Helvetica, Arial, sans-serif&quot;;
-	font-size: 28pt
+	/*border-color: transparent;*/
+	/*color: #709e32;*/
+	/*font-family: &quot;Helvetica, Arial, sans-serif&quot;;*/
+	/*font-size: 28pt*/
 }
 
 QPushButton:hover, QToolButton:hover {
@@ -66,12 +78,13 @@ QPushButton:hover, QToolButton:hover {
 }
 
 QPushButton:pressed, QToolButton:pressed {
-	padding: 1px 1px 0px 1px;
+	/*padding: 1px 0px 0px 1px;*/
+	background: #3c3c3c;
 }
 
 QPushButton:default, QToolButton:default {
 	border-color: transparent;
-}*/</string>
+}</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
@@ -86,6 +99,19 @@ QPushButton:default, QToolButton:default {
          <pixmap resource="rsc.qrc">:/rsc/rsc/icarus_header.png</pixmap>
         </property>
        </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_5">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
       <item>
        <widget class="QLineEdit" name="shotEnv_label">
@@ -116,14 +142,20 @@ QPushButton:default, QToolButton:default {
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="settings_toolButton">
+       <widget class="QToolButton" name="about_toolButton">
         <property name="text">
          <string>...</string>
         </property>
         <property name="icon">
          <iconset resource="rsc.qrc">
-          <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
-          <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
+          <normaloff>:/rsc/rsc/icon_info.png</normaloff>
+          <disabledoff>:/rsc/rsc/icon_info_disabled.png</disabledoff>:/rsc/rsc/icon_info.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>15</width>
+          <height>15</height>
+         </size>
         </property>
        </widget>
       </item>
@@ -191,7 +223,7 @@ QPushButton:default, QToolButton:default {
             <property name="title">
              <string>Shot Setup</string>
             </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_17">
+            <layout class="QHBoxLayout" name="horizontalLayout_16">
              <item>
               <widget class="QFrame" name="shotSetup_groupBox">
                <property name="enabled">
@@ -248,6 +280,22 @@ QPushButton:default, QToolButton:default {
               </widget>
              </item>
              <item>
+              <spacer name="horizontalSpacer_4">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Maximum</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>12</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
               <widget class="QFrame" name="shotSetupButtons_groupBox">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -268,7 +316,7 @@ QPushButton:default, QToolButton:default {
                    </sizepolicy>
                   </property>
                   <property name="toolTip">
-                   <string>Sets up the job and shot environment.</string>
+                   <string>Sets up the job and shot environment</string>
                   </property>
                   <property name="text">
                    <string>Set Shot</string>
@@ -293,7 +341,7 @@ QPushButton:default, QToolButton:default {
                    </sizepolicy>
                   </property>
                   <property name="toolTip">
-                   <string>Sets up the job and shot environment.</string>
+                   <string>Sets up the job and shot environment</string>
                   </property>
                   <property name="text">
                    <string>Set New Shot</string>
@@ -348,36 +396,6 @@ QPushButton:default, QToolButton:default {
             <layout class="QVBoxLayout" name="verticalLayout_13">
              <item>
               <layout class="QGridLayout" name="apps_gridLayout">
-               <item row="0" column="3">
-                <widget class="QToolButton" name="mari_pushButton">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string>Launch Mari</string>
-                 </property>
-                 <property name="text">
-                  <string>Mari</string>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="rsc.qrc">
-                   <normaloff>:/rsc/rsc/app_icon_mari.png</normaloff>
-                   <disabledoff>:/rsc/rsc/app_icon_mari_disabled.png</disabledoff>:/rsc/rsc/app_icon_mari.png</iconset>
-                 </property>
-                 <property name="iconSize">
-                  <size>
-                   <width>48</width>
-                   <height>48</height>
-                  </size>
-                 </property>
-                 <property name="toolButtonStyle">
-                  <enum>Qt::ToolButtonTextUnderIcon</enum>
-                 </property>
-                </widget>
-               </item>
                <item row="0" column="4">
                 <widget class="QToolButton" name="realflow_pushButton">
                  <property name="sizePolicy">
@@ -498,6 +516,36 @@ QPushButton:default, QToolButton:default {
                  </property>
                 </widget>
                </item>
+               <item row="1" column="4">
+                <widget class="QToolButton" name="render_pushButton">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="toolTip">
+                  <string>Submit and monitor local and network renders</string>
+                 </property>
+                 <property name="text">
+                  <string>Render</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="rsc.qrc">
+                   <normaloff>:/rsc/rsc/icon_render.png</normaloff>
+                   <disabledoff>:/rsc/rsc/icon_render_disabled.png</disabledoff>:/rsc/rsc/icon_render.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>48</width>
+                   <height>48</height>
+                  </size>
+                 </property>
+                 <property name="toolButtonStyle">
+                  <enum>Qt::ToolButtonTextUnderIcon</enum>
+                 </property>
+                </widget>
+               </item>
                <item row="1" column="0">
                 <widget class="QToolButton" name="openProdBoard_pushButton">
                  <property name="sizePolicy">
@@ -528,8 +576,8 @@ QPushButton:default, QToolButton:default {
                  </property>
                 </widget>
                </item>
-               <item row="1" column="1">
-                <widget class="QToolButton" name="openReview_pushButton">
+               <item row="0" column="3">
+                <widget class="QToolButton" name="mari_pushButton">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -537,15 +585,15 @@ QPushButton:default, QToolButton:default {
                   </sizepolicy>
                  </property>
                  <property name="toolTip">
-                  <string>Launch HieroPlayer or djv_view</string>
+                  <string>Launch Mari</string>
                  </property>
                  <property name="text">
-                  <string>Review</string>
+                  <string>Mari</string>
                  </property>
                  <property name="icon">
                   <iconset resource="rsc.qrc">
-                   <normaloff>:/rsc/rsc/icon_review.png</normaloff>
-                   <disabledoff>:/rsc/rsc/icon_review_disabled.png</disabledoff>:/rsc/rsc/icon_review.png</iconset>
+                   <normaloff>:/rsc/rsc/app_icon_mari.png</normaloff>
+                   <disabledoff>:/rsc/rsc/app_icon_mari_disabled.png</disabledoff>:/rsc/rsc/app_icon_mari.png</iconset>
                  </property>
                  <property name="iconSize">
                   <size>
@@ -618,8 +666,8 @@ QPushButton:default, QToolButton:default {
                  </property>
                 </widget>
                </item>
-               <item row="1" column="4">
-                <widget class="QToolButton" name="render_pushButton">
+               <item row="1" column="1">
+                <widget class="QToolButton" name="openReview_pushButton">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -627,15 +675,15 @@ QPushButton:default, QToolButton:default {
                   </sizepolicy>
                  </property>
                  <property name="toolTip">
-                  <string>Submit and monitor local and network renders</string>
+                  <string>Launch HieroPlayer or djv_view</string>
                  </property>
                  <property name="text">
-                  <string>Render</string>
+                  <string>Review</string>
                  </property>
                  <property name="icon">
                   <iconset resource="rsc.qrc">
-                   <normaloff>:/rsc/rsc/icon_render.png</normaloff>
-                   <disabledoff>:/rsc/rsc/icon_render_disabled.png</disabledoff>:/rsc/rsc/icon_render.png</iconset>
+                   <normaloff>:/rsc/rsc/icon_review.png</normaloff>
+                   <disabledoff>:/rsc/rsc/icon_review_disabled.png</disabledoff>:/rsc/rsc/icon_review.png</iconset>
                  </property>
                  <property name="iconSize">
                   <size>

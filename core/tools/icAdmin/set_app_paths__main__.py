@@ -39,27 +39,28 @@ class setAppPathsDialog(QtGui.QDialog):
 		self.shortcut.setKey('Ctrl+S')
 		self.shortcut.activated.connect(self.saveAppPaths)
 
-		# Connect signals and slots
-		QtCore.QObject.connect(self.ui.appName_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.populateAppVersions)
-		QtCore.QObject.connect(self.ui.appVer_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.populateAppExecPaths)
-		QtCore.QObject.connect(self.ui.appNameDel_toolButton, QtCore.SIGNAL('clicked()'), self.deleteApp)
-		QtCore.QObject.connect(self.ui.appVerDel_toolButton, QtCore.SIGNAL('clicked()'), self.deleteAppVersion)
-		QtCore.QObject.connect(self.ui.osxPath_lineEdit, QtCore.SIGNAL('editingFinished()'), self.storeAppPathOSX)
-		QtCore.QObject.connect(self.ui.linuxPath_lineEdit, QtCore.SIGNAL('editingFinished()'), self.storeAppPathLinux)
-		QtCore.QObject.connect(self.ui.winPath_lineEdit, QtCore.SIGNAL('editingFinished()'), self.storeAppPathWin)
-		QtCore.QObject.connect(self.ui.guess_pushButton, QtCore.SIGNAL('clicked()'), self.guessAppPaths)
+		# Connect signals and slots (new style)
+		self.ui.appName_comboBox.currentIndexChanged.connect(self.populateAppVersions)
+		self.ui.appVer_comboBox.currentIndexChanged.connect(self.populateAppExecPaths)
+		self.ui.appNameDel_toolButton.clicked.connect(self.deleteApp)
+		self.ui.appVerDel_toolButton.clicked.connect(self.deleteAppVersion)
+		self.ui.osxPath_lineEdit.editingFinished.connect(self.storeAppPathOSX)
+		self.ui.linuxPath_lineEdit.editingFinished.connect(self.storeAppPathLinux)
+		self.ui.winPath_lineEdit.editingFinished.connect(self.storeAppPathWin)
+		self.ui.guess_pushButton.clicked.connect(self.guessAppPaths)
 
-		#QtCore.QObject.connect(self.ui.appPaths_buttonBox.button(QtGui.QDialogButtonBox.Reset), QtCore.SIGNAL('clicked()'), self.init)
-		#QtCore.QObject.connect(self.ui.appPaths_buttonBox.button(QtGui.QDialogButtonBox.Apply), QtCore.SIGNAL('clicked()'), self.saveAppPaths)
-		QtCore.QObject.connect(self.ui.appPaths_buttonBox.button(QtGui.QDialogButtonBox.Cancel), QtCore.SIGNAL('clicked()'), self.exit)
-		QtCore.QObject.connect(self.ui.appPaths_buttonBox.button(QtGui.QDialogButtonBox.Save), QtCore.SIGNAL('clicked()'), self.saveAndExit)
+		#self.ui.appPaths_buttonBox.button(QtGui.QDialogButtonBox.Reset).clicked.connect(self.init)
+		#self.ui.appPaths_buttonBox.button(QtGui.QDialogButtonBox.Apply).clicked.connect(self.saveAppPaths)
+		self.ui.appPaths_buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.exit)
+		self.ui.appPaths_buttonBox.button(QtGui.QDialogButtonBox.Save).clicked.connect(self.saveAndExit)
 
 
 	def init(self):
 		""" Initialise or reset by reloading data
 		"""
 		# Load data from xml file
-		self.ap = appPaths.appPaths(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'appPaths.xml'))
+		self.ap = appPaths.appPaths()
+		ap_load = self.ap.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'appPaths.xml'))
 
 		# Populate fields
 		self.populateApps()

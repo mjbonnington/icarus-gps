@@ -29,14 +29,15 @@ def setEnv():
 
 	os.environ['SHOTSROOTRELATIVEDIR'] = 'Vfx'
 	os.environ['DATAFILESRELATIVEDIR'] = '.icarus'
-	os.environ['JOBDATAFILE'] = 'jobData.py'
-	os.environ['SHOTDATAFILE'] = 'shotData.py'
+	os.environ['JOBDATAFILE'] = 'jobData.py' # Change when data is stored as XML
+	os.environ['SHOTDATAFILE'] = 'shotData.py' # Change when data is stored as XML
 	appendSysPaths()
 
 def appendSysPaths():
 	icarusLibs = os.path.join('core', 'libs')
 	icarusTools = os.path.join('core', 'tools')
 	sys.path.append(os.environ['PIPELINE'])
+	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusTools, 'icAdmin'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusTools, 'gpsSubmit'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusTools, 'gpsPreview'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'ui'))
