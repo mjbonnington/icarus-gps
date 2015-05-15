@@ -38,10 +38,13 @@ class jobSettingsDialog(QtGui.QDialog):
 		if jd_load and ap_load:
 			self.init()
 		else:
-			print "ERROR"
+			print "DATA ERROR"
 
 		# Connect signals and slots
-		self.ui.appPaths_pushButton.clicked.connect(self.appPathsEditor)
+		self.ui.categories_listWidget.currentItemChanged.connect( lambda current: self.openProperties(current.text()) )
+
+##		self.ui.appPaths_pushButton.clicked.connect(self.appPathsEditor)
+
 		# Work out a way to do this procedurally
 #		self.ui.Maya_comboBox.currentIndexChanged.connect( lambda x: self.storeAppVersion('Maya', x) )
 #		self.ui.Mudbox_comboBox.currentIndexChanged.connect( lambda x: self.storeAppVersion('Mudbox', x) )
@@ -58,6 +61,18 @@ class jobSettingsDialog(QtGui.QDialog):
 	def init(self):
 		""" Initialise or reset by reloading data
 		"""
+		# Populate categories
+		categories = self.jd.getCategories()
+		for cat in categories:
+			self.ui.categories_listWidget.addItem(cat)
+
+		# Set the maximum size of the list widget
+		self.ui.categories_listWidget.setMaximumWidth( self.ui.categories_listWidget.sizeHintForColumn(0) + 64 )
+
+		# Select the first item & show the appropriate settings panel
+		self.ui.categories_listWidget.item(0).setSelected(True)
+		self.openProperties( self.ui.categories_listWidget.item(0).text() )
+
 		# Populate fields
 #		self.populateJobSettings()
 #		self.populateTimeSettings()
@@ -65,26 +80,26 @@ class jobSettingsDialog(QtGui.QDialog):
 #		self.populateAppSettings()
 #		self.populateOtherSettings()
 
-		self.ui.projNum_spinBox.setValue( int(self.jd.getText("./job/proj-num")) )
-		self.ui.jobNum_spinBox.setValue( int(self.jd.getText("./job/job-num")) )
-		self.ui.client_lineEdit.setText( self.jd.getText("./job/client") )
-		self.ui.brand_lineEdit.setText( self.jd.getText("./job/brand") )
-		self.ui.title_lineEdit.setText( self.jd.getText("./job/title") )
-		self.ui.deliverable_lineEdit.setText( self.jd.getText("./job/deliverable") )
+##		self.ui.projNum_spinBox.setValue( int(self.jd.getText("./job/proj-num")) )
+#		self.ui.jobNum_spinBox.setValue( int(self.jd.getText("./job/job-num")) )
+#		self.ui.client_lineEdit.setText( self.jd.getText("./job/client") )
+#		self.ui.brand_lineEdit.setText( self.jd.getText("./job/brand") )
+#		self.ui.title_lineEdit.setText( self.jd.getText("./job/title") )
+#		self.ui.deliverable_lineEdit.setText( self.jd.getText("./job/deliverable") )
 
-		self.ui.fps_spinBox.setValue( int(self.jd.getText("./time/fps")) )
-		self.ui.rangeStart_spinBox.setValue( int(self.jd.getAttr("./time/range", "start")) )
-		self.ui.rangeEnd_spinBox.setValue( int(self.jd.getAttr("./time/range", "end")) )
-		self.ui.handles_spinBox.setValue( int(self.jd.getText("./time/handles")) )
+##		self.ui.fps_spinBox.setValue( int(self.jd.getText("./time/fps")) )
+#		self.ui.rangeStart_spinBox.setValue( int(self.jd.getAttr("./time/range", "start")) )
+#		self.ui.rangeEnd_spinBox.setValue( int(self.jd.getAttr("./time/range", "end")) )
+#		self.ui.handles_spinBox.setValue( int(self.jd.getText("./time/handles")) )
 
-		self.ui.resX_spinBox.setValue( int(self.jd.getAttr("./res/full", "x")) )
-		self.ui.resY_spinBox.setValue( int(self.jd.getAttr("./res/full", "y")) )
-		self.ui.proxyResX_spinBox.setValue( int(self.jd.getAttr("./res/proxy", "x")) )
-		self.ui.proxyResY_spinBox.setValue( int(self.jd.getAttr("./res/proxy", "y")) )
+##		self.ui.resX_spinBox.setValue( int(self.jd.getAttr("./res/full", "x")) )
+#		self.ui.resY_spinBox.setValue( int(self.jd.getAttr("./res/full", "y")) )
+#		self.ui.proxyResX_spinBox.setValue( int(self.jd.getAttr("./res/proxy", "x")) )
+#		self.ui.proxyResY_spinBox.setValue( int(self.jd.getAttr("./res/proxy", "y")) )
 
-		self.populateAppVersions()
+##		self.populateAppVersions()
 
-		self.ui.board_lineEdit.setText( self.jd.getText("./other/production-board") )
+##		self.ui.board_lineEdit.setText( self.jd.getText("./other/production-board") )
 
 
 	def keyPressEvent(self, event):
@@ -93,6 +108,69 @@ class jobSettingsDialog(QtGui.QDialog):
 		pass
 #		if event.key() == QtCore.Qt.Key_Return or event.key() == QtCore.Qt.Key_Enter:
 #			return
+
+
+	def clearLayout(self, layout):
+		while layout.count():
+			child = layout.takeAt(0)
+			if child.widget() is not None:
+				child.widget().deleteLater()
+			elif child.layout() is not None:
+				clearLayout(child.layout())
+
+
+	def openProperties(self, category):
+		""" Open properties panel for selected settings category
+		"""
+		#print category
+#		layout = self.ui.settings_frame
+		self.ui.settings_frame.close()
+		self.ui.settings_frame = QtGui.QFrame(self.ui.settings_scrollAreaWidgetContents)
+		self.ui.settings_frame.setObjectName("settings_frame")
+		self.ui.verticalLayout_2.addWidget(self.ui.settings_frame)
+#		self.clearLayout(layout)
+#		for i in reversed(range(layout.count())): 
+#			layout.itemAt(i).widget().setParent(None)
+#		for widget in layout.findChildren():
+#			widget.close()
+		ui_file = 'settings_%s_ui' %category
+		exec('import %s' %ui_file)
+		exec('panel_job = %s.Ui_Frame()' %ui_file)
+		panel_job.setupUi(self.ui.settings_frame)
+
+#		panel_job.projNum_spinBox.setValue( int(self.jd.getText(category, 'proj-num')) )
+#		panel_job.jobNum_spinBox.setValue( int(self.jd.getText(category, 'job-num')) )
+#		panel_job.client_lineEdit.setText( self.jd.getText(category, 'client') )
+#		panel_job.brand_lineEdit.setText( self.jd.getText(category, 'brand') )
+#		panel_job.title_lineEdit.setText( self.jd.getText(category, 'title') )
+#		panel_job.deliverable_lineEdit.setText( self.jd.getText(category, 'deliverable') )
+
+
+#	def openProperties(self, category):
+#		""" Open properties panel for selected settings category
+#		"""
+#		# Populate settings
+#		settings = self.jd.getSettings()
+#		for setting in settings:
+#			self.createControl(setting)
+
+
+#	def createControl(self, setting):
+#		""" Create a control for a setting
+#		"""
+#		# Populate settings
+#		settings = self.jd.getSettings()
+#		for setting in settings:
+#			if setting[0] == 'int':
+#				label = QtGui.QLabel(Frame)
+#				self.projNum_label.setObjectName("projNum_label")
+#				self.formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.projNum_label)
+#				self.projNum_spinBox = QtGui.QSpinBox(Frame)
+#				self.projNum_spinBox.setMinimum(0)
+#				self.projNum_spinBox.setMaximum(999999)
+#				self.projNum_spinBox.setProperty("value", 0)
+#				self.projNum_spinBox.setObjectName("projNum_spinBox")
+#				self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.projNum_spinBox)
 
 
 	def populateAppVersions(self, selectCurrent=True):

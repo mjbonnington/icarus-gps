@@ -18,16 +18,36 @@ class jobSettings(xmlData.xmlData):
 		Inherits xmlData class
 	"""
 
-	def getText(self, xpath):
+	def getText(self, category, tag):
 		""" Get the specified value
 		"""
-		return self.root.find(xpath).text
+		return self.root.find("./data[@category='%s']/%s" %(category, tag) ).text
 
 
 	def getAttr(self, xpath, attr):
 		""" Get the specified attribute
 		"""
 		return self.root.find(xpath).attrib[attr]
+
+
+	def getCategories(self):
+		""" Return a list of settings categories
+		"""
+		cats = self.root.findall("./data")
+		c = []
+		for cat in cats:
+			c.append( cat.get('category') )
+		return c
+
+
+	def getSettings(self, category):
+		""" Return a list of settings for a given category
+		"""
+		settings = self.root.findall("./data[@category='%s']/option" %category)
+		s = []
+		for setting in settings:
+			s.append( setting.get('type'), setting.get('name'), setting.get('value') )
+		return s
 
 
 	def getApps(self):

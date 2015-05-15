@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Frame</class>
+ <widget class="QFrame" name="Frame">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>240</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <property name="frameShape">
+   <enum>QFrame::NoFrame</enum>
+  </property>
+  <layout class="QFormLayout" name="formLayout">
+   <property name="fieldGrowthPolicy">
+    <enum>QFormLayout::ExpandingFieldsGrow</enum>
+   </property>
+   <item row="0" column="0">
+    <widget class="QLabel" name="resPreset_label">
+     <property name="text">
+      <string>Preset:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QComboBox" name="resPreset_comboBox">
+     <item>
+      <property name="text">
+       <string>Custom</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>HD 1080p</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>HD 720p</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>PAL 576p 16:9</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>PAL 576p 4:3</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="res_label">
+     <property name="text">
+      <string>Full size resolution:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <layout class="QHBoxLayout" name="res_horizontalLayout">
+     <item>
+      <widget class="QSpinBox" name="resX_spinBox">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>99999</number>
+       </property>
+       <property name="value">
+        <number>1920</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="resSep_label">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>x</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="resY_spinBox">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>99999</number>
+       </property>
+       <property name="value">
+        <number>1080</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="proxyMode_label">
+     <property name="text">
+      <string>Proxy mode:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <layout class="QHBoxLayout" name="proxyMode_horizontalLayout">
+     <item>
+      <widget class="QRadioButton" name="scale_radioButton">
+       <property name="text">
+        <string>Scale</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="res_radioButton">
+       <property name="text">
+        <string>Resolution</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="proxyScale_label">
+     <property name="text">
+      <string>Proxy scale:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <layout class="QHBoxLayout" name="proxyScale_horizontalLayout">
+     <item>
+      <widget class="QDoubleSpinBox" name="proxyScale_doubleSpinBox">
+       <property name="maximum">
+        <double>1.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.010000000000000</double>
+       </property>
+       <property name="value">
+        <double>0.500000000000000</double>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="proxyRes_label">
+     <property name="text">
+      <string>Proxy resolution:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <layout class="QHBoxLayout" name="proxyRes_horizontalLayout">
+     <item>
+      <widget class="QSpinBox" name="proxyResX_spinBox">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>99999</number>
+       </property>
+       <property name="value">
+        <number>960</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="proxyResSep_label">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>x</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="proxyResY_spinBox">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>99999</number>
+       </property>
+       <property name="value">
+        <number>540</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="5" column="1">
+    <widget class="QCheckBox" name="preserveAR_checkBox">
+     <property name="text">
+      <string>Preserve aspect ratio</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>resPreset_comboBox</tabstop>
+  <tabstop>resX_spinBox</tabstop>
+  <tabstop>resY_spinBox</tabstop>
+  <tabstop>scale_radioButton</tabstop>
+  <tabstop>res_radioButton</tabstop>
+  <tabstop>proxyScale_doubleSpinBox</tabstop>
+  <tabstop>proxyResX_spinBox</tabstop>
+  <tabstop>proxyResY_spinBox</tabstop>
+  <tabstop>preserveAR_checkBox</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

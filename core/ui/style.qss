@@ -26,6 +26,7 @@ QWidget:disabled {
 	color: rgba(102, 102, 102, 100%);
 	selection-background-color: #666;
 	selection-color: #333;
+	alternate-background-color: #484848;
 	text-decoration: none;
 }
 
@@ -724,9 +725,9 @@ QComboBox:editable {
 	/*padding-left: 1px;*/
 	padding: 1px 6px 2px 1px;
 	background: #222;
-	/*border-top-left-radius: 0px;*/
-	/*border-bottom-left-radius: 0px;*/
-	/*border-color: #555;*/
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+	border-color: #555;
 }
 
 QComboBox:!editable, QComboBox::drop-down:editable {
@@ -750,15 +751,27 @@ QComboBox::drop-down {
 	subcontrol-origin: padding;
 	subcontrol-position: top right;
 	width: 15px;
-	border-left-width: 1px;
-	border-left-color: rgba(34, 34, 34, 33%);
-	border-left-style: solid; /* just a single line */
-	border-top-right-radius: 3px; /* same radius as the QComboBox */
+	border-top-right-radius: 3px;
 	border-bottom-right-radius: 3px;
 }
 
-QComboBox:disabled, QComboBox::drop-down:editable:disabled {
+QComboBox::drop-down:!editable {
+	border-left-width: 1px;
+	border-left-color: rgba(34, 34, 34, 33%);
+	border-left-style: solid;
+}
+
+QComboBox::drop-down:editable {
+	border: 1px solid #222;
+}
+
+QComboBox:disabled {
 	background: transparent;
+}
+
+QComboBox::drop-down:disabled {
+	background: transparent;
+	border-color: transparent;
 }
 
 QComboBox::down-arrow {
@@ -881,6 +894,8 @@ QAbstractSpinBox {
 	padding: 1px 2px 2px 1px;
 	border: 1px solid #555;
 	border-radius: 3px;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
 	background: #222;
 }
 
