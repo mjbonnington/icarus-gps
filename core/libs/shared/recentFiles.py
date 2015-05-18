@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 # Recent Files
-# v0.1
+# v0.2
 #
 # Michael Bonnington 2015
 # Gramercy Park Studios
@@ -63,8 +63,12 @@ def updateLs(newEntry, env=os.environ['ICARUSENVAWARE']):
 
 	fileLs = [] # clear recent file list
 
-	if newEntry.startswith(os.environ['SHOTPATH']): # only add files in the current shot
-		newEntry = newEntry.replace(os.environ['SHOTPATH'], '')
+	#newEntry = os.path.normpath(newEntry) # normalise path for host os
+	newEntry = newEntry.replace('\\', '/')
+	shotpath = os.environ['SHOTPATH'].replace('\\', '/')
+	
+	if newEntry.startswith(shotpath): # only add files in the current shot
+		newEntry = newEntry.replace(shotpath, '')
 
 		fileStr = config.get(os.environ['SHOT'], env)
 
@@ -81,9 +85,12 @@ def updateLs(newEntry, env=os.environ['ICARUSENVAWARE']):
 		while len(fileLs) > 10: # limit list to ten entries - currently hard-coded, but could be saved in user prefs?
 			fileLs.pop()
 
-		config.set(os.environ['SHOT'], env, '; '.join(n for n in fileLs))
+		config.set(os.environ['SHOT'], env, '; '.join(n for n in fileLs)) # encode the list into a single line with entries separated by semicolons
 
 		_write()
+
+	else:
+		print "Warning: Entry '%s' could not be added to recent files list. (%s)" %(newEntry, shotpath)
 
 
 def getLs(env=os.environ['ICARUSENVAWARE']):

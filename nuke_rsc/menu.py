@@ -22,7 +22,7 @@ writeNode = 'import gpsNodes; gpsNodes.write_create()'
 save = 'import gpsSave; gpsSave.save(incr=False)'
 saveAs = 'import gpsSave; gpsSave.save(saveAs=True)'
 incrSave = 'import gpsSave; gpsSave.save(incr=True)'
-openScript = 'nuke.scriptOpen(\"%s/\")' % os.environ["NUKESCRIPTSDIR"]
+openScript = 'nuke.scriptOpen(\"%s/.\")' % os.environ["NUKESCRIPTSDIR"].replace('\\', '/')
 openScriptsDir = 'import openDirs; openDirs.openNukeScripts()'
 openRendersDir = 'import openDirs; openDirs.openNukeRenders()'
 openElementsDir = 'import openDirs; openDirs.openNukeElements()'

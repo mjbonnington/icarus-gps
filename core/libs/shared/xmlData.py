@@ -31,7 +31,7 @@ class xmlData():
 			self.root = self.tree.getroot()
 			return True
 		except (IOError, ET.ParseError):
-			print "Warning: XML data file is invalid or doesn't exist."
+			print "Warning: XML data file is invalid or doesn't exist: %s" %datafile
 			self.root = ET.Element('root')
 			self.tree = ET.ElementTree(self.root)
 			return False

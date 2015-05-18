@@ -20,7 +20,7 @@ def updateRecentFilesMenu(menu):
 	# Re-populate the items in the pop-up menu
 	for item in fileLs:
 		openRecentCmdStr = 'nuke.scriptOpen(\"%s%s\")' %(os.environ["SHOTPATH"], item)
-		menu.addCommand(item.replace('/', '\/'), openRecentCmdStr) # forward slashes need escaping to prevent Nuke from interpreting them as sub-menus
+		menu.addCommand(item.replace('/', '\/'), openRecentCmdStr.replace('\\', '/')) # forward slashes need escaping to prevent Nuke from interpreting them as sub-menus
 
 	# If recent file list contains no entries, disable menu
 	if len(fileLs)==0:

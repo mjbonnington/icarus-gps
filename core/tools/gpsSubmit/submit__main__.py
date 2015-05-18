@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 # GPS Submit Render
-# v0.31
+# v0.3.2
 #
 # Michael Bonnington 2015
 # Gramercy Park Studios
@@ -29,7 +29,7 @@ class gpsSubmitRender(QtGui.QDialog):
 		self.ui = Ui_Dialog()
 		self.ui.setupUi(self)
 
-		self.relativeScenesDir = os.path.join(os.environ['MAYADIR'], 'scenes')
+		self.relativeScenesDir = os.path.normpath( '%s/%s' %(os.environ['MAYADIR'], 'scenes') )
 		self.relativeScenesToken = '...' # representative string to replace the path specified above
 		self.numList = []
 		self.resetFrameList()
@@ -37,7 +37,7 @@ class gpsSubmitRender(QtGui.QDialog):
 		# Clear scene menu and populate with recent scenes
 		self.ui.scene_comboBox.clear()
 		for filePath in recentFiles.getLs('maya'):
-			fullPath = os.environ['SHOTPATH'] + filePath
+			fullPath = os.path.normpath( os.environ['SHOTPATH'] + filePath )
 			relPath = self.relativePath(fullPath)
 			if relPath:
 				self.ui.scene_comboBox.addItem(relPath)
@@ -157,7 +157,11 @@ class gpsSubmitRender(QtGui.QDialog):
 		"""
 		try:
 			print "Attempting to kill rendering process (PID=%s)" %self.renderProcess.pid
-			os.killpg(self.renderProcess.pid, signal.SIGTERM)
+			if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+				os.killpg(self.renderProcess.pid, signal.SIGTERM)
+			else:
+				os.kill(self.renderProcess.pid, signal.CTRL_C_EVENT)
+
 		except (OSError, AttributeError):
 			print "Warning: Cannot kill rendering process as there is no render in progress."
 
@@ -171,35 +175,39 @@ class gpsSubmitRender(QtGui.QDialog):
 		self.calcFrameList(quiet=False)
 
 		try:
-			renderCmd = os.environ['MAYARENDERVERSION']
+			renderCmd = '"%s"' %os.environ['MAYARENDERVERSION']
 		except KeyError:
 			print "ERROR: Path to Maya Render command executable not found. This can be set with the environment variable 'MAYARENDERVERSION'."
 
-		cmdStr = ""
-		args = "-proj %s" %os.environ['MAYADIR']
-		frameRangeArgs = ""
+		cmdStr = ''
+		args = '-proj "%s"' %os.environ['MAYADIR']
+		frameRangeArgs = ''
 
+		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+			cmdSep = ' & '
+		else:
+			cmdSep = '; '
 		# Additional command-line arguments
 		#if mc.checkBox("skipExistingFrames", query=True, value=True):
 		#	args = args + " -skipExistingFrames true"
 
-		sceneName = self.absolutePath(self.ui.scene_comboBox.currentText())
+		sceneName = '"%s"' %self.absolutePath(self.ui.scene_comboBox.currentText())
 
 		# Check we're not working in an unsaved scene
 		if sceneName:
 
 			if self.ui.overrideFrameRange_groupBox.isChecked():
 				for frame in self.taskList:
-					frameRangeArgs = "-s %d -e %d" %(frame[0], frame[1])
+					frameRangeArgs = '-s %d -e %d' %(frame[0], frame[1])
 
-					cmdStr = cmdStr + "%s %s %s %s; " %(renderCmd, args, frameRangeArgs, sceneName)
+					cmdStr = cmdStr + '%s %s %s %s%s' %(renderCmd, args, frameRangeArgs, sceneName, cmdSep)
 
 			else:
-				cmdStr = "%s %s %s; " %(renderCmd, args, sceneName)
+				cmdStr = '%s %s %s%s' %(renderCmd, args, sceneName, cmdSep)
 
 			if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-				print cmdStr
-				self.renderProcess = subprocess.Popen(cmdStr, stdout=subprocess.PIPE, shell=True)
+				#print cmdStr
+				self.renderProcess = subprocess.Popen(cmdStr, shell=True) #, stdout=subprocess.PIPE, shell=True)
 			else:
 				#print cmdStr
 				self.renderProcess = subprocess.Popen(cmdStr, stdout=subprocess.PIPE, shell=True, preexec_fn=os.setsid)
