@@ -11,6 +11,8 @@ def setEnv():
 	if platform.system() == 'Darwin':
 		os.environ['ICARUS_RUNNING_OS'] = 'Darwin'
 		os.environ['USERNAME'] = os.environ['USER']
+	elif platform.system() == 'Windows':
+		os.environ['ICARUS_RUNNING_OS'] = 'Windows'
 	else:
 		os.environ['ICARUS_RUNNING_OS'] = 'Linux'
 	try:

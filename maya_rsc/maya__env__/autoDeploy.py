@@ -1,7 +1,7 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:autoDeploy
-#copyright	:Gramercy Park Studios
+#support    :Nuno Pereira - nuno.pereira@gps-ldn.com
+#title      :autoDeploy
+#copyright  :Gramercy Park Studios
 
 
 import os, sys
@@ -14,26 +14,28 @@ import verbose, osOps
 def deploy():
 	#Getting Maya Home
 	mayaVersion = mc.about(v=True)
-	if mc.about(is64=True):
+	if mc.about(is64=True) and int(mayaVersion) < 2016:
 		#Bypassing a Maya bug 'about -v' not always returning -x64 with 64 bit version
 		if '64' not in mayaVersion:
 			mayaVersion += '-x64'
 		else:
 	 		mayaVersion = mayaVersion.replace(' ', '-')
-	if sys.platform == 'darwin':
+
+	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
 		mayaHome = os.path.join(mel.eval('getenv HOME'), 'Library', 'Preferences', 'Autodesk', 'maya', mayaVersion)
+	elif os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+		mayaHome = os.path.join(os.environ['HOMEPATH'], 'Documents', 'maya', mayaVersion)
 	else:
 		mayaHome = os.path.join(mel.eval('getenv HOME'), 'maya', mayaVersion)
-	
+
 	#Pipeline Resources Paths
 	#shelves
 	shelf_resources = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'shelves')
 	mayaShelvesDir = os.path.join(mayaHome, 'prefs', 'shelves')
-	
+
 	#Copying files
 	try:
 		osOps.copyDirContents(shelf_resources, mayaShelvesDir)
 		verbose.gpsToolDeploy('Ok')
 	except:
 		verbose.gpsToolDeploy('Failed')
-		

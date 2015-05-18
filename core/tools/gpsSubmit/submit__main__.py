@@ -87,7 +87,7 @@ class gpsSubmitRender(QtGui.QDialog):
 
 		filePath = QtGui.QFileDialog.getOpenFileName(gpsSubmitRenderApp, self.tr('Files'), startingDir, 'Maya files (*.ma *.mb)')
 		if filePath[0]:
-			newEntry = self.relativePath(filePath[0])
+			newEntry = self.relativePath( os.path.normpath(filePath[0]) )
 			if newEntry:
 				self.ui.scene_comboBox.removeItem(self.ui.scene_comboBox.findText(newEntry)) # if the entry already exists in the list, delete it
 				self.ui.scene_comboBox.insertItem(0, newEntry)
@@ -156,8 +156,8 @@ class gpsSubmitRender(QtGui.QDialog):
 		""" Kill the rendering process
 		"""
 		try:
+			print "Attempting to kill rendering process (PID=%s)" %self.renderProcess.pid
 			os.killpg(self.renderProcess.pid, signal.SIGTERM)
-			#os.killpg(int(os.environ['MAYARENDERPID']), signal.SIGTERM)
 		except (OSError, AttributeError):
 			print "Warning: Cannot kill rendering process as there is no render in progress."
 
@@ -197,10 +197,12 @@ class gpsSubmitRender(QtGui.QDialog):
 			else:
 				cmdStr = "%s %s %s; " %(renderCmd, args, sceneName)
 
-			#cmdStr = cmdStr + "unset MAYARENDERPID" # Linux & OS X only: unset the env var when rendering is finished
-			#print cmdStr
-			self.renderProcess = subprocess.Popen(cmdStr, stdout=subprocess.PIPE, shell=True, preexec_fn=os.setsid)
-			#os.environ['MAYARENDERPID'] = str(self.renderProcess.pid)
+			if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+				print cmdStr
+				self.renderProcess = subprocess.Popen(cmdStr, stdout=subprocess.PIPE, shell=True)
+			else:
+				#print cmdStr
+				self.renderProcess = subprocess.Popen(cmdStr, stdout=subprocess.PIPE, shell=True, preexec_fn=os.setsid)
 
 			# Disable UI to prevent new renders being submitted
 			self.tglUI(False)

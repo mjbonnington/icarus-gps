@@ -1,7 +1,7 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:userSetup.py
-#copyright	:Gramercy Park Studios
+#support    :Nuno Pereira - nuno.pereira@gps-ldn.com
+#title      :userSetup.py
+#copyright  :Gramercy Park Studios
 
 import autoDeploy, maya.cmds as mc, os, sys
 sys.path.append(os.path.join(os.environ['PIPELINE'], 'core', 'ui'))
@@ -14,14 +14,13 @@ import mayaOps
 autoDeploy.deploy()
 
 #loading default plugins
-mayaAppPath = os.path.split(os.environ['MAYAVERSION'])[0]
 ma_pluginLs = [
-'AbcExport.bundle', 
-'AbcImport.bundle',
-'fbxmaya.bundle',
-'objExport.bundle',
-'OpenEXRLoader.bundle',
-'tiffFloatReader.bundle']
+'AbcExport', 
+'AbcImport',
+'fbxmaya',
+'objExport',
+'OpenEXRLoader',
+'tiffFloatReader']
 
 for ma_plugin in ma_pluginLs:
-	mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins', ma_plugin), qt=True)
+	mc.loadPlugin(ma_plugin, qt=True)

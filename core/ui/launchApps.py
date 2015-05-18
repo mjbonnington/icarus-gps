@@ -1,7 +1,7 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:launchApps
-#copyright	:Gramercy Park Studios
+#support    :Nuno Pereira - nuno.pereira@gps-ldn.com
+#title      :launchApps
+#copyright  :Gramercy Park Studios
 
 #Launches software applications
 
@@ -11,26 +11,31 @@ import verbose, osOps
 
 def mari():
 	verbose.launchApp('Mari')
-	subprocess.Popen("%s; $MARIVERSION" % osOps.setUmask(), shell=True)
+	subprocess.Popen('%s; "%s"' % (osOps.setUmask(), os.environ['MARIVERSION']), shell=True)
 
 def maya():
 	verbose.launchApp('Maya')
-	subprocess.Popen("%s; $MAYAVERSION -proj %s" % (osOps.setUmask(), os.environ['MAYADIR']), shell=True)
+	subprocess.Popen('%s; "%s" -proj %s' % (osOps.setUmask(), os.environ['MAYAVERSION'], os.environ['MAYADIR']), shell=True)
 	#subprocess.Popen("%s; $MAYAVERSION -proj %s" % (osOps.setUmask(), os.path.join('$SHOTPATH', '3D', 'maya')), shell=True)
 
 def mudbox():
 	verbose.launchApp('Mudbox')
-	subprocess.Popen("%s; $MUDBOXVERSION" % osOps.setUmask(), shell=True)
+	subprocess.Popen('%s; "%s"' % (osOps.setUmask(), os.environ['MUDBOXVERSION']), shell=True)
 
 def nuke(nukeType):
 	verbose.launchApp(nukeType)
 	if nukeType in ('nuke', 'Nuke'):
-		subprocess.Popen("%s; $NUKEVERSION" % osOps.setUmask(), shell=True)
+		subprocess.Popen('%s; "%s"' % (osOps.setUmask(), os.environ['NUKEVERSION']), shell=True)
 	elif nukeType in ('nukex', 'NukeX'):
-		subprocess.Popen("%s; $NUKEXVERSION" % osOps.setUmask(), shell=True)
+		subprocess.Popen('%s; "%s" --nukex' % (osOps.setUmask(), os.environ['NUKEVERSION']), shell=True)
+	elif nukeType in ('nukestudio', 'NukeStudio'):
+		subprocess.Popen('%s; "%s" --studio' % (osOps.setUmask(), os.environ['NUKEVERSION']), shell=True)
 
 def terminal():
-	subprocess.Popen("bash --rcfile %s" % os.environ['GPS_RC'], shell=True)
+	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+		subprocess.Popen("cmd", shell=True)
+	else:
+		subprocess.Popen("bash --rcfile %s" % os.environ['GPS_RC'], shell=True)
 
 def prodBoard():
 	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
@@ -43,11 +48,11 @@ def realflow():
 	import startup
 	verbose.launchApp('RealFlow')
 	startup.autoDeploy()
-	subprocess.Popen('%s; "$REALFLOWVERSION"' % osOps.setUmask(), shell=True)
+	subprocess.Popen('%s; "%s"' % (osOps.setUmask(), os.environ['REALFLOWVERSION']), shell=True)
 
 def hieroPlayer():
 	verbose.launchApp('HieroPlayer')
-	subprocess.Popen("%s; $HIEROPLAYERVERSION -q" % osOps.setUmask(), shell=True)
+	subprocess.Popen('%s; "%s" -q' % (osOps.setUmask(), os.environ['HIEROPLAYERVERSION']), shell=True)
 
 def djv():
 	verbose.launchApp('djv_view')
@@ -56,8 +61,8 @@ def djv():
 
 def deadlineMonitor():
 	verbose.launchApp('Deadline Monitor')
-	subprocess.Popen("%s; $DEADLINEMONITORVERSION" % osOps.setUmask(), shell=True)
+	subprocess.Popen('%s; "%s"' % (osOps.setUmask(), os.environ['DEADLINEMONITORVERSION']), shell=True)
 
 def deadlineSlave():
 	verbose.launchApp('Deadline Slave')
-	subprocess.Popen("%s; $DEADLINESLAVEVERSION" % osOps.setUmask(), shell=True)
+	subprocess.Popen('%s; "%s"' % (osOps.setUmask(), os.environ['DEADLINESLAVEVERSION']), shell=True)

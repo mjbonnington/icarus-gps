@@ -43,8 +43,9 @@ class dialog(QtGui.QDialog):
 		
 		#loading ICData for current asset verion
 		assetRootDir = os.path.expandvars(assetRootDir)
-		assetDir = os.path.join(assetRootDir, version)
+		assetDir = os.path.join(assetRootDir, version) #.replace('\\', '\\\\') # backslashes in Windows paths need escaping
 		sys.path.append(assetDir)
+		#print assetDir
 		import icData;	reload(icData)
 		sys.path.remove(assetDir)
 		

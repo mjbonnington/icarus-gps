@@ -69,36 +69,42 @@ class icarusApp(QtGui.QDialog):
 		self.ui.nuke_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 		self.actionNuke = QtGui.QAction("Nuke", None)
 		self.actionNuke.triggered.connect(self.launchNuke)
+		self.ui.nuke_pushButton.addAction(self.actionNuke)
 		self.actionNukeX = QtGui.QAction("NukeX", None)
 		self.actionNukeX.triggered.connect(self.launchNukeX)
-		self.ui.nuke_pushButton.addAction(self.actionNuke)
 		self.ui.nuke_pushButton.addAction(self.actionNukeX)
+		self.actionNukeStudio = QtGui.QAction("NukeStudio", None)
+		self.actionNukeStudio.triggered.connect(self.launchNukeStudio)
+		self.ui.nuke_pushButton.addAction(self.actionNukeStudio)
+
 		#Review
 		self.ui.openReview_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 		self.actionHieroPlayer = QtGui.QAction("HieroPlayer", None)
 		self.actionHieroPlayer.triggered.connect(self.launchHieroPlayer)
+		self.ui.openReview_pushButton.addAction(self.actionHieroPlayer)
 		self.actionDjv = QtGui.QAction("djv_view", None)
 		self.actionDjv.triggered.connect(self.launchDjv)
-		self.ui.openReview_pushButton.addAction(self.actionHieroPlayer)
 		self.ui.openReview_pushButton.addAction(self.actionDjv)
+
 		#Browse
 		self.ui.browse_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 		self.actionOpenShot = QtGui.QAction("Shot", None)
 		self.actionOpenShot.triggered.connect(openDirs.openShot)
+		self.ui.browse_pushButton.addAction(self.actionOpenShot)
 		self.actionOpenJob = QtGui.QAction("Job", None)
 		self.actionOpenJob.triggered.connect(openDirs.openJob)
-		self.ui.browse_pushButton.addAction(self.actionOpenShot)
 		self.ui.browse_pushButton.addAction(self.actionOpenJob)
+
 		#Render
 		self.ui.render_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 		self.actionDeadlineMonitor = QtGui.QAction("Deadline Monitor", None)
 		self.actionDeadlineMonitor.triggered.connect(self.launchDeadlineMonitor)
+		self.ui.render_pushButton.addAction(self.actionDeadlineMonitor)
 		self.actionDeadlineSlave = QtGui.QAction("Deadline Slave", None)
 		self.actionDeadlineSlave.triggered.connect(self.launchDeadlineSlave)
+		self.ui.render_pushButton.addAction(self.actionDeadlineSlave)
 		self.actionSubmitLocal = QtGui.QAction("Submit Maya command-line render (local)", None)
 		self.actionSubmitLocal.triggered.connect(self.launchSubmitRender)
-		self.ui.render_pushButton.addAction(self.actionDeadlineMonitor)
-		self.ui.render_pushButton.addAction(self.actionDeadlineSlave)
 		self.ui.render_pushButton.addAction(self.actionSubmitLocal)
 
 		#self.ui.settings_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
@@ -483,8 +489,12 @@ I   C   A   R   U   S
 		launchApps.nuke(nukeType='NukeX')
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
-		#launchApps.nuke()
-		#self.showMinimized()
+
+	#runs launch nuke studio procedure
+	def launchNukeStudio(self):
+		launchApps.nuke(nukeType='NukeStudio')
+		if self.boolMinimiseOnAppLaunch:
+			self.showMinimized()
 
 	#runs launch mari procedure
 	def launchMari(self):
