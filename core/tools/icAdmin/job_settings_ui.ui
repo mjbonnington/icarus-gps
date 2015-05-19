@@ -54,7 +54,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>286</width>
+          <width>218</width>
           <height>316</height>
          </rect>
         </property>
@@ -63,7 +63,23 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QFrame" name="settings_frame"/>
+          <widget class="QFrame" name="settings_frame">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <layout class="QFormLayout" name="formLayout">
+            <property name="fieldGrowthPolicy">
+             <enum>QFormLayout::ExpandingFieldsGrow</enum>
+            </property>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>No settings loaded</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
          </item>
         </layout>
        </widget>

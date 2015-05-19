@@ -21,10 +21,11 @@ class xmlData():
 		#self.loadXML()
 
 
-	def loadXML(self, datafile):
-		""" Load XML data
+	def loadXML(self, datafile=None):
+		""" Load XML data. Omit datafile to reload XML data
 		"""
-		self.datafile = datafile
+		if datafile is not None:
+			self.datafile = datafile
 
 		try:
 			self.tree = ET.parse(self.datafile)

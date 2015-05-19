@@ -2,46 +2,49 @@
 
 # Form implementation generated from reading ui file 'settings_other_ui.ui'
 #
-# Created: Fri May 15 18:46:45 2015
+# Created: Tue May 19 18:09:25 2015
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
 
 from PySide import QtCore, QtGui
 
-class Ui_Frame(object):
-    def setupUi(self, Frame):
-        Frame.setObjectName("Frame")
-        Frame.resize(400, 128)
-        Frame.setFrameShape(QtGui.QFrame.NoFrame)
-        self.formLayout = QtGui.QFormLayout(Frame)
+class Ui_settings_frame(object):
+    def setupUi(self, settings_frame):
+        settings_frame.setObjectName("settings_frame")
+        settings_frame.resize(400, 128)
+        settings_frame.setFrameShape(QtGui.QFrame.NoFrame)
+        self.formLayout = QtGui.QFormLayout(settings_frame)
         self.formLayout.setFieldGrowthPolicy(QtGui.QFormLayout.ExpandingFieldsGrow)
         self.formLayout.setObjectName("formLayout")
-        self.board_label = QtGui.QLabel(Frame)
-        self.board_label.setObjectName("board_label")
-        self.formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.board_label)
-        self.board_lineEdit = QtGui.QLineEdit(Frame)
-        self.board_lineEdit.setObjectName("board_lineEdit")
-        self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.board_lineEdit)
-        self.label = QtGui.QLabel(Frame)
-        self.label.setObjectName("label")
-        self.formLayout.setWidget(1, QtGui.QFormLayout.LabelRole, self.label)
-        self.lineEdit = QtGui.QLineEdit(Frame)
-        self.lineEdit.setObjectName("lineEdit")
-        self.formLayout.setWidget(1, QtGui.QFormLayout.FieldRole, self.lineEdit)
-        self.label_2 = QtGui.QLabel(Frame)
-        self.label_2.setObjectName("label_2")
-        self.formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.label_2)
-        self.lineEdit_2 = QtGui.QLineEdit(Frame)
-        self.lineEdit_2.setObjectName("lineEdit_2")
-        self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.lineEdit_2)
+        self.prodboard_label = QtGui.QLabel(settings_frame)
+        self.prodboard_label.setObjectName("prodboard_label")
+        self.formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.prodboard_label)
+        self.prodboard_lineEdit = QtGui.QLineEdit(settings_frame)
+        self.prodboard_lineEdit.setObjectName("prodboard_lineEdit")
+        self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.prodboard_lineEdit)
+        self.projtools_label = QtGui.QLabel(settings_frame)
+        self.projtools_label.setObjectName("projtools_label")
+        self.formLayout.setWidget(1, QtGui.QFormLayout.LabelRole, self.projtools_label)
+        self.projtools_lineEdit = QtGui.QLineEdit(settings_frame)
+        self.projtools_lineEdit.setObjectName("projtools_lineEdit")
+        self.formLayout.setWidget(1, QtGui.QFormLayout.FieldRole, self.projtools_lineEdit)
+        self.elementslib_label = QtGui.QLabel(settings_frame)
+        self.elementslib_label.setObjectName("elementslib_label")
+        self.formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.elementslib_label)
+        self.elementslib_lineEdit = QtGui.QLineEdit(settings_frame)
+        self.elementslib_lineEdit.setObjectName("elementslib_lineEdit")
+        self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.elementslib_lineEdit)
 
-        self.retranslateUi(Frame)
-        QtCore.QMetaObject.connectSlotsByName(Frame)
+        self.retranslateUi(settings_frame)
+        QtCore.QMetaObject.connectSlotsByName(settings_frame)
+        settings_frame.setTabOrder(self.prodboard_lineEdit, self.projtools_lineEdit)
+        settings_frame.setTabOrder(self.projtools_lineEdit, self.elementslib_lineEdit)
 
-    def retranslateUi(self, Frame):
-        Frame.setWindowTitle(QtGui.QApplication.translate("Frame", "Frame", None, QtGui.QApplication.UnicodeUTF8))
-        self.board_label.setText(QtGui.QApplication.translate("Frame", "Production board:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(QtGui.QApplication.translate("Frame", "Project tools:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_2.setText(QtGui.QApplication.translate("Frame", "Elements library:", None, QtGui.QApplication.UnicodeUTF8))
+    def retranslateUi(self, settings_frame):
+        settings_frame.setWindowTitle(QtGui.QApplication.translate("settings_frame", "Frame", None, QtGui.QApplication.UnicodeUTF8))
+        self.prodboard_label.setText(QtGui.QApplication.translate("settings_frame", "Production board:", None, QtGui.QApplication.UnicodeUTF8))
+        self.prodboard_lineEdit.setText(QtGui.QApplication.translate("settings_frame", "https://gramercypark.tpondemand.com", None, QtGui.QApplication.UnicodeUTF8))
+        self.projtools_label.setText(QtGui.QApplication.translate("settings_frame", "Project tools:", None, QtGui.QApplication.UnicodeUTF8))
+        self.elementslib_label.setText(QtGui.QApplication.translate("settings_frame", "Elements library:", None, QtGui.QApplication.UnicodeUTF8))
 

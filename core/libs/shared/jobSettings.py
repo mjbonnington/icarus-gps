@@ -21,13 +21,13 @@ class jobSettings(xmlData.xmlData):
 	def getText(self, category, tag):
 		""" Get the specified value
 		"""
-		return self.root.find("./data[@category='%s']/%s" %(category, tag) ).text
+		return self.root.find( "./data[@category='%s']/%s" %(category, tag) ).text
 
 
-	def getAttr(self, xpath, attr):
+	def getAttr(self, category, tag, attr):
 		""" Get the specified attribute
 		"""
-		return self.root.find(xpath).attrib[attr]
+		return self.root.find( "./data[@category='%s']/%s" %(category, tag) ).attrib[attr]
 
 
 	def getCategories(self):
@@ -40,6 +40,13 @@ class jobSettings(xmlData.xmlData):
 		return c
 
 
+	def getAppVersion(self, app):
+		""" Return version for specified app
+		"""
+		appElem = self.root.find("./data[@category='apps']/app[@name='%s']" %app)
+		return appElem.attrib['version']
+
+
 	def getSettings(self, category):
 		""" Return a list of settings for a given category
 		"""
@@ -50,14 +57,29 @@ class jobSettings(xmlData.xmlData):
 		return s
 
 
-	def getApps(self):
-		""" Return a list of apps with preferred versions
+	def setText(self, category, tag, newText):
+		""" Set text. Create elements if they don't exist
 		"""
-		apps = self.root.findall("./apps/app")
-		a = []
-		for app in apps:
-			a.append( (app.get('name'), app.get('version')) )
-		return a
+		catElem = self.root.find("./data[@category='%s']" %category)
+		if catElem is None:
+			catElem = ET.SubElement(self.root, 'data')
+			catElem.set('category', category)
+
+		tagElem = catElem.find(tag)
+		if tagElem is None:
+			tagElem = ET.SubElement(catElem, tag)
+
+		tagElem.text = newText
+
+
+#	def getApps(self):
+#		""" Return a list of apps with preferred versions
+#		"""
+#		apps = self.root.findall("./apps/app")
+#		a = []
+#		for app in apps:
+#			a.append( (app.get('name'), app.get('version')) )
+#		return a
 
 
 	def deleteApp(self, app):
@@ -68,16 +90,6 @@ class jobSettings(xmlData.xmlData):
 			self.root.remove(appElem)
 		except ValueError:
 			print "Warning: Application '%s' does not exist." %app
-
-
-	def getVersions(self, app):
-		""" Return list of versions associated with app
-		"""
-		vers = self.root.findall("./app[@name='%s']/path" %app)
-		v = []
-		for ver in vers:
-			v.append( ver.get('version') )
-		return v
 
 
 	def deleteVersion(self, app, ver):
@@ -103,30 +115,6 @@ class jobSettings(xmlData.xmlData):
 			return path.text
 		else:
 			return ""
-
-
-	def setPath(self, app, ver, os, newText):
-		""" Set path. Create elements if they don't exist
-		"""
-		if (ver == "") or (ver is None):
-			print "Please enter a version."
-
-		else:
-			appElem = self.root.find("app[@name='%s']" %app)
-			if(appElem is None):
-				appElem = ET.SubElement(self.root, 'app')
-				appElem.set('name', app)
-
-			verElem = appElem.find("path[@version='%s']" %ver)
-			if(verElem is None):
-				verElem = ET.SubElement(appElem, 'path')
-				verElem.set('version', ver)
-
-			pathElem = verElem.find(os)
-			if(pathElem is None):
-				pathElem = ET.SubElement(verElem, os)
-
-			pathElem.text = newText
 
 
 	def guessPath(self, app, ver, os):

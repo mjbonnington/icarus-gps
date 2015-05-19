@@ -10,7 +10,7 @@
 
 from PySide import QtCore, QtGui
 from job_settings_ui import *
-import os, sys
+import os, sys, math
 
 # Initialise Icarus environment
 sys.path.append(os.environ['ICWORKINGDIR'])
@@ -39,6 +39,7 @@ class jobSettingsDialog(QtGui.QDialog):
 			self.init()
 		else:
 			print "DATA ERROR"
+			self.init()
 
 		# Connect signals and slots
 		self.ui.categories_listWidget.currentItemChanged.connect( lambda current: self.openProperties(current.text()) )
@@ -62,7 +63,9 @@ class jobSettingsDialog(QtGui.QDialog):
 		""" Initialise or reset by reloading data
 		"""
 		# Populate categories
-		categories = self.jd.getCategories()
+		#categories = self.jd.getCategories()
+		categories = ['job', 'units', 'time', 'resolution', 'apps', 'other']
+
 		for cat in categories:
 			self.ui.categories_listWidget.addItem(cat)
 
@@ -73,33 +76,13 @@ class jobSettingsDialog(QtGui.QDialog):
 		self.ui.categories_listWidget.item(0).setSelected(True)
 		self.openProperties( self.ui.categories_listWidget.item(0).text() )
 
-		# Populate fields
-#		self.populateJobSettings()
-#		self.populateTimeSettings()
-#		self.populateResSettings()
-#		self.populateAppSettings()
-#		self.populateOtherSettings()
-
-##		self.ui.projNum_spinBox.setValue( int(self.jd.getText("./job/proj-num")) )
-#		self.ui.jobNum_spinBox.setValue( int(self.jd.getText("./job/job-num")) )
-#		self.ui.client_lineEdit.setText( self.jd.getText("./job/client") )
-#		self.ui.brand_lineEdit.setText( self.jd.getText("./job/brand") )
-#		self.ui.title_lineEdit.setText( self.jd.getText("./job/title") )
-#		self.ui.deliverable_lineEdit.setText( self.jd.getText("./job/deliverable") )
-
-##		self.ui.fps_spinBox.setValue( int(self.jd.getText("./time/fps")) )
-#		self.ui.rangeStart_spinBox.setValue( int(self.jd.getAttr("./time/range", "start")) )
-#		self.ui.rangeEnd_spinBox.setValue( int(self.jd.getAttr("./time/range", "end")) )
-#		self.ui.handles_spinBox.setValue( int(self.jd.getText("./time/handles")) )
-
-##		self.ui.resX_spinBox.setValue( int(self.jd.getAttr("./res/full", "x")) )
-#		self.ui.resY_spinBox.setValue( int(self.jd.getAttr("./res/full", "y")) )
-#		self.ui.proxyResX_spinBox.setValue( int(self.jd.getAttr("./res/proxy", "x")) )
-#		self.ui.proxyResY_spinBox.setValue( int(self.jd.getAttr("./res/proxy", "y")) )
-
 ##		self.populateAppVersions()
 
-##		self.ui.board_lineEdit.setText( self.jd.getText("./other/production-board") )
+
+	def noop(self):
+		""" Empty function to do nothing (used to connect to a signal)
+		"""
+		pass
 
 
 	def keyPressEvent(self, event):
@@ -110,120 +93,263 @@ class jobSettingsDialog(QtGui.QDialog):
 #			return
 
 
-	def clearLayout(self, layout):
-		while layout.count():
-			child = layout.takeAt(0)
-			if child.widget() is not None:
-				child.widget().deleteLater()
-			elif child.layout() is not None:
-				clearLayout(child.layout())
+	def importUI(self, ui_file, frame):
+		""" Import specified UI file and insert into specified frame
+		"""
+		exec('from %s import *' %ui_file)
+		#exec('reload(%s)' %ui_file)
+		properties_panel = Ui_settings_frame()
+		properties_panel.setupUi(frame)
 
 
 	def openProperties(self, category):
 		""" Open properties panel for selected settings category
 		"""
-		#print category
-#		layout = self.ui.settings_frame
+		# Reload job data
+		#self.jd.loadXML()
+
+		# Create new frame to hold properties UI
 		self.ui.settings_frame.close()
 		self.ui.settings_frame = QtGui.QFrame(self.ui.settings_scrollAreaWidgetContents)
 		self.ui.settings_frame.setObjectName("settings_frame")
 		self.ui.verticalLayout_2.addWidget(self.ui.settings_frame)
-#		self.clearLayout(layout)
-#		for i in reversed(range(layout.count())): 
-#			layout.itemAt(i).widget().setParent(None)
-#		for widget in layout.findChildren():
-#			widget.close()
-		ui_file = 'settings_%s_ui' %category
-		exec('import %s' %ui_file)
-		exec('panel_job = %s.Ui_Frame()' %ui_file)
-		panel_job.setupUi(self.ui.settings_frame)
 
-#		panel_job.projNum_spinBox.setValue( int(self.jd.getText(category, 'proj-num')) )
-#		panel_job.jobNum_spinBox.setValue( int(self.jd.getText(category, 'job-num')) )
-#		panel_job.client_lineEdit.setText( self.jd.getText(category, 'client') )
-#		panel_job.brand_lineEdit.setText( self.jd.getText(category, 'brand') )
-#		panel_job.title_lineEdit.setText( self.jd.getText(category, 'title') )
-#		panel_job.deliverable_lineEdit.setText( self.jd.getText(category, 'deliverable') )
+		# Load approprate UI file into frame
+		self.importUI('settings_%s_ui' %category, self.ui.settings_frame)
+
+		# Load data
+		#print "[%s]" %category
+
+		if category == 'apps':
+			self.populateAppVersions(self.ui.settings_frame)
+
+		if category == 'resolution':
+			self.setupRes()
+
+		widgets = self.ui.settings_frame.children()
+		for widget in widgets:
+			# TODO: only connect widgets which have a dynamic property attached
+			attr = widget.objectName().split('_')[0]
+
+			if isinstance(widget, QtGui.QComboBox):
+				#widget.setValue( int(self.jd.getText(category, widget.property('xmlAttr'))) )
+				try:
+					text = self.jd.getText(category, attr)
+					widget.setCurrentIndex( widget.findText(text) )
+				except AttributeError:
+					pass
+					#text = ""
+				print "%s: %s" %(attr, widget.currentText())
+
+			if isinstance(widget, QtGui.QLineEdit):
+				#widget.setText( self.jd.getText(category, widget.property('xmlAttr')) )
+				try:
+					text = self.jd.getText(category, attr)
+					widget.setText(text)
+				except AttributeError:
+					pass
+					#text = ""
+				print "%s: %s" %(attr, widget.text())
+				#widget.editingFinished.connect( lambda current: self.jd.setText(category, attr, current.text()) )
+			#	widget.s = QtCore.Signal()
+			#	widget.s.connect = lambda f: self.connect(widget.s, f)
+				#widget.editingFinished.connect( func )
+
+			if isinstance(widget, QtGui.QSpinBox):
+				#widget.setValue( int(self.jd.getText(category, widget.property('xmlAttr'))) )
+				try:
+					value = int( self.jd.getText(category, attr) )
+					widget.setValue(value)
+				except AttributeError:
+					pass
+					#value = 0
+				print "%s: %s" %(attr, widget.value())
 
 
-#	def openProperties(self, category):
-#		""" Open properties panel for selected settings category
-#		"""
-#		# Populate settings
-#		settings = self.jd.getSettings()
-#		for setting in settings:
-#			self.createControl(setting)
+# We monkey-patch signal to tell you when it is being connected to.
+#	def connect(self, f):
+#		print("Boy just got a new connection")
+#		QtCore.Signal.connect(self, f)
+
+	def bollox(self, val='tosser'):
+		print val
 
 
-#	def createControl(self, setting):
-#		""" Create a control for a setting
-#		"""
-#		# Populate settings
-#		settings = self.jd.getSettings()
-#		for setting in settings:
-#			if setting[0] == 'int':
-#				label = QtGui.QLabel(Frame)
-#				self.projNum_label.setObjectName("projNum_label")
-#				self.formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.projNum_label)
-#				self.projNum_spinBox = QtGui.QSpinBox(Frame)
-#				self.projNum_spinBox.setMinimum(0)
-#				self.projNum_spinBox.setMaximum(999999)
-#				self.projNum_spinBox.setProperty("value", 0)
-#				self.projNum_spinBox.setObjectName("projNum_spinBox")
-#				self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.projNum_spinBox)
-
-
-	def populateAppVersions(self, selectCurrent=True):
+	def populateAppVersions(self, frame, selectCurrent=True):
 		""" Populate application version combo boxes
 		"""
-		apps = self.jd.getApps() # Get apps and versions
-		pass # Append apps from appPaths
-		self.ui.apps_formLayout.setWidget(len(apps), QtGui.QFormLayout.FieldRole, self.ui.appPaths_pushButton) # Move edit button to bottom of form
+		noSelectText = ""
+		apps = self.ap.getApps() # Get apps and versions
+		formLayout = frame.findChildren(QtGui.QFormLayout, 'formLayout')
+		appPaths_pushButton = frame.findChildren(QtGui.QPushButton, 'appPaths_pushButton')
+
+		formLayout[0].setWidget(len(apps), QtGui.QFormLayout.FieldRole, appPaths_pushButton[0]) # Move edit button to bottom of form
+		appPaths_pushButton[0].clicked.connect(self.appPathsEditor)
 
 		for i, app in enumerate(apps):
-			label = QtGui.QLabel(self.ui.apps_groupBox)
-			label.setObjectName("%s_label" %app[0])
-			label.setText("%s:" %app[0])
-			self.ui.apps_formLayout.setWidget(i, QtGui.QFormLayout.LabelRole, label)
+			label = QtGui.QLabel(frame)
+			label.setObjectName("%s_label" %app)
+			label.setText("%s:" %app)
+			formLayout[0].setWidget(i, QtGui.QFormLayout.LabelRole, label)
 
-			comboBox = QtGui.QComboBox(self.ui.apps_groupBox)
-			comboBox.setObjectName("%s_comboBox" %app[0])
+			comboBox = QtGui.QComboBox(frame)
+			comboBox.setObjectName("%s_comboBox" %app)
 			comboBox.clear()
-			versions = self.ap.getVersions(app[0]) # Popluate the combo box with available app versions
+			versions = self.ap.getVersions(app) # Popluate the combo box with available app versions
 			availableVersions = []
 			for version in versions:
 				if version == '[template]':
-					pass
+					#pass
+					availableVersions.append(noSelectText)
 				else:
 					availableVersions.append(version)
 			for version in availableVersions:
 				comboBox.addItem(version)
+
 			if selectCurrent: # Set selection to correct entry
-				comboBox.setCurrentIndex( comboBox.findText(app[1]) )
+				try:
+					text = self.jd.getAppVersion(app)
+				except AttributeError:
+					text = noSelectText
+					#comboBox.insertItem(text, 0)
+				print "%s: %s" %(app, text)
+				comboBox.setCurrentIndex( comboBox.findText(text) )
+
 			#QtCore.QObject.connect(comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), lambda x: self.storeAppVersion(x) )
 			#comboBox.currentIndexChanged.connect( lambda x: self.storeAppVersion(app[0], availableVersions[x]) )
-			self.ui.apps_formLayout.setWidget(i, QtGui.QFormLayout.FieldRole, comboBox)
+			formLayout[0].setWidget(i, QtGui.QFormLayout.FieldRole, comboBox)
 
 
-	def storeAppVersion(self, app, ver):
-		""" Store Application version
+	def setupRes(self):
+		""" Setup resolution properties panel
 		"""
-		#self.jd.setAppVersion(app, version)
-		print app, ver
+		frame = self.ui.settings_frame
+
+		#children = frame.children()
+		#for child in children:
+		#	print child.objectName()
+
+		self.calcAR()
+
+		# Connect signals and slots
+		#frame.findChildren(QtGui.QComboBox, 'resPreset_comboBox')[0].currentIndexChanged.connect(self.updateRes)
+		frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].valueChanged.connect(self.updateResFullWidth)
+		#frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].valueChanged.connect(self.updateResFullHeight)
+		frame.findChildren(QtGui.QRadioButton, 'proxyModeScale_radioButton')[0].toggled.connect(self.calcProxyRes)
+		frame.findChildren(QtGui.QDoubleSpinBox, 'proxyScale_doubleSpinBox')[0].valueChanged.connect(self.calcProxyRes)
+		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].valueChanged.connect(self.updateResProxyWidth)
+		#frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].valueChanged.connect(self.updateResProxyHeight)
+		frame.findChildren(QtGui.QCheckBox, 'preserveAR_checkBox')[0].stateChanged.connect(self.calcAR)
 
 
-	def appPathsEditor(self):
-		""" Open the application paths editor dialog
+	def calcAR(self, value=0):
+		""" Calculate aspect ratio
 		"""
-		import set_app_paths__main__
-		reload(set_app_paths__main__)
-		setAppPaths = set_app_paths__main__.setAppPathsDialog()
-		setAppPaths.show()
-		#sys.exit(setAppPaths.exec_())
-		setAppPaths.exec_()
+		frame = self.ui.settings_frame
 
-		# Update comboBox contents after closing application paths dialog
-		self.populateAppVersions(selectCurrent=False)
+		fullWidth = frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].value()
+		fullHeight = frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].value()
+		self.aspectRatio = float(fullWidth) / float(fullHeight)
+
+		print "aspect ratio: %f" %self.aspectRatio
+
+
+	def updateResFullWidth(self, value=0):
+		""" 
+		"""
+		frame = self.ui.settings_frame
+
+		# Stop the other widgets from emitting signals
+		#frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].valueChanged.connect(self.noop)
+		#frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].valueChanged.disconnect(self.updateResFullHeight)
+
+		preserveAR = frame.findChildren(QtGui.QCheckBox, 'preserveAR_checkBox')[0].isChecked()
+		if preserveAR:
+			height = int(math.ceil(value/self.aspectRatio))
+		else:
+			height = frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].value()
+		fullRes = value, height
+
+#		fullWidth = frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].value()
+#		fullHeight = frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].value()
+#		aspectRatio = float(fullWidth) / float(fullHeight)
+
+#		if preserveAR:
+#			#fullWidth = frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].value()
+#			fullRes = fullWidth, float(fullWidth / 2)
+#		else:
+#			fullRes = fullWidth, fullHeight
+
+#		#fullRes = frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].value(), frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].value()
+#		#aspectRatio = float(fullRes[0]) / float(fullRes[1])
+
+		self.calcProxyRes()
+		frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].setValue(height)
+
+		print fullRes, self.aspectRatio
+
+
+	def updateResFullHeight(self, value=0):
+		""" 
+		"""
+		frame = self.ui.settings_frame
+
+		# Stop the other widgets from emitting signals
+		#frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].valueChanged.connect(self.noop)
+		#frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].valueChanged.disconnect(self.updateResFullWidth)
+
+		preserveAR = frame.findChildren(QtGui.QCheckBox, 'preserveAR_checkBox')[0].isChecked()
+		if preserveAR:
+			width = int(math.ceil(value*self.aspectRatio))
+		else:
+			width = frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].value()
+		fullRes = width, value
+
+		self.calcProxyRes()
+		frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].setValue(width)
+
+		print fullRes, self.aspectRatio
+
+
+	def calcProxyRes(self): #, fullWidth, fullHeight):
+		""" Calculate proxy resolution
+		"""
+		frame = self.ui.settings_frame
+
+		fullWidth = frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].value()
+		fullHeight = frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].value()
+		fullRes = fullWidth, fullHeight
+
+		if frame.findChildren(QtGui.QRadioButton, 'proxyModeScale_radioButton')[0].isChecked():
+			proxyMode = 'scale'
+			proxyScale = frame.findChildren(QtGui.QDoubleSpinBox, 'proxyScale_doubleSpinBox')[0].value()
+			proxyRes = int(fullRes[0] * proxyScale), int(fullRes[1] * proxyScale)
+		else:
+			proxyMode = 'res'
+			proxyRes = frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].value(), frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].value()
+			proxyScale = 0
+
+		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].setValue(proxyRes[0])
+		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].setValue(proxyRes[1])
+
+		print "proxy res: %dx%d" %(proxyRes[0], proxyRes[1])
+
+
+	def updateResProxyWidth(self, value=0):
+		""" 
+		"""
+		frame = self.ui.settings_frame
+
+		preserveAR = frame.findChildren(QtGui.QCheckBox, 'preserveAR_checkBox')[0].isChecked()
+		if preserveAR:
+			height = int(math.ceil(value/self.aspectRatio))
+		else:
+			height = frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].value()
+		proxyRes = value, height
+
+		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].setValue(height)
+
+		print proxyRes, self.aspectRatio
 
 
 	def exit(self):

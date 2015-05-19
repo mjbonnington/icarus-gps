@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>settings_frame</class>
+ <widget class="QFrame" name="settings_frame">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>128</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <property name="frameShape">
+   <enum>QFrame::NoFrame</enum>
+  </property>
+  <layout class="QFormLayout" name="formLayout">
+   <property name="fieldGrowthPolicy">
+    <enum>QFormLayout::ExpandingFieldsGrow</enum>
+   </property>
+   <item row="0" column="0">
+    <widget class="QLabel" name="time_label">
+     <property name="text">
+      <string>Time:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="linear_label">
+     <property name="text">
+      <string>Linear:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="angle_label">
+     <property name="text">
+      <string>Angle:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QComboBox" name="time_comboBox">
+     <property name="currentIndex">
+      <number>1</number>
+     </property>
+     <item>
+      <property name="text">
+       <string>film</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>pal</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>ntsc</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>millisec</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>sec</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>min</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>hour</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QComboBox" name="linear_comboBox">
+     <property name="currentIndex">
+      <number>1</number>
+     </property>
+     <item>
+      <property name="text">
+       <string>millimeter</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>centimeter</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>meter</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>kilometer</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>inch</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>foot</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>yard</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>mile</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QComboBox" name="angle_comboBox">
+     <item>
+      <property name="text">
+       <string>degree</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>radian</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

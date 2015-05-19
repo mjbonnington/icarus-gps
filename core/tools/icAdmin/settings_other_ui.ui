@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Frame</class>
- <widget class="QFrame" name="Frame">
+ <class>settings_frame</class>
+ <widget class="QFrame" name="settings_frame">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -21,37 +21,46 @@
     <enum>QFormLayout::ExpandingFieldsGrow</enum>
    </property>
    <item row="0" column="0">
-    <widget class="QLabel" name="board_label">
+    <widget class="QLabel" name="prodboard_label">
      <property name="text">
       <string>Production board:</string>
      </property>
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QLineEdit" name="board_lineEdit"/>
+    <widget class="QLineEdit" name="prodboard_lineEdit">
+     <property name="text">
+      <string>https://gramercypark.tpondemand.com</string>
+     </property>
+    </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="projtools_label">
      <property name="text">
       <string>Project tools:</string>
      </property>
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QLineEdit" name="lineEdit"/>
+    <widget class="QLineEdit" name="projtools_lineEdit"/>
    </item>
    <item row="2" column="0">
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="elementslib_label">
      <property name="text">
       <string>Elements library:</string>
      </property>
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QLineEdit" name="lineEdit_2"/>
+    <widget class="QLineEdit" name="elementslib_lineEdit"/>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>prodboard_lineEdit</tabstop>
+  <tabstop>projtools_lineEdit</tabstop>
+  <tabstop>elementslib_lineEdit</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'job_settings_ui.ui'
 #
-# Created: Fri May 15 18:55:58 2015
+# Created: Tue May 19 18:21:05 2015
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -38,13 +38,20 @@ class Ui_Dialog(object):
         self.settings_scrollArea.setProperty("noBackground", True)
         self.settings_scrollArea.setObjectName("settings_scrollArea")
         self.settings_scrollAreaWidgetContents = QtGui.QWidget()
-        self.settings_scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 286, 316))
+        self.settings_scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 218, 316))
         self.settings_scrollAreaWidgetContents.setObjectName("settings_scrollAreaWidgetContents")
         self.verticalLayout_2 = QtGui.QVBoxLayout(self.settings_scrollAreaWidgetContents)
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.settings_frame = QtGui.QFrame(self.settings_scrollAreaWidgetContents)
+        self.settings_frame.setFrameShape(QtGui.QFrame.Box)
         self.settings_frame.setObjectName("settings_frame")
+        self.formLayout = QtGui.QFormLayout(self.settings_frame)
+        self.formLayout.setFieldGrowthPolicy(QtGui.QFormLayout.ExpandingFieldsGrow)
+        self.formLayout.setObjectName("formLayout")
+        self.label = QtGui.QLabel(self.settings_frame)
+        self.label.setObjectName("label")
+        self.formLayout.setWidget(1, QtGui.QFormLayout.LabelRole, self.label)
         self.verticalLayout_2.addWidget(self.settings_frame)
         self.settings_scrollArea.setWidget(self.settings_scrollAreaWidgetContents)
         self.horizontalLayout.addWidget(self.settings_scrollArea)
@@ -61,4 +68,5 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Job Settings", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("Dialog", "No settings loaded", None, QtGui.QApplication.UnicodeUTF8))
 
