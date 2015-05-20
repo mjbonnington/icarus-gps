@@ -2,7 +2,7 @@
 
 # Icarus Admin Tools
 # Job Settings editor dialog
-# v0.1
+# v0.2
 #
 # Michael Bonnington 2015
 # Gramercy Park Studios
@@ -38,21 +38,11 @@ class jobSettingsDialog(QtGui.QDialog):
 		if jd_load and ap_load:
 			self.init()
 		else:
-			print "DATA ERROR"
+			print "Warning: XML data error."
 			self.init()
 
 		# Connect signals and slots
 		self.ui.categories_listWidget.currentItemChanged.connect( lambda current: self.openProperties(current.text()) )
-
-##		self.ui.appPaths_pushButton.clicked.connect(self.appPathsEditor)
-
-		# Work out a way to do this procedurally
-#		self.ui.Maya_comboBox.currentIndexChanged.connect( lambda x: self.storeAppVersion('Maya', x) )
-#		self.ui.Mudbox_comboBox.currentIndexChanged.connect( lambda x: self.storeAppVersion('Mudbox', x) )
-#		self.ui.Nuke_comboBox.currentIndexChanged.connect( lambda x: self.storeAppVersion('Nuke', x) )
-#		self.ui.Mari_comboBox.currentIndexChanged.connect( lambda x: self.storeAppVersion('Mari', x) )
-#		self.ui.RealFlow_comboBox.currentIndexChanged.connect( lambda x: self.storeAppVersion('RealFlow', x) )
-#		self.ui.HieroPlayer_comboBox.currentIndexChanged.connect( lambda x: self.storeAppVersion('HieroPlayer', x) )
 
 		self.ui.jobSettings_buttonBox.button(QtGui.QDialogButtonBox.Reset).clicked.connect(self.init)
 		#self.ui.jobSettings_buttonBox.button(QtGui.QDialogButtonBox.Save).clicked.connect(self.ap.saveXML)
@@ -62,8 +52,8 @@ class jobSettingsDialog(QtGui.QDialog):
 	def init(self):
 		""" Initialise or reset by reloading data
 		"""
-		# Populate categories
-		#categories = self.jd.getCategories()
+		# Populate categories - hard coding this for now so XML can be generated from this list. Perhaps could be auto-generated from existing ui files?
+		#categories = self.jd.getCategories() # Read categories from XML
 		categories = ['job', 'units', 'time', 'resolution', 'apps', 'other']
 
 		for cat in categories:
@@ -76,21 +66,20 @@ class jobSettingsDialog(QtGui.QDialog):
 		self.ui.categories_listWidget.item(0).setSelected(True)
 		self.openProperties( self.ui.categories_listWidget.item(0).text() )
 
-##		self.populateAppVersions()
-
-
-	def noop(self):
-		""" Empty function to do nothing (used to connect to a signal)
-		"""
-		pass
-
 
 	def keyPressEvent(self, event):
 		""" Override function to prevent Enter / Esc keypresses triggering OK / Cancel buttons
 		"""
 		pass
-#		if event.key() == QtCore.Qt.Key_Return or event.key() == QtCore.Qt.Key_Enter:
-#			return
+		#if event.key() == QtCore.Qt.Key_Return or event.key() == QtCore.Qt.Key_Enter:
+		#	return
+
+
+#	def eventFilter(self, object, event):
+#		""" 
+#		"""
+#		if event.type() == QEvent.FocusOut:
+#			print object
 
 
 	def importUI(self, ui_file, frame):
@@ -118,14 +107,6 @@ class jobSettingsDialog(QtGui.QDialog):
 		self.importUI('settings_%s_ui' %category, self.ui.settings_frame)
 
 		# Load data
-		#print "[%s]" %category
-
-		if category == 'apps':
-			self.populateAppVersions(self.ui.settings_frame)
-
-		if category == 'resolution':
-			self.setupRes()
-
 		widgets = self.ui.settings_frame.children()
 		for widget in widgets:
 			# TODO: only connect widgets which have a dynamic property attached
@@ -153,7 +134,6 @@ class jobSettingsDialog(QtGui.QDialog):
 				#widget.editingFinished.connect( lambda current: self.jd.setText(category, attr, current.text()) )
 			#	widget.s = QtCore.Signal()
 			#	widget.s.connect = lambda f: self.connect(widget.s, f)
-				#widget.editingFinished.connect( func )
 
 			if isinstance(widget, QtGui.QSpinBox):
 				#widget.setValue( int(self.jd.getText(category, widget.property('xmlAttr'))) )
@@ -165,14 +145,220 @@ class jobSettingsDialog(QtGui.QDialog):
 					#value = 0
 				print "%s: %s" %(attr, widget.value())
 
+		if category == 'apps':
+			self.populateAppVersions(self.ui.settings_frame)
+
+		if category == 'resolution':
+			self.setupRes()
+
 
 # We monkey-patch signal to tell you when it is being connected to.
 #	def connect(self, f):
 #		print("Boy just got a new connection")
 #		QtCore.Signal.connect(self, f)
 
-	def bollox(self, val='tosser'):
-		print val
+
+	def setupRes(self):
+		""" Setup resolution properties panel
+		"""
+		frame = self.ui.settings_frame
+
+		#children = frame.children()
+		#for child in children:
+		#	print child.objectName()
+
+		# Populate combo box with presets
+
+		self.calcAspectRatio()
+		self.checkProxyRes()
+
+		# Connect signals and slots
+		frame.findChildren(QtGui.QComboBox, 'resPreset_comboBox')[0].currentIndexChanged.connect(self.updateResFromPreset)
+		frame.findChildren(QtGui.QCheckBox, 'preserveAR_checkBox')[0].stateChanged.connect(self.calcAspectRatio)
+		frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].valueChanged.connect(self.updateResFullWidth)
+		frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].valueChanged.connect(self.updateResFullHeight)
+		frame.findChildren(QtGui.QRadioButton, 'proxyModeScale_radioButton')[0].toggled.connect(self.calcProxyRes)
+		frame.findChildren(QtGui.QDoubleSpinBox, 'proxyScale_doubleSpinBox')[0].valueChanged.connect(self.calcProxyRes)
+		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].valueChanged.connect(self.updateResProxyWidth)
+		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].valueChanged.connect(self.updateResProxyHeight)
+
+
+	def calcAspectRatio(self):
+		""" Calculate aspect ratio
+		"""
+		frame = self.ui.settings_frame
+
+		fullWidth = frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].value()
+		fullHeight = frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].value()
+		self.aspectRatio = float(fullWidth) / float(fullHeight)
+
+		print "aspect ratio: %f" %self.aspectRatio
+
+
+	def updateResFromPreset(self, index = -1):
+		""" 
+		"""
+		frame = self.ui.settings_frame
+
+		print index, frame.findChildren(QtGui.QComboBox, 'resPreset_comboBox')[0].currentText()
+
+
+	def updateResFullWidth(self, width = -1):
+		""" Update resolution when width is changed
+		"""
+		frame = self.ui.settings_frame
+
+		# Stop the other widgets from emitting signals
+		frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].blockSignals(True)
+		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].blockSignals(True)
+		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].blockSignals(True)
+
+		# Set the preset to 'Custom'
+		comboBox = frame.findChildren(QtGui.QComboBox, 'resPreset_comboBox')[0]
+		comboBox.setCurrentIndex( comboBox.findText('Custom') )
+
+		preserveAR = frame.findChildren(QtGui.QCheckBox, 'preserveAR_checkBox')[0].isChecked()
+		if preserveAR:
+			height = int(math.ceil(width/self.aspectRatio))
+		else:
+			height = frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].value()
+
+		print "full res: [%d]x%d (aspect ratio: %f)" %(width, height, self.aspectRatio)
+
+		# Update height widget
+		frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].setValue(height)
+
+		self.calcProxyRes(fullWidth=width, fullHeight=height)
+
+		# Re-enable signals
+		frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].blockSignals(False)
+		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].blockSignals(False)
+		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].blockSignals(False)
+
+
+	def updateResFullHeight(self, height = -1):
+		""" Update resolution when height is changed
+		"""
+		frame = self.ui.settings_frame
+
+		# Stop the other widgets from emitting signals
+		frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].blockSignals(True)
+		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].blockSignals(True)
+		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].blockSignals(True)
+
+		# Set the preset to 'Custom'
+		comboBox = frame.findChildren(QtGui.QComboBox, 'resPreset_comboBox')[0]
+		comboBox.setCurrentIndex( comboBox.findText('Custom') )
+
+		preserveAR = frame.findChildren(QtGui.QCheckBox, 'preserveAR_checkBox')[0].isChecked()
+		if preserveAR:
+			width = int(math.ceil(height*self.aspectRatio))
+		else:
+			width = frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].value()
+
+		print "full res: %dx[%d] (aspect ratio: %f)" %(width, height, self.aspectRatio)
+
+		# Update width widget
+		frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].setValue(width)
+
+		self.calcProxyRes(fullWidth=width, fullHeight=height)
+
+		# Re-enable signals
+		frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].blockSignals(False)
+		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].blockSignals(False)
+		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].blockSignals(False)
+
+
+	def updateResProxyWidth(self, width = -1):
+		""" Update proxy resolution when width is changed
+		"""
+		frame = self.ui.settings_frame
+
+		# Stop the other widgets from emitting signals
+		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].blockSignals(True)
+
+		preserveAR = frame.findChildren(QtGui.QCheckBox, 'preserveAR_checkBox')[0].isChecked()
+		if preserveAR:
+			height = int(math.ceil(width/self.aspectRatio))
+		else:
+			height = frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].value()
+
+		print "proxy res: [%d]x%d (aspect ratio: %f)" %(width, height, self.aspectRatio)
+
+		# Update height widget
+		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].setValue(height)
+
+		# Re-enable signals
+		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].blockSignals(False)
+
+
+	def updateResProxyHeight(self, height = -1):
+		""" Update proxy resolution when height is changed
+		"""
+		frame = self.ui.settings_frame
+
+		# Stop the other widgets from emitting signals
+		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].blockSignals(True)
+
+		preserveAR = frame.findChildren(QtGui.QCheckBox, 'preserveAR_checkBox')[0].isChecked()
+		if preserveAR:
+			width = int(math.ceil(height*self.aspectRatio))
+		else:
+			width = frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].value()
+
+		print "proxy res: %dx[%d] (aspect ratio: %f)" %(width, height, self.aspectRatio)
+
+		# Update width widget
+		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].setValue(width)
+
+		# Re-enable signals
+		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].blockSignals(False)
+
+
+	def calcProxyRes(self, proxyScale = -1, fullWidth = -1, fullHeight = -1):
+		""" Calculate proxy resolution
+		"""
+		frame = self.ui.settings_frame
+
+		# If fullWidth or fullHeight not specified, get values from widgets
+		if fullWidth < 0:
+			fullWidth = frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].value()
+		if fullHeight < 0:
+			fullHeight = frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].value()
+
+		if frame.findChildren(QtGui.QRadioButton, 'proxyModeScale_radioButton')[0].isChecked():
+			proxyMode = 'scale'
+			proxyScale = frame.findChildren(QtGui.QDoubleSpinBox, 'proxyScale_doubleSpinBox')[0].value()
+			proxyRes = int(fullWidth * proxyScale), int(fullHeight * proxyScale)
+		else:
+			proxyMode = 'res'
+			proxyScale = -1
+			proxyRes = frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].value(), frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].value()
+
+		print "proxy res: %dx%d (%s: %f)" %(proxyRes[0], proxyRes[1], proxyMode, proxyScale)
+
+		# Update widgets
+		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].setValue(proxyRes[0])
+		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].setValue(proxyRes[1])
+
+
+	def checkProxyRes(self):
+		""" Check proxy resolution matches full resolution * scale and set appropriate proxy mode
+		"""
+		frame = self.ui.settings_frame
+
+		fullWidth = frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].value()
+		fullHeight = frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].value()
+		proxyWidth = frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].value()
+		proxyHeight = frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].value()
+		proxyScale = frame.findChildren(QtGui.QDoubleSpinBox, 'proxyScale_doubleSpinBox')[0].value()
+
+		if (proxyWidth == fullWidth*proxyScale) and (proxyHeight == fullHeight*proxyScale):
+			frame.findChildren(QtGui.QRadioButton, 'proxyModeScale_radioButton')[0].setChecked(True)
+			frame.findChildren(QtGui.QRadioButton, 'proxyModeRes_radioButton')[0].setChecked(False)
+		else:
+			frame.findChildren(QtGui.QRadioButton, 'proxyModeScale_radioButton')[0].setChecked(False)
+			frame.findChildren(QtGui.QRadioButton, 'proxyModeRes_radioButton')[0].setChecked(True)
 
 
 	def populateAppVersions(self, frame, selectCurrent=True):
@@ -199,8 +385,8 @@ class jobSettingsDialog(QtGui.QDialog):
 			availableVersions = []
 			for version in versions:
 				if version == '[template]':
-					#pass
-					availableVersions.append(noSelectText)
+					pass
+					#availableVersions.append(noSelectText)
 				else:
 					availableVersions.append(version)
 			for version in availableVersions:
@@ -220,136 +406,34 @@ class jobSettingsDialog(QtGui.QDialog):
 			formLayout[0].setWidget(i, QtGui.QFormLayout.FieldRole, comboBox)
 
 
-	def setupRes(self):
-		""" Setup resolution properties panel
+	def resPresetsEditor(self):
+		""" Open the resolution presets editor dialog. TODO: Prevent multiple windows from opening
 		"""
-		frame = self.ui.settings_frame
+		import set_res_presets__main__
+		reload(set_res_presets__main__)
+		self.setAppPaths = set_res_presets__main__.setAppPathsDialog()
+		self.setAppPaths.show()
+		#sys.exit(self.setAppPaths.exec_())
+		self.setAppPaths.exec_()
 
-		#children = frame.children()
-		#for child in children:
-		#	print child.objectName()
-
-		self.calcAR()
-
-		# Connect signals and slots
-		#frame.findChildren(QtGui.QComboBox, 'resPreset_comboBox')[0].currentIndexChanged.connect(self.updateRes)
-		frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].valueChanged.connect(self.updateResFullWidth)
-		#frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].valueChanged.connect(self.updateResFullHeight)
-		frame.findChildren(QtGui.QRadioButton, 'proxyModeScale_radioButton')[0].toggled.connect(self.calcProxyRes)
-		frame.findChildren(QtGui.QDoubleSpinBox, 'proxyScale_doubleSpinBox')[0].valueChanged.connect(self.calcProxyRes)
-		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].valueChanged.connect(self.updateResProxyWidth)
-		#frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].valueChanged.connect(self.updateResProxyHeight)
-		frame.findChildren(QtGui.QCheckBox, 'preserveAR_checkBox')[0].stateChanged.connect(self.calcAR)
+		# Reload resPresets XML and update comboBox contents after closing dialog
+		self.rp.loadXML()
+		self.openProperties('resolution')
 
 
-	def calcAR(self, value=0):
-		""" Calculate aspect ratio
+	def appPathsEditor(self):
+		""" Open the application paths editor dialog. TODO: Prevent multiple windows from opening
 		"""
-		frame = self.ui.settings_frame
+		import set_app_paths__main__
+		reload(set_app_paths__main__)
+		self.setResPresets = set_app_paths__main__.setResPresetsDialog()
+		self.setResPresets.show()
+		#sys.exit(self.setResPresets.exec_())
+		self.setResPresets.exec_()
 
-		fullWidth = frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].value()
-		fullHeight = frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].value()
-		self.aspectRatio = float(fullWidth) / float(fullHeight)
-
-		print "aspect ratio: %f" %self.aspectRatio
-
-
-	def updateResFullWidth(self, value=0):
-		""" 
-		"""
-		frame = self.ui.settings_frame
-
-		# Stop the other widgets from emitting signals
-		#frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].valueChanged.connect(self.noop)
-		#frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].valueChanged.disconnect(self.updateResFullHeight)
-
-		preserveAR = frame.findChildren(QtGui.QCheckBox, 'preserveAR_checkBox')[0].isChecked()
-		if preserveAR:
-			height = int(math.ceil(value/self.aspectRatio))
-		else:
-			height = frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].value()
-		fullRes = value, height
-
-#		fullWidth = frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].value()
-#		fullHeight = frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].value()
-#		aspectRatio = float(fullWidth) / float(fullHeight)
-
-#		if preserveAR:
-#			#fullWidth = frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].value()
-#			fullRes = fullWidth, float(fullWidth / 2)
-#		else:
-#			fullRes = fullWidth, fullHeight
-
-#		#fullRes = frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].value(), frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].value()
-#		#aspectRatio = float(fullRes[0]) / float(fullRes[1])
-
-		self.calcProxyRes()
-		frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].setValue(height)
-
-		print fullRes, self.aspectRatio
-
-
-	def updateResFullHeight(self, value=0):
-		""" 
-		"""
-		frame = self.ui.settings_frame
-
-		# Stop the other widgets from emitting signals
-		#frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].valueChanged.connect(self.noop)
-		#frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].valueChanged.disconnect(self.updateResFullWidth)
-
-		preserveAR = frame.findChildren(QtGui.QCheckBox, 'preserveAR_checkBox')[0].isChecked()
-		if preserveAR:
-			width = int(math.ceil(value*self.aspectRatio))
-		else:
-			width = frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].value()
-		fullRes = width, value
-
-		self.calcProxyRes()
-		frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].setValue(width)
-
-		print fullRes, self.aspectRatio
-
-
-	def calcProxyRes(self): #, fullWidth, fullHeight):
-		""" Calculate proxy resolution
-		"""
-		frame = self.ui.settings_frame
-
-		fullWidth = frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].value()
-		fullHeight = frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].value()
-		fullRes = fullWidth, fullHeight
-
-		if frame.findChildren(QtGui.QRadioButton, 'proxyModeScale_radioButton')[0].isChecked():
-			proxyMode = 'scale'
-			proxyScale = frame.findChildren(QtGui.QDoubleSpinBox, 'proxyScale_doubleSpinBox')[0].value()
-			proxyRes = int(fullRes[0] * proxyScale), int(fullRes[1] * proxyScale)
-		else:
-			proxyMode = 'res'
-			proxyRes = frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].value(), frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].value()
-			proxyScale = 0
-
-		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].setValue(proxyRes[0])
-		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].setValue(proxyRes[1])
-
-		print "proxy res: %dx%d" %(proxyRes[0], proxyRes[1])
-
-
-	def updateResProxyWidth(self, value=0):
-		""" 
-		"""
-		frame = self.ui.settings_frame
-
-		preserveAR = frame.findChildren(QtGui.QCheckBox, 'preserveAR_checkBox')[0].isChecked()
-		if preserveAR:
-			height = int(math.ceil(value/self.aspectRatio))
-		else:
-			height = frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].value()
-		proxyRes = value, height
-
-		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].setValue(height)
-
-		print proxyRes, self.aspectRatio
+		# Reload appPaths XML and update comboBox contents after closing dialog
+		self.ap.loadXML()
+		self.openProperties('apps')
 
 
 	def exit(self):

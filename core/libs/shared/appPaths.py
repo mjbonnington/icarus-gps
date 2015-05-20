@@ -81,17 +81,17 @@ class appPaths(xmlData.xmlData):
 
 		else:
 			appElem = self.root.find("app[@name='%s']" %app)
-			if(appElem is None):
+			if appElem is None:
 				appElem = ET.SubElement(self.root, 'app')
 				appElem.set('name', app)
 
 			verElem = appElem.find("path[@version='%s']" %ver)
-			if(verElem is None):
+			if verElem is None:
 				verElem = ET.SubElement(appElem, 'path')
 				verElem.set('version', ver)
 
 			pathElem = verElem.find(os)
-			if(pathElem is None):
+			if pathElem is None:
 				pathElem = ET.SubElement(verElem, os)
 
 			pathElem.text = newText
