@@ -411,7 +411,7 @@ class jobSettingsDialog(QtGui.QDialog):
 		"""
 		import set_res_presets__main__
 		reload(set_res_presets__main__)
-		self.setAppPaths = set_res_presets__main__.setAppPathsDialog()
+		self.setAppPaths = set_res_presets__main__.setResPresetsDialog()
 		self.setAppPaths.show()
 		#sys.exit(self.setAppPaths.exec_())
 		self.setAppPaths.exec_()
@@ -426,7 +426,7 @@ class jobSettingsDialog(QtGui.QDialog):
 		"""
 		import set_app_paths__main__
 		reload(set_app_paths__main__)
-		self.setResPresets = set_app_paths__main__.setResPresetsDialog()
+		self.setResPresets = set_app_paths__main__.setAppPathsDialog()
 		self.setResPresets.show()
 		#sys.exit(self.setResPresets.exec_())
 		self.setResPresets.exec_()
@@ -454,6 +454,9 @@ if __name__ == "__main__":
 		app.setStyleSheet(fh.read())
 
 	jobSettingsEditor = jobSettingsDialog()
-
 	jobSettingsEditor.show()
 	sys.exit(jobSettingsEditor.exec_())
+
+#else:
+#	jobSettingsEditor = jobSettingsDialog()
+#	jobSettingsEditor.show()

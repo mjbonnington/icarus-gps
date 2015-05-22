@@ -459,11 +459,11 @@ I   C   A   R   U   S
 	# Open shot settings dialog
 	def shotSettings(self):
 		pass
-#		import shot_settings__main__
-#		reload(shot_settings__main__)
-#		setShotSettings = shot_settings__main__.shotSettingsDialog()
-#		setShotSettings.show()
-#		setShotSettings.exec_()
+	#	import shot_settings__main__
+	#	reload(shot_settings__main__)
+	#	setShotSettings = shot_settings__main__.shotSettingsDialog()
+	#	setShotSettings.show()
+	#	setShotSettings.exec_()
 
 
 	#runs launch maya procedure
@@ -964,6 +964,7 @@ I   C   A   R   U   S
 						itemLs.remove(item)
 			#reversing order to facilitate user gather
 			itemLs.reverse()
+			#column.setCurrentIndex(0) # select the most recent item automatically
 		if column == self.aTypeCol:
 			for item in itemLs:
 				if item[:2] in envPrefix or item in envPrefix:

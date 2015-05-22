@@ -72,8 +72,8 @@ class setAppPathsDialog(QtGui.QDialog):
 		""" Override function to prevent Enter / Esc keypresses triggering OK / Cancel buttons
 		"""
 		pass
-#		if event.key() == QtCore.Qt.Key_Return or event.key() == QtCore.Qt.Key_Enter:
-#			return
+		#if event.key() == QtCore.Qt.Key_Return or event.key() == QtCore.Qt.Key_Enter:
+		#	return
 
 
 	def toggleAppVerDelButton(self):
@@ -216,7 +216,7 @@ class setAppPathsDialog(QtGui.QDialog):
 		""" Save data and exit
 		"""
 		if self.saveAppPaths():
-			self.exit()
+			self.hide()
 
 
 	def exit(self):
@@ -237,7 +237,9 @@ if __name__ == "__main__":
 		app.setStyleSheet(fh.read())
 
 	setAppPaths = setAppPathsDialog()
-
 	setAppPaths.show()
 	sys.exit(setAppPaths.exec_())
 
+#else:
+#	setAppPaths = setAppPathsDialog()
+#	setAppPaths.show()
