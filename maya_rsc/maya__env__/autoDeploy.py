@@ -14,12 +14,13 @@ import verbose, osOps
 def deploy():
 	#Getting Maya Home
 	mayaVersion = mc.about(v=True)
-	if mc.about(is64=True) and int(mayaVersion) < 2016:
-		#Bypassing a Maya bug 'about -v' not always returning -x64 with 64 bit version
-		if '64' not in mayaVersion:
-			mayaVersion += '-x64'
-		else:
-	 		mayaVersion = mayaVersion.replace(' ', '-')
+	#if mc.about(is64=True):
+	#	#Bypassing a Maya bug 'about -v' not always returning -x64 with 64 bit version
+	#	if '64' not in mayaVersion:
+	#		mayaVersion += '-x64'
+	#	else:
+	#		mayaVersion = mayaVersion.replace(' ', '-')
+	mayaVersion = mayaVersion.replace(' ', '-')
 
 	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
 		mayaHome = os.path.join(mel.eval('getenv HOME'), 'Library', 'Preferences', 'Autodesk', 'maya', mayaVersion)

@@ -77,6 +77,7 @@ def setEnv(envVars):
 	os.environ['PYTHONPATH'] = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'maya__env__') + os.pathsep + os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'scripts')
 	os.environ['MAYA_DEBUG_ENABLE_CRASH_REPORTING'] = '0'
 	os.environ['MAYA_PLUG_IN_PATH'] = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'plugins')
+	#os.environ['MAYA_SHELF_PATH'] = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'shelves')
 	os.environ['MAYA_SCRIPT_PATH'] = os.path.join(os.environ['PIPELINE'],'maya_rsc', 'maya__env__') + os.pathsep + os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'scripts')
 	os.environ['MI_CUSTOM_SHADER_PATH'] = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'shaders', 'include')
 	os.environ['MI_LIBRARY_PATH'] = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'shaders')
