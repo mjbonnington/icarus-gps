@@ -1,70 +1,106 @@
 #!/usr/bin/python
 
 # Icarus Admin Tools
-# Job Settings editor dialog
-# v0.2
+# Generic settings editor dialog
+# v0.3
 #
 # Michael Bonnington 2015
 # Gramercy Park Studios
 
 
 from PySide import QtCore, QtGui
-from job_settings_ui import *
+from PySide.QtCore import QSignalMapper, Signal
+from settings_ui import *
 import os, sys, math
 
-# Initialise Icarus environment
-sys.path.append(os.environ['ICWORKINGDIR'])
-import env__init__
-env__init__.setEnv()
-env__init__.appendSysPaths()
+# Initialise Icarus environment - only when standalone
+#sys.path.append(os.environ['ICWORKINGDIR'])
+#import env__init__
+#env__init__.setEnv()
+#env__init__.appendSysPaths()
 
 import jobSettings, appPaths
 
 
-class jobSettingsDialog(QtGui.QDialog):
+class settingsDialog(QtGui.QDialog):
 
-	def __init__(self, parent = None):
+	# Custom signals
+	customSignal = Signal(str)
+
+	def __init__(self, parent=None, settingsType="Generic", categoryLs=[], xmlData=None):
 		#QtGui.QDialog.__init__(self, parent)
-		super(jobSettingsDialog, self).__init__()
+		super(settingsDialog, self).__init__()
 		self.ui = Ui_Dialog()
 		self.ui.setupUi(self)
 
-		# Load data from xml file
-		self.jd = jobSettings.jobSettings()
-		jd_load = self.jd.loadXML(os.path.join(os.environ['JOBDATA'], 'jobData.xml'))
-		self.ap = appPaths.appPaths()
-		ap_load = self.ap.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'appPaths.xml'))
+		# Set window title
+		self.setWindowTitle("%s Settings" %settingsType)
 
-		if jd_load and ap_load:
-			self.init()
-		else:
-			print "Warning: XML data error."
-			self.init()
+		# Some global variables to hold the currently edited attribute and its value. A bit hacky
+		self.currentCategory = ""
+		self.currentAttr = ""
+		self.currentValue = ""
+
+		self.settingsType = settingsType
+		self.categoryLs = categoryLs
+		self.xmlData = xmlData
+
+		self.lockUI = True
+
+		# Instantiate XML data classes
+		self.jd = jobSettings.jobSettings()
+		self.ap = appPaths.appPaths()
+		self.reset()
+
+		# Set up keyboard shortcuts
+		self.shortcutSave = QtGui.QShortcut(self)
+		self.shortcutSave.setKey('Ctrl+S')
+		self.shortcutSave.activated.connect(self.save)
+
+		self.shortcutLock = QtGui.QShortcut(self)
+		self.shortcutLock.setKey('Ctrl+L')
+		self.shortcutLock.activated.connect(self.toggleLockUI)
 
 		# Connect signals and slots
 		self.ui.categories_listWidget.currentItemChanged.connect( lambda current: self.openProperties(current.text()) )
 
-		self.ui.jobSettings_buttonBox.button(QtGui.QDialogButtonBox.Reset).clicked.connect(self.init)
-		#self.ui.jobSettings_buttonBox.button(QtGui.QDialogButtonBox.Save).clicked.connect(self.ap.saveXML)
-		self.ui.jobSettings_buttonBox.button(QtGui.QDialogButtonBox.Close).clicked.connect(self.exit)
+		#self.ui.settings_buttonBox.button(QtGui.QDialogButtonBox.Reset).clicked.connect(self.reset)
+		self.ui.settings_buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.exit)
+		self.ui.settings_buttonBox.button(QtGui.QDialogButtonBox.Save).clicked.connect(self.saveAndExit)
 
 
-	def init(self):
+	def reset(self):
 		""" Initialise or reset by reloading data
 		"""
+		# Load data from xml file - perhaps pass in as an object?
+		#jd_load = self.jd.loadXML(os.path.join(os.environ['JOBDATA'], 'jobData.xml'))
+		jd_load = self.jd.loadXML(self.xmlData)
+		ap_load = self.ap.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'appPaths.xml'))
+
+		if jd_load and ap_load:
+			pass
+		else:
+			print "Warning: XML data error."
+
 		# Populate categories - hard coding this for now so XML can be generated from this list. Perhaps could be auto-generated from existing ui files?
 		#categories = self.jd.getCategories() # Read categories from XML
-		categories = ['job', 'units', 'time', 'resolution', 'apps', 'other']
+		#categories = ['job', 'units', 'time', 'resolution', 'apps', 'other']
+		if self.categoryLs is not None:
+			self.ui.categories_listWidget.clear()
 
-		for cat in categories:
-			self.ui.categories_listWidget.addItem(cat)
+			for cat in self.categoryLs:
+				self.ui.categories_listWidget.addItem(cat)
 
-		# Set the maximum size of the list widget
-		self.ui.categories_listWidget.setMaximumWidth( self.ui.categories_listWidget.sizeHintForColumn(0) + 64 )
+			# Set the maximum size of the list widget
+			self.ui.categories_listWidget.setMaximumWidth( self.ui.categories_listWidget.sizeHintForColumn(0) + 64 )
 
-		# Select the first item & show the appropriate settings panel
-		self.ui.categories_listWidget.item(0).setSelected(True)
-		self.openProperties( self.ui.categories_listWidget.item(0).text() )
+			# Select the first item & show the appropriate settings panel
+			if self.currentCategory == "":
+				currentItem = self.ui.categories_listWidget.item(0)
+			else:
+				currentItem = self.ui.categories_listWidget.findItems(self.currentCategory, QtCore.Qt.MatchExactly)[0]
+			currentItem.setSelected(True)
+			self.openProperties( currentItem.text() )
 
 
 	def keyPressEvent(self, event):
@@ -75,11 +111,11 @@ class jobSettingsDialog(QtGui.QDialog):
 		#	return
 
 
-#	def eventFilter(self, object, event):
-#		""" 
-#		"""
-#		if event.type() == QEvent.FocusOut:
-#			print object
+	def toggleLockUI(self):
+		""" Lock/unlock UI for editing
+		"""
+		self.lockUI = not self.lockUI
+		self.ui.settings_scrollArea.setEnabled(self.lockUI)
 
 
 	def importUI(self, ui_file, frame):
@@ -94,8 +130,16 @@ class jobSettingsDialog(QtGui.QDialog):
 	def openProperties(self, category):
 		""" Open properties panel for selected settings category
 		"""
-		# Reload job data
-		#self.jd.loadXML()
+		#print "[%s]" %category
+
+		# Store the widget values of the currently open page
+		#self.storeProperties(self.currentCategory)
+
+		self.currentCategory = category # a bit hacky
+
+		# Create the signal mapper
+		signalMapper = QSignalMapper(self)
+		signalMapper.mapped.connect(self.customSignal)
 
 		# Create new frame to hold properties UI
 		self.ui.settings_frame.close()
@@ -106,56 +150,52 @@ class jobSettingsDialog(QtGui.QDialog):
 		# Load approprate UI file into frame
 		self.importUI('settings_%s_ui' %category, self.ui.settings_frame)
 
-		# Load data
+		# Load values into form widgets
 		widgets = self.ui.settings_frame.children()
+
 		for widget in widgets:
-			# TODO: only connect widgets which have a dynamic property attached
-			attr = widget.objectName().split('_')[0]
+			#attr = widget.objectName().split('_')[0] # use first part of widget object's name
+			attr = widget.property('xmlTag') # use widget's dynamic 'xmlTag' 
 
-			if isinstance(widget, QtGui.QComboBox):
-				#widget.setValue( int(self.jd.getText(category, widget.property('xmlAttr'))) )
-				try:
-					text = self.jd.getText(category, attr)
-					widget.setCurrentIndex( widget.findText(text) )
-				except AttributeError:
-					pass
-					#text = ""
-				print "%s: %s" %(attr, widget.currentText())
+			if attr is not None:
+				signalMapper.setMapping(widget, attr)
 
-			if isinstance(widget, QtGui.QLineEdit):
-				#widget.setText( self.jd.getText(category, widget.property('xmlAttr')) )
-				try:
-					text = self.jd.getText(category, attr)
-					widget.setText(text)
-				except AttributeError:
-					pass
-					#text = ""
-				print "%s: %s" %(attr, widget.text())
-				#widget.editingFinished.connect( lambda current: self.jd.setText(category, attr, current.text()) )
-			#	widget.s = QtCore.Signal()
-			#	widget.s.connect = lambda f: self.connect(widget.s, f)
+				# Combo box(es)...
+				if isinstance(widget, QtGui.QComboBox):
+					text = self.jd.getValue(category, attr)
+					if text is not "":
+						widget.setCurrentIndex( widget.findText(text) )
+					#print "%s: %s" %(attr, widget.currentText())
+					widget.currentIndexChanged.connect(signalMapper.map)
+					widget.currentIndexChanged.connect( lambda current: self.storeComboBoxValue(current) )
 
-			if isinstance(widget, QtGui.QSpinBox):
-				#widget.setValue( int(self.jd.getText(category, widget.property('xmlAttr'))) )
-				try:
-					value = int( self.jd.getText(category, attr) )
-					widget.setValue(value)
-				except AttributeError:
-					pass
-					#value = 0
-				print "%s: %s" %(attr, widget.value())
+				# Line edit(s)...
+				if isinstance(widget, QtGui.QLineEdit):
+					text = self.jd.getValue(category, attr)
+					if text is not "":
+						widget.setText(text)
+					#print "%s: %s" %(attr, widget.text())
+					widget.textEdited.connect(signalMapper.map)
+					widget.textEdited.connect( lambda current: self.storeValue(current) )
 
+				# Spin box(es)...
+				if isinstance(widget, QtGui.QSpinBox):
+					text = self.jd.getValue(category, attr)
+					if text is not "":
+						widget.setValue( int(text) )
+					#print "%s: %s" %(attr, widget.value())
+					widget.valueChanged.connect(signalMapper.map)
+					widget.valueChanged.connect( lambda current: self.storeValue(current) )
+
+		# Run special function to deal with apps panel
 		if category == 'apps':
 			self.populateAppVersions(self.ui.settings_frame)
 
+		# Run special function to deal with resolution panel
 		if category == 'resolution':
 			self.setupRes()
 
-
-# We monkey-patch signal to tell you when it is being connected to.
-#	def connect(self, f):
-#		print("Boy just got a new connection")
-#		QtCore.Signal.connect(self, f)
+		#signalMapper.mapped.connect(self.customSignal)
 
 
 	def setupRes(self):
@@ -192,7 +232,7 @@ class jobSettingsDialog(QtGui.QDialog):
 		fullHeight = frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].value()
 		self.aspectRatio = float(fullWidth) / float(fullHeight)
 
-		print "aspect ratio: %f" %self.aspectRatio
+		#print "aspect ratio: %f" %self.aspectRatio
 
 
 	def updateResFromPreset(self, index = -1):
@@ -200,7 +240,7 @@ class jobSettingsDialog(QtGui.QDialog):
 		"""
 		frame = self.ui.settings_frame
 
-		print index, frame.findChildren(QtGui.QComboBox, 'resPreset_comboBox')[0].currentText()
+		#print index, frame.findChildren(QtGui.QComboBox, 'resPreset_comboBox')[0].currentText()
 
 
 	def updateResFullWidth(self, width = -1):
@@ -223,7 +263,7 @@ class jobSettingsDialog(QtGui.QDialog):
 		else:
 			height = frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].value()
 
-		print "full res: [%d]x%d (aspect ratio: %f)" %(width, height, self.aspectRatio)
+		#print "full res: [%d]x%d (aspect ratio: %f)" %(width, height, self.aspectRatio)
 
 		# Update height widget
 		frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].setValue(height)
@@ -256,7 +296,7 @@ class jobSettingsDialog(QtGui.QDialog):
 		else:
 			width = frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].value()
 
-		print "full res: %dx[%d] (aspect ratio: %f)" %(width, height, self.aspectRatio)
+		#print "full res: %dx[%d] (aspect ratio: %f)" %(width, height, self.aspectRatio)
 
 		# Update width widget
 		frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].setValue(width)
@@ -283,7 +323,7 @@ class jobSettingsDialog(QtGui.QDialog):
 		else:
 			height = frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].value()
 
-		print "proxy res: [%d]x%d (aspect ratio: %f)" %(width, height, self.aspectRatio)
+		#print "proxy res: [%d]x%d (aspect ratio: %f)" %(width, height, self.aspectRatio)
 
 		# Update height widget
 		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].setValue(height)
@@ -306,7 +346,7 @@ class jobSettingsDialog(QtGui.QDialog):
 		else:
 			width = frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].value()
 
-		print "proxy res: %dx[%d] (aspect ratio: %f)" %(width, height, self.aspectRatio)
+		#print "proxy res: %dx[%d] (aspect ratio: %f)" %(width, height, self.aspectRatio)
 
 		# Update width widget
 		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].setValue(width)
@@ -335,7 +375,7 @@ class jobSettingsDialog(QtGui.QDialog):
 			proxyScale = -1
 			proxyRes = frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].value(), frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].value()
 
-		print "proxy res: %dx%d (%s: %f)" %(proxyRes[0], proxyRes[1], proxyMode, proxyScale)
+		#print "proxy res: %dx%d (%s: %f)" %(proxyRes[0], proxyRes[1], proxyMode, proxyScale)
 
 		# Update widgets
 		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].setValue(proxyRes[0])
@@ -364,6 +404,9 @@ class jobSettingsDialog(QtGui.QDialog):
 	def populateAppVersions(self, frame, selectCurrent=True):
 		""" Populate application version combo boxes
 		"""
+		# Create the signal mapper
+		signalMapper = QSignalMapper(self)
+
 		noSelectText = ""
 		apps = self.ap.getApps() # Get apps and versions
 		formLayout = frame.findChildren(QtGui.QFormLayout, 'formLayout')
@@ -381,6 +424,9 @@ class jobSettingsDialog(QtGui.QDialog):
 			comboBox = QtGui.QComboBox(frame)
 			comboBox.setObjectName("%s_comboBox" %app)
 			comboBox.clear()
+
+			signalMapper.setMapping(comboBox, app)
+
 			versions = self.ap.getVersions(app) # Popluate the combo box with available app versions
 			availableVersions = []
 			for version in versions:
@@ -398,12 +444,14 @@ class jobSettingsDialog(QtGui.QDialog):
 				except AttributeError:
 					text = noSelectText
 					#comboBox.insertItem(text, 0)
-				print "%s: %s" %(app, text)
+				#print "%s: %s" %(app, text)
 				comboBox.setCurrentIndex( comboBox.findText(text) )
 
-			#QtCore.QObject.connect(comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), lambda x: self.storeAppVersion(x) )
-			#comboBox.currentIndexChanged.connect( lambda x: self.storeAppVersion(app[0], availableVersions[x]) )
+			comboBox.currentIndexChanged.connect(signalMapper.map)
+			comboBox.currentIndexChanged.connect( lambda current: self.storeComboBoxValue(current) )
 			formLayout[0].setWidget(i, QtGui.QFormLayout.FieldRole, comboBox)
+
+		signalMapper.mapped.connect(self.customSignal)
 
 
 	def resPresetsEditor(self):
@@ -413,7 +461,6 @@ class jobSettingsDialog(QtGui.QDialog):
 		reload(set_res_presets__main__)
 		self.setAppPaths = set_res_presets__main__.setResPresetsDialog()
 		self.setAppPaths.show()
-		#sys.exit(self.setAppPaths.exec_())
 		self.setAppPaths.exec_()
 
 		# Reload resPresets XML and update comboBox contents after closing dialog
@@ -428,12 +475,81 @@ class jobSettingsDialog(QtGui.QDialog):
 		reload(set_app_paths__main__)
 		self.setResPresets = set_app_paths__main__.setAppPathsDialog()
 		self.setResPresets.show()
-		#sys.exit(self.setResPresets.exec_())
 		self.setResPresets.exec_()
 
 		# Reload appPaths XML and update comboBox contents after closing dialog
 		self.ap.loadXML()
 		self.openProperties('apps')
+
+
+	def storeValue(self, val):
+		""" Stores the currently edited attribute value into the XML data
+		"""
+		self.currentValue = str(val) # value must be a string for XML
+		#print '[%s] [%s] : %s' %(self.currentCategory, self.currentAttr, self.currentValue)
+		self.jd.setValue(self.currentCategory, self.currentAttr, self.currentValue)
+
+
+	def storeComboBoxValue(self, index):
+		""" Get the value of the currently edited ComboBox. A bit hacky
+		"""
+		frame = self.ui.settings_frame
+		val = frame.findChildren(QtGui.QComboBox, '%s_comboBox' %self.currentAttr)[0].currentText()
+		self.storeValue(val)
+
+
+	def storeProperties(self, category):
+		""" Store properties for all relevant widgets on selected settings category panel
+		"""
+		# Load values into form widgets
+		widgets = self.ui.settings_frame.children()
+
+		for widget in widgets:
+			attr = widget.property('xmlTag')
+
+			# Only store values of wigets which have the dynamic property 'xmlTag' set
+			if attr is not None:
+				self.currentAttr = attr
+
+				# Combo box(es)...
+				if isinstance(widget, QtGui.QComboBox):
+					#print "%s: %s" %(attr, widget.currentText())
+					self.storeValue( widget.currentText() )
+					#self.storeComboBoxValue( widget.currentIndex() )
+
+				# Line edit(s)...
+				if isinstance(widget, QtGui.QLineEdit):
+					#print "%s: %s" %(attr, widget.text())
+					self.storeValue( widget.text() )
+
+				# Spin box(es)...
+				if isinstance(widget, QtGui.QSpinBox):
+					#print "%s: %s" %(attr, widget.value())
+					self.storeValue( widget.value() )
+
+
+	def save(self):
+		""" Save data
+		"""
+		# Store the values from widgets on the current page
+		#self.storeProperties(self.currentCategory)
+		for cat in self.categoryLs:
+			self.openProperties(cat)
+			self.storeProperties(cat)
+
+		if self.jd.saveXML():
+			print "%s settings data file saved." %self.settingsType
+			return True
+		else:
+			print "Warning: %s settings data file could not be saved." %self.settingsType
+			return False
+
+
+	def saveAndExit(self):
+		""" Save data and exit
+		"""
+		if self.save():
+			self.hide()
 
 
 	def exit(self):
@@ -453,10 +569,26 @@ if __name__ == "__main__":
 	with open(qss, "r") as fh:
 		app.setStyleSheet(fh.read())
 
-	jobSettingsEditor = jobSettingsDialog()
-	jobSettingsEditor.show()
-	sys.exit(jobSettingsEditor.exec_())
+	settingsEditor = settingsDialog()
+
+	@settingsEditor.customSignal.connect
+	def storeAttr(attr):
+		settingsEditor.currentAttr = attr # a bit hacky - need to find a way to add this function to main class
+		#print '[%s] :' %attr,
+		#print '[%s] : %d' %(attr, value)
+	#storeAttr = settingsEditor.customSignal.connect(storeAttr)
+
+	settingsEditor.show()
+	sys.exit(settingsEditor.exec_())
 
 #else:
-#	jobSettingsEditor = jobSettingsDialog()
-#	jobSettingsEditor.show()
+#	settingsEditor = settingsDialog()
+#
+#	@settingsEditor.customSignal.connect
+#	def storeAttr(attr):
+#		settingsEditor.currentAttr = attr # a bit hacky - need to find a way to add this function to main class
+#		#print '[%s] :' %attr,
+#		#print '[%s] : %d' %(attr, value)
+#	#storeAttr = settingsEditor.customSignal.connect(storeAttr)
+#
+#	settingsEditor.show()

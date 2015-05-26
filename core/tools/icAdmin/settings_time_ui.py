@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'settings_time_ui.ui'
 #
-# Created: Tue May 19 18:09:34 2015
+# Created: Tue May 26 14:36:46 2015
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ class Ui_settings_frame(object):
         self.range_horizontalLayout = QtGui.QHBoxLayout()
         self.range_horizontalLayout.setObjectName("range_horizontalLayout")
         self.rangeStart_spinBox = QtGui.QSpinBox(settings_frame)
-        self.rangeStart_spinBox.setMinimum(1)
+        self.rangeStart_spinBox.setMinimum(0)
         self.rangeStart_spinBox.setMaximum(9999)
         self.rangeStart_spinBox.setProperty("value", 1001)
         self.rangeStart_spinBox.setObjectName("rangeStart_spinBox")
@@ -37,7 +37,7 @@ class Ui_settings_frame(object):
         self.rangeSep_label.setObjectName("rangeSep_label")
         self.range_horizontalLayout.addWidget(self.rangeSep_label)
         self.rangeEnd_spinBox = QtGui.QSpinBox(settings_frame)
-        self.rangeEnd_spinBox.setMinimum(1)
+        self.rangeEnd_spinBox.setMinimum(0)
         self.rangeEnd_spinBox.setMaximum(9999)
         self.rangeEnd_spinBox.setProperty("value", 1100)
         self.rangeEnd_spinBox.setObjectName("rangeEnd_spinBox")
@@ -70,7 +70,11 @@ class Ui_settings_frame(object):
     def retranslateUi(self, settings_frame):
         settings_frame.setWindowTitle(QtGui.QApplication.translate("settings_frame", "Frame", None, QtGui.QApplication.UnicodeUTF8))
         self.range_label.setText(QtGui.QApplication.translate("settings_frame", "Frame range:", None, QtGui.QApplication.UnicodeUTF8))
+        self.rangeStart_spinBox.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "rangeStart", None, QtGui.QApplication.UnicodeUTF8))
         self.rangeSep_label.setText(QtGui.QApplication.translate("settings_frame", "-", None, QtGui.QApplication.UnicodeUTF8))
+        self.rangeEnd_spinBox.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "rangeEnd", None, QtGui.QApplication.UnicodeUTF8))
         self.fps_label.setText(QtGui.QApplication.translate("settings_frame", "Frames per second:", None, QtGui.QApplication.UnicodeUTF8))
+        self.fps_spinBox.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "fps", None, QtGui.QApplication.UnicodeUTF8))
         self.handles_label.setText(QtGui.QApplication.translate("settings_frame", "Handles:", None, QtGui.QApplication.UnicodeUTF8))
+        self.handles_spinBox.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "handles", None, QtGui.QApplication.UnicodeUTF8))
 

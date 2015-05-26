@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'settings_job_ui.ui'
 #
-# Created: Tue May 19 18:09:44 2015
+# Created: Tue May 26 14:37:08 2015
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -76,9 +76,15 @@ class Ui_settings_frame(object):
     def retranslateUi(self, settings_frame):
         settings_frame.setWindowTitle(QtGui.QApplication.translate("settings_frame", "Frame", None, QtGui.QApplication.UnicodeUTF8))
         self.projnum_label.setText(QtGui.QApplication.translate("settings_frame", "Project number:", None, QtGui.QApplication.UnicodeUTF8))
+        self.projnum_spinBox.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "projnum", None, QtGui.QApplication.UnicodeUTF8))
         self.jobnum_label.setText(QtGui.QApplication.translate("settings_frame", "Job number:", None, QtGui.QApplication.UnicodeUTF8))
+        self.jobnum_spinBox.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "jobnum", None, QtGui.QApplication.UnicodeUTF8))
         self.client_label.setText(QtGui.QApplication.translate("settings_frame", "Client:", None, QtGui.QApplication.UnicodeUTF8))
+        self.client_lineEdit.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "client", None, QtGui.QApplication.UnicodeUTF8))
         self.brand_label.setText(QtGui.QApplication.translate("settings_frame", "Brand:", None, QtGui.QApplication.UnicodeUTF8))
+        self.brand_lineEdit.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "brand", None, QtGui.QApplication.UnicodeUTF8))
         self.title_label.setText(QtGui.QApplication.translate("settings_frame", "Title:", None, QtGui.QApplication.UnicodeUTF8))
+        self.title_lineEdit.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "title", None, QtGui.QApplication.UnicodeUTF8))
         self.deliverable_label.setText(QtGui.QApplication.translate("settings_frame", "Deliverable:", None, QtGui.QApplication.UnicodeUTF8))
+        self.deliverable_lineEdit.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "deliverable", None, QtGui.QApplication.UnicodeUTF8))
 

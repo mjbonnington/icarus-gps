@@ -5,16 +5,52 @@
 
 
 import os, sys
+import jobSettings, appPaths
 
 #sets job and shot environment variables
 def setEnv(envVars):
 	job, shot, shotPath = envVars
 	jobDataPath = os.path.join(os.path.split(shotPath)[0], os.environ['DATAFILESRELATIVEDIR'])
 	shotDataPath = os.path.join(shotPath, os.environ['DATAFILESRELATIVEDIR'])
-	sys.path.append(jobDataPath); sys.path.append(shotDataPath)
-	import jobData, shotData
-	reload(jobData); reload(shotData)
-	sys.path.remove(jobDataPath); sys.path.remove(shotDataPath)
+
+	# Instantiate job / shot settings classes
+	jobData = jobSettings.jobSettings()
+	shotData = jobSettings.jobSettings()
+	ap = appPaths.appPaths()
+
+	jobDataLoaded = jobData.loadXML(os.path.join(jobDataPath, 'jobData.xml'))
+	shotDataLoaded = shotData.loadXML(os.path.join(shotDataPath, 'shotData.xml'))
+	ap.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'appPaths.xml'))
+
+	# If XML files don't exist, load data from legacy Python files
+	if not jobDataLoaded:
+		print "Converting jobData.py to jobData.xml"
+		import legacySettings
+		legacySettings.convertJobData(jobDataPath, jobData, ap)
+		#print "Using default values"
+		jobData.loadXML()
+	if not shotDataLoaded:
+		print "Converting shotData.py to shotData.xml"
+		import legacySettings
+		legacySettings.convertShotData(shotDataPath, shotData)
+		shotData.loadXML()
+		#print "Using values inherited from Job"
+		#print "Using default values"
+#	if not ap.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'appPaths.xml')):
+#		print "PROBLEM LOADING APP PATHS DATA"
+
+	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+		currentOS = 'osx'
+	elif os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+		currentOS = 'win'
+	else:
+		currentOS = 'linux'
+
+	def getAppExecPath(app):
+		""" Return the path to the executable for the specified app on the current OS
+		"""
+		return ap.getPath(app, jobData.getValue('apps', app), currentOS)
+
 	#TERMINAL
 	os.environ['GPS_RC'] = os.path.join(os.environ['PIPELINE'], 'core', 'ui', '.gps_rc')
 
@@ -25,30 +61,30 @@ def setEnv(envVars):
 	os.environ['SHOTDATA'] = os.path.normpath(shotDataPath)
 	os.environ['JOB'] = job
 	os.environ['SHOT'] = shot
-	os.environ['PRODBOARD'] = jobData.prodBoard
-	os.environ['PROJECTTOOLS'] = jobData.projectTools
-	os.environ['FRAMEVIEWER'] = os.path.normpath(jobData.frameViewer)
+	os.environ['PRODBOARD'] = jobData.getValue('other', 'prodboard') #jobData.prodBoard
+	os.environ['PROJECTTOOLS'] = jobData.getValue('other', 'projtools') #jobData.projectTools
+	#os.environ['FRAMEVIEWER'] = os.path.normpath(jobData.frameViewer)
 	os.environ['JOBAPPROVEDPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['JOBPATH'], 'Assets', '3D') )
 	os.environ['SHOTAPPROVEDPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['SHOTPATH'], 'Publish') )
 	os.environ['PUBLISHRELATIVEDIR'] = '.publish'
 	os.environ['JOBPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['JOBPATH'] , os.environ['PUBLISHRELATIVEDIR']) )
 	os.environ['SHOTPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['SHOTPATH'], os.environ['PUBLISHRELATIVEDIR']) )
 	os.environ['WIPSDIR'] = os.path.normpath( os.path.join(os.path.split(os.environ['JOBPATH'])[0], 'Deliverables', 'WIPS') )
-	os.environ['ELEMENTSLIBRARY'] = os.path.normpath(jobData.elementsLibrary)
-	os.environ['TIMEFORMAT'] = jobData.timeFormat
-	os.environ['ANGLE'] = jobData.angle
-	os.environ['UNIT'] = jobData.unit
-	os.environ['FPS'] = jobData.fps
-	os.environ['STARTFRAME'] = shotData.frRange[0]
-	os.environ['ENDFRAME'] = shotData.frRange[1]
+	os.environ['ELEMENTSLIBRARY'] = os.path.normpath(jobData.getValue('other', 'elementslib')) #os.path.normpath(jobData.elementsLibrary)
+	os.environ['TIMEFORMAT'] = jobData.getValue('units', 'time') #jobData.timeFormat
+	os.environ['UNIT'] = jobData.getValue('units', 'linear') #jobData.unit
+	os.environ['ANGLE'] = jobData.getValue('units', 'angle') #jobData.angle
+	os.environ['FPS'] = shotData.getValue('time', 'fps') #jobData.fps
+	os.environ['STARTFRAME'] = shotData.getValue('time', 'rangeStart') #shotData.frRange[0]
+	os.environ['ENDFRAME'] = shotData.getValue('time', 'rangeEnd') #shotData.frRange[1]
 	os.environ['FRAMERANGE'] = '%s-%s' % (os.environ['STARTFRAME'], os.environ['ENDFRAME'])
-	os.environ['RESOLUTIONX'] = shotData.res[0]
-	os.environ['RESOLUTIONY'] = shotData.res[1]
+	os.environ['RESOLUTIONX'] = shotData.getValue('resolution', 'fullWidth') #shotData.res[0]
+	os.environ['RESOLUTIONY'] = shotData.getValue('resolution', 'fullHeight') #shotData.res[1]
 	os.environ['RESOLUTION'] = '%sx%s' % (os.environ['RESOLUTIONX'], os.environ['RESOLUTIONY'])
-	os.environ['PROXY_RESOLUTIONX'] = str(int(os.environ['RESOLUTIONX'])/2)
-	os.environ['PROXY_RESOLUTIONY'] = str(int(os.environ['RESOLUTIONY'])/2)
+	os.environ['PROXY_RESOLUTIONX'] = shotData.getValue('resolution', 'proxyWidth') #str(int(os.environ['RESOLUTIONX'])/2)
+	os.environ['PROXY_RESOLUTIONY'] = shotData.getValue('resolution', 'proxyHeight') #str(int(os.environ['RESOLUTIONY'])/2)
 	os.environ['PROXY_RESOLUTION'] = '%sx%s' % (os.environ['PROXY_RESOLUTIONX'], os.environ['PROXY_RESOLUTIONY'])
-	os.environ['ASPECTRATIO'] = '%s' % float(float(os.environ['RESOLUTIONX']) / float(os.environ['RESOLUTIONY']))
+	#os.environ['ASPECTRATIO'] = '%s' % float(float(os.environ['RESOLUTIONX']) / float(os.environ['RESOLUTIONY']))
 	os.environ['RECENTFILESDIR'] = os.path.normpath( os.path.join(os.environ['ICUSERPREFS'], 'recentFiles') )
 
 	#MARI
@@ -67,8 +103,8 @@ def setEnv(envVars):
 	os.environ['MARI_DEFAULT_RENDER_PATH'] = os.environ['MARIRENDERSDIR']
 	os.environ['MARI_DEFAULT_CAMERA_PATH'] = os.environ['SHOTAPPROVEDPUBLISHDIR']
 	os.environ['MARI_SCRIPT_PATH'] = os.path.join(os.environ['PIPELINE'], 'mari_rsc', 'scripts')
-	os.environ['MARI_NUKEWORKFLOW_PATH'] = jobData.nukeVersion
-	os.environ['MARIVERSION'] = jobData.mariVersion
+	os.environ['MARI_NUKEWORKFLOW_PATH'] = getAppExecPath('Nuke') #jobData.nukeVersion
+	os.environ['MARIVERSION'] = getAppExecPath('Mari') #jobData.mariVersion
 
 	#MAYA ENV
 	#os.environ['PATH'] = os.path.join('%s;%s' % (os.environ['PATH'], os.environ['PIPELINE']), 'maya_rsc', 'dlls')
@@ -97,16 +133,15 @@ def setEnv(envVars):
 	os.environ['MAYACACHEDIR'] = os.path.join(os.environ['MAYADIR'], 'cache', os.environ['USERNAME'])
 	os.environ['MAYASOURCEIMAGESDIR'] = os.path.join(os.environ['MAYADIR'], 'sourceimages', os.environ['USERNAME'])
 	os.environ['MAYARENDERSDIR'] = os.path.join(os.environ['MAYADIR'], 'renders', os.environ['USERNAME'])
-	os.environ['MAYAVERSION'] = os.path.normpath(jobData.mayaVersion)
-	os.environ['MAYARENDERVERSION'] = os.path.join( os.path.dirname( os.path.normpath(jobData.mayaVersion) ), 'Render' )
-	#os.environ['MAYARENDERVERSION'] = os.path.join(os.path.dirname(jobData.mayaVersion), 'Render')
+	os.environ['MAYAVERSION'] = getAppExecPath('Maya') #os.path.normpath(jobData.mayaVersion)
+	os.environ['MAYARENDERVERSION'] = os.path.join( os.path.dirname( os.environ['MAYAVERSION'] ), 'Render' )
 
 	#MUDBOXENV
 	os.environ['MUDBOXDIR'] = os.path.join(os.environ['SHOTPATH'], '3D', 'mudbox')
 	os.environ['MUDBOXSCENESDIR'] = os.path.join(os.environ['MUDBOXDIR'], 'scenes', os.environ['USERNAME'])
 	os.environ['MUDBOX_IDLE_LICENSE_TIME'] = '60'
 	os.environ['MUDBOX_PLUG_IN_PATH'] = os.path.join(os.environ['PIPELINE'], 'mudbox_rsc', 'plugins') 
-	os.environ['MUDBOXVERSION'] = jobData.mudboxVersion
+	os.environ['MUDBOXVERSION'] = getAppExecPath('Mudbox') #jobData.mudboxVersion
 
 	#NUKE ENV
 	os.environ['NUKE_PATH'] = os.path.join(os.environ['PIPELINE'], 'nuke_rsc')
@@ -114,12 +149,12 @@ def setEnv(envVars):
 	os.environ['NUKEELEMENTSDIR'] = os.path.join(os.environ['NUKEDIR'], 'elements', os.environ['USERNAME'])
 	os.environ['NUKESCRIPTSDIR'] = os.path.join(os.environ['NUKEDIR'], 'scripts', os.environ['USERNAME'])
 	os.environ['NUKERENDERSDIR'] = os.path.join(os.environ['NUKEDIR'], 'renders', os.environ['USERNAME'])
-	os.environ['NUKEVERSION'] = jobData.nukeVersion
+	os.environ['NUKEVERSION'] = getAppExecPath('Nuke') #jobData.nukeVersion
 	#os.environ['NUKEXVERSION'] = '%s --nukex' % jobData.nukeVersion # now being set in launchApps.py
 
 	#HIERO ENV
 	os.environ['HIEROEDITORIALPATH'] = os.path.join(os.path.split(os.environ['JOBPATH'])[0], 'Editorial', 'Hiero') 
-	os.environ['HIEROPLAYERVERSION'] = jobData.hieroPlayerVersion
+	os.environ['HIEROPLAYERVERSION'] = getAppExecPath('HieroPlayer') #jobData.hieroPlayerVersion
 	os.environ['HIERO_PLUGIN_PATH'] = os.path.join(os.environ['PIPELINE'], 'hiero_rsc')
 
 	#CLARISSE ENV
@@ -127,7 +162,7 @@ def setEnv(envVars):
 
 	#REALFLOW
 	os.environ['REALFLOWDIR'] = os.path.join(os.environ['SHOTPATH'], '3D', 'realflow')
-	os.environ['REALFLOWVERSION'] = jobData.realflowVersion
+	os.environ['REALFLOWVERSION'] = getAppExecPath('RealFlow') #jobData.realflowVersion
 	os.environ['REALFLOWSCENESDIR'] = os.path.join(os.environ['REALFLOWDIR'], os.environ['USERNAME'])
 	os.environ['RF_STARTUP_PYTHON_SCRIPT_FILE_PATH'] = os.path.join(os.environ['PIPELINE'], 'realflow_rsc', 'scripts', 'startup.rfs')
 	os.environ['RFDEFAULTPROJECT'] = os.path.join(os.environ['REALFLOWSCENESDIR'], '%s_%s' % (os.environ['JOB'], os.environ['SHOT']))
@@ -149,6 +184,7 @@ def setEnv(envVars):
 		os.environ['DJV_CONVERT'] = '%s/external_apps/djv/djv-1.0.5-Linux-64/bin/djv_convert' % os.environ['PIPELINE']
 		os.environ['DJV_PLAY'] = '%s/external_apps/djv/djv-1.0.5-Linux-64/bin/djv_view' % os.environ['PIPELINE']
 
-	# Temp declaration until appPaths.xml, and jobData / shotData implementation changed
-	os.environ['DEADLINEMONITORVERSION'] = '/Applications/Thinkbox/Deadline7/DeadlineMonitor7.app/Contents/MacOS/DeadlineMonitor7'
-	os.environ['DEADLINESLAVEVERSION'] = '/Applications/Thinkbox/Deadline7/DeadlineSlave7.app/Contents/MacOS/DeadlineSlave7'
+	# Deadline Monitor / Slave
+	os.environ['DEADLINEMONITORVERSION'] = getAppExecPath('DeadlineMonitor') #'/Applications/Thinkbox/Deadline7/DeadlineMonitor7.app/Contents/MacOS/DeadlineMonitor7'
+	os.environ['DEADLINESLAVEVERSION'] = getAppExecPath('DeadlineSlave') #'/Applications/Thinkbox/Deadline7/DeadlineSlave7.app/Contents/MacOS/DeadlineSlave7'
+

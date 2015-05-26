@@ -38,6 +38,9 @@
      <property name="value">
       <number>0</number>
      </property>
+     <property name="xmlTag" stdset="0">
+      <string>projnum</string>
+     </property>
     </widget>
    </item>
    <item row="1" column="0">
@@ -61,6 +64,9 @@
      <property name="value">
       <number>0</number>
      </property>
+     <property name="xmlTag" stdset="0">
+      <string>jobnum</string>
+     </property>
     </widget>
    </item>
    <item row="2" column="0">
@@ -74,7 +80,11 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QLineEdit" name="client_lineEdit"/>
+    <widget class="QLineEdit" name="client_lineEdit">
+     <property name="xmlTag" stdset="0">
+      <string>client</string>
+     </property>
+    </widget>
    </item>
    <item row="3" column="0">
     <widget class="QLabel" name="brand_label">
@@ -87,7 +97,11 @@
     </widget>
    </item>
    <item row="3" column="1">
-    <widget class="QLineEdit" name="brand_lineEdit"/>
+    <widget class="QLineEdit" name="brand_lineEdit">
+     <property name="xmlTag" stdset="0">
+      <string>brand</string>
+     </property>
+    </widget>
    </item>
    <item row="4" column="0">
     <widget class="QLabel" name="title_label">
@@ -100,7 +114,11 @@
     </widget>
    </item>
    <item row="4" column="1">
-    <widget class="QLineEdit" name="title_lineEdit"/>
+    <widget class="QLineEdit" name="title_lineEdit">
+     <property name="xmlTag" stdset="0">
+      <string>title</string>
+     </property>
+    </widget>
    </item>
    <item row="5" column="0">
     <widget class="QLabel" name="deliverable_label">
@@ -113,7 +131,11 @@
     </widget>
    </item>
    <item row="5" column="1">
-    <widget class="QLineEdit" name="deliverable_lineEdit"/>
+    <widget class="QLineEdit" name="deliverable_lineEdit">
+     <property name="xmlTag" stdset="0">
+      <string>deliverable</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

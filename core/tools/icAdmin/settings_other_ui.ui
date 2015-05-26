@@ -32,6 +32,9 @@
      <property name="text">
       <string>https://gramercypark.tpondemand.com</string>
      </property>
+     <property name="xmlTag" stdset="0">
+      <string>prodboard</string>
+     </property>
     </widget>
    </item>
    <item row="1" column="0">
@@ -42,7 +45,11 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QLineEdit" name="projtools_lineEdit"/>
+    <widget class="QLineEdit" name="projtools_lineEdit">
+     <property name="xmlTag" stdset="0">
+      <string>projtools</string>
+     </property>
+    </widget>
    </item>
    <item row="2" column="0">
     <widget class="QLabel" name="elementslib_label">
@@ -52,7 +59,11 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QLineEdit" name="elementslib_lineEdit"/>
+    <widget class="QLineEdit" name="elementslib_lineEdit">
+     <property name="xmlTag" stdset="0">
+      <string>elementslib</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

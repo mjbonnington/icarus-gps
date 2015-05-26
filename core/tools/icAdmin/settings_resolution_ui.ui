@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>240</height>
+    <height>320</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,14 +27,53 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="0">
+   <item row="0" column="1">
+    <widget class="QComboBox" name="resPreset_comboBox">
+     <item>
+      <property name="text">
+       <string>Custom</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>HD 1080p</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>HD 720p</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>PAL 576p 16:9</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>PAL 576p 4:3</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QCheckBox" name="preserveAR_checkBox">
+     <property name="text">
+      <string>Preserve aspect ratio</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
     <widget class="QLabel" name="full_label">
      <property name="text">
       <string>Full size resolution:</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
+   <item row="5" column="1">
     <layout class="QHBoxLayout" name="full_horizontalLayout">
      <item>
       <widget class="QSpinBox" name="fullWidth_spinBox">
@@ -46,6 +85,9 @@
        </property>
        <property name="value">
         <number>1920</number>
+       </property>
+       <property name="xmlTag" stdset="0">
+        <string>fullWidth</string>
        </property>
       </widget>
      </item>
@@ -73,18 +115,21 @@
        <property name="value">
         <number>1080</number>
        </property>
+       <property name="xmlTag" stdset="0">
+        <string>fullHeight</string>
+       </property>
       </widget>
      </item>
     </layout>
    </item>
-   <item row="6" column="0">
+   <item row="7" column="0">
     <widget class="QLabel" name="proxyMode_label">
      <property name="text">
       <string>Proxy mode:</string>
      </property>
     </widget>
    </item>
-   <item row="6" column="1">
+   <item row="7" column="1">
     <layout class="QHBoxLayout" name="proxyMode_horizontalLayout">
      <item>
       <widget class="QRadioButton" name="proxyModeScale_radioButton">
@@ -105,14 +150,14 @@
      </item>
     </layout>
    </item>
-   <item row="7" column="0">
+   <item row="8" column="0">
     <widget class="QLabel" name="proxyScale_label">
      <property name="text">
       <string>Proxy scale:</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="1">
+   <item row="8" column="1">
     <layout class="QHBoxLayout" name="proxyScale_horizontalLayout">
      <item>
       <widget class="QDoubleSpinBox" name="proxyScale_doubleSpinBox">
@@ -132,14 +177,14 @@
      </item>
     </layout>
    </item>
-   <item row="8" column="0">
+   <item row="9" column="0">
     <widget class="QLabel" name="proxy_label">
      <property name="text">
       <string>Proxy resolution:</string>
      </property>
     </widget>
    </item>
-   <item row="8" column="1">
+   <item row="9" column="1">
     <layout class="QHBoxLayout" name="proxy_horizontalLayout">
      <item>
       <widget class="QSpinBox" name="proxyWidth_spinBox">
@@ -154,6 +199,9 @@
        </property>
        <property name="value">
         <number>960</number>
+       </property>
+       <property name="xmlTag" stdset="0">
+        <string>proxyWidth</string>
        </property>
       </widget>
      </item>
@@ -184,59 +232,19 @@
        <property name="value">
         <number>540</number>
        </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="3" column="1">
-    <widget class="QCheckBox" name="preserveAR_checkBox">
-     <property name="text">
-      <string>Preserve aspect ratio</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <layout class="QHBoxLayout" name="preset_horizontalLayout">
-     <item>
-      <widget class="QComboBox" name="resPreset_comboBox">
-       <item>
-        <property name="text">
-         <string>Custom</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>HD 1080p</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>HD 720p</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>PAL 576p 16:9</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>PAL 576p 4:3</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="resPrest_pushButton">
-       <property name="text">
-        <string>Edit...</string>
+       <property name="xmlTag" stdset="0">
+        <string>proxyHeight</string>
        </property>
       </widget>
      </item>
     </layout>
+   </item>
+   <item row="10" column="1">
+    <widget class="QPushButton" name="resPrest_pushButton">
+     <property name="text">
+      <string>Edit Presets...</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

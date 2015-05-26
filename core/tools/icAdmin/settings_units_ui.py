@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'settings_units_ui.ui'
 #
-# Created: Tue May 19 18:10:08 2015
+# Created: Tue May 26 18:40:45 2015
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -63,6 +63,7 @@ class Ui_settings_frame(object):
         self.time_label.setText(QtGui.QApplication.translate("settings_frame", "Time:", None, QtGui.QApplication.UnicodeUTF8))
         self.linear_label.setText(QtGui.QApplication.translate("settings_frame", "Linear:", None, QtGui.QApplication.UnicodeUTF8))
         self.angle_label.setText(QtGui.QApplication.translate("settings_frame", "Angle:", None, QtGui.QApplication.UnicodeUTF8))
+        self.time_comboBox.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "time", None, QtGui.QApplication.UnicodeUTF8))
         self.time_comboBox.setItemText(0, QtGui.QApplication.translate("settings_frame", "film", None, QtGui.QApplication.UnicodeUTF8))
         self.time_comboBox.setItemText(1, QtGui.QApplication.translate("settings_frame", "pal", None, QtGui.QApplication.UnicodeUTF8))
         self.time_comboBox.setItemText(2, QtGui.QApplication.translate("settings_frame", "ntsc", None, QtGui.QApplication.UnicodeUTF8))
@@ -70,14 +71,16 @@ class Ui_settings_frame(object):
         self.time_comboBox.setItemText(4, QtGui.QApplication.translate("settings_frame", "sec", None, QtGui.QApplication.UnicodeUTF8))
         self.time_comboBox.setItemText(5, QtGui.QApplication.translate("settings_frame", "min", None, QtGui.QApplication.UnicodeUTF8))
         self.time_comboBox.setItemText(6, QtGui.QApplication.translate("settings_frame", "hour", None, QtGui.QApplication.UnicodeUTF8))
-        self.linear_comboBox.setItemText(0, QtGui.QApplication.translate("settings_frame", "millimeter", None, QtGui.QApplication.UnicodeUTF8))
-        self.linear_comboBox.setItemText(1, QtGui.QApplication.translate("settings_frame", "centimeter", None, QtGui.QApplication.UnicodeUTF8))
-        self.linear_comboBox.setItemText(2, QtGui.QApplication.translate("settings_frame", "meter", None, QtGui.QApplication.UnicodeUTF8))
-        self.linear_comboBox.setItemText(3, QtGui.QApplication.translate("settings_frame", "kilometer", None, QtGui.QApplication.UnicodeUTF8))
-        self.linear_comboBox.setItemText(4, QtGui.QApplication.translate("settings_frame", "inch", None, QtGui.QApplication.UnicodeUTF8))
-        self.linear_comboBox.setItemText(5, QtGui.QApplication.translate("settings_frame", "foot", None, QtGui.QApplication.UnicodeUTF8))
-        self.linear_comboBox.setItemText(6, QtGui.QApplication.translate("settings_frame", "yard", None, QtGui.QApplication.UnicodeUTF8))
-        self.linear_comboBox.setItemText(7, QtGui.QApplication.translate("settings_frame", "mile", None, QtGui.QApplication.UnicodeUTF8))
-        self.angle_comboBox.setItemText(0, QtGui.QApplication.translate("settings_frame", "degree", None, QtGui.QApplication.UnicodeUTF8))
-        self.angle_comboBox.setItemText(1, QtGui.QApplication.translate("settings_frame", "radian", None, QtGui.QApplication.UnicodeUTF8))
+        self.linear_comboBox.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "linear", None, QtGui.QApplication.UnicodeUTF8))
+        self.linear_comboBox.setItemText(0, QtGui.QApplication.translate("settings_frame", "mm", None, QtGui.QApplication.UnicodeUTF8))
+        self.linear_comboBox.setItemText(1, QtGui.QApplication.translate("settings_frame", "cm", None, QtGui.QApplication.UnicodeUTF8))
+        self.linear_comboBox.setItemText(2, QtGui.QApplication.translate("settings_frame", "m", None, QtGui.QApplication.UnicodeUTF8))
+        self.linear_comboBox.setItemText(3, QtGui.QApplication.translate("settings_frame", "km", None, QtGui.QApplication.UnicodeUTF8))
+        self.linear_comboBox.setItemText(4, QtGui.QApplication.translate("settings_frame", "in", None, QtGui.QApplication.UnicodeUTF8))
+        self.linear_comboBox.setItemText(5, QtGui.QApplication.translate("settings_frame", "ft", None, QtGui.QApplication.UnicodeUTF8))
+        self.linear_comboBox.setItemText(6, QtGui.QApplication.translate("settings_frame", "yd", None, QtGui.QApplication.UnicodeUTF8))
+        self.linear_comboBox.setItemText(7, QtGui.QApplication.translate("settings_frame", "mi", None, QtGui.QApplication.UnicodeUTF8))
+        self.angle_comboBox.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "angle", None, QtGui.QApplication.UnicodeUTF8))
+        self.angle_comboBox.setItemText(0, QtGui.QApplication.translate("settings_frame", "deg", None, QtGui.QApplication.UnicodeUTF8))
+        self.angle_comboBox.setItemText(1, QtGui.QApplication.translate("settings_frame", "rad", None, QtGui.QApplication.UnicodeUTF8))
 

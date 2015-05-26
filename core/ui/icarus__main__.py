@@ -433,8 +433,9 @@ class icarusApp(QtGui.QDialog):
 			#print "Minimise on launch disabled"
 
 
-	# Show about dialog
 	def about(self):
+		""" Show about dialog
+		"""
 		about_msg = """
 I   C   A   R   U   S
 
@@ -447,23 +448,42 @@ I   C   A   R   U   S
 		about.msg(about_msg)
 
 
-	# Open job settings dialog
-	def jobSettings(self):
+	def openSettings(self, settingsType):
+		""" Open settings dialog
+		"""
+		if settingsType == "Job":
+			categoryLs = ['job', 'units', 'time', 'resolution', 'apps', 'other']
+			xmlData = os.path.join(os.environ['JOBDATA'], 'jobData.xml')
+		elif settingsType == "Shot":
+			categoryLs = ['time', 'resolution']
+			xmlData = os.path.join(os.environ['SHOTDATA'], 'shotData.xml')
 		import job_settings__main__
 		reload(job_settings__main__)
-		setJobSettings = job_settings__main__.jobSettingsDialog()
-		setJobSettings.show()
-		setJobSettings.exec_()
+		settingsEditor = job_settings__main__.settingsDialog(settingsType=settingsType, categoryLs=categoryLs, xmlData=xmlData)
+		@settingsEditor.customSignal.connect
+		def storeAttr(attr):
+			settingsEditor.currentAttr = attr # a bit hacky - need to find a way to add this function to main class
+		settingsEditor.show()
+		settingsEditor.exec_()
+		self.setupJob()
 
 
-	# Open shot settings dialog
+	def jobSettings(self):
+		""" Open job settings dialog
+		"""
+		self.openSettings("Job")
+
+
 	def shotSettings(self):
-		pass
-	#	import shot_settings__main__
-	#	reload(shot_settings__main__)
-	#	setShotSettings = shot_settings__main__.shotSettingsDialog()
-	#	setShotSettings.show()
-	#	setShotSettings.exec_()
+		""" Open shot settings dialog
+		"""
+		self.openSettings("Shot")
+
+
+	def userSettings(self):
+		""" Open user settings dialog
+		"""
+		self.openSettings("User")
 
 
 	#runs launch maya procedure

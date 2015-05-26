@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'set_app_paths_ui.ui'
 #
-# Created: Tue May 12 14:03:31 2015
+# Created: Tue May 26 19:24:53 2015
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,6 +13,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(576, 384)
+        Dialog.setModal(True)
         self.verticalLayout = QtGui.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName("verticalLayout")
         spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)

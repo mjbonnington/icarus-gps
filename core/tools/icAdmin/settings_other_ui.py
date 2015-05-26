@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'settings_other_ui.ui'
 #
-# Created: Tue May 19 18:09:25 2015
+# Created: Tue May 26 14:36:58 2015
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -45,6 +45,9 @@ class Ui_settings_frame(object):
         settings_frame.setWindowTitle(QtGui.QApplication.translate("settings_frame", "Frame", None, QtGui.QApplication.UnicodeUTF8))
         self.prodboard_label.setText(QtGui.QApplication.translate("settings_frame", "Production board:", None, QtGui.QApplication.UnicodeUTF8))
         self.prodboard_lineEdit.setText(QtGui.QApplication.translate("settings_frame", "https://gramercypark.tpondemand.com", None, QtGui.QApplication.UnicodeUTF8))
+        self.prodboard_lineEdit.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "prodboard", None, QtGui.QApplication.UnicodeUTF8))
         self.projtools_label.setText(QtGui.QApplication.translate("settings_frame", "Project tools:", None, QtGui.QApplication.UnicodeUTF8))
+        self.projtools_lineEdit.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "projtools", None, QtGui.QApplication.UnicodeUTF8))
         self.elementslib_label.setText(QtGui.QApplication.translate("settings_frame", "Elements library:", None, QtGui.QApplication.UnicodeUTF8))
+        self.elementslib_lineEdit.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "elementslib", None, QtGui.QApplication.UnicodeUTF8))
 
