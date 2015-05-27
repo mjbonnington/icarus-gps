@@ -1,9 +1,21 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:verbose
-#copyright	:Gramercy Park Studios
+#support    :Nuno Pereira - nuno.pereira@gps-ldn.com
+#title      :verbose
+#copyright  :Gramercy Park Studios
 
 #this module processes verbosity printing
+
+def appPaths_noApp(app):
+	print "Warning: Application '%s' does not exist." % app
+
+def appPaths_noVersion(app, ver):
+	print "Warning: Application '%s' has no '%s' version." % (app, ver)
+
+def appPaths_enterVersion():
+	print "Please enter a version."
+
+def appPaths_guessPathFailed(os):
+	print "Warning: Failed to guess %s path." % os
 
 def approval(start=False, end=False):
 	if start:
@@ -12,9 +24,9 @@ def approval(start=False, end=False):
 	if end:
 		print 'Approved.'
 		return
-	
+
 def approvalOSError():
-	print 'Some assets may not have gone trough the approval process. Some file links may be missing.'
+	print 'Some assets may not have gone through the approval process. Some file links may be missing.'
 
 def animRequires(asset):
 	print 'Requires %s' % asset
@@ -182,7 +194,16 @@ def renderElements(layer=None, pass_=None, versionHeader=False):
 		return
 	else:
 		print '[%s_%s]' % (layer, pass_)
-		
+
+def settingsData_written(settingsType):
+	print "%s settings data file saved." % settingsType
+
+def settingsData_notWritten(settingsType):
+	print "Warning: %s settings data file could not be saved." % settingsType
+
+def settingsData_convert(settingsFile):
+	print "Converting %s.py to %s.xml" % (settingsFile, settingsFile)
+
 def shaderLinkError(shaderRelinkResult):
 	print 'Shader link error: The following objects could not be relinked.\n%s' % shaderRelinkResult
 
@@ -191,4 +212,7 @@ def shaderSupport():
 
 def userPrefs_notWritten():
 	print '[Icarus] Warning: unable to write user prefs configuration file.'
-	
+
+def xmlData_readError(datafile):
+	print "Warning: XML data file is invalid or doesn't exist: %s" % datafile
+

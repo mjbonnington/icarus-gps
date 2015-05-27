@@ -13,13 +13,13 @@ from PySide.QtCore import QSignalMapper, Signal
 from settings_ui import *
 import os, sys, math
 
-# Initialise Icarus environment - only when standalone
+# Initialise Icarus environment - only required when standalone
 #sys.path.append(os.environ['ICWORKINGDIR'])
 #import env__init__
 #env__init__.setEnv()
 #env__init__.appendSysPaths()
 
-import jobSettings, appPaths
+import jobSettings, appPaths, verbose
 
 
 class settingsDialog(QtGui.QDialog):
@@ -65,15 +65,14 @@ class settingsDialog(QtGui.QDialog):
 		self.ui.categories_listWidget.currentItemChanged.connect( lambda current: self.openProperties(current.text()) )
 
 		#self.ui.settings_buttonBox.button(QtGui.QDialogButtonBox.Reset).clicked.connect(self.reset)
-		self.ui.settings_buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.exit)
 		self.ui.settings_buttonBox.button(QtGui.QDialogButtonBox.Save).clicked.connect(self.saveAndExit)
+		self.ui.settings_buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.exit)
 
 
 	def reset(self):
 		""" Initialise or reset by reloading data
 		"""
-		# Load data from xml file - perhaps pass in as an object?
-		#jd_load = self.jd.loadXML(os.path.join(os.environ['JOBDATA'], 'jobData.xml'))
+		# Load data from xml file
 		jd_load = self.jd.loadXML(self.xmlData)
 		ap_load = self.ap.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'appPaths.xml'))
 
@@ -82,9 +81,7 @@ class settingsDialog(QtGui.QDialog):
 		else:
 			print "Warning: XML data error."
 
-		# Populate categories - hard coding this for now so XML can be generated from this list. Perhaps could be auto-generated from existing ui files?
-		#categories = self.jd.getCategories() # Read categories from XML
-		#categories = ['job', 'units', 'time', 'resolution', 'apps', 'other']
+		# Populate categories
 		if self.categoryLs is not None:
 			self.ui.categories_listWidget.clear()
 
@@ -115,7 +112,8 @@ class settingsDialog(QtGui.QDialog):
 		""" Lock/unlock UI for editing
 		"""
 		self.lockUI = not self.lockUI
-		self.ui.settings_scrollArea.setEnabled(self.lockUI)
+		#self.ui.settings_scrollArea.setEnabled(self.lockUI) # disable properties panel widgets
+		self.ui.settings_buttonBox.button(QtGui.QDialogButtonBox.Save).setEnabled(self.lockUI) # disable save button
 
 
 	def importUI(self, ui_file, frame):
@@ -133,7 +131,7 @@ class settingsDialog(QtGui.QDialog):
 		#print "[%s]" %category
 
 		# Store the widget values of the currently open page
-		#self.storeProperties(self.currentCategory)
+		self.storeProperties(self.currentCategory)
 
 		self.currentCategory = category # a bit hacky
 
@@ -195,19 +193,14 @@ class settingsDialog(QtGui.QDialog):
 		if category == 'resolution':
 			self.setupRes()
 
-		#signalMapper.mapped.connect(self.customSignal)
-
 
 	def setupRes(self):
 		""" Setup resolution properties panel
 		"""
 		frame = self.ui.settings_frame
 
-		#children = frame.children()
-		#for child in children:
-		#	print child.objectName()
-
 		# Populate combo box with presets
+		pass
 
 		self.calcAspectRatio()
 		self.checkProxyRes()
@@ -406,13 +399,14 @@ class settingsDialog(QtGui.QDialog):
 		"""
 		# Create the signal mapper
 		signalMapper = QSignalMapper(self)
+		signalMapper.mapped.connect(self.customSignal)
 
 		noSelectText = ""
-		apps = self.ap.getApps() # Get apps and versions
+		apps = self.ap.getApps() # get apps and versions
 		formLayout = frame.findChildren(QtGui.QFormLayout, 'formLayout')
 		appPaths_pushButton = frame.findChildren(QtGui.QPushButton, 'appPaths_pushButton')
 
-		formLayout[0].setWidget(len(apps), QtGui.QFormLayout.FieldRole, appPaths_pushButton[0]) # Move edit button to bottom of form
+		formLayout[0].setWidget(len(apps), QtGui.QFormLayout.FieldRole, appPaths_pushButton[0]) # move edit button to bottom of form
 		appPaths_pushButton[0].clicked.connect(self.appPathsEditor)
 
 		for i, app in enumerate(apps):
@@ -427,7 +421,7 @@ class settingsDialog(QtGui.QDialog):
 
 			signalMapper.setMapping(comboBox, app)
 
-			versions = self.ap.getVersions(app) # Popluate the combo box with available app versions
+			versions = self.ap.getVersions(app) # popluate the combo box with available app versions
 			availableVersions = []
 			for version in versions:
 				if version == '[template]':
@@ -438,7 +432,7 @@ class settingsDialog(QtGui.QDialog):
 			for version in availableVersions:
 				comboBox.addItem(version)
 
-			if selectCurrent: # Set selection to correct entry
+			if selectCurrent: # set selection to correct entry
 				try:
 					text = self.jd.getAppVersion(app)
 				except AttributeError:
@@ -450,8 +444,6 @@ class settingsDialog(QtGui.QDialog):
 			comboBox.currentIndexChanged.connect(signalMapper.map)
 			comboBox.currentIndexChanged.connect( lambda current: self.storeComboBoxValue(current) )
 			formLayout[0].setWidget(i, QtGui.QFormLayout.FieldRole, comboBox)
-
-		signalMapper.mapped.connect(self.customSignal)
 
 
 	def resPresetsEditor(self):
@@ -535,13 +527,15 @@ class settingsDialog(QtGui.QDialog):
 		#self.storeProperties(self.currentCategory)
 		for cat in self.categoryLs:
 			self.openProperties(cat)
-			self.storeProperties(cat)
+			#self.storeProperties(cat)
 
 		if self.jd.saveXML():
-			print "%s settings data file saved." %self.settingsType
+			verbose.settingsData_written(self.settingsType)
+			#print "%s settings data file saved." %self.settingsType
 			return True
 		else:
-			print "Warning: %s settings data file could not be saved." %self.settingsType
+			verbose.settingsData_notWritten(self.settingsType)
+			#print "Warning: %s settings data file could not be saved." %self.settingsType
 			return False
 
 

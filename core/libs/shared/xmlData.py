@@ -10,15 +10,13 @@
 
 
 import xml.etree.ElementTree as ET
+import verbose
 
 
 class xmlData():
 
 	def __init__(self):
 		pass
-
-		#print "Attempting to load %s" %datafile
-		#self.loadXML()
 
 
 	def loadXML(self, datafile=None):
@@ -32,7 +30,8 @@ class xmlData():
 			self.root = self.tree.getroot()
 			return True
 		except (IOError, ET.ParseError):
-			print "Warning: XML data file is invalid or doesn't exist: %s" %datafile
+			verbose.xmlData_readError(datafile)
+			#print "Warning: XML data file is invalid or doesn't exist: %s" %datafile
 			self.root = ET.Element('root')
 			self.tree = ET.ElementTree(self.root)
 			return False

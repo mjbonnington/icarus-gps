@@ -224,6 +224,16 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.assetSubType_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateAssetVersionCol)
 		QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateInfoField)
 		QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateImgPreview)
+		#QtCore.QObject.connect(self.ui.assetType_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.updateAssetNameCol)
+		#QtCore.QObject.connect(self.ui.assetName_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.adjustColumns)
+		#QtCore.QObject.connect(self.ui.assetSubType_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.updateAssetVersionCol)
+		#QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.updateInfoField)
+		#QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.updateImgPreview)
+		#self.ui.assetType_listWidget.currentItemChanged.connect(self.updateAssetNameCol)
+		#self.ui.assetName_listWidget.currentItemChanged.connect(self.adjustColumns)
+		#self.ui.assetSubType_listWidget.currentItemChanged.connect(self.updateAssetVersionCol)
+		#self.ui.assetVersion_listWidget.currentItemChanged.connect(self.updateInfoField)
+		#self.ui.assetVersion_listWidget.currentItemChanged.connect(self.updateImgPreview)
 		
 	#gets the current main tab
 	def getMainTab(self):
@@ -984,7 +994,6 @@ I   C   A   R   U   S
 						itemLs.remove(item)
 			#reversing order to facilitate user gather
 			itemLs.reverse()
-			#column.setCurrentIndex(0) # select the most recent item automatically
 		if column == self.aTypeCol:
 			for item in itemLs:
 				if item[:2] in envPrefix or item in envPrefix:
@@ -993,6 +1002,9 @@ I   C   A   R   U   S
 			for item in itemLs:
 				if not item.startswith('.'):
 					column.addItem(item)
+		#column.item(0).setSelected(True) # select the first item automatically
+		#self.updateInfoField()
+		#self.updateImgPreview()
 	
 	#adjust UI columns to accodmodate assetSubType column
 	def adjustColumns(self):

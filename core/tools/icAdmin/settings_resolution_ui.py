@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'settings_resolution_ui.ui'
 #
-# Created: Tue May 26 14:38:25 2015
+# Created: Wed May 27 11:26:31 2015
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -21,6 +21,7 @@ class Ui_settings_frame(object):
         self.resPreset_label.setObjectName("resPreset_label")
         self.formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.resPreset_label)
         self.resPreset_comboBox = QtGui.QComboBox(settings_frame)
+        self.resPreset_comboBox.setEnabled(False)
         self.resPreset_comboBox.setObjectName("resPreset_comboBox")
         self.resPreset_comboBox.addItem("")
         self.resPreset_comboBox.addItem("")
@@ -113,6 +114,7 @@ class Ui_settings_frame(object):
         self.proxy_horizontalLayout.addWidget(self.proxyHeight_spinBox)
         self.formLayout.setLayout(9, QtGui.QFormLayout.FieldRole, self.proxy_horizontalLayout)
         self.resPrest_pushButton = QtGui.QPushButton(settings_frame)
+        self.resPrest_pushButton.setEnabled(False)
         self.resPrest_pushButton.setObjectName("resPrest_pushButton")
         self.formLayout.setWidget(10, QtGui.QFormLayout.FieldRole, self.resPrest_pushButton)
 

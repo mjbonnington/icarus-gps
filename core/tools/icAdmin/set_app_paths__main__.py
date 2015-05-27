@@ -12,13 +12,13 @@ from PySide import QtCore, QtGui
 from set_app_paths_ui import *
 import os, sys
 
-# Initialise Icarus environment
-sys.path.append(os.environ['ICWORKINGDIR'])
-import env__init__
-env__init__.setEnv()
-env__init__.appendSysPaths()
+# Initialise Icarus environment - only required when standalone
+#sys.path.append(os.environ['ICWORKINGDIR'])
+#import env__init__
+#env__init__.setEnv()
+#env__init__.appendSysPaths()
 
-import appPaths
+import appPaths, verbose
 
 
 class setAppPathsDialog(QtGui.QDialog):
@@ -205,10 +205,12 @@ class setAppPathsDialog(QtGui.QDialog):
 		self.storeAppPathLinux()
 		self.storeAppPathWin()
 		if self.ap.saveXML():
-			print "Application paths data file saved."
+			verbose.settingsData_written('Application path')
+			#print "Application paths data file saved."
 			return True
 		else:
-			print "Warning: Application paths data file could not be saved."
+			verbose.settingsData_notWritten('Application path')
+			#print "Warning: Application paths data file could not be saved."
 			return False
 
 

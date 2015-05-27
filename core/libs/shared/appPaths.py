@@ -10,7 +10,7 @@
 
 
 import xml.etree.ElementTree as ET
-import xmlData
+import xmlData, verbose
 
 
 class appPaths(xmlData.xmlData):
@@ -35,7 +35,8 @@ class appPaths(xmlData.xmlData):
 		try:
 			self.root.remove(appElem)
 		except ValueError:
-			print "Warning: Application '%s' does not exist." %app
+			verbose.appPaths_noApp(app)
+			#print "Warning: Application '%s' does not exist." %app
 
 
 	def getVersions(self, app):
@@ -55,12 +56,14 @@ class appPaths(xmlData.xmlData):
 		try:
 			verElem = appElem.find("path[@version='%s']" %ver)
 		except AttributeError:
-			print "Warning: Application '%s' does not exist." %app
+			verbose.appPaths_noApp(app)
+			#print "Warning: Application '%s' does not exist." %app
 
 		try:
 			appElem.remove(verElem)
 		except (AttributeError, ValueError):
-			print "Warning: Application '%s' has no '%s' version." %(app, ver)
+			verbose.appPaths_noVersion(app, ver)
+			#print "Warning: Application '%s' has no '%s' version." %(app, ver)
 
 
 	def getPath(self, app, ver, os):
@@ -77,7 +80,8 @@ class appPaths(xmlData.xmlData):
 		""" Set path. Create elements if they don't exist
 		"""
 		if (ver == "") or (ver is None):
-			print "Please enter a version."
+			verbose.appPaths_enterVersion()
+			#print "Please enter a version."
 
 		else:
 			appElem = self.root.find("app[@name='%s']" %app)
@@ -108,7 +112,8 @@ class appPaths(xmlData.xmlData):
 			guessedPath = path.text.replace( "[ver]", ver )
 			guessedPath = guessedPath.replace( "[ver-major]", ver_major )
 		except AttributeError:
-			print "Warning: Failed to guess %s path." %os
+			verbose.appPaths_guessPathFailed(os)
+			#print "Warning: Failed to guess %s path." %os
 			guessedPath =  None
 
 		return guessedPath

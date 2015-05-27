@@ -6,10 +6,11 @@
 # Michael Bonnington 2015
 # Gramercy Park Studios
 #
-# Fallback functions to convert job and shot data from python files to XML, if XML files don't exist.
+# Fallback functions to convert data from python files to XML, if XML files don't exist.
 
 
 import re, sys
+import verbose
 
 
 def convertAppExecPath(app, path, ap):
@@ -72,10 +73,12 @@ def convertJobData(jobDataPath, jd, ap):
 
 	# Save XML
 	if jd.saveXML():
-		print "Job settings data file saved."
+		verbose.settingsData_written('Job')
+		#print "Job settings data file saved."
 		return True
 	else:
-		print "Warning: Job settings data file could not be saved."
+		verbose.settingsData_notWritten('Job')
+		#print "Warning: Job settings data file could not be saved."
 		return False
 
 
@@ -88,16 +91,18 @@ def convertShotData(shotDataPath, sd):
 	sys.path.remove(shotDataPath)
 
 	# General settings
-	sd.setValue('res', 'fullWidth', shotData.res[0])
-	sd.setValue('res', 'fullHeight', shotData.res[1])
+	sd.setValue('resolution', 'fullWidth', shotData.res[0])
+	sd.setValue('resolution', 'fullHeight', shotData.res[1])
 	sd.setValue('time', 'rangeStart', shotData.frRange[0])
 	sd.setValue('time', 'rangeEnd', shotData.frRange[1])
 
 	# Save XML
 	if sd.saveXML():
-		print "Shot settings data file saved."
+		verbose.settingsData_written('Shot')
+		#print "Shot settings data file saved."
 		return True
 	else:
-		print "Warning: Shot settings data file could not be saved."
+		verbose.settingsData_notWritten('Shot')
+		#print "Warning: Shot settings data file could not be saved."
 		return False
 
