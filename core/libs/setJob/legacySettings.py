@@ -90,11 +90,15 @@ def convertShotData(shotDataPath, sd):
 	reload(shotData)
 	sys.path.remove(shotDataPath)
 
-	# General settings
-	sd.setValue('resolution', 'fullWidth', shotData.res[0])
-	sd.setValue('resolution', 'fullHeight', shotData.res[1])
+	# Time settings
 	sd.setValue('time', 'rangeStart', shotData.frRange[0])
 	sd.setValue('time', 'rangeEnd', shotData.frRange[1])
+
+	# Resolution settings
+	sd.setValue('resolution', 'fullWidth', shotData.res[0])
+	sd.setValue('resolution', 'fullHeight', shotData.res[1])
+	sd.setValue('resolution', 'proxyWidth', shotData.res[0] / 2)
+	sd.setValue('resolution', 'proxyHeight', shotData.res[1] / 2)
 
 	# Save XML
 	if sd.saveXML():

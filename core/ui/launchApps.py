@@ -38,10 +38,13 @@ def terminal():
 		subprocess.Popen("bash --rcfile %s" % os.environ['GPS_RC'], shell=True)
 
 def prodBoard():
+	#webbrowser.open(os.environ['PRODBOARD'], new=2, autoraise=True)
 	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-		subprocess.Popen('open %s' % os.environ['PRODBOARD'], shell=True)
+		subprocess.Popen('open "%s"' % os.environ['PRODBOARD'], shell=True)
+	elif os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+		subprocess.Popen('explorer "%s"' % os.environ['PRODBOARD'], shell=True)
 	else:
-		subprocess.Popen('xdg-open %s' % os.environ['PRODBOARD'], shell=True)
+		subprocess.Popen('xdg-open "%s"' % os.environ['PRODBOARD'], shell=True)
 
 def realflow():
 	sys.path.append(os.path.join(os.environ['PIPELINE'], 'realflow_rsc', 'scripts'))

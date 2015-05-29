@@ -19,7 +19,7 @@ import os, sys, math
 #env__init__.setEnv()
 #env__init__.appendSysPaths()
 
-import jobSettings, appPaths, verbose
+import jobSettings, appPaths, resPresets, verbose
 
 
 class settingsDialog(QtGui.QDialog):
@@ -50,6 +50,7 @@ class settingsDialog(QtGui.QDialog):
 		# Instantiate XML data classes
 		self.jd = jobSettings.jobSettings()
 		self.ap = appPaths.appPaths()
+		self.rp = resPresets.resPresets()
 		self.reset()
 
 		# Set up keyboard shortcuts
@@ -72,14 +73,15 @@ class settingsDialog(QtGui.QDialog):
 	def reset(self):
 		""" Initialise or reset by reloading data
 		"""
-		# Load data from xml file
+		# Load data from xml file(s)
 		jd_load = self.jd.loadXML(self.xmlData)
 		ap_load = self.ap.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'appPaths.xml'))
+		rp_load = self.rp.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'resPresets.xml'))
 
-		if jd_load and ap_load:
-			pass
-		else:
-			print "Warning: XML data error."
+		#if jd_load and ap_load and rp_load:
+		#	pass
+		#else:
+		#	print "Warning: XML data error."
 
 		# Populate categories
 		if self.categoryLs is not None:
@@ -187,7 +189,7 @@ class settingsDialog(QtGui.QDialog):
 
 		# Run special function to deal with apps panel
 		if category == 'apps':
-			self.populateAppVersions(self.ui.settings_frame)
+			self.setupAppVersions()
 
 		# Run special function to deal with resolution panel
 		if category == 'resolution':
@@ -200,7 +202,15 @@ class settingsDialog(QtGui.QDialog):
 		frame = self.ui.settings_frame
 
 		# Populate combo box with presets
-		pass
+		presets = self.rp.getPresets()
+		comboBox = frame.findChildren(QtGui.QComboBox, 'resPreset_comboBox')[0]
+
+		for item in presets:
+			comboBox.addItem(item)
+		#comboBox.setCurrentIndex(0)
+		width = frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].value()
+		height = frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].value()
+		comboBox.setCurrentIndex( comboBox.findText( self.rp.getPresetFromRes(width, height) ) )
 
 		self.calcAspectRatio()
 		self.checkProxyRes()
@@ -229,9 +239,32 @@ class settingsDialog(QtGui.QDialog):
 
 
 	def updateResFromPreset(self, index = -1):
-		""" 
+		""" Update resolution settings when a preset is chosen
 		"""
 		frame = self.ui.settings_frame
+
+		preset = frame.findChildren(QtGui.QComboBox, 'resPreset_comboBox')[0].currentText()
+		width = int( self.rp.getValue(preset, 'width') )
+		height = int( self.rp.getValue(preset, 'height') )
+
+		# Stop the other widgets from emitting signals
+		frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].blockSignals(True)
+		frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].blockSignals(True)
+		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].blockSignals(True)
+		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].blockSignals(True)
+
+		# Update widgets
+		frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].setValue(width)
+		frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].setValue(height)
+
+		self.calcAspectRatio()
+		self.calcProxyRes(fullWidth=width, fullHeight=height)
+
+		# Re-enable signals
+		frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].blockSignals(False)
+		frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].blockSignals(False)
+		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].blockSignals(False)
+		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].blockSignals(False)
 
 		#print index, frame.findChildren(QtGui.QComboBox, 'resPreset_comboBox')[0].currentText()
 
@@ -242,13 +275,10 @@ class settingsDialog(QtGui.QDialog):
 		frame = self.ui.settings_frame
 
 		# Stop the other widgets from emitting signals
+		frame.findChildren(QtGui.QComboBox, 'resPreset_comboBox')[0].blockSignals(True)
 		frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].blockSignals(True)
 		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].blockSignals(True)
 		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].blockSignals(True)
-
-		# Set the preset to 'Custom'
-		comboBox = frame.findChildren(QtGui.QComboBox, 'resPreset_comboBox')[0]
-		comboBox.setCurrentIndex( comboBox.findText('Custom') )
 
 		preserveAR = frame.findChildren(QtGui.QCheckBox, 'preserveAR_checkBox')[0].isChecked()
 		if preserveAR:
@@ -258,12 +288,18 @@ class settingsDialog(QtGui.QDialog):
 
 		#print "full res: [%d]x%d (aspect ratio: %f)" %(width, height, self.aspectRatio)
 
+		# Set the preset to 'Custom'
+		comboBox = frame.findChildren(QtGui.QComboBox, 'resPreset_comboBox')[0]
+		comboBox.setCurrentIndex( comboBox.findText( self.rp.getPresetFromRes(width, height) ) )
+		#comboBox.setCurrentIndex( comboBox.findText('Custom') )
+
 		# Update height widget
 		frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].setValue(height)
 
 		self.calcProxyRes(fullWidth=width, fullHeight=height)
 
 		# Re-enable signals
+		frame.findChildren(QtGui.QComboBox, 'resPreset_comboBox')[0].blockSignals(False)
 		frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].blockSignals(False)
 		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].blockSignals(False)
 		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].blockSignals(False)
@@ -275,13 +311,10 @@ class settingsDialog(QtGui.QDialog):
 		frame = self.ui.settings_frame
 
 		# Stop the other widgets from emitting signals
+		frame.findChildren(QtGui.QComboBox, 'resPreset_comboBox')[0].blockSignals(True)
 		frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].blockSignals(True)
 		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].blockSignals(True)
 		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].blockSignals(True)
-
-		# Set the preset to 'Custom'
-		comboBox = frame.findChildren(QtGui.QComboBox, 'resPreset_comboBox')[0]
-		comboBox.setCurrentIndex( comboBox.findText('Custom') )
 
 		preserveAR = frame.findChildren(QtGui.QCheckBox, 'preserveAR_checkBox')[0].isChecked()
 		if preserveAR:
@@ -291,12 +324,18 @@ class settingsDialog(QtGui.QDialog):
 
 		#print "full res: %dx[%d] (aspect ratio: %f)" %(width, height, self.aspectRatio)
 
+		# Set the preset to 'Custom'
+		comboBox = frame.findChildren(QtGui.QComboBox, 'resPreset_comboBox')[0]
+		comboBox.setCurrentIndex( comboBox.findText( self.rp.getPresetFromRes(width, height) ) )
+		#comboBox.setCurrentIndex( comboBox.findText('Custom') )
+
 		# Update width widget
 		frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].setValue(width)
 
 		self.calcProxyRes(fullWidth=width, fullHeight=height)
 
 		# Re-enable signals
+		frame.findChildren(QtGui.QComboBox, 'resPreset_comboBox')[0].blockSignals(False)
 		frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].blockSignals(False)
 		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].blockSignals(False)
 		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].blockSignals(False)
@@ -394,9 +433,11 @@ class settingsDialog(QtGui.QDialog):
 			frame.findChildren(QtGui.QRadioButton, 'proxyModeRes_radioButton')[0].setChecked(True)
 
 
-	def populateAppVersions(self, frame, selectCurrent=True):
-		""" Populate application version combo boxes
+	def setupAppVersions(self, selectCurrent=True):
+		""" Setup application version properties panel and populate combo boxes
 		"""
+		frame = self.ui.settings_frame
+
 		# Create the signal mapper
 		signalMapper = QSignalMapper(self)
 		signalMapper.mapped.connect(self.customSignal)

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'settings_resolution_ui.ui'
 #
-# Created: Wed May 27 11:26:31 2015
+# Created: Fri May 29 16:21:22 2015
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -21,12 +21,7 @@ class Ui_settings_frame(object):
         self.resPreset_label.setObjectName("resPreset_label")
         self.formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.resPreset_label)
         self.resPreset_comboBox = QtGui.QComboBox(settings_frame)
-        self.resPreset_comboBox.setEnabled(False)
         self.resPreset_comboBox.setObjectName("resPreset_comboBox")
-        self.resPreset_comboBox.addItem("")
-        self.resPreset_comboBox.addItem("")
-        self.resPreset_comboBox.addItem("")
-        self.resPreset_comboBox.addItem("")
         self.resPreset_comboBox.addItem("")
         self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.resPreset_comboBox)
         self.preserveAR_checkBox = QtGui.QCheckBox(settings_frame)
@@ -138,10 +133,6 @@ class Ui_settings_frame(object):
         settings_frame.setWindowTitle(QtGui.QApplication.translate("settings_frame", "Frame", None, QtGui.QApplication.UnicodeUTF8))
         self.resPreset_label.setText(QtGui.QApplication.translate("settings_frame", "Preset:", None, QtGui.QApplication.UnicodeUTF8))
         self.resPreset_comboBox.setItemText(0, QtGui.QApplication.translate("settings_frame", "Custom", None, QtGui.QApplication.UnicodeUTF8))
-        self.resPreset_comboBox.setItemText(1, QtGui.QApplication.translate("settings_frame", "HD 1080p", None, QtGui.QApplication.UnicodeUTF8))
-        self.resPreset_comboBox.setItemText(2, QtGui.QApplication.translate("settings_frame", "HD 720p", None, QtGui.QApplication.UnicodeUTF8))
-        self.resPreset_comboBox.setItemText(3, QtGui.QApplication.translate("settings_frame", "PAL 576p 16:9", None, QtGui.QApplication.UnicodeUTF8))
-        self.resPreset_comboBox.setItemText(4, QtGui.QApplication.translate("settings_frame", "PAL 576p 4:3", None, QtGui.QApplication.UnicodeUTF8))
         self.preserveAR_checkBox.setText(QtGui.QApplication.translate("settings_frame", "Preserve aspect ratio", None, QtGui.QApplication.UnicodeUTF8))
         self.full_label.setText(QtGui.QApplication.translate("settings_frame", "Full size resolution:", None, QtGui.QApplication.UnicodeUTF8))
         self.fullWidth_spinBox.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "fullWidth", None, QtGui.QApplication.UnicodeUTF8))
