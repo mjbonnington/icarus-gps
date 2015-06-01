@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #support    :Nuno Pereira - nuno.pereira@gps-ldn.com
-#title      :dirOps
+#title      :osOps
 #copyright  :Gramercy Park Studios
 
 # Manages OS operations
@@ -12,6 +12,10 @@ def createDir(path, umask='000'):
 	if not os.path.isdir(path):
 		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
 			os.makedirs(path)
+			if os.path.basename(path).startswith('.'): # hide the folder if the name starts with a dot, as these files are not automatically hidden on Windows
+				import ctypes
+				FILE_ATTRIBUTE_HIDDEN = 0x02
+				ctypes.windll.kernel32.SetFileAttributesW(path, FILE_ATTRIBUTE_HIDDEN)
 		else:
 			os.system('%s; mkdir -p %s' % (setUmask(umask), path))
 		return path

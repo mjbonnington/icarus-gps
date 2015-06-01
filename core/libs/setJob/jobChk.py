@@ -3,7 +3,7 @@
 #title      :jobChk
 #copyright  :Gramercy Park Studios
 
-import os
+import os, verbose
 
 def chk(shotPath):
 	""" Check for jobData and shotData modules to ensure the specified shot is valid
@@ -13,8 +13,12 @@ def chk(shotPath):
 	shotData = os.path.join(shotPath, os.environ['DATAFILESRELATIVEDIR'], os.environ['SHOTDATAFILE'])
 	if not os.path.isfile(jobData):
 		valid = False
+		verbose.settingsData_notFound('Job', jobData)
 		#print "ERROR: Job data not found."
+		print 'Generating default job settings'
 	if not os.path.isfile(shotData):
 		valid = False
+		verbose.settingsData_notFound('Shot', shotData)
 		#print "ERROR: Shot data not found."
+		print 'Generating default shot settings'
 	return valid

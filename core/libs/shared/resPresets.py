@@ -51,7 +51,7 @@ class resPresets(xmlData.xmlData):
 			h = element.find("./height").text
 			p = element.find("./par").text
 			if w==str(width) and h==str(height) and p==str(par):
-				print w, h, p
+				#print w, h, p
 				return element.get('name')
 
 		return "Custom"

@@ -1,8 +1,7 @@
 #!/usr/bin/python
-#support		:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:listShots
-#copyright	:Gramercy Park Studios
-
+#support    :Nuno Pereira - nuno.pereira@gps-ldn.com
+#title      :listShots
+#copyright  :Gramercy Park Studios
 
 #lists all available shots in the specified directory
 
@@ -21,8 +20,8 @@ def list_(job):
 			if item.startswith('SH') or item.startswith('PC'):
 				shotPath = os.path.join(shotsPath, item)
 				#performs jobChk to ensure that directories are valid shots
-				if jobChk.chk(shotPath):
-					shotLs.append(item)
+				#if jobChk.chk(shotPath):
+				shotLs.append(item)
 
 		if len(shotLs):
 			shotLs.sort(); shotLs.reverse()

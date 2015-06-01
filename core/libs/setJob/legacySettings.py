@@ -97,8 +97,8 @@ def convertShotData(shotDataPath, sd):
 	# Resolution settings
 	sd.setValue('resolution', 'fullWidth', shotData.res[0])
 	sd.setValue('resolution', 'fullHeight', shotData.res[1])
-	sd.setValue('resolution', 'proxyWidth', shotData.res[0] / 2)
-	sd.setValue('resolution', 'proxyHeight', shotData.res[1] / 2)
+	sd.setValue('resolution', 'proxyWidth', int(shotData.res[0]) / 2)
+	sd.setValue('resolution', 'proxyHeight', int(shotData.res[1]) / 2)
 
 	# Save XML
 	if sd.saveXML():

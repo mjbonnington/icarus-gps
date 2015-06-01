@@ -46,7 +46,7 @@ class jobSettings(xmlData.xmlData):
 		if tagElem is None:
 			tagElem = ET.SubElement(catElem, tag)
 
-		tagElem.text = newValue
+		tagElem.text = str(newValue)
 
 
 #	def getAttr(self, category, tag, attr):

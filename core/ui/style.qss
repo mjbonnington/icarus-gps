@@ -16,7 +16,7 @@ QWidget {
 	selection-color: #fff;
 	alternate-background-color: #262626;
 	/*alternate-background-color: rgba(255, 255, 255, 2%);*/
-	/*font-family: 'Helvetica, Arial, sans-serif';*/
+	font-family: 'Segoe UI, Lucida Grande, Helvetica, sans-serif';
 	font-size: 11px;
 	font-weight: normal;
 }
@@ -242,6 +242,7 @@ QPushButton:disabled {
 QPushButton {
 	min-width: 8em;
 	min-height: 3ex;
+	min-height: 18px;
 	/*margin: 0px 2px;*/
 	padding: 1px 2px 2px 1px;
 	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #666, stop: 1 #555);
@@ -648,6 +649,7 @@ QTabWidget::tab-bar {
 QTabBar::tab { /* Style the tab using the tab sub-control. Note that it reads QTabBar _not_ QTabWidget */
 	min-width: 3em;
 	min-height: 2ex;
+	min-height: 12px;
 	margin-left: -1px;
 	margin-right: -1px;
 	padding: 3px 6px;
@@ -663,6 +665,7 @@ QTabBar::tab:hover {
 
 QTabBar::tab:selected {
 	min-height: 2.5ex; /* need to test this on Windows / OS X and check single tab doesn't change height */
+	min-height: 15px;
 	border-top-left-radius: 3px;
 	border-top-right-radius: 3px;
 	border-bottom-color: #444; /* same as pane color */
@@ -715,6 +718,7 @@ QFrame:no-frame {
 QComboBox {
 	min-width: 6em;
 	min-height: 3ex;
+	min-height: 18px;
 	/*margin: 0px 2px;*/
 	padding: 1px 2px 2px 5px;
 	border: 1px solid #222;
@@ -838,6 +842,7 @@ QComboBox::indicator:checked:disabled {
 QLineEdit {
 	min-width: 8em;
 	min-height: 3ex;
+	min-height: 18px;
 	/*margin: 0px 2px;*/
 	padding: 1px 2px 2px 1px;
 	border: 1px solid #555;
@@ -890,6 +895,7 @@ QTextEdit:no-frame, QPlainTextEdit:no-frame {
 
 QAbstractSpinBox {
 	min-height: 3ex;
+	min-height: 18px;
 	/*margin: 0px 2px;*/
 	padding: 1px 2px 2px 1px;
 	border: 1px solid #555;

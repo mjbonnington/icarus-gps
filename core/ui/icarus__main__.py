@@ -475,19 +475,20 @@ I   C   A   R   U   S
 			settingsEditor.currentAttr = attr # a bit hacky - need to find a way to add this function to main class
 		settingsEditor.show()
 		settingsEditor.exec_()
-		self.setupJob()
 
 
 	def jobSettings(self):
 		""" Open job settings dialog
 		"""
 		self.openSettings("Job")
+		self.setupJob()
 
 
 	def shotSettings(self):
 		""" Open shot settings dialog
 		"""
 		self.openSettings("Shot")
+		self.setupJob()
 
 
 	def userSettings(self):

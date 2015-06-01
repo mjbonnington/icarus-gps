@@ -20,7 +20,7 @@ def setEnv():
 	except KeyError:
 		os.environ['ICARUSENVAWARE'] = 'STANDALONE'
 
-	os.environ['ICARUSVERSION'] = 'v0.8.7-20150529'
+	os.environ['ICARUSVERSION'] = 'v0.8.7-20150601'
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
 	os.environ['ICWORKINGDIR'] = icarusWorkingDir
 	icarusUIDir = os.path.join('core', 'ui')
@@ -31,8 +31,8 @@ def setEnv():
 
 	os.environ['SHOTSROOTRELATIVEDIR'] = 'Vfx'
 	os.environ['DATAFILESRELATIVEDIR'] = '.icarus'
-	os.environ['JOBDATAFILE'] = 'jobData.py' # Change when data is stored as XML
-	os.environ['SHOTDATAFILE'] = 'shotData.py' # Change when data is stored as XML
+	#os.environ['JOBDATAFILE'] = 'jobData' # Change when data is stored as XML
+	#os.environ['SHOTDATAFILE'] = 'shotData' # Change when data is stored as XML
 	appendSysPaths()
 
 def appendSysPaths():

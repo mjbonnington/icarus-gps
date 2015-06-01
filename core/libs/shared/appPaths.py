@@ -69,11 +69,13 @@ class appPaths(xmlData.xmlData):
 	def getPath(self, app, ver, os):
 		""" Return executable path
 		"""
-		path = self.root.find( "./app[@name='%s']/path[@version='%s']/%s" %(app, ver, os) )
-		if path is not None:
-			return path.text
-		else:
-			return ""
+		elem = self.root.find( "./app[@name='%s']/path[@version='%s']/%s" %(app, ver, os) )
+		if elem is not None:
+			text = elem.text
+			if text is not None:
+				return text
+
+		return ""
 
 
 	def setPath(self, app, ver, os, newText):

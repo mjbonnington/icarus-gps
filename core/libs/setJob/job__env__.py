@@ -42,7 +42,7 @@ def setEnv(envVars):
 		currentOS = 'osx'
 	elif os.environ['ICARUS_RUNNING_OS'] == 'Windows':
 		currentOS = 'win'
-	else:
+	elif os.environ['ICARUS_RUNNING_OS'] == 'Linux':
 		currentOS = 'linux'
 
 	def getAppExecPath(app):
@@ -64,6 +64,7 @@ def setEnv(envVars):
 	os.environ['PROJECTTOOLS'] = jobData.getValue('other', 'projtools') #jobData.projectTools
 	#os.environ['FRAMEVIEWER'] = os.path.normpath(jobData.frameViewer)
 	os.environ['JOBAPPROVEDPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['JOBPATH'], 'Assets', '3D') )
+	#os.environ['JOBAPPROVEDPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['JOBPATH'], 'Publish') ) # changed for consistency
 	os.environ['SHOTAPPROVEDPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['SHOTPATH'], 'Publish') )
 	os.environ['PUBLISHRELATIVEDIR'] = '.publish'
 	os.environ['JOBPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['JOBPATH'] , os.environ['PUBLISHRELATIVEDIR']) )
