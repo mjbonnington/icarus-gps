@@ -42,10 +42,10 @@ def create():
 			osOps.createDir(uDir)
 
 	#realflow
-	#for directory in ('.cmdsOrg'): # Something wrong here? Need to figure out what it should be
-	#	uDir = '%s/%s' % (os.environ['REALFLOWSCENESDIR'], directory)
-	#	if not os.path.isdir(uDir):
-	#		osOps.createDir(uDir)
+	for directory in ('.cmdsOrg', ): # Something wrong here? Need to figure out what it should be
+		uDir = os.path.join(os.environ['REALFLOWSCENESDIR'], directory)
+		if not os.path.isdir(uDir):
+			osOps.createDir(uDir)
 
 	#env
 	for directory in (os.environ['JOBAPPROVEDPUBLISHDIR'], os.environ['SHOTAPPROVEDPUBLISHDIR'], os.environ['JOBPUBLISHDIR'], os.environ['SHOTPUBLISHDIR']):

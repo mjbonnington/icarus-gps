@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'icarusUI.ui'
 #
-# Created: Thu May 14 16:42:44 2015
+# Created: Tue Jun  2 13:30:16 2015
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -68,12 +68,22 @@ class Ui_Dialog(object):
         self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.icarusHeader_label = QtGui.QLabel(self.header_frame)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.icarusHeader_label.sizePolicy().hasHeightForWidth())
+        self.icarusHeader_label.setSizePolicy(sizePolicy)
         self.icarusHeader_label.setPixmap(QtGui.QPixmap(":/rsc/rsc/icarus_header.png"))
         self.icarusHeader_label.setObjectName("icarusHeader_label")
         self.horizontalLayout_3.addWidget(self.icarusHeader_label)
-        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        spacerItem = QtGui.QSpacerItem(24, 20, QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem)
         self.shotEnv_label = QtGui.QLineEdit(self.header_frame)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.shotEnv_label.sizePolicy().hasHeightForWidth())
+        self.shotEnv_label.setSizePolicy(sizePolicy)
         self.shotEnv_label.setCursor(QtCore.Qt.ArrowCursor)
         self.shotEnv_label.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.shotEnv_label.setStyleSheet("")

@@ -42,7 +42,7 @@ def recurseRemove(path):
 		if os.path.isdir(path):
 			os.system('rmdir %s /s /q' % path)
 		else:
-			os.system('del %s /f /q' % path)			
+			os.system('del %s /f /q' % path)
 	else:
 		os.system('rm -rf %s' % path)
 	return path

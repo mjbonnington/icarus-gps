@@ -23,21 +23,32 @@ def setEnv(envVars):
 	shotDataLoaded = shotData.loadXML(os.path.join(shotDataPath, 'shotData.xml'))
 	ap.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'appPaths.xml'))
 
-	# If XML files don't exist, convert data from legacy Python data files
+	# If XML files don't exist, create defaults, and attempt to convert data from Python data files
 	if not jobDataLoaded:
-		verbose.settingsData_convert('jobData')
 		import legacySettings
-		legacySettings.convertJobData(jobDataPath, jobData, ap)
-		#print "Using default values"
-		jobData.loadXML()
-	if not shotDataLoaded:
-		verbose.settingsData_convert('shotData')
-		import legacySettings
-		legacySettings.convertShotData(shotDataPath, shotData)
-		#print "Using values inherited from Job"
-		#print "Using default values"
-		shotData.loadXML()
 
+		# Create defaults
+		#legacySettings.createDefaults('Job')
+
+		# If jobData.py exists, convert data to XML
+		if legacySettings.convertJobData(jobDataPath, jobData, ap):
+			jobData.loadXML()
+
+	if not shotDataLoaded:
+		import legacySettings
+
+		# Create defaults
+		#legacySettings.createDefaults('Shot')
+
+		# If jobData.py exists, convert data to XML
+		if legacySettings.convertShotData(shotDataPath, shotData):
+			shotData.loadXML()
+#		else:
+#			# Inherit from job data (defaults)...
+#			pass
+
+
+	# Set OS identifier strings to get correct app executable paths
 	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
 		currentOS = 'osx'
 	elif os.environ['ICARUS_RUNNING_OS'] == 'Windows':

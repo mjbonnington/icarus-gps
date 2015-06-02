@@ -9,16 +9,13 @@ def chk(shotPath):
 	""" Check for jobData and shotData modules to ensure the specified shot is valid
 	"""
 	valid = True
-	jobData = os.path.join(os.path.split(shotPath)[0], os.environ['DATAFILESRELATIVEDIR'], os.environ['JOBDATAFILE'])
-	shotData = os.path.join(shotPath, os.environ['DATAFILESRELATIVEDIR'], os.environ['SHOTDATAFILE'])
-	if not os.path.isfile(jobData):
+	jobPath = os.path.split(shotPath)[0]
+	jobDataDir = os.path.join(jobPath, os.environ['DATAFILESRELATIVEDIR'])
+	shotDataDir = os.path.join(shotPath, os.environ['DATAFILESRELATIVEDIR'])
+	if not os.path.isdir(jobDataDir):
 		valid = False
-		verbose.settingsData_notFound('Job', jobData)
-		#print "ERROR: Job data not found."
-		print 'Generating default job settings'
-	if not os.path.isfile(shotData):
+		#verbose.settingsData_notFound('Job', jobDataDir)
+	if not os.path.isdir(shotDataDir):
 		valid = False
-		verbose.settingsData_notFound('Shot', shotData)
-		#print "ERROR: Shot data not found."
-		print 'Generating default shot settings'
+		#verbose.settingsData_notFound('Shot', shotDataDir)
 	return valid
