@@ -82,10 +82,10 @@ def setEnv(envVars):
 	os.environ['SHOTPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['SHOTPATH'], os.environ['PUBLISHRELATIVEDIR']) )
 	os.environ['WIPSDIR'] = os.path.normpath( os.path.join(os.path.split(os.environ['JOBPATH'])[0], 'Deliverables', 'WIPS') )
 	os.environ['ELEMENTSLIBRARY'] = os.path.normpath(jobData.getValue('other', 'elementslib')) #os.path.normpath(jobData.elementsLibrary)
-	os.environ['TIMEFORMAT'] = jobData.getValue('units', 'time') #jobData.timeFormat
 	os.environ['UNIT'] = jobData.getValue('units', 'linear') #jobData.unit
 	os.environ['ANGLE'] = jobData.getValue('units', 'angle') #jobData.angle
-	os.environ['FPS'] = shotData.getValue('time', 'fps') #jobData.fps
+	os.environ['TIMEFORMAT'] = jobData.getValue('units', 'time') #jobData.timeFormat
+	os.environ['FPS'] = jobData.getValue('time', 'fps') #jobData.fps
 	os.environ['STARTFRAME'] = shotData.getValue('time', 'rangeStart') #shotData.frRange[0]
 	os.environ['ENDFRAME'] = shotData.getValue('time', 'rangeEnd') #shotData.frRange[1]
 	os.environ['FRAMERANGE'] = '%s-%s' % (os.environ['STARTFRAME'], os.environ['ENDFRAME'])

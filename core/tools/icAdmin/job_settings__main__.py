@@ -19,7 +19,7 @@ import os, sys, math
 #env__init__.setEnv()
 #env__init__.appendSysPaths()
 
-import jobSettings, appPaths, resPresets, verbose
+import appPaths, jobSettings, resPresets, units, verbose
 
 
 class settingsDialog(QtGui.QDialog):
@@ -153,6 +153,18 @@ class settingsDialog(QtGui.QDialog):
 		# Load values into form widgets
 		widgets = self.ui.settings_frame.children()
 
+		# Run special function to deal with apps panel
+		if category == 'apps':
+			self.setupAppVersions()
+
+		# Run special function to deal with resolution panel
+		if category == 'resolution':
+			self.setupRes()
+
+		# Run special function to deal with units panel
+		if category == 'units':
+			self.setupUnits()
+
 		for widget in widgets:
 			#attr = widget.objectName().split('_')[0] # use first part of widget object's name
 			attr = widget.property('xmlTag') # use widget's dynamic 'xmlTag' 
@@ -187,13 +199,39 @@ class settingsDialog(QtGui.QDialog):
 					widget.valueChanged.connect(signalMapper.map)
 					widget.valueChanged.connect( lambda current: self.storeValue(current) )
 
-		# Run special function to deal with apps panel
-		if category == 'apps':
-			self.setupAppVersions()
 
-		# Run special function to deal with resolution panel
-		if category == 'resolution':
-			self.setupRes()
+	def setupUnits(self):
+		""" Setup units properties panel
+		"""
+		frame = self.ui.settings_frame
+
+		# Populate combo boxes with presets
+		for item in units.linear:
+			frame.findChildren(QtGui.QComboBox, 'linear_comboBox')[0].addItem(item[0]) # Find a way to display nice names but store short names internally
+
+		for item in units.angular:
+			frame.findChildren(QtGui.QComboBox, 'angle_comboBox')[0].addItem(item[0]) # Find a way to display nice names but store short names internally
+
+		for item in units.time:
+			frame.findChildren(QtGui.QComboBox, 'time_comboBox')[0].addItem(item[0]) # Find a way to display nice names but store short names internally
+
+		# Connect signals and slots
+		frame.findChildren(QtGui.QComboBox, 'time_comboBox')[0].currentIndexChanged.connect(lambda current: self.setFPS(current))
+		#frame.findChildren(QtGui.QSpinBox, 'fps_spinBox')[0].valueChanged.connect(lambda value: self.setTimeUnit(value))
+
+
+	def setFPS(self, current=None):
+		""" Set FPS spin box value based on time unit combo box
+		"""
+		frame = self.ui.settings_frame
+		frame.findChildren(QtGui.QSpinBox, 'fps_spinBox')[0].setValue(units.time[current][2])
+
+
+	#def setTimeUnit(self, current=None):
+	#	""" Set time unit combo box value based on FPS
+	#	"""
+	#	frame = self.ui.settings_frame
+	#	frame.findChildren(QtGui.QSpinBox, 'time_comboBox')[0].setCurrentIndex(0)
 
 
 	def setupRes(self):

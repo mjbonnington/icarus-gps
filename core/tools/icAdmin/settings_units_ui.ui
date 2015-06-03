@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>128</height>
+    <height>145</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,17 +20,20 @@
    <property name="fieldGrowthPolicy">
     <enum>QFormLayout::ExpandingFieldsGrow</enum>
    </property>
-   <item row="0" column="0">
-    <widget class="QLabel" name="time_label">
-     <property name="text">
-      <string>Time:</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="0">
     <widget class="QLabel" name="linear_label">
      <property name="text">
       <string>Linear:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QComboBox" name="linear_comboBox">
+     <property name="currentIndex">
+      <number>-1</number>
+     </property>
+     <property name="xmlTag" stdset="0">
+      <string>linear</string>
      </property>
     </widget>
    </item>
@@ -41,117 +44,72 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
-    <widget class="QComboBox" name="time_comboBox">
-     <property name="currentIndex">
-      <number>1</number>
-     </property>
-     <property name="xmlTag" stdset="0">
-      <string>time</string>
-     </property>
-     <item>
-      <property name="text">
-       <string>film</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>pal</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>ntsc</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>millisec</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>sec</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>min</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>hour</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QComboBox" name="linear_comboBox">
-     <property name="currentIndex">
-      <number>1</number>
-     </property>
-     <property name="xmlTag" stdset="0">
-      <string>linear</string>
-     </property>
-     <item>
-      <property name="text">
-       <string>mm</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>cm</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>m</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>km</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>in</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>ft</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>yd</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>mi</string>
-      </property>
-     </item>
-    </widget>
-   </item>
    <item row="2" column="1">
     <widget class="QComboBox" name="angle_comboBox">
      <property name="xmlTag" stdset="0">
       <string>angle</string>
      </property>
-     <item>
-      <property name="text">
-       <string>deg</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>rad</string>
-      </property>
-     </item>
     </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="time_label">
+     <property name="text">
+      <string>Time:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <layout class="QHBoxLayout" name="time_horizontalLayout">
+     <item>
+      <widget class="QComboBox" name="time_comboBox">
+       <property name="currentIndex">
+        <number>-1</number>
+       </property>
+       <property name="xmlTag" stdset="0">
+        <string>time</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Preferred</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>12</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="fps_label">
+       <property name="text">
+        <string>FPS:</string>
+       </property>
+       <property name="xmlTag" stdset="0">
+        <string>fps</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="fps_spinBox">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>6000</number>
+       </property>
+       <property name="value">
+        <number>25</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
