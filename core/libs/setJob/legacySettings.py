@@ -21,6 +21,7 @@ def convertAppExecPath(app, path, ap):
 		if ver in path:
 			return ver
 
+	print "Warning: could not detect the preferred version of %s.\nPlease set the preferred version in the Job Settings dialog or this app will be unavailable." %app
 	return ""
 
 
@@ -54,12 +55,12 @@ def convertJobData(jobDataPath, jd, ap):
 		jd.setValue('job', 'jobnum', parseJobPath(jobDataPath, 'jobnum'))
 
 		# Units settings
-		jd.setValue('units', 'time', jobData.timeFormat)
 		jd.setValue('units', 'linear', jobData.unit)
 		jd.setValue('units', 'angle', jobData.angle)
+		jd.setValue('units', 'time', jobData.timeFormat)
+		jd.setValue('units', 'fps', jobData.fps)
 
 		# Time settings
-		jd.setValue('time', 'fps', jobData.fps)
 
 		# App versions
 		jd.setValue('apps', 'Maya', convertAppExecPath('Maya', jobData.mayaVersion, ap))

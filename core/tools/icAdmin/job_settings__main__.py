@@ -54,13 +54,17 @@ class settingsDialog(QtGui.QDialog):
 		self.reset()
 
 		# Set up keyboard shortcuts
-		self.shortcutSave = QtGui.QShortcut(self)
-		self.shortcutSave.setKey('Ctrl+S')
-		self.shortcutSave.activated.connect(self.save)
+		#self.shortcutSave = QtGui.QShortcut(self)
+		#self.shortcutSave.setKey('Ctrl+S')
+		#self.shortcutSave.activated.connect(self.save)
 
 		self.shortcutLock = QtGui.QShortcut(self)
 		self.shortcutLock.setKey('Ctrl+L')
 		self.shortcutLock.activated.connect(self.toggleLockUI)
+
+		self.shortcutRemoverOverride = QtGui.QShortcut(self)
+		self.shortcutRemoverOverride.setKey('Ctrl+R')
+		self.shortcutRemoverOverride.activated.connect(self.removeOverrides)
 
 		# Connect signals and slots
 		self.ui.categories_listWidget.currentItemChanged.connect( lambda current: self.openProperties(current.text()) )
@@ -127,13 +131,15 @@ class settingsDialog(QtGui.QDialog):
 		properties_panel.setupUi(frame)
 
 
-	def openProperties(self, category):
+	def openProperties(self, category, storeProperties=True):
 		""" Open properties panel for selected settings category
 		"""
 		#print "[%s]" %category
+		inherited = False
 
 		# Store the widget values of the currently open page
-		self.storeProperties(self.currentCategory)
+		if storeProperties:
+			self.storeProperties(self.currentCategory)
 
 		self.currentCategory = category # a bit hacky
 
@@ -153,15 +159,7 @@ class settingsDialog(QtGui.QDialog):
 		# Load values into form widgets
 		widgets = self.ui.settings_frame.children()
 
-		# Run special function to deal with apps panel
-		if category == 'apps':
-			self.setupAppVersions()
-
-		# Run special function to deal with resolution panel
-		if category == 'resolution':
-			self.setupRes()
-
-		# Run special function to deal with units panel
+		# Run special function to deal with units panel - must happen before we set the widget values for defaults to work correctly
 		if category == 'units':
 			self.setupUnits()
 
@@ -172,9 +170,23 @@ class settingsDialog(QtGui.QDialog):
 			if attr is not None:
 				signalMapper.setMapping(widget, attr)
 
+				#text = self.jd.getValue(category, attr)
+				text, inherited = self.inheritFrom(category, attr)
+
+				if inherited:
+					widget.setProperty('xmlTag', None)
+					widget.setProperty('inheritedValue', True)
+					widget.setToolTip("This value is being inherited. Change the value to override the inherited value.")
+
+					# Apply pop-up menu to remove override - can't get to work here
+					#widget.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+
+					#actionRemoveOverride = QtGui.QAction("Remove override", None)
+					#actionRemoveOverride.triggered.connect(self.removeOverrides)
+					#widget.addAction(actionRemoveOverride)
+
 				# Combo box(es)...
 				if isinstance(widget, QtGui.QComboBox):
-					text = self.jd.getValue(category, attr)
 					if text is not "":
 						widget.setCurrentIndex( widget.findText(text) )
 					#print "%s: %s" %(attr, widget.currentText())
@@ -183,7 +195,6 @@ class settingsDialog(QtGui.QDialog):
 
 				# Line edit(s)...
 				if isinstance(widget, QtGui.QLineEdit):
-					text = self.jd.getValue(category, attr)
 					if text is not "":
 						widget.setText(text)
 					#print "%s: %s" %(attr, widget.text())
@@ -192,12 +203,41 @@ class settingsDialog(QtGui.QDialog):
 
 				# Spin box(es)...
 				if isinstance(widget, QtGui.QSpinBox):
-					text = self.jd.getValue(category, attr)
 					if text is not "":
 						widget.setValue( int(text) )
 					#print "%s: %s" %(attr, widget.value())
 					widget.valueChanged.connect(signalMapper.map)
 					widget.valueChanged.connect( lambda current: self.storeValue(current) )
+
+		# Run special function to deal with resolution panel
+		if category == 'resolution':
+			self.setupRes()
+
+		# Run special function to deal with apps panel
+		if category == 'apps':
+			self.setupAppVersions()
+
+
+	def inheritFrom(self, category, attr):
+		""" Tries to get a value from the current settings type, and if no value is found tries to inherit the value instead
+			Returns two values:
+			text - the value of the requested attribute
+			inherited - a Boolean value which is true if the value was inherited
+		"""
+		text = self.jd.getValue(category, attr)
+		inherited = False
+
+		if text is not "":
+			pass
+
+		elif self.settingsType == 'Shot':
+			jd = jobSettings.jobSettings()
+			jd.loadXML( os.path.join(os.environ['JOBDATA'], 'jobData.xml') )
+			text = jd.getValue(category, attr)
+			inherited = True
+
+		#print "%s/%s: got value %s, inherited=%s" %(category, attr, text, inherited)
+		return text, inherited
 
 
 	def setupUnits(self):
@@ -215,6 +255,14 @@ class settingsDialog(QtGui.QDialog):
 		for item in units.time:
 			frame.findChildren(QtGui.QComboBox, 'time_comboBox')[0].addItem(item[0]) # Find a way to display nice names but store short names internally
 
+		# Set default values - this must happen before values are read from XML data
+		frame.findChildren(QtGui.QComboBox, 'linear_comboBox')[0].setCurrentIndex(1) # cm
+		frame.findChildren(QtGui.QComboBox, 'angle_comboBox')[0].setCurrentIndex(0) # deg
+		frame.findChildren(QtGui.QComboBox, 'time_comboBox')[0].setCurrentIndex(1) # pal
+
+		# Set FPS spin box to correct value based on time combo box selection
+		self.setFPS( frame.findChildren(QtGui.QComboBox, 'time_comboBox')[0].currentIndex() )
+
 		# Connect signals and slots
 		frame.findChildren(QtGui.QComboBox, 'time_comboBox')[0].currentIndexChanged.connect(lambda current: self.setFPS(current))
 		#frame.findChildren(QtGui.QSpinBox, 'fps_spinBox')[0].valueChanged.connect(lambda value: self.setTimeUnit(value))
@@ -228,7 +276,7 @@ class settingsDialog(QtGui.QDialog):
 
 
 	#def setTimeUnit(self, current=None):
-	#	""" Set time unit combo box value based on FPS
+	#	""" Set time unit combo box value based on FPS - currently disabled
 	#	"""
 	#	frame = self.ui.settings_frame
 	#	frame.findChildren(QtGui.QSpinBox, 'time_comboBox')[0].setCurrentIndex(0)
@@ -572,7 +620,6 @@ class settingsDialog(QtGui.QDialog):
 	def storeProperties(self, category):
 		""" Store properties for all relevant widgets on selected settings category panel
 		"""
-		# Load values into form widgets
 		widgets = self.ui.settings_frame.children()
 
 		for widget in widgets:
@@ -597,6 +644,20 @@ class settingsDialog(QtGui.QDialog):
 				if isinstance(widget, QtGui.QSpinBox):
 					#print "%s: %s" %(attr, widget.value())
 					self.storeValue( widget.value() )
+
+
+	def removeOverrides(self):
+		""" Remove overrides and instead inherit values for widgets on the selected panel
+		"""
+		widgets = self.ui.settings_frame.children()
+
+		for widget in widgets:
+			attr = widget.property('xmlTag')
+
+			if attr is not None:
+				self.jd.removeElement(self.currentCategory, attr)
+
+		self.openProperties(self.currentCategory, storeProperties=False)
 
 
 	def save(self):

@@ -49,6 +49,20 @@ class jobSettings(xmlData.xmlData):
 		tagElem.text = str(newValue)
 
 
+	def removeElement(self, category, tag):
+		""" Remove the selected element
+		"""
+		cat = self.root.find( "./data[@category='%s']" %category )
+		if cat is not None:
+			elem = cat.find(tag)
+			if elem is not None:
+				#print "Removing element: %s" %elem.tag
+				cat.remove(elem)
+				return True
+
+		return False
+
+
 #	def getAttr(self, category, tag, attr):
 #		""" Get the specified attribute
 #		"""

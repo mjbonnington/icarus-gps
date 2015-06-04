@@ -65,6 +65,11 @@ QAbstractScrollArea:disabled {
 	/*border-color: #de727a;*/
 }
 
+*[inheritedValue="true"] { /* custom colour for inherited attribute values */
+	/*color: #de727a;*/
+	border-color: #de727a;
+}
+
 *[noBackground="true"] { /* no background colour */
 	background: transparent;
 }

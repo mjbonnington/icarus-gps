@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'settings_units_ui.ui'
 #
-# Created: Wed Jun  3 17:42:41 2015
+# Created: Thu Jun  4 10:43:22 2015
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -43,6 +43,7 @@ class Ui_settings_frame(object):
         self.fps_label.setObjectName("fps_label")
         self.time_horizontalLayout.addWidget(self.fps_label)
         self.fps_spinBox = QtGui.QSpinBox(settings_frame)
+        self.fps_spinBox.setReadOnly(True)
         self.fps_spinBox.setMinimum(1)
         self.fps_spinBox.setMaximum(6000)
         self.fps_spinBox.setProperty("value", 25)
@@ -65,4 +66,5 @@ class Ui_settings_frame(object):
         self.time_comboBox.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "time", None, QtGui.QApplication.UnicodeUTF8))
         self.fps_label.setText(QtGui.QApplication.translate("settings_frame", "FPS:", None, QtGui.QApplication.UnicodeUTF8))
         self.fps_label.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "fps", None, QtGui.QApplication.UnicodeUTF8))
+        self.fps_spinBox.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "fps", None, QtGui.QApplication.UnicodeUTF8))
 

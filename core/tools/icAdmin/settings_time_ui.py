@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'settings_time_ui.ui'
 #
-# Created: Wed Jun  3 15:59:53 2015
+# Created: Thu Jun  4 15:28:43 2015
 #      by: pyside-uic 0.2.13 running on PySide 1.1.1
 #
 # WARNING! All changes made in this file will be lost!

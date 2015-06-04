@@ -34,6 +34,11 @@ class icarusApp(QtGui.QDialog):
 		else:
 			self.previewPlayer = None
 
+		# Set up keyboard shortcuts
+		self.shortcutShotInfo = QtGui.QShortcut(self)
+		self.shortcutShotInfo.setKey('Ctrl+I')
+		self.shortcutShotInfo.activated.connect(self.printShotInfo)
+
 	##########################################Connecting signals and slots##########################################
 	################################################################################################################
 		QtCore.QObject.connect(self.ui.job_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.populateShots)
@@ -443,6 +448,34 @@ class icarusApp(QtGui.QDialog):
 			#print "Minimise on launch disabled"
 
 
+	def printShotInfo(self):
+		""" Print job / shot information stored in enviroment variables - used for debugging
+		"""
+		try:
+			print """
+     Job/Shot: %s - %s
+
+  Frame range: %s
+      Handles: %s
+
+   Resolution: %s (full)
+               %s (proxy)
+
+ Linear units: %s
+Angular units: %s
+   Time units: %s (%s fps)
+""" %(os.environ['JOB'], os.environ['SHOT'],
+      os.environ['FRAMERANGE'],
+      os.environ['HANDLES'],
+      os.environ['RESOLUTION'],
+      os.environ['PROXY_RESOLUTION'],
+      os.environ['UNIT'],
+      os.environ['ANGLE'],
+      os.environ['TIMEFORMAT'], os.environ['FPS'])
+		except KeyError:
+			print "Environment variable(s) not set."
+
+
 	def about(self):
 		""" Show about dialog
 		"""
@@ -462,10 +495,10 @@ I   C   A   R   U   S
 		""" Open settings dialog
 		"""
 		if settingsType == "Job":
-			categoryLs = ['job', 'units', 'time', 'resolution', 'apps', 'other']
+			categoryLs = ['job', 'time', 'resolution', 'units', 'apps', 'other']
 			xmlData = os.path.join(os.environ['JOBDATA'], 'jobData.xml')
 		elif settingsType == "Shot":
-			categoryLs = ['time', 'resolution']
+			categoryLs = ['time', 'resolution', 'units']
 			xmlData = os.path.join(os.environ['SHOTDATA'], 'shotData.xml')
 		import job_settings__main__
 		reload(job_settings__main__)
@@ -478,21 +511,21 @@ I   C   A   R   U   S
 
 
 	def jobSettings(self):
-		""" Open job settings dialog
+		""" Open job settings dialog wrapper function
 		"""
 		self.openSettings("Job")
 		self.setupJob()
 
 
 	def shotSettings(self):
-		""" Open shot settings dialog
+		""" Open shot settings dialog wrapper function
 		"""
 		self.openSettings("Shot")
 		self.setupJob()
 
 
 	def userSettings(self):
-		""" Open user settings dialog
+		""" Open user settings dialog wrapper function
 		"""
 		self.openSettings("User")
 

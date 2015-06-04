@@ -56,6 +56,15 @@ def setEnv(envVars):
 	elif os.environ['ICARUS_RUNNING_OS'] == 'Linux':
 		currentOS = 'linux'
 
+	def getInheritedValue(category, setting):
+		""" First try to get the value from the shot data, if it returns nothing then look in job data instead
+		"""
+		value = shotData.getValue(category, setting)
+		if value == "":
+			value = jobData.getValue(category, setting)
+
+		return value
+
 	def getAppExecPath(app):
 		""" Return the path to the executable for the specified app on the current OS
 		"""
@@ -82,18 +91,19 @@ def setEnv(envVars):
 	os.environ['SHOTPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['SHOTPATH'], os.environ['PUBLISHRELATIVEDIR']) )
 	os.environ['WIPSDIR'] = os.path.normpath( os.path.join(os.path.split(os.environ['JOBPATH'])[0], 'Deliverables', 'WIPS') )
 	os.environ['ELEMENTSLIBRARY'] = os.path.normpath(jobData.getValue('other', 'elementslib')) #os.path.normpath(jobData.elementsLibrary)
-	os.environ['UNIT'] = jobData.getValue('units', 'linear') #jobData.unit
-	os.environ['ANGLE'] = jobData.getValue('units', 'angle') #jobData.angle
-	os.environ['TIMEFORMAT'] = jobData.getValue('units', 'time') #jobData.timeFormat
-	os.environ['FPS'] = jobData.getValue('time', 'fps') #jobData.fps
-	os.environ['STARTFRAME'] = shotData.getValue('time', 'rangeStart') #shotData.frRange[0]
-	os.environ['ENDFRAME'] = shotData.getValue('time', 'rangeEnd') #shotData.frRange[1]
+	os.environ['UNIT'] = getInheritedValue('units', 'linear') #jobData.unit
+	os.environ['ANGLE'] = getInheritedValue('units', 'angle') #jobData.angle
+	os.environ['TIMEFORMAT'] = getInheritedValue('units', 'time') #jobData.timeFormat
+	os.environ['FPS'] = getInheritedValue('units', 'fps') #jobData.fps
+	os.environ['HANDLES'] = getInheritedValue('time', 'handles')
+	os.environ['STARTFRAME'] = getInheritedValue('time', 'rangeStart') #shotData.frRange[0]
+	os.environ['ENDFRAME'] = getInheritedValue('time', 'rangeEnd') #shotData.frRange[1]
 	os.environ['FRAMERANGE'] = '%s-%s' % (os.environ['STARTFRAME'], os.environ['ENDFRAME'])
-	os.environ['RESOLUTIONX'] = shotData.getValue('resolution', 'fullWidth') #shotData.res[0]
-	os.environ['RESOLUTIONY'] = shotData.getValue('resolution', 'fullHeight') #shotData.res[1]
+	os.environ['RESOLUTIONX'] = getInheritedValue('resolution', 'fullWidth') #shotData.res[0]
+	os.environ['RESOLUTIONY'] = getInheritedValue('resolution', 'fullHeight') #shotData.res[1]
 	os.environ['RESOLUTION'] = '%sx%s' % (os.environ['RESOLUTIONX'], os.environ['RESOLUTIONY'])
-	os.environ['PROXY_RESOLUTIONX'] = shotData.getValue('resolution', 'proxyWidth') #str(int(os.environ['RESOLUTIONX'])/2)
-	os.environ['PROXY_RESOLUTIONY'] = shotData.getValue('resolution', 'proxyHeight') #str(int(os.environ['RESOLUTIONY'])/2)
+	os.environ['PROXY_RESOLUTIONX'] = getInheritedValue('resolution', 'proxyWidth') #str(int(os.environ['RESOLUTIONX'])/2)
+	os.environ['PROXY_RESOLUTIONY'] = getInheritedValue('resolution', 'proxyHeight') #str(int(os.environ['RESOLUTIONY'])/2)
 	os.environ['PROXY_RESOLUTION'] = '%sx%s' % (os.environ['PROXY_RESOLUTIONX'], os.environ['PROXY_RESOLUTIONY'])
 	#os.environ['ASPECTRATIO'] = '%s' % float(float(os.environ['RESOLUTIONX']) / float(os.environ['RESOLUTIONY']))
 	os.environ['RECENTFILESDIR'] = os.path.normpath( os.path.join(os.environ['ICUSERPREFS'], 'recentFiles') )
