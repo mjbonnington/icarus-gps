@@ -21,15 +21,6 @@
    <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="leftMargin">
-    <number>8</number>
-   </property>
-   <property name="rightMargin">
-    <number>8</number>
-   </property>
-   <property name="bottomMargin">
-    <number>8</number>
-   </property>
    <item>
     <widget class="QFrame" name="header_frame">
      <property name="minimumSize">
@@ -111,48 +102,58 @@ QPushButton:default, QToolButton:default {
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::MinimumExpanding</enum>
-        </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>24</width>
+          <width>40</width>
           <height>20</height>
          </size>
         </property>
        </spacer>
       </item>
       <item>
-       <widget class="QLineEdit" name="shotEnv_label">
+       <widget class="QToolButton" name="shotEnv_toolButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="cursor">
-         <cursorShape>ArrowCursor</cursorShape>
-        </property>
-        <property name="toolTip">
-         <string>Current job and shot</string>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
         <property name="styleSheet">
-         <string notr="true"/>
+         <string notr="true">QToolButton {
+	padding: 1px 12px 2px 1px;
+}
+
+QToolButton:pressed, QToolButton:checked:pressed {
+	padding: 2px 11px 1px 2px;
+}
+
+QToolButton:disabled {
+	color: #ccc;
+}
+</string>
         </property>
         <property name="text">
          <string/>
         </property>
-        <property name="frame">
-         <bool>false</bool>
+        <property name="icon">
+         <iconset resource="rsc.qrc">
+          <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
+          <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <property name="iconSize">
+         <size>
+          <width>15</width>
+          <height>15</height>
+         </size>
         </property>
-        <property name="readOnly">
-         <bool>true</bool>
+        <property name="popupMode">
+         <enum>QToolButton::InstantPopup</enum>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextBesideIcon</enum>
         </property>
        </widget>
       </item>
@@ -295,7 +296,7 @@ QPushButton:default, QToolButton:default {
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_4">
+              <spacer name="shotSetup_horizontalSpacer">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -2468,7 +2469,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>assetSubType_listWidget</tabstop>
   <tabstop>assetVersion_listWidget</tabstop>
   <tabstop>gatherInfo_textEdit</tabstop>
-  <tabstop>shotEnv_label</tabstop>
   <tabstop>geoPbl_radioButton</tabstop>
   <tabstop>publishToShot_radioButton</tabstop>
   <tabstop>publishToShot_comboBox</tabstop>

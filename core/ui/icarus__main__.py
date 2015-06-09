@@ -138,7 +138,7 @@ class icarusApp(QtGui.QDialog):
 		##############################################
 		if os.environ['ICARUSENVAWARE'] == 'STANDALONE':
 			#hides ui items relating to maya environment
-			uiHideLs = ['setNewShot_pushButton', 'shotEnv_label'] # Removed 'shotEnv_label_maya', 
+			uiHideLs = ['setNewShot_pushButton', 'shotEnv_toolButton'] # Removed 'shotEnv_label_maya', 
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
@@ -151,7 +151,11 @@ class icarusApp(QtGui.QDialog):
 			if entryLs:
 				if entryLs[0] in jobLs:
 					self.ui.job_comboBox.setCurrentIndex(self.ui.job_comboBox.findText(entryLs[0]))
-					self.ui.shot_comboBox.setCurrentIndex(self.ui.shot_comboBox.findText(entryLs[1]))			
+					if entryLs[1]:
+						shotLs = listShots.list_(entryLs[0])
+						if entryLs[1] in shotLs:
+							self.ui.shot_comboBox.setCurrentIndex(self.ui.shot_comboBox.findText(entryLs[1]))
+
 			#deletes all tabs but jobMng
 			for i in range(0, self.ui.tabWidget.count()-1):
 				self.ui.tabWidget.removeTab(1)
@@ -160,15 +164,17 @@ class icarusApp(QtGui.QDialog):
 				self.ui.publishType_tabWidget.removeTab(0)
 
 			# Apply job/shot settings pop-up menu to shotEnv label (only in standalone mode)
-			self.ui.shotEnv_label.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+			self.ui.shotEnv_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
 			self.actionJobSettings = QtGui.QAction("Job Settings...", None)
 			self.actionJobSettings.triggered.connect(self.jobSettings)
-			self.ui.shotEnv_label.addAction(self.actionJobSettings)
+			self.ui.shotEnv_toolButton.addAction(self.actionJobSettings)
 
 			self.actionShotSettings = QtGui.QAction("Shot Settings...", None)
 			self.actionShotSettings.triggered.connect(self.shotSettings)
-			self.ui.shotEnv_label.addAction(self.actionShotSettings)
+			self.ui.shotEnv_toolButton.addAction(self.actionShotSettings)
+
+			self.ui.shotEnv_toolButton.setEnabled(True)
 
 
 		##############MAYA ENVIRONMENT################
@@ -395,7 +401,7 @@ class icarusApp(QtGui.QDialog):
 		self.ui.tabWidget.insertTab(2, self.gatherTab, 'Assets')
 		self.ui.gather_pushButton.hide()
 		self.ui.setShot_pushButton.hide()
-		self.ui.shotEnv_label.show()
+		self.ui.shotEnv_toolButton.show()
 		self.ui.setNewShot_pushButton.show()
 		verbose.jobSet(self.job, self.shot)
 	
@@ -411,8 +417,8 @@ class icarusApp(QtGui.QDialog):
 		self.ui.renderPbl_tableWidget.clearContents()
 		self.ui.dailyPbl_tableWidget.removeRow(0)
 		self.ui.dailyPbl_tableWidget.clearContents()
-		self.ui.shotEnv_label.setText('')
-		self.ui.shotEnv_label.hide()
+		self.ui.shotEnv_toolButton.setText('')
+		self.ui.shotEnv_toolButton.hide()
 		self.ui.setNewShot_pushButton.hide()
 		self.ui.setShot_pushButton.show()
 		
@@ -433,7 +439,7 @@ class icarusApp(QtGui.QDialog):
 		if os.environ['ICARUSENVAWARE'] != 'STANDALONE':
 			self.job = os.environ['JOB']
 			self.shot = os.environ['SHOT']
-		self.ui.shotEnv_label.setText('%s - %s' % (self.job, self.shot))
+		self.ui.shotEnv_toolButton.setText('%s - %s' % (self.job, self.shot))
 		#self.ui.shotEnv_label_maya.setText('%s - %s' % (self.job, self.shot)) # This is now redundant as the current shot is always shown in the header.
 
 	# Sets state of minimise on app launch variable

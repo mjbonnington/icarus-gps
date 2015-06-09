@@ -31,7 +31,8 @@ def setPermissions(path, mode='a+w'):
 #hardlinks files with the set umask
 def hardLink(source, destination, umask='000'):
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		os.system('mklink /H %s %s' % (destination, source))
+		#os.system('mklink /H %s %s' % (destination, source)) # this only works with local NTFS volumes
+		os.system('fsutil hardlink create %s %s' % (destination, source)) # works over SMB network shares
 	else:
 		os.system('%s; ln -f %s %s' % (setUmask(umask), source, destination))
 	return destination
