@@ -197,9 +197,10 @@ def setEnv(envVars):
 		os.environ['DJV_CONVERT'] = '%s/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/Resources/bin/djv_convert' % os.environ['PIPELINE']
 		os.environ['DJV_PLAY'] = '%s/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/Resources/bin/djv_view.sh' % os.environ['PIPELINE']
 	elif os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		os.environ['DJV_LIB'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-Windows-64/lib' % os.environ['PIPELINE'])
-		os.environ['DJV_CONVERT'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-Windows-64/bin/djv_convert.exe' % os.environ['PIPELINE'])
-		os.environ['DJV_PLAY'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-Windows-64/bin/djv_view.exe' % os.environ['PIPELINE'])
+		# Note: using 32-bit version of djv_view for QuickTime compatibility on Windows
+		os.environ['DJV_LIB'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-Windows-32/lib' % os.environ['PIPELINE'])
+		os.environ['DJV_CONVERT'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-Windows-32/bin/djv_convert.exe' % os.environ['PIPELINE'])
+		os.environ['DJV_PLAY'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-Windows-32/bin/djv_view.exe' % os.environ['PIPELINE'])
 	else:
 		os.environ['DJV_LIB'] = '%s/external_apps/djv/djv-1.0.5-Linux-64/lib' % os.environ['PIPELINE']
 		os.environ['DJV_CONVERT'] = '%s/external_apps/djv/djv-1.0.5-Linux-64/bin/djv_convert' % os.environ['PIPELINE']
