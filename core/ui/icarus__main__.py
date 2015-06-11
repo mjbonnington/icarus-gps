@@ -230,16 +230,19 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.gatherFromShot_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.adjustMainUI)
 		QtCore.QObject.connect(self.ui.gatherFromJob_radioButton, QtCore.SIGNAL('clicked(bool)'), self.adjustMainUI)
 		QtCore.QObject.connect(self.ui.gather_pushButton, QtCore.SIGNAL('clicked(bool)'), self.initGather)
+
 		QtCore.QObject.connect(self.ui.assetType_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateAssetNameCol)
 		QtCore.QObject.connect(self.ui.assetName_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.adjustColumns)
 		QtCore.QObject.connect(self.ui.assetSubType_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateAssetVersionCol)
 		QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateInfoField)
 		QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateImgPreview)
+
 		#QtCore.QObject.connect(self.ui.assetType_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.updateAssetNameCol)
 		#QtCore.QObject.connect(self.ui.assetName_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.adjustColumns)
 		#QtCore.QObject.connect(self.ui.assetSubType_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.updateAssetVersionCol)
 		#QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.updateInfoField)
 		#QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.updateImgPreview)
+
 		#self.ui.assetType_listWidget.currentItemChanged.connect(self.updateAssetNameCol)
 		#self.ui.assetName_listWidget.currentItemChanged.connect(self.adjustColumns)
 		#self.ui.assetSubType_listWidget.currentItemChanged.connect(self.updateAssetVersionCol)
@@ -666,7 +669,7 @@ I   C   A   R   U   S
 					elif layer in ('masterLayer', 'master', 'beauty'):
 						if not autoMainLayer:
 							autoMainLayer = layerItem
-							self.setLayerAsMain(autoMainLayer)				
+							self.setLayerAsMain(autoMainLayer)
 
 	#removes items from the render table
 	def renderTableRm(self):
@@ -711,8 +714,8 @@ I   C   A   R   U   S
 			layerName = passItem.text()
 			layerItem.setBackground(QtGui.QColor(60,75,40))
 		#app hide and show forces thw window to update
-		app.hide()
-		app.show()
+#		app.hide()
+#		app.show() # This was causing an issue with the UI closing so I've commented it out fot the time being. The widget still seems to auto update.
 		
 	#populates the daily publish table
 	def dailyTableAdd(self):
