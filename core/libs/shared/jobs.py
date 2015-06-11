@@ -1,27 +1,57 @@
 #!/usr/bin/python
 
-# jobs.py
-# support	: Michael Bonnington - mike.bonnington@gps-ldn.com
-# copyright	: Gramercy Park Studios
-
-# This file holds the jobs running in the CG department.
+# Jobs
+# v0.2
+#
+# Michael Bonnington 2015
+# Gramercy Park Studios
+#
+# Manipulates the database of jobs running in the CG department
 
 
 import os, sys
 import xml.etree.ElementTree as ET
 
 
-# Legacy code to work with current icarus implementation
+# Legacy code to work with current icarus implementation...
 dic = {}
 try:
 	tree = ET.parse(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'jobs.xml'))
 	root = tree.getroot()
+
+	win_root = root.find('jobs-root/win').text
+	osx_root = root.find('jobs-root/osx').text
+	linux_root = root.find('jobs-root/linux').text
+
 	for job in root.findall('job'):
 		if job.get('active') == 'True': # Only add jobs tagged as 'active'
-			if os.path.exists(job.find('path').text): # Only add jobs which exist on disk
-				dic[job.find('name').text] = job.find('path').text
+			jobpath = job.find('path').text
+
+			# Temporary (?) fix for cross-platform paths
+			if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+				if jobpath.startswith(osx_root):
+					jobpath = os.path.normpath( jobpath.replace(osx_root, win_root) )
+				elif jobpath.startswith(linux_root):
+					jobpath = os.path.normpath( jobpath.replace(linux_root, win_root) )
+			elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+				if jobpath.startswith(win_root):
+					jobpath = os.path.normpath( jobpath.replace(win_root, osx_root) )
+				elif jobpath.startswith(linux_root):
+					jobpath = os.path.normpath( jobpath.replace(linux_root, osx_root) )
+			else:
+				if jobpath.startswith(win_root):
+					jobpath = os.path.normpath( jobpath.replace(win_root, linux_root) )
+				elif jobpath.startswith(osx_root):
+					jobpath = os.path.normpath( jobpath.replace(osx_root, linux_root) )
+
+			if os.path.exists(jobpath): # Only add jobs which exist on disk
+				dic[job.find('name').text] = jobpath
+
 except:
-	sys.exit("ERROR: Jobs file not found.")
+	sys.exit("ERROR: Jobs file not found, or contents are invalid.")
+
+if not dic:
+	sys.exit("ERROR: No active jobs found.")
 
 
 class jobs():

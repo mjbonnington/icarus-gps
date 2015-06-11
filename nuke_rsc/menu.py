@@ -22,7 +22,7 @@ writeNode = 'import gpsNodes; gpsNodes.write_create()'
 save = 'import gpsSave; gpsSave.save(incr=False)'
 saveAs = 'import gpsSave; gpsSave.save(saveAs=True)'
 incrSave = 'import gpsSave; gpsSave.save(incr=True)'
-openScript = 'nuke.scriptOpen(\"%s/\")' % os.environ["NUKESCRIPTSDIR"]
+openScript = 'nuke.scriptOpen(\"%s/.\")' % os.environ["NUKESCRIPTSDIR"].replace('\\', '/')
 openScriptsDir = 'import openDirs; openDirs.openNukeScripts()'
 openRendersDir = 'import openDirs; openDirs.openNukeRenders()'
 openElementsDir = 'import openDirs; openDirs.openNukeElements()'
@@ -57,7 +57,9 @@ nodesMenu.addSeparator()
 #new
 newMenu_nodes = nodesMenu.addCommand('GPS - New', launchNuke, '^n', icon='newScript.png')
 #open
-openRecentMenu_nodes = nodesMenu.addMenu('Open', icon='openScript.png')
+openMenu_nodes = nodesMenu.addMenu('Open', icon='openScript.png')
+openMenu_nodes.addCommand('GPS - Open...', openScript, '^o', icon='openScript.png')
+openRecentMenu_nodes = openMenu_nodes.addMenu('GPS - Open Recent', icon='openScript.png')
 #save
 incrementalSaveMenu_nodes =  nodesMenu.addCommand('GPS - Incremental Save', incrSave, 'alt+shift+s', icon='incrementalSave.png')
 saveMenu_nodes =  nodesMenu.addCommand('GPS - Save', save, '^s', icon='saveScript.png')
@@ -72,8 +74,8 @@ icarusMenu_nodes = nodesMenu.addCommand('Icarus UI', launchIcarus, icon='icarus.
 productionBoardMenu_nodes = nodesMenu.addCommand('Production Board', launchProdBoard, icon='productionBoard.png')
 #djv
 reviewMenu = nodesMenu.addMenu('Review', icon='review.png')
-hieroPlayerMenu_nodes = reviewMenu.addCommand('Hiero Player', launchHieroPlayer, icon='hieroPlayer.png')
-djvMenu_nodes = reviewMenu.addCommand('Djv', launchDjv, icon='djv.png')
+hieroPlayerMenu_nodes = reviewMenu.addCommand('HieroPlayer', launchHieroPlayer, icon='hieroPlayer.png')
+djvMenu_nodes = reviewMenu.addCommand('djv_view', launchDjv, icon='djv.png')
 #browse
 browseMenu_nodes = nodesMenu.addMenu('Browse', icon='browse.png')
 browseMenu_nodes.addCommand('Browse Scripts', openScriptsDir)
@@ -160,8 +162,6 @@ fileMenu.removeItem('Save New Comp Version')
 # Initialise recent files menu...
 gpsSave.updateRecentFilesMenu(openRecentMenu_gps)
 gpsSave.updateRecentFilesMenu(openRecentMenu_nodes)
-#update recent files clears the menu. Generic open dialog needs to be added to nodes menu after updating
-openRecentMenu_nodes.addCommand('GPS - Open...', openScript, '^o', index=0)
 
 
 # Add callback function to add script to recent files on script load...

@@ -12,6 +12,7 @@ from PySide import QtCore, QtGui
 from icadminUI import *
 
 # Initialise icarus environment
+sys.path.append(os.environ['ICWORKINGDIR'])
 import env__init__
 env__init__.setEnv()
 env__init__.appendSysPaths()
@@ -208,6 +209,8 @@ class icadminApp(QtGui.QMainWindow):
 if __name__ == "__main__":
 	app = QtGui.QApplication(sys.argv)
 	myApp = icadminApp()
+
+	import rsc_rc # TODO: Check why this isn't working from within the UI file
 
 	# Apply UI style sheet
 	qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")

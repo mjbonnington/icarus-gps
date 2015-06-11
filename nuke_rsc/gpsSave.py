@@ -9,10 +9,10 @@ import recentFiles, osOps
 
 
 def updateRecentFilesMenu(menu):
-	"""Populates the recent files menu, disables it if no recent files in list"""
-
+	""" Populates the recent files menu, disables it if no recent files in list
+	"""
 	enable = True;
-	fileLs = recentFiles.getLs()
+	fileLs = recentFiles.getLs('nuke') # explicitly stating 'nuke' environment to get around 'nuke_tmp' fix
 
 	# Delete all items in the pop-up menu
 	menu.clearMenu()
@@ -20,26 +20,31 @@ def updateRecentFilesMenu(menu):
 	# Re-populate the items in the pop-up menu
 	for item in fileLs:
 		openRecentCmdStr = 'nuke.scriptOpen(\"%s%s\")' %(os.environ["SHOTPATH"], item)
-		menu.addCommand(item.replace('/', '\/'), openRecentCmdStr) # forward slashes need escaping to prevent Nuke from interpreting them as sub-menus
+		menu.addCommand(item.replace('/', '\/'), openRecentCmdStr.replace('\\', '/')) # forward slashes need escaping to prevent Nuke from interpreting them as sub-menus
 
 	# If recent file list contains no entries, disable menu
 	if len(fileLs)==0:
 		enable = False
 	if len(fileLs)==1 and fileLs[0]=="":
 		enable = False
+
 	menu.setEnabled(enable)
 
 
 def updateRecentFiles(script=None):
-	"""Adds a script to the recent files list config file. If script is not specified use current script name"""
-
+	""" Adds a script to the recent files list config file. If script is not specified use current script name
+	"""
 	if script == None:
 		script = os.path.abspath( nuke.value("root.name") )
 
 	#nuke.tprint('Adding script %s to recent files list.' %script)
 
-	recentFiles.updateLs( script )
+	# Add entry to recent files config file
+	recentFiles.updateLs(script, 'nuke') # explicitly stating 'nuke' environment to get around 'nuke_tmp' fix
+
+	# Update GPS custom recent files menu(s)
 	updateRecentFilesMenu( nuke.menu('Nuke').menu('File').menu('GPS - Open Recent') )
+	updateRecentFilesMenu( nuke.menu('Nodes').menu('Open').menu('GPS - Open Recent') )
 
 
 #strips all naming conventions and returns script name

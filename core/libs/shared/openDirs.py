@@ -1,26 +1,28 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@hogarthww.com
-#title     	:openDirs
+#support    :Nuno Pereira - nuno.pereira@hogarthww.com
+#title      :openDirs
 
-import os, sys
+import os
 
-if sys.platform == 'darwin':
+if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
 	sysCommand = 'open'
+elif os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	sysCommand = 'explorer'
 else:
 	sysCommand = 'nautilus'
-	
-	
+
+
 def openElementsLib():
 	elementsLibDir = os.environ['ELEMENTSLIBRARY']
 	if os.path.isdir(elementsLibDir):
 		os.system('%s %s' % (sysCommand, elementsLibDir))
-	
+
 def openJob():
 	jobRoot = os.path.split(os.environ['JOBPATH'])[0]
 	if os.path.isdir(jobRoot):
 		os.system('%s %s' % (sysCommand, jobRoot))
 	return
-	
+
 def openMaya():
 	mayaDir = os.environ['MAYADIR']
 	if os.path.isdir(mayaDir):

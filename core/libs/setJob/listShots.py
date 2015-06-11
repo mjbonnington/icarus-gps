@@ -1,8 +1,7 @@
 #!/usr/bin/python
-#support		:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:listShots
-#copyright	:Gramercy Park Studios
-
+#support    :Nuno Pereira - nuno.pereira@gps-ldn.com
+#title      :listShots
+#copyright  :Gramercy Park Studios
 
 #lists all available shots in the specified directory
 

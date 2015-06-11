@@ -3,7 +3,7 @@
  */
 
 QMainWindow, QDialog { /* main background colour */
-	background-color: #404040; /*#3c3c3c;*/
+	background-color: #444; /*#404040; #3c3c3c;*/
 	/*etch-disabled-text: 1;*/
 }
 
@@ -16,7 +16,7 @@ QWidget {
 	selection-color: #fff;
 	alternate-background-color: #262626;
 	/*alternate-background-color: rgba(255, 255, 255, 2%);*/
-	/*font-family: 'Helvetica, Arial, sans-serif';*/
+	font-family: 'Segoe UI, Lucida Grande, DejaVu Sans Book Condensed, Helvetica, sans-serif';
 	font-size: 11px;
 	font-weight: normal;
 }
@@ -26,6 +26,7 @@ QWidget:disabled {
 	color: rgba(102, 102, 102, 100%);
 	selection-background-color: #666;
 	selection-color: #333;
+	alternate-background-color: #484848;
 	text-decoration: none;
 }
 
@@ -43,6 +44,10 @@ QWidget:focus { /* add highlight for input focus */
 	selection-color: #333;
 }*/
 
+QFrame {
+	background: #444;
+}
+
 QAbstractScrollArea {
 	/*padding: 2px;*/
 	background: #222;
@@ -57,6 +62,12 @@ QAbstractScrollArea:disabled {
 *[mandatoryField="true"] { /* custom background colour for mandatory fields */
 	background: #de727a;
 	color: #222;
+	/*border-color: #de727a;*/
+}
+
+*[inheritedValue="true"] { /* custom colour for inherited attribute values */
+	/*color: #de727a;*/
+	border-color: #de727a;
 }
 
 *[noBackground="true"] { /* no background colour */
@@ -236,6 +247,7 @@ QPushButton:disabled {
 QPushButton {
 	min-width: 8em;
 	min-height: 3ex;
+	min-height: 18px;
 	/*margin: 0px 2px;*/
 	padding: 1px 2px 2px 1px;
 	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #666, stop: 1 #555);
@@ -316,8 +328,12 @@ QToolButton:checked {
 	background: #333;
 }
 
-QToolButton[popupMode="1"] { /* only for MenuButtonPopup */
-	padding-right: 20px; /* make way for the popup button */
+QToolButton[popupMode="MenuButtonPopup"] { /* only for MenuButtonPopup */
+	padding-right: 16px;
+}
+
+QToolButton[popupMode="InstantPopup"] { /* only for InstantPopup */
+	padding-right: 16px;
 }
 
 /* the subcontrols below are used only in the MenuButtonPopup mode */
@@ -329,14 +345,14 @@ QToolButton::menu-button {
 	width: 17px;
 }
 
-QToolButton::menu-arrow {
+/*QToolButton::menu-arrow {
 	image: url(:/images/arrow_down.png);
-}
+}*/
 
-QToolButton::menu-arrow:open {
+/*QToolButton::menu-arrow:open {
 	top: 1px;
 	left: 1px;
-}
+}*/
 
 QToolButton::menu-indicator {
 	image: url(:/images/arrow_down.png);
@@ -642,6 +658,7 @@ QTabWidget::tab-bar {
 QTabBar::tab { /* Style the tab using the tab sub-control. Note that it reads QTabBar _not_ QTabWidget */
 	min-width: 3em;
 	min-height: 2ex;
+	min-height: 12px;
 	margin-left: -1px;
 	margin-right: -1px;
 	padding: 3px 6px;
@@ -657,6 +674,7 @@ QTabBar::tab:hover {
 
 QTabBar::tab:selected {
 	min-height: 2.5ex; /* need to test this on Windows / OS X and check single tab doesn't change height */
+	min-height: 15px;
 	border-top-left-radius: 3px;
 	border-top-right-radius: 3px;
 	border-bottom-color: #444; /* same as pane color */
@@ -709,6 +727,7 @@ QFrame:no-frame {
 QComboBox {
 	min-width: 6em;
 	min-height: 3ex;
+	min-height: 18px;
 	/*margin: 0px 2px;*/
 	padding: 1px 2px 2px 5px;
 	border: 1px solid #222;
@@ -719,9 +738,9 @@ QComboBox:editable {
 	/*padding-left: 1px;*/
 	padding: 1px 6px 2px 1px;
 	background: #222;
-	/*border-top-left-radius: 0px;*/
-	/*border-bottom-left-radius: 0px;*/
-	/*border-color: #555;*/
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+	border-color: #555;
 }
 
 QComboBox:!editable, QComboBox::drop-down:editable {
@@ -745,15 +764,27 @@ QComboBox::drop-down {
 	subcontrol-origin: padding;
 	subcontrol-position: top right;
 	width: 15px;
-	border-left-width: 1px;
-	border-left-color: rgba(34, 34, 34, 33%);
-	border-left-style: solid; /* just a single line */
-	border-top-right-radius: 3px; /* same radius as the QComboBox */
+	border-top-right-radius: 3px;
 	border-bottom-right-radius: 3px;
 }
 
-QComboBox:disabled, QComboBox::drop-down:editable:disabled {
+QComboBox::drop-down:!editable {
+	border-left-width: 1px;
+	border-left-color: rgba(34, 34, 34, 33%);
+	border-left-style: solid;
+}
+
+QComboBox::drop-down:editable {
+	border: 1px solid #222;
+}
+
+QComboBox:disabled {
 	background: transparent;
+}
+
+QComboBox::drop-down:disabled {
+	background: transparent;
+	border-color: transparent;
 }
 
 QComboBox::down-arrow {
@@ -820,6 +851,7 @@ QComboBox::indicator:checked:disabled {
 QLineEdit {
 	min-width: 8em;
 	min-height: 3ex;
+	min-height: 18px;
 	/*margin: 0px 2px;*/
 	padding: 1px 2px 2px 1px;
 	border: 1px solid #555;
@@ -872,10 +904,13 @@ QTextEdit:no-frame, QPlainTextEdit:no-frame {
 
 QAbstractSpinBox {
 	min-height: 3ex;
+	min-height: 18px;
 	/*margin: 0px 2px;*/
 	padding: 1px 2px 2px 1px;
 	border: 1px solid #555;
 	border-radius: 3px;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
 	background: #222;
 }
 
@@ -1141,6 +1176,18 @@ QSlider::handle {
 
 
 
+/* Line
+ *
+ */
+
+/*QFrame[frameShadow="Sunken"] {
+	border: 1px inset #333;
+}*/
+
+/* End Line */
+
+
+
 /* Progress Bar
  *
  */
@@ -1167,3 +1214,4 @@ QProgressBar::chunk:disabled {
 }
 
 /* End Progress Bar */
+

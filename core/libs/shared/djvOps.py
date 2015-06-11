@@ -16,6 +16,8 @@ def prcImg(input, output, startFrame, endFrame, inExt, outExt='jpg', fps=os.envi
 	#exporting path to djv codec libraries according to os
 	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
 		libsExport = 'export DYLD_FALLBACK_LIBRARY_PATH=%s' % os.environ['DJV_LIB']
+	elif os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+		libsExport = ''
 	else:
 		libsExport = 'export LD_LIBRARY_PATH=%s; export LIBQUICKTIME_PLUGIN_DIR=%s' % (os.environ['DJV_LIB'], os.path.join(os.environ['DJV_LIB'],'libquicktime'))
 
@@ -35,6 +37,8 @@ def prcQt(input, output, startFrame, endFrame, inExt, name='preview', fps=os.env
 	#exporting path to djv codec libraries according to os
 	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
 		libsExport = 'export DYLD_FALLBACK_LIBRARY_PATH=%s' % os.environ['DJV_LIB']
+	elif os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+		libsExport = ''
 	else:
 		libsExport = 'export LD_LIBRARY_PATH=%s; export LIBQUICKTIME_PLUGIN_DIR=%s' % (os.environ['DJV_LIB'], os.path.join(os.environ['DJV_LIB'],'libquicktime'))
 
@@ -51,6 +55,8 @@ def viewer(path=''):
 	#exporting path to djv codec libraries according to os
 	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
 		libsExport = 'export DYLD_FALLBACK_LIBRARY_PATH=%s' % os.environ['DJV_LIB']
+	elif os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+		libsExport = ''
 	else:
 		libsExport = 'export LD_LIBRARY_PATH=%s; export LIBQUICKTIME_PLUGIN_DIR=%s' % (os.environ['DJV_LIB'], os.path.join(os.environ['DJV_LIB'],'libquicktime'))
 		

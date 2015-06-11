@@ -34,6 +34,11 @@ class icarusApp(QtGui.QDialog):
 		else:
 			self.previewPlayer = None
 
+		# Set up keyboard shortcuts
+		self.shortcutShotInfo = QtGui.QShortcut(self)
+		self.shortcutShotInfo.setKey('Ctrl+I')
+		self.shortcutShotInfo.activated.connect(self.printShotInfo)
+
 	##########################################Connecting signals and slots##########################################
 	################################################################################################################
 		QtCore.QObject.connect(self.ui.job_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.populateShots)
@@ -47,8 +52,8 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.openProdBoard_pushButton, QtCore.SIGNAL('clicked()'), launchApps.prodBoard)
 		QtCore.QObject.connect(self.ui.openReview_pushButton, QtCore.SIGNAL('clicked()'), self.launchHieroPlayer)
 		QtCore.QObject.connect(self.ui.openTerminal_pushButton, QtCore.SIGNAL('clicked()'), self.launchTerminal)
-		QtCore.QObject.connect(self.ui.openJob_pushButton, QtCore.SIGNAL('clicked()'), openDirs.openJob)
-		QtCore.QObject.connect(self.ui.openShot_pushButton, QtCore.SIGNAL('clicked()'), openDirs.openShot)
+		QtCore.QObject.connect(self.ui.browse_pushButton, QtCore.SIGNAL('clicked()'), openDirs.openShot)
+		QtCore.QObject.connect(self.ui.render_pushButton, QtCore.SIGNAL('clicked()'), self.launchSubmitRender)
 		QtCore.QObject.connect(self.ui.renderPblAdd_pushButton, QtCore.SIGNAL('clicked()'), self.renderTableAdd)
 		QtCore.QObject.connect(self.ui.renderPblRemove_pushButton, QtCore.SIGNAL('clicked()'), self.renderTableRm)
 		QtCore.QObject.connect(self.ui.renderPblSetMain_pushButton, QtCore.SIGNAL('clicked()'), self.setLayerAsMain)
@@ -56,6 +61,7 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.dailyPblAdd_pushButton, QtCore.SIGNAL('clicked()'), self.dailyTableAdd)
 		QtCore.QObject.connect(self.ui.publish_pushButton, QtCore.SIGNAL('clicked()'), self.initPublish)
 		QtCore.QObject.connect(self.ui.tabWidget, QtCore.SIGNAL('currentChanged(int)'), self.adjustMainUI)
+		QtCore.QObject.connect(self.ui.about_toolButton, QtCore.SIGNAL('clicked()'), self.about)
 
 		self.ui.minimise_checkBox.stateChanged.connect(self.setMinimiseOnAppLaunch)
 
@@ -68,18 +74,51 @@ class icarusApp(QtGui.QDialog):
 		self.ui.nuke_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 		self.actionNuke = QtGui.QAction("Nuke", None)
 		self.actionNuke.triggered.connect(self.launchNuke)
+		self.ui.nuke_pushButton.addAction(self.actionNuke)
 		self.actionNukeX = QtGui.QAction("NukeX", None)
 		self.actionNukeX.triggered.connect(self.launchNukeX)
-		self.ui.nuke_pushButton.addAction(self.actionNuke)
 		self.ui.nuke_pushButton.addAction(self.actionNukeX)
+		self.actionNukeStudio = QtGui.QAction("NukeStudio", None)
+		self.actionNukeStudio.triggered.connect(self.launchNukeStudio)
+		self.ui.nuke_pushButton.addAction(self.actionNukeStudio)
+
 		#Review
 		self.ui.openReview_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 		self.actionHieroPlayer = QtGui.QAction("HieroPlayer", None)
 		self.actionHieroPlayer.triggered.connect(self.launchHieroPlayer)
-		self.actionDjv = QtGui.QAction("Djv", None)
-		self.actionDjv.triggered.connect(self.launchDjv)
 		self.ui.openReview_pushButton.addAction(self.actionHieroPlayer)
+		self.actionDjv = QtGui.QAction("djv_view", None)
+		self.actionDjv.triggered.connect(self.launchDjv)
 		self.ui.openReview_pushButton.addAction(self.actionDjv)
+
+		#Browse
+		self.ui.browse_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+		self.actionOpenShot = QtGui.QAction("Shot", None)
+		self.actionOpenShot.triggered.connect(openDirs.openShot)
+		self.ui.browse_pushButton.addAction(self.actionOpenShot)
+		self.actionOpenJob = QtGui.QAction("Job", None)
+		self.actionOpenJob.triggered.connect(openDirs.openJob)
+		self.ui.browse_pushButton.addAction(self.actionOpenJob)
+
+		#Render
+		self.ui.render_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+		self.actionDeadlineMonitor = QtGui.QAction("Deadline Monitor", None)
+		self.actionDeadlineMonitor.triggered.connect(self.launchDeadlineMonitor)
+		self.ui.render_pushButton.addAction(self.actionDeadlineMonitor)
+		self.actionDeadlineSlave = QtGui.QAction("Deadline Slave", None)
+		self.actionDeadlineSlave.triggered.connect(self.launchDeadlineSlave)
+		self.ui.render_pushButton.addAction(self.actionDeadlineSlave)
+		self.actionSubmitLocal = QtGui.QAction("Submit Maya command-line render (local)", None)
+		self.actionSubmitLocal.triggered.connect(self.launchSubmitRender)
+		self.ui.render_pushButton.addAction(self.actionSubmitLocal)
+
+		#self.ui.settings_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+		#self.actionAbout = QtGui.QAction("About", None)
+		#self.actionAbout.triggered.connect(self.about)
+		#self.ui.settings_toolButton.addAction(self.actionAbout)
+		#self.actionPrefs = QtGui.QAction("User Preferences", None)
+		#self.actionPrefs.triggered.connect(openDirs.openShot)
+		#self.ui.settings_toolButton.addAction(self.actionPrefs)
 
 	##########################################UI adapt environment awareness##########################################
 	##################################################################################################################
@@ -99,7 +138,7 @@ class icarusApp(QtGui.QDialog):
 		##############################################
 		if os.environ['ICARUSENVAWARE'] == 'STANDALONE':
 			#hides ui items relating to maya environment
-			uiHideLs = ['setNewShot_pushButton'] # Removed 'shotEnv_label_maya', 
+			uiHideLs = ['setNewShot_pushButton', 'shotEnv_toolButton'] # Removed 'shotEnv_label_maya', 
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
@@ -112,15 +151,32 @@ class icarusApp(QtGui.QDialog):
 			if entryLs:
 				if entryLs[0] in jobLs:
 					self.ui.job_comboBox.setCurrentIndex(self.ui.job_comboBox.findText(entryLs[0]))
-					self.ui.shot_comboBox.setCurrentIndex(self.ui.shot_comboBox.findText(entryLs[1]))			
+					if entryLs[1]:
+						shotLs = listShots.list_(entryLs[0])
+						if entryLs[1] in shotLs:
+							self.ui.shot_comboBox.setCurrentIndex(self.ui.shot_comboBox.findText(entryLs[1]))
+
 			#deletes all tabs but jobMng
 			for i in range(0, self.ui.tabWidget.count()-1):
 				self.ui.tabWidget.removeTab(1)
 			#deletes Asset, NK Asset publish tabs
 			for i in range(0,2):
 				self.ui.publishType_tabWidget.removeTab(0)
-				
-				
+
+			# Apply job/shot settings pop-up menu to shotEnv label (only in standalone mode)
+			self.ui.shotEnv_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+
+			self.actionJobSettings = QtGui.QAction("Job Settings...", None)
+			self.actionJobSettings.triggered.connect(self.jobSettings)
+			self.ui.shotEnv_toolButton.addAction(self.actionJobSettings)
+
+			self.actionShotSettings = QtGui.QAction("Shot Settings...", None)
+			self.actionShotSettings.triggered.connect(self.shotSettings)
+			self.ui.shotEnv_toolButton.addAction(self.actionShotSettings)
+
+			self.ui.shotEnv_toolButton.setEnabled(True)
+
+
 		##############MAYA ENVIRONMENT################
 		##############################################
 		elif os.environ['ICARUSENVAWARE'] == 'MAYA':
@@ -174,11 +230,24 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.gatherFromShot_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.adjustMainUI)
 		QtCore.QObject.connect(self.ui.gatherFromJob_radioButton, QtCore.SIGNAL('clicked(bool)'), self.adjustMainUI)
 		QtCore.QObject.connect(self.ui.gather_pushButton, QtCore.SIGNAL('clicked(bool)'), self.initGather)
+
 		QtCore.QObject.connect(self.ui.assetType_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateAssetNameCol)
 		QtCore.QObject.connect(self.ui.assetName_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.adjustColumns)
 		QtCore.QObject.connect(self.ui.assetSubType_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateAssetVersionCol)
 		QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateInfoField)
 		QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateImgPreview)
+
+		#QtCore.QObject.connect(self.ui.assetType_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.updateAssetNameCol)
+		#QtCore.QObject.connect(self.ui.assetName_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.adjustColumns)
+		#QtCore.QObject.connect(self.ui.assetSubType_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.updateAssetVersionCol)
+		#QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.updateInfoField)
+		#QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.updateImgPreview)
+
+		#self.ui.assetType_listWidget.currentItemChanged.connect(self.updateAssetNameCol)
+		#self.ui.assetName_listWidget.currentItemChanged.connect(self.adjustColumns)
+		#self.ui.assetSubType_listWidget.currentItemChanged.connect(self.updateAssetVersionCol)
+		#self.ui.assetVersion_listWidget.currentItemChanged.connect(self.updateInfoField)
+		#self.ui.assetVersion_listWidget.currentItemChanged.connect(self.updateImgPreview)
 		
 	#gets the current main tab
 	def getMainTab(self):
@@ -330,12 +399,12 @@ class icarusApp(QtGui.QDialog):
 		self.updateJobLabel()
 		self.ui.shotSetup_groupBox.setEnabled(False)
 		self.ui.launchApp_groupBox.setEnabled(True)
-		self.ui.open_groupBox.setEnabled(True)
 		self.ui.launchOptions_groupBox.setEnabled(True)
 		self.ui.tabWidget.insertTab(1, self.publishTab, 'Publish')
 		self.ui.tabWidget.insertTab(2, self.gatherTab, 'Assets')
 		self.ui.gather_pushButton.hide()
 		self.ui.setShot_pushButton.hide()
+		self.ui.shotEnv_toolButton.show()
 		self.ui.setNewShot_pushButton.show()
 		verbose.jobSet(self.job, self.shot)
 	
@@ -343,7 +412,6 @@ class icarusApp(QtGui.QDialog):
 	def unlockJobUI(self):
 		self.ui.shotSetup_groupBox.setEnabled(True)
 		self.ui.launchApp_groupBox.setEnabled(False)
-		self.ui.open_groupBox.setEnabled(False)
 		self.ui.launchOptions_groupBox.setEnabled(False)
 		#removing publish and assets tab
 		self.ui.tabWidget.removeTab(1); self.ui.tabWidget.removeTab(1)
@@ -352,7 +420,8 @@ class icarusApp(QtGui.QDialog):
 		self.ui.renderPbl_tableWidget.clearContents()
 		self.ui.dailyPbl_tableWidget.removeRow(0)
 		self.ui.dailyPbl_tableWidget.clearContents()
-		self.ui.shotEnv_label.setText('')
+		self.ui.shotEnv_toolButton.setText('')
+		self.ui.shotEnv_toolButton.hide()
 		self.ui.setNewShot_pushButton.hide()
 		self.ui.setShot_pushButton.show()
 		
@@ -373,7 +442,7 @@ class icarusApp(QtGui.QDialog):
 		if os.environ['ICARUSENVAWARE'] != 'STANDALONE':
 			self.job = os.environ['JOB']
 			self.shot = os.environ['SHOT']
-		self.ui.shotEnv_label.setText('%s - %s' % (self.job, self.shot))
+		self.ui.shotEnv_toolButton.setText('%s - %s' % (self.job, self.shot))
 		#self.ui.shotEnv_label_maya.setText('%s - %s' % (self.job, self.shot)) # This is now redundant as the current shot is always shown in the header.
 
 	# Sets state of minimise on app launch variable
@@ -386,6 +455,89 @@ class icarusApp(QtGui.QDialog):
 			self.boolMinimiseOnAppLaunch = False
 			userPrefs.edit('main', 'minimiseonlaunch', 'False')
 			#print "Minimise on launch disabled"
+
+
+	def printShotInfo(self):
+		""" Print job / shot information stored in enviroment variables - used for debugging
+		"""
+		try:
+			print """
+     Job/Shot: %s - %s
+
+  Frame range: %s
+      Handles: %s
+
+   Resolution: %s (full)
+               %s (proxy)
+
+ Linear units: %s
+Angular units: %s
+   Time units: %s (%s fps)
+""" %(os.environ['JOB'], os.environ['SHOT'],
+      os.environ['FRAMERANGE'],
+      os.environ['HANDLES'],
+      os.environ['RESOLUTION'],
+      os.environ['PROXY_RESOLUTION'],
+      os.environ['UNIT'],
+      os.environ['ANGLE'],
+      os.environ['TIMEFORMAT'], os.environ['FPS'])
+		except KeyError:
+			print "Environment variable(s) not set."
+
+
+	def about(self):
+		""" Show about dialog
+		"""
+		about_msg = """
+I   C   A   R   U   S
+
+%s
+
+(c) 2013-2015 Gramercy Park Studios
+""" %os.environ['ICARUSVERSION']
+		import about
+		about = about.aboutDialog()
+		about.msg(about_msg)
+
+
+	def openSettings(self, settingsType):
+		""" Open settings dialog
+		"""
+		if settingsType == "Job":
+			categoryLs = ['job', 'time', 'resolution', 'units', 'apps', 'other']
+			xmlData = os.path.join(os.environ['JOBDATA'], 'jobData.xml')
+		elif settingsType == "Shot":
+			categoryLs = ['time', 'resolution', 'units']
+			xmlData = os.path.join(os.environ['SHOTDATA'], 'shotData.xml')
+		import job_settings__main__
+		reload(job_settings__main__)
+		settingsEditor = job_settings__main__.settingsDialog(settingsType=settingsType, categoryLs=categoryLs, xmlData=xmlData)
+		@settingsEditor.customSignal.connect
+		def storeAttr(attr):
+			settingsEditor.currentAttr = attr # a bit hacky - need to find a way to add this function to main class
+		settingsEditor.show()
+		settingsEditor.exec_()
+
+
+	def jobSettings(self):
+		""" Open job settings dialog wrapper function
+		"""
+		self.openSettings("Job")
+		self.setupJob()
+
+
+	def shotSettings(self):
+		""" Open shot settings dialog wrapper function
+		"""
+		self.openSettings("Shot")
+		self.setupJob()
+
+
+	def userSettings(self):
+		""" Open user settings dialog wrapper function
+		"""
+		self.openSettings("User")
+
 
 	#runs launch maya procedure
 	def launchMaya(self):
@@ -410,8 +562,12 @@ class icarusApp(QtGui.QDialog):
 		launchApps.nuke(nukeType='NukeX')
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
-		#launchApps.nuke()
-		#self.showMinimized()
+
+	#runs launch nuke studio procedure
+	def launchNukeStudio(self):
+		launchApps.nuke(nukeType='NukeStudio')
+		if self.boolMinimiseOnAppLaunch:
+			self.showMinimized()
 
 	#runs launch mari procedure
 	def launchMari(self):
@@ -439,11 +595,31 @@ class icarusApp(QtGui.QDialog):
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
 
-	#Laucnhes DJV
+	#Launches DJV
 	def launchDjv(self):
 		launchApps.djv()
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
+
+	#Launches Deadline Monitor
+	def launchDeadlineMonitor(self):
+		launchApps.deadlineMonitor()
+		if self.boolMinimiseOnAppLaunch:
+			self.showMinimized()
+
+	#Launches Deadline Slave
+	def launchDeadlineSlave(self):
+		launchApps.deadlineSlave()
+		if self.boolMinimiseOnAppLaunch:
+			self.showMinimized()
+
+	#Launches GPS command-line render script
+	def launchSubmitRender(self):
+		import submit__main__
+		reload(submit__main__)
+		#gpsSubmitRenderApp = submit__main__.gpsSubmitRender(parent=app)
+		#gpsSubmitRenderApp.setWindowFlags(QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinMaxButtonsHint )
+		#gpsSubmitRenderApp.show()
 
 	##################################################Publish tab###################################################
 	################################################################################################################
@@ -493,7 +669,7 @@ class icarusApp(QtGui.QDialog):
 					elif layer in ('masterLayer', 'master', 'beauty'):
 						if not autoMainLayer:
 							autoMainLayer = layerItem
-							self.setLayerAsMain(autoMainLayer)				
+							self.setLayerAsMain(autoMainLayer)
 
 	#removes items from the render table
 	def renderTableRm(self):
@@ -538,8 +714,8 @@ class icarusApp(QtGui.QDialog):
 			layerName = passItem.text()
 			layerItem.setBackground(QtGui.QColor(60,75,40))
 		#app hide and show forces thw window to update
-		app.hide()
-		app.show()
+#		app.hide()
+#		app.show() # This was causing an issue with the UI closing so I've commented it out fot the time being. The widget still seems to auto update.
 		
 	#populates the daily publish table
 	def dailyTableAdd(self):
@@ -869,6 +1045,9 @@ class icarusApp(QtGui.QDialog):
 			for item in itemLs:
 				if not item.startswith('.'):
 					column.addItem(item)
+		#column.item(0).setSelected(True) # select the first item automatically
+		#self.updateInfoField()
+		#self.updateImgPreview()
 	
 	#adjust UI columns to accodmodate assetSubType column
 	def adjustColumns(self):
@@ -1054,4 +1233,4 @@ else:
 		app.move(QtGui.QDesktopWidget().availableGeometry(1).center() - app.frameGeometry().center())
 
 		app.show()
-		sys.exit(mainApp.exec_())
+		sys.exit(app.exec_())

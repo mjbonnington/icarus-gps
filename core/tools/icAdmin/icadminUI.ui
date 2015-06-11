@@ -36,7 +36,7 @@
        <attribute name="title">
         <string>Jobs</string>
        </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_8">
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
         <property name="margin">
          <number>4</number>
         </property>
@@ -93,7 +93,7 @@
                 <string>Add Job</string>
                </property>
                <property name="icon">
-                <iconset resource="rsc.qrc">
+                <iconset resource="../../ui/rsc.qrc">
                  <normaloff>:/rsc/rsc/icon_add.png</normaloff>
                  <disabledoff>:/rsc/rsc/icon_add_disabled.png</disabledoff>:/rsc/rsc/icon_add.png</iconset>
                </property>
@@ -120,7 +120,7 @@
                 <string>Remove</string>
                </property>
                <property name="icon">
-                <iconset resource="rsc.qrc">
+                <iconset resource="../../ui/rsc.qrc">
                  <normaloff>:/rsc/rsc/icon_delete.png</normaloff>
                  <disabledoff>:/rsc/rsc/icon_delete_disabled.png</disabledoff>:/rsc/rsc/icon_delete.png</iconset>
                </property>
@@ -141,547 +141,543 @@
          </widget>
         </item>
         <item>
-         <widget class="QScrollArea" name="jobProperties_scrollArea">
-          <property name="enabled">
-           <bool>true</bool>
+         <widget class="QFrame" name="jobProperties_frame">
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
           </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true"/>
-          </property>
-          <property name="widgetResizable">
-           <bool>true</bool>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-          </property>
-          <property name="noBackground" stdset="0">
-           <bool>true</bool>
-          </property>
-          <widget class="QWidget" name="jobProperties_scrollAreaWidgetContents">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>447</width>
-             <height>719</height>
-            </rect>
+          <layout class="QVBoxLayout" name="verticalLayout_8">
+           <property name="margin">
+            <number>0</number>
            </property>
-           <layout class="QVBoxLayout" name="verticalLayout_4">
-            <item>
-             <widget class="QGroupBox" name="jobSettings_groupBox">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="title">
-               <string>Basic settings</string>
-              </property>
-              <layout class="QFormLayout" name="formLayout_5">
-               <property name="fieldGrowthPolicy">
-                <enum>QFormLayout::ExpandingFieldsGrow</enum>
+           <item>
+            <layout class="QFormLayout" name="formLayout">
+             <item row="0" column="0">
+              <widget class="QLabel" name="jobName_label">
+               <property name="text">
+                <string>Name:</string>
                </property>
-               <item row="0" column="1">
-                <widget class="QCheckBox" name="jobActive_checkBox">
-                 <property name="text">
-                  <string>Active</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="jobNumber_label">
-                 <property name="text">
-                  <string>Job number:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="jobPath_label">
-                 <property name="text">
-                  <string>Job path:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <layout class="QHBoxLayout" name="jobPath_horizontalLayout">
-                 <item>
-                  <widget class="QLineEdit" name="jobPath_lineEdit"/>
-                 </item>
-                 <item>
-                  <widget class="QToolButton" name="jobPathBrowse_toolButton">
-                   <property name="text">
-                    <string>...</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/icon_folder.png</normaloff>
-                     <disabledoff>:/rsc/rsc/icon_folder_disabled.png</disabledoff>:/rsc/rsc/icon_folder.png</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>15</width>
-                     <height>15</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="jobName_label">
-                 <property name="text">
-                  <string>Job name:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="jobPath_label">
+               <property name="text">
+                <string>Path:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <layout class="QHBoxLayout" name="jobName_horizontalLayout">
+               <item>
                 <widget class="QLineEdit" name="jobName_lineEdit"/>
                </item>
-               <item row="1" column="1">
-                <widget class="QLineEdit" name="jobNumber_lineEdit">
+               <item>
+                <widget class="QToolButton" name="jobNameGuess_toolButton">
+                 <property name="text">
+                  <string>?</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="../../ui/rsc.qrc">
+                   <normaloff>:/rsc/rsc/icon_folder.png</normaloff>
+                   <disabledoff>:/rsc/rsc/icon_folder_disabled.png</disabledoff>:/rsc/rsc/icon_folder.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>15</width>
+                   <height>15</height>
+                  </size>
+                 </property>
+                 <property name="toolButtonStyle">
+                  <enum>Qt::ToolButtonTextOnly</enum>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="1" column="1">
+              <layout class="QHBoxLayout" name="jobPath_horizontalLayout">
+               <item>
+                <widget class="QLineEdit" name="jobPath_lineEdit"/>
+               </item>
+               <item>
+                <widget class="QToolButton" name="jobPathBrowse_toolButton">
+                 <property name="text">
+                  <string>...</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="../../ui/rsc.qrc">
+                   <normaloff>:/rsc/rsc/icon_folder.png</normaloff>
+                   <disabledoff>:/rsc/rsc/icon_folder_disabled.png</disabledoff>:/rsc/rsc/icon_folder.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>15</width>
+                   <height>15</height>
+                  </size>
+                 </property>
+                 <property name="toolButtonStyle">
+                  <enum>Qt::ToolButtonTextOnly</enum>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QScrollArea" name="jobProperties_scrollArea">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="widgetResizable">
+              <bool>true</bool>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+             </property>
+             <property name="noBackground" stdset="0">
+              <bool>true</bool>
+             </property>
+             <widget class="QWidget" name="jobProperties_scrollAreaWidgetContents">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>441</width>
+                <height>562</height>
+               </rect>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_4">
+               <item>
+                <widget class="QGroupBox" name="time_groupBox">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
-                 <property name="maxLength">
-                  <number>6</number>
+                 <property name="title">
+                  <string>Time</string>
                  </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="time_groupBox">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="title">
-               <string>Time</string>
-              </property>
-              <layout class="QFormLayout" name="formLayout_4">
-               <property name="fieldGrowthPolicy">
-                <enum>QFormLayout::ExpandingFieldsGrow</enum>
-               </property>
-               <item row="0" column="0">
-                <widget class="QLabel" name="fps_label">
-                 <property name="text">
-                  <string>Frames per second:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QSpinBox" name="fps_spinBox">
-                 <property name="minimum">
-                  <number>1</number>
-                 </property>
-                 <property name="maximum">
-                  <number>5000</number>
-                 </property>
-                 <property name="value">
-                  <number>25</number>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="range_label">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="text">
-                  <string>Frame range:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <layout class="QHBoxLayout" name="range_horizontalLayout">
-                 <item>
-                  <widget class="QSpinBox" name="in_spinBox">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="minimum">
-                    <number>1</number>
-                   </property>
-                   <property name="maximum">
-                    <number>9999</number>
-                   </property>
-                   <property name="value">
-                    <number>1001</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="rangeSep_label">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="text">
-                    <string>-</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QSpinBox" name="out_spinBox">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="minimum">
-                    <number>1</number>
-                   </property>
-                   <property name="maximum">
-                    <number>9999</number>
-                   </property>
-                   <property name="value">
-                    <number>1100</number>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="handles_label">
-                 <property name="text">
-                  <string>Handles:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QSpinBox" name="handles_spinBox">
-                 <property name="maximum">
-                  <number>9999</number>
-                 </property>
-                 <property name="value">
-                  <number>10</number>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="res_groupBox">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="title">
-               <string>Resolution</string>
-              </property>
-              <layout class="QFormLayout" name="formLayout_6">
-               <property name="fieldGrowthPolicy">
-                <enum>QFormLayout::ExpandingFieldsGrow</enum>
-               </property>
-               <item row="1" column="0">
-                <widget class="QLabel" name="resPreset_label">
-                 <property name="text">
-                  <string>Preset:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="res_label">
-                 <property name="text">
-                  <string>Full size resolution:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <layout class="QHBoxLayout" name="res_horizontalLayout">
-                 <item>
-                  <widget class="QSpinBox" name="resX_spinBox">
-                   <property name="minimum">
-                    <number>1</number>
-                   </property>
-                   <property name="maximum">
-                    <number>99999</number>
-                   </property>
-                   <property name="value">
-                    <number>1920</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="resSep_label">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="text">
-                    <string>x</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QSpinBox" name="resY_spinBox">
-                   <property name="minimum">
-                    <number>1</number>
-                   </property>
-                   <property name="maximum">
-                    <number>99999</number>
-                   </property>
-                   <property name="value">
-                    <number>1080</number>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="5" column="0">
-                <widget class="QLabel" name="label">
-                 <property name="text">
-                  <string>Proxy resolution:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QComboBox" name="resPreset_comboBox">
-                 <item>
-                  <property name="text">
-                   <string>HD 1080p</string>
+                 <layout class="QFormLayout" name="formLayout_4">
+                  <property name="fieldGrowthPolicy">
+                   <enum>QFormLayout::ExpandingFieldsGrow</enum>
                   </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>HD 720p</string>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="fps_label">
+                    <property name="text">
+                     <string>Frames per second:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QSpinBox" name="fps_spinBox">
+                    <property name="minimum">
+                     <number>1</number>
+                    </property>
+                    <property name="maximum">
+                     <number>5000</number>
+                    </property>
+                    <property name="value">
+                     <number>25</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="range_label">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="text">
+                     <string>Frame range:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <layout class="QHBoxLayout" name="range_horizontalLayout">
+                    <item>
+                     <widget class="QSpinBox" name="in_spinBox">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
+                      <property name="minimum">
+                       <number>1</number>
+                      </property>
+                      <property name="maximum">
+                       <number>9999</number>
+                      </property>
+                      <property name="value">
+                       <number>1001</number>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="rangeSep_label">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>-</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QSpinBox" name="out_spinBox">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
+                      <property name="minimum">
+                       <number>1</number>
+                      </property>
+                      <property name="maximum">
+                       <number>9999</number>
+                      </property>
+                      <property name="value">
+                       <number>1100</number>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="handles_label">
+                    <property name="text">
+                     <string>Handles:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QSpinBox" name="handles_spinBox">
+                    <property name="maximum">
+                     <number>9999</number>
+                    </property>
+                    <property name="value">
+                     <number>10</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="res_groupBox">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="title">
+                  <string>Resolution</string>
+                 </property>
+                 <layout class="QFormLayout" name="formLayout_6">
+                  <property name="fieldGrowthPolicy">
+                   <enum>QFormLayout::ExpandingFieldsGrow</enum>
                   </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>PAL 576p 16:9</string>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="resPreset_label">
+                    <property name="text">
+                     <string>Preset:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="res_label">
+                    <property name="text">
+                     <string>Full size resolution:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <layout class="QHBoxLayout" name="res_horizontalLayout">
+                    <item>
+                     <widget class="QSpinBox" name="resX_spinBox">
+                      <property name="minimum">
+                       <number>1</number>
+                      </property>
+                      <property name="maximum">
+                       <number>99999</number>
+                      </property>
+                      <property name="value">
+                       <number>1920</number>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="resSep_label">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>x</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QSpinBox" name="resY_spinBox">
+                      <property name="minimum">
+                       <number>1</number>
+                      </property>
+                      <property name="maximum">
+                       <number>99999</number>
+                      </property>
+                      <property name="value">
+                       <number>1080</number>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="5" column="0">
+                   <widget class="QLabel" name="label">
+                    <property name="text">
+                     <string>Proxy resolution:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QComboBox" name="resPreset_comboBox">
+                    <item>
+                     <property name="text">
+                      <string>HD 1080p</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>HD 720p</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>PAL 576p 16:9</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>PAL 576p 4:3</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item row="3" column="0">
+                   <widget class="QLabel" name="label_2">
+                    <property name="text">
+                     <string>Proxy mode:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="1">
+                   <layout class="QHBoxLayout" name="horizontalLayout_2">
+                    <item>
+                     <widget class="QRadioButton" name="radioButton_2">
+                      <property name="text">
+                       <string>Scale</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QRadioButton" name="radioButton">
+                      <property name="text">
+                       <string>Resolution</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="5" column="1">
+                   <layout class="QHBoxLayout" name="res_horizontalLayout_3">
+                    <item>
+                     <widget class="QSpinBox" name="resX_spinBox_3">
+                      <property name="minimum">
+                       <number>1</number>
+                      </property>
+                      <property name="maximum">
+                       <number>99999</number>
+                      </property>
+                      <property name="value">
+                       <number>1920</number>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="resSep_label_3">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>x</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QSpinBox" name="resY_spinBox_3">
+                      <property name="minimum">
+                       <number>1</number>
+                      </property>
+                      <property name="maximum">
+                       <number>99999</number>
+                      </property>
+                      <property name="value">
+                       <number>1080</number>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="4" column="0">
+                   <widget class="QLabel" name="label_3">
+                    <property name="text">
+                     <string>Proxy scale:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="4" column="1">
+                   <layout class="QHBoxLayout" name="horizontalLayout_3">
+                    <item>
+                     <widget class="QDoubleSpinBox" name="doubleSpinBox">
+                      <property name="maximum">
+                       <double>1.000000000000000</double>
+                      </property>
+                      <property name="singleStep">
+                       <double>0.010000000000000</double>
+                      </property>
+                      <property name="value">
+                       <double>0.500000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QSlider" name="horizontalSlider">
+                      <property name="maximum">
+                       <number>100</number>
+                      </property>
+                      <property name="sliderPosition">
+                       <number>50</number>
+                      </property>
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="6" column="1">
+                   <widget class="QCheckBox" name="preserveAR_checkBox">
+                    <property name="text">
+                     <string>Preserve aspect ratio</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="appPaths_groupBox">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="title">
+                  <string>Preferred application versions</string>
+                 </property>
+                 <layout class="QFormLayout" name="formLayout_3">
+                  <property name="fieldGrowthPolicy">
+                   <enum>QFormLayout::ExpandingFieldsGrow</enum>
                   </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>PAL 576p 4:3</string>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="app_label">
+                    <property name="text">
+                     <string>Application:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QComboBox" name="app_comboBox"/>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="os_label">
+                    <property name="text">
+                     <string>Version:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QComboBox" name="os_comboBox"/>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="other_groupBox">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="title">
+                  <string>Other settings</string>
+                 </property>
+                 <layout class="QFormLayout" name="formLayout_7">
+                  <property name="fieldGrowthPolicy">
+                   <enum>QFormLayout::ExpandingFieldsGrow</enum>
                   </property>
-                 </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="board_label">
+                    <property name="text">
+                     <string>Production board URL:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QLineEdit" name="board_lineEdit"/>
+                  </item>
+                 </layout>
                 </widget>
                </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="label_2">
-                 <property name="text">
-                  <string>Proxy mode:</string>
+               <item>
+                <spacer name="verticalSpacer_4">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
                  </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <layout class="QHBoxLayout" name="horizontalLayout_2">
-                 <item>
-                  <widget class="QRadioButton" name="radioButton_2">
-                   <property name="text">
-                    <string>Scale</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QRadioButton" name="radioButton">
-                   <property name="text">
-                    <string>Resolution</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="5" column="1">
-                <layout class="QHBoxLayout" name="res_horizontalLayout_3">
-                 <item>
-                  <widget class="QSpinBox" name="resX_spinBox_3">
-                   <property name="minimum">
-                    <number>1</number>
-                   </property>
-                   <property name="maximum">
-                    <number>99999</number>
-                   </property>
-                   <property name="value">
-                    <number>1920</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="resSep_label_3">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="text">
-                    <string>x</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QSpinBox" name="resY_spinBox_3">
-                   <property name="minimum">
-                    <number>1</number>
-                   </property>
-                   <property name="maximum">
-                    <number>99999</number>
-                   </property>
-                   <property name="value">
-                    <number>1080</number>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="4" column="0">
-                <widget class="QLabel" name="label_3">
-                 <property name="text">
-                  <string>Proxy scale:</string>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
                  </property>
-                </widget>
-               </item>
-               <item row="4" column="1">
-                <layout class="QHBoxLayout" name="horizontalLayout_3">
-                 <item>
-                  <widget class="QDoubleSpinBox" name="doubleSpinBox">
-                   <property name="maximum">
-                    <double>1.000000000000000</double>
-                   </property>
-                   <property name="singleStep">
-                    <double>0.010000000000000</double>
-                   </property>
-                   <property name="value">
-                    <double>0.500000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QSlider" name="horizontalSlider">
-                   <property name="maximum">
-                    <number>100</number>
-                   </property>
-                   <property name="sliderPosition">
-                    <number>50</number>
-                   </property>
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="6" column="1">
-                <widget class="QCheckBox" name="preserveAR_checkBox">
-                 <property name="text">
-                  <string>Preserve aspect ratio</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
+                </spacer>
                </item>
               </layout>
              </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="appPaths_groupBox">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="title">
-               <string>Preferred application versions</string>
-              </property>
-              <layout class="QFormLayout" name="formLayout_3">
-               <property name="fieldGrowthPolicy">
-                <enum>QFormLayout::ExpandingFieldsGrow</enum>
-               </property>
-               <item row="0" column="0">
-                <widget class="QLabel" name="app_label">
-                 <property name="text">
-                  <string>Application:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QComboBox" name="app_comboBox"/>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="os_label">
-                 <property name="text">
-                  <string>Version:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QComboBox" name="os_comboBox"/>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="other_groupBox">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="title">
-               <string>Other settings</string>
-              </property>
-              <layout class="QFormLayout" name="formLayout_7">
-               <property name="fieldGrowthPolicy">
-                <enum>QFormLayout::ExpandingFieldsGrow</enum>
-               </property>
-               <item row="0" column="0">
-                <widget class="QLabel" name="board_label">
-                 <property name="text">
-                  <string>Production board URL:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QLineEdit" name="board_lineEdit"/>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <spacer name="verticalSpacer_4">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </widget>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -736,7 +732,7 @@
                 <string>Add Shot</string>
                </property>
                <property name="icon">
-                <iconset resource="rsc.qrc">
+                <iconset resource="../../ui/rsc.qrc">
                  <normaloff>:/rsc/rsc/icon_add.png</normaloff>
                  <disabledoff>:/rsc/rsc/icon_add_disabled.png</disabledoff>:/rsc/rsc/icon_add.png</iconset>
                </property>
@@ -763,7 +759,7 @@
                 <string>Remove</string>
                </property>
                <property name="icon">
-                <iconset resource="rsc.qrc">
+                <iconset resource="../../ui/rsc.qrc">
                  <normaloff>:/rsc/rsc/icon_delete.png</normaloff>
                  <disabledoff>:/rsc/rsc/icon_delete_disabled.png</disabledoff>:/rsc/rsc/icon_delete.png</iconset>
                </property>
@@ -811,46 +807,11 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>456</width>
-             <height>485</height>
+             <width>338</width>
+             <height>300</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_7">
-            <item>
-             <widget class="QGroupBox" name="shotSettings_groupBox_2">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="title">
-               <string>Shot settings</string>
-              </property>
-              <layout class="QFormLayout" name="formLayout_12">
-               <property name="fieldGrowthPolicy">
-                <enum>QFormLayout::ExpandingFieldsGrow</enum>
-               </property>
-               <item row="0" column="0">
-                <widget class="QLabel" name="shotName_label_2">
-                 <property name="text">
-                  <string>Shot name:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QLineEdit" name="shotName_lineEdit_2">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
             <item>
              <widget class="QGroupBox" name="time_groupBox_2">
               <property name="sizePolicy">
@@ -1084,9 +1045,102 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="jobPaths_tab">
+       <attribute name="title">
+        <string>Job Paths</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_9">
+        <item>
+         <spacer name="verticalSpacer_6">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>156</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="jobRootPaths_groupBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title">
+           <string>Jobs root paths</string>
+          </property>
+          <layout class="QFormLayout" name="formLayout_15">
+           <property name="fieldGrowthPolicy">
+            <enum>QFormLayout::ExpandingFieldsGrow</enum>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLabel" name="jobRootPathOSX_label">
+             <property name="text">
+              <string>Mac OS X:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <layout class="QHBoxLayout" name="jobRootPathOSX_horizontalLayout">
+             <item>
+              <widget class="QLineEdit" name="jobRootPathOSX_lineEdit"/>
+             </item>
+            </layout>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="jobRootPathLinux_label">
+             <property name="text">
+              <string>Linux:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <layout class="QHBoxLayout" name="jobRootPathLinux_horizontalLayout">
+             <item>
+              <widget class="QLineEdit" name="jobRootPathLinux_lineEdit"/>
+             </item>
+            </layout>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="jobRootPathWin_label">
+             <property name="text">
+              <string>Windows:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <layout class="QHBoxLayout" name="jobRootPathWin_horizontalLayout">
+             <item>
+              <widget class="QLineEdit" name="jobRootPathWin_lineEdit"/>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_7">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>156</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="appPaths_tab">
        <attribute name="title">
-        <string>App paths</string>
+        <string>App Paths</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
@@ -1128,6 +1182,12 @@
             <layout class="QHBoxLayout" name="appName_horizontalLayout">
              <item>
               <widget class="QComboBox" name="appName_comboBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="toolTip">
                 <string>Select an application, or add a new application by typing a new name and pressing Enter</string>
                </property>
@@ -1148,7 +1208,7 @@
                 <string>...</string>
                </property>
                <property name="icon">
-                <iconset resource="rsc.qrc">
+                <iconset resource="../../ui/rsc.qrc">
                  <normaloff>:/rsc/rsc/icon_delete.png</normaloff>
                  <disabledoff>:/rsc/rsc/icon_delete_disabled.png</disabledoff>:/rsc/rsc/icon_delete.png</iconset>
                </property>
@@ -1173,6 +1233,12 @@
             <layout class="QHBoxLayout" name="appVer_horizontalLayout">
              <item>
               <widget class="QComboBox" name="appVer_comboBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="toolTip">
                 <string>Select a version for this application, or add a new version by typing a new name and pressing Enter</string>
                </property>
@@ -1193,7 +1259,7 @@
                 <string>...</string>
                </property>
                <property name="icon">
-                <iconset resource="rsc.qrc">
+                <iconset resource="../../ui/rsc.qrc">
                  <normaloff>:/rsc/rsc/icon_delete.png</normaloff>
                  <disabledoff>:/rsc/rsc/icon_delete_disabled.png</disabledoff>:/rsc/rsc/icon_delete.png</iconset>
                </property>
@@ -1306,9 +1372,14 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="res_tab">
+       <attribute name="title">
+        <string>Resolution Presets</string>
+       </attribute>
+      </widget>
       <widget class="QWidget" name="cameras_tab">
        <attribute name="title">
-        <string>Cameras</string>
+        <string>Camera Presets</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
@@ -1337,6 +1408,12 @@
             <layout class="QHBoxLayout" name="camPreset_horizontalLayout">
              <item>
               <widget class="QComboBox" name="camPreset_comboBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="toolTip">
                 <string>Select an application, or add a new application by typing a new name and pressing Enter</string>
                </property>
@@ -1357,7 +1434,7 @@
                 <string>...</string>
                </property>
                <property name="icon">
-                <iconset resource="rsc.qrc">
+                <iconset resource="../../ui/rsc.qrc">
                  <normaloff>:/rsc/rsc/icon_delete.png</normaloff>
                  <disabledoff>:/rsc/rsc/icon_delete_disabled.png</disabledoff>:/rsc/rsc/icon_delete.png</iconset>
                </property>
@@ -1374,6 +1451,19 @@
           </layout>
          </widget>
         </item>
+        <item>
+         <spacer name="verticalSpacer_5">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
        </layout>
       </widget>
      </widget>
@@ -1389,7 +1479,7 @@
   </widget>
  </widget>
  <resources>
-  <include location="rsc.qrc"/>
+  <include location="../../ui/rsc.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -42,9 +42,12 @@ class dialog(QtGui.QDialog):
 		
 		
 		#loading ICData for current asset verion
+		if os.environ['ICARUS_RUNNING_OS'] == 'Windows': # hack for Windows environment variables
+			assetRootDir = assetRootDir.replace('$JOBPATH', '%JOBPATH%')
 		assetRootDir = os.path.expandvars(assetRootDir)
 		assetDir = os.path.join(assetRootDir, version)
 		sys.path.append(assetDir)
+		#print assetDir
 		import icData;	reload(icData)
 		sys.path.remove(assetDir)
 		
