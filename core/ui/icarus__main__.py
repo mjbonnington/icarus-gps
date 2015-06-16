@@ -1136,7 +1136,7 @@ I   C   A   R   U   S
 		self.previewPlayerCtrl(hide=True)
 		pixmap = QtGui.QPixmap(None)
 		self.ui.gatherImgPreview_label.setPixmap(pixmap)
-		if self.previewPlayer:
+		if self.previewPlayer and os.environ['ICARUS_RUNNING_OS'] is not 'Windows': # quick hack as haven't yet figured out how to get Phonon video player working on Windows
 			imgPath = previewImg.getImg(self.gatherPath, forceExt='mov')
 			if imgPath:
 					self.previewPlayerCtrl(hide=True)

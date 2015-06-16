@@ -40,12 +40,19 @@ def hardLink(source, destination, umask='000'):
 	""" Creates hard links
 	"""
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+		if os.path.isdir(destination): # if destination is a folder, append the filename from the source
+			filename = os.path.basename(source)
+			destination = os.path.join(destination, filename)
+
+		if os.path.isfile(destination): # delete the destination file if it already exists - this is to mimic the Unix behaviour and force creation of the hard link
+			os.system('del %s /f /q' % destination)
+
 		#cmdStr = 'mklink /H %s %s' % (destination, source) # this only works with local NTFS volumes
-		cmdStr = 'fsutil hardlink create %s %s' % (destination, source) # works over SMB network shares
+		cmdStr = 'fsutil hardlink create %s %s >nul' % (destination, source) # works over SMB network shares; suppressing output to null
 	else:
 		cmdStr = '%s; ln -f %s %s' % (setUmask(umask), source, destination)
 
-	print cmdStr
+	#print cmdStr
 	os.system(cmdStr)
 
 	return destination
@@ -62,7 +69,7 @@ def recurseRemove(path):
 	else:
 		cmdStr = 'rm -rf %s' % path
 
-	print cmdStr
+	#print cmdStr
 	os.system(cmdStr)
 
 	return path
@@ -76,7 +83,7 @@ def copyDirContents(source, destination, umask='000'):
 	else:
 		cmdStr = '%s; cp -rf %s %s' % (setUmask(umask), os.path.join(source, '*'), destination)
 
-	print cmdStr
+	#print cmdStr
 	os.system(cmdStr)
 
 
