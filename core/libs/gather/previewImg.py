@@ -1,9 +1,10 @@
 #!/usr/bin/python
-#support		:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:assetGather
-#copyright	:Gramercy Park Studios
+#support    :Nuno Pereira - nuno.pereira@gps-ldn.com
+#title      :previewImg
+#copyright  :Gramercy Park Studios
 
 import os
+
 
 def getImg(gatherPath, forceExt=None):
 	gatherPathLs = os.listdir(gatherPath)
@@ -21,3 +22,4 @@ def getImg(gatherPath, forceExt=None):
 		return os.path.join(gatherPath, img)
 	else:
 		return
+
