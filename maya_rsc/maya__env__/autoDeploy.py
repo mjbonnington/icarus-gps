@@ -36,6 +36,7 @@ def deploy():
 
 	#Copying files
 	try:
+		#print "Copying GPS shelves: %s -> %s" %(shelf_resources, mayaShelvesDir)
 		osOps.copyDirContents(shelf_resources, mayaShelvesDir)
 		verbose.gpsToolDeploy('Ok')
 	except:
