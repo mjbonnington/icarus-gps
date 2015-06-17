@@ -14,27 +14,31 @@ import xmlData
 
 
 class jobSettings(xmlData.xmlData):
-	""" Manipulates XML database to store job settings
+	""" Manipulates XML database to store job settings.
 		Inherits xmlData class
+		TODO: Rewrite to avoid using XPath expressions, as they are not fully supported by the version of the ElementTree module included with Python 2.6
 	"""
 
-	def getValue(self, category, tag):
+	def getValue(self, category, setting):
 		""" Get the specified value
 		"""
-		elem = self.root.find( "./data[@category='%s']/%s" %(category, tag) )
+		elem = self.root.find( "./data[@category='%s']/%s" %(category, setting) )
 		if elem is not None:
 			text = elem.text
 			if text is not None:
 				return text
 
-		return ""
-	#	try:
-	#		return self.root.find( "./data[@category='%s']/%s" %(category, tag) ).text
-	#	except AttributeError:
-	#		return "" # Must return string if value is being returned into an environment variable
+		#for catElem in self.root.findall('./data'):
+		#	if catElem.attrib.get('category') == category:
+		#		for settingElem in catElem.findall(setting):
+		#			text = settingElem.text
+		#			if text is not None:
+		#				return text
+
+		return "" # return an empty string, not None, so value can be stored in an environment variable without raising an error
 
 
-	def setValue(self, category, tag, newValue):
+	def setValue(self, category, setting, newValue):
 		""" Set value. Create elements if they don't exist
 		"""
 		catElem = self.root.find("./data[@category='%s']" %category)
@@ -42,31 +46,31 @@ class jobSettings(xmlData.xmlData):
 			catElem = ET.SubElement(self.root, 'data')
 			catElem.set('category', category)
 
-		tagElem = catElem.find(tag)
-		if tagElem is None:
-			tagElem = ET.SubElement(catElem, tag)
+		settingElem = catElem.find(setting)
+		if settingElem is None:
+			settingElem = ET.SubElement(catElem, setting)
 
-		tagElem.text = str(newValue)
+		settingElem.text = str(newValue)
 
 
-	def removeElement(self, category, tag):
+	def removeElement(self, category, setting):
 		""" Remove the selected element
 		"""
 		cat = self.root.find( "./data[@category='%s']" %category )
 		if cat is not None:
-			elem = cat.find(tag)
+			elem = cat.find(setting)
 			if elem is not None:
-				#print "Removing element: %s" %elem.tag
+				#print "Removing element: %s" %elem.setting
 				cat.remove(elem)
 				return True
 
 		return False
 
 
-#	def getAttr(self, category, tag, attr):
+#	def getAttr(self, category, setting, attr):
 #		""" Get the specified attribute
 #		"""
-#		return self.root.find( "./data[@category='%s']/%s" %(category, tag) ).attrib[attr]
+#		return self.root.find( "./data[@category='%s']/%s" %(category, setting) ).attrib[attr]
 
 
 	def getCategories(self):
