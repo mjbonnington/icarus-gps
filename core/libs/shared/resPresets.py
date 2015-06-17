@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 # Resolution Presets
-# v0.1
+# v0.2
 #
 # Michael Bonnington 2015
 # Gramercy Park Studios
@@ -14,7 +14,7 @@ import xmlData
 
 
 class resPresets(xmlData.xmlData):
-	""" Manipulates XML database to store resolution presets
+	""" Manipulates XML database to store resolution presets.
 		Inherits xmlData class
 	"""
 
@@ -28,10 +28,10 @@ class resPresets(xmlData.xmlData):
 		return presets
 
 
-	def getValue(self, preset, tag):
+	def getValue(self, preset, setting):
 		""" Get the specified value
 		"""
-		element = self.root.find( "./resolution[@name='%s']/%s" %(preset, tag) )
+		element = self.root.find( "./resolution[@name='%s']/%s" %(preset, setting) )
 		if element is not None:
 			text = element.text
 			if text is not None:
@@ -44,30 +44,15 @@ class resPresets(xmlData.xmlData):
 		""" Return a resolution preset given the pixel dimensions (width and height).
 			PAR (pixel aspect ratio) is optional
 		"""
-		elements = self.root.findall("./resolution")
+		elements = self.root.findall('./resolution')
 		presets = []
 		for element in elements:
-			w = element.find("./width").text
-			h = element.find("./height").text
-			p = element.find("./par").text
+			w = element.find('./width').text
+			h = element.find('./height').text
+			p = element.find('./par').text
 			if w==str(width) and h==str(height) and p==str(par):
 				#print w, h, p
 				return element.get('name')
 
 		return "Custom"
-
-
-#	def setValue(self, category, tag, newValue):
-#		""" Set value. Create elements if they don't exist
-#		"""
-#		catElem = self.root.find("./data[@category='%s']" %category)
-#		if catElem is None:
-#			catElem = ET.SubElement(self.root, 'data')
-#			catElem.set('category', category)
-#
-#		tagElem = catElem.find(tag)
-#		if tagElem is None:
-#			tagElem = ET.SubElement(catElem, tag)
-#
-#		tagElem.text = newValue
 

@@ -28,7 +28,8 @@ class icarusApp(QtGui.QDialog):
 		userPrefs.read()
 
 		#defining phonon as preview player if icarus is standalone
-		if os.environ['ICARUSENVAWARE'] == 'STANDALONE':
+		#(only enabled on Mac OS X as haven't yet figured out how to get Phonon video player working properly on Windows or Linux)
+		if os.environ['ICARUSENVAWARE'] == 'STANDALONE' and os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
 			from PySide.phonon import Phonon
 			self.previewPlayer = Phonon.VideoPlayer(parent = self.ui.gatherImgPreview_label)
 		else:
@@ -1136,7 +1137,7 @@ I   C   A   R   U   S
 		self.previewPlayerCtrl(hide=True)
 		pixmap = QtGui.QPixmap(None)
 		self.ui.gatherImgPreview_label.setPixmap(pixmap)
-		if self.previewPlayer and os.environ['ICARUS_RUNNING_OS'] is not 'Windows': # quick hack as haven't yet figured out how to get Phonon video player working on Windows
+		if self.previewPlayer:
 			imgPath = previewImg.getImg(self.gatherPath, forceExt='mov')
 			if imgPath:
 					self.previewPlayerCtrl(hide=True)
