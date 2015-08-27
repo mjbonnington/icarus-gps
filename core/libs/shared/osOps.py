@@ -75,6 +75,18 @@ def recurseRemove(path):
 	return path
 
 
+def copy(source, destination):
+	""" Copy a file or folder
+	"""
+	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+		cmdStr = 'copy /Y %s %s' % (source, destination)
+	else:
+		cmdStr = 'cp -rf %s %s' % (source, destination)
+
+	#print cmdStr
+	os.system(cmdStr)
+
+
 def copyDirContents(source, destination, umask='000'):
 	""" Copy the contents of a folder recursively - rewrite using shutil.copy / copytree
 	"""
