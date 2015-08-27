@@ -494,8 +494,12 @@ I   C   A   R   U   S
 
 %s
 
+Python v%d.%d.%d (%s)
+
 (c) 2013-2015 Gramercy Park Studios
-""" %os.environ['ICARUSVERSION']
+""" %(os.environ['ICARUSVERSION'], 
+	  sys.version_info[0], sys.version_info[1], sys.version_info[2], 
+	  os.environ['ICARUS_RUNNING_OS'])
 		import about
 		about = about.aboutDialog()
 		about.msg(about_msg)

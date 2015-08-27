@@ -53,7 +53,7 @@ def gpsPreview_uiValues():
 	print 'Not all GPS Preview UI values could be read'
 
 def gpsToolDeploy(status):
-	print 'Deploying GPS tools - %s' % status
+	print 'Deploying GPS tools... %s' % status
 
 def icarusLaunch(icarusVersion, icarusLocation=""):
 	print 'GRAMERCY PARK STUDIOS - ICARUS %s\n' % icarusVersion

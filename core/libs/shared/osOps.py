@@ -28,7 +28,9 @@ def setPermissions(path, mode='a+w'):
 	""" Sets permissions to provided path - could probably be rewritten to use Python's own functions
 	"""
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		os.chmod(path, 0777) # Python 2 octal syntax
+		# Removed permissions setting on Windows as it causes problems
+		pass
+		#os.chmod(path, 0777) # Python 2 octal syntax
 		#os.chmod(path, 0o777) # Python 3 octal syntax
 	else:
 		os.system('chmod -R %s %s' % (mode, path))
@@ -75,13 +77,28 @@ def recurseRemove(path):
 	return path
 
 
+def copy(source, destination):
+	""" Copy a file or folder
+	"""
+	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+		cmdStr = 'copy /Y %s %s' % (source, destination)
+	else:
+		cmdStr = 'cp -rf %s %s' % (source, destination)
+
+	#print cmdStr
+	os.system(cmdStr)
+
+
 def copyDirContents(source, destination, umask='000'):
 	""" Copy the contents of a folder recursively - rewrite using shutil.copy / copytree
 	"""
+	src = os.path.normpath( os.path.join(source, '*') )
+	dst = os.path.normpath( destination )
+
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		cmdStr = 'copy %s %s' %(os.path.join(source, '*'), destination)
+		cmdStr = 'copy /Y %s %s' % (src, dst)
 	else:
-		cmdStr = '%s; cp -rf %s %s' % (setUmask(umask), os.path.join(source, '*'), destination)
+		cmdStr = '%s; cp -rf %s %s' % (setUmask(umask), src, dst)
 
 	#print cmdStr
 	os.system(cmdStr)

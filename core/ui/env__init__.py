@@ -8,11 +8,13 @@
 import os, platform, sys
 
 def setEnv():
+	# Standardising some environment variables across systems
 	if platform.system() == 'Darwin':
 		os.environ['ICARUS_RUNNING_OS'] = 'Darwin'
 		os.environ['USERNAME'] = os.environ['USER']
 	elif platform.system() == 'Windows':
 		os.environ['ICARUS_RUNNING_OS'] = 'Windows'
+		os.environ['HOME'] = os.path.join(os.environ['HOMEDRIVE'], os.environ['HOMEPATH'])
 	else:
 		os.environ['ICARUS_RUNNING_OS'] = 'Linux'
 	try:
@@ -20,7 +22,7 @@ def setEnv():
 	except KeyError:
 		os.environ['ICARUSENVAWARE'] = 'STANDALONE'
 
-	os.environ['ICARUSVERSION'] = 'v0.8.8-20150617'
+	os.environ['ICARUSVERSION'] = 'v0.8.9-20150827'
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
 	os.environ['ICWORKINGDIR'] = icarusWorkingDir
 	icarusUIDir = os.path.join('core', 'ui')
