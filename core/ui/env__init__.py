@@ -14,7 +14,7 @@ def setEnv():
 		os.environ['USERNAME'] = os.environ['USER']
 	elif platform.system() == 'Windows':
 		os.environ['ICARUS_RUNNING_OS'] = 'Windows'
-		os.environ['HOME'] = os.environ['HOMEPATH']
+		os.environ['HOME'] = os.path.join(os.environ['HOMEDRIVE'], os.environ['HOMEPATH'])
 	else:
 		os.environ['ICARUS_RUNNING_OS'] = 'Linux'
 	try:

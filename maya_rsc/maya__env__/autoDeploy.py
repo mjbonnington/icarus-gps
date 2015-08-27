@@ -23,11 +23,11 @@ def deploy():
 	mayaVersion = mayaVersion.replace(' ', '-')
 
 	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-		mayaHome = os.path.join(mel.eval('getenv HOME'), 'Library', 'Preferences', 'Autodesk', 'maya', mayaVersion)
+		mayaHome = os.path.join(os.environ['HOME'], 'Library', 'Preferences', 'Autodesk', 'maya', mayaVersion)
 	elif os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		mayaHome = os.path.join(os.environ['HOMEPATH'], 'Documents', 'maya', mayaVersion)
+		mayaHome = os.path.join(os.environ['HOME'], 'Documents', 'maya', mayaVersion)
 	else:
-		mayaHome = os.path.join(mel.eval('getenv HOME'), 'maya', mayaVersion)
+		mayaHome = os.path.join(os.environ['HOME'], 'maya', mayaVersion)
 
 	#Pipeline Resources Paths
 	#shelves
