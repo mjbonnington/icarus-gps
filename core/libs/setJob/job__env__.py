@@ -5,7 +5,7 @@
 
 
 import os, sys
-import jobSettings, appPaths, verbose
+import jobs, jobSettings, appPaths, verbose
 
 
 #sets job and shot environment variables
@@ -72,6 +72,11 @@ def setEnv(envVars):
 
 	#TERMINAL
 	os.environ['GPS_RC'] = os.path.join(os.environ['PIPELINE'], 'core', 'ui', '.gps_rc')
+
+	# Jobs root paths for cross-platform support
+	os.environ['JOBSROOTWIN'] = jobs.win_root
+	os.environ['JOBSROOTOSX'] = jobs.osx_root
+	#os.environ['JOBSROOTLINUX'] = jobs.linux_root # not currently required as Linux & OSX mount points should be the same
 
 	#job env
 	os.environ['SHOTPATH'] = os.path.normpath(shotPath)

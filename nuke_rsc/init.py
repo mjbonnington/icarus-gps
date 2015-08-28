@@ -10,10 +10,9 @@ import os, sys
 # Set up path remapping for cross-platform support
 def filenameFix(filename):
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		return filename.replace( "/Volumes/hggl_SAN_1/", "Z:/" )
+		return filename.replace( os.environ['JOBSROOTOSX'], os.environ['JOBSROOTWIN'] )
 	else: # Linux or OS X
-		return filename.replace( "Z:/", "/Volumes/hggl_SAN_1/" )
-		#return filename
+		return filename.replace( os.environ['JOBSROOTWIN'], os.environ['JOBSROOTOSX'] )
 
 # Adding to Nuke path
 nuke.pluginAddPath('./gizmos')
