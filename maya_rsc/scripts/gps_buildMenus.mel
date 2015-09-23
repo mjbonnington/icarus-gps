@@ -19,8 +19,7 @@ global proc checkGPSFileMenu()
 }
 
 
-//File Menu//
-/////////////
+// File Menu
 
 string $fileMenu = "MayaWindow|mainFileMenu";
 buildFileMenu();
@@ -41,19 +40,19 @@ deleteUI -menuItem FileMenuRecentFileItems;
 deleteUI -menuItem FileMenuRecentBackupItems;
 deleteUI -menuItem FileMenuRecentProjectItems;
 
-//adding GPS entries
+// Add GPS entries
 setParent -menu $fileMenu;
 
 	// GPS New Scene
 	menuItem -insertAfter ""
-			 -label "GPS - New"
+			 -label "[GPS] New"
 			 -annotation ("Create a new scene")
 			 -command ("source menus2Py; menus2Py.newScene()")
 			 GPSNewScene;
 
 	// GPS Open Scene
 	menuItem -insertAfter GPSNewScene
-			 -label "GPS - Open..."
+			 -label "[GPS] Open..."
 			 -annotation ("Open a saved scene")
 			 -command ("source menus2Py; menus2Py.openScene()")
 			 GPSOpenScene; // tmpMenu;
@@ -61,7 +60,7 @@ setParent -menu $fileMenu;
 	// GPS Open Recent Scene (edit the existing menu item)
 	menuItem -insertAfter GPSOpenScene
 			 -subMenu true
-			 -label "GPS - Open Recent"
+			 -label "[GPS] Open Recent"
 			 -postMenuCommand "source menus2Py; menus2Py.updateRecentFilesMenu(\"GPSFileMenuRecentFileItems\")"
 			 GPSFileMenuRecentFileItems;
 	setParent -menu ..;
@@ -72,21 +71,21 @@ setParent -menu $fileMenu;
 
 	// GPS Save Scene
 	menuItem -insertAfter GPSFileDivider1
-			 -label "GPS - Save"
+			 -label "[GPS] Save"
 			 -annotation ("Save the current scene")
 			 -command ("source menus2Py; menus2Py.saveScene()")
 			 GPSSaveScene;
 
 	// GPS Save Scene As
 	menuItem -insertAfter GPSSaveScene
-			 -label "GPS - Save As..."
+			 -label "[GPS] Save As..."
 			 -annotation ("Save scene with a new name")
 			 -command ("source menus2Py; menus2Py.saveSceneAs()")
 			 GPSSaveSceneAs;
 
 	// GPS - Incremental Save
 	menuItem -insertAfter GPSSaveSceneAs
-			 -label "GPS - Incremental Save"
+			 -label "[GPS] Incremental Save"
 			 -annotation "Save the current scene as new version"
 			 -command ("source menus2Py; menus2Py.incrementalSave()")
 			 GPSIncrementalSave;
@@ -97,7 +96,7 @@ setParent -menu $fileMenu;
 
 	// GPS Launch Icarus UI
 	menuItem -insertAfter GPSFileDivider2
-			 -label "GPS - Icarus UI..."
+			 -label "[GPS] Icarus UI..."
 			 -annotation ("Launch Icarus UI")
 			 -command ("source menus2Py;menus2Py.launchIcarus()")
 			 GPSLaunchIcarusUI;
@@ -105,8 +104,7 @@ setParent -menu $fileMenu;
 checkGPSFileMenu();
 
 
-//Window Menu//
-///////////////
+// Window Menu
 
 string $windowMenu = "MayaWindow|mainWindowMenu";
 buildViewMenu($windowMenu);
@@ -120,7 +118,7 @@ buildViewMenu($windowMenu);
 
 setParent -menu $windowMenu;
 	menuItem -edit
-			 -label ("GPS - Preview")
+			 -label ("[GPS] Preview")
 			 -command ("source menus2Py; menus2Py.gpsPreview()")
 			 -annotation ("Launches GPS Preview")
 			 playblastItem;
@@ -129,8 +127,7 @@ setParent -menu $windowMenu;
 			 playblastDialogItem;
 
 
-//Time Slider menu//
-////////////////////
+// Time Slider Menu
 
 string $timelineMenu = "MayaWindow|toolBar6|MainTimeSliderLayout|formLayout9|TimeSliderMenu";
 updateTimeSliderMenu $timelineMenu;
@@ -145,14 +142,13 @@ deleteUI -menuItem timeSliderPlayblastItem;
 //Adding GPS entries
 setParent -menu $timelineMenu;
 	menuItem -divider true;
-	menuItem -label ("GPS - Preview...")
+	menuItem -label ("[GPS] Preview...")
 			 -command ("source menus2Py; menus2Py.gpsPreview()")
 			 -annotation ("Launches GPS Preview")
 			 GPSPlayblastItem;
 
 
-//Status Line buttons//
-///////////////////////
+// Status Line Buttons
 
 setParent $gStatusLine;
 
@@ -257,7 +253,7 @@ iconTextButton -image1 "icarus.png"
                -annotation "Launch Icarus UI"
                launchIcarusButton;
 
-// GPS - Print current Job and Shot info
+// GPS - Print current job and shot info
 string $jobInfo = `getenv JOB` + " - " + `getenv SHOT`;
 text -label "   ";
 text -label $jobInfo -h 27;
