@@ -32,8 +32,8 @@ global proc shelf_GPS_Lighting () {
 		-mip 3
 		-mi "Load Data Elements" ( "import loadElements\n\nloadElements.addDataElements()" )
 		-mip 4
-		//-mi "Add or update AOV / Render Pass selector to Maya Render View" ( "import gpsRenderViewSelectAOV;reload(gpsRenderViewSelectAOV)" )
-		//-mip 5
+		-mi "Add or update AOV / Render Pass selector to Maya Render View" ( "import gpsRenderViewSelectAOV; reload(gpsRenderViewSelectAOV); gpsRenderViewSelectAOV.selectAOV()" )
+		-mip 5
 	;
 	shelfButton
 		-enableCommandRepeat 1
