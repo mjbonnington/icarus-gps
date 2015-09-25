@@ -1,12 +1,14 @@
 # [GPS] Render View Select AOV
-# v0.3
+# v0.4
 #
 # Michael Bonnington 2015
 # Gramercy Park Studios
 #
 # This script adds a combo box to the Render View toolbar which enables you to view render passes / AOVs directly in the Render View.
 # To initialise, run the script with 'import gpsRenderViewSelectAOV; gpsRenderViewSelectAOV.selectAOV()'
-# Currently only works with Arnold Renderer.
+# The Render View must be set to 32-bit mode.
+# Currently supports the following renderers: Arnold, Redshift.
+# Multi-channel EXRs are not supported.
 
 import maya.cmds as mc
 import maya.mel as mel
@@ -16,9 +18,9 @@ class selectAOV():
 
 	def __init__(self):
 		# Initialise some global variables
-		self.renderer = "arnold"
+		self.renderer = mc.getAttr( "defaultRenderGlobals.currentRenderer" )
 		self.default_beauty_aov_name = "beauty"
-		self.frame = mc.currentTime(query=True)
+		self.frame = mc.currentTime( query=True )
 
 		# Load OpenEXR plugin
 		mc.loadPlugin( "OpenEXRLoader" )
@@ -26,15 +28,11 @@ class selectAOV():
 		# Set up common render settings
 		pass
 
-		# Add pre- and post-render commands
-		mc.setAttr( "defaultRenderGlobals.preMel", 'python("gpsRenderViewSelectAOV.selectAOV().pre_render()")', type="string" )
-		mc.setAttr( "defaultRenderGlobals.postMel", 'python("gpsRenderViewSelectAOV.selectAOV().post_render()")', type="string" )
-
 		# Set up renderer-specific render settings
+		# Arnold...
 		if self.renderer == "arnold":
-			# TODO - Check whether Arnold is set as the current renderer
-
 			# Set output file type to exr (can't figure out how to do this)
+			pass
 
 			# Set file name prefix options
 			imageFilePrefix = mc.getAttr( "defaultRenderGlobals.imageFilePrefix" )
@@ -57,8 +55,41 @@ class selectAOV():
 			# Set correct output gamma
 			mc.setAttr( "defaultArnoldRenderOptions.display_gamma", 1 )
 
-		#elif self.renderer == "vray":
-		#	pass
+			# Add pre- and post-render commands
+			mc.setAttr( "defaultRenderGlobals.preMel", 'python("gpsRenderViewSelectAOV.selectAOV().pre_render()")', type="string" )
+			mc.setAttr( "defaultRenderGlobals.postMel", 'python("gpsRenderViewSelectAOV.selectAOV().post_render()")', type="string" )
+
+		# Redshift...
+		elif self.renderer == "redshift":
+			# Set output file type to exr
+			mc.setAttr( "redshiftOptions.imageFormat", 1)
+
+			# Set file name prefix options
+			imageFilePrefix = mc.getAttr( "defaultRenderGlobals.imageFilePrefix" )
+			if not imageFilePrefix:
+				imageFilePrefix = "<Scene>"
+
+			# Append RenderPass token
+			if "<RenderPass>" not in imageFilePrefix:
+				imageFilePrefix += "_<RenderPass>"
+
+			# Store the updated prefix string
+			mc.setAttr( "defaultRenderGlobals.imageFilePrefix", imageFilePrefix, type="string" ) # Store in render globals
+
+			# Set correct output gamma
+			mc.setAttr( "redshiftOptions.displayGammaValue", 2.2 )
+
+			# Add pre- and post-render commands
+			mc.setAttr( "redshiftOptions.preRenderMel", 'python("gpsRenderViewSelectAOV.selectAOV().pre_render()")', type="string" )
+			mc.setAttr( "redshiftOptions.postRenderMel", 'python("gpsRenderViewSelectAOV.selectAOV().post_render()")', type="string" )
+
+		# Vray...
+		elif self.renderer == "vray":
+			pass
+
+		# No supported renderer...
+		else:
+			mc.error( "The renderer %s is not supported" %self.renderer )
 
 		# Set up Maya Render View for 32-bit float / linear
 		mc.setAttr( "defaultViewColorManager.imageColorProfile", 2 )
@@ -125,6 +156,15 @@ class selectAOV():
 				if mc.getAttr("%s.enabled" %aov_node):
 					aov_name_ls.append( mc.getAttr("%s.name" %aov_node) )
 
+		elif self.renderer == "redshift":
+			# List all Redshift AOV nodes
+			aov_node_ls = mc.ls(type="RedshiftAOV")
+
+			for aov_node in aov_node_ls:
+				# Only add to list if AOV is enabled
+				if mc.getAttr("%s.enabled" %aov_node):
+					aov_name_ls.append( mc.getAttr("%s.name" %aov_node) )
+
 		#elif self.renderer == "vray":
 		#	# List all Vray Render Element nodes
 		#	aov_node_ls = mc.ls(type="VRayRenderElement")
@@ -143,7 +183,6 @@ class selectAOV():
 
 	def loadAOV(self):
 		aov = mc.optionMenu( "aov_comboBox", query=True, value=True )
-		#print aov
 
 		padding = mc.getAttr("defaultRenderGlobals.extensionPadding")
 
@@ -151,15 +190,23 @@ class selectAOV():
 			img_path = mc.renderSettings( fullPathTemp=True, leaveUnmatchedTokens=True, genericFrameImageName=str(int(self.frame)).zfill(padding) )
 			img = img_path[0].replace( "<RenderPass>", aov )
 
+		elif self.renderer == "redshift":
+			img_path = mc.renderSettings( fullPathTemp=True, leaveUnmatchedTokens=True, genericFrameImageName=str(int(self.frame)).zfill(padding) )
+			if aov == self.default_beauty_aov_name:
+				img = img_path[0].replace( "<RenderPass>", "Beauty" )
+			else:
+				img = img_path[0].replace( "<RenderPass>", "Beauty.%s" %aov )
+
+			print img
+
 		#elif self.renderer == "vray":
 		#	img_path = mc.renderSettings( fullPathTemp=True, leaveUnmatchedTokens=True, genericFrameImageName=str(int(self.frame)).zfill(padding) )
 		#	img = img_path[0].replace( "[CurrentFrame]", "%4d" %frame ) # <- FIX PADDING
-		#	if aov == default_beauty_aov_name:
+		#	if aov == self.default_beauty_aov_name:
 		#		img = img.replace( "_<RenderPass>", "" )
 		#	else:
 		#		img = img.replace( "_<RenderPass>", "_%s" %aov )
 
-		#print img
 		rview = mc.getPanel( scriptType="renderWindowPanel" )
 		mc.renderWindowEditor( rview, edit=True, loadImage=img )
 
