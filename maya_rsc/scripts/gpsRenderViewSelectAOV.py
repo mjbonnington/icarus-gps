@@ -1,5 +1,5 @@
 # [GPS] Render View Select AOV
-# v0.4
+# v0.5
 #
 # Michael Bonnington 2015
 # Gramercy Park Studios
@@ -8,6 +8,7 @@
 # To initialise, run the script with 'import gpsRenderViewSelectAOV; gpsRenderViewSelectAOV.selectAOV()'
 # The Render View must be set to 32-bit mode.
 # Currently supports the following renderers: Arnold, Redshift, Mentalray.
+# Removed Vray support as this functionality already exists in the Vray Framebuffer.
 # Multi-channel EXRs are not supported.
 
 import maya.cmds as mc
@@ -49,8 +50,7 @@ class selectAOV():
 					imageFilePrefix += "_<RenderPass>"
 
 			# Store the updated prefix string
-			mc.setAttr( "defaultRenderGlobals.imageFilePrefix", imageFilePrefix, type="string" ) # Store in render globals
-			#mc.setAttr( "defaultArnoldDriver.prefix", imageFilePrefix, type="string" ) # Store as override in Arnold driver
+			mc.setAttr( "defaultRenderGlobals.imageFilePrefix", imageFilePrefix, type="string" )
 
 			# Set correct output gamma
 			mc.setAttr( "defaultArnoldRenderOptions.display_gamma", 1 )
@@ -74,7 +74,7 @@ class selectAOV():
 				imageFilePrefix += "_<RenderPass>"
 
 			# Store the updated prefix string
-			mc.setAttr( "defaultRenderGlobals.imageFilePrefix", imageFilePrefix, type="string" ) # Store in render globals
+			mc.setAttr( "defaultRenderGlobals.imageFilePrefix", imageFilePrefix, type="string" )
 
 			# Set correct output gamma
 			mc.setAttr( "redshiftOptions.displayGammaValue", 2.2 )
@@ -99,38 +99,10 @@ class selectAOV():
 				imageFilePrefix += "_<RenderPass>"
 
 			# Store the updated prefix string
-			mc.setAttr( "defaultRenderGlobals.imageFilePrefix", imageFilePrefix, type="string" ) # Store in render globals
+			mc.setAttr( "defaultRenderGlobals.imageFilePrefix", imageFilePrefix, type="string" )
 
 			# Set correct output gamma
 			pass
-
-			# Add pre- and post-render commands
-			mc.setAttr( "defaultRenderGlobals.preMel", 'python("gpsRenderViewSelectAOV.selectAOV().pre_render()")', type="string" )
-			mc.setAttr( "defaultRenderGlobals.postMel", 'python("gpsRenderViewSelectAOV.selectAOV().post_render()")', type="string" )
-
-		# Vray...
-		elif self.renderer == "vray":
-			# Disable Vray Framebuffer
-			mc.setAttr( "vraySettings.vfbOn", 0 )
-
-			# Set output file type to exr (can't figure out how to do this)
-			#mc.setAttr( "vraySettings.imageFormatStr", 5 )
-
-			# Set file name prefix options
-			imageFilePrefix = mc.getAttr( "vraySettings.fileNamePrefix" )
-			if not imageFilePrefix:
-				imageFilePrefix = "<Scene>"
-
-			# Append RenderPass token
-			if "<RenderPass>" not in imageFilePrefix:
-				imageFilePrefix += "_<RenderPass>"
-
-			# Store the updated prefix string
-			#mc.setAttr( "vraySettings.fileNamePrefix", imageFilePrefix, type="string" ) # Store in Vray settings
-			mc.setAttr( "defaultRenderGlobals.imageFilePrefix", imageFilePrefix, type="string" ) # Store in render globals
-
-			# Set correct output gamma
-			mc.setAttr( "vraySettings.cmap_gamma", 2.2 )
 
 			# Add pre- and post-render commands
 			mc.setAttr( "defaultRenderGlobals.preMel", 'python("gpsRenderViewSelectAOV.selectAOV().pre_render()")', type="string" )
@@ -191,55 +163,46 @@ class selectAOV():
 
 
 	def getAOVNames(self):
-		"""Find all the active AOVs in the scene and return their names in a list.
+		""" Find all the active AOVs in the scene and return their names in a list.
 		"""
 		# Default beauty pass will always be added to the start of the list
 		aov_name_ls = [self.default_beauty_aov_name]
 
 		if self.renderer == "arnold":
 			# List all Arnold AOV nodes
-			aov_node_ls = mc.ls(type="aiAOV")
+			aov_node_ls = mc.ls( type="aiAOV" )
 
 			for aov_node in aov_node_ls:
 				# Only add to list if AOV is enabled
-				if mc.getAttr("%s.enabled" %aov_node):
-					aov_name_ls.append( mc.getAttr("%s.name" %aov_node) )
+				if mc.getAttr( "%s.enabled" %aov_node ):
+					aov_name_ls.append( mc.getAttr( "%s.name" %aov_node ) )
 
 		elif self.renderer == "redshift":
 			# List all Redshift AOV nodes
-			aov_node_ls = mc.ls(type="RedshiftAOV")
+			aov_node_ls = mc.ls( type="RedshiftAOV" )
 
 			for aov_node in aov_node_ls:
 				# Only add to list if AOV is enabled
-				if mc.getAttr("%s.enabled" %aov_node):
-					aov_name_ls.append( mc.getAttr("%s.name" %aov_node) )
+				if mc.getAttr( "%s.enabled" %aov_node ):
+					aov_name_ls.append( mc.getAttr( "%s.name" %aov_node ) )
 
 		elif self.renderer == "mentalRay":
 			# List all Mentalray Render Pass nodes
-			aov_node_ls = mc.ls(type="renderPass")
+			aov_node_ls = mc.ls( type="renderPass" )
 
 			for aov_node in aov_node_ls:
 				# Only add to list if AOV is enabled
-				if mc.getAttr("%s.renderable" %aov_node):
-					aov_name_ls.append(aov_node)
+				if mc.getAttr( "%s.renderable" %aov_node ):
+					aov_name_ls.append( aov_node )
 
-		elif self.renderer == "vray":
-			# List all Vray Render Element nodes
-			aov_node_ls = mc.ls(type="VRayRenderElement")
-
-			for aov_node in aov_node_ls:
-				# We need to find the element's name, but as Vray isn't consistent we first need to find the attribute name to query.
-				attr_ls = mc.listAttr(aov_node)
-				for attr in attr_ls:
-					if "vray_name_" in attr or "vray_filename_" in attr:
-						aov_name_attr = attr
-				aov_name_ls.append( mc.getAttr("%s.%s" %(aov_node, aov_name_attr)) )
-
-		# Return list with duplicates removed
+		# Return list
 		return aov_name_ls
 
 
 	def loadAOV(self):
+		""" Load the selected AOV into the Render View framebuffer.
+		"""
+		# Get the name of the selected AOV by querying the combo box
 		aov = mc.optionMenu( "aov_comboBox", query=True, value=True )
 
 		frame_str = str( int( self.frame ) ).zfill( mc.getAttr("defaultRenderGlobals.extensionPadding") )
@@ -260,21 +223,9 @@ class selectAOV():
 			else:
 				img = img_path[0].replace( "<RenderPass>", aov )
 
-		elif self.renderer == "vray":
-			import os
-			base, ext = os.path.splitext(img_path[0])
-			img = base + ".exr"
+		#print img
 
-			if aov == self.default_beauty_aov_name:
-				img = img.replace( "_<RenderPass>", "" )
-			else:
-				img = img.replace( "_<RenderPass>", "_%s" %aov )
-
-			# Remove frame number
-			img = img.replace( ".%s." %frame_str, "." )
-
-			print img
-
+		# Load the image
 		rview = mc.getPanel( scriptType="renderWindowPanel" )
 		mc.renderWindowEditor( rview, edit=True, loadImage=img )
 

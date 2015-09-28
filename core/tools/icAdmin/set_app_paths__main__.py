@@ -175,7 +175,7 @@ class setAppPathsDialog(QtGui.QDialog):
 	def storeAppPathWin(self):
 		""" Store Windows executable path when relevant field is updated
 		"""
-		self.ap.setPath( self.ui.appName_comboBox.currentText(), self.ui.appVer_comboBox.currentText(), 'win', self.ui.winPath_lineEdit.text() )
+		self.ap.setPath( self.ui.appName_comboBox.currentText(), self.ui.appVer_comboBox.currentText(), 'win', self.ui.winPath_lineEdit.text().replace("\\", "/") )
 		#print "%s %s - Windows executable path set to %s" %( self.ui.appName_comboBox.currentText(), self.ui.appVer_comboBox.currentText(), self.ui.winPath_lineEdit.text() )
 
 
