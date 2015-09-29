@@ -7,8 +7,8 @@
 # This script adds a combo box to the Render View toolbar which enables you to view render passes / AOVs directly in the Render View.
 # To initialise, run the script with 'import gpsRenderViewSelectAOV; gpsRenderViewSelectAOV.selectAOV()'
 # The Render View must be set to 32-bit mode.
-# Currently supports the following renderers: Arnold, Redshift, Mentalray.
-# Removed Vray support as this functionality already exists in the Vray Framebuffer.
+# Currently supports the following renderers: Arnold, Redshift, MentalRay.
+# Removed VRay support as this functionality already exists in the VRay Framebuffer.
 # Multi-channel EXRs are not supported.
 
 import maya.cmds as mc
@@ -83,7 +83,7 @@ class selectAOV():
 			mc.setAttr( "redshiftOptions.preRenderMel", 'python("gpsRenderViewSelectAOV.selectAOV().pre_render()")', type="string" )
 			mc.setAttr( "redshiftOptions.postRenderMel", 'python("gpsRenderViewSelectAOV.selectAOV().post_render()")', type="string" )
 
-		# Mentalray...
+		# MentalRay...
 		elif self.renderer == "mentalRay":
 
 			# Set output file type to exr (can't figure out how to do this)
@@ -187,13 +187,19 @@ class selectAOV():
 					aov_name_ls.append( mc.getAttr( "%s.name" %aov_node ) )
 
 		elif self.renderer == "mentalRay":
-			# List all Mentalray Render Pass nodes
+			# Get the current render layer
+			current_layer = mc.editRenderLayerGlobals( query=True, currentRenderLayer=True )
+
+			# List all MentalRay render pass nodes
 			aov_node_ls = mc.ls( type="renderPass" )
 
 			for aov_node in aov_node_ls:
-				# Only add to list if AOV is enabled
-				if mc.getAttr( "%s.renderable" %aov_node ):
-					aov_name_ls.append( aov_node )
+				# Only add to list if render pass is connected to current render layer and is renderable
+				associated_layers = mc.listConnections( "%s.owner" %aov_node )
+				if associated_layers is not None:
+					if current_layer in associated_layers:
+						if mc.getAttr( "%s.renderable" %aov_node ):
+							aov_name_ls.append( aov_node )
 
 		# Return list
 		return aov_name_ls
