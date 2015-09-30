@@ -489,17 +489,21 @@ Angular units: %s
 	def about(self):
 		""" Show about dialog
 		"""
+		import PySide.QtCore
+		python_ver_str = "%d.%d.%d" %(sys.version_info[0], sys.version_info[1], sys.version_info[2])
+		pyside_ver_str = PySide.__version__
+		qt_ver_str = PySide.QtCore.qVersion()
+
 		about_msg = """
 I   C   A   R   U   S
 
 %s
 
-Python v%d.%d.%d (%s)
+Python %s / PySide %s / Qt %s / %s
 
 (c) 2013-2015 Gramercy Park Studios
-""" %(os.environ['ICARUSVERSION'], 
-	  sys.version_info[0], sys.version_info[1], sys.version_info[2], 
-	  os.environ['ICARUS_RUNNING_OS'])
+""" %(os.environ['ICARUSVERSION'], python_ver_str, pyside_ver_str, qt_ver_str, os.environ['ICARUS_RUNNING_OS'])
+
 		import about
 		about = about.aboutDialog()
 		about.msg(about_msg)
@@ -600,11 +604,16 @@ Python v%d.%d.%d (%s)
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
 
-	#Launches DJV
+	# Launches djv_view
 	def launchDjv(self):
 		launchApps.djv()
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
+
+	# Preview - opens djv_view to preview movie or image sequence
+	def preview(self):
+		import djvOps
+		djvOps.viewer(self.gatherPath)
 
 	#Launches Deadline Monitor
 	def launchDeadlineMonitor(self):
@@ -1134,22 +1143,34 @@ Python v%d.%d.%d (%s)
 		sys.path.remove(self.gatherPath)
 		self.ui.gatherInfo_textEdit.setText(icData.notes)
 
-	#updates image preview field with snapshot 
+
 	def updateImgPreview(self):
+		""" Update image preview field with snapshot or preview clip.
+		"""
+		# Apply context menu to open viewer
+		self.ui.gatherImgPreview_label.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+		self.actionPreview = QtGui.QAction("Preview...", None)
+		self.actionPreview.triggered.connect(self.preview)
+
 		import previewImg
 		imgPath = ''
 		self.previewPlayerCtrl(hide=True)
 		pixmap = QtGui.QPixmap(None)
 		self.ui.gatherImgPreview_label.setPixmap(pixmap)
+
 		if self.previewPlayer:
 			imgPath = previewImg.getImg(self.gatherPath, forceExt='mov')
 			if imgPath:
-					self.previewPlayerCtrl(hide=True)
-					pixmap = QtGui.QPixmap(None)
-					self.ui.gatherImgPreview_label.setPixmap(pixmap)
-					self.previewPlayerCtrl(loadImg=imgPath)
-					self.previewPlayerCtrl(show=True)
-					self.previewPlayerCtrl(play=True)
+				self.previewPlayerCtrl(hide=True)
+				pixmap = QtGui.QPixmap(None)
+				self.ui.gatherImgPreview_label.setPixmap(pixmap)
+				self.previewPlayerCtrl(loadImg=imgPath)
+				self.previewPlayerCtrl(show=True)
+				self.previewPlayerCtrl(play=True)
+
+				# Add preview context menu
+				self.ui.gatherImgPreview_label.addAction(self.actionPreview)
+
 		if not imgPath or not self.previewPlayer:
 			imgPath = previewImg.getImg(self.gatherPath, forceExt='jpg')
 			if imgPath:
@@ -1158,7 +1179,11 @@ Python v%d.%d.%d (%s)
 				self.ui.gatherImgPreview_label.setPixmap(pixmap)
 				pixmap = QtGui.QPixmap(imgPath)
 				self.ui.gatherImgPreview_label.setScaledContents(True)
-				self.ui.gatherImgPreview_label.setPixmap(pixmap)		
+				self.ui.gatherImgPreview_label.setPixmap(pixmap)
+
+				# Remove preview context menu
+				self.ui.gatherImgPreview_label.removeAction(self.actionPreview)
+
 
 	##################intializes gather################
 	def initGather(self):
@@ -1218,7 +1243,7 @@ if os.environ['ICARUSENVAWARE'] == 'MAYA' or os.environ['ICARUSENVAWARE'] == 'NU
 #	app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint)
 #	app.show()
 #	icarus_clarisseWrap.exec_(mainApp)
-	
+
 else:
 	if __name__ == '__main__':
 		mainApp = QtGui.QApplication(sys.argv)
