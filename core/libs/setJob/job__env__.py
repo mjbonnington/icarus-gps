@@ -196,16 +196,18 @@ def setEnv(envVars):
 	os.environ['RF_RSC'] = os.path.join(os.environ['PIPELINE'], 'realflow_rsc')
 	os.environ['RF_COMMANDS_ORGANIZER_FILE_PATH'] = os.path.join(os.environ['REALFLOWSCENESDIR'] , '.cmdsOrg', 'commandsOrganizer.dat')
 
-	#DJV
-	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-		os.environ['DJV_LIB'] = '%s/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/Resources/lib' % os.environ['PIPELINE']
-		os.environ['DJV_CONVERT'] = '%s/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/Resources/bin/djv_convert' % os.environ['PIPELINE']
-		os.environ['DJV_PLAY'] = '%s/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/Resources/bin/djv_view.sh' % os.environ['PIPELINE']
-	elif os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	# djv_view
+	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
 		# Note: using 32-bit version of djv_view for QuickTime compatibility on Windows
 		os.environ['DJV_LIB'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-Windows-32/lib' % os.environ['PIPELINE'])
 		os.environ['DJV_CONVERT'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-Windows-32/bin/djv_convert.exe' % os.environ['PIPELINE'])
 		os.environ['DJV_PLAY'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-Windows-32/bin/djv_view.exe' % os.environ['PIPELINE'])
+
+	elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+		os.environ['DJV_LIB'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/Resources/lib' % os.environ['PIPELINE'])
+		os.environ['DJV_CONVERT'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/Resources/bin/djv_convert' % os.environ['PIPELINE'])
+		os.environ['DJV_PLAY'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/Resources/bin/djv_view.sh' % os.environ['PIPELINE'])
+
 	else:
 		os.environ['DJV_LIB'] = '%s/external_apps/djv/djv-1.0.5-Linux-64/lib' % os.environ['PIPELINE']
 		os.environ['DJV_CONVERT'] = '%s/external_apps/djv/djv-1.0.5-Linux-64/bin/djv_convert' % os.environ['PIPELINE']

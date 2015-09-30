@@ -55,19 +55,19 @@ deflickerVelocity_cmd = gpsMenu_nodes.addCommand('Deflicker Velocity', "nuke.cre
 #separator
 nodesMenu.addSeparator()
 #new
-newMenu_nodes = nodesMenu.addCommand('GPS - New', launchNuke, '^n', icon='newScript.png')
+newMenu_nodes = nodesMenu.addCommand('[GPS] New', launchNuke, '^n', icon='newScript.png')
 #open
-openMenu_nodes = nodesMenu.addMenu('Open', icon='openScript.png')
-openMenu_nodes.addCommand('GPS - Open...', openScript, '^o', icon='openScript.png')
-openRecentMenu_nodes = openMenu_nodes.addMenu('GPS - Open Recent', icon='openScript.png')
+openMenu_nodes = nodesMenu.addMenu('[GPS] Open', icon='openScript.png')
+openMenu_nodes.addCommand('[GPS] Open...', openScript, '^o', icon='openScript.png')
+openRecentMenu_nodes = openMenu_nodes.addMenu('[GPS] Open Recent', icon='openScript.png')
 #save
-incrementalSaveMenu_nodes =  nodesMenu.addCommand('GPS - Incremental Save', incrSave, 'alt+shift+s', icon='incrementalSave.png')
-saveMenu_nodes =  nodesMenu.addCommand('GPS - Save', save, '^s', icon='saveScript.png')
+incrementalSaveMenu_nodes =  nodesMenu.addCommand('[GPS] Incremental Save', incrSave, 'alt+shift+s', icon='incrementalSave.png')
+saveMenu_nodes =  nodesMenu.addCommand('[GPS] Save', save, '^s', icon='saveScript.png')
 #switch version
 switchVersionMenu = nodesMenu.addMenu('Switch Version', icon='switchVersion.png')
-versionLatestMenu_nodes = switchVersionMenu.addCommand('GPS - Version To Latest', versionLatest, 'alt+shift+up', icon='versionLatest.png')
-versionUpMenu_nodes = switchVersionMenu.addCommand('GPS - Version Up', versionUp, 'alt+up', icon='versionUp.png')
-versionDownMenu_nodes = switchVersionMenu.addCommand('GPS - Version Down', versionDown, 'alt+down', icon='versionDown.png')
+versionLatestMenu_nodes = switchVersionMenu.addCommand('Version to Latest', versionLatest, 'alt+shift+up', icon='versionLatest.png')
+versionUpMenu_nodes = switchVersionMenu.addCommand('Version Up', versionUp, 'alt+up', icon='versionUp.png')
+versionDownMenu_nodes = switchVersionMenu.addCommand('Version Down', versionDown, 'alt+down', icon='versionDown.png')
 #icarusUI
 icarusMenu_nodes = nodesMenu.addCommand('Icarus UI', launchIcarus, icon='icarus.png')
 #production board
@@ -89,9 +89,9 @@ browseMenu_nodes.addCommand('Browse Elements Library', openElementsLibDir)
 #GPS MENU
 #switch version
 switchVersionMenu_gps = gpsMenu.addMenu('Switch Version')
-versionUpMenu_gps = switchVersionMenu_gps.addCommand('GPS - Version Latest', versionLatest)
-versionUpMenu_gps = switchVersionMenu_gps.addCommand('GPS - Version Up', versionUp)
-versionUpMenu_gps = switchVersionMenu_gps.addCommand('GPS - Version Down', versionDown)
+versionUpMenu_gps = switchVersionMenu_gps.addCommand('Version to Latest', versionLatest)
+versionUpMenu_gps = switchVersionMenu_gps.addCommand('Version Up', versionUp)
+versionUpMenu_gps = switchVersionMenu_gps.addCommand('Version Down', versionDown)
 #separator
 gpsMenu.addSeparator()
 #icarusUI
@@ -114,26 +114,26 @@ browseMenu_gps.addCommand('Browse Elements Library', openElementsLibDir)
 
 #IMAGE MENU
 imageMenu = nodesMenu.menu('Image')
-imageMenu.addCommand('GPS - Read', readNode, 'r', icon='newScript.png', index=0)
-imageMenu.addCommand('GPS - Write', writeNode, 'w', icon='newScript.png', index=1)
+imageMenu.addCommand('[GPS] Read', readNode, 'r', icon='newScript.png', index=0)
+imageMenu.addCommand('[GPS] Write', writeNode, 'w', icon='newScript.png', index=1)
 
 
 #FILE MENU
 fileMenu = nukeMenu.menu('File')
 #new
-newMenu_gps = fileMenu.addCommand('GPS - New', launchNuke, '^n', index=0)
+newMenu_gps = fileMenu.addCommand('[GPS] New', launchNuke, '^n', index=0)
 #open
-openMenu_gps = fileMenu.addCommand('GPS - Open...', openScript, '^o', index=1)
+openMenu_gps = fileMenu.addCommand('[GPS] Open...', openScript, '^o', index=1)
 #open recent
-openRecentMenu_gps = fileMenu.addMenu('GPS - Open Recent', index=2)
+openRecentMenu_gps = fileMenu.addMenu('[GPS] Open Recent', index=2)
 #separator
 fileMenu.addSeparator(index=3)
 #save
-saveMenu_gps =  fileMenu.addCommand('GPS - Save', save, '^s', index=4)
+saveMenu_gps =  fileMenu.addCommand('[GPS] Save', save, '^s', index=4)
 #save as
-saveAsMenu_gps =  fileMenu.addCommand('GPS - Save As...', saveAs, '^shift+s', index=5)
+saveAsMenu_gps =  fileMenu.addCommand('[GPS] Save As...', saveAs, '^shift+s', index=5)
 #incremental save
-saveIncrementalMenu_gps =  fileMenu.addCommand('GPS - Incremental Save', incrSave, 'alt+shift+s', index=6)
+saveIncrementalMenu_gps =  fileMenu.addCommand('[GPS] Incremental Save', incrSave, 'alt+shift+s', index=6)
 #separator
 fileMenu.addSeparator(index=7)
 
