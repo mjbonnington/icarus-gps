@@ -1,3 +1,12 @@
+// [GPS] Build Menus
+// v0.1
+//
+// Michael Bonnington, Nuno Pereira
+// (c) 2015 Gramercy Park Studios
+//
+// Dynamically modifies Maya's menus without the need to edit Maya's UI MEL scripts directly.
+
+
 // This function suppresses recent menus...
 global proc checkGPSFileMenu()
 {
@@ -15,7 +24,7 @@ global proc checkGPSFileMenu()
 	// Create "Send To" menu items for one-click
 	// interop with available applications.
 	//
-	buildSendToSubMenus;
+	//buildSendToSubMenus;
 }
 
 
@@ -96,12 +105,31 @@ setParent -menu $fileMenu;
 
 	// GPS Launch Icarus UI
 	menuItem -insertAfter GPSFileDivider2
-			 -label "[GPS] Icarus UI..."
+			 -label "Icarus UI..."
 			 -annotation ("Launch Icarus UI")
 			 -command ("source menus2Py;menus2Py.launchIcarus()")
 			 GPSLaunchIcarusUI;
 
 checkGPSFileMenu();
+
+
+// Create Menu
+
+string $createMenu = "MayaWindow|mainCreateMenu";
+ModCreateMenu $createMenu;
+
+if ( !`optionVar -exists GPSCreateCameraRig` ) optionVar -iv GPSCreateCameraRig 0;
+if ( !`optionVar -exists GPSAddVRayPhysicalCamera` ) optionVar -iv GPSAddVRayPhysicalCamera 0;
+
+setParent -menu $createMenu;
+	// GPS - Create Cameras menu
+	menuItem -insertAfter LightsItem
+			 -subMenu true
+			 -tearOff true
+			 -label "[GPS] Camera Presets"
+			 -postMenuCommand "source menus2Py; menus2Py.updatePresetCameraMenu(\"GPSCreatePresetCameraItems\")"
+			 GPSCreatePresetCameraItems;
+	setParent -menu ..;
 
 
 // Window Menu

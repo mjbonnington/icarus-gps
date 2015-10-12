@@ -45,30 +45,64 @@ python("import openDirs; openDirs.openMayaSourceimages()");
 
 global proc menus2Py.browseShot()
 {
-python("import openDirs; openDirs.openShot()");
+	python("import openDirs; openDirs.openShot()");
 }
+
 
 global proc menus2Py.browseJob()
 {
-python("import openDirs; openDirs.openJob()");
+	python("import openDirs; openDirs.openJob()");
 }
 
-global proc menus2Py.createGPSCamera(string $cam)
+
+global proc menus2Py.updatePresetCameraMenu(string $menu)
 {
-global string $camera;
-$camera = $cam;
-python "import maya.mel as mel";
-python "camera = mel.eval('$temp=$camera')";
-python("import createGPSCamera; createGPSCamera.createCamera(camera)");
+	// Get the list of cameras and store it in an array
+	python( "import camPresets, os; cp = camPresets.camPresets(); cp.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'camPresets.xml'))" );
+	string $camLs[] = python( "cp.getPresets(activeOnly=True)" );
+
+	// Delete all items in the menu
+	menu -edit -deleteAllItems $menu;
+
+	// Re-populate the items in the menu
+	for ( $item in $camLs )
+	{
+		menuItem -label $item -command ("menus2Py.gpsCreateCamera(\"" + $item + "\")") -parent $menu $item;
+	}
+	menuItem -divider true -parent $menu;
+	menuItem -label "Create Camera Rig"
+	         -checkBox `optionVar -q GPSCreateCameraRig`
+	         -command "menus2Py.toggleCreateCameraRig()"
+	         -parent $menu
+	         GPSCreateCameraRigMenu;
+	menuItem -label "Add VRay Physical Camera Attributes"
+	         -checkBox `optionVar -q GPSAddVRayPhysicalCamera`
+	         -command "menus2Py.toggleGPSAddVRayPhysicalCamera()"
+	         -parent $menu
+	         GPSAddVRayPhysicalCameraMenu;
 }
 
-global proc menus2Py.createGPSCameraRig(string $cam)
+global proc menus2Py.toggleCreateCameraRig()
 {
-global string $camera;
-$camera = $cam;
-python "import maya.mel as mel";
-python "camera = mel.eval('$temp=$camera')";
-python("import createGPSCamera; createGPSCamera.createCamera(camera, rig=True)");
+	optionVar -iv GPSCreateCameraRig `menuItem -q -checkBox GPSCreateCameraRigMenu`;
+}
+
+global proc menus2Py.toggleGPSAddVRayPhysicalCamera()
+{
+	optionVar -iv GPSAddVRayPhysicalCamera `menuItem -q -checkBox GPSAddVRayPhysicalCameraMenu`;
+}
+
+
+global proc menus2Py.gpsCreateCamera(string $cam)
+{
+	global string $camera;
+	$camera = $cam;
+	python "import maya.cmds as mc";
+	python "import maya.mel as mel";
+	python "camera = mel.eval('$temp=$camera')";
+	python "rig = mc.optionVar( q='GPSCreateCameraRig' )";
+	python "physical = mc.optionVar( q='GPSAddVRayPhysicalCamera' )";
+	python "import gpsCreateCamera; gpsCreateCamera.gpsCreateCamera().createCamera(camera, rig, physical)";
 }
 
 

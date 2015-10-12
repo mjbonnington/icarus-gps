@@ -226,30 +226,25 @@ global proc shelf_GPS_Lighting () {
 		-manage 1
 		-visible 1
 		-preventOverride 0
-		-annotation "Create GPS Cameras" 
+		-annotation "Create GPS Cameras"
 		-enableBackground 0
-		-align "center" 
-		-label "GPS Camera" 
+		-align "center"
+		-label "GPS Camera"
 		-labelOffset 0
-		-font "tinyBoldLabelFont" 
-		-overlayLabelColor 0.8 0.8 0.8 
-		-overlayLabelBackColor 0 0 0 0.2 
-		-image "gpsCamera.png" 
-		-image1 "gpsCamera.png" 
-		-style "iconOnly" 
+		-font "tinyBoldLabelFont"
+		-overlayLabelColor 0.8 0.8 0.8
+		-overlayLabelBackColor 0 0 0 0.2
+		-image "gpsCamera.png"
+		-image1 "gpsCamera.png"
+		-style "iconOnly"
 		-marginWidth 1
 		-marginHeight 1
-		-sourceType "mel" 
+		-command "import gpsCreateCamera; gpsCreateCamera.gpsCreateCamera().UI()" 
+		-sourceType "python"
 		-commandRepeatable 1
 		-flat 1
-	   -mi "GPS - Arri Alexa" ("source menus2Py; menus2Py.createGPSCamera(\"arriAlexa\")")
-	   -mi "GPS - Canon 5D" ("source menus2Py; menus2Py.createGPSCamera(\"canon5D\")")
-	   -mi "GPS - Epic X" ("source menus2Py; menus2Py.createGPSCamera(\"redEpicX\")")
-	   -mi "GPS - Red One" ("source menus2Py; menus2Py.createGPSCamera(\"redOne\")")
-	   -mi "GPS - Sony F55" ("source menus2Py; menus2Py.createGPSCamera(\"sonyF55\")")
-	   -mi "GPS - Default" ("source menus2Py; menus2Py.createGPSCamera(\"default\")")
-	   -mi "Add Physical Settings" ( "import createGPSCamera; createGPSCamera.addPhysical()" )
-		-mip 6
+		-mi "Add Physical Settings" ( "import gpsCreateCamera; gpsCreateCamera.gpsCreateCamera().addPhysical()" )
+		-mip 0
 	;
 	shelfButton
 		-enableCommandRepeat 1
