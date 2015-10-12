@@ -43,8 +43,8 @@ def updateRecentFiles(script=None):
 	recentFiles.updateLs(script, 'nuke') # explicitly stating 'nuke' environment to get around 'nuke_tmp' fix
 
 	# Update GPS custom recent files menu(s)
-	updateRecentFilesMenu( nuke.menu('Nuke').menu('File').menu('GPS - Open Recent') )
-	updateRecentFilesMenu( nuke.menu('Nodes').menu('Open').menu('GPS - Open Recent') )
+	updateRecentFilesMenu( nuke.menu('Nuke').menu('File').menu('[GPS] Open Recent') )
+	updateRecentFilesMenu( nuke.menu('Nodes').menu('Open').menu('Open Recent') )
 
 
 #strips all naming conventions and returns script name

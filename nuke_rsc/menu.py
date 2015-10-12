@@ -55,14 +55,14 @@ deflickerVelocity_cmd = gpsMenu_nodes.addCommand('Deflicker Velocity', "nuke.cre
 #separator
 nodesMenu.addSeparator()
 #new
-newMenu_nodes = nodesMenu.addCommand('[GPS] New', launchNuke, '^n', icon='newScript.png')
+newMenu_nodes = nodesMenu.addCommand('New', launchNuke, '^n', icon='newScript.png')
 #open
-openMenu_nodes = nodesMenu.addMenu('[GPS] Open', icon='openScript.png')
-openMenu_nodes.addCommand('[GPS] Open...', openScript, '^o', icon='openScript.png')
-openRecentMenu_nodes = openMenu_nodes.addMenu('[GPS] Open Recent', icon='openScript.png')
+openMenu_nodes = nodesMenu.addMenu('Open', icon='openScript.png')
+openMenu_nodes.addCommand('Open...', openScript, '^o', icon='openScript.png')
+openRecentMenu_nodes = openMenu_nodes.addMenu('Open Recent', icon='openScript.png')
 #save
-incrementalSaveMenu_nodes =  nodesMenu.addCommand('[GPS] Incremental Save', incrSave, 'alt+shift+s', icon='incrementalSave.png')
-saveMenu_nodes =  nodesMenu.addCommand('[GPS] Save', save, '^s', icon='saveScript.png')
+incrementalSaveMenu_nodes =  nodesMenu.addCommand('Incremental Save', incrSave, 'alt+shift+s', icon='incrementalSave.png')
+saveMenu_nodes =  nodesMenu.addCommand('Save', save, '^s', icon='saveScript.png')
 #switch version
 switchVersionMenu = nodesMenu.addMenu('Switch Version', icon='switchVersion.png')
 versionLatestMenu_nodes = switchVersionMenu.addCommand('Version to Latest', versionLatest, 'alt+shift+up', icon='versionLatest.png')

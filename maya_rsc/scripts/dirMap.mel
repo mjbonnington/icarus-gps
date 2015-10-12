@@ -1,6 +1,0 @@
-global proc dirMap()
-{
-	dirmap -en true;
-	dirmap -m "/Volumes/hggl_SAN_1/" "//hgglapsv06/hggl_SAN_1/";
-	dirmap -m "//hgglapsv06/hggl_SAN_1/" "/Volumes/hggl_SAN_1/";
-}

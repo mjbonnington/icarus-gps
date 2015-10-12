@@ -3,26 +3,28 @@
 #title      :env__init__
 #copyright  :Gramercy Park Studios
 
-#Initializes main pipeline environment
+# Initialises main pipeline environment
 
 import os, platform, sys
 
+
 def setEnv():
 	# Standardising some environment variables across systems
-	if platform.system() == 'Darwin':
-		os.environ['ICARUS_RUNNING_OS'] = 'Darwin'
-		os.environ['USERNAME'] = os.environ['USER']
-	elif platform.system() == 'Windows':
+	if platform.system() == 'Windows':
 		os.environ['ICARUS_RUNNING_OS'] = 'Windows'
 		os.environ['HOME'] = os.path.join(os.environ['HOMEDRIVE'], os.environ['HOMEPATH'])
+	elif platform.system() == 'Darwin':
+		os.environ['ICARUS_RUNNING_OS'] = 'Darwin'
+		os.environ['USERNAME'] = os.environ['USER']
 	else:
 		os.environ['ICARUS_RUNNING_OS'] = 'Linux'
+
 	try:
 		os.environ['ICARUSENVAWARE']
 	except KeyError:
 		os.environ['ICARUSENVAWARE'] = 'STANDALONE'
 
-	os.environ['ICARUSVERSION'] = 'v0.8.10-20150930'
+	os.environ['ICARUSVERSION'] = 'v0.8.11-20151012'
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
 	os.environ['ICWORKINGDIR'] = icarusWorkingDir
 	icarusUIDir = os.path.join('core', 'ui')
@@ -36,6 +38,7 @@ def setEnv():
 	#os.environ['JOBDATAFILE'] = 'jobData' # Change when data is stored as XML
 	#os.environ['SHOTDATAFILE'] = 'shotData' # Change when data is stored as XML
 	appendSysPaths()
+
 
 def appendSysPaths():
 	icarusLibs = os.path.join('core', 'libs')
