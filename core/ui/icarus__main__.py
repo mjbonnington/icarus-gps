@@ -1,7 +1,12 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:icarus__main__
-#copyright	:Gramercy Park Studios
+
+# Icarus icarus__main__
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) Gramercy Park Studios 2015
+#
+# Launches and controls Icarus main UI
 
 
 from PySide import QtCore, QtGui
@@ -9,8 +14,6 @@ from PySide.QtGui import QStyleFactory
 from icarusUI import *
 import os, sys, env__init__
 
-
-#lauches and controls Icarus main UI
 
 #initializing icarus environment and adding libs to sysPath
 env__init__.setEnv()
@@ -27,8 +30,8 @@ class icarusApp(QtGui.QDialog):
 		# Read user prefs config file file - if it doesn't exist it will be created
 		userPrefs.read()
 
-		#defining phonon as preview player if icarus is standalone
-		#(only enabled on Mac OS X as haven't yet figured out how to get Phonon video player working properly on Windows or Linux)
+		# Define Phonon as preview player if Icarus is standalone
+		# (only enabled on Mac OS X as haven't yet figured out how to get Phonon video player working properly on Windows or Linux)
 		if os.environ['ICARUSENVAWARE'] == 'STANDALONE' and os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
 			from PySide.phonon import Phonon
 			self.previewPlayer = Phonon.VideoPlayer(parent = self.ui.gatherImgPreview_label)
@@ -425,7 +428,7 @@ class icarusApp(QtGui.QDialog):
 		self.ui.shotEnv_toolButton.hide()
 		self.ui.setNewShot_pushButton.hide()
 		self.ui.setShot_pushButton.show()
-		
+
 	#controls phonon preview player
 	def previewPlayerCtrl(self, show=False, hide=False, play=False, loadImg=None):
 		if self.previewPlayer:

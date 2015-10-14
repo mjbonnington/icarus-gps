@@ -82,7 +82,7 @@ global proc shelfButtonPMO (string $popupMenu,
 	if( `popupMenu -q -ni $popupMenu` > 0 ){
 		// Need to insert the default items ahead of the existing ones
 		//
-		// Commented out this section to stop it drawing default menu's if popUpMenu items have been added
+		// Commented out this section to stop it drawing default menus if popUpMenu items have been added
 		/*
 		menuItem -divider true -ia "";
 		int $i = $numDefaultItems;

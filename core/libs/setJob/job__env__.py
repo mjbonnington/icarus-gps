@@ -70,8 +70,11 @@ def setEnv(envVars):
 		"""
 		return ap.getPath(app, jobData.getValue('apps', app), currentOS)
 
-	#TERMINAL
-	os.environ['GPS_RC'] = os.path.join(os.environ['PIPELINE'], 'core', 'ui', '.gps_rc')
+	# Terminal / Command Prompt
+	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+		os.environ['GPS_RC'] = os.path.join(os.environ['PIPELINE'], 'core', 'ui', 'gps_cmd.bat')
+	else:
+		os.environ['GPS_RC'] = os.path.join(os.environ['PIPELINE'], 'core', 'ui', '.gps_rc')
 
 	# Jobs root paths for cross-platform support
 	os.environ['JOBSROOTWIN'] = jobs.win_root

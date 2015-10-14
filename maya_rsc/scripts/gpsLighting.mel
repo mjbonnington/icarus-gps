@@ -16,8 +16,8 @@ global proc gpsLighting.loadBaseSettings()
 
 	if(!`objExists "vraySettings"`) //check to see if the globals are made already
 	{
-	//setup the renderglobals
-	vrayCreateVRaySettingsNode;
+		//setup the renderglobals
+		vrayCreateVRaySettingsNode;
 	}
 
 	//VRAY
@@ -25,10 +25,10 @@ global proc gpsLighting.loadBaseSettings()
 	//vray framebuffer
 	setAttr "vraySettings.vfbOn" 1;
 	setAttr "vraySettings.stamp_on" 1;
-	string $job=`getenv JOB`;
-	string $shot=`getenv SHOT`;
-	//string $user=`getenv USER`;
-	string $stamp="Frame: %frame Render time: %rendertime Camera: %camera Job: " + $job + " - " + $shot;
+	string $JOB=`getenv JOB`;
+	string $SHOT=`getenv SHOT`;
+	//string $USER=`getenv USER`;
+	string $stamp="Frame: %frame Render time: %rendertime Camera: %camera Job: " + $JOB + " - " + $SHOT;
 	setAttr -type "string" vraySettings.stamp_text $stamp;
 	vray vfbControl -srgb true;
 
@@ -53,7 +53,7 @@ global proc gpsLighting.loadBaseSettings()
 	setAttr "vraySettings.fileNamePadding" 4;
 	setAttr "defaultRenderGlobals.startFrame" $startFrame;
 	setAttr "defaultRenderGlobals.endFrame" $endFrame;
-	
+
 	// Set res and fix aspect ratio
 	float $aspectRatio = `getenv "ASPECTRATIO"`;
 	int $resX = `getenv "RESOLUTIONX"`;
@@ -66,19 +66,19 @@ global proc gpsLighting.loadBaseSettings()
 	setAttr "vraySettings.aspectRatio" $aspectRatio;
 	setAttr "vraySettings.pixelAspect" 1;
 	setAttr "vraySettings.aspectLock" 1;
-	
+
 	// Set render element separator
 	setAttr "vraySettings.fileNameRenderElementSeparator" -type "string" "_";
 	if (`optionMenuGrp -exists vrayRenderElementSeparator`) {
-	optionMenuGrp -edit -sl (2) vrayRenderElementSeparator;
+		optionMenuGrp -edit -sl (2) vrayRenderElementSeparator;
 	};
-	
+
 	//setting DMC sampler
 	gpsLighting.loadDMCSettings();
-	
+
 	//lower max transparency
 	setAttr "vraySettings.globopt_mtl_transpMaxLevels" 10;
-	
+
 	//setting global max depth
 	setAttr "vraySettings.globopt_mtl_limitDepth" 1;
 	setAttr "vraySettings.globopt_mtl_maxDepth" 3;
@@ -89,54 +89,53 @@ global proc gpsLighting.loadBaseSettings()
 	//set default subdiv amount to more realistic number
 	setAttr "vraySettings.ddisplac_maxSubdivs" 4;
 	setAttr "vraySettings.ddisplac_edgeLength" 1;
-	
+
 	//Dynamic memory limit
 	setAttr "vraySettings.sys_rayc_dynMemLimit" 3000;
-	
-	
+
+
 	//MAYA DEFAULT RENDER MENU
 	//image format to tiff
 	setAttr "defaultRenderGlobals.imageFormat" 3;
-	
-	//setting [frame].[padding.[ext]
+
+	//setting [frame].[padding].[ext]
 	setAttr defaultRenderGlobals.outFormatControl 0;
 	setAttr defaultRenderGlobals.animation 1;
 	setAttr defaultRenderGlobals.putFrameBeforeExt 1;
 	setAttr defaultRenderGlobals.extensionPadding 4;
-	
+
 	//Frame range
 	setAttr "defaultRenderGlobals.startFrame" $startFrame;
 	setAttr "defaultRenderGlobals.endFrame" $endFrame;
-	
+
 	//Resolution
 	setAttr "defaultResolution.w" $resX;
 	setAttr "defaultResolution.h" $resY;
-	
-	
+
 	//set render file name
 	gpsLighting.setRenderPath();
-	
+
 }
 
-//sets user name in render path
+// Set up render file name prefix format
 global proc gpsLighting.setRenderPath()
 {
-	string $user = `getenv "USER"`;
+	string $USER = `getenv "USER"`;
 	string $SHOT = `getenv "SHOT"`;
-	//Vray
+	// Maya render globals Common tab...
+	setAttr -type "string" "defaultRenderGlobals.ifp" ($USER + "/<Scene>/<RenderLayer>/" + $SHOT + "_<RenderLayer>");
+	// VRay has its own Common tab...
 	setAttr -l false { "vraySettings.fnprx" };
-	setAttr -type "string" "vraySettings.fileNamePrefix" ($user + "/%s/%l/" + $SHOT + "_%l");
-	//Maya Default Render menu
-	setAttr -type "string" "defaultRenderGlobals.ifp" ($user + "/%s/%l/" + $SHOT + "_%l");
-	//This cannot be lock otherwise renders submitted to deadline from maya submitter will fail.
+	setAttr -type "string" "vraySettings.fileNamePrefix" ($USER + "/<Scene>/<RenderLayer>/" + $SHOT + "_<RenderLayer>");
+	// This cannot be locked otherwise renders submitted to Deadline from Maya submitter will fail.
 	//setAttr -l true { "vraySettings.fnprx" };
 }
 
-//Load Adaptive DMC settings
+// Load adaptive DMC settings
 global proc gpsLighting.loadDMCSettings()
 {
 	setAttr "vraySettings.samplerType" 1;
-    setAttr "vraySettings.dmcs_adaptiveAmount" 0.85;
+	setAttr "vraySettings.dmcs_adaptiveAmount" 0.85;
 	setAttr "vraySettings.dmcs_adaptiveThreshold" 0.010;
 	setAttr "vraySettings.dmcMinSubdivs" 1;
 	setAttr "vraySettings.dmcMaxSubdivs" 100;
@@ -144,11 +143,11 @@ global proc gpsLighting.loadDMCSettings()
 
 	setAttr "vraySettings.aaFilterOn" 0;
 
-	// setup basic GI settings
+	// Setup basic GI settings...
 	//setAttr "vraySettings.primaryEngine" 2;
 	//setAttr "vraySettings.secondaryEngine" 3;
 	//setAttr "vraySettings.numPasses" 12;
-	//setAttr "vraySettings.subdivs" 2000;	
+	//setAttr "vraySettings.subdivs" 2000;
 }
 
 
