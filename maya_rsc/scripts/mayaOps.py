@@ -1,19 +1,25 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:mayaOps
-#copyright	:Gramercy Park Studios
+
+# [GPS] Maya Ops
+# v0.1
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2015 Gramercy Park Studios
+#
+# Maya operations module.
 
 
-#maya operations module
 import os, shutil, recentFiles
 import maya.cmds as mc
 import maya.mel as mel
 import osOps
 
 
-
-####################applies tranforms#####################
 def applyTransforms(obj, objT, objR, objS):
+	""" Apply transforms.
+		(used by point cloud publish module)
+	"""
 	try:
 		mc.xform(obj, s=objS, ws=True)
 		mc.xform(obj, ro=objR, ws=True)
@@ -22,37 +28,46 @@ def applyTransforms(obj, objT, objR, objS):
 	except TypeError:
 		return
 
-#########adds asset name tag as extra attr################
+
 def assetTag(obj, assetName):
+	""" Add asset name tag as extra attribute.
+	"""
 	refTag = mc.listAttr(obj, st='icAsset')
 	if not refTag:
 		mc.addAttr(obj, ln='asset', dt='string')
 	mc.setAttr('%s.icAsset' % obj, l=False)
 	mc.setAttr('%s.icAsset' % obj, assetName, typ='string', l=True)
-	
-###################adds asset type tag as extra attr#######
+
+
 def assetExtTag(obj, assetExt):
+	""" Add asset extension tag as extra attribute.
+	"""
 	refTag = mc.listAttr(obj, st='icAssetExt')
 	if not refTag:
 		mc.addAttr(obj, ln='assetExt', dt='string')
 	mc.setAttr('%s.icAssetExt' % obj, l=False)
 	mc.setAttr('%s.icAssetExt' % obj, assetExt, typ='string', l=True)
-	
-###################adds asset type tag as extra attr#######
+
+
 def assetTypeTag(obj, assetType):
+	""" Add asset type tag as extra attribute.
+	"""
 	refTag = mc.listAttr(obj, st='icAssetType')
 	if not refTag:
 		mc.addAttr(obj, ln='icAssetType', dt='string')
 	mc.setAttr('%s.icAssetType' % obj, l=False)
 	mc.setAttr('%s.icAssetType' % obj, assetType, typ='string', l=True)
 
-#############adds asset root dir as extra attr###############
+
 def assetRootDir(obj, assetRootDir):
+	""" Add asset root dir as extra attribute.
+	"""
 	rootDir = mc.listAttr(obj, st='icAssetRootDir')
 	if not rootDir:
 		mc.addAttr(obj, ln='icAssetRootDir', dt='string')
 	mc.setAttr('%s.icAssetRootDir' % obj, l=False)
 	mc.setAttr('%s.icAssetRootDir' % obj, assetRootDir, typ='string', l=True)
+
 
 #######################bakes camera anim###################
 def cameraBake(objLs, assetPblName):
@@ -106,7 +121,7 @@ def cameraNodeCheck(obj):
 			return
 	except (TypeError, RuntimeError):
 		return
-	
+
 #######checks if ICSet contains icAssetRoot attr##########
 def chkIcAssetRootAttr(obj):
 	if not chkIcDataSet(obj):
@@ -174,7 +189,7 @@ def createSet(setName, rm=False):
 			return
 	newSet = mc.sets(n=setName)
 	return newSet
-	
+
 ###################connects lods visibility##################
 def createVisibilitySwitch(masterGrp, slaveGrpLs):
 	mc.select(masterGrp, r=True)
@@ -196,15 +211,15 @@ def createVisibilitySwitch(masterGrp, slaveGrpLs):
 	mc.connectAttr('%s.outColorR' % lodBCndt, '%s.visibility' % lodBGrp)
 	mc.connectAttr('%s.lod' % masterGrp, '%s.firstTerm' % lodCCndt)
 	mc.connectAttr('%s.outColorR' % lodCCndt, '%s.visibility' % lodCGrp)
-	
-	
+
+
 #################decimates obj mesh###########################
 def decimate(objLs, iterations=1):
 	for obj in objLs:
 		mc.select(obj, r=True)
 		for i in range(0, iterations):
 			mc.polyReduce(ver=1, trm=0, p=25, top=True, kqw=1, shp=0.5)
-			
+
 ##################deletes channels############################
 def deleteChannels(objLs, hierarchy=False):
 	if hierarchy:
@@ -223,7 +238,7 @@ def deleteAnimation(objLs):
 				mc.delete(conn)
 	except TypeError:
 		pass
-		
+
 #############deletes full or partial history##################
 def deleteHist(objLs, partial=False):
 	for obj in objLs:
@@ -232,7 +247,6 @@ def deleteHist(objLs, partial=False):
 		else:
 			mc.delete(ch=True, c=True, e=True, cn=True)
 
-			
 ###########deletes icSets connected to selection##############			
 def deleteICDataSet(objLs):
 	for obj in objLs:
@@ -247,7 +261,7 @@ def deleteICDataSet(objLs):
 					mc.setAttr('%s.overrideComponentDisplay' % objSet, 0)
 					mc.delete(objSet)
 					break
-				
+
 #############deletes imgPlane from camera#####################
 def deleteIM(objLs):
 	objLsShape = mc.listRelatives(objLs[0], s=True)
@@ -264,7 +278,7 @@ def deleteIM(objLs):
 ########################exports all#######################
 def exportAll(pathToPblAsset, fileType):
 	mc.file(pathToPblAsset, typ=fileType, f=True, ea=True)
-	
+
 ##############exports animation curves via atom###########
 def exportAnimation(pathToPblAsset, pblDir, objLs):
 	mayaAppPath = os.path.split(os.environ['MAYAVERSION'])[0]
@@ -320,7 +334,6 @@ def exportGeo(objLs, geoType, pathToPblAsset):
 	force=True, 
 	es=True)
 
-
 #################exports locators as nulls#################
 def exportNulls(objSel, objLs, pathToPblAsset):
 	nullLs = []
@@ -341,17 +354,16 @@ def exportNulls(objSel, objLs, pathToPblAsset):
 	mc.delete(nullGrp)	
 	mc.rename('%s_tmp' % objSel, objSel)
 
-
 ##################exports selection#######################
 def exportSelection(pathToPblAsset, fileType):
 	mc.file(pathToPblAsset, typ=fileType, es=True, f=True)
-	
+
 ####################freezes transforms####################
 def freezeTrnsf(objLs):
 	for obj in objLs:
 		mc.select(obj, r=True)
 		mc.makeIdentity(apply=True, t=True, r=True, s=True)
-		
+
 ###########generates  a lower level of detail#############
 def generateLods(objLs, lodLvl, reduceIter):
 	mc.select(objLs[0])
@@ -370,7 +382,6 @@ def generateLods(objLs, lodLvl, reduceIter):
 			pass
 	return objLod
 
-
 ###############gets all attributes in an ICSet############
 def getICSetAttrs(ICSet):
 	icSetAttrDic = {}
@@ -385,7 +396,6 @@ def getICSetAttrs(ICSet):
 def getScene():
 	actFile = mc.file(exn=True, q=True)
 	return actFile
-
 
 #########gets selected obj worldspace transforms##########
 def getTransforms(obj):
@@ -494,7 +504,7 @@ def importRefs(objLs):
 		if mc.referenceQuery(obj, inr=True):
 			refFile = mc.referenceQuery(obj, f=True)
 			mc.file(refFile, ir=True)
-	
+
 #################locks object attributes#####################
 def lockAttr(objLs, attrLs, lock=True, children=True):
 	for obj in objLs:
@@ -552,7 +562,7 @@ def notesTag(obj, pblNotes):
 		mc.addAttr(obj, ln='Notes', dt='string')
 	mc.setAttr('%s.Notes' % obj, l=False)
 	mc.setAttr('%s.Notes' % obj, pblNotes, typ='string', l=True)
-	
+
 ###################opens maya file########################
 def openScene(filePath, extension=None, dialog=True, updateRecentFiles=True):
 	if mel.eval('saveChanges("")'):
@@ -588,7 +598,7 @@ def relinkCache(cacheLs, cachePath, asset, version):
 				shutil.copy(filePath, cachePath)
 			mc.setAttr(cacheLs[0]+'.cachePath', cachePath, type='string')
 			mc.rename(cacheLs[0], asset  + '_%s' % version)
-			
+
 ###############relinks camera imagePlane####################
 def relinkImPlate(objLs, texturePath):
 	objLsShape = mc.listRelatives(objLs[0], s=True)
@@ -651,7 +661,6 @@ def relinkTexture(txPaths, txObjLs=None, updateMaya=True, copy=True):
 						#mc.setAttr(fileNode + '.fileTextureName', os.path.join(txRelPath, fileName), type='string')
 						mc.setAttr(fileNode + '.fileTextureName', os.path.join(txFullPath, fileName), type='string')
 
-
 ####################removes drawing overrides##################
 #returns 0, if it does not override anything, 1 if objects cvould not be overriden because of display layers, 2 otherwise
 def removeDrawOverride(objLs=None, icSet=False, hierarchy=True, shapes=True, overrideLayers=False):
@@ -688,7 +697,7 @@ def removeDrawOverride(objLs=None, icSet=False, hierarchy=True, shapes=True, ove
 			allObjLs.remove(objLs[0])
 		except ValueError:
 			pass
-	
+
 	#Overriding display in allObjLs
 	for allObjs in allObjLs:
 		#overriding transforms
@@ -712,7 +721,7 @@ def removeDrawOverride(objLs=None, icSet=False, hierarchy=True, shapes=True, ove
 				if connectedShAttr:
 					mc.disconnectAttr(connectedShAttr[0], '%s.overrideEnabled' % objSh[0])
 				mc.setAttr('%s.overrideEnabled' % objSh[0], 0)
-				
+
 	#lastly overriding shape of ICSet connected object
 	if shapes:
 		objSh = mc.listRelatives(objLs[0], s=True, f=True)
@@ -723,7 +732,7 @@ def removeDrawOverride(objLs=None, icSet=False, hierarchy=True, shapes=True, ove
 				mc.disconnectAttr(connectedShAttr[0], '%s.overrideEnabled' % objSh[0])
 			mc.setAttr('%s.overrideEnabled' % objSh[0], 0)
 	return result
-	
+
 ####################renames paired hierarchy###################
 def renameHrq(hrq, suffix):
 	hrq = mc.listRelatives(hrq, ad=True, typ='transform')
@@ -740,7 +749,7 @@ def renameObj(objLs, newName, oldName=False):
 		newName = ''
 		renamedObjLs.append(objRenamed)
 	return renamedObjLs
-			
+
 #####################saves maya file######################
 def saveFile(fileType, updateRecentFiles=True):
 	if fileType == 'ma':
@@ -769,7 +778,7 @@ def saveFileAs(filePath, extension, updateRecentFiles=True):
 		if updateRecentFiles:
 			recentFiles.updateLs(filename)
 		osOps.setPermissions(filename)
-		
+
 ################creates viewport snapshot##################
 def snapShot(pblDir):
 	pbFrame = mc.currentTime(q=True)
@@ -938,7 +947,7 @@ def nkCameraExport(objLs, pblDir, assetPblName, version):
 	#camera name and label
 	nkFile.write(' name %s\n }' % assetPblName)
 	nkFile.close()
-	
+
 ##############################.nk node export###########################
 def nkFileNodeExport(objLs, nodeType, fileName, pblDir, visiblePblDir, assetPblName, version):
 	pathtoPblAsset = os.path.join(pblDir, '%s.nk' % assetPblName)
@@ -956,4 +965,3 @@ def nkFileNodeExport(objLs, nodeType, fileName, pblDir, visiblePblDir, assetPblN
 	cached true\n}''' % (filePath, assetPblName))
 	nkFile.close()
 	return
-	

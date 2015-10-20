@@ -596,8 +596,8 @@ Python %s / PySide %s / Qt %s / %s
 	#launches terminal locks button
 	def launchTerminal(self):
 		launchApps.terminal()
-		self.ui.openTerminal_pushButton.setEnabled(False)
-		self.ui.setNewShot_pushButton.setEnabled(False)
+	#	self.ui.openTerminal_pushButton.setEnabled(False)
+	#	self.ui.setNewShot_pushButton.setEnabled(False)
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
 

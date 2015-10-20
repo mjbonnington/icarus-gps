@@ -33,7 +33,8 @@ def nuke(nukeType):
 
 def terminal():
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		subprocess.Popen("cmd /k %s" % os.environ['GPS_RC'], shell=True)
+		#subprocess.Popen("cmd /k %s" % os.environ['GPS_RC'], shell=True)
+		subprocess.Popen("start cmd /k %s" % os.environ['GPS_RC'], shell=True)
 	else:
 		subprocess.Popen("bash --rcfile %s" % os.environ['GPS_RC'], shell=True)
 

@@ -1,26 +1,42 @@
 #!/usr/bin/python
-#support    :Nuno Pereira - nuno.pereira@gps-ldn.com
-#title      :userSetup.py
-#copyright  :Gramercy Park Studios
 
-import autoDeploy, maya.cmds as mc, os, sys
+# [GPS] Auto Deploy
+# v0.1
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2015 Gramercy Park Studios
+#
+# Commands to execute at Maya startup.
+
+
+import os, sys
 sys.path.append(os.path.join(os.environ['PIPELINE'], 'core', 'ui'))
-#import icarus__main__, env__init__
 import env__init__
 env__init__.appendSysPaths()
+import maya.cmds as mc
 os.environ['ICARUSENVAWARE'] = 'MAYA'
-import mayaOps
-#autodeploying maya tools and env files.
-autoDeploy.deploy()
+import mayaOps, osOps, verbose
 
-#loading default plugins
-ma_pluginLs = [
-'AbcExport', 
-'AbcImport',
-'fbxmaya',
-'objExport',
-'OpenEXRLoader',
-'tiffFloatReader']
+
+# Deploy custom tool shelves
+shelfResources = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'shelves')
+mayaShelvesDir = os.path.join(mc.about(preferences=True), 'prefs', 'shelves')
+
+try:
+	osOps.copyDirContents(shelfResources, mayaShelvesDir)
+	verbose.gpsToolDeploy('OK')
+except:
+	verbose.gpsToolDeploy('Failed')
+
+
+# List of plugins to load by default
+ma_pluginLs = ['AbcExport', 
+               'AbcImport', 
+               'fbxmaya', 
+               'objExport', 
+               'OpenEXRLoader', 
+               'tiffFloatReader']
 
 for ma_plugin in ma_pluginLs:
 	mc.loadPlugin(ma_plugin, qt=True)

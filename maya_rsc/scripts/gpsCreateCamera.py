@@ -1,10 +1,12 @@
 # [GPS] Create Cameras
 # v0.1
 #
-# Michael Bonnington, Nuno Pereira
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2015 Gramercy Park Studios
 #
 # Create Maya cameras based on presets stored in XML data file. Can also create a camera rig.
+
 
 import os
 import maya.cmds as mc
