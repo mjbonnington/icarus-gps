@@ -4,7 +4,7 @@
 # v0.1
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) Gramercy Park Studios 2015
+# (c) 2015 Gramercy Park Studios
 #
 # Class for handling generic XML data files via ElementTree.
 # Classes written to handle specific data files should inherit this class.

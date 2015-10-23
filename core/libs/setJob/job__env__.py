@@ -1,7 +1,12 @@
 #!/usr/bin/python
-#support    :Nuno Pereira - nuno.pereira@gps-ldn.com
-#title      :job__env__
-#copyright  :Gramercy Park Studios
+
+# [Icarus] job__env__.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2015 Gramercy Park Studios
+#
+# Sets up job-related environment variables.
 
 
 import os, sys
@@ -131,31 +136,31 @@ def setEnv(envVars):
 	os.environ['MARI_DEFAULT_IMPORT_PATH'] = os.environ['MARITEXTURESDIR']
 	os.environ['MARI_DEFAULT_RENDER_PATH'] = os.environ['MARIRENDERSDIR']
 	os.environ['MARI_DEFAULT_CAMERA_PATH'] = os.environ['SHOTAPPROVEDPUBLISHDIR']
-	os.environ['MARI_SCRIPT_PATH'] = os.path.join(os.environ['PIPELINE'], 'mari_rsc', 'scripts')
+	os.environ['MARI_SCRIPT_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'mari', 'scripts')
 	os.environ['MARI_NUKEWORKFLOW_PATH'] = getAppExecPath('Nuke') #jobData.nukeVersion
 	os.environ['MARIVERSION'] = getAppExecPath('Mari') #jobData.mariVersion
 
 	#MAYA ENV
-	#os.environ['PATH'] = os.path.join('%s;%s' % (os.environ['PATH'], os.environ['PIPELINE']), 'maya_rsc', 'dlls')
-	os.environ['PATH'] += os.pathsep + os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'dlls') # - this DLLs folder doesn't actually exist?
-	#os.environ['PYTHONPATH'] = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'maya__env__;%s' % os.environ['PIPELINE'], 'maya_rsc', 'scripts')
-	os.environ['PYTHONPATH'] = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'maya__env__') + os.pathsep + os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'scripts')
+	#os.environ['PATH'] = os.path.join('%s;%s' % (os.environ['PATH'], os.environ['PIPELINE']), 'rsc', 'maya', 'dlls')
+	os.environ['PATH'] += os.pathsep + os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'dlls') # - this DLLs folder doesn't actually exist?
+	#os.environ['PYTHONPATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'maya__env__;%s' % os.environ['PIPELINE'], 'rsc', 'maya', 'scripts')
+	os.environ['PYTHONPATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'maya__env__') + os.pathsep + os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'scripts')
 	os.environ['MAYA_DEBUG_ENABLE_CRASH_REPORTING'] = '0'
-	os.environ['MAYA_PLUG_IN_PATH'] = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'plugins')
-	#os.environ['MAYA_SHELF_PATH'] = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'shelves')
-	os.environ['MAYA_SCRIPT_PATH'] = os.path.join(os.environ['PIPELINE'],'maya_rsc', 'maya__env__') + os.pathsep + os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'scripts')
-	os.environ['MI_CUSTOM_SHADER_PATH'] = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'shaders', 'include')
-	os.environ['MI_LIBRARY_PATH'] = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'shaders')
-	os.environ['VRAY_FOR_MAYA_SHADERS'] = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'shaders')
+	os.environ['MAYA_PLUG_IN_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'plugins')
+	#os.environ['MAYA_SHELF_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shelves')
+	os.environ['MAYA_SCRIPT_PATH'] = os.path.join(os.environ['PIPELINE'],'rsc', 'maya', 'maya__env__') + os.pathsep + os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'scripts')
+	os.environ['MI_CUSTOM_SHADER_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shaders', 'include')
+	os.environ['MI_LIBRARY_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shaders')
+	os.environ['VRAY_FOR_MAYA_SHADERS'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shaders')
 	try:
-		os.environ['VRAY_FOR_MAYA2014_PLUGINS_x64'] += os.pathsep + os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'plugins')
+		os.environ['VRAY_FOR_MAYA2014_PLUGINS_x64'] += os.pathsep + os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'plugins')
 	except (AttributeError, KeyError):
 		pass
 	if os.environ['ICARUS_RUNNING_OS'] == 'Linux':
-		os.environ['XBMLANGPATH'] = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'icons', '%B')
+		os.environ['XBMLANGPATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'icons', '%B')
 	else:
-		os.environ['XBMLANGPATH'] = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'icons')
-	os.environ['MAYA_PRESET_PATH'] = os.path.join(os.environ['PIPELINE'], 'maya_rsc', 'presets')
+		os.environ['XBMLANGPATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'icons')
+	os.environ['MAYA_PRESET_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'presets')
 	os.environ['MAYADIR'] = os.path.join(os.environ['SHOTPATH'], '3D', 'maya')
 	os.environ['MAYASCENESDIR'] = os.path.join(os.environ['MAYADIR'], 'scenes', os.environ['USERNAME'])
 	os.environ['MAYAPLAYBLASTSDIR'] = os.path.join(os.environ['MAYADIR'], 'playblasts', os.environ['USERNAME'])
@@ -169,11 +174,11 @@ def setEnv(envVars):
 	os.environ['MUDBOXDIR'] = os.path.join(os.environ['SHOTPATH'], '3D', 'mudbox')
 	os.environ['MUDBOXSCENESDIR'] = os.path.join(os.environ['MUDBOXDIR'], 'scenes', os.environ['USERNAME'])
 	os.environ['MUDBOX_IDLE_LICENSE_TIME'] = '60'
-	os.environ['MUDBOX_PLUG_IN_PATH'] = os.path.join(os.environ['PIPELINE'], 'mudbox_rsc', 'plugins') 
+	os.environ['MUDBOX_PLUG_IN_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'mudbox', 'plugins') 
 	os.environ['MUDBOXVERSION'] = getAppExecPath('Mudbox') #jobData.mudboxVersion
 
 	#NUKE ENV
-	os.environ['NUKE_PATH'] = os.path.join(os.environ['PIPELINE'], 'nuke_rsc')
+	os.environ['NUKE_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'nuke')
 	os.environ['NUKEDIR'] = os.path.join(os.environ['SHOTPATH'], '2D', 'nuke')
 	os.environ['NUKEELEMENTSDIR'] = os.path.join(os.environ['NUKEDIR'], 'elements', os.environ['USERNAME'])
 	os.environ['NUKESCRIPTSDIR'] = os.path.join(os.environ['NUKEDIR'], 'scripts', os.environ['USERNAME'])
@@ -184,19 +189,19 @@ def setEnv(envVars):
 	#HIERO ENV
 	os.environ['HIEROEDITORIALPATH'] = os.path.join(os.path.split(os.environ['JOBPATH'])[0], 'Editorial', 'Hiero') 
 	os.environ['HIEROPLAYERVERSION'] = getAppExecPath('HieroPlayer') #jobData.hieroPlayerVersion
-	os.environ['HIERO_PLUGIN_PATH'] = os.path.join(os.environ['PIPELINE'], 'hiero_rsc')
+	os.environ['HIERO_PLUGIN_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'hiero')
 
 	#CLARISSE ENV
-	#sys.path.append(os.path.join(os.environ['PIPELINE'], 'clarisse_rsc'))
+	#sys.path.append(os.path.join(os.environ['PIPELINE'], 'rsc', 'clarisse'))
 
 	#REALFLOW
 	os.environ['REALFLOWDIR'] = os.path.join(os.environ['SHOTPATH'], '3D', 'realflow')
 	os.environ['REALFLOWVERSION'] = getAppExecPath('RealFlow') #jobData.realflowVersion
 	os.environ['REALFLOWSCENESDIR'] = os.path.join(os.environ['REALFLOWDIR'], os.environ['USERNAME'])
-	os.environ['RF_STARTUP_PYTHON_SCRIPT_FILE_PATH'] = os.path.join(os.environ['PIPELINE'], 'realflow_rsc', 'scripts', 'startup.rfs')
+	os.environ['RF_STARTUP_PYTHON_SCRIPT_FILE_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'realflow', 'scripts', 'startup.rfs')
 	os.environ['RFDEFAULTPROJECT'] = os.path.join(os.environ['REALFLOWSCENESDIR'], '%s_%s' % (os.environ['JOB'], os.environ['SHOT']))
 	os.environ['RFOBJECTSPATH'] = os.path.join(os.environ['SHOTPUBLISHDIR'], 'ma_geoCache', 'realflow')
-	os.environ['RF_RSC'] = os.path.join(os.environ['PIPELINE'], 'realflow_rsc')
+	os.environ['RF_RSC'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'realflow')
 	os.environ['RF_COMMANDS_ORGANIZER_FILE_PATH'] = os.path.join(os.environ['REALFLOWSCENESDIR'] , '.cmdsOrg', 'commandsOrganizer.dat')
 
 	# djv_view

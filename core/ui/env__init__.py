@@ -1,12 +1,12 @@
 #!/usr/bin/python
 
-# Icarus env__init__
+# [Icarus] env__init__.py
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) Gramercy Park Studios 2015
+# (c) 2013-2015 Gramercy Park Studios
 #
-# Initialises main pipeline environment
+# Initialises main pipeline environment.
 
 
 import os, platform, sys
@@ -28,7 +28,7 @@ def setEnv():
 	except KeyError:
 		os.environ['ICARUSENVAWARE'] = 'STANDALONE'
 
-	os.environ['ICARUSVERSION'] = 'v0.8.12-20151013'
+	os.environ['ICARUSVERSION'] = 'v0.8.12-20151023'
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
 	os.environ['ICWORKINGDIR'] = icarusWorkingDir
 	icarusUIDir = os.path.join('core', 'ui')
