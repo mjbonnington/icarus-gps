@@ -25,12 +25,12 @@ global proc shelf_GPS_Lighting () {
 		-sourceType "mel" 
 		-commandRepeatable 1
 		-flat 1
-		-mi "Load Base Settings" ( "source gpsLighting.mel;gpsLighting.loadBaseSettings()" )
-		-mi "Update Render Path" ( "source gpsLighting.mel;gpsLighting.setRenderPath()" )
+		-mi "Load Base Settings" ( "source gpsLighting.mel; gpsLighting.loadBaseSettings()" )
+		-mi "Update Render Path" ( "source gpsLighting.mel; gpsLighting.setRenderPath()" )
 		-mi "Open Framebuffer" ( "vray showVFB;" )
-		-mi "Load Standard Elements" ( "import loadElements\n\nloadElements.addStdElements()" )
+		-mi "Load Standard Elements" ( "import loadElements; loadElements.addStdElements()" )
 		-mip 3
-		-mi "Load Data Elements" ( "import loadElements\n\nloadElements.addDataElements()" )
+		-mi "Load Data Elements" ( "import loadElements; loadElements.addDataElements()" )
 		-mip 4
 		-mi "Add or update AOV / Render Pass selector to Maya Render View" ( "import gpsRenderViewSelectAOV; reload(gpsRenderViewSelectAOV); gpsRenderViewSelectAOV.selectAOV()" )
 		-mip 5

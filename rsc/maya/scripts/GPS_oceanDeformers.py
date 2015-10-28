@@ -10,13 +10,13 @@ def createOcean(type):
 	if type == 'hot':
 		return
 		#creating ocean geo
-		#oceanGeo = mc.polyPlane(n='hot_oceanDefromer1', w=100, h=100, sx=100, sy=100, ax=(0,1,0), cuv=2, ch=1)
+		#oceanGeo = mc.polyPlane(n='hot_oceanDeformer1', w=100, h=100, sx=100, sy=100, ax=(0,1,0), cuv=2, ch=1)
 		#oceanGeoSh = mc.listRelatives(oceanGeo, s=True)
 		#mel.eval('deformer -type hotOceanDeformer)
 	elif type == 'vray':
 		import vraySubDsMulti
 		#creating ocean geo
-		oceanGeo = mc.polyPlane(n='vray_oceanDefromer1', w=100, h=100, sx=30, sy=30, ax=(0,1,0), cuv=2, ch=1)
+		oceanGeo = mc.polyPlane(n='vray_oceanDeformer1', w=100, h=100, sx=30, sy=30, ax=(0,1,0), cuv=2, ch=1)
 		oceanGeoSh = mc.listRelatives(oceanGeo, s=True)
 		#creating vRay shader, water shader, shading group, making connections assiging to ocean geo
 		shader = mc.shadingNode('VRayMtl', asShader=True)
@@ -34,7 +34,7 @@ def createOcean(type):
 	elif type == 'maya':
 		import maya.mel as mel
 		#creating ocean geo
-		oceanGeo = mc.polyPlane(n='maya_oceanDefromer1', w=100, h=100, sx=100, sy=100, ax=(0,1,0), cuv=2, ch=1)
+		oceanGeo = mc.polyPlane(n='maya_oceanDeformer1', w=100, h=100, sx=100, sy=100, ax=(0,1,0), cuv=2, ch=1)
 		oceanGeoSh = mc.listRelatives(oceanGeo, s=True)
 		mel.eval('loadPlugin -qt iDeform; iDisplace()')
 		#getting oceanGeo connections and retrieving iDisplace node

@@ -1,12 +1,13 @@
-# GPS Ortho Cam Fix
+# [GPS] Ortho Cam Fix
 # v0.1
 #
-# Michael Bonnington 2015
-# Gramercy Park Studios
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2015 Gramercy Park Studios
 #
 # Automatically sets default orthographic cameras' transform and clipping
 # planes to selection. Use when working with large-scale scenes and framing
-# the view doesn't work
+# the view doesn't work.
+
 
 import maya.cmds as mc
 
@@ -28,13 +29,17 @@ class gpsOrthoCamFix():
 			self.orthoCamFix()
 			mc.select(clear=True)
 
+
 	def orthoCamFix(self):
 		bbox = mc.exactWorldBoundingBox()
-		x_min = bbox[0]; y_min = bbox[1]; z_min = bbox[2]; x_max = bbox[3]; y_max = bbox[4]; z_max = bbox[5]
 
-		x_len = x_max - x_min
-		y_len = y_max - y_min
-		z_len = z_max - z_min
+		x_min = bbox[0]; x_max = bbox[3]
+		y_min = bbox[1]; y_max = bbox[4]
+		z_min = bbox[2]; z_max = bbox[5]
+
+		x_len = abs(x_max - x_min)
+		y_len = abs(y_max - y_min)
+		z_len = abs(z_max - z_min)
 
 		mc.setAttr("side.tx", x_max+x_len*2)
 		mc.setAttr("sideShape.nearClipPlane", x_len)
@@ -50,3 +55,4 @@ class gpsOrthoCamFix():
 		mc.setAttr("frontShape.nearClipPlane", z_len)
 		mc.setAttr("frontShape.farClipPlane", z_len*4)
 		mc.setAttr("frontShape.centerOfInterest", z_len*2.5)
+

@@ -8,7 +8,7 @@
 import os, re
 
 
-def createDir(path, umask='000'):
+def createDir(path, umask='000', verbose=False):
 	""" Creates directory for the specified path with the specified umask - could probably be rewritten to use Python's own functions
 	"""
 	if not os.path.isdir(path):
@@ -24,7 +24,7 @@ def createDir(path, umask='000'):
 		return path
 
 
-def setPermissions(path, mode='a+w'):
+def setPermissions(path, mode='a+w', verbose=False):
 	""" Sets permissions to provided path - could probably be rewritten to use Python's own functions
 	"""
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
@@ -38,7 +38,7 @@ def setPermissions(path, mode='a+w'):
 	return path
 
 
-def hardLink(source, destination, umask='000'):
+def hardLink(source, destination, umask='000', verbose=False):
 	""" Creates hard links
 	"""
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
@@ -54,13 +54,14 @@ def hardLink(source, destination, umask='000'):
 	else:
 		cmdStr = '%s; ln -f %s %s' % (setUmask(umask), source, destination)
 
-	#print cmdStr
+	if verbose:
+		print cmdStr
 	os.system(cmdStr)
 
 	return destination
 
 
-def recurseRemove(path):
+def recurseRemove(path, verbose=False):
 	""" Removes files or folders recursively
 	"""
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
@@ -71,13 +72,14 @@ def recurseRemove(path):
 	else:
 		cmdStr = 'rm -rf %s' % path
 
-	#print cmdStr
+	if verbose:
+		print cmdStr
 	os.system(cmdStr)
 
 	return path
 
 
-def copy(source, destination):
+def copy(source, destination, verbose=False):
 	""" Copy a file or folder
 	"""
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
@@ -85,11 +87,12 @@ def copy(source, destination):
 	else:
 		cmdStr = 'cp -rf %s %s' % (source, destination)
 
-	#print cmdStr
+	if verbose:
+		print cmdStr
 	os.system(cmdStr)
 
 
-def copyDirContents(source, destination, umask='000'):
+def copyDirContents(source, destination, umask='000', verbose=False):
 	""" Copy the contents of a folder recursively - rewrite using shutil.copy / copytree
 	"""
 	src = os.path.normpath( os.path.join(source, '*') )
@@ -100,11 +103,12 @@ def copyDirContents(source, destination, umask='000'):
 	else:
 		cmdStr = '%s; cp -rf %s %s' % (setUmask(umask), src, dst)
 
-	#print cmdStr
+	if verbose:
+		print cmdStr
 	os.system(cmdStr)
 
 
-def setUmask(umask='000'):
+def setUmask(umask='000', verbose=False):
 	""" Set the umask for permissions on created files and folders (Unix only)
 	"""
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
@@ -113,7 +117,7 @@ def setUmask(umask='000'):
 		return 'umask %s' % umask
 
 
-def sanitize(instr, pattern='\W', replace=''):
+def sanitize(instr, pattern='\W', replace='', verbose=False):
 	""" Sanitizes characters in string. Default removes all non-alphanumeric characters.
 	"""
 	return re.sub(pattern, replace, instr)

@@ -172,5 +172,5 @@ class gpsCreateCamera():
 				mc.warning('Please select a camera.')
 				return
 		else:
-			mc.warning('VRay plugin not loaded.')
+			mc.warning('V-Ray plugin not loaded.')
 

@@ -19,7 +19,7 @@ import os, sys, env__init__
 env__init__.setEnv()
 
 #note: publish modules are imported on demand rather than all at once at beggining of file
-import launchApps, setJob, userPrefs, verbose, pblChk, pblOptsPrc, openDirs, setTerm, jobs, listShots
+import launchApps, setJob, userPrefs, verbose, pblChk, pblOptsPrc, openDirs, jobs #, setTerm, listShots
 
 class icarusApp(QtGui.QDialog):
 	def __init__(self, parent = None):
@@ -156,7 +156,7 @@ class icarusApp(QtGui.QDialog):
 				if entryLs[0] in jobLs:
 					self.ui.job_comboBox.setCurrentIndex(self.ui.job_comboBox.findText(entryLs[0]))
 					if entryLs[1]:
-						shotLs = listShots.list_(entryLs[0])
+						shotLs = setJob.listShots(entryLs[0])
 						if entryLs[1] in shotLs:
 							self.ui.shot_comboBox.setCurrentIndex(self.ui.shot_comboBox.findText(entryLs[1]))
 
@@ -351,7 +351,7 @@ class icarusApp(QtGui.QDialog):
 		for shot in range(0, self.ui.shot_comboBox.count(), 1):
 			self.ui.shot_comboBox.removeItem(0)
 		selJob = self.ui.job_comboBox.currentText()
-		shotLs = listShots.list_(selJob)
+		shotLs = setJob.listShots(selJob)
 		if shotLs:
 			for shot in shotLs:
 				self.ui.shot_comboBox.insertItem(0, shot)
@@ -368,7 +368,7 @@ class icarusApp(QtGui.QDialog):
 	#populates publish shot drop down menu	
 	def populatePblShotLs(self):
 		self.ui.publishToShot_comboBox.clear()
-		shotLs = listShots.list_(os.environ['JOB'])
+		shotLs = setJob.listShots(os.environ['JOB'])
 		if shotLs:
 			for shot in shotLs:
 				self.ui.publishToShot_comboBox.insertItem(0, shot)
@@ -377,7 +377,7 @@ class icarusApp(QtGui.QDialog):
 	#populates gather shot drop down menu	
 	def populateGatherShotLs(self):
 		self.ui.gatherFromShot_comboBox.clear()
-		shotLs = listShots.list_(os.environ['JOB'])
+		shotLs = setJob.listShots(os.environ['JOB'])
 		if shotLs:
 			for shot in shotLs:
 				self.ui.gatherFromShot_comboBox.insertItem(0, shot)
@@ -503,9 +503,10 @@ I   C   A   R   U   S
 %s
 
 Python %s / PySide %s / Qt %s / %s
+Environment: %s
 
 (c) 2013-2015 Gramercy Park Studios
-""" %(os.environ['ICARUSVERSION'], python_ver_str, pyside_ver_str, qt_ver_str, os.environ['ICARUS_RUNNING_OS'])
+""" %(os.environ['ICARUSVERSION'], python_ver_str, pyside_ver_str, qt_ver_str, os.environ['ICARUS_RUNNING_OS'], os.environ['ICARUSENVAWARE'])
 
 		import about
 		about = about.aboutDialog()
@@ -535,14 +536,16 @@ Python %s / PySide %s / Qt %s / %s
 		""" Open job settings dialog wrapper function
 		"""
 		self.openSettings("Job")
-		self.setupJob()
+		#self.setupJob()
+		setJob.setup(self.job, self.shot)
 
 
 	def shotSettings(self):
 		""" Open shot settings dialog wrapper function
 		"""
 		self.openSettings("Shot")
-		self.setupJob()
+		#self.setupJob()
+		setJob.setup(self.job, self.shot)
 
 
 	def userSettings(self):
