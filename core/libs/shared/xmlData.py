@@ -3,10 +3,11 @@
 # XML Data
 # v0.1
 #
-# Michael Bonnington 2015
-# Gramercy Park Studios
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2015 Gramercy Park Studios
 #
-# Class for handling XML data files via ElementTree
+# Class for handling generic XML data files via ElementTree.
+# Classes written to handle specific data files should inherit this class.
 
 
 import xml.etree.ElementTree as ET
@@ -20,7 +21,7 @@ class xmlData():
 
 
 	def loadXML(self, datafile=None):
-		""" Load XML data. Omit datafile to reload XML data
+		""" Load XML data. Omit the keyword argument 'datafile' to reload XML data.
 		"""
 		if datafile is not None:
 			self.datafile = datafile
@@ -38,7 +39,7 @@ class xmlData():
 
 
 	def indent(self, elem, level=0):
-		""" Indent elements automatically to create nicely formatted XML
+		""" Indent elements automatically to prepare nicely formatted XML for output.
 		"""
 		i = "\n" + level*"\t"
 		if len(elem):
@@ -56,7 +57,7 @@ class xmlData():
 
 
 	def saveXML(self):
-		""" Save XML data
+		""" Save XML data.
 		"""
 		try:
 			self.indent(self.root)

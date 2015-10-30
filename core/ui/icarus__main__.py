@@ -1,7 +1,12 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:icarus__main__
-#copyright	:Gramercy Park Studios
+
+# Icarus icarus__main__
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) Gramercy Park Studios 2015
+#
+# Launches and controls Icarus main UI
 
 
 from PySide import QtCore, QtGui
@@ -10,13 +15,11 @@ from icarusUI import *
 import os, sys, env__init__
 
 
-#lauches and controls Icarus main UI
-
 #initializing icarus environment and adding libs to sysPath
 env__init__.setEnv()
 
 #note: publish modules are imported on demand rather than all at once at beggining of file
-import launchApps, setJob, userPrefs, verbose, pblChk, pblOptsPrc, openDirs, setTerm, jobs, listShots
+import launchApps, setJob, userPrefs, verbose, pblChk, pblOptsPrc, openDirs, jobs #, setTerm, listShots
 
 class icarusApp(QtGui.QDialog):
 	def __init__(self, parent = None):
@@ -27,8 +30,8 @@ class icarusApp(QtGui.QDialog):
 		# Read user prefs config file file - if it doesn't exist it will be created
 		userPrefs.read()
 
-		#defining phonon as preview player if icarus is standalone
-		#(only enabled on Mac OS X as haven't yet figured out how to get Phonon video player working properly on Windows or Linux)
+		# Define Phonon as preview player if Icarus is standalone
+		# (only enabled on Mac OS X as haven't yet figured out how to get Phonon video player working properly on Windows or Linux)
 		if os.environ['ICARUSENVAWARE'] == 'STANDALONE' and os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
 			from PySide.phonon import Phonon
 			self.previewPlayer = Phonon.VideoPlayer(parent = self.ui.gatherImgPreview_label)
@@ -153,7 +156,7 @@ class icarusApp(QtGui.QDialog):
 				if entryLs[0] in jobLs:
 					self.ui.job_comboBox.setCurrentIndex(self.ui.job_comboBox.findText(entryLs[0]))
 					if entryLs[1]:
-						shotLs = listShots.list_(entryLs[0])
+						shotLs = setJob.listShots(entryLs[0])
 						if entryLs[1] in shotLs:
 							self.ui.shot_comboBox.setCurrentIndex(self.ui.shot_comboBox.findText(entryLs[1]))
 
@@ -348,7 +351,7 @@ class icarusApp(QtGui.QDialog):
 		for shot in range(0, self.ui.shot_comboBox.count(), 1):
 			self.ui.shot_comboBox.removeItem(0)
 		selJob = self.ui.job_comboBox.currentText()
-		shotLs = listShots.list_(selJob)
+		shotLs = setJob.listShots(selJob)
 		if shotLs:
 			for shot in shotLs:
 				self.ui.shot_comboBox.insertItem(0, shot)
@@ -365,7 +368,7 @@ class icarusApp(QtGui.QDialog):
 	#populates publish shot drop down menu	
 	def populatePblShotLs(self):
 		self.ui.publishToShot_comboBox.clear()
-		shotLs = listShots.list_(os.environ['JOB'])
+		shotLs = setJob.listShots(os.environ['JOB'])
 		if shotLs:
 			for shot in shotLs:
 				self.ui.publishToShot_comboBox.insertItem(0, shot)
@@ -374,7 +377,7 @@ class icarusApp(QtGui.QDialog):
 	#populates gather shot drop down menu	
 	def populateGatherShotLs(self):
 		self.ui.gatherFromShot_comboBox.clear()
-		shotLs = listShots.list_(os.environ['JOB'])
+		shotLs = setJob.listShots(os.environ['JOB'])
 		if shotLs:
 			for shot in shotLs:
 				self.ui.gatherFromShot_comboBox.insertItem(0, shot)
@@ -388,12 +391,17 @@ class icarusApp(QtGui.QDialog):
 	def setupJob(self):
 		self.job = self.ui.job_comboBox.currentText()
 		self.shot = self.ui.shot_comboBox.currentText()
-		setJob.setup(self.job, self.shot)
-		self.adjustPblTypeUI()
-		self.populatePblShotLs()
-		self.populateGatherShotLs()
-		self.connectNewSignalsSlots()
-		self.lockJobUI()
+		if setJob.setup(self.job, self.shot):
+			self.adjustPblTypeUI()
+			self.populatePblShotLs()
+			self.populateGatherShotLs()
+			self.connectNewSignalsSlots()
+			self.lockJobUI()
+		else:
+			verbose.defaultJobSettings()
+			#print "Unable to load job settings. Default values have been applied.\nPlease review the settings in the editor and click Save when done."
+			if self.openSettings("Job", autoFill=True):
+				self.setupJob()
 
 	#updates and locks UI job tab
 	def lockJobUI(self):
@@ -425,7 +433,7 @@ class icarusApp(QtGui.QDialog):
 		self.ui.shotEnv_toolButton.hide()
 		self.ui.setNewShot_pushButton.hide()
 		self.ui.setShot_pushButton.show()
-		
+
 	#controls phonon preview player
 	def previewPlayerCtrl(self, show=False, hide=False, play=False, loadImg=None):
 		if self.previewPlayer:
@@ -500,16 +508,17 @@ I   C   A   R   U   S
 %s
 
 Python %s / PySide %s / Qt %s / %s
+Environment: %s
 
 (c) 2013-2015 Gramercy Park Studios
-""" %(os.environ['ICARUSVERSION'], python_ver_str, pyside_ver_str, qt_ver_str, os.environ['ICARUS_RUNNING_OS'])
+""" %(os.environ['ICARUSVERSION'], python_ver_str, pyside_ver_str, qt_ver_str, os.environ['ICARUS_RUNNING_OS'], os.environ['ICARUSENVAWARE'])
 
 		import about
 		about = about.aboutDialog()
 		about.msg(about_msg)
 
 
-	def openSettings(self, settingsType):
+	def openSettings(self, settingsType, autoFill=False):
 		""" Open settings dialog
 		"""
 		if settingsType == "Job":
@@ -520,32 +529,34 @@ Python %s / PySide %s / Qt %s / %s
 			xmlData = os.path.join(os.environ['SHOTDATA'], 'shotData.xml')
 		import job_settings__main__
 		reload(job_settings__main__)
-		settingsEditor = job_settings__main__.settingsDialog(settingsType=settingsType, categoryLs=categoryLs, xmlData=xmlData)
+		settingsEditor = job_settings__main__.settingsDialog(settingsType=settingsType, categoryLs=categoryLs, xmlData=xmlData, autoFill=autoFill)
 		@settingsEditor.customSignal.connect
 		def storeAttr(attr):
 			settingsEditor.currentAttr = attr # a bit hacky - need to find a way to add this function to main class
 		settingsEditor.show()
 		settingsEditor.exec_()
+		return settingsEditor.returnValue # return True if user clicked Save, False for Cancel
 
 
 	def jobSettings(self):
 		""" Open job settings dialog wrapper function
 		"""
-		self.openSettings("Job")
-		self.setupJob()
+		if self.openSettings("Job"):
+			setJob.setup(self.job, self.shot) # Set up environment variables
 
 
 	def shotSettings(self):
 		""" Open shot settings dialog wrapper function
 		"""
-		self.openSettings("Shot")
-		self.setupJob()
+		if self.openSettings("Shot"):
+			setJob.setup(self.job, self.shot) # Set up environment variables
 
 
 	def userSettings(self):
 		""" Open user settings dialog wrapper function
 		"""
-		self.openSettings("User")
+		if self.openSettings("User"):
+			pass
 
 
 	#runs launch maya procedure
@@ -593,8 +604,8 @@ Python %s / PySide %s / Qt %s / %s
 	#launches terminal locks button
 	def launchTerminal(self):
 		launchApps.terminal()
-		self.ui.openTerminal_pushButton.setEnabled(False)
-		self.ui.setNewShot_pushButton.setEnabled(False)
+	#	self.ui.openTerminal_pushButton.setEnabled(False)
+	#	self.ui.setNewShot_pushButton.setEnabled(False)
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
 

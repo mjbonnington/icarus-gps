@@ -1,5 +1,14 @@
 #!/usr/bin/env python
 
+# Sequences
+# v0.2
+#
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) Gramercy Park Studios 2015
+#
+# These functions convert formatted sequences to lists and vice-versa.
+
+
 import re
 
 
@@ -12,15 +21,15 @@ def numList(num_range_str, quiet=False):
 	num_format = re.compile(r'^\d+$')
 	seq_format = re.compile(r'^\d+-\d+$')
 
-	# split into groups of ranges separated by commas
+	# Split into groups of ranges separated by commas
 	grps = re.split(r',\s*', num_range_str)
 	for grp in grps:
 
-		# grp is a single number (e.g. 10)
+		# 'grp' is a single number (e.g. 10)
 		if num_format.match(grp) is not None:
 			num_int_list.append(int(grp))
 
-		# grp is a number sequence (e.g. 1-10)
+		# 'grp' is a number sequence (e.g. 1-10)
 		elif seq_format.match(grp) is not None:
 			seq = re.split(r'-', grp)
 			first = int(seq[0])
@@ -39,7 +48,7 @@ def numList(num_range_str, quiet=False):
 				print "ERROR: Sequence format is invalid."
 			return False
 
-	# remove duplicates & sort list
+	# Remove duplicates & sort list
 	return sorted(list(set(num_int_list)), key=int)
 
 
@@ -50,7 +59,7 @@ def numRange(num_int_list, quiet=False):
 	"""
 	num_range_str = ''
 
-	# remove duplicates & sort list
+	# Remove duplicates & sort list
 	try:
 		sorted_list = sorted(list(set(num_int_list)), key=int)
 	except (ValueError, TypeError):
@@ -59,7 +68,7 @@ def numRange(num_int_list, quiet=False):
 		return False
 		
 
-	# find sequences
+	# Find sequences
 	first = None
 	for x in sorted_list:
 		if first is None:
@@ -82,7 +91,7 @@ def numRange(num_int_list, quiet=False):
 
 
 def seqRange(sorted_list, gen_range=False):
-	""" Generate first and last values, or ranges of values, from sequences
+	""" Generate first and last values, or ranges of values, from sequences.
 	"""
 	first = None
 	for x in sorted_list:

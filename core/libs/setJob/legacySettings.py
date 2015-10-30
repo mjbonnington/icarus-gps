@@ -1,20 +1,20 @@
 #!/usr/bin/python
 
-# Legacy Settings
-# v0.1
+# [Icarus] Legacy Settings
+# v0.2
 #
-# Michael Bonnington 2015
-# Gramercy Park Studios
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2015 Gramercy Park Studios
 #
-# Fallback functions to convert data from python files to XML, if XML files don't exist.
+# Fallback functions to convert job and shot data from python files (legacy) to XML, if XML files don't exist.
 
 
-import os, re, sys
+import os, sys
 import verbose
 
 
 def convertAppExecPath(app, path, ap):
-	""" Given an executable path for an app, determine the version
+	""" Given an executable path for an app, determine the version.
 	"""
 	vers = ap.getVersions(app)
 	for ver in vers:
@@ -25,22 +25,8 @@ def convertAppExecPath(app, path, ap):
 	return ""
 
 
-def parseJobPath(path, element):
-	""" Find the element (project number, job number) in the job path
-	"""
-	if element == 'projnum':
-		pattern = re.compile(r'\d{6}')
-	elif element == 'jobnum':
-		pattern = re.compile(r'\d{7}')
-	match = pattern.search(path)
-	if match is not None:
-		return match.group()
-
-	return ""
-
-
 def convertJobData(jobDataPath, jd, ap):
-	""" Read job data from python source and save out an XML file
+	""" Read job data from python source and save out an XML file.
 	"""
 	if os.path.isfile(os.path.join(jobDataPath, 'jobData.py')):
 		verbose.settingsData_convert('jobData')
@@ -51,8 +37,8 @@ def convertJobData(jobDataPath, jd, ap):
 		sys.path.remove(jobDataPath)
 
 		# Job settings
-		jd.setValue('job', 'projnum', parseJobPath(jobDataPath, 'projnum'))
-		jd.setValue('job', 'jobnum', parseJobPath(jobDataPath, 'jobnum'))
+		#jd.setValue('job', 'projnum', parseJobPath(jobDataPath, 'projnum'))
+		#jd.setValue('job', 'jobnum', parseJobPath(jobDataPath, 'jobnum'))
 
 		# Units settings
 		jd.setValue('units', 'linear', jobData.unit)
@@ -91,7 +77,7 @@ def convertJobData(jobDataPath, jd, ap):
 
 
 def convertShotData(shotDataPath, sd):
-	""" Read job data from python source and save out an XML file
+	""" Read shot data from python source and save out an XML file.
 	"""
 	if os.path.isfile(os.path.join(shotDataPath, 'shotData.py')):
 		verbose.settingsData_convert('shotData')

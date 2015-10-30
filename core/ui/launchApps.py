@@ -1,9 +1,12 @@
 #!/usr/bin/python
-#support    :Nuno Pereira - nuno.pereira@gps-ldn.com
-#title      :launchApps
-#copyright  :Gramercy Park Studios
 
-#Launches software applications
+# [Icarus] launchApps.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2015 Gramercy Park Studios
+#
+# Launches software applications.
 
 
 import os, sys, subprocess
@@ -33,7 +36,8 @@ def nuke(nukeType):
 
 def terminal():
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		subprocess.Popen("cmd", shell=True)
+		#subprocess.Popen("cmd /k %s" % os.environ['GPS_RC'], shell=True)
+		subprocess.Popen("start cmd /k %s" % os.environ['GPS_RC'], shell=True)
 	else:
 		subprocess.Popen("bash --rcfile %s" % os.environ['GPS_RC'], shell=True)
 
@@ -47,7 +51,7 @@ def prodBoard():
 		subprocess.Popen('xdg-open "%s"' % os.environ['PRODBOARD'], shell=True)
 
 def realflow():
-	sys.path.append(os.path.join(os.environ['PIPELINE'], 'realflow_rsc', 'scripts'))
+	sys.path.append(os.path.join(os.environ['PIPELINE'], 'rsc', 'realflow', 'scripts'))
 	import startup
 	verbose.launchApp('RealFlow')
 	startup.autoDeploy()

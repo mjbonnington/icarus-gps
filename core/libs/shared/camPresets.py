@@ -45,14 +45,3 @@ class camPresets(xmlData.xmlData):
 
 		return (sensor_w, sensor_h)
 
-
-	def getValue(self, preset, setting):
-		""" Get the specified value
-		"""
-		element = self.root.find( "./camera[@name='%s']/%s" %(preset, setting) )
-		if element is not None:
-			text = element.text
-			if text is not None:
-				return text
-
-		return ""

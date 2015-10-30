@@ -1,47 +1,73 @@
 #!/usr/bin/python
-#support    :Nuno Pereira - nuno.pereira@gps-ldn.com
-#title      :verbose
-#copyright  :Gramercy Park Studios
 
-#this module processes verbosity printing
+# [Icarus] verbose.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2015 Gramercy Park Studios
+#
+# This module processes verbosity printing.
 
+
+import userPrefs
+userPrefs.read()
+if not userPrefs.config.has_option('main', 'verbosity'):
+	userPrefs.config.set('main', 'verbosity', '3')
+
+
+def print_(message, verbosityLevel=3, log=False):
+	""" print_( the message to the console. If log is True, the messages will be written to a logfile (not yet implemented)
+
+		Verbosity Levels:
+		0 - Nothing is output
+		1 - Errors and messages requiring user action
+		2 - Errors and warning messages
+		3 - Info message (default)
+		4 - Detailed info messages
+	"""
+	userPrefs.read()
+	if verbosityLevel <= userPrefs.config.getint('main', 'verbosity'):
+		print message
+
+
+# Messages follow in alphabetical order...
 def appPaths_noApp(app):
-	print "Warning: Application '%s' does not exist." % app
+	print_( "Warning: Application '%s' does not exist." % app , 2 )
 
 def appPaths_noVersion(app, ver):
-	print "Warning: Application '%s' has no '%s' version." % (app, ver)
+	print_( "Warning: Application '%s' has no '%s' version." % (app, ver) , 2 )
 
 def appPaths_enterVersion():
-	print "Please enter a version."
+	print_( "Please enter a version." , 1 )
 
 def appPaths_guessPathFailed(os):
-	print "Warning: Failed to guess %s path." % os
+	print_( "Warning: Failed to guess %s path." % os , 2 )
 
 def approval(start=False, end=False):
 	if start:
-		print 'Processing approval...'
+		print_( 'Processing approval...' , 3 )
 		return
 	if end:
-		print 'Approved.'
+		print_( 'Approved.' , 3 )
 		return
 
 def approvalOSError():
-	print 'Some assets may not have gone through the approval process. Some file links may be missing.'
+	print_( 'Warning: Some assets may not have gone through the approval process. Some file links may be missing.' , 2 )
 
 def animRequires(asset):
-	print 'Requires %s' % asset
+	print_( 'Requires %s' % asset , 1 )
 
 def assetConflict():
-	print 'Asset already exists in scene'
+	print_( 'Asset already exists in scene' , 2 )
 
 def assetUpdateMatch():
-	print 'Assets do not match. Update canceled.'
+	print_( 'Assets do not match. Update cancelled.' , 2 )
 
 def chkDirSize():
-	print 'Comparing directory sizes...'
+	print_( 'Comparing directory sizes...' , 3 )
 
 def chooseCameraPreview():
-	print 'Please choose a camera view to preview from'
+	print_( 'Please choose a camera view to preview from' , 1 )
 
 def concurrentPublish():
 	return 'Another publish for the same asset is currently under progress. Please check your settings or try again later.'
@@ -49,173 +75,176 @@ def concurrentPublish():
 def dailyFail():
 	return 'Could not verify daily files.'
 
+def defaultJobSettings():
+	print_( "Unable to load job settings. Default values have been applied.\nPlease review the settings in the editor and click Save when done." , 1 )
+
 def gpsPreview_uiValues():
-	print 'Not all GPS Preview UI values could be read'
+	print_( 'Not all GPS Preview UI values could be read' , 2 )
 
 def gpsToolDeploy(status):
-	print 'Deploying GPS tools... %s' % status
+	print_( 'Deploying GPS tools... %s' % status , 3 )
 
 def icarusLaunch(icarusVersion, icarusLocation=""):
-	print 'GRAMERCY PARK STUDIOS - ICARUS %s\n' % icarusVersion
+	print_( 'GRAMERCY PARK STUDIOS - ICARUS %s\n' % icarusVersion , 0 )
 
 def ignored(asset):
-	print '%s ignored' % asset
+	print_( '%s ignored' % asset , 2 )
 
 def illegalCharacters(string=''):
-	print '"%s" contains illegal characters.' % string
+	print_( '"%s" contains illegal characters.' % string , 1 )
 
 def integersInput(input):
-	print '%s input must be integers' % input
+	print_( '%s input must be integers' % input , 1 )
 
 def itemSel():
-	print 'Please select one item'
+	print_( 'Please select one item' , 1 )
 
 def launchApp(application):
-	print 'Launching %s...' % application
+	print_( 'Launching %s...' % application , 3 )
 
 def jobSet(job, shot):
-	print 'Job set. Working on %s - %s' % (job, shot)
+	print_( 'Job set. Working on %s - %s' % (job, shot) , 3 )
 
 def lightLinkError(lightRelinkResult):
-	print 'Light link error: The following objects could not be relinked.\n%s' % lightRelinkResult
+	print_( 'Light link error: The following objects could not be relinked.\n%s' % lightRelinkResult , 1 )
 
 def locatorsOnly():
-	print 'Only locators can be published as nulls.'
+	print_( 'Only locators can be published as nulls.' , 2 )
 
 def lodARequired():
 	raise('lodA level required')
 
 def nameConflict(assetName):
-	print 'Asset with name "%s" already exists in scene. Existing asset has been renamed' % assetName
+	print_( 'Asset with name "%s" already exists in scene. Existing asset has been renamed' % assetName , 2 )
 
 def noAsset():
-	print 'Could not find any compatible assets'
+	print_( 'Could not find any compatible assets' , 1 )
 
 def noDir():
-	print 'Could not find the specified directory'
+	print_( 'Could not find the specified directory' , 1 )
 
 def noDirContents():
-	print 'The specified directory is empty'
+	print_( 'The specified directory is empty' , 2 )
 
 def noEnv():
-	print 'Could not launch Icarus - No environment could be found'
+	print_( 'Could not launch Icarus - No environment could be found' , 1 )
 
 def noFile():
-	print 'Could not find the specified file'
+	print_( 'Could not find the specified file' , 1 )
 
 def noGetTranforms():
-	print 'Could not get object transforms'
+	print_( 'Could not get object transforms' , 1 )
 
 def noHrox(hroxFile):
-	print '%s - File could not be found.' % hroxFile
+	print_( '%s - File could not be found.' % hroxFile , 1 )
 
 def noICSetsPbl():
-	print 'ICSets cannot be selected for publishing'
+	print_( 'ICSets cannot be selected for publishing' , 1 )
 
 def noJob(job):
-	print 'ERROR: The job path "%s" does not exist. The job may have been archived, moved or deleted.' % job
+	print_( 'ERROR: The job path "%s" does not exist. The job may have been archived, moved or deleted.' % job , 1 )
 
 def noMainLayer():
-	print 'Please set a main layer'
+	print_( 'Please set a main layer' , 1 )
 
 def noNotes():
-	print 'No notes found'
+	print_( 'No notes found' , 2 )
 
 def noPermissionsSet():
-	print 'Warning: Permissions could not be set'
+	print_( 'Warning: Permissions could not be set' , 2 )
 
 def noReference():
-	print 'The specified node is not a reference'
+	print_( 'The specified node is not a reference' , 1 )
 
 def noRefPbl():
-	print 'Cannot publish referenced assets'
+	print_( 'Cannot publish referenced assets' , 1 )
 
 def noRefTag():
-	print 'No reference tag found'
+	print_( 'No reference tag found' , 1 )
 
 def noRendersPbl():
-	print 'No renders have been published'
+	print_( 'No renders have been published' , 1 )
 
 def noSel():
-	print 'Nothing selected'
+	print_( 'Nothing selected' , 2 )
 
 def noSeq(dir):
-	print '\nNo sequence or bad sequence format found in\n\n%s\n\nSequences must have the format [<file_name>.<padding>.<extension>]' % dir
+	print_( '\nNo sequence or bad sequence format found in\n\n%s\n\nSequences must have the format [<file_name>.<padding>.<extension>]' % dir , 2 )
 
 def noSetsPbl():
-	print 'Sets cannot be selected for publishing'
+	print_( 'Sets cannot be selected for publishing' , 1 )
 
 def noShot(shot):
-	print 'Warning: No valid shots found in job path "%s".' % shot
+	print_( 'Warning: No valid shots found in job path "%s".' % shot , 2 )
 
 def notCamera():
-	print 'The current selection is not a camera'
+	print_( 'The current selection is not a camera' , 2 )
 
 def noVersion():
-	print 'No versioning detected'
+	print_( 'No versioning detected' , 1 )
 
 def notVersionManagerCompatible(icSet):
-	print 'The selected ICSet is not compatible with Version Manager'
+	print_( 'The selected ICSet is not compatible with Version Manager' , 1 )
 
 def pblFeed(msg=None, begin=None, end=None):
 	if msg:
-		print msg
+		print_( msg )
 		return
 	if begin:
-		print 'Publishing...'
+		print_( 'Publishing...' , 3 )
 		return
 	if end:
-		print 'Done.'
+		print_( 'Done.' , 3 )
 		return
 
 def pblRollback():
 	msg = 'Current publish has been rolled back. No changes made.\nCheck console output for details'
-	print msg
+	print_( msg , 1 )
 	return msg
 
 def pblAssetReq():
-	print 'Animation can only be published from published assets'
+	print_( 'Animation can only be published from published assets' , 1 )
 
 def pointCloudParticle():
-	print 'pointCloud publishing requires a particle or nParticle object'
+	print_( 'pointCloud publishing requires a particle or nParticle object' , 1 )
 
 def processing(asset=None):
-	print 'processing: %s...' % asset
+	print_( 'processing: %s...' % asset , 3 )
 
 def recentFiles_notWritten():
-	print 'Warning: unable to write recent files configuration file.'
+	print_( 'Warning: unable to write recent files configuration file.' , 2 )
 
 def redFields():
-	print 'All fields in red are mandatory'
+	print_( 'All fields in red are mandatory' , 1 )
 
 def renderElements(layer=None, pass_=None, versionHeader=False):
 	if versionHeader:
-		print '\n\nRENDER PUBLISH INFO: %s\n--\n[<layer>_<pass>]\n--' % versionHeader
+		print_( '\n\nRENDER PUBLISH INFO: %s\n--\n[<layer>_<pass>]\n--' % versionHeader , 3 )
 		return
 	else:
-		print '[%s_%s]' % (layer, pass_)
+		print_( '[%s_%s]' % (layer, pass_) , 3 )
 
 def settingsData_written(settingsType):
-	print "%s settings data file saved." % settingsType
+	print_( "%s settings data file saved." % settingsType , 3 )
 
 def settingsData_notWritten(settingsType):
-	print "Warning: %s settings data file could not be saved." % settingsType
+	print_( "Error: %s settings data file could not be saved." % settingsType , 1 )
 
 def settingsData_notFound(settingsType, dataFile=""):
-	print "Warning: %s settings data file not found: %s" % (settingsType, dataFile)
+	print_( "Warning: %s settings data file not found: %s" % (settingsType, dataFile) , 2 )
 
 def settingsData_convert(settingsFile):
-	print "Converting %s.py to %s.xml" % (settingsFile, settingsFile)
+	print_( "Converting %s.py to %s.xml" % (settingsFile, settingsFile) , 3 )
 
 def shaderLinkError(shaderRelinkResult):
-	print 'Shader link error: The following objects could not be relinked.\n%s' % shaderRelinkResult
+	print_( 'Shader link error: The following objects could not be relinked.\n%s' % shaderRelinkResult , 1 )
 
 def shaderSupport():
-	print 'The specified node is not a shading group'
+	print_( 'The specified node is not a shading group' , 2 )
 
 def userPrefs_notWritten():
-	print 'Warning: unable to write user prefs configuration file.'
+	print_( 'Warning: unable to write user prefs configuration file.' , 2 )
 
 def xmlData_readError(datafile):
-	print "Warning: XML data file is invalid or doesn't exist: %s" % datafile
+	print_( "Warning: XML data file is invalid or doesn't exist: %s" % datafile , 2 )
 

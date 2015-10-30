@@ -6,6 +6,7 @@
 # Manages OS operations
 
 import os, re
+import verbose
 
 
 def createDir(path, umask='000'):
@@ -54,7 +55,7 @@ def hardLink(source, destination, umask='000'):
 	else:
 		cmdStr = '%s; ln -f %s %s' % (setUmask(umask), source, destination)
 
-	#print cmdStr
+	verbose.print_(cmdStr, 4)
 	os.system(cmdStr)
 
 	return destination
@@ -71,7 +72,7 @@ def recurseRemove(path):
 	else:
 		cmdStr = 'rm -rf %s' % path
 
-	#print cmdStr
+	verbose.print_(cmdStr, 4)
 	os.system(cmdStr)
 
 	return path
@@ -85,7 +86,7 @@ def copy(source, destination):
 	else:
 		cmdStr = 'cp -rf %s %s' % (source, destination)
 
-	#print cmdStr
+	verbose.print_(cmdStr, 4)
 	os.system(cmdStr)
 
 
@@ -100,7 +101,7 @@ def copyDirContents(source, destination, umask='000'):
 	else:
 		cmdStr = '%s; cp -rf %s %s' % (setUmask(umask), src, dst)
 
-	#print cmdStr
+	verbose.print_(cmdStr, 4)
 	os.system(cmdStr)
 
 

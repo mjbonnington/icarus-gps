@@ -51,6 +51,7 @@ fi
 # Add bash aliases.
 alias shot="cd $SHOTPATH"
 alias cls="clear"
+alias dir="ls -l"
 alias ll="ls -ltr"
 alias lseq="$PIPELINE/core/libs/shared/sequenceLs.py"
 alias submit="$PIPELINE/core/tools/gpsSubmit/submit__main__.py"

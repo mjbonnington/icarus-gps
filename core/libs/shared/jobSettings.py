@@ -9,6 +9,7 @@
 # Manipulates job settings data stored in an XML database
 
 
+import re
 import xml.etree.ElementTree as ET
 import xmlData
 
@@ -99,4 +100,25 @@ class jobSettings(xmlData.xmlData):
 		#appElem = self.root.find("./data[@category='apps']/app[@name='%s']" %app)
 		#return appElem.attrib['version']
 		return self.root.find( "./data[@category='apps']/%s" %app ).text
+
+
+	def autoFill(self, path):
+		""" Auto-fill the job and project number fields
+		"""
+		self.setValue('job', 'projnum', self.parseJobPath(path, 'projnum'))
+		self.setValue('job', 'jobnum', self.parseJobPath(path, 'jobnum'))
+
+
+	def parseJobPath(self, path, element):
+		""" Find the element (project number, job number) in the job path
+		"""
+		if element == 'projnum':
+			pattern = re.compile(r'\d{6}')
+		elif element == 'jobnum':
+			pattern = re.compile(r'\d{7}')
+		match = pattern.search(path)
+		if match is not None:
+			return match.group()
+
+		return ""
 
