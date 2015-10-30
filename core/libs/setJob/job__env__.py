@@ -10,14 +10,46 @@
 
 
 import os, sys
-import jobs, jobSettings, appPaths, verbose
+import jobs, jobSettings, osOps, appPaths, verbose
 
 
-# Set job and shot environment variables
 def setEnv(envVars):
+	""" Set job and shot environment variables.
+	"""
 	job, shot, shotPath = envVars
+
+
+	def getInheritedValue(category, setting):
+		""" First try to get the value from the shot data, if it returns nothing then look in job data instead
+		"""
+		value = shotData.getValue(category, setting)
+		if value == "":
+			value = jobData.getValue(category, setting)
+		#	if value == "":
+		#		value = defaultData.getValue(category, setting)
+
+		return value
+
+
+	def getAppExecPath(app):
+		""" Return the path to the executable for the specified app on the current OS
+		"""
+		#return ap.getPath(app, jobData.getValue('apps', app), currentOS)
+		return ap.getPath(app, getInheritedValue('apps', app), currentOS)
+
+
 	jobDataPath = os.path.join(os.path.split(shotPath)[0], os.environ['DATAFILESRELATIVEDIR'])
 	shotDataPath = os.path.join(shotPath, os.environ['DATAFILESRELATIVEDIR'])
+
+	# Set basic environment variables
+	os.environ['SHOTPATH'] = os.path.normpath(shotPath)
+	os.environ['JOBPATH'] = os.path.normpath( os.path.split(os.environ['SHOTPATH'])[0] )
+	os.environ['JOBDATA'] = os.path.normpath( os.path.join(os.environ['JOBPATH'], os.environ['DATAFILESRELATIVEDIR']) )
+	os.environ['SHOTDATA'] = os.path.normpath(shotDataPath)
+	os.environ['JOB'] = job
+	os.environ['SHOT'] = shot
+
+	osOps.createDir(os.environ['JOBDATA'])
 
 	# Instantiate job / shot settings classes
 	jobData = jobSettings.jobSettings()
@@ -26,32 +58,24 @@ def setEnv(envVars):
 
 	jobDataLoaded = jobData.loadXML(os.path.join(jobDataPath, 'jobData.xml'))
 	shotDataLoaded = shotData.loadXML(os.path.join(shotDataPath, 'shotData.xml'))
-	ap.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'appPaths.xml'))
+	ap.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'appPaths.xml'))
 
 	# If XML files don't exist, create defaults, and attempt to convert data from Python data files
 	if not jobDataLoaded:
 		import legacySettings
 
-		# Create defaults
-		#legacySettings.createDefaults('Job')
-
-		# If jobData.py exists, convert data to XML
+		# Try to convert from jobData.py to XML (legacy jobs)
 		if legacySettings.convertJobData(jobDataPath, jobData, ap):
 			jobData.loadXML()
+		else:
+			return False
 
 	if not shotDataLoaded:
 		import legacySettings
 
-		# Create defaults
-		#legacySettings.createDefaults('Shot')
-
-		# If jobData.py exists, convert data to XML
+		# Try to convert from shotData.py to XML (legacy jobs)
 		if legacySettings.convertShotData(shotDataPath, shotData):
 			shotData.loadXML()
-	#	else:
-	#		# Inherit from job data (defaults)...
-	#		pass
-
 
 	# Set OS identifier strings to get correct app executable paths
 	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
@@ -61,20 +85,6 @@ def setEnv(envVars):
 	elif os.environ['ICARUS_RUNNING_OS'] == 'Linux':
 		currentOS = 'linux'
 
-	def getInheritedValue(category, setting):
-		""" First try to get the value from the shot data, if it returns nothing then look in job data instead
-		"""
-		value = shotData.getValue(category, setting)
-		if value == "":
-			value = jobData.getValue(category, setting)
-
-		return value
-
-	def getAppExecPath(app):
-		""" Return the path to the executable for the specified app on the current OS
-		"""
-		#return ap.getPath(app, jobData.getValue('apps', app), currentOS)
-		return ap.getPath(app, getInheritedValue('apps', app), currentOS)
 
 	# Terminal / Command Prompt
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
@@ -88,12 +98,6 @@ def setEnv(envVars):
 	#os.environ['JOBSROOTLINUX'] = jobs.linux_root # not currently required as Linux & OSX mount points should be the same
 
 	# Job / shot env
-	os.environ['SHOTPATH'] = os.path.normpath(shotPath)
-	os.environ['JOBPATH'] = os.path.normpath( os.path.split(os.environ['SHOTPATH'])[0] )
-	os.environ['JOBDATA'] = os.path.normpath( os.path.join(os.environ['JOBPATH'], os.environ['DATAFILESRELATIVEDIR']) )
-	os.environ['SHOTDATA'] = os.path.normpath(shotDataPath)
-	os.environ['JOB'] = job
-	os.environ['SHOT'] = shot
 	os.environ['PRODBOARD'] = getInheritedValue('other', 'prodboard')
 	os.environ['PROJECTTOOLS'] = getInheritedValue('other', 'projtools') # Is this necessary?
 	#os.environ['FRAMEVIEWER'] = os.path.normpath(jobData.frameViewer)
@@ -225,4 +229,6 @@ def setEnv(envVars):
 	# Deadline Monitor / Slave
 	os.environ['DEADLINEMONITORVERSION'] = getAppExecPath('DeadlineMonitor')
 	os.environ['DEADLINESLAVEVERSION'] = getAppExecPath('DeadlineSlave')
+
+	return True
 

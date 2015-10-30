@@ -391,12 +391,17 @@ class icarusApp(QtGui.QDialog):
 	def setupJob(self):
 		self.job = self.ui.job_comboBox.currentText()
 		self.shot = self.ui.shot_comboBox.currentText()
-		setJob.setup(self.job, self.shot)
-		self.adjustPblTypeUI()
-		self.populatePblShotLs()
-		self.populateGatherShotLs()
-		self.connectNewSignalsSlots()
-		self.lockJobUI()
+		if setJob.setup(self.job, self.shot):
+			self.adjustPblTypeUI()
+			self.populatePblShotLs()
+			self.populateGatherShotLs()
+			self.connectNewSignalsSlots()
+			self.lockJobUI()
+		else:
+			verbose.defaultJobSettings()
+			#print "Unable to load job settings. Default values have been applied.\nPlease review the settings in the editor and click Save when done."
+			if self.openSettings("Job", autoFill=True):
+				self.setupJob()
 
 	#updates and locks UI job tab
 	def lockJobUI(self):
@@ -513,7 +518,7 @@ Environment: %s
 		about.msg(about_msg)
 
 
-	def openSettings(self, settingsType):
+	def openSettings(self, settingsType, autoFill=False):
 		""" Open settings dialog
 		"""
 		if settingsType == "Job":
@@ -524,34 +529,34 @@ Environment: %s
 			xmlData = os.path.join(os.environ['SHOTDATA'], 'shotData.xml')
 		import job_settings__main__
 		reload(job_settings__main__)
-		settingsEditor = job_settings__main__.settingsDialog(settingsType=settingsType, categoryLs=categoryLs, xmlData=xmlData)
+		settingsEditor = job_settings__main__.settingsDialog(settingsType=settingsType, categoryLs=categoryLs, xmlData=xmlData, autoFill=autoFill)
 		@settingsEditor.customSignal.connect
 		def storeAttr(attr):
 			settingsEditor.currentAttr = attr # a bit hacky - need to find a way to add this function to main class
 		settingsEditor.show()
 		settingsEditor.exec_()
+		return settingsEditor.returnValue # return True if user clicked Save, False for Cancel
 
 
 	def jobSettings(self):
 		""" Open job settings dialog wrapper function
 		"""
-		self.openSettings("Job")
-		#self.setupJob()
-		setJob.setup(self.job, self.shot)
+		if self.openSettings("Job"):
+			setJob.setup(self.job, self.shot) # Set up environment variables
 
 
 	def shotSettings(self):
 		""" Open shot settings dialog wrapper function
 		"""
-		self.openSettings("Shot")
-		#self.setupJob()
-		setJob.setup(self.job, self.shot)
+		if self.openSettings("Shot"):
+			setJob.setup(self.job, self.shot) # Set up environment variables
 
 
 	def userSettings(self):
 		""" Open user settings dialog wrapper function
 		"""
-		self.openSettings("User")
+		if self.openSettings("User"):
+			pass
 
 
 	#runs launch maya procedure

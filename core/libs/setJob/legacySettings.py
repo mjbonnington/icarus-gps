@@ -9,7 +9,7 @@
 # Fallback functions to convert job and shot data from python files (legacy) to XML, if XML files don't exist.
 
 
-import os, re, sys
+import os, sys
 import verbose
 
 
@@ -25,20 +25,6 @@ def convertAppExecPath(app, path, ap):
 	return ""
 
 
-def parseJobPath(path, element):
-	""" Find the element (project number, job number) in the job path.
-	"""
-	if element == 'projnum':
-		pattern = re.compile(r'\d{6}')
-	elif element == 'jobnum':
-		pattern = re.compile(r'\d{7}')
-	match = pattern.search(path)
-	if match is not None:
-		return match.group()
-
-	return ""
-
-
 def convertJobData(jobDataPath, jd, ap):
 	""" Read job data from python source and save out an XML file.
 	"""
@@ -51,8 +37,8 @@ def convertJobData(jobDataPath, jd, ap):
 		sys.path.remove(jobDataPath)
 
 		# Job settings
-		jd.setValue('job', 'projnum', parseJobPath(jobDataPath, 'projnum'))
-		jd.setValue('job', 'jobnum', parseJobPath(jobDataPath, 'jobnum'))
+		#jd.setValue('job', 'projnum', parseJobPath(jobDataPath, 'projnum'))
+		#jd.setValue('job', 'jobnum', parseJobPath(jobDataPath, 'jobnum'))
 
 		# Units settings
 		jd.setValue('units', 'linear', jobData.unit)

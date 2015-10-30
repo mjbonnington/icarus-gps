@@ -27,7 +27,7 @@ class settingsDialog(QtGui.QDialog):
 	# Custom signals
 	customSignal = Signal(str)
 
-	def __init__(self, parent=None, settingsType="Generic", categoryLs=[], xmlData=None):
+	def __init__(self, parent=None, settingsType="Generic", categoryLs=[], xmlData=None, autoFill=False):
 		#QtGui.QDialog.__init__(self, parent)
 		super(settingsDialog, self).__init__()
 		self.ui = Ui_Dialog()
@@ -44,8 +44,11 @@ class settingsDialog(QtGui.QDialog):
 		self.settingsType = settingsType
 		self.categoryLs = categoryLs
 		self.xmlData = xmlData
+		self.autoFill = autoFill
 
 		self.lockUI = True
+
+		self.returnValue = False
 
 		# Instantiate XML data classes
 		self.jd = jobSettings.jobSettings()
@@ -158,6 +161,13 @@ class settingsDialog(QtGui.QDialog):
 
 		# Load values into form widgets
 		widgets = self.ui.settings_frame.children()
+
+		# Run special function to autofill the project and job number fields - must happen before we set the widget values for defaults to work correctly
+		if category == 'job' and self.autoFill:
+			# Attempt to auto-fill the job and project number fields
+			#self.jd.setValue('job', 'projnum', self.parseJobPath(self.xmlData, 'projnum'))
+			#self.jd.setValue('job', 'jobnum', self.parseJobPath(self.xmlData, 'jobnum'))
+			self.jd.autoFill(self.xmlData)
 
 		# Run special function to deal with units panel - must happen before we set the widget values for defaults to work correctly
 		if category == 'units':
@@ -684,12 +694,16 @@ class settingsDialog(QtGui.QDialog):
 		"""
 		if self.save():
 			self.hide()
+			self.returnValue = True
+		else:
+			self.exit() # There's a bug where all property panel widgets become visible if a save fails. As a quick dodgy workaround we exit so we don't see it happen.
 
 
 	def exit(self):
 		""" Exit the dialog
 		"""
 		self.hide()
+		self.returnValue = False
 
 
 if __name__ == "__main__":

@@ -18,10 +18,21 @@ def setup(job, shot):
 	"""
 	shotPath = getPath(job, shot)
 	envVars = job, shot, shotPath
-	job__env__.setEnv(envVars)
-	defaultDirs.create()
-	newEntry = '%s,%s' % (job, shot)
-	userPrefs.edit('main', 'lastjob', newEntry)
+
+	# Create environment variables
+	if job__env__.setEnv(envVars):
+
+		# Create folder structure
+		defaultDirs.create()
+
+		# Remember for next time
+		newEntry = '%s,%s' % (job, shot)
+		userPrefs.edit('main', 'lastjob', newEntry)
+
+		return True
+
+	else:
+		return False
 
 
 def getPath(job, shot=False):
@@ -77,12 +88,12 @@ def checkShot(shotPath):
 	valid = True
 
 	jobPath = os.path.split(shotPath)[0]
-	jobDataDir = os.path.join(jobPath, os.environ['DATAFILESRELATIVEDIR'])
+	#jobDataDir = os.path.join(jobPath, os.environ['DATAFILESRELATIVEDIR'])
 	shotDataDir = os.path.join(shotPath, os.environ['DATAFILESRELATIVEDIR'])
 
-	if not os.path.isdir(jobDataDir):
-		valid = False
-		#verbose.settingsData_notFound('Job', jobDataDir)
+	#if not os.path.isdir(jobDataDir):
+	#	valid = False
+	#	#verbose.settingsData_notFound('Job', jobDataDir)
 
 	if not os.path.isdir(shotDataDir):
 		valid = False
