@@ -128,10 +128,13 @@ class settingsDialog(QtGui.QDialog):
 	def importUI(self, ui_file, frame):
 		""" Import specified UI file and insert into specified frame
 		"""
-		exec('from %s import *' %ui_file)
-		#exec('reload(%s)' %ui_file)
-		properties_panel = Ui_settings_frame()
-		properties_panel.setupUi(frame)
+		try:
+			exec('from %s import *' %ui_file)
+			#exec('reload(%s)' %ui_file)
+			properties_panel = Ui_settings_frame()
+			properties_panel.setupUi(frame)
+		except ImportError:
+			print "Error: The '%s' properties panel could not be loaded." % ui_file
 
 
 	def openProperties(self, category, storeProperties=True):

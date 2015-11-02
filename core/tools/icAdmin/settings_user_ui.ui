@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>settings_frame</class>
+ <widget class="QFrame" name="settings_frame">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>160</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <property name="frameShape">
+   <enum>QFrame::NoFrame</enum>
+  </property>
+  <layout class="QFormLayout" name="formLayout">
+   <property name="fieldGrowthPolicy">
+    <enum>QFormLayout::ExpandingFieldsGrow</enum>
+   </property>
+   <item row="0" column="0">
+    <widget class="QLabel" name="userPrefs_label">
+     <property name="text">
+      <string>User preferences location:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <layout class="QHBoxLayout" name="userPrefs_horizontalLayout">
+     <item>
+      <widget class="QRadioButton" name="userPrefsServer_radioButton">
+       <property name="text">
+        <string>Server</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="userPrefsHome_radioButton">
+       <property name="text">
+        <string>Home folder</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="1">
+    <widget class="QCheckBox" name="minimiseOnLaunch_checkBox">
+     <property name="text">
+      <string>Minimise Icarus UI on application launch</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <property name="xmlTag" stdset="0">
+      <string>minimiseOnLaunch</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="numRecentFiles_label">
+     <property name="text">
+      <string>Number of recent files:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="verbosity_label">
+     <property name="text">
+      <string>Output message verbosity:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <layout class="QHBoxLayout" name="numRecentFiles_horizontalLayout">
+     <item>
+      <widget class="QSpinBox" name="numRecentFiles_spinBox">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>20</number>
+       </property>
+       <property name="value">
+        <number>10</number>
+       </property>
+       <property name="xmlTag" stdset="0">
+        <string>numRecentFiles</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="3" column="1">
+    <layout class="QHBoxLayout" name="verbosity_horizontalLayout">
+     <item>
+      <widget class="QSpinBox" name="verbosity_spinBox">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="maximum">
+        <number>4</number>
+       </property>
+       <property name="value">
+        <number>3</number>
+       </property>
+       <property name="xmlTag" stdset="0">
+        <string>verbosity</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="vebosityInfo_label">
+       <property name="text">
+        <string>Errors and warnings</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>numRecentFiles_spinBox</tabstop>
+  <tabstop>userPrefsServer_radioButton</tabstop>
+  <tabstop>userPrefsHome_radioButton</tabstop>
+  <tabstop>verbosity_spinBox</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

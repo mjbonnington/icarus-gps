@@ -82,9 +82,10 @@ class icarusApp(QtGui.QDialog):
 		self.actionNukeX = QtGui.QAction("NukeX", None)
 		self.actionNukeX.triggered.connect(self.launchNukeX)
 		self.ui.nuke_pushButton.addAction(self.actionNukeX)
-		self.actionNukeStudio = QtGui.QAction("NukeStudio", None)
-		self.actionNukeStudio.triggered.connect(self.launchNukeStudio)
-		self.ui.nuke_pushButton.addAction(self.actionNukeStudio)
+	#	self.actionNukeStudio = QtGui.QAction("NukeStudio", None)
+	#	self.actionNukeStudio.triggered.connect(self.launchNukeStudio)
+	#	self.ui.nuke_pushButton.addAction(self.actionNukeStudio)
+		# [removed NukeStudio Launcher until properly supported in Icarus]
 
 		#Review
 		self.ui.openReview_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
@@ -116,13 +117,14 @@ class icarusApp(QtGui.QDialog):
 		self.actionSubmitLocal.triggered.connect(self.launchSubmitRender)
 		self.ui.render_pushButton.addAction(self.actionSubmitLocal)
 
-		#self.ui.settings_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-		#self.actionAbout = QtGui.QAction("About", None)
-		#self.actionAbout.triggered.connect(self.about)
-		#self.ui.settings_toolButton.addAction(self.actionAbout)
-		#self.actionPrefs = QtGui.QAction("User Preferences", None)
-		#self.actionPrefs.triggered.connect(openDirs.openShot)
-		#self.ui.settings_toolButton.addAction(self.actionPrefs)
+		# About menu
+	#	self.ui.about_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+	#	self.actionAbout = QtGui.QAction("About", None)
+	#	self.actionAbout.triggered.connect(self.about)
+	#	self.ui.about_toolButton.addAction(self.actionAbout)
+	#	self.actionPrefs = QtGui.QAction("User Preferences", None)
+	#	self.actionPrefs.triggered.connect(self.userSettings)
+	#	self.ui.about_toolButton.addAction(self.actionPrefs)
 
 	##########################################UI adapt environment awareness##########################################
 	##################################################################################################################
@@ -527,6 +529,9 @@ Environment: %s
 		elif settingsType == "Shot":
 			categoryLs = ['time', 'resolution', 'units']
 			xmlData = os.path.join(os.environ['SHOTDATA'], 'shotData.xml')
+		elif settingsType == "User":
+			categoryLs = ['user', ]
+			xmlData = os.path.join(os.environ['ICUSERPREFS'], 'userPrefs.xml')
 		import job_settings__main__
 		reload(job_settings__main__)
 		settingsEditor = job_settings__main__.settingsDialog(settingsType=settingsType, categoryLs=categoryLs, xmlData=xmlData, autoFill=autoFill)
