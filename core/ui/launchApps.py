@@ -15,48 +15,48 @@ import verbose, osOps
 
 def maya():
 	verbose.launchApp('Maya')
-	cmdStr = '%s; "%s" -proj %s' % (osOps.setUmask(), os.environ['MAYAVERSION'], os.environ['MAYADIR'])
+	cmdStr = '"%s" -proj %s' % (os.environ['MAYAVERSION'], os.environ['MAYADIR'])
 	verbose.print_(cmdStr, 4)
 	subprocess.Popen(cmdStr, shell=True)
 
 def mudbox():
 	verbose.launchApp('Mudbox')
-	cmdStr = '%s; "%s"' % (osOps.setUmask(), os.environ['MUDBOXVERSION'])
+	cmdStr = '"%s"' % os.environ['MUDBOXVERSION']
 	verbose.print_(cmdStr, 4)
 	subprocess.Popen(cmdStr, shell=True)
 
 def mari():
 	verbose.launchApp('Mari')
-	cmdStr = '%s; "%s"' % (osOps.setUmask(), os.environ['MARIVERSION'])
+	cmdStr = '"%s"' % os.environ['MARIVERSION']
 	verbose.print_(cmdStr, 4)
 	subprocess.Popen(cmdStr, shell=True)
 
 def hieroPlayer():
 	verbose.launchApp('HieroPlayer')
-	cmdStr = '%s; "%s" -q' % (osOps.setUmask(), os.environ['HIEROPLAYERVERSION'])
+	cmdStr = '"%s" -q' % os.environ['HIEROPLAYERVERSION']
 	verbose.print_(cmdStr, 4)
 	subprocess.Popen(cmdStr, shell=True)
 
 def deadlineMonitor():
 	verbose.launchApp('Deadline Monitor')
-	cmdStr = '%s; "%s"' % (osOps.setUmask(), os.environ['DEADLINEMONITORVERSION'])
+	cmdStr = '"%s"' % os.environ['DEADLINEMONITORVERSION']
 	verbose.print_(cmdStr, 4)
 	subprocess.Popen(cmdStr, shell=True)
 
 def deadlineSlave():
 	verbose.launchApp('Deadline Slave')
-	cmdStr = '%s; "%s"' % (osOps.setUmask(), os.environ['DEADLINESLAVEVERSION'])
+	cmdStr = '"%s"' % os.environ['DEADLINESLAVEVERSION']
 	verbose.print_(cmdStr, 4)
 	subprocess.Popen(cmdStr, shell=True)
 
 def nuke(nukeType):
 	verbose.launchApp(nukeType)
 	if nukeType in ('nuke', 'Nuke'):
-		cmdStr = '%s; "%s"' % (osOps.setUmask(), os.environ['NUKEVERSION'])
+		cmdStr = '"%s"' % os.environ['NUKEVERSION']
 	elif nukeType in ('nukex', 'NukeX'):
-		cmdStr = '%s; "%s" --nukex' % (osOps.setUmask(), os.environ['NUKEVERSION'])
+		cmdStr = '"%s" --nukex' % os.environ['NUKEVERSION']
 	elif nukeType in ('nukestudio', 'NukeStudio'):
-		cmdStr = '%s; "%s" --studio' % (osOps.setUmask(), os.environ['NUKEVERSION'])
+		cmdStr = '"%s" --studio' % os.environ['NUKEVERSION']
 	verbose.print_(cmdStr, 4)
 	subprocess.Popen(cmdStr, shell=True)
 
@@ -65,7 +65,7 @@ def realflow():
 	import startup
 	verbose.launchApp('RealFlow')
 	startup.autoDeploy()
-	cmdStr = '%s; "%s"' % (osOps.setUmask(), os.environ['REALFLOWVERSION'])
+	cmdStr = '"%s"' % os.environ['REALFLOWVERSION']
 	verbose.print_(cmdStr, 4)
 	subprocess.Popen(cmdStr, shell=True)
 
