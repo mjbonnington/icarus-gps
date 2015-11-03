@@ -123,4 +123,4 @@ def addDataElements():
 		print 'vrayRE_uvf element already exsits. Skipped'
 
 	#changes the bit depth from 16 to 32 bit exr
-	mc.setAttr("vraySettings.imgOpt_exr_bitsPerChannel", 32)
+	#mc.setAttr("vraySettings.imgOpt_exr_bitsPerChannel", 32)
