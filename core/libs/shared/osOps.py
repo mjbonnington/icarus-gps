@@ -22,6 +22,7 @@ def createDir(path, umask='000'):
 		else:
 			os.system('%s; mkdir -p %s' % (setUmask(umask), path))
 
+		verbose.print_("mkdir %s" %path, 4)
 		return path
 
 
@@ -62,7 +63,7 @@ def hardLink(source, destination, umask='000'):
 
 
 def recurseRemove(path):
-	""" Removes files or folders recursively
+	""" Removes files or folders recursively - could be rewritten to use shutil.rmtree
 	"""
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
 		if os.path.isdir(path):

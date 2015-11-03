@@ -7,6 +7,7 @@
 #djv operations module
 
 import os, subprocess
+import verbose
 
 #processes image sequences
 def prcImg(input, output, startFrame, endFrame, inExt, outExt='jpg', fps=os.environ['FPS']):
@@ -51,27 +52,30 @@ def prcQt(input, output, startFrame, endFrame, inExt, name='preview', fps=os.env
 	os.system(djvCmd)
 
 
-def viewer(path=os.environ['SHOTPATH']):
+def viewer(path=None):
 	""" Launch djv_view.
 		If path is specified and is a file, automatically load sequence.
 		If path is a directory, start in that directory.
 		If path is not specified, use shot directory.
 	"""
+	if path is None:
+		path=os.environ['SHOTPATH']
+
 	# Export path to djv codec libraries according to OS
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		command_str = ""
+		cmdStr = ""
 	elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-		command_str = "export DYLD_FALLBACK_LIBRARY_PATH=%s; " %os.environ['DJV_LIB']
+		cmdStr = "export DYLD_FALLBACK_LIBRARY_PATH=%s; " %os.environ['DJV_LIB']
 	else:
-		command_str = "export LD_LIBRARY_PATH=%s; export LIBQUICKTIME_PLUGIN_DIR=%s; " %(os.environ['DJV_LIB'], os.path.join(os.environ['DJV_LIB'],'libquicktime'))
+		cmdStr = "export LD_LIBRARY_PATH=%s; export LIBQUICKTIME_PLUGIN_DIR=%s; " %(os.environ['DJV_LIB'], os.path.join(os.environ['DJV_LIB'],'libquicktime'))
 
 	# Build the command based on whether path is a file or a directory
 	if os.path.isdir(path):
-		command_str += "cd %s; %s" %(path, os.environ['DJV_PLAY'])
+		cmdStr += "cd %s; %s" %(path, os.environ['DJV_PLAY'])
 	elif os.path.isfile(path):
-		command_str += "cd %s; %s %s" %(os.path.dirname(path), os.environ['DJV_PLAY'], path)
+		cmdStr += "cd %s; %s %s" %(os.path.dirname(path), os.environ['DJV_PLAY'], path)
 
 	# Call command with subprocess in order to not lock the system while djv is running
-	#print command_str
-	subprocess.Popen(command_str, shell=True)
+	verbose.print_(cmdStr, 4)
+	subprocess.Popen(cmdStr, shell=True)
 

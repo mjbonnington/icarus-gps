@@ -55,14 +55,30 @@ def create():
 			osOps.createDir(uDir)
 
 	# RealFlow
-	for directory in ('.cmdsOrg', ): # Something wrong here? Need to figure out what it should be
+	for directory in ('.cmdsOrg', ): # Trailing comma required to make iterable, otherwise for loop will iterate over string, i.e. '.', 'c', 'm', 'd', etc.
 		uDir = os.path.join(os.environ['REALFLOWSCENESDIR'], directory)
 		if not os.path.isdir(uDir):
 			osOps.createDir(uDir)
 
-	# env
+	# Plate directories
+	plates = (os.environ['RESOLUTION'], os.environ['PROXY_RESOLUTION'])
+	platesDir = os.path.join(os.environ['SHOTPATH'], 'Plate')
+	if not os.path.isdir(platesDir):
+		osOps.createDir(platesDir)
+	# Delete any pre-existing redundant plate directories that are empty
+	for directory in os.listdir(platesDir):
+		existingDir = os.path.join(platesDir, directory)
+		if os.path.isdir(existingDir) and not os.listdir(existingDir):
+			if directory not in plates:
+				osOps.recurseRemove(existingDir)
+	# Create plate directory named with resolution
+	for directory in plates:
+		plateDir = os.path.join(platesDir, directory)
+		if not os.path.isdir(plateDir):
+			osOps.createDir(plateDir)
+
+	# Published assets
 	for directory in (os.environ['JOBAPPROVEDPUBLISHDIR'], os.environ['SHOTAPPROVEDPUBLISHDIR'], os.environ['JOBPUBLISHDIR'], os.environ['SHOTPUBLISHDIR']):
 		if not os.path.isdir(directory):
-			#os.system('mkdir -p %s' % dir)
 			osOps.createDir(directory)
 
