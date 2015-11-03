@@ -1,13 +1,17 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:djvOps
-#copyright	:Gramercy Park Studios
 
+# [Icarus] djvOps.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2015 Gramercy Park Studios
+#
+# djv_view operations module.
 
-#djv operations module
 
 import os, subprocess
 import verbose
+
 
 #processes image sequences
 def prcImg(input, output, startFrame, endFrame, inExt, outExt='jpg', fps=os.environ['FPS']):
@@ -26,6 +30,7 @@ def prcImg(input, output, startFrame, endFrame, inExt, outExt='jpg', fps=os.envi
 	djvCmd = '%s; %s %s %s -speed %s' % (libsExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, fps)
 
 	os.system(djvCmd)
+
 
 #processes quicktime movies
 def prcQt(input, output, startFrame, endFrame, inExt, name='preview', fps=os.environ['FPS'], resize=None):
@@ -58,22 +63,32 @@ def viewer(path=None):
 		If path is a directory, start in that directory.
 		If path is not specified, use shot directory.
 	"""
+	cmdStr = ""
+
 	if path is None:
 		path=os.environ['SHOTPATH']
 
+	# Get starting directory
+	if os.path.isdir(path):
+		startupDir = path
+	elif os.path.isfile(path):
+		startupDir = os.path.dirname(path)
+
 	# Export path to djv codec libraries according to OS
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		cmdStr = ""
+		cmdStr += "cd /d %s & " % startupDir
 	elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-		cmdStr = "export DYLD_FALLBACK_LIBRARY_PATH=%s; " %os.environ['DJV_LIB']
+		cmdStr += "export DYLD_FALLBACK_LIBRARY_PATH=%s; " %os.environ['DJV_LIB']
+		cmdStr += "cd %s; " % startupDir
 	else:
-		cmdStr = "export LD_LIBRARY_PATH=%s; export LIBQUICKTIME_PLUGIN_DIR=%s; " %(os.environ['DJV_LIB'], os.path.join(os.environ['DJV_LIB'],'libquicktime'))
+		cmdStr += "export LD_LIBRARY_PATH=%s; export LIBQUICKTIME_PLUGIN_DIR=%s; " %(os.environ['DJV_LIB'], os.path.join(os.environ['DJV_LIB'],'libquicktime'))
+		cmdStr += "cd %s; " % startupDir
 
 	# Build the command based on whether path is a file or a directory
 	if os.path.isdir(path):
-		cmdStr += "cd %s; %s" %(path, os.environ['DJV_PLAY'])
+		cmdStr += os.environ['DJV_PLAY']
 	elif os.path.isfile(path):
-		cmdStr += "cd %s; %s %s" %(os.path.dirname(path), os.environ['DJV_PLAY'], path)
+		cmdStr += "%s %s" %(os.environ['DJV_PLAY'], path)
 
 	# Call command with subprocess in order to not lock the system while djv is running
 	verbose.print_(cmdStr, 4)

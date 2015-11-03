@@ -167,9 +167,6 @@ class settingsDialog(QtGui.QDialog):
 
 		# Run special function to autofill the project and job number fields - must happen before we set the widget values for defaults to work correctly
 		if category == 'job' and self.autoFill:
-			# Attempt to auto-fill the job and project number fields
-			#self.jd.setValue('job', 'projnum', self.parseJobPath(self.xmlData, 'projnum'))
-			#self.jd.setValue('job', 'jobnum', self.parseJobPath(self.xmlData, 'jobnum'))
 			self.jd.autoFill(self.xmlData)
 
 		# Run special function to deal with units panel - must happen before we set the widget values for defaults to work correctly
