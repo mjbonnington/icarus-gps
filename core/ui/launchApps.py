@@ -10,7 +10,7 @@
 
 
 import os, sys, subprocess
-import verbose, osOps
+import verbose
 
 
 def maya():

@@ -87,7 +87,7 @@ for base in bases:
 		fr_range = sequence.numRange(frame_ls)
 
 		# Print output
-		print "%s[%s]%s" %(base, fr_range, ext)
+		print "%s[%s]%s (%d)" %(base, fr_range, ext, len(frame_ls))
 
 	except (ValueError):
 		pass

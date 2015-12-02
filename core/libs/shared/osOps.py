@@ -1,9 +1,13 @@
 #!/usr/bin/python
-#support    :Nuno Pereira - nuno.pereira@gps-ldn.com
-#title      :osOps
-#copyright  :Gramercy Park Studios
 
-# Manages OS operations
+# [Icarus] osOps.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2015 Gramercy Park Studios
+#
+# This module acts as a wrapper for low-level OS operations.
+
 
 import os, re
 import verbose
@@ -22,7 +26,7 @@ def createDir(path, umask='000'):
 		else:
 			os.system('%s; mkdir -p %s' % (setUmask(umask), path))
 
-		verbose.print_("mkdir %s" %path, 4)
+		#verbose.print_("mkdir %s" %path, 4) # commenting this line out as it causes an error if user config dir doesn't exist
 		return path
 
 

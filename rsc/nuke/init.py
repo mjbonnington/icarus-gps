@@ -1,10 +1,14 @@
 #!/usr/bin/python
-#support   :Nuno Pereira - nuno.pereira@gps-ldn.com
-#support   :Mike Bonnington - mike.bonnington@gps-ldn.com
-#title     :init.py
-#copyright :Gramercy Park Studios
 
-# This file contains Nuke's initializing procedures
+# [GPS] init.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2015 Gramercy Park Studios
+#
+# This file contains Nuke's initialisation procedures.
+
+
 import os, sys
 
 # Set up path remapping for cross-platform support

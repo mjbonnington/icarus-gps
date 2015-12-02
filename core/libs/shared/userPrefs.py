@@ -1,7 +1,11 @@
 #!/usr/bin/python
-#support	:Mike Bonnington - mike.bonnington@gps-ldn.com
-#title		:userPrefs
-#copyright	:Gramercy Park Studios
+
+# [Icarus] userPrefs.py
+#
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2015 Gramercy Park Studios
+#
+# Manages user preferences stored in .ini files via Python's ConfigParser module.
 
 
 from ConfigParser import SafeConfigParser

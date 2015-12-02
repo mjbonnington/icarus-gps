@@ -28,11 +28,12 @@ def gather(gatherPath):
 		if not os.path.isfile(animFile):
 			verbose.noAsset()
 			return
-	
+
 		#loading ATOM animation plugin if needed
 		mayaAppPath = os.path.split(os.environ['MAYAVERSION'])[0]
-		mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins', 'atomImportExport.bundle'), qt=True)
-		
+		#mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins', 'atomImportExport.bundle'), qt=True)
+		mc.loadPlugin('atomImportExport', qt=True)
+
 		#gathering
 		allObjLs = mc.listRelatives(icData.asset, ad=True, f=True, typ='transform')
 		if allObjLs:
