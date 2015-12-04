@@ -1,7 +1,13 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title		:menu
-#copyright	:Gramercy Park Studios
+
+# [GPS] menu.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2015 Gramercy Park Studios
+#
+# Customises Nuke's menus and toolbars.
+
 
 #third party gizmos and plugins menu build
 import pixelfudger
@@ -9,14 +15,14 @@ import pixelfudger
 import gpsSave
 
 
-#getting if running app is Nuke or Nukex
+# Detect if running app is Nuke or NukeX
 if nuke.env['nukex']:
 	nukeType = 'nukex'
 else:
 	nukeType = 'nuke'
 
 
-#command strings
+# Command strings
 readNode = 'import gpsNodes; gpsNodes.read_create()'
 writeNode = 'import gpsNodes; gpsNodes.write_create()'
 save = 'import gpsSave; gpsSave.save(incr=False)'
@@ -114,8 +120,10 @@ browseMenu_gps.addCommand('Browse Elements Library', openElementsLibDir)
 
 #IMAGE MENU
 imageMenu = nodesMenu.menu('Image')
-imageMenu.addCommand('[GPS] Read', readNode, 'r', icon='newScript.png', index=0)
-imageMenu.addCommand('[GPS] Write', writeNode, 'w', icon='newScript.png', index=1)
+#imageMenu.addCommand('[GPS] Read', readNode, 'r', icon='newScript.png', index=0)
+#imageMenu.addCommand('[GPS] Write', writeNode, 'w', icon='newScript.png', index=1)
+imageMenu.addCommand('[GPS] Read', readNode, icon='newScript.png', index=0)
+imageMenu.addCommand('[GPS] Write', writeNode, icon='newScript.png', index=1)
 
 
 #FILE MENU

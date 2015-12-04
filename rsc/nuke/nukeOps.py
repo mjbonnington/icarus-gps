@@ -1,10 +1,14 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:nukeOps
-#copyright	:Gramercy Park Studios
+
+# [GPS] nukeOps.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2015 Gramercy Park Studios
+#
+# Nuke operations module.
 
 
-#nuke opeartions module
 import os
 import nuke
 

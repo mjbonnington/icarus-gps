@@ -1,12 +1,18 @@
 #!/usr/bin/python
-#support		:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:gpsNodes
-#copyright	:Gramercy Park Studios
+
+# [GPS] gpsNodes.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2015 Gramercy Park Studios
+#
+# GPS custom nodes.
+
 
 import os
 import nuke
 import gpsSave, vCtrl, osOps
-	
+
 
 ##########################################GPS READ#############################################
 ###############################################################################################
