@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# [GPS] Maya Ops
+# [GPS] mayaOps.py
 # v0.1
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>

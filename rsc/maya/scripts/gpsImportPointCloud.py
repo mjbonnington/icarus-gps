@@ -1,8 +1,14 @@
-# GPS Import Point Cloud
-# v0.2
+#!/usr/bin/python
+
+# [GPS] Import Point Cloud
+# v0.3
 #
-# Nuno Pereira / Michael Bonnington 2014
-# Gramercy Park Studios
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# (c) 2014-2015 Gramercy Park Studios
+#
+# Import point cloud and photogrammetry camera position data into Maya.
+
 
 import math, time, re, os
 import numpy as np
@@ -14,17 +20,19 @@ import maya.mel as mel
 class gpsImportPointCloud():
 
 	def __init__(self):
-		self.winTitle = "GPS Import Point Cloud"
+		self.winTitle = "[GPS] Import Point Cloud"
 		self.winName = "gpsImportPointCloud"
 		self.gMainProgressBar = mel.eval('$tmp = $gMainProgressBar')
+
+		#self.dataFormats = "Plain text (*.txt);;ASCII X,Y,Z (*.xyz)"
 
 		self.pcExt = ".txt"
 		self.camExt = ".chan"
 
 
 	def UI(self):
-		"""Create UI"""
-
+		""" Create UI.
+		"""
 		# Check if UI window already exists
 		if mc.window(self.winName, exists=True):
 			mc.deleteUI(self.winName)
@@ -38,7 +46,7 @@ class gpsImportPointCloud():
 		self.fileOptUI("fileOpt", "windowRoot")
 		mc.separator(height=8, style="none")
 		mc.rowLayout(numberOfColumns=2)
-		mc.button("btnImport", width=198, height=28, label="Import", command=lambda *args: self.getCloud(), enable=False)
+		mc.button("btnImport", width=198, height=28, label="Import", command=lambda *args: self.importData(), enable=False)
 		mc.button("btnClose", width=198, height=28, label="Close", command=lambda *args: mc.deleteUI(self.winName))
 		#setUITemplate -popTemplate;
 
@@ -46,8 +54,8 @@ class gpsImportPointCloud():
 
 
 	def fileOptUI(self, name, parent, collapse=False):
-		"""Create panel UI controls"""
-
+		""" Create panel UI controls.
+		"""
 		mc.frameLayout(width=400, collapsable=True, cl=collapse, borderStyle="etchedIn", label="Read Data")
 		mc.columnLayout(name)
 
@@ -76,8 +84,8 @@ class gpsImportPointCloud():
 
 
 	def checkFileExists(self):
-		"""Check specified point cloud file exists, and attempt to load associated camera data file"""
-
+		""" Check specified point cloud file exists, and attempt to load associated camera data file.
+		"""
 		filePath = mc.textField("pointCloudPath", query=True, text=True)
 		chanPath = filePath.replace(self.pcExt, self.camExt)
 
@@ -88,8 +96,8 @@ class gpsImportPointCloud():
 
 
 	def fileBrowse(self, value, format):
-		"""Browse for a data file."""
-
+		""" Browse for a data file.
+		"""
 		startingDir = mc.workspace(expandName=mc.workspace(fileRuleEntry="translatorData"))
 		filePath = mc.fileDialog2(dialogStyle=2, fileMode=1, dir=startingDir, fileFilter=format)
 		if filePath:
@@ -97,9 +105,9 @@ class gpsImportPointCloud():
 			self.checkFileExists()
 
 
-	def getCloud(self):
-		"""docstring for getCloud"""
-
+	def importData(self):
+		""" Import data.
+		"""
 		pointCloudPath = mc.textField("pointCloudPath", query=True, text=True)
 		cameraDataPath = mc.textField("cameraDataPath", query=True, text=True)
 
@@ -114,8 +122,8 @@ class gpsImportPointCloud():
 
 
 	def importPointCloud(self, filePath):
-		"""Read data from file and generate point cloud"""
-
+		""" Read data from file and generate point cloud.
+		"""
 		if os.path.isfile(filePath): # Check file exists
 
 			# Read data into numpy array
@@ -163,8 +171,8 @@ class gpsImportPointCloud():
 
 
 	def importCameraData(self, filePath):
-		"""Read data from file and generate projection cameras"""
-
+		""" Read data from file and generate projection cameras.
+		"""
 		if os.path.isfile(filePath): # Check file exists
 
 			# Read data into numpy array
@@ -201,10 +209,11 @@ class gpsImportPointCloud():
 
 
 def createImagePlanes(self, arg):
-	"""NOT YET IMPLEMENTED
-    The idea is to find a way to store camera names in the .chan file from
-    Photoscan, based on the photo filename, then use that to automatically
-    create image planes with the appropriate images."""
+	""" NOT YET IMPLEMENTED
+    	The idea is to find a way to store camera names in the .chan file from
+    	Photoscan, based on the photo filename, then use that to automatically
+    	create image planes with the appropriate images.
+    """
 
 	path = "/Volumes/hggl_SAN_1/Project_Media/110053_The_Louvre/2009753_The_Louvre/Vfx/PC010/3D/photoscan/sourceImages/charles/atrium_Undistorted/atrium_undistorted/proxy"
 	portrait = True
@@ -230,8 +239,9 @@ def createImagePlanes(self, arg):
 
 
 	def importPointCloudX(self, filePath):
-		"""Read data from file - Old method"""
-
+		""" Read data from file - old method.
+			Kept here for completeness.
+		"""
 		if os.path.isfile(filePath): # Check file exists
 
 			# Read data into numpy array
