@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# [GPS] Maya Ops
+# [GPS] mayaOps.py
 # v0.1
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
@@ -282,8 +282,8 @@ def exportAll(pathToPblAsset, fileType):
 ##############exports animation curves via atom###########
 def exportAnimation(pathToPblAsset, pblDir, objLs):
 	mayaAppPath = os.path.split(os.environ['MAYAVERSION'])[0]
-	plugin = os.path.join(mayaAppPath, 'plug-ins/atomImportExport.bundle')
-	mc.loadPlugin(plugin, qt=True)
+	#plugin = os.path.join(mayaAppPath, 'plug-ins/atomImportExport.bundle')
+	mc.loadPlugin('atomImportExport', qt=True)
 	startFr = mc.playbackOptions(min=True, q=True)
 	endFr = mc.playbackOptions(max=True, q=True)
 	mc.select(objLs[0], r=True)
@@ -297,7 +297,7 @@ def exportAnimation(pathToPblAsset, pblDir, objLs):
 def exportGeo(objLs, geoType, pathToPblAsset):
 	mayaAppPath = os.path.split(os.environ['MAYAVERSION'])[0]
 	if geoType == 'abc':
-		plugin = os.path.join(mayaAppPath, 'plug-ins/AbcExport.bundle')
+		plugin = 'AbcExport'
 		mc.loadPlugin(plugin, qt=True)
 		minFrame = int(mc.playbackOptions(min=True, q=True))
 		maxFrame = int(mc.playbackOptions(max=True, q=True))
@@ -319,12 +319,12 @@ def exportGeo(objLs, geoType, pathToPblAsset):
 	if geoType == 'obj':
 		fileType = 'OBJexport'
 		fileExtension = '.obj'
-		plugin = os.path.join(mayaAppPath, 'plug-ins/objExport.bundle')
+		plugin = 'objExport'
 		fileOptions = 'groups=1;ptgroups=1;materials=0;smoothing=1;normals=1'
 	elif geoType == 'fbx':
 		fileType = 'FBX export'
 		fileExtension = '.fbx'
-		plugin = os.path.join(mayaAppPath, 'plug-ins/fbxmaya.bundle')
+		plugin = 'fbxmaya'
 		fileOptions = 'v=0'
 	mc.loadPlugin(plugin, qt=True)
 	mc.select(objLs[0])

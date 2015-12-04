@@ -1,7 +1,13 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title		:gpsSave
-#copyright	:Gramercy Park Studios
+
+# [GPS] gpsSave.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2015 Gramercy Park Studios
+#
+# Custom file saving procedures.
+
 
 import os
 import nuke
@@ -9,7 +15,7 @@ import recentFiles, osOps
 
 
 def updateRecentFilesMenu(menu):
-	""" Populates the recent files menu, disables it if no recent files in list
+	""" Populates the recent files menu, disables it if no recent files in list.
 	"""
 	enable = True;
 	fileLs = recentFiles.getLs('nuke') # explicitly stating 'nuke' environment to get around 'nuke_tmp' fix
@@ -32,7 +38,7 @@ def updateRecentFilesMenu(menu):
 
 
 def updateRecentFiles(script=None):
-	""" Adds a script to the recent files list config file. If script is not specified use current script name
+	""" Adds a script to the recent files list config file. If script is not specified use current script name.
 	"""
 	if script == None:
 		script = os.path.abspath( nuke.value("root.name") )

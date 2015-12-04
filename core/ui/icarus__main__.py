@@ -1,12 +1,12 @@
 #!/usr/bin/python
 
-# Icarus icarus__main__
+# [Icarus] icarus__main__.py
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) Gramercy Park Studios 2015
+# (c) 2013-2015 Gramercy Park Studios
 #
-# Launches and controls Icarus main UI
+# Launches and controls the Icarus main UI.
 
 
 from PySide import QtCore, QtGui

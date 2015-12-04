@@ -38,17 +38,20 @@ def gather(gatherPath):
 		if not os.path.isfile(assetPath):
 			verbose.noAsset()
 			return
-	
+
 		#loads the appropriate plugin if needed
 		mayaAppPath = os.path.split(os.environ['MAYAVERSION'])[0]
 		if assetExt == 'abc':
-			mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins', 'AbcImport.bundle'), qt=True)
+			#mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins', 'AbcImport.bundle'), qt=True)
+			mc.loadPlugin('AbcImport', qt=True)
 		elif assetExt == 'fbx':
-			mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins', 'fbxmaya.bundle'), qt=True)
+			#mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins', 'fbxmaya.bundle'), qt=True)
+			mc.loadPlugin('fbxmaya', qt=True)
 		elif assetExt == 'obj':
-			mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins', 'objExport.bundle'), qt=True)
-		
-	
+			#mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins', 'objExport.bundle'), qt=True)
+			mc.loadPlugin('objExport', qt=True)
+
+
 		#gathering
 		drawOverrides = True
 		if icData.assetType == 'ma_shot':

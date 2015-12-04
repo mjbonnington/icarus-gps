@@ -16,7 +16,7 @@ if not userPrefs.config.has_option('main', 'verbosity'):
 
 
 def print_(message, verbosityLevel=3, log=False):
-	""" print_( the message to the console. If log is True, the messages will be written to a logfile (not yet implemented)
+	""" print the message to the console. If log is True, the messages will be written to a logfile (not yet implemented)
 
 		Verbosity Levels:
 		0 - Nothing is output
