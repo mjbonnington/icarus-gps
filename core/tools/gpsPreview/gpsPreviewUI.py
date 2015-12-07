@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'gpsPreviewUI.ui'
 #
-# Created: Tue May  5 14:01:09 2015
-#      by: pyside-uic 0.2.13 running on PySide 1.1.1
+# Created: Mon Dec 07 19:34:57 2015
+#      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -39,9 +39,12 @@ class Ui_Dialog(object):
         self.file_label.setObjectName("file_label")
         self.file_horizontalLayout.addWidget(self.file_label)
         self.file_lineEdit = QtGui.QLineEdit(self.main_frame)
-        self.file_lineEdit.setProperty("mandatoryField", True)
+        self.file_lineEdit.setProperty("mandatoryField", False)
         self.file_lineEdit.setObjectName("file_lineEdit")
         self.file_horizontalLayout.addWidget(self.file_lineEdit)
+        self.reset_toolButton = QtGui.QToolButton(self.main_frame)
+        self.reset_toolButton.setObjectName("reset_toolButton")
+        self.file_horizontalLayout.addWidget(self.reset_toolButton)
         self.verticalLayout_3.addLayout(self.file_horizontalLayout)
         self.res_range_horizontalLayout = QtGui.QHBoxLayout()
         self.res_range_horizontalLayout.setObjectName("res_range_horizontalLayout")
@@ -69,7 +72,7 @@ class Ui_Dialog(object):
         self.x_lineEdit = QtGui.QLineEdit(self.resolution_groupBox)
         self.x_lineEdit.setEnabled(False)
         self.x_lineEdit.setText("")
-        self.x_lineEdit.setProperty("mandatoryField", True)
+        self.x_lineEdit.setProperty("mandatoryField", False)
         self.x_lineEdit.setObjectName("x_lineEdit")
         self.res_horizontalLayout.addWidget(self.x_lineEdit)
         self.x_label = QtGui.QLabel(self.resolution_groupBox)
@@ -78,7 +81,7 @@ class Ui_Dialog(object):
         self.y_lineEdit = QtGui.QLineEdit(self.resolution_groupBox)
         self.y_lineEdit.setEnabled(False)
         self.y_lineEdit.setText("")
-        self.y_lineEdit.setProperty("mandatoryField", True)
+        self.y_lineEdit.setProperty("mandatoryField", False)
         self.y_lineEdit.setObjectName("y_lineEdit")
         self.res_horizontalLayout.addWidget(self.y_lineEdit)
         self.verticalLayout.addLayout(self.res_horizontalLayout)
@@ -99,7 +102,7 @@ class Ui_Dialog(object):
         self.start_lineEdit = QtGui.QLineEdit(self.range_groupBox)
         self.start_lineEdit.setEnabled(False)
         self.start_lineEdit.setText("")
-        self.start_lineEdit.setProperty("mandatoryField", True)
+        self.start_lineEdit.setProperty("mandatoryField", False)
         self.start_lineEdit.setObjectName("start_lineEdit")
         self.range_horizontalLayout.addWidget(self.start_lineEdit)
         self.range_label = QtGui.QLabel(self.range_groupBox)
@@ -108,7 +111,7 @@ class Ui_Dialog(object):
         self.end_lineEdit = QtGui.QLineEdit(self.range_groupBox)
         self.end_lineEdit.setEnabled(False)
         self.end_lineEdit.setText("")
-        self.end_lineEdit.setProperty("mandatoryField", True)
+        self.end_lineEdit.setProperty("mandatoryField", False)
         self.end_lineEdit.setObjectName("end_lineEdit")
         self.range_horizontalLayout.addWidget(self.end_lineEdit)
         self.verticalLayout_2.addLayout(self.range_horizontalLayout)
@@ -160,8 +163,9 @@ class Ui_Dialog(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "GPS - Preview", None, QtGui.QApplication.UnicodeUTF8))
+        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "[GPS] Preview", None, QtGui.QApplication.UnicodeUTF8))
         self.file_label.setText(QtGui.QApplication.translate("Dialog", "File:", None, QtGui.QApplication.UnicodeUTF8))
+        self.reset_toolButton.setText(QtGui.QApplication.translate("Dialog", "<", None, QtGui.QApplication.UnicodeUTF8))
         self.resolution_groupBox.setTitle(QtGui.QApplication.translate("Dialog", "Resolution", None, QtGui.QApplication.UnicodeUTF8))
         self.resolution_comboBox.setItemText(0, QtGui.QApplication.translate("Dialog", "150%", None, QtGui.QApplication.UnicodeUTF8))
         self.resolution_comboBox.setItemText(1, QtGui.QApplication.translate("Dialog", "125%", None, QtGui.QApplication.UnicodeUTF8))
