@@ -1,16 +1,23 @@
 #!/usr/bin/python
-#support		:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:gpsPreview
+
+# [GPS Preview] gpsPreview__main__.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2014-2015 Gramercy Park Studios
+#
+# GPS Preview: a generic UI for previewing animations, replaces Maya's playblast interface.
+
 
 import os, subprocess
 from PySide import QtCore, QtGui
 from gpsPreviewUI import *
 import djvOps, verbose, appConnect, userPrefs, osOps
 
-#launches and controls GPS Preview UI
 
 class previewUI(QtGui.QDialog):
-	
+	""" Launches and controls GPS Preview UI.
+	"""
 	def __init__(self, parent = None):
 		super(previewUI, self).__init__(parent)
 		self.ui = Ui_Dialog()
@@ -25,6 +32,7 @@ class previewUI(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.preview_pushButton, QtCore.SIGNAL("clicked()"), self.preview)
 		QtCore.QObject.connect(self.ui.resolution_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.updateResGrp)
 		QtCore.QObject.connect(self.ui.range_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.updateRangeGrp)
+		QtCore.QObject.connect(self.ui.reset_toolButton, QtCore.SIGNAL('clicked()'), self.resetFilename)
 
 		self.ui.offscreen_checkBox.stateChanged.connect(self.setOffscreen)
 		self.ui.noSelection_checkBox.stateChanged.connect(self.setNoSelection)
@@ -65,7 +73,16 @@ class previewUI(QtGui.QDialog):
 			self.ui.x_lineEdit.setText(os.environ['GPSPREVIEW_HRES'])
 			self.ui.y_lineEdit.setText(os.environ['GPSPREVIEW_VRES'])
 		except KeyError:
+			#self.ui.file_lineEdit.setText('<Scene>')
+			self.resetFilename()
 			pass
+
+
+	def resetFilename(self):
+		""" Reset filename field to use scene/script/project filename.
+		"""
+		self.ui.file_lineEdit.setText(appConnect.getScene())
+
 
 	#updates resolution group UI based on combo box selection
 	def updateResGrp(self):
