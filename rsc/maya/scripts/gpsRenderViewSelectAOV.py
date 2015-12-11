@@ -150,7 +150,7 @@ class selectAOV():
 
 		# Store the current frame number
 		self.frame = mc.currentTime( query=True )
-	 
+
 
 	def post_render(self):
 		""" Function to execute when a render finishes.
