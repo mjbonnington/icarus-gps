@@ -348,24 +348,44 @@ class icarusApp(QtGui.QDialog):
 				
 	##############################################Job management tab##############################################
 	##############################################################################################################
-	#populates shot drop down menu
+
 	def populateShots(self):
+		""" Populates shot drop down menu.
+		"""
+		# Remove all items
 		for shot in range(0, self.ui.shot_comboBox.count(), 1):
 			self.ui.shot_comboBox.removeItem(0)
+
 		selJob = self.ui.job_comboBox.currentText()
 		shotLs = setJob.listShots(selJob)
+
+		# Add shots...
 		if shotLs:
 			for shot in shotLs:
 				self.ui.shot_comboBox.insertItem(0, shot)
-			self.ui.shot_comboBox.setCurrentIndex(0)
+
+			# Try to set current item in combo box to the current shot 
+			try:
+				index = self.ui.shot_comboBox.findText(self.shot)
+			except AttributeError:
+				index = 0
+
+			if 0 <= index < len(shotLs):
+				self.ui.shot_comboBox.setCurrentIndex(index)
+			else:
+				self.ui.shot_comboBox.setCurrentIndex(0)
+
 			self.ui.shot_comboBox.setEnabled(True)
 			self.ui.setShot_label.setEnabled(True)
 			self.ui.setShot_pushButton.setEnabled(True)
+
+		# No shots detected...
 		else:
 			self.ui.shot_comboBox.insertItem(0, '[None]')
 			self.ui.shot_comboBox.setEnabled(False)
 			self.ui.setShot_label.setEnabled(False)
 			self.ui.setShot_pushButton.setEnabled(False)
+
 
 	#populates publish shot drop down menu	
 	def populatePblShotLs(self):
@@ -405,8 +425,10 @@ class icarusApp(QtGui.QDialog):
 			if self.openSettings("Job", autoFill=True):
 				self.setupJob()
 
-	#updates and locks UI job tab
+
 	def lockJobUI(self):
+		""" Updates and locks UI job tab.
+		"""
 		self.updateJobLabel()
 		self.ui.shotSetup_groupBox.setEnabled(False)
 		self.ui.launchApp_groupBox.setEnabled(True)
@@ -418,13 +440,19 @@ class icarusApp(QtGui.QDialog):
 		self.ui.shotEnv_toolButton.show()
 		self.ui.setNewShot_pushButton.show()
 		verbose.jobSet(self.job, self.shot)
-	
-	#unlocks UI if set new shot is clicked
+
+
 	def unlockJobUI(self):
+		""" Unlocks UI if 'Set New Shot' is clicked.
+		"""
+		# Re-scan for shots
+		self.populateShots()
+
 		self.ui.shotSetup_groupBox.setEnabled(True)
 		self.ui.launchApp_groupBox.setEnabled(False)
 		self.ui.launchOptions_groupBox.setEnabled(False)
-		#removing publish and assets tab
+
+		# Remove publish and assets tab
 		self.ui.tabWidget.removeTab(1); self.ui.tabWidget.removeTab(1)
 		for row in range(self.ui.renderPbl_tableWidget.rowCount()):
 			self.ui.renderPbl_tableWidget.removeRow(0)
@@ -435,6 +463,7 @@ class icarusApp(QtGui.QDialog):
 		self.ui.shotEnv_toolButton.hide()
 		self.ui.setNewShot_pushButton.hide()
 		self.ui.setShot_pushButton.show()
+
 
 	#controls phonon preview player
 	def previewPlayerCtrl(self, show=False, hide=False, play=False, loadImg=None):
