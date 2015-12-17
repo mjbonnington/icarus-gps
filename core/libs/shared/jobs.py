@@ -19,13 +19,14 @@ try:
 	tree = ET.parse(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'jobs.xml'))
 	root = tree.getroot()
 
-	win_root = root.find('jobs-root/win').text
-	osx_root = root.find('jobs-root/osx').text
-	linux_root = root.find('jobs-root/linux').text
+	# Get OS-specific root paths defined in jobs.xml. Always replace any backslashes with forward-slashes...
+	win_root = root.find('jobs-root/win').text.replace("\\", "/")
+	osx_root = root.find('jobs-root/osx').text.replace("\\", "/")
+	linux_root = root.find('jobs-root/linux').text.replace("\\", "/")
 
 	for job in root.findall('job'):
 		if job.get('active') == 'True': # Only add jobs tagged as 'active'
-			jobpath = job.find('path').text
+			jobpath = job.find('path').text.replace("\\", "/")
 
 			# Temporary (?) fix for cross-platform paths
 			if os.environ['ICARUS_RUNNING_OS'] == 'Windows':

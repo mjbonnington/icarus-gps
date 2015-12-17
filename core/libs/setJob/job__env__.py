@@ -152,6 +152,7 @@ def setEnv(envVars):
 	os.environ['PYTHONPATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'maya__env__') + os.pathsep + os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'scripts')
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
 		os.environ['PYTHONPATH'] = "C:\ProgramData\Redshift\Plugins\Maya\Common\scripts" + os.pathsep + os.environ['PYTHONPATH'] # Hack for Redshift/XGen
+		os.environ['redshift_LICENSE'] = "62843@10.105.11.11" # Temporary fix for Redshift license - this should be set via a system environment variable
 	os.environ['MAYA_DEBUG_ENABLE_CRASH_REPORTING'] = '0'
 	os.environ['MAYA_PLUG_IN_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'plugins')
 	#os.environ['MAYA_SHELF_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shelves')
