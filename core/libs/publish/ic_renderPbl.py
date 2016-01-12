@@ -6,7 +6,7 @@
 
 #render publish module
 import os, sys, traceback
-import pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, approvePbl, djvOps, inProgress
+import pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, djvOps, inProgress
 
 def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 	
@@ -24,14 +24,11 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 	#processing asset publish options
 	assetPblName, assetDir, pblDir = pblOptsPrc.prc(pblTo, subsetName, assetType, prefix, convention, suffix)
 	renderRootPblDir = pblDir
-	
-	#approved publish directory
-	apvDir = os.environ['SHOTAPPROVEDPUBLISHDIR']
-	
+
 	#version control
 	currentVersion = '%s' % vCtrl.version(pblDir, current=True)
 	version = '%s' % vCtrl.version(pblDir)
-	
+
 	#checks if no main layer was set and cancels publish if publishin first version
 	if version == 'v001':
 		if not mainLayer:
@@ -126,16 +123,13 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 		apvFile = open(os.path.join(pblDir, 'approved.ic'), 'w')
 		apvFile.write(str(approved))
 		apvFile.close
-			
-		#Approving publish
-		if approved:
-			approvePbl.publish(apvDir, pblDir, assetDir, assetType, version)
+
 
 		#deleting in progress tmp file
 		inProgress.end(pblDir)			
-		
+
 		verbose.pblFeed(end=True)
-		
+
 	except:
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)

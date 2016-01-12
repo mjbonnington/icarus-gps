@@ -301,6 +301,8 @@ def exportGeo(objLs, geoType, pathToPblAsset):
 		mc.loadPlugin(plugin, qt=True)
 		minFrame = int(mc.playbackOptions(min=True, q=True))
 		maxFrame = int(mc.playbackOptions(max=True, q=True))
+		#minFrame = int(os.environ['STARTFRAME'])
+		#maxFrame = int(os.environ['ENDFRAME'])
 		abcJob = '-fr %s %s -s 1 -uv -ws -ef -rt %s -f %s' % (minFrame, maxFrame, objLs[0], pathToPblAsset)
 		mc.AbcExport(j=abcJob)
 		return

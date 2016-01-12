@@ -226,7 +226,7 @@ class selectAOV():
 		if self.renderer == "arnold":
 			img = img_path[0].replace( "<RenderPass>", aov )
 
-		elif self.renderer == "redshift":
+		elif self.renderer == "redshift": # TODO: update this to respect Redshift's AOV name prefix attribute
 			if aov == self.default_beauty_aov_name:
 				img = img_path[0].replace( "<RenderPass>", "Beauty" )
 			else:

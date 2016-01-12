@@ -7,7 +7,7 @@
 #camera publish module
 import os, sys, traceback
 import maya.cmds as mc
-import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, approvePbl, inProgress
+import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, inProgress
 
 def publish(pblTo, slShot, cameraType, pblNotes, mail, approved):
 	
@@ -49,8 +49,7 @@ def publish(pblTo, slShot, cameraType, pblNotes, mail, approved):
 	#processing asset publish options
 	assetPblName, assetDir, pblDir = pblOptsPrc.prc(pblTo, subsetName, assetType, prefix, convention, suffix)
 	assetPblName += '_%s' % slShot
-	apvDir = os.environ['SHOTAPPROVEDPUBLISHDIR']
-	
+
 	#version control	
 	version = '%s' % vCtrl.version(pblDir)
 	if approved:
@@ -89,11 +88,6 @@ def publish(pblTo, slShot, cameraType, pblNotes, mail, approved):
 		mayaOps.exportGeo(objLs, 'fbx', pathToPblAsset)
 		osOps.setPermissions(os.path.join(pblDir, '*'))
 
-		#approving publish
-		if approved:
-			approvePbl.publish(apvDir, pblDir, assetDir, assetType, version)
-
-
 		#deleting in progress tmp file
 		inProgress.end(pblDir)
 
@@ -102,9 +96,9 @@ def publish(pblTo, slShot, cameraType, pblNotes, mail, approved):
 
 		#deleting in progress tmp file
 		inProgress.end(pblDir)
-			
+
 		verbose.pblFeed(end=True)
-	
+
 	except:
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)

@@ -7,7 +7,7 @@
 #pointCloud publish module
 import os, sys, traceback
 import maya.cmds as mc
-import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, approvePbl, inProgress
+import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, inProgress
 
 def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 	
@@ -64,17 +64,14 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 
 	#processing asset publish options
 	assetPblName, assetDir, pblDir = pblOptsPrc.prc(pblTo, subsetName, assetType, prefix, convention, suffix)
-	
-	#determining approved publish directory
+
 	#determining publish env var for relative directory
 	if pblTo != os.environ['JOBPUBLISHDIR']:
 		assetPblName += '_%s' % slShot
 		pblRelDir = '$SHOTPUBLISHDIR'
-		apvDir = os.environ['SHOTAPPROVEDPUBLISHDIR']
 	else:
 		pblRelDir = '$JOBPUBLISHDIR'
-		apvDir = os.environ['JOBAPPROVEDPUBLISHDIR']
-	
+
 	#version control	
 	version = '%s' % vCtrl.version(pblDir)
 	if approved:
@@ -129,17 +126,13 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 		mayaOps.exportGeo(objLs, geoType, pathToPblAsset)
 		#reapplying original tranforms to object
 		mayaOps.applyTransforms(convention, objT, objR, objS)
-		
-		#approving publish
-		if approved:
-			approvePbl.publish(apvDir, pblDir, assetDir, assetType, version)
 
 		#deleting in progress tmp file
 		inProgress.end(pblDir)
 
 		#published asset check
 		pblResult = pblChk.success(pathToPblAsset)
-		
+
 		verbose.pblFeed(end=True)
 
 	except:

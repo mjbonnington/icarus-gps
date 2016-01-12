@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2015 Gramercy Park Studios
+# (c) 2013-2016 Gramercy Park Studios
 #
 # Sets up job- and shot-related environment variables.
 
@@ -100,12 +100,15 @@ def setEnv(envVars):
 	# Job / shot env
 	os.environ['PRODBOARD'] = getInheritedValue('other', 'prodboard')
 	os.environ['PROJECTTOOLS'] = getInheritedValue('other', 'projtools') # Is this necessary?
-	#os.environ['FRAMEVIEWER'] = os.path.normpath(jobData.frameViewer)
-	os.environ['JOBAPPROVEDPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['JOBPATH'], 'Assets', '3D') )
-	#os.environ['JOBAPPROVEDPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['JOBPATH'], 'Publish') ) # changed for consistency
-	os.environ['SHOTAPPROVEDPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['SHOTPATH'], 'Publish') )
-	os.environ['PUBLISHRELATIVEDIR'] = '.publish'
-	os.environ['JOBPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['JOBPATH'] , os.environ['PUBLISHRELATIVEDIR']) )
+#	os.environ['FRAMEVIEWER'] = os.path.normpath(jobData.frameViewer)
+#	os.environ['JOBAPPROVEDPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['JOBPATH'], 'Assets') )
+#	os.environ['SHOTAPPROVEDPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['SHOTPATH'], 'Publish') )
+#	os.environ['PUBLISHRELATIVEDIR'] = '.publish'
+#	os.environ['JOBPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['JOBPATH'] , os.environ['PUBLISHRELATIVEDIR']) )
+#	os.environ['SHOTPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['SHOTPATH'], os.environ['PUBLISHRELATIVEDIR']) )
+	os.environ['PUBLISHRELATIVEDIR'] = 'Assets'
+	#os.environ['GLOBALPUBLISHDIR'] = os.path.normpath( getInheritedValue('other', 'assetlib') ) # Path needs to be translated for OS portability
+	os.environ['JOBPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['JOBPATH'], os.environ['PUBLISHRELATIVEDIR']) )
 	os.environ['SHOTPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['SHOTPATH'], os.environ['PUBLISHRELATIVEDIR']) )
 	os.environ['WIPSDIR'] = os.path.normpath( os.path.join(os.path.split(os.environ['JOBPATH'])[0], 'Deliverables', 'WIPS') )
 	os.environ['ELEMENTSLIBRARY'] = os.path.normpath( getInheritedValue('other', 'elementslib') ) # Path needs to be translated for OS portability
@@ -135,12 +138,12 @@ def setEnv(envVars):
 	os.environ['MARI_CACHE'] = os.environ['MARISCENESDIR']
 	os.environ['MARI_DEFAULT_IMAGEPATH'] = os.path.join(os.environ['MARIDIR'], 'sourceimages', os.environ['USERNAME'])
 	os.environ['MARI_WORKING_DIR'] = os.environ['MARISCENESDIR']
-	os.environ['MARI_DEFAULT_GEOMETRY_PATH'] = os.environ['SHOTAPPROVEDPUBLISHDIR']
+	os.environ['MARI_DEFAULT_GEOMETRY_PATH'] = os.environ['SHOTPUBLISHDIR']
 	os.environ['MARI_DEFAULT_ARCHIVE_PATH'] = os.environ['MARISCENESDIR']
 	os.environ['MARI_DEFAULT_EXPORT_PATH'] = os.environ['MARITEXTURESDIR']
 	os.environ['MARI_DEFAULT_IMPORT_PATH'] = os.environ['MARITEXTURESDIR']
 	os.environ['MARI_DEFAULT_RENDER_PATH'] = os.environ['MARIRENDERSDIR']
-	os.environ['MARI_DEFAULT_CAMERA_PATH'] = os.environ['SHOTAPPROVEDPUBLISHDIR']
+	os.environ['MARI_DEFAULT_CAMERA_PATH'] = os.environ['SHOTPUBLISHDIR']
 	os.environ['MARI_SCRIPT_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'mari', 'scripts')
 	os.environ['MARI_NUKEWORKFLOW_PATH'] = getAppExecPath('Nuke') #jobData.nukeVersion
 	os.environ['MARIVERSION'] = getAppExecPath('Mari') #jobData.mariVersion

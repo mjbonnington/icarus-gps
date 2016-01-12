@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2015 Gramercy Park Studios
+# (c) 2013-2016 Gramercy Park Studios
 #
 # Launches and controls the Icarus main UI.
 
@@ -840,7 +840,7 @@ Environment: %s
 		self.pblNotes = self.ui.notes_textEdit.text() #.toPlainText() # Edited line as notes box is now line edit widget, not text edit
 		self.pblType = self.getPblTab()[1]
 		self.slShot = self.ui.publishToShot_comboBox.currentText()
-		#gets path to publish to. if selected shot doesn't match shot the correct publish path is assigned based on the selected shot
+		# Get path to publish to. If selected shot doesn't match shot the correct publish path is assigned based on the selected shot
 		if self.ui.publishToShot_radioButton.isChecked() == 1:
 			if self.slShot == os.environ['SHOT']:
 				self.pblTo = os.environ['SHOTPUBLISHDIR']
@@ -848,10 +848,10 @@ Environment: %s
 				self.pblTo = os.path.join(os.environ['JOBPATH'], self.slShot, os.environ["PUBLISHRELATIVEDIR"])
 		else:
 			self.pblTo = os.environ["JOBPUBLISHDIR"]
-		if self.ui.approved_checkBox.checkState() == 2:
-			self.approved = True
-		if self.ui.mail_checkBox.checkState() == 2:
-			self.mail = True
+	#	if self.ui.approved_checkBox.checkState() == 2:
+	#		self.approved = True
+	#	if self.ui.mail_checkBox.checkState() == 2:
+	#		self.mail = True
 
 	#gets asset publish options
 	def get_maya_assetPblOpts(self, genericAsset=False):

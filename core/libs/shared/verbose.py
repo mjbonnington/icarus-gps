@@ -103,7 +103,7 @@ def launchApp(application):
 	print_( 'Launching %s...' % application , 3 )
 
 def jobSet(job, shot):
-	print_( 'Job set. Working on %s - %s' % (job, shot) , 3 )
+	print_( 'Shot set: Now working on %s - %s' % (job, shot) , 3 )
 
 def lightLinkError(lightRelinkResult):
 	print_( 'Light link error: The following objects could not be relinked.\n%s' % lightRelinkResult , 1 )

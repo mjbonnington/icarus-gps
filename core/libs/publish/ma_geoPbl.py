@@ -7,7 +7,7 @@
 #geometry publish module
 import os, sys, traceback
 import maya.cmds as mc
-import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, approvePbl, inProgress
+import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, inProgress
 
 def publish(pblTo, slShot, geoType, textures, pblNotes, mail, approved):
 	
@@ -58,15 +58,11 @@ def publish(pblTo, slShot, geoType, textures, pblNotes, mail, approved):
 	#processing asset publish options
 	mayaOps.deleteICDataSet(allObjLs)
 	assetPblName, assetDir, pblDir = pblOptsPrc.prc(pblTo, subsetName, assetType, prefix, convention, suffix)
-	
-	#determining approved publish directory
+
 	#determining publish env var for relative directory
 	if pblTo != os.environ['JOBPUBLISHDIR']:
 		assetPblName += '_%s' % slShot
-		apvDir = os.environ['SHOTAPPROVEDPUBLISHDIR']
-	else:
-		apvDir = os.environ['JOBAPPROVEDPUBLISHDIR']
-	
+
 	#version control	
 	version = '%s' % vCtrl.version(pblDir)
 	if approved:
@@ -108,11 +104,7 @@ def publish(pblTo, slShot, geoType, textures, pblNotes, mail, approved):
 		pathToPblAsset = os.path.join(pblDir, '%s.%s' % (assetPblName, extension))
 		verbose.pblFeed(msg=assetPblName)
 		mayaOps.exportGeo(objLs, geoType, pathToPblAsset)
-		
-		#approving publish
-		if approved:
-			approvePbl.publish(apvDir, pblDir, assetDir, assetType, version)
-			
+
 		#deleting in progress tmp file
 		inProgress.end(pblDir)
 
