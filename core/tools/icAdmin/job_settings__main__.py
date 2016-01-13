@@ -211,10 +211,26 @@ class settingsDialog(QtGui.QDialog):
 					widget.textEdited.connect(signalMapper.map)
 					widget.textEdited.connect( lambda current: self.storeValue(current) )
 
+				# Plain text edit(s)...
+				if isinstance(widget, QtGui.QPlainTextEdit):
+					if text is not "":
+						widget.setPlainText(text)
+					#print "%s: %s" %(attr, widget.text())
+					widget.textChanged.connect(signalMapper.map)
+					widget.textChanged.connect( lambda current: self.storeValue(current) ) # This seems to give an TypeError, but still works as expected
+
 				# Spin box(es)...
 				if isinstance(widget, QtGui.QSpinBox):
 					if text is not "":
 						widget.setValue( int(text) )
+					#print "%s: %s" %(attr, widget.value())
+					widget.valueChanged.connect(signalMapper.map)
+					widget.valueChanged.connect( lambda current: self.storeValue(current) )
+
+				# Double spin box(es)...
+				if isinstance(widget, QtGui.QDoubleSpinBox):
+					if text is not "":
+						widget.setValue( float(text) )
 					#print "%s: %s" %(attr, widget.value())
 					widget.valueChanged.connect(signalMapper.map)
 					widget.valueChanged.connect( lambda current: self.storeValue(current) )
@@ -615,7 +631,7 @@ class settingsDialog(QtGui.QDialog):
 		""" Stores the currently edited attribute value into the XML data
 		"""
 		self.currentValue = str(val) # value must be a string for XML
-		#print '[%s] [%s] : %s' %(self.currentCategory, self.currentAttr, self.currentValue)
+		#verbose.print_('[%s] [%s] : %s' %(self.currentCategory, self.currentAttr, self.currentValue), 4)
 		self.jd.setValue(self.currentCategory, self.currentAttr, self.currentValue)
 
 
@@ -641,18 +657,23 @@ class settingsDialog(QtGui.QDialog):
 
 				# Combo box(es)...
 				if isinstance(widget, QtGui.QComboBox):
-					#print "%s: %s" %(attr, widget.currentText())
+					#verbose.print_("%s: %s" %(attr, widget.currentText()), 4)
 					self.storeValue( widget.currentText() )
 					#self.storeComboBoxValue( widget.currentIndex() )
 
 				# Line edit(s)...
 				if isinstance(widget, QtGui.QLineEdit):
-					#print "%s: %s" %(attr, widget.text())
+					#verbose.print_("%s: %s" %(attr, widget.text()), 4)
 					self.storeValue( widget.text() )
 
+				# Plain text edit(s)...
+				if isinstance(widget, QtGui.QPlainTextEdit):
+					#verbose.print_("%s: %s" %(attr, widget.toPlainText()), 4)
+					self.storeValue( widget.toPlainText() )
+
 				# Spin box(es)...
-				if isinstance(widget, QtGui.QSpinBox):
-					#print "%s: %s" %(attr, widget.value())
+				if isinstance(widget, QtGui.QSpinBox) or isinstance(widget, QtGui.QDoubleSpinBox):
+					#verbose.print_("%s: %s" %(attr, widget.value()), 4)
 					self.storeValue( widget.value() )
 
 

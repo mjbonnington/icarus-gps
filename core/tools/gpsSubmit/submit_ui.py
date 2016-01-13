@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'submit_ui.ui'
 #
-# Created: Thu May  7 14:07:45 2015
-#      by: pyside-uic 0.2.13 running on PySide 1.1.1
+# Created: Wed Jan 13 11:59:33 2016
+#      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -59,6 +59,7 @@ class Ui_Dialog(object):
         self.formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.taskSize_label)
         self.taskSize_spinBox = QtGui.QSpinBox(self.overrideFrameRange_groupBox)
         self.taskSize_spinBox.setMinimum(1)
+        self.taskSize_spinBox.setMaximum(9999)
         self.taskSize_spinBox.setObjectName("taskSize_spinBox")
         self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.taskSize_spinBox)
         self.frameRange_label = QtGui.QLabel(self.overrideFrameRange_groupBox)

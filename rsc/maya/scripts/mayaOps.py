@@ -394,10 +394,13 @@ def getICSetAttrs(ICSet):
 			icSetAttrDic[attr] = (mc.getAttr(attrFullPath))
 	return icSetAttrDic
 
-################gets current maya file####################
+
 def getScene():
+	""" Returns filename and path of currently open scene.
+	"""
 	actFile = mc.file(exn=True, q=True)
 	return actFile
+
 
 #########gets selected obj worldspace transforms##########
 def getTransforms(obj):
@@ -781,36 +784,56 @@ def saveFileAs(filePath, extension, updateRecentFiles=True):
 			recentFiles.updateLs(filename)
 		osOps.setPermissions(filename)
 
-################creates viewport snapshot##################
-def snapShot(pblDir):
-	pbFrame = mc.currentTime(q=True)
-	imgFmtLck = mc.getAttr('defaultRenderGlobals.outf', l=True)
-	imgFmt = int(mc.getAttr('defaultRenderGlobals.imageFormat'))
-	if imgFmtLck:
-		mc.setAttr('defaultRenderGlobals.outf', l=False)
-	mc.setAttr('defaultRenderGlobals.imageFormat', 8)
-	#mc.viewFit(f=1)
-	actSel=mc.ls(sl=True)
+
+def snapShot(output_folder, isolate=True, fit=False):
+	""" Generate viewport snapshot.
+	"""
+	# Get current selection, frame and panel
+	currentSel = mc.ls(sl=True)
+	currentFrame = mc.currentTime(q=True)
+	currentPanel = mc.playblast(ae=True)
+
+	# Isolate the current object
+	if isolate:
+		mc.isolateSelect(currentPanel, state=1)
+		mc.isolateSelect(currentPanel, addSelected=True)
+
+	# Frame view to selection
+	if fit:
+		mc.viewFit(fitFactor=1)
+
+	# Store current selection and deselect all
 	mc.select(cl=True)
-	mc.playblast(f=os.path.join(pblDir, 'preview'), 
-	fr=(pbFrame), 
-	fp=1, 
-	w=512, 
-	h=288, 
-	p=100, 
-	fmt='image',
-	c='jpg',
-	v=False, 
-	os=True, 
-	cc=True, 
-	orn=False)
-	mc.setAttr('defaultRenderGlobals.imageFormat', imgFmt)
-	##RESELECTING USER ORIGINAL SELECTION##
-	for sel in actSel:
+
+	# Generate playblast
+	mc.playblast(completeFilename=os.path.join(output_folder, 'preview.jpg'), 
+	#mc.playblast(filename=os.path.join(output_folder, 'preview'), 
+				 frame=(currentFrame), 
+				 framePadding=4, 
+				 rawFrameNumbers=True, 
+				 width=512, 
+				 height=288, 
+				 percent=100, 
+				 format='image', 
+				 compression='jpg', 
+				 quality=90, 
+				 viewer=False, 
+				 offScreen=True, 
+				 clearCache=True, 
+				 showOrnaments=False)
+
+	# Turn off isolate selection
+	if isolate:
+		mc.isolateSelect(currentPanel, state=0) 
+
+	# Reset view
+	if fit:
+		mc.viewSet(previousView=True)
+
+	# Reselect original selection
+	for sel in currentSel:
 		mc.select(sel, add=True)
-	##RESETING IMAGE FORMAT LOCK TO ORIGINAL STATE###
-	if imgFmtLck:
-		mc.setAttr('defaultRenderGlobals.outf', l=True)
+
 
 #################updates maya scene#######################
 def update():

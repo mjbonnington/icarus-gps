@@ -556,7 +556,7 @@ Environment: %s
 			categoryLs = ['job', 'time', 'resolution', 'units', 'apps', 'other']
 			xmlData = os.path.join(os.environ['JOBDATA'], 'jobData.xml')
 		elif settingsType == "Shot":
-			categoryLs = ['time', 'resolution', 'units']
+			categoryLs = ['time', 'resolution', 'units', 'camera']
 			xmlData = os.path.join(os.environ['SHOTDATA'], 'shotData.xml')
 		elif settingsType == "User":
 			categoryLs = ['user', ]
@@ -856,7 +856,7 @@ Environment: %s
 	#gets asset publish options
 	def get_maya_assetPblOpts(self, genericAsset=False):
 		self.textures, self.subsetName, self.sceneName = '', '', ''
-		self.chkLs = [self.pblNotes]
+		self.chkLs = [] #self.chkLs = [self.pblNotes]
 		if self.ui.textures_checkBox.checkState() == 2:
 			self.textures = True
 		if self.ui.subSet_checkBox.checkState() == 2:
@@ -911,6 +911,7 @@ Environment: %s
 		if self.pblType == 'ma Asset':
 
 			self.get_maya_assetPblOpts()
+			#print self.chkLs
 			if not pblChk.chkOpts(self.chkLs):
 				return
 
@@ -1178,15 +1179,45 @@ Environment: %s
 		searchPath = os.path.join(self.gatherFrom, self.assetType, self.assetName, self.assetSubType)
 		self.fillColumn(self.aVersionCol, searchPath)
 
-	#updates infoField with notes 
+
 	def updateInfoField(self):
+		""" Update info field with notes and other relevant data.
+		"""
 		self.adjustGatherTab(showGatherButton = True)
 		self.assetVersion = self.aVersionCol.currentItem().text()
 		self.gatherPath = os.path.join(self.gatherFrom, self.assetType, self.assetName, self.assetSubType, self.assetVersion)
-		sys.path.append(self.gatherPath)
-		import icData; reload(icData)
-		sys.path.remove(self.gatherPath)
-		self.ui.gatherInfo_textEdit.setText(icData.notes)
+
+	#	sys.path.append(self.gatherPath)
+	#	import icData; reload(icData)
+	#	sys.path.remove(self.gatherPath)
+	#	self.ui.gatherInfo_textEdit.setText(icData.notes)
+
+		import jobSettings
+		# Instantiate XML data classes
+		assetData = jobSettings.jobSettings()
+		assetDataLoaded = assetData.loadXML(os.path.join(self.gatherPath, 'assetData.xml'))
+
+		# If XML files don't exist, create defaults, and attempt to convert data from Python data files
+		if not assetDataLoaded:
+			import legacySettings
+
+			# Try to convert from icData.py to XML (legacy assets)
+			if legacySettings.convertAssetData(self.gatherPath, assetData):
+				assetData.loadXML()
+			else:
+				return False
+
+		# Print info to text field
+		infoText = ""
+		notes = assetData.getValue('asset', 'notes')
+		if notes:
+			infoText += "%s\n\n" % notes
+		infoText += "Published by %s\n%s" % (assetData.getValue('asset', 'user'), assetData.getValue('asset', 'timestamp'))
+		source = assetData.getValue('asset', 'assetSource')
+		if source:
+			infoText += "\nFrom '%s'" % source #os.path.basename(source)
+
+		self.ui.gatherInfo_textEdit.setText(infoText)
 
 
 	def updateImgPreview(self):

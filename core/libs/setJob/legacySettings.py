@@ -1,12 +1,11 @@
 #!/usr/bin/python
 
-# [Icarus] Legacy Settings
-# v0.2
+# [Icarus] legacySettings.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2015 Gramercy Park Studios
+# (c) 2015-2016 Gramercy Park Studios
 #
-# Fallback functions to convert job and shot data from python files (legacy) to XML, if XML files don't exist.
+# Fallback functions to convert job/shot/asset metadata from python files (legacy) to XML, if XML files don't exist.
 
 
 import os, sys
@@ -25,20 +24,20 @@ def convertAppExecPath(app, path, ap):
 	return ""
 
 
-def convertJobData(jobDataPath, jd, ap):
+def convertJobData(dataPath, jd, ap):
 	""" Read job data from python source and save out an XML file.
 	"""
-	if os.path.isfile(os.path.join(jobDataPath, 'jobData.py')):
+	if os.path.isfile(os.path.join(dataPath, 'jobData.py')):
 		verbose.settingsData_convert('jobData')
 
-		sys.path.append(jobDataPath)
+		sys.path.append(dataPath)
 		import jobData
 		reload(jobData)
-		sys.path.remove(jobDataPath)
+		sys.path.remove(dataPath)
 
 		# Job settings
-		#jd.setValue('job', 'projnum', parseJobPath(jobDataPath, 'projnum'))
-		#jd.setValue('job', 'jobnum', parseJobPath(jobDataPath, 'jobnum'))
+		#jd.setValue('job', 'projnum', parseJobPath(dataPath, 'projnum'))
+		#jd.setValue('job', 'jobnum', parseJobPath(dataPath, 'jobnum'))
 
 		# Units settings
 		jd.setValue('units', 'linear', jobData.unit)
@@ -76,16 +75,16 @@ def convertJobData(jobDataPath, jd, ap):
 		return False
 
 
-def convertShotData(shotDataPath, sd):
+def convertShotData(dataPath, sd):
 	""" Read shot data from python source and save out an XML file.
 	"""
-	if os.path.isfile(os.path.join(shotDataPath, 'shotData.py')):
+	if os.path.isfile(os.path.join(dataPath, 'shotData.py')):
 		verbose.settingsData_convert('shotData')
 
-		sys.path.append(shotDataPath)
+		sys.path.append(dataPath)
 		import shotData
 		reload(shotData)
-		sys.path.remove(shotDataPath)
+		sys.path.remove(dataPath)
 
 		# Time settings
 		sd.setValue('time', 'rangeStart', shotData.frRange[0])
@@ -109,5 +108,52 @@ def convertShotData(shotDataPath, sd):
 
 	else:
 		#print "Cannot convert settings: shotData.py not found."
+		return False
+
+
+def convertAssetData(dataPath, ad):
+	""" Read asset data from python source and save out an XML file.
+	"""
+	if os.path.isfile(os.path.join(dataPath, 'icData.py')):
+		verbose.settingsData_convert('icData', 'assetData')
+
+		sys.path.append(dataPath)
+		import icData
+		reload(icData)
+		sys.path.remove(dataPath)
+
+		# Store values
+		ad.setValue('asset', 'assetRootDir', icData.assetRootDir)
+		ad.setValue('asset', 'assetPblName', icData.assetPblName)
+		ad.setValue('asset', 'asset', icData.asset)
+		ad.setValue('asset', 'assetType', icData.assetType)
+		ad.setValue('asset', 'assetExt', icData.assetExt)
+		ad.setValue('asset', 'version', icData.version)
+		ad.setValue('asset', 'requires', icData.requires)
+		ad.setValue('asset', 'compatible', icData.compatible)
+
+		# Parse notes field
+		notesLegacy = icData.notes.rsplit('\n\n', 1)
+		notes = notesLegacy[0]
+		notesFooter = notesLegacy[1].split(' ', 1)
+		username = notesFooter[0]
+		timestamp = notesFooter[1]
+
+		ad.setValue('asset', 'notes', notes)
+		ad.setValue('asset', 'user', username)
+		ad.setValue('asset', 'timestamp', timestamp)
+
+		# Save XML
+		if ad.saveXML():
+			verbose.settingsData_written('Asset')
+			#print "Asset settings data file saved."
+			return True
+		else:
+			verbose.settingsData_notWritten('Asset')
+			#print "Warning: Asset settings data file could not be saved."
+			return False
+
+	else:
+		#print "Cannot convert settings: icData.py not found."
 		return False
 

@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2015 Gramercy Park Studios
+# (c) 2013-2016 Gramercy Park Studios
 #
 # This module processes verbosity printing.
 
@@ -16,7 +16,7 @@ if not userPrefs.config.has_option('main', 'verbosity'):
 
 
 def print_(message, verbosityLevel=3, log=False):
-	""" print the message to the console. If log is True, the messages will be written to a logfile (not yet implemented)
+	""" Print the message to the console. If log is True, the messages will be written to a logfile (not yet implemented)
 
 		Verbosity Levels:
 		0 - Nothing is output
@@ -43,16 +43,16 @@ def appPaths_enterVersion():
 def appPaths_guessPathFailed(os):
 	print_( "Warning: Failed to guess %s path." % os , 2 )
 
-def approval(start=False, end=False):
-	if start:
-		print_( 'Processing approval...' , 3 )
-		return
-	if end:
-		print_( 'Approved.' , 3 )
-		return
-
-def approvalOSError():
-	print_( 'Warning: Some assets may not have gone through the approval process. Some file links may be missing.' , 2 )
+#def approval(start=False, end=False):
+#	if start:
+#		print_( 'Processing approval...' , 3 )
+#		return
+#	if end:
+#		print_( 'Approved.' , 3 )
+#		return
+#
+#def approvalOSError():
+#	print_( 'Warning: Some assets may not have gone through the approval process. Some file links may be missing.' , 2 )
 
 def animRequires(asset):
 	print_( 'Requires %s' % asset , 1 )
@@ -233,8 +233,10 @@ def settingsData_notWritten(settingsType):
 def settingsData_notFound(settingsType, dataFile=""):
 	print_( "Warning: %s settings data file not found: %s" % (settingsType, dataFile) , 2 )
 
-def settingsData_convert(settingsFile):
-	print_( "Converting %s.py to %s.xml" % (settingsFile, settingsFile) , 3 )
+def settingsData_convert(settingsInFile, settingsOutFile=None):
+	if settingsOutFile is None:
+		settingsOutFile = settingsInFile
+	print_( "Converting %s.py to %s.xml" % (settingsInFile, settingsOutFile) , 3 )
 
 def shaderLinkError(shaderRelinkResult):
 	print_( 'Shader link error: The following objects could not be relinked.\n%s' % shaderRelinkResult , 1 )

@@ -117,12 +117,6 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 		#ic publishData files
 		assetPblName += '_%s' % version		
 		icPblData.writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, pblNotes)
-			
-		
-		#inserting approval file
-		apvFile = open(os.path.join(pblDir, 'approved.ic'), 'w')
-		apvFile.write(str(approved))
-		apvFile.close
 
 
 		#deleting in progress tmp file
