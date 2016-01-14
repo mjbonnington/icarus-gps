@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
-# List Sequences
-# v0.2
+# [Icarus] sequenceLs.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) Gramercy Park Studios 2015
+# (c) 2015-2016 Gramercy Park Studios
 #
 # Command-line tool for listing file sequences in a nicely formatted manner.
 # TODO: Take arguments to list specific directory or sequence

@@ -1,15 +1,20 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:renderPbl
-#copyright	:Gramercy Park Studios
+
+# [Icarus] ic_renderPbl.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2016 Gramercy Park Studios
+#
+# Render peublishing module.
 
 
-#render publish module
 import os, sys, traceback
 import pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, djvOps, inProgress
 
+
 def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
-	
+
 	job = os.environ['JOB']
 	assetType = 'render'
 	prefix = ''
@@ -20,24 +25,24 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 	assetPblName = '%s%s%s' % (prefix, convention, suffix)
 	assetName = assetPblName 
 	assetType = 'render'
-	
-	#processing asset publish options
+
+	# Process asset publish options
 	assetPblName, assetDir, pblDir = pblOptsPrc.prc(pblTo, subsetName, assetType, prefix, convention, suffix)
 	renderRootPblDir = pblDir
 
-	#version control
+	# Version control
 	currentVersion = '%s' % vCtrl.version(pblDir, current=True)
 	version = '%s' % vCtrl.version(pblDir)
 
-	#checks if no main layer was set and cancels publish if publishin first version
+	# Checks if no main layer was set and cancels publish if publishing first version
 	if version == 'v001':
 		if not mainLayer:
 			verbose.noMainLayer()
 			return
-		
-	#confirmation dialog
+
+	# Confirmation dialog
 	dialogMsg = ''
-	dialogTitle = 'Publishing'
+	dialogTitle = 'Publishing Render'
 	if not streamPbl:
 		dialogMsg += "Warning:\n\nPublish won't be streamed.\nLayers from previous renders will not be ported.\n\n\n"
 	if not mainLayer:
@@ -47,37 +52,38 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 	if not dialog.dialogWindow(dialogMsg, dialogTitle):
 		return
 
-	try:	
+	try:
 		verbose.pblFeed(begin=True)
-		pblResult = 'SUCCESS'
-		#creating publish directories
+		#pblResult = 'SUCCESS'
+
+		# Create publish directories
 		pblDir = osOps.createDir(os.path.join(pblDir, version))
 
-		#creating in progress tmp file
+		# Create in-progress tmp file
 		inProgress.start(pblDir)
-		
-		#file operations
+
+		# File operations
 		if not mainLayer:
 			streamPbl = True
 		elif version == 'v001':
 			streamPbl = True
-		#streaming publish. Hard linking previous version and removing previous icarus data files
+		# Streaming publish. Hard linking previous version and removing previous icarus data files
 		if streamPbl:
 			if version != 'v001':
-				#getting all layers in current publish 
+				# Get all layers in current publish
 				currentPblLayerLs = os.listdir(os.path.join(renderRootPblDir, currentVersion))
 				for currentPblLayer in currentPblLayerLs:
-					#creating respective layer folder in new version
+					# Create respective layer folder in new version
 					if os.path.isdir(os.path.join(renderRootPblDir, currentVersion, currentPblLayer)):
 						osOps.createDir(os.path.join(pblDir, currentPblLayer))
-						#getting all files in current layer
+						# Get all files in current layer
 						currentLayerFileLs = sorted(os.listdir(os.path.join(renderRootPblDir, currentVersion, currentPblLayer)))
-						#hard linking files to new version
+						# Hard linking files to new version
 						for currentLayerFile in currentLayerFileLs:
 							verbose.pblFeed(msg='Processing %s' % currentLayerFile)
 							osOps.hardLink(os.path.join(renderRootPblDir, currentVersion, currentPblLayer, currentLayerFile), os.path.join(pblDir, currentPblLayer))
-			
-		#processing all new layers and passes
+
+		# Process all new layers and passes
 		for key in renderDic.keys():
 			outputDir = os.path.expandvars(renderDic[key])
 			dirContents = sorted(os.listdir(outputDir))
@@ -93,34 +99,38 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 					if not os.path.isdir(os.path.join(pblDir, key)):
 						osOps.createDir(os.path.join(pblDir, key))
 					osOps.hardLink(os.path.join(outputDir, file_), os.path.join(pblDir, key))
-		
-		#creating publish snapshot from main layer new version
+
+		# Creating publish snapshot from main layer new version
 		mainLayerDir = os.path.join(pblDir, 'main')
 		mainLayerFileLs = sorted(os.listdir(mainLayerDir))
 		mainLayerPaddingLs = []
 		snapShot = False
+		#print mainLayerFileLs
 		for mainLayerFile in mainLayerFileLs:
-			if '_main.' in mainLayerFile:
+			#if '_main.' in mainLayerFile:
+			if '_main' in mainLayerFile: # use regex for better matching
 				snapShot = True
 				mainLayerBody, mainLayerPadding, mainLayerExtension = pblOptsPrc.render_split(mainLayerFile)
 				mainLayerPaddingLs.append(mainLayerPadding)
-				
+
 		if snapShot:
+			verbose.pblSaveSnapshot()
 			startFrame = min(mainLayerPaddingLs)
 			endFrame = max(mainLayerPaddingLs)
 			midFrame = int((int(startFrame) + int(endFrame))/2)
-			input = os.path.join(mainLayerDir, mainLayerBody)
-			output = os.path.join(pblDir, 'preview')
-			djvOps.prcImg(input, output, midFrame,  midFrame, mainLayerExtension, outExt='jpg')
-			djvOps.prcQt(input, pblDir, startFrame, endFrame, mainLayerExtension, resize=(256, 144))
-				
-		#ic publishData files
-		assetPblName += '_%s' % version		
-		icPblData.writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, pblNotes)
+			inFile = os.path.join(mainLayerDir, mainLayerBody)
+			outFile = os.path.join(pblDir, 'preview')
+			djvOps.prcImg(inFile, outFile, midFrame,  midFrame, mainLayerExtension, resize=(512,288), outExt='jpg')
+			#djvOps.prcQt(inFile, pblDir, startFrame, endFrame, mainLayerExtension, resize=(256,144))
 
+		# Store asset metadata in file
+		assetPblName += '_%s' % version
+		#src = renderDic['main']
+		src = None
+		icPblData.writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, pblNotes, src)
 
-		#deleting in progress tmp file
-		inProgress.end(pblDir)			
+		# Delete in-progress tmp file
+		inProgress.end(pblDir)
 
 		verbose.pblFeed(end=True)
 
@@ -131,10 +141,10 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 		osOps.recurseRemove(pblDir)
 		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += verbose.pblRollback()
-	
-	#publish result dialog
+
+	# Show publish result dialog
 	dialogTitle = "Publish Report"
 	dialogMsg = "Render:\t%s\n\nVersion:\t%s\n\n\n%s" % (assetPblName, version, pblResult)
 	dialog = pDialog.dialog()
 	dialog.dialogWindow(dialogMsg, dialogTitle, conf=True)
-		
+

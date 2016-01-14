@@ -98,6 +98,44 @@ QPushButton:default, QToolButton:default {
        </widget>
       </item>
       <item>
+       <spacer name="horizontalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>24</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="appIcon_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="header_horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -883,6 +921,9 @@ QToolButton:disabled {
              <layout class="QHBoxLayout" name="horizontalLayout_9">
               <item>
                <widget class="QListWidget" name="ma_assetTypes_listWidget">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
                   <horstretch>0</horstretch>
@@ -957,26 +998,7 @@ QToolButton:disabled {
                  <enum>QFrame::NoFrame</enum>
                 </property>
                 <layout class="QGridLayout" name="gridLayout">
-                 <item row="0" column="0">
-                  <widget class="QRadioButton" name="cameraPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>camera</string>
-                   </property>
-                   <property name="checked">
-                    <bool>false</bool>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
+                 <item row="2" column="1">
                   <widget class="QComboBox" name="cameraPbl_comboBox">
                    <item>
                     <property name="text">
@@ -995,8 +1017,8 @@ QToolButton:disabled {
                    </item>
                   </widget>
                  </item>
-                 <item row="0" column="2">
-                  <widget class="QRadioButton" name="rigPbl_radioButton">
+                 <item row="2" column="0">
+                  <widget class="QRadioButton" name="cameraPbl_radioButton">
                    <property name="enabled">
                     <bool>true</bool>
                    </property>
@@ -1004,66 +1026,17 @@ QToolButton:disabled {
                     <bool>false</bool>
                    </property>
                    <property name="text">
-                    <string>rig</string>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="3">
-                  <widget class="QComboBox" name="rigPbl_comboBox">
-                   <item>
-                    <property name="text">
-                     <string>light</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>fx</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>anim</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="0" column="4">
-                  <widget class="QRadioButton" name="modelPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>model</string>
+                    <string>camera</string>
                    </property>
                    <property name="checked">
-                    <bool>true</bool>
+                    <bool>false</bool>
                    </property>
                    <property name="autoExclusive">
                     <bool>true</bool>
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="5">
-                  <widget class="QComboBox" name="modelPbl_comboBox">
-                   <item>
-                    <property name="text">
-                     <string>base</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>anim</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
+                 <item row="3" column="0">
                   <widget class="QRadioButton" name="geoCachePbl_radioButton">
                    <property name="enabled">
                     <bool>true</bool>
@@ -1079,7 +1052,23 @@ QToolButton:disabled {
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="1">
+                 <item row="6" column="0">
+                  <widget class="QRadioButton" name="shaderPbl_radioButton">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="autoFillBackground">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string>shader</string>
+                   </property>
+                   <property name="autoExclusive">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
                   <widget class="QComboBox" name="geoCachePbl_comboBox">
                    <item>
                     <property name="text">
@@ -1108,106 +1097,7 @@ QToolButton:disabled {
                    </item>
                   </widget>
                  </item>
-                 <item row="1" column="2">
-                  <widget class="QRadioButton" name="geoPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>geo</string>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="3">
-                  <widget class="QComboBox" name="geoPbl_comboBox">
-                   <item>
-                    <property name="text">
-                     <string>abc</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>obj</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>fbx</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="1" column="4">
-                  <widget class="QRadioButton" name="animPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>animation</string>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QRadioButton" name="shaderPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>shader</string>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="2">
-                  <widget class="QRadioButton" name="fxPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>fx</string>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="4">
-                  <widget class="QRadioButton" name="pointCloudPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>pointCloud</string>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="0">
+                 <item row="10" column="0">
                   <widget class="QRadioButton" name="scenePbl_radioButton">
                    <property name="enabled">
                     <bool>true</bool>
@@ -1223,7 +1113,7 @@ QToolButton:disabled {
                    </property>
                   </widget>
                  </item>
-                 <item row="3" column="1">
+                 <item row="10" column="1">
                   <widget class="QLineEdit" name="scenePblName_lineEdit">
                    <property name="enabled">
                     <bool>false</bool>
@@ -1242,7 +1132,158 @@ QToolButton:disabled {
                    </property>
                   </widget>
                  </item>
-                 <item row="3" column="2">
+                 <item row="5" column="0">
+                  <widget class="QRadioButton" name="animPbl_radioButton">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="autoFillBackground">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string>animation</string>
+                   </property>
+                   <property name="autoExclusive">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QRadioButton" name="modelPbl_radioButton">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="autoFillBackground">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string>model</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                   <property name="autoExclusive">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QRadioButton" name="geoPbl_radioButton">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="autoFillBackground">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string>geo</string>
+                   </property>
+                   <property name="autoExclusive">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QComboBox" name="modelPbl_comboBox">
+                   <item>
+                    <property name="text">
+                     <string>base</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>anim</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QRadioButton" name="rigPbl_radioButton">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="autoFillBackground">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string>rig</string>
+                   </property>
+                   <property name="autoExclusive">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QComboBox" name="rigPbl_comboBox">
+                   <item>
+                    <property name="text">
+                     <string>light</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>fx</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>anim</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                 <item row="8" column="0">
+                  <widget class="QRadioButton" name="pointCloudPbl_radioButton">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="autoFillBackground">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string>pointCloud</string>
+                   </property>
+                   <property name="autoExclusive">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="1">
+                  <widget class="QComboBox" name="geoPbl_comboBox">
+                   <item>
+                    <property name="text">
+                     <string>abc</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>obj</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>fbx</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                 <item row="7" column="0">
+                  <widget class="QRadioButton" name="fxPbl_radioButton">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="autoFillBackground">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string>fx</string>
+                   </property>
+                   <property name="autoExclusive">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="9" column="0">
                   <widget class="QRadioButton" name="shotPbl_radioButton">
                    <property name="enabled">
                     <bool>true</bool>
@@ -1258,14 +1299,14 @@ QToolButton:disabled {
                    </property>
                   </widget>
                  </item>
-                 <item row="3" column="4">
+                 <item row="11" column="0">
                   <widget class="QRadioButton" name="nodePbl_radioButton">
                    <property name="text">
                     <string>node</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="3" column="5">
+                 <item row="11" column="1">
                   <widget class="QComboBox" name="nodePbl_comboBox">
                    <item>
                     <property name="text">
@@ -1373,6 +1414,9 @@ QToolButton:disabled {
              <layout class="QHBoxLayout" name="horizontalLayout_12">
               <item>
                <widget class="QListWidget" name="nk_assetTypes_listWidget">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
                   <horstretch>0</horstretch>
@@ -1439,26 +1483,7 @@ QToolButton:disabled {
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="1">
-                  <widget class="QRadioButton" name="nk_cardPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>card</string>
-                   </property>
-                   <property name="checked">
-                    <bool>false</bool>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
+                 <item row="4" column="0">
                   <widget class="QRadioButton" name="nk_pointCloudPbl_radioButton">
                    <property name="enabled">
                     <bool>true</bool>
@@ -1477,8 +1502,37 @@ QToolButton:disabled {
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="1">
-                  <widget class="QRadioButton" name="nk_nodePbl_radioButton">
+                 <item row="7" column="0">
+                  <widget class="QLabel" name="nk_PblName_label">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="text">
+                    <string>Publish Name:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="7" column="1">
+                  <widget class="QLineEdit" name="nk_PblName_lineEdit">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="frame">
+                    <bool>true</bool>
+                   </property>
+                   <property name="readOnly">
+                    <bool>false</bool>
+                   </property>
+                   <property name="mandatoryField" stdset="0">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QRadioButton" name="nk_cardPbl_radioButton">
                    <property name="enabled">
                     <bool>true</bool>
                    </property>
@@ -1486,14 +1540,17 @@ QToolButton:disabled {
                     <bool>false</bool>
                    </property>
                    <property name="text">
-                    <string>node</string>
+                    <string>card</string>
+                   </property>
+                   <property name="checked">
+                    <bool>false</bool>
                    </property>
                    <property name="autoExclusive">
                     <bool>true</bool>
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="0">
+                 <item row="3" column="0">
                   <widget class="QRadioButton" name="nk_preCompPbl_radioButton">
                    <property name="enabled">
                     <bool>true</bool>
@@ -1509,7 +1566,7 @@ QToolButton:disabled {
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="1">
+                 <item row="2" column="0">
                   <widget class="QRadioButton" name="nk_compPbl_radioButton">
                    <property name="enabled">
                     <bool>true</bool>
@@ -1525,31 +1582,18 @@ QToolButton:disabled {
                    </property>
                   </widget>
                  </item>
-                 <item row="3" column="0">
-                  <widget class="QLabel" name="nk_PblName_label">
+                 <item row="5" column="0">
+                  <widget class="QRadioButton" name="nk_nodePbl_radioButton">
                    <property name="enabled">
                     <bool>true</bool>
                    </property>
-                   <property name="text">
-                    <string>Publish Name:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="1">
-                  <widget class="QLineEdit" name="nk_PblName_lineEdit">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="frame">
-                    <bool>true</bool>
-                   </property>
-                   <property name="readOnly">
+                   <property name="autoFillBackground">
                     <bool>false</bool>
                    </property>
-                   <property name="mandatoryField" stdset="0">
+                   <property name="text">
+                    <string>node</string>
+                   </property>
+                   <property name="autoExclusive">
                     <bool>true</bool>
                    </property>
                   </widget>
@@ -1635,11 +1679,146 @@ QToolButton:disabled {
              <attribute name="title">
               <string>Daily</string>
              </attribute>
-             <layout class="QHBoxLayout" name="horizontalLayout_11">
+             <layout class="QVBoxLayout" name="verticalLayout_9">
+              <item>
+               <widget class="QFrame" name="dailyPblToolbar_frame">
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_11">
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>6</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="dailyPblType_label">
+                   <property name="text">
+                    <string>Type:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QComboBox" name="dailyPblType_comboBox">
+                   <item>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>previs</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>tracking</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>modeling</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>rigging</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>texturing</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>shading</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>anim</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>lighting</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>fx</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>comp</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="dailyPblAdd_pushButton">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string>Add</string>
+                   </property>
+                   <property name="default">
+                    <bool>false</bool>
+                   </property>
+                   <property name="flat">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="dailyPblView_pushButton">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string>View</string>
+                   </property>
+                   <property name="default">
+                    <bool>false</bool>
+                   </property>
+                   <property name="flat">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_4">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </widget>
+              </item>
               <item>
                <widget class="QTableWidget" name="dailyPbl_tableWidget">
-                <property name="horizontalScrollBarPolicy">
-                 <enum>Qt::ScrollBarAsNeeded</enum>
+                <property name="selectionBehavior">
+                 <enum>QAbstractItemView::SelectRows</enum>
                 </property>
                 <property name="textElideMode">
                  <enum>Qt::ElideMiddle</enum>
@@ -1651,7 +1830,7 @@ QToolButton:disabled {
                  <bool>true</bool>
                 </attribute>
                 <attribute name="horizontalHeaderStretchLastSection">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </attribute>
                 <attribute name="verticalHeaderVisible">
                  <bool>false</bool>
@@ -1675,7 +1854,7 @@ QToolButton:disabled {
                 </column>
                 <column>
                  <property name="text">
-                  <string>path</string>
+                  <string>range</string>
                  </property>
                 </column>
                 <column>
@@ -1683,127 +1862,11 @@ QToolButton:disabled {
                   <string>type</string>
                  </property>
                 </column>
-               </widget>
-              </item>
-              <item>
-               <widget class="QFrame" name="frame_4">
-                <property name="frameShape">
-                 <enum>QFrame::NoFrame</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-                <layout class="QVBoxLayout" name="verticalLayout_10">
-                 <property name="margin">
-                  <number>0</number>
+                <column>
+                 <property name="text">
+                  <string>path</string>
                  </property>
-                 <item>
-                  <widget class="QGroupBox" name="dailyPblSequenceType_groupBox">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="title">
-                    <string>Type / Sequence</string>
-                   </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_9">
-                    <item>
-                     <widget class="QComboBox" name="dailyPblType_comboBox">
-                      <item>
-                       <property name="text">
-                        <string/>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string>previs</string>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string>tracking</string>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string>modeling</string>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string>rigging</string>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string>texturing</string>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string>shading</string>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string>anim</string>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string>lighting</string>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string>fx</string>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string>comp</string>
-                       </property>
-                      </item>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="dailyPblAdd_pushButton">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="text">
-                       <string>Add</string>
-                      </property>
-                      <property name="default">
-                       <bool>false</bool>
-                      </property>
-                      <property name="flat">
-                       <bool>false</bool>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <spacer name="verticalSpacer_2">
-                   <property name="orientation">
-                    <enum>Qt::Vertical</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>20</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                </layout>
+                </column>
                </widget>
               </item>
              </layout>
@@ -1812,9 +1875,114 @@ QToolButton:disabled {
              <attribute name="title">
               <string>Render</string>
              </attribute>
-             <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <layout class="QVBoxLayout" name="verticalLayout_6">
+              <item>
+               <widget class="QFrame" name="renderPblToolbar_frame">
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_10">
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>6</number>
+                 </property>
+                 <item>
+                  <widget class="QPushButton" name="renderPblAdd_pushButton">
+                   <property name="text">
+                    <string>Add</string>
+                   </property>
+                   <property name="default">
+                    <bool>false</bool>
+                   </property>
+                   <property name="flat">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="renderPblRemove_pushButton">
+                   <property name="text">
+                    <string>Remove</string>
+                   </property>
+                   <property name="default">
+                    <bool>false</bool>
+                   </property>
+                   <property name="flat">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="renderPblSetMain_pushButton">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="text">
+                    <string>Set as Main</string>
+                   </property>
+                   <property name="checkable">
+                    <bool>false</bool>
+                   </property>
+                   <property name="default">
+                    <bool>false</bool>
+                   </property>
+                   <property name="flat">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="renderPblRevert_pushButton">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string>Revert</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_5">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="streamPbl_checkBox">
+                   <property name="text">
+                    <string>Stream Publish</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
               <item>
                <widget class="QTableWidget" name="renderPbl_tableWidget">
+                <property name="selectionBehavior">
+                 <enum>QAbstractItemView::SelectRows</enum>
+                </property>
                 <property name="textElideMode">
                  <enum>Qt::ElideMiddle</enum>
                 </property>
@@ -1825,7 +1993,7 @@ QToolButton:disabled {
                  <bool>true</bool>
                 </attribute>
                 <attribute name="horizontalHeaderStretchLastSection">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </attribute>
                 <attribute name="verticalHeaderVisible">
                  <bool>false</bool>
@@ -1857,135 +2025,6 @@ QToolButton:disabled {
                   <string>type</string>
                  </property>
                 </column>
-               </widget>
-              </item>
-              <item>
-               <widget class="QFrame" name="frame_3">
-                <property name="frameShape">
-                 <enum>QFrame::NoFrame</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-                <layout class="QVBoxLayout" name="verticalLayout_8">
-                 <property name="margin">
-                  <number>0</number>
-                 </property>
-                 <item>
-                  <widget class="QGroupBox" name="renderPblLayersPasses_groupBox">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="title">
-                    <string>Layers / Passes</string>
-                   </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_6">
-                    <item>
-                     <widget class="QPushButton" name="renderPblAdd_pushButton">
-                      <property name="text">
-                       <string>Add</string>
-                      </property>
-                      <property name="default">
-                       <bool>false</bool>
-                      </property>
-                      <property name="flat">
-                       <bool>false</bool>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="renderPblRemove_pushButton">
-                      <property name="text">
-                       <string>Remove</string>
-                      </property>
-                      <property name="default">
-                       <bool>false</bool>
-                      </property>
-                      <property name="flat">
-                       <bool>false</bool>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="renderPblSetMain_pushButton">
-                      <property name="enabled">
-                       <bool>true</bool>
-                      </property>
-                      <property name="text">
-                       <string>Set as Main</string>
-                      </property>
-                      <property name="checkable">
-                       <bool>false</bool>
-                      </property>
-                      <property name="default">
-                       <bool>false</bool>
-                      </property>
-                      <property name="flat">
-                       <bool>false</bool>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <spacer name="verticalSpacer">
-                   <property name="orientation">
-                    <enum>Qt::Vertical</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>20</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                 <item>
-                  <widget class="QGroupBox" name="renderProcessing_groupBox">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="title">
-                    <string>Processing</string>
-                   </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_7">
-                    <item>
-                     <widget class="QCheckBox" name="streamPbl_checkBox">
-                      <property name="text">
-                       <string>Stream Publish</string>
-                      </property>
-                      <property name="checked">
-                       <bool>true</bool>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="revert_pushButton">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="text">
-                       <string>Revert</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                </layout>
                </widget>
               </item>
              </layout>
@@ -2566,56 +2605,33 @@ p, li { white-space: pre-wrap; }
   <tabstop>mari_pushButton</tabstop>
   <tabstop>realflow_pushButton</tabstop>
   <tabstop>tabWidget</tabstop>
-  <tabstop>geoPbl_comboBox</tabstop>
-  <tabstop>animPbl_radioButton</tabstop>
   <tabstop>shaderPbl_radioButton</tabstop>
-  <tabstop>fxPbl_radioButton</tabstop>
   <tabstop>scenePbl_radioButton</tabstop>
   <tabstop>scenePblName_lineEdit</tabstop>
-  <tabstop>shotPbl_radioButton</tabstop>
   <tabstop>textures_checkBox</tabstop>
   <tabstop>subSet_checkBox</tabstop>
   <tabstop>subSetName_lineEdit</tabstop>
   <tabstop>subSetWarning_textEdit</tabstop>
-  <tabstop>renderPblAdd_pushButton</tabstop>
   <tabstop>assetType_listWidget</tabstop>
   <tabstop>assetName_listWidget</tabstop>
   <tabstop>assetSubType_listWidget</tabstop>
   <tabstop>assetVersion_listWidget</tabstop>
   <tabstop>gatherInfo_textEdit</tabstop>
-  <tabstop>geoPbl_radioButton</tabstop>
   <tabstop>publishToShot_radioButton</tabstop>
   <tabstop>publishToShot_comboBox</tabstop>
   <tabstop>publishType_tabWidget</tabstop>
   <tabstop>cameraPbl_radioButton</tabstop>
   <tabstop>cameraPbl_comboBox</tabstop>
-  <tabstop>rigPbl_radioButton</tabstop>
-  <tabstop>rigPbl_comboBox</tabstop>
-  <tabstop>modelPbl_radioButton</tabstop>
-  <tabstop>modelPbl_comboBox</tabstop>
   <tabstop>geoCachePbl_radioButton</tabstop>
   <tabstop>geoCachePbl_comboBox</tabstop>
-  <tabstop>pointCloudPbl_radioButton</tabstop>
-  <tabstop>nodePbl_radioButton</tabstop>
-  <tabstop>nodePbl_comboBox</tabstop>
   <tabstop>nk_setupPbl_radioButton</tabstop>
-  <tabstop>nk_cardPbl_radioButton</tabstop>
   <tabstop>nk_pointCloudPbl_radioButton</tabstop>
-  <tabstop>nk_nodePbl_radioButton</tabstop>
-  <tabstop>nk_preCompPbl_radioButton</tabstop>
-  <tabstop>nk_compPbl_radioButton</tabstop>
   <tabstop>nk_PblName_lineEdit</tabstop>
   <tabstop>nk_subSet_checkBox</tabstop>
   <tabstop>nk_subSetName_lineEdit</tabstop>
   <tabstop>nk_subSetWarning_textEdit</tabstop>
   <tabstop>dailyPbl_tableWidget</tabstop>
-  <tabstop>dailyPblType_comboBox</tabstop>
-  <tabstop>dailyPblAdd_pushButton</tabstop>
   <tabstop>renderPbl_tableWidget</tabstop>
-  <tabstop>renderPblRemove_pushButton</tabstop>
-  <tabstop>renderPblSetMain_pushButton</tabstop>
-  <tabstop>streamPbl_checkBox</tabstop>
-  <tabstop>revert_pushButton</tabstop>
   <tabstop>notes_textEdit</tabstop>
   <tabstop>publish_pushButton</tabstop>
   <tabstop>gather_pushButton</tabstop>

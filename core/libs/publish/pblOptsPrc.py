@@ -80,8 +80,10 @@ def renderPath_prc(renderPath):
 		
 ####################DAILY PUBLISHING SPECIFIC OPTIONS PROCESSING####################
 ####################################################################################
-#processes the provided path and returns a dictionary of layer and respective full sequence path
+
 def dailyPath_prc(path):
+	""" Processes the provided path and returns a dictionary of layer and respective full sequence path.
+	"""
 	expPath = os.path.expandvars(path)
 	filePath, file_ = os.path.split(expPath)
 	fileSplit = render_split(file_)
@@ -89,7 +91,8 @@ def dailyPath_prc(path):
 	if fileSplit:
 		nameBody, padding, extension = render_split(file_)
 		renderDic[nameBody] = filePath
+		print nameBody, padding, extension
 		return renderDic
 	else:
 		return
-		
+

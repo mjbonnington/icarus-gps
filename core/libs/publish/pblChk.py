@@ -89,8 +89,8 @@ def paddingChk(renderFile):
 #sucessful publish confirmation 
 def success(pathToPblAsset):
 	if os.path.isfile(pathToPblAsset) == True:
-		return 'SUCCESS'
-	return 'FAILED'
+		return 'SUCCESS\n'
+	return 'FAILED\n'
 	
 #checks if versioned items exist
 def versionedItems(path, vb=True):

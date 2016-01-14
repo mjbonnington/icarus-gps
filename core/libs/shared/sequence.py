@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
-# Sequences
-# v0.2
+# [Icarus] sequence.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) Gramercy Park Studios 2015
+# (c) 2015-2016 Gramercy Park Studios
 #
 # These functions convert formatted sequences to lists and vice-versa.
 

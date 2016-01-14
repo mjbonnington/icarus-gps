@@ -99,7 +99,10 @@ def publish(pblTo, slShot, mdlType, textures, pblNotes, mail, approved):
 
 		# Store asset metadata in file
 		src = mayaOps.getScene()
-		icPblData.writeData(pblDir, assetPblName, convention, assetType, extension, version, src, pblNotes)
+		#for i in ('pblDir', 'assetPblName', 'convention', 'assetType', 'extension', 'version', 'src', 'pblNotes')
+		#	publishVars[i] = locals()[i]
+		#icPblData.writeData(publishVars)
+		icPblData.writeData(pblDir, assetPblName, convention, assetType, extension, version, pblNotes, src)
 
 		# Publish operations
 		mayaOps.deleteICDataSet(allObjLs)

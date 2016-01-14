@@ -30,13 +30,13 @@ class icarusApp(QtGui.QDialog):
 		# Read user prefs config file file - if it doesn't exist it will be created
 		userPrefs.read()
 
-		# Define Phonon as preview player if Icarus is standalone
-		# (only enabled on Mac OS X as haven't yet figured out how to get Phonon video player working properly on Windows or Linux)
-		if os.environ['ICARUSENVAWARE'] == 'STANDALONE' and os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-			from PySide.phonon import Phonon
-			self.previewPlayer = Phonon.VideoPlayer(parent = self.ui.gatherImgPreview_label)
-		else:
-			self.previewPlayer = None
+	#	# Define Phonon as preview player if Icarus is standalone
+	#	# (only enabled on Mac OS X as haven't yet figured out how to get Phonon video player working properly on Windows or Linux)
+	#	if os.environ['ICARUSENVAWARE'] == 'STANDALONE' and os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+	#		from PySide.phonon import Phonon
+	#		self.previewPlayer = Phonon.VideoPlayer(parent = self.ui.gatherImgPreview_label)
+	#	else:
+	#		self.previewPlayer = None
 
 		# Set up keyboard shortcuts
 		self.shortcutShotInfo = QtGui.QShortcut(self)
@@ -133,18 +133,13 @@ class icarusApp(QtGui.QDialog):
 		self.gatherTab = self.ui.tabWidget.widget(2)
 		self.publishAssetTab = self.ui.publishType_tabWidget.widget(0)
 		self.publishRenderTab = self.ui.publishType_tabWidget.widget(1)
-		self.ui.renderPbl_tableWidget.setColumnWidth(0,120)
-		self.ui.renderPbl_tableWidget.setColumnWidth(1,380)
-		self.ui.renderPbl_tableWidget.setColumnWidth(2,81)
-		self.ui.dailyPbl_tableWidget.setColumnWidth(0,120)
-		self.ui.dailyPbl_tableWidget.setColumnWidth(1,380)
-		self.ui.dailyPbl_tableWidget.setColumnWidth(2,81)
-			
+
+
 		###########STANDALONE ENVIRONMENT#############
 		##############################################
 		if os.environ['ICARUSENVAWARE'] == 'STANDALONE':
 			#hides ui items relating to maya environment
-			uiHideLs = ['setNewShot_pushButton', 'shotEnv_toolButton'] # Removed 'shotEnv_label_maya', 
+			uiHideLs = ['setNewShot_pushButton', 'shotEnv_toolButton', 'appIcon_label'] # Removed 'shotEnv_label_maya', 
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
@@ -186,6 +181,8 @@ class icarusApp(QtGui.QDialog):
 		##############MAYA ENVIRONMENT################
 		##############################################
 		elif os.environ['ICARUSENVAWARE'] == 'MAYA':
+			pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_maya.png")
+			self.ui.appIcon_label.setPixmap(pixmap)
 			uiHideLs = ['assetSubType_listWidget'] # Removed 'icarusBanner', 
 			#hides UI items 
 			for uiItem in uiHideLs:
@@ -203,6 +200,8 @@ class icarusApp(QtGui.QDialog):
 		##############NUKE ENVIRONMENT################
 		##############################################
 		elif os.environ['ICARUSENVAWARE'] == 'NUKE':
+			pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_nuke.png")
+			self.ui.appIcon_label.setPixmap(pixmap)
 			uiHideLs = ['assetSubType_listWidget'] # Removed 'icarusBanner', 
 			#hides UI 
 			for uiItem in uiHideLs:
@@ -465,17 +464,17 @@ class icarusApp(QtGui.QDialog):
 		self.ui.setShot_pushButton.show()
 
 
-	#controls phonon preview player
-	def previewPlayerCtrl(self, show=False, hide=False, play=False, loadImg=None):
-		if self.previewPlayer:
-			if show:
-				self.previewPlayer.show()
-			elif hide:
-				self.previewPlayer.hide()
-			elif play:
-				self.previewPlayer.play()
-			elif loadImg:
-				self.previewPlayer.load(loadImg)
+#	#controls phonon preview player
+#	def previewPlayerCtrl(self, show=False, hide=False, play=False, loadImg=None):
+#		if self.previewPlayer:
+#			if show:
+#				self.previewPlayer.show()
+#			elif hide:
+#				self.previewPlayer.hide()
+#			elif play:
+#				self.previewPlayer.play()
+#			elif loadImg:
+#				self.previewPlayer.load(loadImg)
 
 	#updates job label
 	def updateJobLabel(self):
@@ -541,7 +540,7 @@ I   C   A   R   U   S
 Python %s / PySide %s / Qt %s / %s
 Environment: %s
 
-(c) 2013-2015 Gramercy Park Studios
+(c) 2013-2016 Gramercy Park Studios
 """ %(os.environ['ICARUSVERSION'], python_ver_str, pyside_ver_str, qt_ver_str, os.environ['ICARUS_RUNNING_OS'], os.environ['ICARUSENVAWARE'])
 
 		import about
@@ -656,9 +655,12 @@ Environment: %s
 			self.showMinimized()
 
 	# Preview - opens djv_view to preview movie or image sequence
-	def preview(self):
+	def preview(self, path=None):
 		import djvOps
-		djvOps.viewer(self.gatherPath)
+		if path is None:
+			djvOps.viewer(self.gatherPath)
+		else:
+			djvOps.viewer(path)
 
 	#Launches Deadline Monitor
 	def launchDeadlineMonitor(self):
@@ -721,6 +723,7 @@ Environment: %s
 					self.ui.renderPbl_tableWidget.setItem(0, 2, mainItem)
 					mainItem.setFlags(~QtCore.Qt.ItemIsEditable)
 					mainItem.setText('layer')
+					self.ui.renderPbl_tableWidget.resizeColumnsToContents()
 					#making layer main if autoDetected
 					if layer == 'main':
 						autoMainLayer = layerItem
@@ -744,14 +747,19 @@ Environment: %s
 	
 	#sets the selected render layer as the main layer
 	def setLayerAsMain(self, autoMainLayer=None):
+		font = QtGui.QFont()
 		for rowItem in range(0, self.ui.renderPbl_tableWidget.rowCount()):
+			font.setBold(False)
 			mainItem = self.ui.renderPbl_tableWidget.item(rowItem, 2)
 			mainItem.setText('layer')
-			mainItem.setBackground(QtGui.QColor(34,34,34))
+			mainItem.setFont(font)
+			#mainItem.setBackground(QtGui.QColor(34,34,34))
 			rowItem1 = self.ui.renderPbl_tableWidget.item(rowItem, 1)
-			rowItem1.setBackground(QtGui.QColor(34,34,34))
+			rowItem1.setFont(font)
+			#rowItem1.setBackground(QtGui.QColor(34,34,34))
 			rowItem0 = self.ui.renderPbl_tableWidget.item(rowItem, 0)
-			rowItem0.setBackground(QtGui.QColor(34,34,34))
+			rowItem0.setFont(font)
+			#rowItem0.setBackground(QtGui.QColor(34,34,34))
 		rowLs = []
 		if autoMainLayer:
 			selRow = self.ui.renderPbl_tableWidget.row(autoMainLayer)
@@ -763,31 +771,49 @@ Environment: %s
 				if selRow not in rowLs and selRow != -1:
 					rowLs.append(selRow)
 		if len(rowLs) == 1:
+			font.setBold(True)
 			mainItem = self.ui.renderPbl_tableWidget.item(rowLs[0], 2)
 			mainItem.setText('main')
-			mainItem.setBackground(QtGui.QColor(60,75,40))
+			mainItem.setFont(font)
+			#mainItem.setBackground(QtGui.QColor(60,75,40))
 			passItem = self.ui.renderPbl_tableWidget.item(rowLs[0], 1)
 			passName = passItem.text()
-			passItem.setBackground(QtGui.QColor(60,75,40))
+			passItem.setFont(font)
+			#passItem.setBackground(QtGui.QColor(60,75,40))
 			layerItem = self.ui.renderPbl_tableWidget.item(rowLs[0], 0)
 			layerName = passItem.text()
-			layerItem.setBackground(QtGui.QColor(60,75,40))
+			layerItem.setFont(font)
+			#layerItem.setBackground(QtGui.QColor(60,75,40))
 		#app hide and show forces thw window to update
 #		app.hide()
 #		app.show() # This was causing an issue with the UI closing so I've commented it out fot the time being. The widget still seems to auto update.
-		
-	#populates the daily publish table
+
+
+	def cell_was_clicked(self, row, column):
+		item = self.ui.dailyPbl_tableWidget.itemAt(row, column)
+		print("Row %d and column %d was clicked: %s" % (row, column, item.text()))
+		#self.ID = item.text()
+		self.preview(self.previewPath)
+
+
 	def dailyTableAdd(self):
+		""" Populates the dailies publish table.
+		"""
 		#processes latest path added to self.renderPaths
 		dailyPath = self.dailyPblBrowse()
 		dailyDic = {}
 		if dailyPath:
+			self.previewPath = dailyPath
 			dailyDic = pblOptsPrc.dailyPath_prc(dailyPath)
 			seqPath = dailyPath.replace(os.environ['SHOTPATH'], '$SHOTPATH')
 			seqPath = os.path.split(seqPath)[0]
 			if dailyDic:
+				self.ui.dailyPbl_tableWidget.cellDoubleClicked.connect(self.cell_was_clicked)
+				#seqItem.doubleClicked.connect(self.preview(dailyPath))
 				seq = dailyDic.keys()[0]
+				seqRange = "1001-1010"
 				seqItem = QtGui.QTableWidgetItem(seq)
+				rangeItem = QtGui.QTableWidgetItem(seqRange)
 				pathItem = QtGui.QTableWidgetItem(seqPath)
 				mainItem = QtGui.QTableWidgetItem()
 				#deleting existent sequence
@@ -796,14 +822,18 @@ Environment: %s
 				newRow = self.ui.dailyPbl_tableWidget.insertRow(0)
 				self.ui.dailyPbl_tableWidget.setItem(0, 0, seqItem)
 				seqItem.setFlags(~QtCore.Qt.ItemIsEditable)
-				self.ui.dailyPbl_tableWidget.setItem(0, 1, pathItem)
-				pathItem.setFlags(~QtCore.Qt.ItemIsEditable)
+				self.ui.dailyPbl_tableWidget.setItem(0, 1, rangeItem)
+				rangeItem.setFlags(~QtCore.Qt.ItemIsEditable)
 				self.ui.dailyPbl_tableWidget.setItem(0, 2, mainItem)
 				mainItem.setFlags(~QtCore.Qt.ItemIsEditable)
+				self.ui.dailyPbl_tableWidget.setItem(0, 3, pathItem)
+				pathItem.setFlags(~QtCore.Qt.ItemIsEditable)
 				mainItem.setText(self.dailyType)
+				self.ui.dailyPbl_tableWidget.resizeColumnsToContents()
+
 			else:
 				verbose.noSeq(seqPath)
-			
+
 	#sets the daily type and locks/unlocks the add and remove button accordingly
 	def setDailyType(self):
 		self.dailyType = self.ui.dailyPblType_comboBox.currentText()
@@ -817,7 +847,7 @@ Environment: %s
 	def assetPblBrowse(self):
 		dialogHome = os.environ['JOBPATH']
 		self.ui.pathToAsset_lineEdit.setText(self.fileDialog(dialogHome))
-	
+
 	#render master browse	
 	def renderPblBrowse(self):
 		return self.folderDialog(os.environ['MAYARENDERSDIR'])
@@ -879,8 +909,8 @@ Environment: %s
 		rowCount = self.ui.dailyPbl_tableWidget.rowCount()
 		if rowCount:
 			self.dailySeq = self.ui.dailyPbl_tableWidget.item(0, 0).text()
-			self.dailyPath = self.ui.dailyPbl_tableWidget.item(0, 1).text()
 			self.dailyType = self.ui.dailyPbl_tableWidget.item(0, 2).text()
+			self.dailyPath = self.ui.dailyPbl_tableWidget.item(0, 3).text()
 		else:
 			rowCount = None
 		self.chkLs = [self.pblNotes, rowCount]
@@ -1133,7 +1163,7 @@ Environment: %s
 		self.clearColumn(self.aSubTypeCol)
 		self.clearColumn(self.aVersionCol)
 		self.ui.gatherInfo_textEdit.setText('')
-		self.previewPlayerCtrl(hide=True)
+	#	self.previewPlayerCtrl(hide=True)
 		pixmap = QtGui.QPixmap(None)
 		self.ui.gatherImgPreview_label.setPixmap(pixmap)
 		self.fillColumn(self.aTypeCol, self.gatherFrom)
@@ -1146,7 +1176,7 @@ Environment: %s
 		self.clearColumn(self.aSubTypeCol)
 		self.clearColumn(self.aVersionCol)
 		self.ui.gatherInfo_textEdit.setText('')
-		self.previewPlayerCtrl(hide=True)
+	#	self.previewPlayerCtrl(hide=True)
 		pixmap = QtGui.QPixmap(None)
 		self.ui.gatherImgPreview_label.setPixmap(pixmap)
 		searchPath = os.path.join(self.gatherFrom, self.assetType)
@@ -1158,7 +1188,7 @@ Environment: %s
 		self.clearColumn(self.aSubTypeCol)
 		self.clearColumn(self.aVersionCol)
 		self.ui.gatherInfo_textEdit.setText('')
-		self.previewPlayerCtrl(hide=True)
+	#	self.previewPlayerCtrl(hide=True)
 		pixmap = QtGui.QPixmap(None)
 		self.ui.gatherImgPreview_label.setPixmap(pixmap)
 		searchPath = os.path.join(self.gatherFrom, self.assetType, self.assetName)
@@ -1173,7 +1203,7 @@ Environment: %s
 		else:
 			self.assetSubType = ''
 		self.ui.gatherInfo_textEdit.setText('')
-		self.previewPlayerCtrl(hide=True)
+	#	self.previewPlayerCtrl(hide=True)
 		pixmap = QtGui.QPixmap(None)
 		self.ui.gatherImgPreview_label.setPixmap(pixmap)
 		searchPath = os.path.join(self.gatherFrom, self.assetType, self.assetName, self.assetSubType)
@@ -1223,42 +1253,46 @@ Environment: %s
 	def updateImgPreview(self):
 		""" Update image preview field with snapshot or preview clip.
 		"""
-		# Apply context menu to open viewer
-		self.ui.gatherImgPreview_label.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-		self.actionPreview = QtGui.QAction("Preview...", None)
-		self.actionPreview.triggered.connect(self.preview)
+		# Apply context menu to open viewer - DO THIS SOMEWHERE ELSE
+	#	self.ui.gatherImgPreview_label.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+	#	self.actionPreview = QtGui.QAction("Preview...", None)
+	#	self.actionPreview.triggered.connect(self.preview)
+	#	self.ui.gatherImgPreview_label.addAction(self.actionPreview)
 
 		import previewImg
-		imgPath = ''
-		self.previewPlayerCtrl(hide=True)
+		imgPath = previewImg.getImg(self.gatherPath, forceExt='jpg')
+	#	self.previewPlayerCtrl(hide=True)
 		pixmap = QtGui.QPixmap(None)
 		self.ui.gatherImgPreview_label.setPixmap(pixmap)
+		pixmap = QtGui.QPixmap(imgPath)
+		self.ui.gatherImgPreview_label.setScaledContents(True)
+		self.ui.gatherImgPreview_label.setPixmap(pixmap)
 
-		if self.previewPlayer:
-			imgPath = previewImg.getImg(self.gatherPath, forceExt='mov')
-			if imgPath:
-				self.previewPlayerCtrl(hide=True)
-				pixmap = QtGui.QPixmap(None)
-				self.ui.gatherImgPreview_label.setPixmap(pixmap)
-				self.previewPlayerCtrl(loadImg=imgPath)
-				self.previewPlayerCtrl(show=True)
-				self.previewPlayerCtrl(play=True)
-
-				# Add preview context menu
-				self.ui.gatherImgPreview_label.addAction(self.actionPreview)
-
-		if not imgPath or not self.previewPlayer:
-			imgPath = previewImg.getImg(self.gatherPath, forceExt='jpg')
-			if imgPath:
-				self.previewPlayerCtrl(hide=True)
-				pixmap = QtGui.QPixmap(None)
-				self.ui.gatherImgPreview_label.setPixmap(pixmap)
-				pixmap = QtGui.QPixmap(imgPath)
-				self.ui.gatherImgPreview_label.setScaledContents(True)
-				self.ui.gatherImgPreview_label.setPixmap(pixmap)
-
-				# Remove preview context menu
-				self.ui.gatherImgPreview_label.removeAction(self.actionPreview)
+#		if self.previewPlayer:
+#			imgPath = previewImg.getImg(self.gatherPath, forceExt='mov')
+#			if imgPath:
+#				self.previewPlayerCtrl(hide=True)
+#				pixmap = QtGui.QPixmap(None)
+#				self.ui.gatherImgPreview_label.setPixmap(pixmap)
+#				self.previewPlayerCtrl(loadImg=imgPath)
+#				self.previewPlayerCtrl(show=True)
+#				self.previewPlayerCtrl(play=True)
+#
+#				# Add preview context menu
+#				self.ui.gatherImgPreview_label.addAction(self.actionPreview)
+#
+#		if not imgPath or not self.previewPlayer:
+#			imgPath = previewImg.getImg(self.gatherPath, forceExt='jpg')
+#			if imgPath:
+#				self.previewPlayerCtrl(hide=True)
+#				pixmap = QtGui.QPixmap(None)
+#				self.ui.gatherImgPreview_label.setPixmap(pixmap)
+#				pixmap = QtGui.QPixmap(imgPath)
+#				self.ui.gatherImgPreview_label.setScaledContents(True)
+#				self.ui.gatherImgPreview_label.setPixmap(pixmap)
+#
+#				# Remove preview context menu
+#				self.ui.gatherImgPreview_label.removeAction(self.actionPreview)
 
 
 	##################intializes gather################

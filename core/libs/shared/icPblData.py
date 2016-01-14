@@ -6,15 +6,17 @@
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2013-2016 Gramercy Park Studios
 #
-# Manipulates published asset metadata.
+# Saves metadata for a published asset.
 
 
 import os, time
 import jobSettings, verbose
 
 
-def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, assetSrc, pblNotes, requires=None, compatible=None):
+def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, notes, assetSrc=None, requires=None, compatible=None):
+#def writeData(publishVars):
 	""" Store asset metadata in file.
+		TODO: pass in list of args to write out, iterate over list
 	"""
 	timeFormatStr = "%a, %d %b %Y %H:%M:%S"
 	#timeFormatStr = "%a, %d %b %Y %H:%M:%S +0000" # Format to RFC 2833 standard
@@ -23,7 +25,7 @@ def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, ass
 
 	# Instantiate XML data classes
 	assetData = jobSettings.jobSettings()
-	assetData.loadXML(os.path.join(pblDir, 'assetData.xml'))
+	assetData.loadXML(os.path.join(pblDir, 'assetData.xml'), quiet=True)
 
 	# Parse asset file path
 	assetRootDir = os.path.split(pblDir)[0]
@@ -31,11 +33,16 @@ def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, ass
 	assetRootDir = assetRootDir.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
 
 	# Parse source scene file path
-	assetSource = os.path.normpath(assetSrc)
-	assetSource = assetSource.replace(os.environ['JOBPATH'], '$JOBPATH')
-	assetSource = assetSource.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
+	if assetSrc:
+		assetSource = os.path.normpath(assetSrc)
+		assetSource = assetSource.replace(os.environ['JOBPATH'], '$JOBPATH')
+		assetSource = assetSource.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
+	else:
+		assetSource = None
 
-	# Store values
+	# Store values - TODO: iterate over list of args to make metadata extensible. N.B. variable names will need to be standardised
+#	for key, value in publishVars.iteritems():
+#		assetData.setValue('asset', key, value)
 	assetData.setValue('asset', 'assetRootDir', assetRootDir)
 	assetData.setValue('asset', 'assetPblName', assetPblName)
 	assetData.setValue('asset', 'asset', assetName)
@@ -45,8 +52,7 @@ def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, ass
 	assetData.setValue('asset', 'assetSource', assetSource)
 	assetData.setValue('asset', 'requires', requires)
 	assetData.setValue('asset', 'compatible', compatible)
-
-	assetData.setValue('asset', 'notes', pblNotes)
+	assetData.setValue('asset', 'notes', notes)
 	assetData.setValue('asset', 'user', userName)
 	assetData.setValue('asset', 'timestamp', pblTime)
 
@@ -55,8 +61,8 @@ def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, ass
 
 
 	# Legacy code to write out icData.py - remove when XML data is fully working
-	pblNotes += '\n\n%s %s' % (userName, pblTime)
+	notes += '\n\n%s %s' % (userName, pblTime)
 	icDataFile = open('%s/icData.py' % pblDir, 'w')
-	icDataFile.write("assetRootDir = '%s'\nassetPblName = '%s'\nasset = '%s'\nassetType = '%s'\nassetExt = '%s'\nversion = '%s'\nrequires = '%s'\ncompatible = '%s'\nnotes = '''%s''' " % (assetRootDir, assetPblName, assetName, assetType, assetExt, version, requires, compatible, pblNotes))
+	icDataFile.write("assetRootDir = '%s'\nassetPblName = '%s'\nasset = '%s'\nassetType = '%s'\nassetExt = '%s'\nversion = '%s'\nrequires = '%s'\ncompatible = '%s'\nnotes = '''%s''' " % (assetRootDir, assetPblName, assetName, assetType, assetExt, version, requires, compatible, notes))
 	icDataFile.close()
 

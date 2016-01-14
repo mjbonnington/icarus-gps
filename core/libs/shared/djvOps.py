@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2015 Gramercy Park Studios
+# (c) 2013-2016 Gramercy Park Studios
 #
 # djv_view operations module.
 
@@ -13,8 +13,9 @@ import os, subprocess
 import verbose
 
 
-#processes image sequences
-def prcImg(input, output, startFrame, endFrame, inExt, outExt='jpg', fps=os.environ['FPS']):
+def prcImg(input, output, startFrame, endFrame, inExt, outExt='jpg', fps=os.environ['FPS'], resize=None):
+	""" Processes image sequences.
+	"""
 	cmdInput = '%s.%s-%s.%s' % (input, startFrame, endFrame, inExt)
 	cmdOutput = '%s.%s.%s' % (output, startFrame, outExt)
 
@@ -27,13 +28,17 @@ def prcImg(input, output, startFrame, endFrame, inExt, outExt='jpg', fps=os.envi
 		libsExport = 'export LD_LIBRARY_PATH=%s; export LIBQUICKTIME_PLUGIN_DIR=%s' % (os.environ['DJV_LIB'], os.path.join(os.environ['DJV_LIB'],'libquicktime'))
 
 	#setting djv command
-	djvCmd = '%s; %s %s %s -speed %s' % (libsExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, fps)
+	if resize:
+		djvCmd = '%s; %s %s %s -resize %s %s -speed %s' % (libsExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, resize[0], resize[1], fps)
+	else:
+		djvCmd = '%s; %s %s %s -speed %s' % (libsExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, fps)
 
 	os.system(djvCmd)
 
 
-#processes quicktime movies
 def prcQt(input, output, startFrame, endFrame, inExt, name='preview', fps=os.environ['FPS'], resize=None):
+	""" Processes QuickTime movies.
+	"""
 	cmdInput = '%s.%s-%s.%s' % (input, startFrame, endFrame, inExt)
 	if name:
 		cmdOutput = os.path.join(output, '%s.mov' % name)
@@ -65,14 +70,13 @@ def viewer(path=None):
 	"""
 	cmdStr = ""
 
-	if path is None:
-		path=os.environ['SHOTPATH']
-
 	# Get starting directory
-	if os.path.isdir(path):
-		startupDir = path
-	elif os.path.isfile(path):
+	if os.path.isfile(path):
 		startupDir = os.path.dirname(path)
+	elif os.path.isdir(path):
+		startupDir = path
+	else:
+		startupDir = os.environ['SHOTPATH']
 
 	# Export path to djv codec libraries according to OS
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
@@ -85,10 +89,10 @@ def viewer(path=None):
 		cmdStr += "cd %s; " % startupDir
 
 	# Build the command based on whether path is a file or a directory
-	if os.path.isdir(path):
-		cmdStr += os.environ['DJV_PLAY']
-	elif os.path.isfile(path):
+	if os.path.isfile(path):
 		cmdStr += "%s %s" %(os.environ['DJV_PLAY'], path)
+	else:
+		cmdStr += os.environ['DJV_PLAY']
 
 	# Call command with subprocess in order to not lock the system while djv is running
 	verbose.print_(cmdStr, 4)

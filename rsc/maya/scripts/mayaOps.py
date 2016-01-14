@@ -1,11 +1,10 @@
 #!/usr/bin/python
 
-# [GPS] mayaOps.py
-# v0.1
+# [Icarus] mayaOps.py
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2015 Gramercy Park Studios
+# (c) 2013-2016 Gramercy Park Studios
 #
 # Maya operations module.
 

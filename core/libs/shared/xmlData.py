@@ -1,10 +1,9 @@
 #!/usr/bin/python
 
-# XML Data
-# v0.1
+# [Icarus] xmlData.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015 Gramercy Park Studios
+# (c) 2015-2106 Gramercy Park Studios
 #
 # Class for handling generic XML data files via ElementTree.
 # Classes written to handle specific data files should inherit this class.
@@ -20,8 +19,10 @@ class xmlData():
 		pass
 
 
-	def loadXML(self, datafile=None):
-		""" Load XML data. Omit the keyword argument 'datafile' to reload XML data.
+	def loadXML(self, datafile=None, quiet=False):
+		""" Load XML data.
+			Omit the keyword argument 'datafile' to reload the data.
+			The 'quiet' argument suppresses the warning message if the file doesn't exist.
 		"""
 		if datafile is not None:
 			self.datafile = datafile
@@ -31,8 +32,9 @@ class xmlData():
 			self.root = self.tree.getroot()
 			return True
 		except (IOError, ET.ParseError):
-			verbose.xmlData_readError(datafile)
-			#print "Warning: XML data file is invalid or doesn't exist: %s" %datafile
+			if not quiet:
+				verbose.xmlData_readError(datafile)
+				#print "Warning: XML data file is invalid or doesn't exist: %s" %datafile
 			self.root = ET.Element('root')
 			self.tree = ET.ElementTree(self.root)
 			return False
