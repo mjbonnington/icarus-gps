@@ -6,7 +6,7 @@
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2013-2016 Gramercy Park Studios
 #
-# Render peublishing module.
+# Render publishing module.
 
 
 import os, sys, traceback
@@ -24,15 +24,14 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 	assetExt = ''
 	assetPblName = '%s%s%s' % (prefix, convention, suffix)
 	assetName = assetPblName 
-	assetType = 'render'
 
 	# Process asset publish options
 	assetPblName, assetDir, pblDir = pblOptsPrc.prc(pblTo, subsetName, assetType, prefix, convention, suffix)
 	renderRootPblDir = pblDir
 
 	# Version control
-	currentVersion = '%s' % vCtrl.version(pblDir, current=True)
-	version = '%s' % vCtrl.version(pblDir)
+	currentVersion = vCtrl.version(pblDir, current=True)
+	version = vCtrl.version(pblDir)
 
 	# Checks if no main layer was set and cancels publish if publishing first version
 	if version == 'v001':
@@ -100,7 +99,7 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 						osOps.createDir(os.path.join(pblDir, key))
 					osOps.hardLink(os.path.join(outputDir, file_), os.path.join(pblDir, key))
 
-		# Creating publish snapshot from main layer new version
+		# Create publish snapshot from main layer new version
 		mainLayerDir = os.path.join(pblDir, 'main')
 		mainLayerFileLs = sorted(os.listdir(mainLayerDir))
 		mainLayerPaddingLs = []

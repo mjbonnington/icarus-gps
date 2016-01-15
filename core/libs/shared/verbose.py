@@ -169,7 +169,7 @@ def noSel():
 	print_( 'Nothing selected', 2 )
 
 def noSeq(dir):
-	print_( '\nNo sequence or bad sequence format found in\n\n%s\n\nSequences must have the format [<file_name>.<padding>.<extension>]' % dir, 2 )
+	print_( "'%s': No sequence or bad sequence format.\nSequences must be in the format [<filename>.<padding>.<extension>]" % dir, 2 )
 
 def noSetsPbl():
 	print_( 'Sets cannot be selected for publishing', 1 )

@@ -8,7 +8,7 @@
 # These functions convert formatted sequences to lists and vice-versa.
 
 
-import re
+import os, re
 
 
 def numList(num_range_str, quiet=False):
@@ -51,7 +51,7 @@ def numList(num_range_str, quiet=False):
 	return sorted(list(set(num_int_list)), key=int)
 
 
-def numRange(num_int_list, quiet=False):
+def numRange(num_int_list, padding=0, quiet=False):
 	""" Takes a list of integer values and returns a formatted string describing the range of numbers.
 		e.g. [1, 2, 3, 4, 5, 20, 24, 1001, 1002]
 		returns '1-5, 20, 24, 1001-1002'
@@ -76,15 +76,15 @@ def numRange(num_int_list, quiet=False):
 			last = x
 		else:
 			if first == last:
-				num_range_str = num_range_str + "%d, " %first
+				num_range_str = num_range_str + "%s, " %str(first).zfill(padding)
 			else:
-				num_range_str = num_range_str + "%d-%d, " %(first, last)
+				num_range_str = num_range_str + "%s-%s, " %(str(first).zfill(padding), str(last).zfill(padding))
 			first = last = x
 	if first is not None:
 		if first == last:
-			num_range_str = num_range_str + "%d" %first
+			num_range_str = num_range_str + "%s" %str(first).zfill(padding)
 		else:
-			num_range_str = num_range_str + "%d-%d" %(first, last)
+			num_range_str = num_range_str + "%s-%s" %(str(first).zfill(padding), str(last).zfill(padding))
 
 	return num_range_str
 
@@ -116,3 +116,37 @@ def chunks(l, n):
     """
     for i in xrange(0, len(l), n):
         yield l[i:i+n]
+
+
+def detectSeq(filepath):
+	""" Detect file sequences based on the provided file path.
+		Returns frame range as string.
+	"""
+	lsFrames = [] # Clear frame list
+
+	# Parse file path
+	try:
+		filename = os.path.basename(filepath)
+		path = os.path.dirname(filepath)
+		base, ext = os.path.splitext(filename)
+		prefix, framenumber = base.rsplit('.', 1)
+		padding = len(framenumber)
+		framenumber = int(framenumber)
+	except ValueError:
+		print "Error: could not parse sequence."
+		return False, False # need to return tuple to match successful return type (str, str)
+
+	# Construct regular expression for matching files in the sequence
+	re_seq_pattern = re.compile( r"^%s\.\d{%d}%s$" %(prefix, padding, ext) )
+
+	# Find other files in the sequence in the same directory
+	for item in os.listdir(path):
+		if re_seq_pattern.match(item) is not None:
+			#lsFrames.append(item) # whole filename
+			lsFrames.append( int(os.path.splitext(item)[0].rsplit('.', 1)[1]) ) # just the frame number
+
+	#print "Found %d frames." %len(lsFrames)
+
+	#return lsFrames
+	return prefix, numRange(lsFrames, padding=padding)
+

@@ -183,7 +183,7 @@ class icarusApp(QtGui.QDialog):
 		elif os.environ['ICARUSENVAWARE'] == 'MAYA':
 			pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_maya.png")
 			self.ui.appIcon_label.setPixmap(pixmap)
-			uiHideLs = ['assetSubType_listWidget'] # Removed 'icarusBanner', 
+			uiHideLs = ['assetSubType_listWidget', 'ma_assetTypes_listWidget'] # Removed 'icarusBanner', 
 			#hides UI items 
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
@@ -202,7 +202,7 @@ class icarusApp(QtGui.QDialog):
 		elif os.environ['ICARUSENVAWARE'] == 'NUKE':
 			pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_nuke.png")
 			self.ui.appIcon_label.setPixmap(pixmap)
-			uiHideLs = ['assetSubType_listWidget'] # Removed 'icarusBanner', 
+			uiHideLs = ['assetSubType_listWidget', 'nk_assetTypes_listWidget'] # Removed 'icarusBanner', 
 			#hides UI 
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
@@ -241,6 +241,8 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.assetSubType_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateAssetVersionCol)
 		QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateInfoField)
 		QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateImgPreview)
+
+		self.ui.dailyPbl_tableWidget.cellDoubleClicked.connect(self.cell_was_clicked)
 
 		#QtCore.QObject.connect(self.ui.assetType_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.updateAssetNameCol)
 		#QtCore.QObject.connect(self.ui.assetName_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.adjustColumns)
@@ -657,6 +659,7 @@ Environment: %s
 	# Preview - opens djv_view to preview movie or image sequence
 	def preview(self, path=None):
 		import djvOps
+		verbose.launchApp('djv_view')
 		if path is None:
 			djvOps.viewer(self.gatherPath)
 		else:
@@ -790,6 +793,8 @@ Environment: %s
 
 
 	def cell_was_clicked(self, row, column):
+		""" TEMPORARY FUNCTION - catches double-click signal on dailies table and launches sequence in viewer
+		"""
 		item = self.ui.dailyPbl_tableWidget.itemAt(row, column)
 		print("Row %d and column %d was clicked: %s" % (row, column, item.text()))
 		#self.ID = item.text()
@@ -799,48 +804,57 @@ Environment: %s
 	def dailyTableAdd(self):
 		""" Populates the dailies publish table.
 		"""
-		#processes latest path added to self.renderPaths
-		dailyPath = self.dailyPblBrowse()
-		dailyDic = {}
+		import sequence
+
+		# Parse the file path
+		dailyPath = self.dailyPblBrowse() # dailyPath is a full path to a file
+	#	dailyDic = {}
 		if dailyPath:
+			dailyPath = dailyPath.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
 			self.previewPath = dailyPath
-			dailyDic = pblOptsPrc.dailyPath_prc(dailyPath)
-			seqPath = dailyPath.replace(os.environ['SHOTPATH'], '$SHOTPATH')
-			seqPath = os.path.split(seqPath)[0]
-			if dailyDic:
-				self.ui.dailyPbl_tableWidget.cellDoubleClicked.connect(self.cell_was_clicked)
-				#seqItem.doubleClicked.connect(self.preview(dailyPath))
-				seq = dailyDic.keys()[0]
-				seqRange = "1001-1010"
-				seqItem = QtGui.QTableWidgetItem(seq)
+			seqDir = dailyPath.replace(os.environ['SHOTPATH'].replace('\\', '/'), '$SHOTPATH') # Change to relative path
+			seqDir = os.path.dirname(seqDir)
+			#dailyDic = pblOptsPrc.dailyPath_prc(dailyPath)
+			seqName, seqRange = sequence.detectSeq(dailyPath)
+			#if dailyDic:
+			if seqName:
+				#seqName = dailyDic.keys()[0]
+				#seqName = os.path.basename(dailyPath)
+
+				nameItem = QtGui.QTableWidgetItem(seqName)
 				rangeItem = QtGui.QTableWidgetItem(seqRange)
-				pathItem = QtGui.QTableWidgetItem(seqPath)
-				mainItem = QtGui.QTableWidgetItem()
-				#deleting existent sequence
+				typeItem = QtGui.QTableWidgetItem(self.dailyType)
+				pathItem = QtGui.QTableWidgetItem(seqDir)
+				# Delete existing entry
 				self.ui.dailyPbl_tableWidget.removeRow(0)
-				#adding items and locking table
+				# Add new entries and lock table
 				newRow = self.ui.dailyPbl_tableWidget.insertRow(0)
-				self.ui.dailyPbl_tableWidget.setItem(0, 0, seqItem)
-				seqItem.setFlags(~QtCore.Qt.ItemIsEditable)
+				self.ui.dailyPbl_tableWidget.setItem(0, 0, nameItem)
+				nameItem.setFlags(~QtCore.Qt.ItemIsEditable)
 				self.ui.dailyPbl_tableWidget.setItem(0, 1, rangeItem)
 				rangeItem.setFlags(~QtCore.Qt.ItemIsEditable)
-				self.ui.dailyPbl_tableWidget.setItem(0, 2, mainItem)
-				mainItem.setFlags(~QtCore.Qt.ItemIsEditable)
+				self.ui.dailyPbl_tableWidget.setItem(0, 2, typeItem)
+				typeItem.setFlags(~QtCore.Qt.ItemIsEditable)
 				self.ui.dailyPbl_tableWidget.setItem(0, 3, pathItem)
 				pathItem.setFlags(~QtCore.Qt.ItemIsEditable)
-				mainItem.setText(self.dailyType)
+				#pathItem.setText(self.dailyType)
 				self.ui.dailyPbl_tableWidget.resizeColumnsToContents()
 
 			else:
-				verbose.noSeq(seqPath)
+				verbose.noSeq(os.path.basename(dailyPath))
+				self.ui.dailyPbl_tableWidget.removeRow(0)
 
-	#sets the daily type and locks/unlocks the add and remove button accordingly
+
 	def setDailyType(self):
+		""" Sets the dailies type and locks/unlocks the add and remove button accordingly.
+		"""
 		self.dailyType = self.ui.dailyPblType_comboBox.currentText()
-		if not self.dailyType:
-			self.ui.dailyPblAdd_pushButton.setEnabled(False)
-		else:
+
+		if self.dailyType:
 			self.ui.dailyPblAdd_pushButton.setEnabled(True)
+		else:
+			self.ui.dailyPblAdd_pushButton.setEnabled(False)
+
 
 	################browse dialogs###############	
 	#asset browse
@@ -856,7 +870,7 @@ Environment: %s
 	def dailyPblBrowse(self):
 		if self.dailyType in ('modeling', 'texturing', 'animation', 'anim', 'fx', 'previs', 'tracking', 'rigging'):
 			return self.fileDialog(os.environ['MAYAPLAYBLASTSDIR'])
-		elif self.dailyType in ('lighting', 'shading'):
+		elif self.dailyType in ('lighting', 'shading', 'lookdev'):
 			return self.fileDialog(os.environ['MAYARENDERSDIR'])
 		elif self.dailyType == 'comp':
 			return self.fileDialog(os.environ['NUKERENDERSDIR'])
