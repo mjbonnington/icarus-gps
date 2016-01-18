@@ -45,7 +45,7 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 	if not streamPbl:
 		dialogMsg += "Warning:\n\nPublish won't be streamed.\nLayers from previous renders will not be ported.\n\n\n"
 	if not mainLayer:
-		dialogMsg += 'Warning:\n\nNo main layer was set.\nThe render main layer will be ported from the previous publish.\n\nContinue?\n\n\n'
+		dialogMsg += 'Warning:\n\nNo main layer was set.\nThe main render layer will be ported from the previous publish.\n\nContinue?\n\n\n'
 	dialogMsg += 'Render:\t%s\n\nVersion:\t%s\n\nNotes:\t%s' % (assetPblName, version, pblNotes)
 	dialog = pDialog.dialog()
 	if not dialog.dialogWindow(dialogMsg, dialogTitle):
@@ -53,7 +53,7 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 
 	try:
 		verbose.pblFeed(begin=True)
-		#pblResult = 'SUCCESS'
+		pblResult = 'SUCCESS'
 
 		# Create publish directories
 		pblDir = osOps.createDir(os.path.join(pblDir, version))
@@ -84,20 +84,22 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
 
 		# Process all new layers and passes
 		for key in renderDic.keys():
-			outputDir = os.path.expandvars(renderDic[key])
-			dirContents = sorted(os.listdir(outputDir))
+			srcLayerDir = os.path.expandvars(renderDic[key]) # expand environment variables in render path
+			dirContents = sorted(os.listdir(srcLayerDir))
 			for file_ in dirContents:
 				verbose.pblFeed(msg='Processing %s' % file_)
 				if key == mainLayer:
 					osOps.createDir(os.path.join(pblDir, 'main'))
-					if os.path.isfile(os.path.join(outputDir, file_)):
-						prcFile = pblOptsPrc.renderName_prc(key, 'main', file_)
-						if prcFile:
-							osOps.hardLink(os.path.join(outputDir, file_), os.path.join(pblDir, 'main', prcFile))
+					#if os.path.isfile(os.path.join(srcLayerDir, file_)):
+					#	prcFile = pblOptsPrc.renderName_prc(key, 'main', file_)
+					#	if prcFile:
+					#		osOps.hardLink(os.path.join(srcLayerDir, file_), os.path.join(pblDir, 'main', prcFile))
+					osOps.hardLink(os.path.join(srcLayerDir, file_), os.path.join(pblDir, key))
 				else:
-					if not os.path.isdir(os.path.join(pblDir, key)):
-						osOps.createDir(os.path.join(pblDir, key))
-					osOps.hardLink(os.path.join(outputDir, file_), os.path.join(pblDir, key))
+					destLayerDir = os.path.join(pblDir, key)
+					if not os.path.isdir(destLayerDir):
+						osOps.createDir(destLayerDir)
+					osOps.hardLink(os.path.join(srcLayerDir, file_), destLayerDir)
 
 		# Create publish snapshot from main layer new version
 		mainLayerDir = os.path.join(pblDir, 'main')

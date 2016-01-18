@@ -71,12 +71,15 @@ def viewer(path=None):
 	cmdStr = ""
 
 	# Get starting directory
-	if os.path.isfile(path):
-		startupDir = os.path.dirname(path)
-	elif os.path.isdir(path):
-		startupDir = path
-	else:
+	pathIsFile = False
+	if path is None:
 		startupDir = os.environ['SHOTPATH']
+	else:
+		if os.path.isfile(path):
+			startupDir = os.path.dirname(path)
+			pathIsFile = True
+		elif os.path.isdir(path):
+			startupDir = path
 
 	# Export path to djv codec libraries according to OS
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
@@ -89,7 +92,7 @@ def viewer(path=None):
 		cmdStr += "cd %s; " % startupDir
 
 	# Build the command based on whether path is a file or a directory
-	if os.path.isfile(path):
+	if pathIsFile:
 		cmdStr += "%s %s" %(os.environ['DJV_PLAY'], path)
 	else:
 		cmdStr += os.environ['DJV_PLAY']

@@ -226,6 +226,7 @@ def setEnv(envVars):
 		os.environ['DJV_LIB'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/Resources/lib' % os.environ['PIPELINE'])
 		os.environ['DJV_CONVERT'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/Resources/bin/djv_convert' % os.environ['PIPELINE'])
 		os.environ['DJV_PLAY'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/Resources/bin/djv_view.sh' % os.environ['PIPELINE'])
+		#os.environ['DJV_PLAY'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/MacOS/djv-1.0.5-OSX-64' % os.environ['PIPELINE'])
 
 	else:
 		os.environ['DJV_LIB'] = '%s/external_apps/djv/djv-1.0.5-Linux-64/lib' % os.environ['PIPELINE']
