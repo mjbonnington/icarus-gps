@@ -92,6 +92,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="renderPreview_pushButton">
+         <property name="text">
+          <string>Preview</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="horizontalSpacer_5">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -122,8 +129,14 @@
       <property name="alternatingRowColors">
        <bool>false</bool>
       </property>
-      <property name="sortingEnabled">
+      <property name="textElideMode">
+       <enum>Qt::ElideMiddle</enum>
+      </property>
+      <property name="uniformRowHeights">
        <bool>true</bool>
+      </property>
+      <property name="sortingEnabled">
+       <bool>false</bool>
       </property>
       <property name="animated">
        <bool>true</bool>
@@ -133,7 +146,7 @@
       </property>
       <column>
        <property name="text">
-        <string>Layer</string>
+        <string>Layer / Pass</string>
        </property>
       </column>
       <column>
@@ -151,188 +164,6 @@
         <string>Path</string>
        </property>
       </column>
-      <item>
-       <property name="text">
-        <string>main</string>
-       </property>
-       <property name="text">
-        <string>1001-1150</string>
-       </property>
-       <property name="text">
-        <string>main</string>
-       </property>
-       <property name="text">
-        <string>C:\Users\Mike\Documents\Scripts\python\PySide\images</string>
-       </property>
-       <item>
-        <property name="text">
-         <string>sss</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>specular</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>self_illumination</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>refract</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>reflect</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>master</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>lighting</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>gi</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>diffuse</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </item>
-      </item>
-      <item>
-       <property name="text">
-        <string>id</string>
-       </property>
-       <property name="text">
-        <string>1001-1150</string>
-       </property>
-       <property name="text">
-        <string>layer</string>
-       </property>
-       <property name="text">
-        <string>C:\Users\Mike\Documents\Scripts\python\PySide\images</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>foreground</string>
-       </property>
-       <property name="text">
-        <string>1056-1150</string>
-       </property>
-       <property name="text">
-        <string>layer</string>
-       </property>
-       <property name="text">
-        <string>C:\Users\Mike\Documents\Scripts\python\PySide\images</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>background</string>
-       </property>
-       <property name="text">
-        <string>1001-1150</string>
-       </property>
-       <property name="text">
-        <string>layer</string>
-       </property>
-       <property name="text">
-        <string>C:\Users\Mike\Documents\Scripts\python\PySide\images</string>
-       </property>
-      </item>
      </widget>
     </item>
    </layout>

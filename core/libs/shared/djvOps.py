@@ -71,10 +71,9 @@ def viewer(path=None):
 	cmdStr = ""
 
 	# Get starting directory
+	startupDir = os.environ['SHOTPATH']
 	pathIsFile = False
-	if path is None:
-		startupDir = os.environ['SHOTPATH']
-	else:
+	if path is not None:
 		if os.path.isfile(path):
 			startupDir = os.path.dirname(path)
 			pathIsFile = True

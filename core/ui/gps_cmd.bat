@@ -26,4 +26,5 @@ doskey clear=cls
 doskey ls=dir /w
 doskey ll=dir
 doskey lseq=%PIPELINE%\core\libs\shared\sequenceLs.py
-doskey submit=$PIPELINE%\core\tools\gpsSubmit\submit__main__.py
+doskey rb=%PIPELINE%\core\tools\renderBrowser\rb__main__.py -style fusion
+doskey submit=$PIPELINE%\core\tools\gpsSubmit\submit__main__.py -style fusion

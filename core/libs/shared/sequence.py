@@ -120,7 +120,12 @@ def chunks(l, n):
 
 def detectSeq(filepath):
 	""" Detect file sequences based on the provided file path.
-		Returns frame range as string.
+		Returns:
+		path - the directory path containing the file
+		prefix - the first part of the filename
+		frame - the numeric part of the filename
+		ext - the filename extension
+		num_frames - the number of frames in the sequence
 	"""
 	lsFrames = [] # Clear frame list
 
@@ -134,7 +139,7 @@ def detectSeq(filepath):
 		framenumber = int(framenumber)
 	except ValueError:
 		print "Error: could not parse sequence."
-		return False, False # need to return tuple to match successful return type (str, str)
+		return
 
 	# Construct regular expression for matching files in the sequence
 	re_seq_pattern = re.compile( r"^%s\.\d{%d}%s$" %(prefix, padding, ext) )
@@ -148,5 +153,58 @@ def detectSeq(filepath):
 	#print "Found %d frames." %len(lsFrames)
 
 	#return lsFrames
-	return prefix, numRange(lsFrames, padding=padding)
+	return (path, prefix, numRange(lsFrames, padding=padding), ext, len(lsFrames))
+
+
+def getBases(path):
+	""" Find file sequence bases in path.
+		Returns a list of bases (the first part of the filename, stripped of frame number padding and extension).
+	"""
+	# Get directory contents
+	try:
+		ls = os.listdir(path)
+		ls.sort()
+	except OSError:
+		print "No such file or directory: '%s'" %path
+		return False
+
+	# Create list to hold all basenames of sequences
+	all_bases = []
+
+	# Get list of files in current directory
+	for filename in ls:
+
+		# Only work on files, not directories, and ignore files that start with a dot
+		if os.path.isfile(os.path.join(path, filename)) and not filename.startswith('.'):
+
+			# Extract file extension
+			root, ext = os.path.splitext(filename)
+
+			# Match file names which have a trailing number separated by a dot
+			seqRE = re.compile(r'\.\d+$')
+			match = seqRE.search(root)
+
+			# Store filename prefix
+			if match is not None:
+				prefix = root[:root.rfind(match.group())]
+				all_bases.append('%s.#%s' % (prefix, ext))
+
+	# Remove duplicates & sort list
+	bases = list(set(all_bases))
+	bases.sort()
+	return bases
+
+
+def getSequence(path, pattern):
+	""" Looks for other frames in a sequence that fit a particular pattern.
+		Pass the first (lowest-numbered) frame in the sequence to the detectSeq function and return its results.
+	"""
+	#filter_ls = glob.glob("%s*" %os.path.join(path, base))
+	import glob
+	pattern = pattern.replace('#', '*')
+	filter_ls = glob.glob( os.path.join(path, pattern) )
+	filter_ls.sort()
+	frame_ls = []
+
+	return detectSeq( filter_ls[0] )
 
