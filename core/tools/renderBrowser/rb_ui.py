@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'rb_ui.ui'
 #
-# Created: Mon Jan 18 15:54:41 2016
+# Created: Tue Jan 19 15:05:52 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -34,26 +34,11 @@ class Ui_MainWindow(object):
         self.renderPblRemove_pushButton.setFlat(False)
         self.renderPblRemove_pushButton.setObjectName("renderPblRemove_pushButton")
         self.horizontalLayout_10.addWidget(self.renderPblRemove_pushButton)
-        self.renderPblSetMain_pushButton = QtGui.QPushButton(self.renderPblToolbar_frame)
-        self.renderPblSetMain_pushButton.setEnabled(True)
-        self.renderPblSetMain_pushButton.setCheckable(False)
-        self.renderPblSetMain_pushButton.setDefault(False)
-        self.renderPblSetMain_pushButton.setFlat(False)
-        self.renderPblSetMain_pushButton.setObjectName("renderPblSetMain_pushButton")
-        self.horizontalLayout_10.addWidget(self.renderPblSetMain_pushButton)
-        self.renderPblRevert_pushButton = QtGui.QPushButton(self.renderPblToolbar_frame)
-        self.renderPblRevert_pushButton.setEnabled(False)
-        self.renderPblRevert_pushButton.setObjectName("renderPblRevert_pushButton")
-        self.horizontalLayout_10.addWidget(self.renderPblRevert_pushButton)
-        self.renderPreview_pushButton = QtGui.QPushButton(self.renderPblToolbar_frame)
-        self.renderPreview_pushButton.setObjectName("renderPreview_pushButton")
-        self.horizontalLayout_10.addWidget(self.renderPreview_pushButton)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_10.addItem(spacerItem)
-        self.streamPbl_checkBox = QtGui.QCheckBox(self.renderPblToolbar_frame)
-        self.streamPbl_checkBox.setChecked(True)
-        self.streamPbl_checkBox.setObjectName("streamPbl_checkBox")
-        self.horizontalLayout_10.addWidget(self.streamPbl_checkBox)
+        self.renderPblClear_pushButton = QtGui.QPushButton(self.renderPblToolbar_frame)
+        self.renderPblClear_pushButton.setObjectName("renderPblClear_pushButton")
+        self.horizontalLayout_10.addWidget(self.renderPblClear_pushButton)
         self.verticalLayout.addWidget(self.renderPblToolbar_frame)
         self.renderPbl_treeWidget = QtGui.QTreeWidget(self.centralwidget)
         self.renderPbl_treeWidget.setAlternatingRowColors(False)
@@ -61,6 +46,7 @@ class Ui_MainWindow(object):
         self.renderPbl_treeWidget.setUniformRowHeights(True)
         self.renderPbl_treeWidget.setAnimated(True)
         self.renderPbl_treeWidget.setHeaderHidden(False)
+        self.renderPbl_treeWidget.setExpandsOnDoubleClick(False)
         self.renderPbl_treeWidget.setObjectName("renderPbl_treeWidget")
         self.verticalLayout.addWidget(self.renderPbl_treeWidget)
         MainWindow.setCentralWidget(self.centralwidget)
@@ -72,10 +58,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Render Browser", None, QtGui.QApplication.UnicodeUTF8))
         self.renderPblAdd_pushButton.setText(QtGui.QApplication.translate("MainWindow", "Add", None, QtGui.QApplication.UnicodeUTF8))
         self.renderPblRemove_pushButton.setText(QtGui.QApplication.translate("MainWindow", "Remove", None, QtGui.QApplication.UnicodeUTF8))
-        self.renderPblSetMain_pushButton.setText(QtGui.QApplication.translate("MainWindow", "Set as Main", None, QtGui.QApplication.UnicodeUTF8))
-        self.renderPblRevert_pushButton.setText(QtGui.QApplication.translate("MainWindow", "Revert", None, QtGui.QApplication.UnicodeUTF8))
-        self.renderPreview_pushButton.setText(QtGui.QApplication.translate("MainWindow", "Preview", None, QtGui.QApplication.UnicodeUTF8))
-        self.streamPbl_checkBox.setText(QtGui.QApplication.translate("MainWindow", "Stream Publish", None, QtGui.QApplication.UnicodeUTF8))
+        self.renderPblClear_pushButton.setText(QtGui.QApplication.translate("MainWindow", "Clear", None, QtGui.QApplication.UnicodeUTF8))
         self.renderPbl_treeWidget.setSortingEnabled(False)
         self.renderPbl_treeWidget.headerItem().setText(0, QtGui.QApplication.translate("MainWindow", "Layer / Pass", None, QtGui.QApplication.UnicodeUTF8))
         self.renderPbl_treeWidget.headerItem().setText(1, QtGui.QApplication.translate("MainWindow", "Frames", None, QtGui.QApplication.UnicodeUTF8))

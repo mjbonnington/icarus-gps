@@ -8,7 +8,7 @@
 # These functions convert formatted sequences to lists and vice-versa.
 
 
-import os, re
+import glob, os, re
 
 
 def numList(num_range_str, quiet=False):
@@ -118,44 +118,6 @@ def chunks(l, n):
         yield l[i:i+n]
 
 
-def detectSeq(filepath):
-	""" Detect file sequences based on the provided file path.
-		Returns:
-		path - the directory path containing the file
-		prefix - the first part of the filename
-		frame - the numeric part of the filename
-		ext - the filename extension
-		num_frames - the number of frames in the sequence
-	"""
-	lsFrames = [] # Clear frame list
-
-	# Parse file path
-	try:
-		filename = os.path.basename(filepath)
-		path = os.path.dirname(filepath)
-		base, ext = os.path.splitext(filename)
-		prefix, framenumber = base.rsplit('.', 1)
-		padding = len(framenumber)
-		framenumber = int(framenumber)
-	except ValueError:
-		print "Error: could not parse sequence."
-		return
-
-	# Construct regular expression for matching files in the sequence
-	re_seq_pattern = re.compile( r"^%s\.\d{%d}%s$" %(prefix, padding, ext) )
-
-	# Find other files in the sequence in the same directory
-	for item in os.listdir(path):
-		if re_seq_pattern.match(item) is not None:
-			#lsFrames.append(item) # whole filename
-			lsFrames.append( int(os.path.splitext(item)[0].rsplit('.', 1)[1]) ) # just the frame number
-
-	#print "Found %d frames." %len(lsFrames)
-
-	#return lsFrames
-	return (path, prefix, numRange(lsFrames, padding=padding), ext, len(lsFrames))
-
-
 def getBases(path):
 	""" Find file sequence bases in path.
 		Returns a list of bases (the first part of the filename, stripped of frame number padding and extension).
@@ -200,11 +162,62 @@ def getSequence(path, pattern):
 		Pass the first (lowest-numbered) frame in the sequence to the detectSeq function and return its results.
 	"""
 	#filter_ls = glob.glob("%s*" %os.path.join(path, base))
-	import glob
 	pattern = pattern.replace('#', '*')
 	filter_ls = glob.glob( os.path.join(path, pattern) )
 	filter_ls.sort()
-	frame_ls = []
+	#frame_ls = []
 
 	return detectSeq( filter_ls[0] )
+
+
+def getFirst(path):
+	""" TEMPORARY BODGE
+	"""
+	#filter_ls = glob.glob("%s*" %os.path.join(path, base))
+	path = path.replace('#', '*')
+	filter_ls = glob.glob(path)
+	filter_ls.sort()
+
+	return filter_ls[0]
+
+
+def detectSeq(filepath):
+	""" Detect file sequences based on the provided file path.
+		Returns a tuple containing 5 elements:
+		1. path - the directory path containing the file
+		2. prefix - the first part of the filename
+		3. frame - the sequence of frame numbers computed from the numeric part of the filename, represented as a string
+		4. ext - the filename extension
+		5. num_frames - the number of frames in the sequence
+	"""
+	lsFrames = [] # Clear frame list
+
+	# Parse file path
+	try:
+		filename = os.path.basename(filepath)
+		path = os.path.dirname(filepath)
+		base, ext = os.path.splitext(filename)
+		prefix, framenumber = base.rsplit('.', 1)
+		padding = len(framenumber)
+		framenumber = int(framenumber)
+	except ValueError:
+		print "Error: could not parse sequence."
+		return
+
+	# Construct regular expression for matching files in the sequence
+	re_seq_str = r"^%s\.\d{%d}%s$" %( re.escape(prefix), padding, re.escape(ext) )
+	#print re_seq_str
+	re_seq_pattern = re.compile(re_seq_str)
+
+	# Find other files in the sequence in the same directory
+	for item in os.listdir(path):
+		if re_seq_pattern.match(item) is not None:
+			#lsFrames.append(item) # whole filename
+			lsFrames.append( int(os.path.splitext(item)[0].rsplit('.', 1)[1]) ) # just the frame number
+
+	#print "Found %d frames." %len(lsFrames)
+
+	#return lsFrames
+	#return (path, prefix, numRange(lsFrames, padding=padding), ext, len(lsFrames))
+	return (path, prefix, numRange(lsFrames), ext, len(lsFrames))
 

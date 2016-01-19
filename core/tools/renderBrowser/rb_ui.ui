@@ -63,43 +63,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="renderPblSetMain_pushButton">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>Set as Main</string>
-         </property>
-         <property name="checkable">
-          <bool>false</bool>
-         </property>
-         <property name="default">
-          <bool>false</bool>
-         </property>
-         <property name="flat">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="renderPblRevert_pushButton">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>Revert</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="renderPreview_pushButton">
-         <property name="text">
-          <string>Preview</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_5">
+        <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -112,12 +76,9 @@
         </spacer>
        </item>
        <item>
-        <widget class="QCheckBox" name="streamPbl_checkBox">
+        <widget class="QPushButton" name="renderPblClear_pushButton">
          <property name="text">
-          <string>Stream Publish</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
+          <string>Clear</string>
          </property>
         </widget>
        </item>
@@ -142,6 +103,9 @@
        <bool>true</bool>
       </property>
       <property name="headerHidden">
+       <bool>false</bool>
+      </property>
+      <property name="expandsOnDoubleClick">
        <bool>false</bool>
       </property>
       <column>
