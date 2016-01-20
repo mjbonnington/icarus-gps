@@ -13,7 +13,7 @@ import os, sys, traceback
 import pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, djvOps, inProgress
 
 
-def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes, mail, approved):
+def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes):
 
 	job = os.environ['JOB']
 	assetType = 'render'

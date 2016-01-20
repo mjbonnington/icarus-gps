@@ -102,9 +102,6 @@ QPushButton:default, QToolButton:default {
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
-        </property>
         <property name="sizeHint" stdset="0">
          <size>
           <width>24</width>
@@ -134,19 +131,6 @@ QPushButton:default, QToolButton:default {
          <bool>true</bool>
         </property>
        </widget>
-      </item>
-      <item>
-       <spacer name="header_horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
       </item>
       <item>
        <widget class="QToolButton" name="shotEnv_toolButton">
@@ -1984,50 +1968,46 @@ QToolButton:disabled {
                </widget>
               </item>
               <item>
-               <widget class="QTableWidget" name="renderPbl_tableWidget">
-                <property name="selectionBehavior">
-                 <enum>QAbstractItemView::SelectRows</enum>
+               <widget class="QTreeWidget" name="renderPbl_treeWidget">
+                <property name="alternatingRowColors">
+                 <bool>false</bool>
                 </property>
                 <property name="textElideMode">
                  <enum>Qt::ElideMiddle</enum>
                 </property>
-                <attribute name="horizontalHeaderDefaultSectionSize">
-                 <number>125</number>
-                </attribute>
-                <attribute name="horizontalHeaderHighlightSections">
+                <property name="uniformRowHeights">
                  <bool>true</bool>
-                </attribute>
-                <attribute name="horizontalHeaderStretchLastSection">
-                 <bool>true</bool>
-                </attribute>
-                <attribute name="verticalHeaderVisible">
+                </property>
+                <property name="sortingEnabled">
                  <bool>false</bool>
-                </attribute>
-                <attribute name="verticalHeaderCascadingSectionResizes">
-                 <bool>false</bool>
-                </attribute>
-                <attribute name="verticalHeaderDefaultSectionSize">
-                 <number>20</number>
-                </attribute>
-                <attribute name="verticalHeaderHighlightSections">
+                </property>
+                <property name="animated">
                  <bool>true</bool>
-                </attribute>
-                <attribute name="verticalHeaderMinimumSectionSize">
-                 <number>20</number>
-                </attribute>
+                </property>
+                <property name="headerHidden">
+                 <bool>false</bool>
+                </property>
+                <property name="expandsOnDoubleClick">
+                 <bool>false</bool>
+                </property>
                 <column>
                  <property name="text">
-                  <string>layer</string>
+                  <string>Layer / Pass</string>
                  </property>
                 </column>
                 <column>
                  <property name="text">
-                  <string>path</string>
+                  <string>Frames</string>
                  </property>
                 </column>
                 <column>
                  <property name="text">
-                  <string>type</string>
+                  <string>Type</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Path</string>
                  </property>
                 </column>
                </widget>
@@ -2636,7 +2616,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>nk_subSetName_lineEdit</tabstop>
   <tabstop>nk_subSetWarning_textEdit</tabstop>
   <tabstop>dailyPbl_tableWidget</tabstop>
-  <tabstop>renderPbl_tableWidget</tabstop>
   <tabstop>notes_textEdit</tabstop>
   <tabstop>publish_pushButton</tabstop>
   <tabstop>gather_pushButton</tabstop>

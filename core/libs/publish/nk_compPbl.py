@@ -9,7 +9,7 @@ import os, sys, traceback
 import nuke
 import pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, nukeOps, inProgress
 
-def publish(pblTo, slShot, pblType, pblNotes, mail, approved):
+def publish(pblTo, slShot, pblType, pblNotes):
 	
 	#gets and selects all nodes
 	nodeLs = nuke.root().nodes()
@@ -35,8 +35,8 @@ def publish(pblTo, slShot, pblType, pblNotes, mail, approved):
 	
 	#version control	
 	version = '%s' % vCtrl.version(pblDir)
-	if approved:
-		version += '_apv'
+	#if approved:
+	#	version += '_apv'
 
 	#confirmation dialog
 	dialogTitle = 'Publishing'

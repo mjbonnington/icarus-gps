@@ -9,7 +9,7 @@ import os, sys, traceback
 import maya.cmds as mc
 import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, inProgress
 
-def publish(pblTo, pblNotes, mail, approved):
+def publish(pblTo, pblNotes):
 	
 	#defining main variables
 	shot_ = os.environ['SHOT']
@@ -26,8 +26,8 @@ def publish(pblTo, pblNotes, mail, approved):
 	
 	#version control	
 	version = '%s' % vCtrl.version(pblDir)
-	if approved:
-		version += '_apv'
+	#if approved:
+	#	version += '_apv'
 
 	#confirmation dialog
 	dialogTitle = 'Publishing'

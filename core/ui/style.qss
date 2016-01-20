@@ -535,6 +535,18 @@ QTreeView {
 	background: #222;*/
 }
 
+/*QTreeView::item {
+	padding: 16px;
+}
+
+QTreeView::icon {
+	height: 18px;
+}*/
+
+/*QTreeView::branch {
+	border-image: none;
+}
+
 QTreeView::branch:has-siblings:!adjoins-item {
 	image: url(:/images/vline.png);
 }
@@ -545,7 +557,7 @@ QTreeView::branch:has-siblings:adjoins-item {
 
 QTreeView::branch:!has-children:!has-siblings:adjoins-item {
 	image: url(:/images/branch-end.png);
-}
+}*/
 
 QTreeView::branch:has-children:!has-siblings:closed,
 QTreeView::branch:closed:has-children:has-siblings {

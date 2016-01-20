@@ -88,13 +88,13 @@
     <item>
      <widget class="QTreeWidget" name="renderPbl_treeWidget">
       <property name="alternatingRowColors">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="textElideMode">
        <enum>Qt::ElideMiddle</enum>
       </property>
       <property name="uniformRowHeights">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <property name="sortingEnabled">
        <bool>false</bool>

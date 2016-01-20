@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'rb_ui.ui'
 #
-# Created: Tue Jan 19 15:05:52 2016
+# Created: Wed Jan 20 15:19:10 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -41,9 +41,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_10.addWidget(self.renderPblClear_pushButton)
         self.verticalLayout.addWidget(self.renderPblToolbar_frame)
         self.renderPbl_treeWidget = QtGui.QTreeWidget(self.centralwidget)
-        self.renderPbl_treeWidget.setAlternatingRowColors(False)
+        self.renderPbl_treeWidget.setAlternatingRowColors(True)
         self.renderPbl_treeWidget.setTextElideMode(QtCore.Qt.ElideMiddle)
-        self.renderPbl_treeWidget.setUniformRowHeights(True)
+        self.renderPbl_treeWidget.setUniformRowHeights(False)
         self.renderPbl_treeWidget.setAnimated(True)
         self.renderPbl_treeWidget.setHeaderHidden(False)
         self.renderPbl_treeWidget.setExpandsOnDoubleClick(False)

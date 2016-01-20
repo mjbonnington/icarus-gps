@@ -13,7 +13,7 @@ import os, sys, traceback, time
 import pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, djvOps, inProgress
 
 
-def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes, mail):
+def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes):
 	
 	job = os.environ['JOB']
 	assetType = 'daily'

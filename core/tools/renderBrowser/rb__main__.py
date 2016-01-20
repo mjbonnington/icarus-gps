@@ -100,12 +100,19 @@ class renderBrowserApp(QtGui.QMainWindow):
 				renderPath = os.path.dirname(renderPath)
 			#print renderPath, renderLayerDirs
 
+			self.ui.renderPbl_treeWidget.setIconSize(QtCore.QSize(128, 72))
+
 			# Add render layers
 			for renderLayerDir in renderLayerDirs:
 				renderPasses = seq.getBases(os.path.join(renderPath, renderLayerDir))
 
-				if renderPasses: # only continue if render pass sequences exist in this directory
+				# Only continue if render pass sequences exist in this directory, and ignore directories that start with a dot
+				if renderPasses and not renderLayerDir.startswith('.'):
 					renderLayerItem = QtGui.QTreeWidgetItem(self.ui.renderPbl_treeWidget)
+					#renderLayerItem.setBackground(0, QtGui.QBrush(QtGui.QColor("#333")))
+					#renderLayerItem.setBackground(1, QtGui.QBrush(QtGui.QColor("#333")))
+					#renderLayerItem.setBackground(2, QtGui.QBrush(QtGui.QColor("#333")))
+					#renderLayerItem.setBackground(3, QtGui.QBrush(QtGui.QColor("#333")))
 					renderLayerItem.setText(0, '%s (%d)' % (renderLayerDir, len(renderPasses)))
 					renderLayerItem.setText(2, 'layer')
 					#renderLayerItem.setText(3, os.path.join(renderPath, renderLayerDir))
@@ -118,9 +125,11 @@ class renderBrowserApp(QtGui.QMainWindow):
 						renderPassItem = QtGui.QTreeWidgetItem(renderLayerItem)
 						path, prefix, fr_range, ext, num_frames = seq.getSequence( os.path.join(renderPath, renderLayerDir), renderPass )
 						renderPassItem.setText(0, prefix)
+						iconPath = os.path.join(renderPath, '.preview', '%s.1001.jpg' %prefix)
+						renderPassItem.setIcon(0, QtGui.QIcon(iconPath))
 						renderPassItem.setText(1, fr_range)
 						if not fr_range == os.environ['FRAMERANGE']: # set red text for sequence mismatch
-							renderPassItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#cc3333")))
+							renderPassItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#c33")))
 						renderPassItem.setText(2, ext.split('.', 1)[1])
 						#renderPassItem.setText(3, path)
 						renderPassItem.setText(3, self.relativePath(os.path.join(renderPath, renderLayerDir, renderPass)))

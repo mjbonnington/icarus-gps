@@ -14,7 +14,7 @@ import maya.cmds as mc
 import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, inProgress
 
 
-def publish(pblTo, slShot, mdlType, textures, pblNotes, mail, approved):
+def publish(pblTo, slShot, mdlType, textures, pblNotes):
 
 	# Get selection
 	objLs = mc.ls(sl=True)

@@ -10,7 +10,7 @@ import maya.cmds as mc
 import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, inProgress
 
 
-def publish(pblTo, slShot, scnName, subsetName, textures, pblNotes, mail, approved):
+def publish(pblTo, slShot, scnName, subsetName, textures, pblNotes):
 
 	
 	#defining main variables
@@ -51,8 +51,8 @@ def publish(pblTo, slShot, scnName, subsetName, textures, pblNotes, mail, approv
 	
 	#version control	
 	version = '%s' % vCtrl.version(pblDir)
-	if approved:
-		version += '_apv'
+	#if approved:
+	#	version += '_apv'
 
 	#confirmation dialog
 	dialogTitle = 'Publishing'

@@ -9,7 +9,7 @@ import os, sys, traceback
 import maya.cmds as mc
 import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, inProgress
 	
-def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
+def publish(pblTo, slShot, subsetName, textures, pblNotes):
 	
 	#gets selection
 	objLs = mc.ls(sl=True)
@@ -52,8 +52,8 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes, mail, approved):
 	
 	#version control	
 	version = '%s' % vCtrl.version(pblDir)
-	if approved:
-		version += '_apv'
+	#if approved:
+	#	version += '_apv'
 
 	#confirmation dialog
 	dialogTitle = 'Publishing'
