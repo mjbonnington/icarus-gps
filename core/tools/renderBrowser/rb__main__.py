@@ -19,7 +19,7 @@ env__init__.setEnv()
 #env__init__.appendSysPaths()
 
 import sequence as seq
-import djvOps
+import djvOps, osOps
 
 
 class renderBrowserApp(QtGui.QMainWindow):
@@ -54,14 +54,17 @@ class renderBrowserApp(QtGui.QMainWindow):
 		return relPath.replace(self.relativeRootToken, self.relativeRootDir)
 
 
-#	def preview(self, path=None):
-#		""" Preview - opens djv_view to preview a movie or image sequence.
-#		"""
-#		#verbose.launchApp('djv_view')
-#		if path is None:
-#			djvOps.viewer(self.renderPath)
-#		else:
-#			djvOps.viewer(path)
+	def generateThumbnail(self, imagePath, imagePrefix, extension, posterFrame=os.environ['STARTFRAME']):
+		""" Generates a low-res JPEG thumbnail from the image path provided.
+		"""
+		inPrefix = os.path.join(imagePath, imagePrefix)
+		outPrefix = os.path.join(imagePath, '.icThumbs', imagePrefix)
+		outFile = '%s.%s.jpg' % (outPrefix, posterFrame)
+		if not os.path.isfile(outFile):
+			print "Generating thumbnails..."
+			osOps.createDir( os.path.join(imagePath, '.icThumbs') )
+			djvOps.prcImg(inPrefix, outPrefix, posterFrame, posterFrame, extension.split('.', 1)[1], outExt='jpg', resize=(512,288))
+		return outFile
 
 
 	def renderPreview(self, item, column):
@@ -92,13 +95,20 @@ class renderBrowserApp(QtGui.QMainWindow):
 		"""
 		renderPath = self.renderPath
 		if renderPath:
-			renderLayerDirs = next(os.walk(renderPath))[1] # get subdirectories
+			renderLayerDirs = []
+
+			# Get subdirectories
+			subdirs = next(os.walk(renderPath))[1]
+			if subdirs:
+				for subdir in subdirs:
+					if not subdir.startswith('.'): # ignore directories that start with a dot
+						renderLayerDirs.append(subdir)
 			if renderLayerDirs:
 				renderLayerDirs.sort()
 			else: # use parent dir
 				renderLayerDirs = [os.path.basename(renderPath)]
 				renderPath = os.path.dirname(renderPath)
-			#print renderPath, renderLayerDirs
+			print renderPath, renderLayerDirs
 
 			self.ui.renderPbl_treeWidget.setIconSize(QtCore.QSize(128, 72))
 
@@ -109,10 +119,6 @@ class renderBrowserApp(QtGui.QMainWindow):
 				# Only continue if render pass sequences exist in this directory, and ignore directories that start with a dot
 				if renderPasses and not renderLayerDir.startswith('.'):
 					renderLayerItem = QtGui.QTreeWidgetItem(self.ui.renderPbl_treeWidget)
-					#renderLayerItem.setBackground(0, QtGui.QBrush(QtGui.QColor("#333")))
-					#renderLayerItem.setBackground(1, QtGui.QBrush(QtGui.QColor("#333")))
-					#renderLayerItem.setBackground(2, QtGui.QBrush(QtGui.QColor("#333")))
-					#renderLayerItem.setBackground(3, QtGui.QBrush(QtGui.QColor("#333")))
 					renderLayerItem.setText(0, '%s (%d)' % (renderLayerDir, len(renderPasses)))
 					renderLayerItem.setText(2, 'layer')
 					#renderLayerItem.setText(3, os.path.join(renderPath, renderLayerDir))
@@ -125,7 +131,8 @@ class renderBrowserApp(QtGui.QMainWindow):
 						renderPassItem = QtGui.QTreeWidgetItem(renderLayerItem)
 						path, prefix, fr_range, ext, num_frames = seq.getSequence( os.path.join(renderPath, renderLayerDir), renderPass )
 						renderPassItem.setText(0, prefix)
-						iconPath = os.path.join(renderPath, '.preview', '%s.1001.jpg' %prefix)
+						iconPath = self.generateThumbnail(os.path.join(renderPath, renderLayerDir), prefix, ext)
+						#print iconPath
 						renderPassItem.setIcon(0, QtGui.QIcon(iconPath))
 						renderPassItem.setText(1, fr_range)
 						if not fr_range == os.environ['FRAMERANGE']: # set red text for sequence mismatch

@@ -157,6 +157,17 @@ def getBases(path):
 	return bases
 
 
+def getFirst(path):
+	""" TEMPORARY BODGE
+	"""
+	#filter_ls = glob.glob("%s*" %os.path.join(path, base))
+	path = path.replace('#', '*')
+	filter_ls = glob.glob(path)
+	filter_ls.sort()
+
+	return filter_ls[0]
+
+
 def getSequence(path, pattern):
 	""" Looks for other frames in a sequence that fit a particular pattern.
 		Pass the first (lowest-numbered) frame in the sequence to the detectSeq function and return its results.
@@ -168,17 +179,6 @@ def getSequence(path, pattern):
 	#frame_ls = []
 
 	return detectSeq( filter_ls[0] )
-
-
-def getFirst(path):
-	""" TEMPORARY BODGE
-	"""
-	#filter_ls = glob.glob("%s*" %os.path.join(path, base))
-	path = path.replace('#', '*')
-	filter_ls = glob.glob(path)
-	filter_ls.sort()
-
-	return filter_ls[0]
 
 
 def detectSeq(filepath):

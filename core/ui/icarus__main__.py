@@ -835,13 +835,21 @@ Environment: %s
 		"""
 		renderPath = self.renderPath
 		if renderPath:
-			renderLayerDirs = next(os.walk(renderPath))[1] # get subdirectories
+			renderLayerDirs = []
+
+			# Get subdirectories
+			subdirs = next(os.walk(renderPath))[1]
+			if subdirs:
+				for subdir in subdirs:
+					if not subdir.startswith('.'): # ignore directories that start with a dot
+						renderLayerDirs.append(subdir)
 			if renderLayerDirs:
 				renderLayerDirs.sort()
 			else: # use parent dir
 				renderLayerDirs = [os.path.basename(renderPath)]
 				renderPath = os.path.dirname(renderPath)
-			#print renderPath, renderLayerDirs
+
+			self.ui.renderPbl_treeWidget.setIconSize(QtCore.QSize(128, 72))
 
 			# Add render layers
 			for renderLayerDir in renderLayerDirs:
