@@ -53,7 +53,7 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.mudbox_pushButton, QtCore.SIGNAL('clicked()'), self.launchMudbox)
 		QtCore.QObject.connect(self.ui.nuke_pushButton, QtCore.SIGNAL('clicked()'), self.launchNuke)
 		QtCore.QObject.connect(self.ui.mari_pushButton, QtCore.SIGNAL('clicked()'), self.launchMari)
-		QtCore.QObject.connect(self.ui.realflow_pushButton, QtCore.SIGNAL('clicked()'), self.launchRealflow)
+		QtCore.QObject.connect(self.ui.realflow_pushButton, QtCore.SIGNAL('clicked()'), self.launchRealFlow)
 		QtCore.QObject.connect(self.ui.openProdBoard_pushButton, QtCore.SIGNAL('clicked()'), launchApps.prodBoard)
 		QtCore.QObject.connect(self.ui.openReview_pushButton, QtCore.SIGNAL('clicked()'), self.launchHieroPlayer)
 		QtCore.QObject.connect(self.ui.openTerminal_pushButton, QtCore.SIGNAL('clicked()'), self.launchTerminal)
@@ -82,57 +82,75 @@ class icarusApp(QtGui.QDialog):
 
 	########################################Adding right click menus to buttons#######################################
 	##################################################################################################################
-		#Nuke
+
+		# Nuke
 		self.ui.nuke_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+
 		self.actionNuke = QtGui.QAction("Nuke", None)
 		self.actionNuke.triggered.connect(self.launchNuke)
 		self.ui.nuke_pushButton.addAction(self.actionNuke)
+
 		self.actionNukeX = QtGui.QAction("NukeX", None)
 		self.actionNukeX.triggered.connect(self.launchNukeX)
 		self.ui.nuke_pushButton.addAction(self.actionNukeX)
+
+		# [removed NukeStudio Launcher until properly supported in Icarus]
 	#	self.actionNukeStudio = QtGui.QAction("NukeStudio", None)
 	#	self.actionNukeStudio.triggered.connect(self.launchNukeStudio)
 	#	self.ui.nuke_pushButton.addAction(self.actionNukeStudio)
-		# [removed NukeStudio Launcher until properly supported in Icarus]
 
-		#Review
+		# Review
 		self.ui.openReview_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+
 		self.actionHieroPlayer = QtGui.QAction("HieroPlayer", None)
 		self.actionHieroPlayer.triggered.connect(self.launchHieroPlayer)
 		self.ui.openReview_pushButton.addAction(self.actionHieroPlayer)
+
 		self.actionDjv = QtGui.QAction("djv_view", None)
 		self.actionDjv.triggered.connect(self.launchDjv)
 		self.ui.openReview_pushButton.addAction(self.actionDjv)
 
-		#Browse
+		# Browse
 		self.ui.browse_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+
 		self.actionOpenShot = QtGui.QAction("Shot", None)
 		self.actionOpenShot.triggered.connect(openDirs.openShot)
 		self.ui.browse_pushButton.addAction(self.actionOpenShot)
+
 		self.actionOpenJob = QtGui.QAction("Job", None)
 		self.actionOpenJob.triggered.connect(openDirs.openJob)
 		self.ui.browse_pushButton.addAction(self.actionOpenJob)
 
-		#Render
+		# Render
 		self.ui.render_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-		self.actionDeadlineMonitor = QtGui.QAction("Deadline Monitor", None)
-		self.actionDeadlineMonitor.triggered.connect(self.launchDeadlineMonitor)
-		self.ui.render_pushButton.addAction(self.actionDeadlineMonitor)
-		self.actionDeadlineSlave = QtGui.QAction("Deadline Slave", None)
-		self.actionDeadlineSlave.triggered.connect(self.launchDeadlineSlave)
-		self.ui.render_pushButton.addAction(self.actionDeadlineSlave)
+
 		self.actionSubmitLocal = QtGui.QAction("Submit Maya command-line render (local)", None)
 		self.actionSubmitLocal.triggered.connect(self.launchSubmitRender)
 		self.ui.render_pushButton.addAction(self.actionSubmitLocal)
 
+		self.actionBrowseRenders = QtGui.QAction("Browse renders", None)
+		self.actionBrowseRenders.triggered.connect(self.launchRenderBrowser)
+		self.ui.render_pushButton.addAction(self.actionBrowseRenders)
+
+		self.actionDeadlineMonitor = QtGui.QAction("Deadline Monitor", None)
+		self.actionDeadlineMonitor.triggered.connect(self.launchDeadlineMonitor)
+		self.ui.render_pushButton.addAction(self.actionDeadlineMonitor)
+
+		self.actionDeadlineSlave = QtGui.QAction("Deadline Slave", None)
+		self.actionDeadlineSlave.triggered.connect(self.launchDeadlineSlave)
+		self.ui.render_pushButton.addAction(self.actionDeadlineSlave)
+
 		# About menu
 	#	self.ui.about_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+
 	#	self.actionAbout = QtGui.QAction("About", None)
 	#	self.actionAbout.triggered.connect(self.about)
 	#	self.ui.about_toolButton.addAction(self.actionAbout)
+
 	#	self.actionPrefs = QtGui.QAction("User Preferences", None)
 	#	self.actionPrefs.triggered.connect(self.userSettings)
 	#	self.ui.about_toolButton.addAction(self.actionPrefs)
+
 
 	##########################################UI adapt environment awareness##########################################
 	##################################################################################################################
@@ -612,47 +630,92 @@ Environment: %s
 			pass
 
 
-	#runs launch maya procedure
 	def launchMaya(self):
-		launchApps.maya()
+		""" Launches Maya.
+		"""
+		launchApps.launch('Maya')
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
 
-	#runs launch mudbox procedure
+
 	def launchMudbox(self):
-		launchApps.mudbox()
+		""" Launches Mudbox.
+		"""
+		launchApps.launch('Mudbox')
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
 
-	#runs launch nuke procedure
+
 	def launchNuke(self):
-		launchApps.nuke(nukeType='Nuke')
+		""" Launches Nuke.
+		"""
+		launchApps.launch('Nuke')
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
 
-	#runs launch nukex procedure
+
 	def launchNukeX(self):
-		launchApps.nuke(nukeType='NukeX')
+		""" Launches NukeX.
+		"""
+		launchApps.launch('NukeX')
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
 
-	#runs launch nuke studio procedure
+
 	def launchNukeStudio(self):
-		launchApps.nuke(nukeType='NukeStudio')
+		""" Launches Nuke Studio.
+		"""
+		launchApps.launch('NukeStudio')
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
 
-	#runs launch mari procedure
+
 	def launchMari(self):
-		launchApps.mari()
+		""" Launches Mari.
+		"""
+		launchApps.launch('Mari')
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
 
-	#runs launch realflow procedure
-	def launchRealflow(self):
-		launchApps.realflow()
+
+	def launchHieroPlayer(self):
+		""" Launches Hiero Player.
+		"""
+		launchApps.launch('HieroPlayer')
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
+
+
+	def launchRealFlow(self):
+		""" Launches RealFlow.
+		"""
+		launchApps.launch('RealFlow')
+		if self.boolMinimiseOnAppLaunch:
+			self.showMinimized()
+
+
+	def launchDeadlineMonitor(self):
+		""" Launches Deadline Monitor.
+		"""
+		launchApps.launch('DeadlineMonitor')
+		if self.boolMinimiseOnAppLaunch:
+			self.showMinimized()
+
+
+	def launchDeadlineSlave(self):
+		""" Launches Deadline Slave.
+		"""
+		launchApps.launch('DeadlineSlave')
+		if self.boolMinimiseOnAppLaunch:
+			self.showMinimized()
+
+
+	# Launches djv_view
+	def launchDjv(self):
+		launchApps.djv()
+		if self.boolMinimiseOnAppLaunch:
+			self.showMinimized()
+
 
 	#launches terminal locks button
 	def launchTerminal(self):
@@ -662,17 +725,6 @@ Environment: %s
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
 
-	#Launches HieroPlayer with and tries to load the job Hrox automatically
-	def launchHieroPlayer(self):
-		launchApps.hieroPlayer()
-		if self.boolMinimiseOnAppLaunch:
-			self.showMinimized()
-
-	# Launches djv_view
-	def launchDjv(self):
-		launchApps.djv()
-		if self.boolMinimiseOnAppLaunch:
-			self.showMinimized()
 
 	# Preview - opens djv_view to preview movie or image sequence
 	def preview(self, path=None):
@@ -683,25 +735,23 @@ Environment: %s
 		else:
 			djvOps.viewer(path)
 
-	#Launches Deadline Monitor
-	def launchDeadlineMonitor(self):
-		launchApps.deadlineMonitor()
-		if self.boolMinimiseOnAppLaunch:
-			self.showMinimized()
 
-	#Launches Deadline Slave
-	def launchDeadlineSlave(self):
-		launchApps.deadlineSlave()
-		if self.boolMinimiseOnAppLaunch:
-			self.showMinimized()
-
-	#Launches GPS command-line render script
 	def launchSubmitRender(self):
+		""" Launches GPS command-line render script.
+		"""
 		import submit__main__
 		reload(submit__main__)
-		#gpsSubmitRenderApp = submit__main__.gpsSubmitRender(parent=app)
-		#gpsSubmitRenderApp.setWindowFlags(QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinMaxButtonsHint )
-		#gpsSubmitRenderApp.show()
+	#	gpsSubmitRenderApp = submit__main__.gpsSubmitRender(parent=app)
+	#	gpsSubmitRenderApp.setWindowFlags(QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinMaxButtonsHint )
+	#	gpsSubmitRenderApp.show()
+
+
+	def launchRenderBrowser(self):
+		""" Launches GPS render browser window.
+		"""
+		import rb__main__
+		reload(rb__main__)
+
 
 	##################################################Publish tab###################################################
 	################################################################################################################

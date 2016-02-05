@@ -102,6 +102,12 @@ def itemSel():
 def launchApp(application):
 	print_( 'Launching %s...' % application, 3 )
 
+def launchAppNotFound(application):
+	print_( 'ERROR: Unable to launch %s - the executable could not be found.' % application, 2 )
+
+def launchAppNotSet(application):
+	print_( 'ERROR: Unable to launch %s - executable path not set.\nPlease set the correct location from the job settings window.' % application, 2 )
+
 def jobSet(job, shot):
 	print_( 'Shot set: Now working on %s - %s' % (job, shot), 3 )
 

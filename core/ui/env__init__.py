@@ -28,7 +28,7 @@ def setEnv():
 	except KeyError:
 		os.environ['ICARUSENVAWARE'] = 'STANDALONE'
 
-	os.environ['ICARUSVERSION'] = 'v0.9.0-20160121'
+	os.environ['ICARUSVERSION'] = 'v0.9.0-20160205'
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
 	os.environ['ICWORKINGDIR'] = icarusWorkingDir
 	icarusUIDir = os.path.join('core', 'ui')
@@ -51,6 +51,7 @@ def appendSysPaths():
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusTools, 'icAdmin'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusTools, 'gpsSubmit'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusTools, 'gpsPreview'))
+	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusTools, 'renderBrowser'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'ui'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'gather'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'publish'))

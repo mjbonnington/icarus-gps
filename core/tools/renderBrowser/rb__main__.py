@@ -108,7 +108,7 @@ class renderBrowserApp(QtGui.QMainWindow):
 			else: # use parent dir
 				renderLayerDirs = [os.path.basename(renderPath)]
 				renderPath = os.path.dirname(renderPath)
-			print renderPath, renderLayerDirs
+			#print renderPath, renderLayerDirs
 
 			self.ui.renderPbl_treeWidget.setIconSize(QtCore.QSize(128, 72))
 
@@ -183,4 +183,8 @@ if __name__ == "__main__":
 	rbApp = renderBrowserApp()
 	rbApp.show()
 	sys.exit(app.exec_())
+
+else:
+	rbApp = renderBrowserApp()
+	rbApp.show()
 

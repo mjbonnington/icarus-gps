@@ -17,9 +17,9 @@ import gpsSave
 
 # Detect if running app is Nuke or NukeX
 if nuke.env['nukex']:
-	nukeType = 'nukex'
+	nukeType = 'NukeX'
 else:
-	nukeType = 'nuke'
+	nukeType = 'Nuke'
 
 
 # Command strings
@@ -36,10 +36,10 @@ openShotDir = 'import openDirs; openDirs.openShot()'
 openJobDir = 'import openDirs; openDirs.openJob()'
 openElementsLibDir = 'import openDirs; openDirs.openElementsLib()'
 launchProdBoard  = 'import launchApps; launchApps.prodBoard()'
-launchNuke = 'import launchApps; launchApps.nuke("%s")' % nukeType
+launchNuke = 'import launchApps; launchApps.launch("%s")' % nukeType
 launchIcarus = 'reload(icarus__main__)'
 launchDjv = 'import launchApps; launchApps.djv()'
-launchHieroPlayer = 'import launchApps; launchApps.hieroPlayer()'
+launchHieroPlayer = 'import launchApps; launchApps.launch("Hiero Player")'
 versionUp = 'import switchVersion; switchVersion.versionUp()'
 versionDown = 'import switchVersion; switchVersion.versionDown()'
 versionLatest = 'import switchVersion; switchVersion.versionLatest()'

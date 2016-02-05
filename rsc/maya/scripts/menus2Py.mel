@@ -204,5 +204,5 @@ python("import launchApps; launchApps.djv()");
 
 global proc menus2Py.launchHieroPlayer()
 {
-python("import launchApps; launchApps.hieroPlayer()");
+	python("import launchApps; launchApps.launch('Hiero Player')");
 }
