@@ -598,7 +598,7 @@ Environment: %s
 		elif settingsType == "User":
 			categoryLs = ['user', ]
 			xmlData = os.path.join(os.environ['ICUSERPREFS'], 'userPrefs.xml')
-		import job_settings__main__
+		import job_settings__main__ # Change this to generic class when it's ready
 		reload(job_settings__main__)
 		settingsEditor = job_settings__main__.settingsDialog(settingsType=settingsType, categoryLs=categoryLs, xmlData=xmlData, autoFill=autoFill)
 		@settingsEditor.customSignal.connect

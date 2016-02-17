@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2015 Gramercy Park Studios
+# (c) 2013-2016 Gramercy Park Studios
 #
 # Customises Nuke's menus and toolbars.
 
@@ -39,7 +39,7 @@ launchProdBoard  = 'import launchApps; launchApps.prodBoard()'
 launchNuke = 'import launchApps; launchApps.launch("%s")' % nukeType
 launchIcarus = 'reload(icarus__main__)'
 launchDjv = 'import launchApps; launchApps.djv()'
-launchHieroPlayer = 'import launchApps; launchApps.launch("Hiero Player")'
+launchHieroPlayer = 'import launchApps; launchApps.launch("HieroPlayer")'
 versionUp = 'import switchVersion; switchVersion.versionUp()'
 versionDown = 'import switchVersion; switchVersion.versionDown()'
 versionLatest = 'import switchVersion; switchVersion.versionLatest()'
