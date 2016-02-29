@@ -28,7 +28,7 @@ def setEnv():
 	except KeyError:
 		os.environ['ICARUSENVAWARE'] = 'STANDALONE'
 
-	os.environ['ICARUSVERSION'] = 'v0.9.0-20160216'
+	os.environ['ICARUSVERSION'] = 'v0.9.0-20160229'
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
 	os.environ['ICWORKINGDIR'] = icarusWorkingDir
 	icarusUIDir = os.path.join('core', 'ui')
@@ -37,10 +37,10 @@ def setEnv():
 	os.environ['ICUSERPREFS'] = os.path.join(os.environ['ICCONFIGDIR'], 'users', os.environ['USERNAME']) # User prefs stored on server
 	#os.environ['ICUSERPREFS'] = os.path.join(os.environ['HOME'], '.icarus') # User prefs stored in user home folder
 
+	# Hard-coded relative data directories required by Icarus
 	os.environ['SHOTSROOTRELATIVEDIR'] = 'Vfx'
 	os.environ['DATAFILESRELATIVEDIR'] = '.icarus'
-	#os.environ['JOBDATAFILE'] = 'jobData' # Change when data is stored as XML
-	#os.environ['SHOTDATAFILE'] = 'shotData' # Change when data is stored as XML
+
 	appendSysPaths()
 
 
@@ -59,3 +59,4 @@ def appendSysPaths():
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'setJob'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'shared'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'py_modules'))
+

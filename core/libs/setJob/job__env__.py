@@ -16,48 +16,49 @@ import jobs, jobSettings, osOps, appPaths, verbose
 def setEnv(envVars):
 	""" Set job and shot environment variables.
 	"""
-	job, shot, shotPath = envVars
-
 
 	def getInheritedValue(category, setting):
-		""" First try to get the value from the shot data, if it returns nothing then look in job data instead
+		""" First try to get the value from the shot data, if it returns nothing then look in job data instead.
 		"""
 		value = shotData.getValue(category, setting)
 		if value == "":
 			value = jobData.getValue(category, setting)
-		#	if value == "":
-		#		value = defaultData.getValue(category, setting)
+#			if value == "":
+#				value = defaultData.getValue(category, setting)
 
 		return value
 
 
 	def getAppExecPath(app):
-		""" Return the path to the executable for the specified app on the current OS
+		""" Return the path to the executable for the specified app on the current OS.
 		"""
-		#return ap.getPath(app, jobData.getValue('apps', app), currentOS)
 		return ap.getPath(app, getInheritedValue('apps', app), currentOS)
 
 
-	jobDataPath = os.path.join(os.path.split(shotPath)[0], os.environ['DATAFILESRELATIVEDIR'])
+	job, shot, shotPath = envVars
+	jobPath = os.path.split(shotPath)[0]
+	jobDataPath = os.path.join(jobPath, os.environ['DATAFILESRELATIVEDIR'])
 	shotDataPath = os.path.join(shotPath, os.environ['DATAFILESRELATIVEDIR'])
 
 	# Set basic environment variables
-	os.environ['SHOTPATH'] = os.path.normpath(shotPath)
-	os.environ['JOBPATH'] = os.path.normpath( os.path.split(os.environ['SHOTPATH'])[0] )
-	os.environ['JOBDATA'] = os.path.normpath( os.path.join(os.environ['JOBPATH'], os.environ['DATAFILESRELATIVEDIR']) )
-	os.environ['SHOTDATA'] = os.path.normpath(shotDataPath)
 	os.environ['JOB'] = job
 	os.environ['SHOT'] = shot
+	os.environ['JOBPATH'] = os.path.normpath(jobPath)
+	os.environ['SHOTPATH'] = os.path.normpath(shotPath)
+	os.environ['JOBDATA'] = os.path.normpath(jobDataPath)
+	os.environ['SHOTDATA'] = os.path.normpath(shotDataPath)
 
 	osOps.createDir(os.environ['JOBDATA'])
 
 	# Instantiate job / shot settings classes
 	jobData = jobSettings.jobSettings()
 	shotData = jobSettings.jobSettings()
+#	defaultData = jobSettings.jobSettings()
 	ap = appPaths.appPaths()
 
 	jobDataLoaded = jobData.loadXML(os.path.join(jobDataPath, 'jobData.xml'))
 	shotDataLoaded = shotData.loadXML(os.path.join(shotDataPath, 'shotData.xml'))
+#	defaultData.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'defaultData.xml'))
 	ap.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'appPaths.xml'))
 
 	# If XML files don't exist, create defaults, and attempt to convert data from Python data files
@@ -77,6 +78,25 @@ def setEnv(envVars):
 		if legacySettings.convertShotData(shotDataPath, shotData):
 			shotData.loadXML()
 
+	# Check if the job is using the old hidden asset publish directory
+	#assetDir = getInheritedValue('meta', 'assetDir')
+	assetDir = jobData.getValue('meta', 'assetDir')
+	if assetDir:
+		os.environ['PUBLISHRELATIVEDIR'] = assetDir
+	else:
+		import legacySettings
+
+		# Check for existing legacy published assets in the job and shot(s)
+		if legacySettings.checkAssetPath():
+			assetDir = '.publish'
+		else:
+			assetDir = 'Assets' # Perhaps this shouldn't be hard-coded?
+
+		jobData.setValue('meta', 'assetDir', assetDir)
+		jobData.saveXML()
+		os.environ['PUBLISHRELATIVEDIR'] = assetDir
+
+
 	# Set OS identifier strings to get correct app executable paths
 	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
 		currentOS = 'osx'
@@ -95,23 +115,17 @@ def setEnv(envVars):
 	# Jobs root paths for cross-platform support
 	os.environ['JOBSROOTWIN'] = jobs.win_root
 	os.environ['JOBSROOTOSX'] = jobs.osx_root
-	#os.environ['JOBSROOTLINUX'] = jobs.linux_root # not currently required as Linux & OSX mount points should be the same
+	#os.environ['JOBSROOTLINUX'] = jobs.linux_root # Not currently required as Linux & OSX mount points should be the same
 
 	# Job / shot env
-	os.environ['PRODBOARD'] = getInheritedValue('other', 'prodboard')
-	os.environ['PROJECTTOOLS'] = getInheritedValue('other', 'projtools') # Is this necessary?
-#	os.environ['FRAMEVIEWER'] = os.path.normpath(jobData.frameViewer)
-#	os.environ['JOBAPPROVEDPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['JOBPATH'], 'Assets') )
-#	os.environ['SHOTAPPROVEDPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['SHOTPATH'], 'Publish') )
-#	os.environ['PUBLISHRELATIVEDIR'] = '.publish'
-#	os.environ['JOBPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['JOBPATH'] , os.environ['PUBLISHRELATIVEDIR']) )
-#	os.environ['SHOTPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['SHOTPATH'], os.environ['PUBLISHRELATIVEDIR']) )
-	os.environ['PUBLISHRELATIVEDIR'] = 'Assets'
 	#os.environ['GLOBALPUBLISHDIR'] = os.path.normpath( getInheritedValue('other', 'assetlib') ) # Path needs to be translated for OS portability
 	os.environ['JOBPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['JOBPATH'], os.environ['PUBLISHRELATIVEDIR']) )
 	os.environ['SHOTPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['SHOTPATH'], os.environ['PUBLISHRELATIVEDIR']) )
-	os.environ['WIPSDIR'] = os.path.normpath( os.path.join(os.path.split(os.environ['JOBPATH'])[0], 'Deliverables', 'WIPS') )
+	os.environ['WIPSDIR'] = os.path.normpath( os.path.join(os.path.split(os.environ['JOBPATH'])[0], 'Deliverables', 'WIPS') ) # Perhaps this shouldn't be hard-coded?
+	os.environ['RECENTFILESDIR'] = os.path.normpath( os.path.join(os.environ['ICUSERPREFS'], 'recentFiles') )
 	os.environ['ELEMENTSLIBRARY'] = os.path.normpath( getInheritedValue('other', 'elementslib') ) # Path needs to be translated for OS portability
+	os.environ['PRODBOARD'] = getInheritedValue('other', 'prodboard')
+	#os.environ['PROJECTTOOLS'] = getInheritedValue('other', 'projtools') # Is this necessary?
 	os.environ['UNIT'] = getInheritedValue('units', 'linear')
 	os.environ['ANGLE'] = getInheritedValue('units', 'angle')
 	os.environ['TIMEFORMAT'] = getInheritedValue('units', 'time')
@@ -125,9 +139,8 @@ def setEnv(envVars):
 	os.environ['RESOLUTION'] = '%sx%s' % (os.environ['RESOLUTIONX'], os.environ['RESOLUTIONY']) # Is this necessary?
 	os.environ['PROXY_RESOLUTIONX'] = getInheritedValue('resolution', 'proxyWidth')
 	os.environ['PROXY_RESOLUTIONY'] = getInheritedValue('resolution', 'proxyHeight')
-	os.environ['PROXY_RESOLUTION'] = '%sx%s' % (os.environ['PROXY_RESOLUTIONX'], os.environ['PROXY_RESOLUTIONY'])
+	os.environ['PROXY_RESOLUTION'] = '%sx%s' % (os.environ['PROXY_RESOLUTIONX'], os.environ['PROXY_RESOLUTIONY']) # Is this necessary?
 	os.environ['ASPECTRATIO'] = str( float(os.environ['RESOLUTIONX']) / float(os.environ['RESOLUTIONY']) )
-	os.environ['RECENTFILESDIR'] = os.path.normpath( os.path.join(os.environ['ICUSERPREFS'], 'recentFiles') )
 
 	# Mari
 	os.environ['MARIDIR'] = os.path.join(os.environ['SHOTPATH'] , '3D', 'mari')

@@ -157,3 +157,39 @@ def convertAssetData(dataPath, ad):
 		#print "Cannot convert settings: icData.py not found."
 		return False
 
+
+def checkAssetPath():
+	""" Check for existence of published assets within job's '.publish' directory.
+		Return True as soon as any assets are found in any of the job or shot(s).
+		This function should only run if the value 'meta/assetDir' is not set in the job settings data.
+	"""
+	#print "Checking for published assets..."
+
+	import setJob
+
+	# Get the paths of the job and all shots within the job
+	paths = [os.environ['JOBPATH'], ]
+	shots = setJob.listShots(os.environ['JOB'])
+	for shot in shots:
+		paths.append( setJob.getPath(os.environ['JOB'], shot) )
+
+
+	for path in paths:
+		assetDir = os.path.join(path, '.publish')
+		#print assetDir
+
+		if os.path.isdir(assetDir):
+			assetTypeDirs = []
+
+			# Get subdirectories
+			subdirs = next(os.walk(assetDir))[1]
+			if subdirs:
+				for subdir in subdirs:
+					if not subdir.startswith('.'): # ignore directories that start with a dot
+						assetTypeDirs.append(subdir)
+
+			if assetTypeDirs:
+				return True
+
+	return False
+

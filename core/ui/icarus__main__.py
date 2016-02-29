@@ -164,29 +164,42 @@ class icarusApp(QtGui.QDialog):
 		###########STANDALONE ENVIRONMENT#############
 		##############################################
 		if os.environ['ICARUSENVAWARE'] == 'STANDALONE':
-			#hides ui items relating to maya environment
+			# Hide UI items relating to app environment(s)
 			uiHideLs = ['setNewShot_pushButton', 'shotEnv_toolButton', 'appIcon_label'] # Removed 'shotEnv_label_maya', 
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
-			#populates job and shot drop down menus
-			entryLs = userPrefs.config.get('main', 'lastjob').split(',')
+
+			# Populate 'Job' and 'Shot' drop down menus
 			jobLs = jobs.dic.keys()
 			jobLs = sorted(jobLs, reverse=True)
 			for job in jobLs:
+				# Populate 'Shot' combo box. Block signals while doing it to prevent call to populateShots() each time a new item is added
+				self.ui.job_comboBox.blockSignals(True)
 				self.ui.job_comboBox.insertItem(0, job)
-			if entryLs:
-				if entryLs[0] in jobLs:
-					self.ui.job_comboBox.setCurrentIndex(self.ui.job_comboBox.findText(entryLs[0]))
-					if entryLs[1]:
-						shotLs = setJob.listShots(entryLs[0])
-						if entryLs[1] in shotLs:
-							self.ui.shot_comboBox.setCurrentIndex(self.ui.shot_comboBox.findText(entryLs[1]))
+				self.ui.job_comboBox.blockSignals(False)
+				# Set the combo box to the first item
+				self.ui.job_comboBox.setCurrentIndex(0)
 
-			#deletes all tabs but jobMng
+			# Attempt to set the combo box selections to remember the last shot
+			lastJob = None
+			try:
+				lastJob, lastShot = userPrefs.config.get('main', 'lastjob').split(',')
+				print lastJob, lastShot
+				if lastJob in jobLs:
+					shotLs = setJob.listShots(lastJob)
+					if shotLs:
+						if lastShot in shotLs:
+							self.ui.job_comboBox.setCurrentIndex(self.ui.job_comboBox.findText(lastJob))
+							self.ui.shot_comboBox.setCurrentIndex(self.ui.shot_comboBox.findText(lastShot))
+			except:
+				pass
+
+			# Delete all tabs except 'Job Management'
 			for i in range(0, self.ui.tabWidget.count()-1):
 				self.ui.tabWidget.removeTab(1)
-			#deletes Asset, NK Asset publish tabs
+
+			# Delete 'ma_asset', 'nk_asset', 'Publish' tabs
 			for i in range(0,2):
 				self.ui.publishType_tabWidget.removeTab(0)
 
@@ -411,12 +424,16 @@ class icarusApp(QtGui.QDialog):
 			self.ui.setShot_label.setEnabled(True)
 			self.ui.setShot_pushButton.setEnabled(True)
 
+			return True
+
 		# No shots detected...
 		else:
 			self.ui.shot_comboBox.insertItem(0, '[None]')
 			self.ui.shot_comboBox.setEnabled(False)
 			self.ui.setShot_label.setEnabled(False)
 			self.ui.setShot_pushButton.setEnabled(False)
+
+			return False
 
 
 	#populates publish shot drop down menu	
