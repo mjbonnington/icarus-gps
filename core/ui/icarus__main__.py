@@ -67,6 +67,7 @@ class icarusApp(QtGui.QDialog):
 		self.ui.renderPblRemove_pushButton.clicked.connect(self.renderTableRemove)
 		#self.ui.renderPblRevert_pushButton.clicked.connect(self.renderTableClear)
 		self.ui.renderPbl_treeWidget.itemDoubleClicked.connect(self.renderPreview)
+		self.ui.dailyPbl_treeWidget.itemDoubleClicked.connect(self.renderPreview)
 
 		QtCore.QObject.connect(self.ui.dailyPblType_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.setDailyType)
 		QtCore.QObject.connect(self.ui.dailyPblAdd_pushButton, QtCore.SIGNAL('clicked()'), self.dailyTableAdd)
@@ -185,7 +186,7 @@ class icarusApp(QtGui.QDialog):
 			lastJob = None
 			try:
 				lastJob, lastShot = userPrefs.config.get('main', 'lastjob').split(',')
-				print lastJob, lastShot
+				#print lastJob, lastShot
 				if lastJob in jobLs:
 					shotLs = setJob.listShots(lastJob)
 					if shotLs:
@@ -220,7 +221,7 @@ class icarusApp(QtGui.QDialog):
 		##############MAYA ENVIRONMENT################
 		##############################################
 		elif os.environ['ICARUSENVAWARE'] == 'MAYA':
-			pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_maya.png")
+			pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_maya_disabled.png")
 			self.ui.appIcon_label.setPixmap(pixmap)
 			uiHideLs = ['assetSubType_listWidget', 'ma_assetTypes_listWidget'] # Removed 'icarusBanner', 
 			#hides UI items 
@@ -239,7 +240,7 @@ class icarusApp(QtGui.QDialog):
 		##############NUKE ENVIRONMENT################
 		##############################################
 		elif os.environ['ICARUSENVAWARE'] == 'NUKE':
-			pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_nuke.png")
+			pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_nuke_disabled.png")
 			self.ui.appIcon_label.setPixmap(pixmap)
 			uiHideLs = ['assetSubType_listWidget', 'nk_assetTypes_listWidget'] # Removed 'icarusBanner', 
 			#hides UI 
@@ -280,8 +281,6 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.assetSubType_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateAssetVersionCol)
 		QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateInfoField)
 		QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateImgPreview)
-
-	#	self.ui.dailyPbl_tableWidget.cellDoubleClicked.connect(self.cell_was_clicked)
 
 		#QtCore.QObject.connect(self.ui.assetType_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.updateAssetNameCol)
 		#QtCore.QObject.connect(self.ui.assetName_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.adjustColumns)
@@ -331,7 +330,7 @@ class icarusApp(QtGui.QDialog):
 		if tabText == 'Render':
 			self.lockPublishTo(lock=True)
 			self.setDropDownToShotEnv()
-		if tabText == 'Daily':
+		if tabText == 'Dailies':
 			self.lockPublishTo(lock=True)
 			self.setDropDownToShotEnv()		
 			
@@ -507,8 +506,8 @@ class icarusApp(QtGui.QDialog):
 	#		self.ui.renderPbl_tableWidget.removeRow(0)
 	#	self.ui.renderPbl_tableWidget.clearContents()
 		self.ui.renderPbl_treeWidget.clear() # clear the render layer tree view widget
-		self.ui.dailyPbl_tableWidget.removeRow(0)
-		self.ui.dailyPbl_tableWidget.clearContents()
+		self.ui.dailyPbl_treeWidget.removeRow(0)
+		self.ui.dailyPbl_treeWidget.clearContents()
 		self.ui.shotEnv_toolButton.setText('')
 		self.ui.shotEnv_toolButton.hide()
 		self.ui.setNewShot_pushButton.hide()
@@ -891,7 +890,7 @@ Environment: %s
 #	def cell_was_clicked(self, row, column):
 #		""" TEMPORARY FUNCTION - catches double-click signal on dailies table and launches sequence in viewer
 #		"""
-#		item = self.ui.dailyPbl_tableWidget.itemAt(row, column)
+#		item = self.ui.dailyPbl_treeWidget.itemAt(row, column)
 #		print("Row %d and column %d was clicked: %s" % (row, column, item.text()))
 #		#self.ID = item.text()
 #		self.preview(self.previewPath)
@@ -971,41 +970,32 @@ Environment: %s
 		"""
 		# Parse the file path
 		dailyPath = self.dailyPblBrowse() # dailyPath is a full path to a file
-	#	dailyDic = {}
 		if dailyPath:
+			self.ui.dailyPbl_treeWidget.clear()
 			dailyPath = dailyPath.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
-			self.previewPath = dailyPath
-			seqDir = dailyPath.replace(os.environ['SHOTPATH'].replace('\\', '/'), '$SHOTPATH') # Change to relative path
-			seqDir = os.path.dirname(seqDir)
-			#dailyDic = pblOptsPrc.dailyPath_prc(dailyPath)
-			seqName, seqRange = seq.detectSeq(dailyPath)
-			#if dailyDic:
-			if seqName:
-				#seqName = dailyDic.keys()[0]
-				#seqName = os.path.basename(dailyPath)
-
-				nameItem = QtGui.QTableWidgetItem(seqName)
-				rangeItem = QtGui.QTableWidgetItem(seqRange)
-				typeItem = QtGui.QTableWidgetItem(self.dailyType)
-				pathItem = QtGui.QTableWidgetItem(seqDir)
-				# Delete existing entry
-				self.ui.dailyPbl_tableWidget.removeRow(0)
-				# Add new entries and lock table
-				newRow = self.ui.dailyPbl_tableWidget.insertRow(0)
-				self.ui.dailyPbl_tableWidget.setItem(0, 0, nameItem)
-				nameItem.setFlags(~QtCore.Qt.ItemIsEditable)
-				self.ui.dailyPbl_tableWidget.setItem(0, 1, rangeItem)
-				rangeItem.setFlags(~QtCore.Qt.ItemIsEditable)
-				self.ui.dailyPbl_tableWidget.setItem(0, 2, typeItem)
-				typeItem.setFlags(~QtCore.Qt.ItemIsEditable)
-				self.ui.dailyPbl_tableWidget.setItem(0, 3, pathItem)
-				pathItem.setFlags(~QtCore.Qt.ItemIsEditable)
-				#pathItem.setText(self.dailyType)
-				self.ui.dailyPbl_tableWidget.resizeColumnsToContents()
+			#self.previewPath = dailyPath
+			#seqDir = dailyPath.replace(os.environ['SHOTPATH'].replace('\\', '/'), '$SHOTPATH') # Change to relative path
+			#seqDir = os.path.dirname(seqDir)
+			path, prefix, fr_range, ext, num_frames = seq.detectSeq(dailyPath)
+			if prefix:
+				dailyItem = QtGui.QTreeWidgetItem(self.ui.dailyPbl_treeWidget)
+				dailyItem.setText(0, '%s%s' % (prefix, ext))
+				dailyItem.setText(1, fr_range)
+				if not fr_range == os.environ['FRAMERANGE']: # set red text for sequence mismatch
+					dailyItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#c33")))
+				dailyItem.setText(2, self.dailyType)
+				dailyItem.setText(3, path)
+				#dailyItem.setText(3, self.relativePath(os.path.join(renderPath, renderLayerDir)))
+				self.ui.dailyPbl_treeWidget.addTopLevelItem(dailyItem)
+				#dailyItem.setExpanded(True)
 
 			else:
 				verbose.noSeq(os.path.basename(dailyPath))
-				self.ui.dailyPbl_tableWidget.removeRow(0)
+
+		# Resize columns
+		self.ui.dailyPbl_treeWidget.resizeColumnToContents(0)
+		self.ui.dailyPbl_treeWidget.resizeColumnToContents(1)
+		self.ui.dailyPbl_treeWidget.resizeColumnToContents(2)
 
 
 	def setDailyType(self):
@@ -1040,9 +1030,12 @@ Environment: %s
 		else:
 			return self.fileDialog(os.environ['SHOTPATH'])
 
+
 	#################getting ui options################
-	#gets main publish options
+
 	def getMainPblOpts(self):
+		""" Get basic publish options before publishing.
+		"""
 	#	self.approved, self.mail = '', ''
 		self.pblNotes = self.ui.notes_textEdit.text() #.toPlainText() # Edited line as notes box is now line edit widget, not text edit
 		self.pblType = self.getPblTab()[1]
@@ -1059,6 +1052,7 @@ Environment: %s
 	#		self.approved = True
 	#	if self.ui.mail_checkBox.checkState() == 2:
 	#		self.mail = True
+
 
 	#gets asset publish options
 	def get_maya_assetPblOpts(self, genericAsset=False):
@@ -1080,18 +1074,28 @@ Environment: %s
 			self.pblName = self.ui.nk_PblName_lineEdit.text()
 			self.chkLs.append(self.pblName)
 
-	#gets daily publish options
+
 	def getDailyPblOpts(self):
-		self.dailyDic = {}
-		rowCount = self.ui.dailyPbl_tableWidget.rowCount()
-		if rowCount:
-			self.dailySeq = self.ui.dailyPbl_tableWidget.item(0, 0).text()
-			self.dailyType = self.ui.dailyPbl_tableWidget.item(0, 2).text()
-			self.dailyPath = self.ui.dailyPbl_tableWidget.item(0, 3).text()
+		""" Get information about dailies before publishing.
+		"""
+		rowCount = self.ui.dailyPbl_treeWidget.topLevelItemCount()
+
+		if rowCount == 1: # only allow one sequence to be published at a time
+			dailyItem = self.ui.dailyPbl_treeWidget.topLevelItem(0)
+
+#			self.dailySeq = dailyItem.text(0)
+#			self.dailyType = dailyItem.text(2)
+#			self.dailyPath = dailyItem.text(3)
+			dailyPblOpts = (dailyItem.text(0), dailyItem.text(1), dailyItem.text(2), dailyItem.text(3))
+
 		else:
 			rowCount = None
-		self.chkLs = [self.pblNotes, rowCount]
-		
+			dailyPblOpts = None
+
+		#self.chkLs = [self.pblNotes, rowCount]
+		return dailyPblOpts
+
+
 	#gets render publish options - THIS NEEDS RE-CODING
 	def getRenderPblOpts(self):
 		self.renderDic = {}
@@ -1243,12 +1247,12 @@ Environment: %s
 		###########
 		# DAILIES #
 		###########
-		elif self.pblType == 'Daily':
+		elif self.pblType == 'Dailies':
 			import ic_dailyPbl;
 			self.getDailyPblOpts()
-			if not pblChk.chkOpts(self.chkLs):
-				return
-			ic_dailyPbl.publish(self.dailySeq, self.dailyPath, self.dailyType, self.pblTo, self.pblNotes)
+			#if not pblChk.chkOpts(self.chkLs):
+			#	return
+			ic_dailyPbl.publish(self.getDailyPblOpts(), self.pblTo, self.pblNotes)
 
 		###########
 		# RENDERS #

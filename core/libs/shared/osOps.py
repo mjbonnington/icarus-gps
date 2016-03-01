@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2015 Gramercy Park Studios
+# (c) 2013-2016 Gramercy Park Studios
 #
 # This module acts as a wrapper for low-level OS operations.
 
@@ -20,9 +20,7 @@ def createDir(path, umask='000'):
 		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
 			os.makedirs(path)
 			if os.path.basename(path).startswith('.'): # hide the folder if the name starts with a dot, as these files are not automatically hidden on Windows
-				import ctypes
-				FILE_ATTRIBUTE_HIDDEN = 0x02
-				ctypes.windll.kernel32.SetFileAttributesW(path, FILE_ATTRIBUTE_HIDDEN)
+				setHidden(path)
 		else:
 			os.system('%s; mkdir -p %s' % (setUmask(umask), path))
 
@@ -45,7 +43,7 @@ def setPermissions(path, mode='a+w'):
 
 
 def hardLink(source, destination, umask='000'):
-	""" Creates hard links
+	""" Creates hard links.
 	"""
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
 		if os.path.isdir(destination): # if destination is a folder, append the filename from the source
@@ -84,7 +82,7 @@ def recurseRemove(path):
 
 
 def copy(source, destination):
-	""" Copy a file or folder
+	""" Copy a file or folder.
 	"""
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
 		cmdStr = 'copy /Y %s %s' % (source, destination)
@@ -110,8 +108,17 @@ def copyDirContents(source, destination, umask='000'):
 	os.system(cmdStr)
 
 
+def setHidden(path):
+	""" Hide a file or folder (Windows only).
+		Useful if the filename name starts with a dot, as these files are not automatically hidden on Windows.
+	"""
+	import ctypes
+	FILE_ATTRIBUTE_HIDDEN = 0x02
+	ctypes.windll.kernel32.SetFileAttributesW(path, FILE_ATTRIBUTE_HIDDEN)
+
+
 def setUmask(umask='000'):
-	""" Set the umask for permissions on created files and folders (Unix only)
+	""" Set the umask for permissions on created files and folders (Unix only).
 	"""
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
 		return ""

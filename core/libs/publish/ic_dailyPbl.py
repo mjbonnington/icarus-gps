@@ -9,12 +9,16 @@
 # Dailies publishing module.
 
 
-import os, sys, traceback, time
-import pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, djvOps, inProgress
+import os, sys, time, traceback
+import pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, djvOps, inProgress, sequence
 
 
-def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes):
-	
+def publish(dailyPblOpts, pblTo, pblNotes):
+
+	dailySeq, dailyRange, dailyType, dailyPath = dailyPblOpts
+	nameBody, extension = os.path.splitext(dailySeq)
+	extension = extension[1:] # remove leading dot from file extension
+
 	job = os.environ['JOB']
 	assetType = 'daily'
 	prefix = ''
@@ -36,7 +40,7 @@ def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes):
 	# Confirmation dialog
 	dialogMsg = ''
 	dialogTitle = 'Publishing'
-	dialogMsg += 'Daily:\t%s_%s\n\nVersion:\t%s\n\nNotes:\t%s' % (os.environ['SHOT'], subsetName, version, pblNotes)
+	dialogMsg += 'Name:\t%s_%s\n\nVersion:\t%s\n\nNotes:\t%s' % (os.environ['SHOT'], subsetName, version, pblNotes)
 	dialog = pDialog.dialog()
 	if not dialog.dialogWindow(dialogMsg, dialogTitle):
 		return
@@ -55,23 +59,26 @@ def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes):
 		dailyPath = os.path.expandvars(dailyPath)
 		dailyPathLs = os.listdir(dailyPath)
 		dailyPathLs = sorted(dailyPathLs)
-		paddingLs = []
+		#paddingLs = []
+		paddingLs = sequence.numList(dailyRange)
 
-		# Get all frames from sequence and append to padding list
-		for file_ in dailyPathLs:
-			if '%s.' % dailySeq in file_:
-				fileSplit = pblOptsPrc.render_split(file_)
-				if fileSplit:
-					nameBody, padding, extension = fileSplit
-					paddingLs.append(padding)
+#		# Get all frames from sequence and append to padding list
+#		for file_ in dailyPathLs:
+#			if '%s.' % dailySeq in file_:
+#				fileSplit = pblOptsPrc.render_split(file_)
+#				if fileSplit:
+#					nameBody, padding, extension = fileSplit
+#					paddingLs.append(padding)
 		startFrame = min(paddingLs)
 		endFrame = max(paddingLs)
 		midFrame = int((int(startFrame) + int(endFrame))/2)
+		#print startFrame, midFrame, endFrame
 
 		# Pass arguments to djv to process the files in djvOps
 		dailyFileBody = '%s_daily_%s' % (os.environ['SHOT'], subsetName)
 		dailyFile = '%s.%s.jpg' % (dailyFileBody, startFrame)
 		inFile = os.path.join(dailyPath, nameBody)
+		#print inFile
 		outFile = os.path.join(pblDir, dailyFileBody)
 		#djvOps.prcImg(inFile, outFile, startFrame, endFrame, extension, outExt='jpg', fps=os.environ['FPS'])
 		djvOps.prcQt(inFile, pblDir, startFrame, endFrame, extension, name='%s_%s' % (dailyFileBody, version))
@@ -95,7 +102,7 @@ def publish(dailySeq, dailyPath, dailyType, pblTo, pblNotes):
 		# Store asset metadata in file
 		assetPblName += '_%s' % version
 		#src = renderDic['main']
-		src = None
+		src = dailySeq
 		icPblData.writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, pblNotes, src)
 
 		# Delete in-progress tmp file

@@ -549,10 +549,13 @@ def lodSystemCheck(objLs):
 			return
 	return lodA, lodB, lodC
 
-################opens new maya scene######################
+
 def newScene():
+	""" Create a new scene.
+	"""
 	mc.NewScene()
 	update()
+
 
 ###################node type check########################
 def nodetypeCheck(obj):
@@ -567,11 +570,13 @@ def notesTag(obj, pblNotes):
 	mc.setAttr('%s.Notes' % obj, l=False)
 	mc.setAttr('%s.Notes' % obj, pblNotes, typ='string', l=True)
 
-###################opens maya file########################
+
 def openScene(filePath, extension=None, dialog=True, updateRecentFiles=True):
+	""" Open a saved scene.
+	"""
 	if mel.eval('saveChanges("")'):
 		if dialog:
-			openFolder = mc.fileDialog2(ds=2, fm=1, ff=extension, dir=filePath, cap='Gramercy Park Studios - Open', okc='Open')
+			openFolder = mc.fileDialog2(ds=2, fm=1, ff=extension, dir=filePath, cap='[GPS] Open', okc='Open')
 			if openFolder == None:
 				return
 		else:
@@ -580,6 +585,7 @@ def openScene(filePath, extension=None, dialog=True, updateRecentFiles=True):
 		if updateRecentFiles:
 			recentFiles.updateLs(filename)
 
+
 ######parent constraints two identical hierarchies########
 def parentCnstrHrq(obj1, obj2):
 	hrq1 = mc.listRelatives(obj1, ad=True, typ='transform')
@@ -587,9 +593,12 @@ def parentCnstrHrq(obj1, obj2):
 	for i in range(0, len(hrq1)):
 		mc.parentConstraint(hrq1[i], hrq2[i])
 
-##############redirects scene name and path###############
+
 def redirectScene(sceneFile):
-	mc.file(rn=sceneFile)
+	""" Redirect scene name and path.
+	"""
+	mc.file(rename=sceneFile)
+
 
 #####relinks cacheNode path and retrieves controlled geo######
 def relinkCache(cacheLs, cachePath, asset, version):
@@ -754,8 +763,10 @@ def renameObj(objLs, newName, oldName=False):
 		renamedObjLs.append(objRenamed)
 	return renamedObjLs
 
-#####################saves maya file######################
+
 def saveFile(fileType, updateRecentFiles=True):
+	""" Save Maya scene.
+	"""
 	if fileType == 'ma':
 		fileType = 'mayaAscii'
 	elif fileType == 'mb':
@@ -764,24 +775,20 @@ def saveFile(fileType, updateRecentFiles=True):
 	if updateRecentFiles:
 		recentFiles.updateLs(filename)
 	osOps.setPermissions(filename)
+	print "\nScene saved: %s" %filename, # print confirmation - the trailing comma make the message visible in Maya's command line output field
 
-###################saves maya file as#####################
+
 def saveFileAs(filePath, extension, updateRecentFiles=True):
-	saveFolder = mc.fileDialog2(ds=2, fm=0, ff=extension, dir=filePath, cap='Gramercy Park Studios - Save As', okc='Save')
+	""" Save Maya scene as.
+	"""
+	saveFolder = mc.fileDialog2(ds=2, fm=0, ff=extension, dir=filePath, cap='[GPS] Save As', okc='Save')
 	if saveFolder == None:
 		return
 	else:
-		fileType = saveFolder[0].split('.'); fileType = fileType.pop()
-		if fileType == 'ma':
-			fileType = 'mayaAscii'
-		elif fileType == 'mb':
-			fileType = 'mayaBinary'
-			
 		mc.file(rename=saveFolder[0])
-		filename = mc.file(options='v=0', force=True, save=True, type=fileType)
-		if updateRecentFiles:
-			recentFiles.updateLs(filename)
-		osOps.setPermissions(filename)
+
+		fileType = os.path.splitext(saveFolder[0])[1][1:] # get the extension without a leading dot
+		saveFile(fileType, updateRecentFiles)
 
 
 def snapShot(output_folder, isolate=True, fit=False):
@@ -834,24 +841,25 @@ def snapShot(output_folder, isolate=True, fit=False):
 		mc.select(sel, add=True)
 
 
-#################updates maya scene#######################
 def update():
+	""" Automatically set some defaults from the shot settings.
+	"""
 	startFrame = os.environ['STARTFRAME']
 	endFrame = os.environ['ENDFRAME']
 	timeFormat = os.environ['TIMEFORMAT']
 	unit = os.environ['UNIT']
 	angle = os.environ['ANGLE']
 
-	#settings default for maya startup
-	mc.optionVar(sv=('workingUnitAngular','%s' % angle))
-	mc.optionVar(sv=('workingUnitAngularDefault','%s' % angle))
-	mc.optionVar(sv=('workingUnitAngularHold','%s' % angle))
-	mc.optionVar(sv=('workingUnitLinear','%s' % unit))
-	mc.optionVar(sv=('workingUnitLinearDefault','%s' % unit))
-	mc.optionVar(sv=('workingUnitLinearHold','%s' % unit))
-	mc.optionVar(sv=('workingUnitTime','%s' % timeFormat))
-	mc.optionVar(sv=('workingUnitTimeDefault','%s' % timeFormat))
-	mc.optionVar(sv=('workingUnitTimeHold','%s' % timeFormat))
+	# Setting defaults for Maya startup
+	mc.optionVar(sv = ('workingUnitAngular','%s' % angle))
+	mc.optionVar(sv = ('workingUnitAngularDefault','%s' % angle))
+	mc.optionVar(sv = ('workingUnitAngularHold','%s' % angle))
+	mc.optionVar(sv = ('workingUnitLinear','%s' % unit))
+	mc.optionVar(sv = ('workingUnitLinearDefault','%s' % unit))
+	mc.optionVar(sv = ('workingUnitLinearHold','%s' % unit))
+	mc.optionVar(sv = ('workingUnitTime','%s' % timeFormat))
+	mc.optionVar(sv = ('workingUnitTimeDefault','%s' % timeFormat))
+	mc.optionVar(sv = ('workingUnitTimeHold','%s' % timeFormat))
 	mc.optionVar(fv = ('playbackMinRangeDefault',int(startFrame)))
 	mc.optionVar(fv = ('playbackMinDefault',int(startFrame)))
 	mc.optionVar(fv = ('playbackMaxRangeDefault',int(endFrame)))
@@ -860,13 +868,9 @@ def update():
 	mc.optionVar(sv = ('workingUnitLinear','%s' % unit))
 	mc.optionVar(sv = ('workingUnitAngular','%s' % angle))
 	mc.optionVar(sv = ('workingUnitTime','%s' % timeFormat))
-	mc.currentUnit(l='%s' % unit, a='%s' % angle, t='%s' % timeFormat)	
-	mc.playbackOptions(min=startFrame, 
-	ast=startFrame, 
-	max=endFrame, 
-	aet=endFrame, 
-	ps=0, 
-	mps=1)
+	mc.currentUnit(l='%s' % unit, a='%s' % angle, t='%s' % timeFormat)
+	mc.playbackOptions(min=startFrame, ast=startFrame, max=endFrame, aet=endFrame, ps=0, mps=1)
+
 
 ###################updates ic set version#################
 def updateIcDataSetVersion(version, ICSet=None):
