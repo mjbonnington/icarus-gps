@@ -1,0 +1,47 @@
+/*global proc dev_outlinerMenuItem(){
+	global string $gMainWindowMenu;
+	string $mayaWindowMenu[] = `menu -q -ia $gMainWindowMenu`;
+	int $i = 0;
+	while ($i < `size $mayaWindowMenu`) {
+		string $target = "MayaWindow|" + $gMainWindowMenu + "|" + $mayaWindowMenu[$i];
+		if (`menuItem -q -l $target` == "Outliner")
+			menuItem -e -c "dev_dockOutliner" $target;
+		$i++;
+	}
+}*/
+
+global proc dev_dockOutliner() {
+	if (!`window -q -exists dev_outlinerDockWindow`) {
+		window -widthHeight 300 1000 -title "" dev_outlinerDockWindow;
+		frameLayout -parent dev_outlinerDockWindow
+					-marginHeight 0
+					-marginWidth 0
+					-borderVisible off
+					-labelVisible off
+					dev_outlinerDockFrame;
+	}
+
+	if (!`dockControl -q -exists dev_outlinerDockControl`) {
+		dockControl -label "Outliner"
+					-area left
+					-allowedArea "left"
+					-width 300
+					-content dev_outlinerDockWindow
+					dev_outlinerDockControl;
+	} else {
+		dockControl -e -visible 1 dev_outlinerDockControl;
+	}
+
+	if (!`outlinerPanel -q -exists dev_dockedOutliner`) {
+		outlinerPanel -parent "dev_outlinerDockFrame" dev_dockedOutliner;
+	} else {
+		panel -e -parent "dev_outlinerDockFrame" dev_dockedOutliner;
+	}
+
+	global int $dev_dockedOutlinerFix;
+	if (!$dev_dockedOutlinerFix) {
+		$dev_dockedOutlinerFix = 1;
+		scriptJob -compressUndo true -protected -event "PostSceneRead" "dev_dockOutliner";
+		scriptJob -compressUndo true -protected -event "NewSceneOpened" "dev_dockOutliner";
+	}
+}

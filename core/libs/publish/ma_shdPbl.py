@@ -75,7 +75,8 @@ def publish(pblTo, slShot, subsetName, textures, pblNotes):
 		inProgress.start(pblDir)
 		
 		#ic publish data file
-		icPblData.writeData(pblDir, assetPblName, convention, assetType, extension, version, pblNotes)
+		src = mayaOps.getScene()
+		icPblData.writeData(pblDir, assetPblName, convention, assetType, extension, version, pblNotes, src)
 	
 		#maya operations
 		mayaOps.deleteICDataSet(objLs)

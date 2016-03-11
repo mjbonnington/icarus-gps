@@ -242,7 +242,6 @@ class preview():
 			if not pre_safeTitle:
 				mc.setAttr("%s.displaySafeTitle" % cameraShape[0], 0)
 
-
 		#returns frRange and file extension
 		return self.frRange , 'jpg'
 

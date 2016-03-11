@@ -231,7 +231,8 @@ iconTextButton -image1 "editor.png"
 
 // GPS - Add popup menu for common editors
 string $menu = `popupMenu -b 1 -p editorsButton`;
-	menuItem -label "Outliner" -c "OutlinerWindow";
+	//menuItem -label "Outliner" -c "OutlinerWindow";
+	menuItem -label "Outliner" -c "source dev_dockOutliner;dev_dockOutliner()"; // Dockable Outliner
 	menuItem -label "Node Editor" -c "NodeEditorWindow";
 	menuItem -divider true;
 	menuItem -label "Hypershade" -c "HypershadeWindow";

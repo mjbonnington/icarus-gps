@@ -1,8 +1,16 @@
-# GPS Randomise Vertices
-# v0.2
+#!/usr/bin/python
+
+# [GPS] Randomise Vertices
+# v0.3
 #
-# Michael Bonnington 2014
-# Gramercy Park Studios
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# (c) 2014-2016 Gramercy Park Studios
+#
+# Adds random deformation to points.
+# Currently works on an mesh vertices, possible future support for NURBS CVs, lattice points, and maybe even UVs.
+# TODO: add random seed for repeatability.
+
 
 import random, time
 import maya.cmds as mc
@@ -14,14 +22,74 @@ import gpsCommon as gps
 class gpsRandomiseVertices():
 
 	def __init__(self):
-		self.winTitle = "GPS Randomise Vertices"
+		self.winTitle = "[GPS] Randomise Vertices"
 		self.winName = "gpsRandomiseVertices"
 		self.gMainProgressBar = mel.eval('$tmp = $gMainProgressBar')
 
 
-	def randomiseVertices(self):
-		"""Randomise vertices"""
+	def UI(self):
+		""" Create UI.
+		"""
+		# Check if UI window already exists
+		if mc.window(self.winName, exists=True):
+			mc.deleteUI(self.winName)
 
+		# Create window
+		mc.window(self.winName, title=self.winTitle, sizeable=False)
+
+		# Create controls
+		#setUITemplate -pushTemplate gpsToolsTemplate;
+		mc.columnLayout("windowRoot")
+		self.randomiseVerticesUI("randomiseVerticesOptions", "windowRoot")
+		mc.separator(height=8, style="none")
+		mc.rowLayout(numberOfColumns=2)
+		mc.button(width=198, height=28, label="Randomise Vertices", command=lambda *args: self.randomiseVertices())
+		mc.button(width=198, height=28, label="Close", command=lambda *args: mc.deleteUI(self.winName))
+		#setUITemplate -popTemplate;
+
+		mc.showWindow(self.winName)
+
+
+	def randomiseVerticesUI(self, name, parent, collapse=False):
+		""" Create randomise vertices options panel UI controls.
+		"""
+		mc.frameLayout(width=400, collapsable=True, cl=collapse, borderStyle="etchedIn", label="Options")
+		mc.columnLayout(name)
+		mc.separator(height=4, style="none")
+		mc.radioButtonGrp("offsetType1", label="Offset type: ", label1="Fractional (prevents intersections)", numberOfRadioButtons=1, columnWidth2=[140, 156], select=1, onCommand=lambda *args: self.tglOffsetControls(False), offCommand=lambda *args: self.tglOffsetControls(True))
+		mc.radioButtonGrp("offsetType2", label="", label1="Absolute", numberOfRadioButtons=1, columnWidth2=[140, 156],	shareCollection="offsetType1")
+		mc.separator(height=4, style="none")
+		mc.radioButtonGrp("offsetSpace1", label="Offset space: ", label1="World (ignore object scaling)", numberOfRadioButtons=1, columnWidth2=[140, 156], select=1)
+		mc.radioButtonGrp("offsetSpace2", label="", label1="Object", numberOfRadioButtons=1, columnWidth2=[140, 156], shareCollection="offsetSpace1")
+		mc.separator(height=4, style="none")
+		mc.floatSliderGrp("offset", label="Offset: ", value=0, field=True, precision=3, minValue=-10, maxValue=10, fieldMinValue=-99999999, fieldMaxValue=99999999, enable=False, annotation="Amount to offset the vertex in the specified axes.")
+		mc.floatSliderGrp("randomness", label="Randomness: ", value=0.1, field=True, precision=3, minValue=0, maxValue=1, annotation="A random value within the specified range to be added to or subtracted from the offset value.")
+		mc.checkBoxGrp("axes", label="Axes: ", labelArray3=['X', 'Y', 'Z'], valueArray3=[True, True, True], numberOfCheckBoxes=3, columnWidth4=[140, 78, 78, 78])
+		mc.rowLayout(numberOfColumns=1, columnAttach1="left", columnAlign1="both", columnOffset1=142)
+		mc.checkBox("vtxNormal", label="Transform along vertex normal", value=0, onCommand=lambda *args: self.tglAxisControls(False), offCommand=lambda *args: self.tglAxisControls(True))
+		mc.setParent(name)
+		mc.separator(height=8, style="none")
+		mc.setParent(parent)
+
+
+	def tglAxisControls(self, option):
+		""" Toggle axis controls.
+		"""
+		mc.checkBoxGrp("axes", edit=True, enable=option)
+		mc.radioButtonGrp("offsetSpace1", edit=True, enable=option)
+		mc.radioButtonGrp("offsetSpace2", edit=True, enable=option)
+		mc.radioButtonGrp("offsetSpace2", edit=True, select=1)
+
+
+	def tglOffsetControls(self, option):
+		""" Toggle offset controls.
+		"""
+		mc.floatSliderGrp("offset", edit=True, enable=option)
+
+
+	def randomiseVertices(self):
+		""" Randomise vertices.
+		"""
 		# Get options
 		fractional = mc.radioButtonGrp("offsetType1", query=True, select=True)
 		worldSpace = mc.radioButtonGrp("offsetSpace1", query=True, select=True)
@@ -140,57 +208,3 @@ class gpsRandomiseVertices():
 			print "Offset %d vertices in %f seconds.\n" %(len(vtxLs), totalTime)
 			return True
 
-
-	def tglAxisControls(self, option):
-		mc.checkBoxGrp("axes", edit=True, enable=option)
-		mc.radioButtonGrp("offsetSpace1", edit=True, enable=option)
-		mc.radioButtonGrp("offsetSpace2", edit=True, enable=option)
-		mc.radioButtonGrp("offsetSpace2", edit=True, select=1)
-
-
-	def tglOffsetControls(self, option):
-		mc.floatSliderGrp("offset", edit=True, enable=option)
-
-
-	def UI(self):
-
-		# Check if UI window already exists
-		if mc.window(self.winName, exists=True):
-			mc.deleteUI(self.winName)
-
-		# Create window
-		mc.window(self.winName, title=self.winTitle, sizeable=False)
-
-		# Create controls
-		#setUITemplate -pushTemplate gpsToolsTemplate;
-		mc.columnLayout("windowRoot")
-		self.randomiseVerticesUI("randomiseVerticesOptions", "windowRoot")
-		mc.separator(height=8, style="none")
-		mc.rowLayout(numberOfColumns=2)
-		mc.button(width=198, height=28, label="Randomise Vertices", command=lambda *args: self.randomiseVertices())
-		mc.button(width=198, height=28, label="Close", command=lambda *args: mc.deleteUI(self.winName))
-		#setUITemplate -popTemplate;
-
-		mc.showWindow(self.winName)
-
-
-	def randomiseVerticesUI(self, name, parent, collapse=False):
-		"""Create randomise vertices options panel UI controls"""
-
-		mc.frameLayout(width=400, collapsable=True, cl=collapse, borderStyle="etchedIn", label="Options")
-		mc.columnLayout(name)
-		mc.separator(height=4, style="none")
-		mc.radioButtonGrp("offsetType1", label="Offset type: ", label1="Fractional (prevents intersections)", numberOfRadioButtons=1, columnWidth2=[140, 156], select=1, onCommand=lambda *args: self.tglOffsetControls(False), offCommand=lambda *args: self.tglOffsetControls(True))
-		mc.radioButtonGrp("offsetType2", label="", label1="Absolute", numberOfRadioButtons=1, columnWidth2=[140, 156],	shareCollection="offsetType1")
-		mc.separator(height=4, style="none")
-		mc.radioButtonGrp("offsetSpace1", label="Offset space: ", label1="World (ignore object scaling)", numberOfRadioButtons=1, columnWidth2=[140, 156], select=1)
-		mc.radioButtonGrp("offsetSpace2", label="", label1="Object", numberOfRadioButtons=1, columnWidth2=[140, 156], shareCollection="offsetSpace1")
-		mc.separator(height=4, style="none")
-		mc.floatSliderGrp("offset", label="Offset: ", value=0, field=True, precision=3, minValue=-10, maxValue=10, fieldMinValue=-99999999, fieldMaxValue=99999999, enable=False, annotation="Amount to offset the vertex in the specified axes.")
-		mc.floatSliderGrp("randomness", label="Randomness: ", value=0.1, field=True, precision=3, minValue=0, maxValue=1, annotation="A random value within the specified range to be added to or subtracted from the offset value.")
-		mc.checkBoxGrp("axes", label="Axes: ", labelArray3=['X', 'Y', 'Z'], valueArray3=[True, True, True], numberOfCheckBoxes=3, columnWidth4=[140, 78, 78, 78])
-		mc.rowLayout(numberOfColumns=1, columnAttach1="left", columnAlign1="both", columnOffset1=142)
-		mc.checkBox("vtxNormal", label="Transform along vertex normal", value=0, onCommand=lambda *args: self.tglAxisControls(False), offCommand=lambda *args: self.tglAxisControls(True))
-		mc.setParent(name)
-		mc.separator(height=8, style="none")
-		mc.setParent(parent)

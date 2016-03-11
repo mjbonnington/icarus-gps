@@ -500,14 +500,9 @@ class icarusApp(QtGui.QDialog):
 		self.ui.launchApp_groupBox.setEnabled(False)
 		self.ui.launchOptions_groupBox.setEnabled(False)
 
-		# Remove publish and assets tab
-		self.ui.tabWidget.removeTab(1); self.ui.tabWidget.removeTab(1)
-	#	for row in range(self.ui.renderPbl_tableWidget.rowCount()):
-	#		self.ui.renderPbl_tableWidget.removeRow(0)
-	#	self.ui.renderPbl_tableWidget.clearContents()
+		self.ui.tabWidget.removeTab(1); self.ui.tabWidget.removeTab(1) # remove publish and assets tab - check this
 		self.ui.renderPbl_treeWidget.clear() # clear the render layer tree view widget
-		self.ui.dailyPbl_treeWidget.removeRow(0)
-		self.ui.dailyPbl_treeWidget.clearContents()
+		self.ui.dailyPbl_treeWidget.clear() # clear the dailies tree view widget
 		self.ui.shotEnv_toolButton.setText('')
 		self.ui.shotEnv_toolButton.hide()
 		self.ui.setNewShot_pushButton.hide()
