@@ -150,6 +150,9 @@ def noICSetsPbl():
 def noJob(job):
 	print_( 'ERROR: The job path "%s" does not exist. The job may have been archived, moved or deleted.' % job, 1 )
 
+def noJobs():
+	print_( 'ERROR: No active jobs found.', 2 )
+
 def noMainLayer():
 	print_( 'Please set a main layer', 1 )
 

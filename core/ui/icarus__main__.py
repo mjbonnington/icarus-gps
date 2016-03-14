@@ -162,11 +162,11 @@ class icarusApp(QtGui.QDialog):
 		self.publishRenderTab = self.ui.publishType_tabWidget.widget(1)
 
 
-		###########STANDALONE ENVIRONMENT#############
-		##############################################
+		##########################
+		# STANDALONE ENVIRONMENT #
+		##########################
 		if os.environ['ICARUSENVAWARE'] == 'STANDALONE':
-			# Hide UI items relating to app environment(s)
-			uiHideLs = ['setNewShot_pushButton', 'shotEnv_toolButton', 'appIcon_label'] # Removed 'shotEnv_label_maya', 
+			uiHideLs = ['setNewShot_pushButton', 'shotEnv_toolButton', 'appIcon_label'] # Hide UI items relating to app environment(s)
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
@@ -174,27 +174,42 @@ class icarusApp(QtGui.QDialog):
 			# Populate 'Job' and 'Shot' drop down menus
 			jobLs = jobs.dic.keys()
 			jobLs = sorted(jobLs, reverse=True)
-			for job in jobLs:
-				# Populate 'Shot' combo box. Block signals while doing it to prevent call to populateShots() each time a new item is added
-				self.ui.job_comboBox.blockSignals(True)
-				self.ui.job_comboBox.insertItem(0, job)
-				self.ui.job_comboBox.blockSignals(False)
-				# Set the combo box to the first item
-				self.ui.job_comboBox.setCurrentIndex(0)
 
-			# Attempt to set the combo box selections to remember the last shot
-			lastJob = None
-			try:
-				lastJob, lastShot = userPrefs.config.get('main', 'lastjob').split(',')
-				#print lastJob, lastShot
-				if lastJob in jobLs:
-					shotLs = setJob.listShots(lastJob)
-					if shotLs:
-						if lastShot in shotLs:
-							self.ui.job_comboBox.setCurrentIndex(self.ui.job_comboBox.findText(lastJob))
-							self.ui.shot_comboBox.setCurrentIndex(self.ui.shot_comboBox.findText(lastShot))
-			except:
-				pass
+			if jobLs:
+				for job in jobLs:
+
+					# Populate 'Shot' combo box. Block signals while doing it to prevent call to populateShots() each time a new item is added
+					self.ui.job_comboBox.blockSignals(True)
+					self.ui.job_comboBox.insertItem(0, job)
+					self.ui.job_comboBox.blockSignals(False)
+
+					# Set the combo box to the first item
+					if len(jobLs) == 1:
+						self.populateShots()
+					else:
+						self.ui.job_comboBox.setCurrentIndex(0)
+
+				# Attempt to set the combo box selections to remember the last shot
+				lastJob = None
+				try:
+					lastJob, lastShot = userPrefs.config.get('main', 'lastjob').split(',')
+					#print lastJob, lastShot
+					if lastJob in jobLs:
+						shotLs = setJob.listShots(lastJob)
+						if shotLs:
+							if lastShot in shotLs:
+								self.ui.job_comboBox.setCurrentIndex(self.ui.job_comboBox.findText(lastJob))
+								self.ui.shot_comboBox.setCurrentIndex(self.ui.shot_comboBox.findText(lastShot))
+				except:
+					pass
+
+			# If no jobs found, disable all job management UI controls
+			else:
+				verbose.noJobs()
+				self.ui.job_comboBox.blockSignals(True)
+				self.ui.job_comboBox.insertItem(0, '[No active jobs found]')
+				self.ui.shot_comboBox.insertItem(0, '[None]')
+				self.ui.shotSetupParent_groupBox.setEnabled(False)
 
 			# Delete all tabs except 'Job Management'
 			for i in range(0, self.ui.tabWidget.count()-1):

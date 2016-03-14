@@ -12,7 +12,7 @@
 
 global proc dev_dockOutliner() {
 	if (!`window -q -exists dev_outlinerDockWindow`) {
-		window -widthHeight 300 1000 -title "" dev_outlinerDockWindow;
+		window -widthHeight 256 768 -title "" dev_outlinerDockWindow;
 		frameLayout -parent dev_outlinerDockWindow
 					-marginHeight 0
 					-marginWidth 0
@@ -25,23 +25,28 @@ global proc dev_dockOutliner() {
 		dockControl -label "Outliner"
 					-area left
 					-allowedArea "left"
-					-width 300
+					-allowedArea "right"
+					-width 256
 					-content dev_outlinerDockWindow
 					dev_outlinerDockControl;
 	} else {
 		dockControl -e -visible 1 dev_outlinerDockControl;
 	}
 
-	if (!`outlinerPanel -q -exists dev_dockedOutliner`) {
-		outlinerPanel -parent "dev_outlinerDockFrame" dev_dockedOutliner;
-	} else {
-		panel -e -parent "dev_outlinerDockFrame" dev_dockedOutliner;
-	}
+	refreshPanel();
 
 	global int $dev_dockedOutlinerFix;
 	if (!$dev_dockedOutlinerFix) {
 		$dev_dockedOutlinerFix = 1;
-		scriptJob -compressUndo true -protected -event "PostSceneRead" "dev_dockOutliner";
-		scriptJob -compressUndo true -protected -event "NewSceneOpened" "dev_dockOutliner";
+		scriptJob -compressUndo true -protected -event "PostSceneRead" "refreshPanel";
+		scriptJob -compressUndo true -protected -event "NewSceneOpened" "refreshPanel";
+	}
+}
+
+global proc refreshPanel() {
+	if (!`outlinerPanel -q -exists dev_dockedOutliner`) {
+		outlinerPanel -parent "dev_outlinerDockFrame" dev_dockedOutliner;
+	} else {
+		panel -e -parent "dev_outlinerDockFrame" dev_dockedOutliner;
 	}
 }
