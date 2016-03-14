@@ -1,4 +1,14 @@
-/*global proc dev_outlinerMenuItem(){
+// Dockable Outliner
+//
+// Mike Bonnington <mike.bonnington@gps-ldn.com>
+// Adapted from a script by Dev Guardead
+// https://guardead.wordpress.com/2015/01/15/maya-dock-outliner/
+//
+// Creates a new outliner panel which can be docked to the edges of the main Maya window.
+
+
+/*global proc dev_outlinerMenuItem() {
+	// Replace the default outliner menu item.
 	global string $gMainWindowMenu;
 	string $mayaWindowMenu[] = `menu -q -ia $gMainWindowMenu`;
 	int $i = 0;
@@ -11,6 +21,7 @@
 }*/
 
 global proc dev_dockOutliner() {
+	// Create dockable outliner.
 	if (!`window -q -exists dev_outlinerDockWindow`) {
 		window -widthHeight 256 768 -title "" dev_outlinerDockWindow;
 		frameLayout -parent dev_outlinerDockWindow
@@ -35,6 +46,7 @@ global proc dev_dockOutliner() {
 
 	refreshPanel();
 
+	// The first time the script is run, create to stript jobs to run 
 	global int $dev_dockedOutlinerFix;
 	if (!$dev_dockedOutlinerFix) {
 		$dev_dockedOutlinerFix = 1;
@@ -44,6 +56,7 @@ global proc dev_dockOutliner() {
 }
 
 global proc refreshPanel() {
+	// Create or recreate the outliner panel.
 	if (!`outlinerPanel -q -exists dev_dockedOutliner`) {
 		outlinerPanel -parent "dev_outlinerDockFrame" dev_dockedOutliner;
 	} else {

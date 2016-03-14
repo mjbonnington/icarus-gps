@@ -1,33 +1,16 @@
-// [GPS] Lighting
+// [GPS] gpsLighting.mel
 //
-// Nuno Pereira <nuno.pereira@gps-ldn.com>
 // Mike Bonnington <mike.bonnington@gps-ldn.com>
-// (c) 2013-2015 Gramercy Park Studios
+// Nuno Pereira <nuno.pereira@gps-ldn.com>
+// (c) 2013-2016 Gramercy Park Studios
 //
-// Generic lighting setup module.
+// Generic lighting / render setup module.
 
 
-// Set the render settings with some sensible defaults (V-Ray).
-global proc gpsLighting.loadBaseSettings()
+// Set common render options.
+global proc gpsLighting.setCommonOptions()
 {
-	// Create main render layer
-	/*string $renderLayerLs[] = `ls -type renderLayer`;
-	$mainLayerIndex = stringArrayFind("main", 0, $renderLayerLs);
-	if ($mainLayerIndex == -1)
-	{
-		createRenderLayer -n "main" -g -num 1;
-		renderLayerEditorRenderable RenderLayerTab "defaultRenderLayer" "0";
-	}*/
-
-	// Get environment variables
-	float $aspectRatio = `getenv "ASPECTRATIO"`;
-	int $resX = `getenv "RESOLUTIONX"`;
-	int $resY = `getenv "RESOLUTIONY"`;
-	string $startFrame = `getenv "STARTFRAME"`;
-	string $endFrame = `getenv "ENDFRAME"`;
-
-	// Maya common settings...
-	// Set image format to TIFF
+	// Set image format to EXR, or TIFF if EXR is not available, i.e. Maya software renderer
 	setAttr "defaultRenderGlobals.imageFormat" 3;
 
 	// Set filename format correctly - name.####.ext
@@ -36,250 +19,50 @@ global proc gpsLighting.loadBaseSettings()
 	setAttr defaultRenderGlobals.putFrameBeforeExt 1;
 	setAttr defaultRenderGlobals.extensionPadding 4;
 
+	// Set render file name prefix
+	gpsLighting.setRenderPath();
+
 	// Set frame range
-	setAttr "defaultRenderGlobals.startFrame" $startFrame;
-	setAttr "defaultRenderGlobals.endFrame" $endFrame;
+	gpsLighting.setFrameRange();
 
 	// Set resolution
-	setAttr "defaultResolution.w" $resX;
-	setAttr "defaultResolution.h" $resY;
-
-
-	// Load V-Ray plugin if it's not loaded
-	gpsLighting.loadRenderer("vrayformaya");
-
-	if(`pluginInfo -q -l vrayformaya`)
-	{
-		// Set V-Ray as the current renderer
-		setCurrentRenderer vray;
-
-		// Create the V-Ray settings node unless it already exists
-		if(!`objExists "vraySettings"`)
-		{
-			vrayCreateVRaySettingsNode;
-		}
-
-		// Enable V-Ray Framebuffer
-		setAttr "vraySettings.vfbOn" 1;
-		vray vfbControl -srgb true;
-
-		// Setup frame stamp burn-in
-		setAttr "vraySettings.stamp_on" 1;
-		vray vfbControl -stamptext true;
-		//string $job=`getenv JOB`;
-		//string $shot=`getenv SHOT`;
-		//string $user=`getenv USER`;
-		//string $stamp="Frame: %frame Render time: %rendertime Camera: %camera Job: " + $job + " - " + $shot;
-		//string $stamp="(V-Ray for Maya %vrayversion)     size: %wx%h     frame: %frame     render time: %rendertime     camera: %camera     layer: %renderlayer     job: " + $job + "     shot: " + $shot + "     user: " + $user;
-		string $stamp="size: %wx%h     frame: %frame     render time: %rendertime     camera: %camera     layer: %renderlayer";
-		setAttr -type "string" vraySettings.stamp_text $stamp; // There seems to be a bug with setting this value in Maya 2016 / V-Ray 3.1
-		vray vfbControl -stamptext $stamp;
-
-		// Setup gamma for linear workflow
-		setAttr "vraySettings.cmap_gamma" 2.2;
-		setAttr "vraySettings.cmap_adaptationOnly" 1;
-		setAttr "vraySettings.cmap_affectSwatches" 1;
-
-		// Render animation in batch mode only
-		setAttr "defaultRenderGlobals.animation" 1;
-		setAttr "vraySettings.animBatchOnly" 1;
-
-		// Force format to EXR by default - with ZIPS compression, 16-bit half float
-		setAttr -type "string" "vraySettings.imageFormatStr" "exr";
-		setAttr "vraySettings.imgOpt_exr_compression" 3;
-		setAttr "vraySettings.imgOpt_exr_bitsPerChannel" 16;
-		setAttr -l false { "vraySettings.exradw" };
-		setAttr "vraySettings.imgOpt_exr_autoDataWindow" 0;
-		setAttr -l true { "vraySettings.exradw" };
-		setAttr "vraySettings.fileNamePadding" 4;
-		setAttr "defaultRenderGlobals.startFrame" $startFrame;
-		setAttr "defaultRenderGlobals.endFrame" $endFrame;
-
-		// Set render test resolution
-		setTestResolutionVar(4);
-
-		// Set resolution and fix aspect ratio
-		setAttr "vraySettings.aspectLock" 0;
-		setAttr "vraySettings.wi" $resX;
-		setAttr "vraySettings.he" $resY;
-		setAttr "vraySettings.aspectRatio" $aspectRatio;
-		setAttr "vraySettings.pixelAspect" 1;
-		setAttr "vraySettings.aspectLock" 1;
-
-		// Set render element separator
-		setAttr "vraySettings.fileNameRenderElementSeparator" -type "string" "_";
-		if (`optionMenuGrp -exists vrayRenderElementSeparator`)
-		{
-			optionMenuGrp -edit -sl (2) vrayRenderElementSeparator;
-		}
-
-		// Set DMC sampler settings
-		gpsLighting.loadDMCSettings();
-
-		// Set max transparency
-		setAttr "vraySettings.globopt_mtl_transpMaxLevels" 10;
-
-		// Set global max depth
-		setAttr "vraySettings.globopt_mtl_limitDepth" 1;
-		setAttr "vraySettings.globopt_mtl_maxDepth" 10;
-
-		// Make grain animate
-		setAttr "vraySettings.dmcs_timeDependent" 1;
-
-		// Set default subdiv amount to more realistic number
-		setAttr "vraySettings.ddisplac_maxSubdivs" 4;
-		setAttr "vraySettings.ddisplac_edgeLength" 1;
-
-		// Set dynamic memory limit
-		setAttr "vraySettings.sys_rayc_dynMemLimit" 3000;
-
-		// Set render file name prefix
-		gpsLighting.setRenderPath();
-
-	} else {
-		error "V-Ray plugin not loaded";
-	}
-
+	gpsLighting.setResolution();
 }
 
 
-// Attempt to load renderer plugin
-global proc gpsLighting.loadRenderer(string $renderer)
-{
-	// Load V-Ray plugin if it's not loaded
-	if(!`pluginInfo -q -l $renderer`)
-	{
-		loadPlugin $renderer; // This seems to cause a crash with Maya 2016 / V-Ray 3.1
-	} else {
-		warning "Plugin already loaded.";
-	}
-}
-
-
-// Set up render file name prefix format
+// Set render file name prefix format.
 global proc gpsLighting.setRenderPath()
 {
 	string $user = `getenv "USER"`;
 	string $shot = `getenv "SHOT"`;
-	// Maya render globals Common tab...
+
 	setAttr -type "string" "defaultRenderGlobals.ifp" ($user + "/<Scene>/<RenderLayer>/" + $shot + "_<RenderLayer>");
-	// V-Ray has its own Common tab...
-	setAttr -l false { "vraySettings.fnprx" };
-	setAttr -type "string" "vraySettings.fileNamePrefix" ($user + "/<Scene>/<Layer>/" + $shot + "_<Layer>"); // V-Ray doesn't like the <RenderLayer> token, so use <Layer> instead
-	//setAttr -l true { "vraySettings.fnprx" }; // This cannot be locked otherwise renders submitted to Deadline from Maya submitter will fail.
 }
 
 
-// Load adaptive DMC settings
-global proc gpsLighting.loadDMCSettings()
+// Set frame range.
+global proc gpsLighting.setFrameRange()
 {
-	setAttr "vraySettings.samplerType" 1;
-	setAttr "vraySettings.dmcs_adaptiveAmount" 0.85;
-	setAttr "vraySettings.dmcs_adaptiveThreshold" 0.010;
-	setAttr "vraySettings.dmcMinSubdivs" 1;
-	setAttr "vraySettings.dmcMaxSubdivs" 100;
-	setAttr "vraySettings.dmcThreshold" 0.03;
+	string $startFrame = `getenv "STARTFRAME"`;
+	string $endFrame = `getenv "ENDFRAME"`;
 
-	setAttr "vraySettings.aaFilterOn" 0;
-
-	// Setup basic GI settings...
-	//setAttr "vraySettings.primaryEngine" 2;
-	//setAttr "vraySettings.secondaryEngine" 3;
-	//setAttr "vraySettings.numPasses" 12;
-	//setAttr "vraySettings.subdivs" 2000;
+	setAttr "defaultRenderGlobals.startFrame" $startFrame;
+	setAttr "defaultRenderGlobals.endFrame" $endFrame;
 }
 
 
-//vray shaders
-global proc string gpsLighting.createMaterial(string $type,string $name)
+// Set resolution.
+global proc gpsLighting.setResolution()
 {
-  if(!`pluginInfo -q -l vrayformaya`) {loadPlugin "vrayformaya";}
+	int $resX = `getenv "RESOLUTIONX"`;
+	int $resY = `getenv "RESOLUTIONY"`;
+	float $aspectRatio = `getenv "ASPECTRATIO"`;
 
-  string $materialName = $name;
+	setAttr "defaultResolution.w" $resX;
+	setAttr "defaultResolution.h" $resY;
+	setAttr "defaultResolution.deviceAspectRatio" $aspectRatio;
+	setAttr "defaultResolution.pixelAspect" 1;
 
-  int $disableNaming = `optionVar -q "vrayDisableShaderNaming"`; //check option to pop up naming dialog
-  print $disableNaming;
-  if($disableNaming < 1)
-  {
-    string $result = `promptDialog
-    -title "Material name"
-    -message "Enter Name:"
-    -button "OK" -button "Cancel"
-    -defaultButton "OK" -cancelButton "Cancel"
-    -dismissString "Cancel"`;
-
-    if ($result == "OK") {
-        $materialName = `promptDialog -query -text`;
-    }    
-  }
-
-  //stash selection
-  string $objSel[] = `ls -sl -type transform`;
-
-
-  //create the node
-  string $shdrNode = `shadingNode -asShader $type`;
-  $shdrNode = `rename $shdrNode ($materialName + "_" + $type)`;
-  //create a shading group
-  string $shdrGrp = `sets -renderable true -noSurfaceShader true -empty`;
-  $shdrGrp = `rename $shdrGrp ($materialName)`;
-  //connect the two together
-  connectAttr -f ($shdrNode+".outColor") ($shdrGrp+".surfaceShader");
-
-  //assign to all the selected objects
-  for($obj in $objSel)
-  {
-    assignSG $shdrNode $obj;
-  }
-
-  return $shdrNode;
-}
-
-
-//adds vRay input gamma attribute on selection
-global proc gpsLighting.addVRayGamma()
-{
-	string $objLs[] = `ls -sl`;
-	for($obj in $objLs){
-		if (`nodeType $obj`=="file"){
-			vrayAddAttr $obj vrayFileGammaEnable;
-			vrayAddAttr $obj vrayFileColorSpace;
-			vrayAddAttr $obj vrayFileGammaValue;
-		}
-	}
-}
-
-//removes vRay input gamma attribute on selection
-global proc gpsLighting.removeVRayGamma()
-{
-	string $objLs[] = `ls -sl`;
-	for($obj in $objLs){
-		if (`nodeType $obj`=="file"){
-			vrayDeleteAttr $obj vrayFileGammaEnable;
-			vrayDeleteAttr $obj vrayFileColorSpace;
-			vrayDeleteAttr $obj vrayFileGammaValue;
-		}
-	}
-}
-
-//adds vRay allow negative colors attribute on selection
-global proc gpsLighting.addVRayNegCol()
-{
-	string $objLs[] = `ls -sl`;
-	for($obj in $objLs){
-		if (`nodeType $obj`=="file"){
-			vray addAttributesFromGroup $obj vray_file_allow_neg_colors 1;
-		}
-	}
-}
-
-//removes vRay allow negative colors attribute on selection
-global proc gpsLighting.removeVRayNegCol()
-{
-	string $objLs[] = `ls -sl`;
-	for($obj in $objLs){
-		if (`nodeType $obj`=="file"){
-			vray addAttributesFromGroup $obj vray_file_allow_neg_colors 0;
-		}
-	}
+	// Set render test resolution
+	//setTestResolutionVar(4);
 }

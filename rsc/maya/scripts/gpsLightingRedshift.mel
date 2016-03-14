@@ -1,0 +1,47 @@
+// [GPS] gpsLightingRedshift.mel
+//
+// Mike Bonnington <mike.bonnington@gps-ldn.com>
+// (c) 2016-2016 Gramercy Park Studios
+//
+// Redshift setup module.
+
+
+// Attempt to load the Redshift plugin and set some defaults.
+global proc gpsLightingRedshift.loadBaseSettings()
+{
+	if(`pluginInfo -q -l "redshift4maya"`)
+		gpsLightingRedshift.loadSettings("redshift4maya");
+	else
+		loadPlugin -addCallback "gpsLightingRedshift.loadSettings" "redshift4maya";
+}
+
+
+// Set the render settings with some sensible defaults.
+global proc gpsLightingRedshift.loadSettings(string $pluginName)
+{
+	// Load common settings
+	source gpsLighting.mel;
+	gpsLighting.setCommonOptions();
+
+	// Set Redshift as the current renderer
+	setCurrentRenderer redshift;
+
+	// Set format to EXR with ZIPS compression, 16-bit half float
+	setAttr "redshiftOptions.imageFormat" 1;
+
+	// Setup gamma for linear workflow
+	if(!`colorManagementPrefs -q -cmEnabled`)
+		setAttr "redshiftOptions.displayGammaValue" 2.2;
+
+	// Set render test resolution
+	//setTestResolutionVar(4);
+
+	// Set max transparency
+
+	// Set global max depth
+
+	// Make grain animate
+	setAttr "redshiftOptions.unifiedRandomizePattern" 1;
+
+	print "\nRedshift defaults loaded. ";
+}

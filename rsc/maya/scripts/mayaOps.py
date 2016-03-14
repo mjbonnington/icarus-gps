@@ -868,7 +868,7 @@ def update():
 	mc.optionVar(sv = ('workingUnitLinear','%s' % unit))
 	mc.optionVar(sv = ('workingUnitAngular','%s' % angle))
 	mc.optionVar(sv = ('workingUnitTime','%s' % timeFormat))
-	mc.currentUnit(l='%s' % unit, a='%s' % angle, t='%s' % timeFormat)
+	mc.currentUnit(l=unit, a=angle, t=timeFormat)
 	mc.playbackOptions(min=startFrame, ast=startFrame, max=endFrame, aet=endFrame, ps=0, mps=1)
 
 

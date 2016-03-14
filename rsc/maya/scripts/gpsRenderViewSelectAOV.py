@@ -8,7 +8,7 @@
 # To initialise, run the script with 'import gpsRenderViewSelectAOV; gpsRenderViewSelectAOV.selectAOV()'
 # The Render View must be set to 32-bit mode.
 # Compatible with Maya 2016's new Color Management system.
-# Currently supports the following renderers: Arnold, Redshift, MentalRay.
+# Currently supports the following renderers: Arnold, Redshift, MentalRay (currently pre-Maya 2015 only).
 # Removed VRay support as this functionality already exists in the VRay Framebuffer.
 # Multi-channel EXRs are not supported.
 
@@ -77,8 +77,8 @@ class selectAOV():
 				imageFilePrefix = "<Scene>"
 
 			# Append RenderPass token
-			if "<RenderPass>" not in imageFilePrefix:
-				imageFilePrefix += "_<RenderPass>"
+			#if "<RenderPass>" not in imageFilePrefix:
+			#	imageFilePrefix += "_<RenderPass>"
 
 			# Store the updated prefix string
 			mc.setAttr( "defaultRenderGlobals.imageFilePrefix", imageFilePrefix, type="string" )
@@ -228,9 +228,14 @@ class selectAOV():
 
 		elif self.renderer == "redshift": # TODO: update this to respect Redshift's AOV name prefix attribute
 			if aov == self.default_beauty_aov_name:
-				img = img_path[0].replace( "<RenderPass>", "Beauty" )
+				#img = img_path[0].replace( "<RenderPass>", "Beauty" )
+				img = img_path[0]
 			else:
-				img = img_path[0].replace( "<RenderPass>", "Beauty.%s" %aov )
+				#img = img_path[0].replace( "<RenderPass>", "Beauty.%s" %aov )
+				layer = mc.editRenderLayerGlobals( query=True, currentRenderLayer=True )
+				if layer == "defaultRenderLayer":
+					layer = "masterLayer"
+				img = img_path[0].replace( "%s." %layer, "%s.%s." %(layer, aov) )
 
 		elif self.renderer == "mentalRay":
 			if aov == self.default_beauty_aov_name:
@@ -238,7 +243,7 @@ class selectAOV():
 			else:
 				img = img_path[0].replace( "<RenderPass>", aov )
 
-		#print img
+		print img
 
 		# Load the image
 		rview = mc.getPanel( scriptType="renderWindowPanel" )
