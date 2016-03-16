@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'settings_time_ui.ui'
 #
-# Created: Thu Jun  4 15:28:43 2015
-#      by: pyside-uic 0.2.13 running on PySide 1.1.1
+# Created: Wed Mar 16 09:53:07 2016
+#      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -51,6 +51,14 @@ class Ui_settings_frame(object):
         self.handles_spinBox.setProperty("value", 10)
         self.handles_spinBox.setObjectName("handles_spinBox")
         self.formLayout.setWidget(1, QtGui.QFormLayout.FieldRole, self.handles_spinBox)
+        self.posterFrame_label = QtGui.QLabel(settings_frame)
+        self.posterFrame_label.setObjectName("posterFrame_label")
+        self.formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.posterFrame_label)
+        self.posterFrame_spinBox = QtGui.QSpinBox(settings_frame)
+        self.posterFrame_spinBox.setMaximum(9999)
+        self.posterFrame_spinBox.setProperty("value", 1001)
+        self.posterFrame_spinBox.setObjectName("posterFrame_spinBox")
+        self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.posterFrame_spinBox)
 
         self.retranslateUi(settings_frame)
         QtCore.QMetaObject.connectSlotsByName(settings_frame)
@@ -65,4 +73,6 @@ class Ui_settings_frame(object):
         self.rangeEnd_spinBox.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "rangeEnd", None, QtGui.QApplication.UnicodeUTF8))
         self.handles_label.setText(QtGui.QApplication.translate("settings_frame", "Handles:", None, QtGui.QApplication.UnicodeUTF8))
         self.handles_spinBox.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "handles", None, QtGui.QApplication.UnicodeUTF8))
+        self.posterFrame_label.setText(QtGui.QApplication.translate("settings_frame", "Poster frame:", None, QtGui.QApplication.UnicodeUTF8))
+        self.posterFrame_spinBox.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "posterFrame", None, QtGui.QApplication.UnicodeUTF8))
 

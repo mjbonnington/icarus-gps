@@ -96,6 +96,26 @@
      </property>
     </widget>
    </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="posterFrame_label">
+     <property name="text">
+      <string>Poster frame:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QSpinBox" name="posterFrame_spinBox">
+     <property name="maximum">
+      <number>9999</number>
+     </property>
+     <property name="value">
+      <number>1001</number>
+     </property>
+     <property name="xmlTag" stdset="0">
+      <string>posterFrame</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <tabstops>

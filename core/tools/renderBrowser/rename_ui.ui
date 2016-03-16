@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>720</width>
+    <height>320</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Batch Rename</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="rename_tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="findReplace_tab">
+       <attribute name="title">
+        <string>Find and Replace</string>
+       </attribute>
+       <layout class="QFormLayout" name="formLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="find_label">
+          <property name="text">
+           <string>Find:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="find_lineEdit"/>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="replace_lineEdit"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="replace_label">
+          <property name="text">
+           <string>Replace:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QCheckBox" name="ignoreCase_checkBox">
+          <property name="text">
+           <string>Ignore case</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="renumber_tab">
+       <attribute name="title">
+        <string>Renumber</string>
+       </attribute>
+       <layout class="QFormLayout" name="formLayout_2">
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::ExpandingFieldsGrow</enum>
+        </property>
+        <item row="1" column="0">
+         <widget class="QLabel" name="startFrom_label">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Start from:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="step_label">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Step:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="padding_label">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Padding:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QSpinBox" name="startFrom_spinBox">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="maximum">
+           <number>999999999</number>
+          </property>
+          <property name="value">
+           <number>1</number>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QSpinBox" name="step_spinBox">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>999999999</number>
+          </property>
+          <property name="value">
+           <number>1</number>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QSpinBox" name="padding_spinBox">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>16</number>
+          </property>
+          <property name="value">
+           <number>4</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QCheckBox" name="preserveNumbering_checkBox">
+          <property name="text">
+           <string>Preserve current numbering</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QCheckBox" name="autoPadding_checkBox">
+          <property name="text">
+           <string>Auto padding</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTreeWidget" name="renderPbl_treeWidget">
+      <property name="alternatingRowColors">
+       <bool>true</bool>
+      </property>
+      <property name="textElideMode">
+       <enum>Qt::ElideMiddle</enum>
+      </property>
+      <property name="uniformRowHeights">
+       <bool>false</bool>
+      </property>
+      <property name="sortingEnabled">
+       <bool>false</bool>
+      </property>
+      <property name="animated">
+       <bool>true</bool>
+      </property>
+      <property name="headerHidden">
+       <bool>false</bool>
+      </property>
+      <property name="expandsOnDoubleClick">
+       <bool>false</bool>
+      </property>
+      <column>
+       <property name="text">
+        <string>Layer / Pass</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Frames</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Type</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Path</string>
+       </property>
+      </column>
+     </widget>
+    </item>
+    <item>
+     <widget class="QFrame" name="renameToolbar_frame">
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_10">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>6</number>
+       </property>
+       <item>
+        <widget class="QPushButton" name="preview_pushButton">
+         <property name="text">
+          <string>Preview</string>
+         </property>
+         <property name="default">
+          <bool>false</bool>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="rename_pushButton">
+         <property name="text">
+          <string>Rename</string>
+         </property>
+         <property name="default">
+          <bool>false</bool>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="close_pushButton">
+         <property name="text">
+          <string>Close</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>rename_tabWidget</tabstop>
+  <tabstop>find_lineEdit</tabstop>
+  <tabstop>replace_lineEdit</tabstop>
+  <tabstop>ignoreCase_checkBox</tabstop>
+  <tabstop>preserveNumbering_checkBox</tabstop>
+  <tabstop>startFrom_spinBox</tabstop>
+  <tabstop>step_spinBox</tabstop>
+  <tabstop>autoPadding_checkBox</tabstop>
+  <tabstop>padding_spinBox</tabstop>
+  <tabstop>renderPbl_treeWidget</tabstop>
+  <tabstop>preview_pushButton</tabstop>
+  <tabstop>rename_pushButton</tabstop>
+  <tabstop>close_pushButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>preserveNumbering_checkBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>startFrom_label</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>129</x>
+     <y>51</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>48</x>
+     <y>68</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>preserveNumbering_checkBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>startFrom_spinBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>201</x>
+     <y>46</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>113</x>
+     <y>72</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>preserveNumbering_checkBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>step_label</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>168</x>
+     <y>48</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>37</x>
+     <y>94</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>preserveNumbering_checkBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>step_spinBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>229</x>
+     <y>48</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>153</x>
+     <y>99</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>autoPadding_checkBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>padding_label</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>144</x>
+     <y>117</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>25</x>
+     <y>144</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>autoPadding_checkBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>padding_spinBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>160</x>
+     <y>123</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>105</x>
+     <y>146</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
