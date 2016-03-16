@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'icarusUI.ui'
 #
-# Created: Tue Mar 01 18:08:20 2016
+# Created: Wed Mar 16 10:21:45 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -789,6 +789,11 @@ class Ui_Dialog(object):
         self.horizontalLayout_11.addWidget(self.dailyPblAdd_pushButton)
         spacerItem7 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_11.addItem(spacerItem7)
+        self.streamPbl_checkBox_2 = QtGui.QCheckBox(self.dailyPblToolbar_frame)
+        self.streamPbl_checkBox_2.setEnabled(False)
+        self.streamPbl_checkBox_2.setChecked(False)
+        self.streamPbl_checkBox_2.setObjectName("streamPbl_checkBox_2")
+        self.horizontalLayout_11.addWidget(self.streamPbl_checkBox_2)
         self.verticalLayout_9.addWidget(self.dailyPblToolbar_frame)
         self.dailyPbl_treeWidget = QtGui.QTreeWidget(self.dailiesPublishTab)
         self.dailyPbl_treeWidget.setAlternatingRowColors(True)
@@ -1344,6 +1349,7 @@ class Ui_Dialog(object):
         self.dailyPblType_comboBox.setItemText(8, QtGui.QApplication.translate("Dialog", "fx", None, QtGui.QApplication.UnicodeUTF8))
         self.dailyPblType_comboBox.setItemText(9, QtGui.QApplication.translate("Dialog", "comp", None, QtGui.QApplication.UnicodeUTF8))
         self.dailyPblAdd_pushButton.setText(QtGui.QApplication.translate("Dialog", "Add", None, QtGui.QApplication.UnicodeUTF8))
+        self.streamPbl_checkBox_2.setText(QtGui.QApplication.translate("Dialog", "Add Slate", None, QtGui.QApplication.UnicodeUTF8))
         self.dailyPbl_treeWidget.setSortingEnabled(False)
         self.dailyPbl_treeWidget.headerItem().setText(0, QtGui.QApplication.translate("Dialog", "Name", None, QtGui.QApplication.UnicodeUTF8))
         self.dailyPbl_treeWidget.headerItem().setText(1, QtGui.QApplication.translate("Dialog", "Frames", None, QtGui.QApplication.UnicodeUTF8))

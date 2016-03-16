@@ -1801,6 +1801,19 @@ QToolButton:disabled {
                    </property>
                   </spacer>
                  </item>
+                 <item>
+                  <widget class="QCheckBox" name="streamPbl_checkBox_2">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string>Add Slate</string>
+                   </property>
+                   <property name="checked">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
                 </layout>
                </widget>
               </item>
