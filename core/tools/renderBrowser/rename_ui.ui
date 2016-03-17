@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>720</width>
-    <height>320</height>
+    <height>480</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,8 +15,29 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>6</number>
+    </property>
+    <property name="leftMargin">
+     <number>8</number>
+    </property>
+    <property name="topMargin">
+     <number>8</number>
+    </property>
+    <property name="rightMargin">
+     <number>8</number>
+    </property>
+    <property name="bottomMargin">
+     <number>8</number>
+    </property>
     <item>
      <widget class="QTabWidget" name="rename_tabWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
@@ -25,32 +46,47 @@
         <string>Find and Replace</string>
        </attribute>
        <layout class="QFormLayout" name="formLayout">
-        <item row="0" column="0">
+        <item row="1" column="0">
          <widget class="QLabel" name="find_label">
           <property name="text">
            <string>Find:</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="find_lineEdit"/>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="replace_lineEdit"/>
-        </item>
-        <item row="1" column="0">
+        <item row="2" column="0">
          <widget class="QLabel" name="replace_label">
           <property name="text">
            <string>Replace:</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
+        <item row="3" column="1">
          <widget class="QCheckBox" name="ignoreCase_checkBox">
           <property name="text">
            <string>Ignore case</string>
           </property>
          </widget>
+        </item>
+        <item row="1" column="1">
+         <layout class="QHBoxLayout" name="find_horizontalLayout">
+          <item>
+           <widget class="QLineEdit" name="find_lineEdit"/>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="regex_checkBox">
+            <property name="text">
+             <string>Regular expression</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="2" column="1">
+         <layout class="QHBoxLayout" name="replace_horizontalLayout">
+          <item>
+           <widget class="QLineEdit" name="replace_lineEdit"/>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
@@ -63,7 +99,7 @@
          <enum>QFormLayout::ExpandingFieldsGrow</enum>
         </property>
         <item row="1" column="0">
-         <widget class="QLabel" name="startFrom_label">
+         <widget class="QLabel" name="start_label">
           <property name="enabled">
            <bool>false</bool>
           </property>
@@ -93,7 +129,7 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QSpinBox" name="startFrom_spinBox">
+         <widget class="QSpinBox" name="start_spinBox">
           <property name="enabled">
            <bool>false</bool>
           </property>
@@ -162,14 +198,38 @@
      </widget>
     </item>
     <item>
-     <widget class="QTreeWidget" name="renderPbl_treeWidget">
+     <layout class="QHBoxLayout" name="dir_horizontalLayout">
+      <item>
+       <widget class="QLineEdit" name="dir_lineEdit">
+        <property name="mandatoryField" stdset="0">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="dirBrowse_toolButton">
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QTreeWidget" name="selection_treeWidget">
       <property name="alternatingRowColors">
        <bool>true</bool>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::ExtendedSelection</enum>
       </property>
       <property name="textElideMode">
        <enum>Qt::ElideMiddle</enum>
       </property>
       <property name="uniformRowHeights">
+       <bool>false</bool>
+      </property>
+      <property name="itemsExpandable">
        <bool>false</bool>
       </property>
       <property name="sortingEnabled">
@@ -184,24 +244,22 @@
       <property name="expandsOnDoubleClick">
        <bool>false</bool>
       </property>
+      <attribute name="headerStretchLastSection">
+       <bool>false</bool>
+      </attribute>
       <column>
        <property name="text">
-        <string>Layer / Pass</string>
+        <string>Count</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>Frames</string>
+        <string>Before</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>Type</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Path</string>
+        <string>After</string>
        </property>
       </column>
      </widget>
@@ -225,8 +283,34 @@
         <number>0</number>
        </property>
        <property name="bottomMargin">
-        <number>6</number>
+        <number>0</number>
        </property>
+       <item>
+        <widget class="QPushButton" name="add_pushButton">
+         <property name="text">
+          <string>Add</string>
+         </property>
+         <property name="default">
+          <bool>false</bool>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="remove_pushButton">
+         <property name="text">
+          <string>Remove</string>
+         </property>
+         <property name="default">
+          <bool>false</bool>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QPushButton" name="preview_pushButton">
          <property name="text">
@@ -281,15 +365,12 @@
  </widget>
  <tabstops>
   <tabstop>rename_tabWidget</tabstop>
-  <tabstop>find_lineEdit</tabstop>
-  <tabstop>replace_lineEdit</tabstop>
-  <tabstop>ignoreCase_checkBox</tabstop>
   <tabstop>preserveNumbering_checkBox</tabstop>
-  <tabstop>startFrom_spinBox</tabstop>
+  <tabstop>start_spinBox</tabstop>
   <tabstop>step_spinBox</tabstop>
   <tabstop>autoPadding_checkBox</tabstop>
   <tabstop>padding_spinBox</tabstop>
-  <tabstop>renderPbl_treeWidget</tabstop>
+  <tabstop>selection_treeWidget</tabstop>
   <tabstop>preview_pushButton</tabstop>
   <tabstop>rename_pushButton</tabstop>
   <tabstop>close_pushButton</tabstop>
@@ -299,7 +380,7 @@
   <connection>
    <sender>preserveNumbering_checkBox</sender>
    <signal>toggled(bool)</signal>
-   <receiver>startFrom_label</receiver>
+   <receiver>start_label</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -315,7 +396,7 @@
   <connection>
    <sender>preserveNumbering_checkBox</sender>
    <signal>toggled(bool)</signal>
-   <receiver>startFrom_spinBox</receiver>
+   <receiver>start_spinBox</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">

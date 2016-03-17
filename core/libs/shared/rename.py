@@ -11,7 +11,7 @@
 import os, string, re, time
 
 
-def renameUnique(self, obj, newName):
+def renameUnique(obj, newName):
 	""" Rename object.
 		Now takes pymel object, rather than string, as first argument.
 		Perhaps this function should be moved to an external module?
@@ -42,99 +42,63 @@ def renameUnique(self, obj, newName):
 #		return False
 
 
-def replaceTextRE(objLs, findStr, replaceStr, ignoreCase=False):
+def replaceTextRE(origName, findStr, replaceStr, ignoreCase=False, regex=True):
 	""" Find and replace using regular expressions.
 	"""
-	if objLs:
+	try:
+		if not regex:
+			findStr = re.escape(findStr)
 
-		# Check input is valid
+		if ignoreCase:
+			pattern = re.compile(r"(?i)%s" %findStr)
+		else:
+			pattern = re.compile(r"%s" %findStr)
+
+		# Perform replacement and return new name if input is valid
 		if findStr:
-
-			# Initialise progress bar and start clock
-			#mc.progressBar(self.gMainProgressBar, edit=True, beginProgress=True, isInterruptable=True, maxValue=len(objLs)) # Initialise progress bar
-			startTime = time.time()
-
-			for obj in objLs:
-				newName = pattern.sub(replaceStr, str(obj))
-				renameUnique(obj, newName)
-				#mc.progressBar(self.gMainProgressBar, edit=True, step=1, status="Renaming items") # Increment progress bar
-
-			# Complete progress bar and print completion message
-			#mc.progressBar(self.gMainProgressBar, edit=True, endProgress=True) # Complete progress bar
-			totalTime = time.time() - startTime;
-			print "Renamed %d items in %f seconds.\n" %(len(objLs), totalTime)
+			newName = pattern.sub(replaceStr, origName)
+			return newName
 
 		else:
 			print "Warning: No search string specified."
+			return origName
 
-	else:
-		print "Warning: Nothing selected."
+	except:
+		print "Warning: Regular expression is invalid."
 
 
-def renumber(objLs, start=1, step=1, padding=4, preserve=True, autopad=True):
+def renumber(numLs, start=1, step=1, padding=4, preserve=True, autopad=True):
 	""" Renumber objects.
 	"""
-	if objLs:
+	newNumLs = []
 
-		# Initialise progress bar and start clock
-		#mc.progressBar(self.gMainProgressBar, edit=True, beginProgress=True, isInterruptable=True, maxValue=2*len(objLs)) # Initialise progress bar
-		startTime = time.time()
+	# Calculate padding automatically...
+	if autopad:
 
-		# Calculate padding automatically...
-		if autopad:
-			numLs = []
-
-			if preserve:
-				for obj in objLs:
-					match = re.search("[0-9]*$", str(obj))
-					currentNumStr = match.group()
-					# Check if name has numeric suffix
-					if currentNumStr:
-						numLs.append(int(currentNumStr))
-
-				if numLs:
-					maxNum = max(numLs)
-				else:
-					print "Error: No numbering sequence detected, unable to calculate padding."
-			else:
-				maxNum = start + (step*(len(objLs)-1))
-
-			padding = len(str(maxNum))
-
-		# ...or use user specified padding value
+		if preserve:
+			maxNum = max(numLs)
 		else:
-			pass
-			#padding = mc.intSliderGrp("padding", query=True, value=True)
+			maxNum = start + (step*(len(numLs)-1))
 
-		# Loop twice to prevent renumbering to a pre-existing number
-		for i in range(2):
-			index = start
-			#objLs = pm.ls(selection=True) # Get selection again as names will have changed - no longer required as now copying object list at start of function
+		padding = len(str(maxNum))
 
-			if preserve:
-				for obj in objLs:
-					match = re.search("[0-9]*$", str(obj))
-					currentNumStr = match.group()
-					# Check if name has numeric suffix
-					if currentNumStr:
-						currentNumInt = int(currentNumStr) # Cast string to integer - looks pointless but otherwise padding can't be reduced
-						newName = re.sub(currentNumStr+"$", str(currentNumInt).zfill(padding), str(obj))
-						self.renameUnique(obj, newName)
-						#mc.progressBar(self.gMainProgressBar, edit=True, step=1, status="Renumbering items") # Increment progress bar
-					elif not i: # Only print warning on first iteration
-						print "Warning: %s has no numeric suffix, unable to renumber." %obj
-			else:
-				for obj in objLs:
-					newName = re.sub("[0-9]*$", str(index).zfill(padding), str(obj))
-					self.renameUnique(obj, newName)
-					index += step
-					#mc.progressBar(self.gMainProgressBar, edit=True, step=1, status="Renumbering items") # Increment progress bar
+	#print padding
 
-		# Complete progress bar and print completion message
-		#mc.progressBar(self.gMainProgressBar, edit=True, endProgress=True) # Complete progress bar
-		totalTime = time.time() - startTime;
-		print "Renumbered %d items in %f seconds.\n" %(len(objLs), totalTime)
+	# Regenerate lists
+	index = start
+
+	if preserve:
+		for num in numLs:
+			newNumStr = str(num).zfill(padding)
+			newNumInt = int(newNumStr)
+			newNumLs.append(newNumInt)
 
 	else:
-		print "Warning: Nothing selected."
+		for num in numLs:
+			newNumStr = str(index).zfill(padding)
+			newNumInt = int(newNumStr)
+			newNumLs.append(newNumInt)
+			index += step
+
+	return newNumLs, padding
 

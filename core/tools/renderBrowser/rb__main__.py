@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# [Icarus] Render Browser rb__init__.py
+# [Icarus] Render Browser rb__main__.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2016 Gramercy Park Studios
