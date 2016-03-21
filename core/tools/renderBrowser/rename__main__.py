@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# [Icarus] Barch Rename Tool rename__main__.py
+# [Icarus] Batch Rename Tool rename__main__.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2016 Gramercy Park Studios
@@ -18,9 +18,8 @@ import env__init__
 env__init__.setEnv()
 #env__init__.appendSysPaths()
 
-import sequence as seq
-import rename
-#import djvOps, osOps
+# Import custom modules
+import osOps, rename, sequence
 
 
 class batchRenameApp(QtGui.QMainWindow):
@@ -30,37 +29,31 @@ class batchRenameApp(QtGui.QMainWindow):
 		self.ui = Ui_MainWindow()
 		self.ui.setupUi(self)
 
-		self.fileRenameLs = []
-		#self.relativeRootDir = os.environ['SHOTPATH']
-		#self.relativeRootToken = '$SHOTPATH'
+		self.renameTaskLs = []
 
 		# Connect signals & slots
-		self.ui.dir_lineEdit.textEdited.connect(self.updateRenameDir)
-		self.ui.dirBrowse_toolButton.clicked.connect(self.addSelection)
-		#self.ui.add_pushButton.clicked.connect(self.addSelection)
+		self.ui.find_lineEdit.textEdited.connect(self.updateTaskListView) # was self.updateRenamePreview
+		self.ui.replace_lineEdit.textEdited.connect(self.updateTaskListView) # was self.updateRenamePreview
+		self.ui.ignoreCase_checkBox.stateChanged.connect(self.updateTaskListView) # was self.updateRenamePreview
+		self.ui.regex_checkBox.stateChanged.connect(self.updateTaskListView) # was self.updateRenamePreview
+
+		self.ui.preserveNumbering_checkBox.stateChanged.connect(self.updateTaskListView) # was self.updateRenamePreview
+		self.ui.start_spinBox.valueChanged.connect(self.updateTaskListView) # was self.updateRenamePreview
+		self.ui.step_spinBox.valueChanged.connect(self.updateTaskListView) # was self.updateRenamePreview
+		self.ui.autoPadding_checkBox.stateChanged.connect(self.updateTaskListView) # was self.updateRenamePreview
+		self.ui.padding_spinBox.valueChanged.connect(self.updateTaskListView) # was self.updateRenamePreview
+
+		self.ui.addDir_pushButton.clicked.connect(self.addDirectory)
+		self.ui.add_pushButton.clicked.connect(self.addSequence)
 		self.ui.remove_pushButton.clicked.connect(self.removeSelection)
+		self.ui.clear_pushButton.clicked.connect(self.clearTaskList)
 		self.ui.rename_pushButton.clicked.connect(self.performFileRename)
+		self.ui.delete_pushButton.clicked.connect(self.performFileDelete)
 
-		self.ui.find_lineEdit.textEdited.connect(self.updateRenamePreview)
-		self.ui.replace_lineEdit.textEdited.connect(self.updateRenamePreview)
-		self.ui.ignoreCase_checkBox.stateChanged.connect(self.updateRenamePreview)
-		self.ui.regex_checkBox.stateChanged.connect(self.updateRenamePreview)
-
-		self.ui.preserveNumbering_checkBox.stateChanged.connect(self.updateRenamePreview)
-		self.ui.start_spinBox.valueChanged.connect(self.updateRenamePreview)
-		self.ui.step_spinBox.valueChanged.connect(self.updateRenamePreview)
-		self.ui.autoPadding_checkBox.stateChanged.connect(self.updateRenamePreview)
-		self.ui.padding_spinBox.valueChanged.connect(self.updateRenamePreview)
-
-		#self.ui.renderPblClear_pushButton.clicked.connect(self.renderTableClear)
-		#self.ui.selection_treeWidget.itemDoubleClicked.connect(self.renderPreview)
-
-		#self.ui.close_pushButton.clicked.connect(self.exit)
+		self.ui.taskList_treeWidget.itemDoubleClicked.connect(self.loadFindStr)
 
 		# Get current dir in which to rename files, and update render layer tree view widget
-		self.renameDir = os.getcwd()
-		#self.renameDir = "/Volumes/Toshiba/Dev/jobs/test_job_2/Vfx/PC001/3D/maya/renders/Michael/puzzle_v006/main"
-		self.updateRenameListView()
+		self.updateTaskListDir( os.getcwd() )
 
 
 	def getCheckBoxValue(self, checkBox):
@@ -73,116 +66,101 @@ class batchRenameApp(QtGui.QMainWindow):
 
 
 	def folderDialog(self, dialogHome):
-		""" Opens a file dialog to choose which directory to browse.
+		""" Opens a dialog from which to select a directory to browse.
 		"""
 		dialog = QtGui.QFileDialog.getExistingDirectory(self, self.tr('Directory'), dialogHome, 
 				 QtGui.QFileDialog.DontResolveSymlinks | QtGui.QFileDialog.ShowDirsOnly)
-		return dialog
+		return os.path.normpath(dialog)
 
 
-	def addSelection(self):
-		""" Adds files to the list to be renamed.
+	def fileDialog(self, dialogHome):
+		""" Opens a dialog from which to select a single file.
+		"""
+		dialog = QtGui.QFileDialog.getOpenFileName(self, self.tr('Files'), dialogHome, 'All files (*.*)')
+		return os.path.normpath(dialog[0])
+
+
+	def getBrowseDir(self):
+		""" 
 		"""
 		if os.environ.get('MAYARENDERSDIR') is None:
-			renderBrowseDir = os.getcwd()
+			browseDir = os.getcwd()
 		else:
-			renderBrowseDir = os.environ['MAYARENDERSDIR']
+			browseDir = os.environ['MAYARENDERSDIR']
 
-		self.renameDir = self.folderDialog(renderBrowseDir)
-		self.updateRenameListView()
+		return browseDir
 
 
-	def updateRenameDir(self):
-		""" .
+	def addDirectory(self):
+		""" Scan a directory for sequences to be added to the task list.
 		"""
-		self.renameDir = self.ui.dir_lineEdit.text()
-		if os.path.isdir(self.renameDir):
-			self.updateRenameListView()
-		else:
-			self.ui.selection_treeWidget.clear()
+		self.updateTaskListDir(self.folderDialog( self.getBrowseDir() ))
+
+
+	def addSequence(self):
+		""" Scan a directory for sequences to be added to the task list.
+		"""
+		self.updateTaskListFile(self.fileDialog( self.getBrowseDir() ))
 
 
 	def removeSelection(self):
-		""" Removes selected items from the list to be renamed.
+		""" Removes selected items from the task list.
 		"""
-		for item in self.ui.selection_treeWidget.selectedItems():
-			index = self.ui.selection_treeWidget.indexOfTopLevelItem(item)
-			self.ui.selection_treeWidget.takeTopLevelItem(index)
+		indices = []
 
-			del self.fileRenameLs[index]
+		for item in self.ui.taskList_treeWidget.selectedItems():
+			indices.append(self.ui.taskList_treeWidget.indexOfTopLevelItem(item))
+		#	self.ui.taskList_treeWidget.takeTopLevelItem(index)
+
+		indices.sort(reverse=True) # iterate over the list in reverse order to prevent the indices changing mid-operation
+
+		for index in indices:
+			#print "Deleting item at index %d" %index
+			del self.renameTaskLs[index]
+
+		self.updateTaskListView()
 
 
-	def updateRenameListView(self):
-		""" Populates the rename list tree view widget with entries.
+	def clearTaskList(self):
+		""" Clears the task list.
 		"""
-		count = 0
-		path = self.renameDir
-		self.ui.dir_lineEdit.setText(path)
+		self.renameTaskLs = []
+		self.updateTaskListView()
 
-		self.ui.selection_treeWidget.clear()
 
-#		# Get directory contents
-#		try:
-#			ls = os.listdir(path)
-#			ls.sort()
-#		except OSError:
-#			print "No such file or directory: '%s'" %path
-#			return False
-#
-#		# Create list to hold all files to be renamed
-#		fileRenameLs = []
-#
-#		# Get list of files in current directory
-#		for filename in ls:
-#
-#			# Only work on files, not directories, and ignore files that start with a dot
-#			if os.path.isfile(os.path.join(path, filename)) and not filename.startswith('.'):
-#				fileRenameLs.append(os.path.join(path, filename))
-#
-#		# Remove duplicates & sort list
-#		self.fileRenameLs = list(set(fileRenameLs))
-#		self.fileRenameLs.sort()
-#
-#		for file in self.fileRenameLs:
-#
-#			# Add entries
-#			renderLayerItem = QtGui.QTreeWidgetItem(self.ui.selection_treeWidget)
-#			renderLayerItem.setText(0, file)
-#			renderLayerItem.setText(1, file)
-#			self.ui.selection_treeWidget.addTopLevelItem(renderLayerItem)
-
-		# Get list of file sequence bases in specified directory
-		bases = seq.getBases(path)
+	def updateTaskListDir(self, dirpath):
+		""" Update task list with detected file sequences in given directory.
+			Pre-existing tasks will not be added, to avoid duplication.
+		"""
+		bases = sequence.getBases(dirpath)
 
 		for base in bases:
-			path, prefix, fr_range, ext, num_frames = seq.getSequence(path, base)
+			path, prefix, fr_range, ext, num_frames = sequence.getSequence(dirpath, base)
+			data = (path, prefix+'.', fr_range, ext, num_frames)
+			if data not in self.renameTaskLs:
+				self.renameTaskLs.append(data)
 
-			# Add entries
-			file = "%s.[%s]%s" %(prefix, fr_range, ext)
-			renderLayerItem = QtGui.QTreeWidgetItem(self.ui.selection_treeWidget)
-			renderLayerItem.setCheckState(0, QtCore.Qt.Checked)
-			renderLayerItem.setText(0, str(num_frames))
-			renderLayerItem.setText(1, file)
-			renderLayerItem.setText(2, file)
-			self.ui.selection_treeWidget.addTopLevelItem(renderLayerItem)
-
-			self.fileRenameLs.append( ("%s." %prefix, fr_range, ext) )
-			count += num_frames
-
-			#renderLayerItem.setExpanded(True)
-
-		# Resize columns
-		self.ui.selection_treeWidget.resizeColumnToContents(0)
-		self.ui.selection_treeWidget.resizeColumnToContents(1)
-		self.ui.selection_treeWidget.resizeColumnToContents(2)
-
-		# Update button text
-		self.ui.rename_pushButton.setText("Rename %d Files" %count)
+		self.updateTaskListView()
 
 
-	def updateRenamePreview(self):
-		""" Updates the 'After' column to reflect the file name changes to be applied.
+	def updateTaskListFile(self, filepath):
+		""" Update task list with detected file sequence given a file path.
+			Pre-existing tasks will not be added, to avoid duplication.
 		"""
+		path, prefix, fr_range, ext, num_frames = sequence.detectSeq(filepath)
+		data = (path, prefix+'.', fr_range, ext, num_frames)
+		if data not in self.renameTaskLs:
+			self.renameTaskLs.append(data)
+
+		self.updateTaskListView()
+
+
+	def updateTaskListView(self):
+		""" Populates the rename list tree view widget with entries.
+		"""
+		renameCount = 0
+		totalCount = 0
+
 		# Get find & replace options
 		findStr = self.ui.find_lineEdit.text()
 		replaceStr = self.ui.replace_lineEdit.text()
@@ -196,48 +174,287 @@ class batchRenameApp(QtGui.QMainWindow):
 		preserve = self.getCheckBoxValue(self.ui.preserveNumbering_checkBox)
 		autopad = self.getCheckBoxValue(self.ui.autoPadding_checkBox)
 
-		root = self.ui.selection_treeWidget.invisibleRootItem()
-		child_count = root.childCount()
-		for i in range(child_count):
-			item = root.child(i)
+		self.ui.taskList_treeWidget.clear()
 
-			renamedPrefix = rename.replaceTextRE(self.fileRenameLs[i][0], findStr, replaceStr, ignoreCase, regex)
+		for task in self.renameTaskLs:
+			path, prefix, fr_range, ext, num_frames = task
 
-			numLs = seq.numList(self.fileRenameLs[i][1])
+			# Add entries
+			file = "%s[%s]%s" %(prefix, fr_range, ext)
+			taskItem = QtGui.QTreeWidgetItem(self.ui.taskList_treeWidget)
+
+			taskItem.setText(0, str(num_frames))
+			taskItem.setText(1, file)
+			taskItem.setText(3, path)
+
+
+			renamedPrefix = rename.replaceTextRE(prefix, findStr, replaceStr, ignoreCase, regex)
+
+			numLs = sequence.numList(fr_range)
 			renumberedLs, padding = rename.renumber(numLs, start, step, padding, preserve, autopad)
-			renumberedRange = seq.numRange(renumberedLs, padding)
+			renumberedRange = sequence.numRange(renumberedLs, padding)
 
-			renamed_file = "%s[%s]%s" %(renamedPrefix, renumberedRange, self.fileRenameLs[i][2])
-			item.setText(2, renamed_file)
+			renamedFile = "%s[%s]%s" %(renamedPrefix, renumberedRange, ext)
+			taskItem.setText(2, renamedFile)
+
+
+			if file == renamedFile: # set text colour to indicate status
+				taskItem.setForeground(2, QtGui.QBrush(QtGui.QColor("#666")))
+				#taskItem.setForeground(2, QtGui.QBrush(QtGui.QColor("#c33")))
+			else:
+				renameCount += num_frames
+
+			self.ui.taskList_treeWidget.addTopLevelItem(taskItem)
+			#taskItem.setExpanded(True)
+
+			totalCount += num_frames
 
 		# Resize columns
-		self.ui.selection_treeWidget.resizeColumnToContents(2)
+		self.ui.taskList_treeWidget.resizeColumnToContents(0)
+		self.ui.taskList_treeWidget.resizeColumnToContents(1)
+		self.ui.taskList_treeWidget.resizeColumnToContents(2)
+		self.ui.taskList_treeWidget.resizeColumnToContents(3)
+		#self.ui.taskList_treeWidget.setColumnHidden(3, True)
+		#self.ui.taskList_treeWidget.setRootIsDecorated(False)
+
+		self.checkConflicts()
+
+		# Update button text
+		if renameCount:
+			self.ui.rename_pushButton.setText("Rename %d Files" %renameCount)
+			self.ui.rename_pushButton.setEnabled(True)
+		else:
+			self.ui.rename_pushButton.setText("Rename")
+			self.ui.rename_pushButton.setEnabled(False)
+
+		if totalCount:
+			self.ui.delete_pushButton.setText("Delete %d Files" %totalCount)
+			self.ui.delete_pushButton.setEnabled(True)
+		else:
+			self.ui.delete_pushButton.setText("Delete")
+			self.ui.delete_pushButton.setEnabled(False)
+
+
+#	def updateTaskListViewX(self):
+#		""" Populates the rename list tree view widget with entries.
+#		"""
+#		count = 0
+#		path = self.currentDir
+#		self.ui.dir_lineEdit.setText(path)
+#
+#		self.ui.taskList_treeWidget.clear()
+#
+#		# Get list of file sequence bases in specified directory
+#		bases = sequence.getBases(path)
+#
+#		for base in bases:
+#			#path, prefix, fr_range, ext, num_frames = sequence.getSequence(path, base)
+#			self.renameTaskLs.append( sequence.getSequence(path, base) )
+#
+#			# Add entries
+#			file = "%s.[%s]%s" %(prefix, fr_range, ext)
+#			taskItem = QtGui.QTreeWidgetItem(self.ui.taskList_treeWidget)
+#			#taskItem.setCheckState(0, QtCore.Qt.Checked)
+#			taskItem.setText(0, str(num_frames))
+#			taskItem.setText(1, file)
+#			#taskItem.setText(2, file)
+#			taskItem.setText(2, self.rename(file))
+#			taskItem.setText(3, path)
+#			self.ui.taskList_treeWidget.setColumnHidden(3)
+#			self.ui.taskList_treeWidget.addTopLevelItem(taskItem)
+#
+#			self.renameTaskLs.append( ("%s." %prefix, fr_range, ext) )
+#			count += num_frames
+#
+#			#taskItem.setExpanded(True)
+#
+#		# Resize columns
+#		self.ui.taskList_treeWidget.resizeColumnToContents(0)
+#		self.ui.taskList_treeWidget.resizeColumnToContents(1)
+#		self.ui.taskList_treeWidget.resizeColumnToContents(2)
+#		self.ui.taskList_treeWidget.resizeColumnToContents(3)
+#
+#		# Update button text
+#		self.ui.rename_pushButton.setText("Rename %d Files" %count)
+
+
+#	def updateRenamePreviewX(self):
+#		""" Updates the 'After' column to reflect the file name changes to be applied.
+#		"""
+#		# Get find & replace options
+#		findStr = self.ui.find_lineEdit.text()
+#		replaceStr = self.ui.replace_lineEdit.text()
+#		ignoreCase = self.getCheckBoxValue(self.ui.ignoreCase_checkBox)
+#		regex = self.getCheckBoxValue(self.ui.regex_checkBox)
+#
+#		# Get renumbering options
+#		start = self.ui.start_spinBox.value()
+#		step = self.ui.step_spinBox.value()
+#		padding = self.ui.padding_spinBox.value()
+#		preserve = self.getCheckBoxValue(self.ui.preserveNumbering_checkBox)
+#		autopad = self.getCheckBoxValue(self.ui.autoPadding_checkBox)
+#
+#		root = self.ui.taskList_treeWidget.invisibleRootItem()
+#		child_count = root.childCount()
+#		for i in range(child_count):
+#			item = root.child(i)
+#
+#			renamedPrefix = rename.replaceTextRE(self.renameTaskLs[i][0], findStr, replaceStr, ignoreCase, regex)
+#
+#			numLs = sequence.numList(self.renameTaskLs[i][1])
+#			renumberedLs, padding = rename.renumber(numLs, start, step, padding, preserve, autopad)
+#			renumberedRange = sequence.numRange(renumberedLs, padding)
+#
+#			renamedFile = "%s[%s]%s" %(renamedPrefix, renumberedRange, self.renameTaskLs[i][2])
+#			item.setText(2, renamedFile)
+#
+#		# Resize columns
+#		self.ui.taskList_treeWidget.resizeColumnToContents(2)
+
+
+	def checkConflicts(self):
+		""" Checks renamed files for conflicts with existing files.
+		"""
+		#results = []
+		#items = []
+		children = []
+		root = self.ui.taskList_treeWidget.invisibleRootItem()
+		child_count = root.childCount()
+		for i in range(child_count):
+			children.append(root.child(i))
+
+		for i, item1 in enumerate(children, 1):
+			for item2 in children[i:]:
+		#		compare(item1, item2)
+				if (item1.text(2) == item2.text(2)) and (item1.text(3) == item2.text(3)):
+
+		#	item1 = root.child(i)
+		#	for j in range(child_count):
+		#		item2 = root.child(j)
+		#		if (i != j) and (item1.text(2) == item2.text(2)) and (item1.text(3) == item2.text(3)):
+					print "Warning: Rename conflict found. %s is not unique." %item1.text(2)
+					item1.setBackground(2, QtGui.QBrush(QtGui.QColor("#c33")))
+					item1.setForeground(2, QtGui.QBrush(QtGui.QColor("#fff")))
+					item2.setBackground(2, QtGui.QBrush(QtGui.QColor("#c33")))
+					item2.setForeground(2, QtGui.QBrush(QtGui.QColor("#fff")))
+
+		#	if i != currentIndex:
+	#		results.append( item.text(2) )
+	#		items.append( item )
+		#	if (newName == item.text(2)) and (i != currentIndex):
+		#		return True
+		#	else:
+		#		return False
+	#	print "\n"
+	#	print results
+	#	for text, i in enumerate(results):
+	#		if results.count(text) == 1:
+	#			pass
+	#		else:
+	#			print "Warning: Rename conflict found. %s is not unique." %text
+	#			items[i].setBackground(2, QtGui.QBrush(QtGui.QColor("#c33")))
+	#			items[i].setForeground(2, QtGui.QBrush(QtGui.QColor("#fff")))
+
+
+
+	def loadFindStr(self, item, column):
+		""" Copies the selected file name prefix to the 'Find' text field when the item is double-clicked.
+		"""
+		index = self.ui.taskList_treeWidget.indexOfTopLevelItem(item)
+
+		#text = item.text(1)
+		text = self.renameTaskLs[index][1]
+
+		self.ui.find_lineEdit.setText(text)
+		self.updateTaskListView()
 
 
 	def performFileRename(self):
 		""" Perform the file rename operation(s).
 		"""
-#		root = self.ui.selection_treeWidget.invisibleRootItem()
-#		child_count = root.childCount()
-#		for i in range(child_count):
-#			item = root.child(i)
-#			origName = self.expandSeq(item.text(0))
-#			newName =  self.expandSeq(item.text(1))
-#			for j in range(len(origName)):
-#				print "rename %s %s" %( origName[j], newName[j] )
+#		for task in self.renameTaskLs:
+#			path, prefix, fr_range, ext, num_frames = task
+#			fr_list = sequence.numList(fr_range)
+#
+#			for frame, i in enumerate(fr_list):
+#				src = os.path.join( path, "%s[%s]%s" %(prefix, frame, ext) )
+#
+# DUPLICATED CODE
+#				renamedPrefix = rename.replaceTextRE(prefix, findStr, replaceStr, ignoreCase, regex)
+#
+#				numLs = sequence.numList(fr_range)
+#				renumberedLs, padding = rename.renumber(numLs, start, step, padding, preserve, autopad)
+#				#renumberedRange = sequence.numRange(renumberedLs, padding)
+#
+#				#renamedFile = "%s[%s]%s" %(renamedPrefix, renumberedRange, ext)
+#				#taskItem.setText(2, renamedFile)
+#----------------
+#				dst = os.path.join( path, "%s[%s]%s" %(renamedPrefix, renumberedLs[i], ext) )
+#				print "rename %s %s" %( src, dst )
+
+		newTaskLs = []
+
+		root = self.ui.taskList_treeWidget.invisibleRootItem()
+		child_count = root.childCount()
+		for i in range(child_count):
+			item = root.child(i)
+			if not item.text(1) == item.text(2): # only rename if the operation will make any changes
+				print "\nRenaming %s to %s" %(item.text(1), item.text(2))
+				src_fileLs = self.expandSeq(item.text(3), item.text(1))
+				dst_fileLs = self.expandSeq(item.text(3), item.text(2))
+				for j in range(len(src_fileLs)):
+					#print j,
+					#print 'rename "%s" "%s"' %( src_fileLs[j], dst_fileLs[j] )
+					os.rename( '"%s"' %src_fileLs[j], '"%s"' %dst_fileLs[j] ) # NOT WORKING - SOMETHING TO DO WITH BACKSLASHES?
+					#osOps.rename( src_fileLs[j], dst_fileLs[j] )
 
 
-	def expandSeq(self, inputFileSeq):
+				#prefix, fr_range, ext = re.split(r'[\[\]]', item.text(2))
+				#self.renameTaskLs[i] = (self.renameTaskLs[i][0], prefix, fr_range, self.renameTaskLs[i][3], self.renameTaskLs[i][4]) # ugly but tuples are immutable
+			#	newTaskLs.append(dst_fileLs[j])
+
+		#for newTask in newTaskLs:
+		#	#print newTask
+		#	self.updateTaskListFile(newTask)
+		#self.updateTaskListView()
+
+		# ^ find a way to update the task list to reflect the renamed files
+		self.clearTaskList()
+
+
+	def performFileDelete(self):
+		""" Perform the file rename operation(s).
+			TODO: confirmation dialog
+		"""
+		root = self.ui.taskList_treeWidget.invisibleRootItem()
+		child_count = root.childCount()
+		for i in range(child_count):
+			item = root.child(i)
+			print "\nDeleting %s" %item.text(1)
+			src_fileLs = self.expandSeq(item.text(3), item.text(1))
+			for j in range(len(src_fileLs)):
+				#print j,
+				#print "delete %s" %( src_fileLs[j] )
+				pass
+
+		self.clearTaskList()
+
+
+	def expandSeq(self, inputDir, inputFileSeq):
 		""" Expand a filename sequence in the format 'name.[start-end].ext' to a list of individual frames.
+			Return a list containing the full path to each file in the sequence.
 		"""
 		fileLs = []
+
 		# Split filename and separate sequence numbering
-		prefix, numRange, ext = re.split(r'[\[\]]', inputFileSeq)
-		numList = seq.numList(numRange)
+		prefix, fr_range, ext = re.split(r'[\[\]]', inputFileSeq)
+		numList = sequence.numList(fr_range)
+
 		for i in numList:
 			file = "%s%s%s" %(prefix, i, ext)
-			filePath = os.path.join(self.renameDir, file)
+			filePath = os.path.join(inputDir, file).replace("\\", "/")
 			fileLs.append(filePath)
+
 		return fileLs
 
 

@@ -42,10 +42,11 @@ def renameUnique(obj, newName):
 #		return False
 
 
-def replaceTextRE(origName, findStr, replaceStr, ignoreCase=False, regex=True):
+def replaceTextRE(origName, findStr, replaceStr, ignoreCase=False, regex=True, quiet=True):
 	""" Find and replace using regular expressions.
 	"""
 	try:
+		# If findStr is not designated as regex, escape all special characters
 		if not regex:
 			findStr = re.escape(findStr)
 
@@ -60,11 +61,13 @@ def replaceTextRE(origName, findStr, replaceStr, ignoreCase=False, regex=True):
 			return newName
 
 		else:
-			print "Warning: No search string specified."
+			if not quiet:
+				print "Warning: No search string specified."
 			return origName
 
 	except:
-		print "Warning: Regular expression is invalid."
+		if not quiet:
+			print "Warning: Regular expression is invalid."
 
 
 def renumber(numLs, start=1, step=1, padding=4, preserve=True, autopad=True):
@@ -89,14 +92,12 @@ def renumber(numLs, start=1, step=1, padding=4, preserve=True, autopad=True):
 
 	if preserve:
 		for num in numLs:
-			newNumStr = str(num).zfill(padding)
-			newNumInt = int(newNumStr)
+			newNumInt = int( str(num).zfill(padding) ) # casting to string as zfill only works on strings
 			newNumLs.append(newNumInt)
 
 	else:
 		for num in numLs:
-			newNumStr = str(index).zfill(padding)
-			newNumInt = int(newNumStr)
+			newNumInt = int( str(index).zfill(padding) ) # casting to string as zfill only works on strings
 			newNumLs.append(newNumInt)
 			index += step
 

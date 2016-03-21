@@ -81,6 +81,19 @@ def recurseRemove(path):
 	return path
 
 
+def rename(source, destination):
+	""" Rename a file or folder.
+	"""
+	#os.rename(source, destination)
+	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+		cmdStr = 'ren "%s" "%s"' % (source, destination)
+	else:
+		cmdStr = 'mv "%s" "%s"' % (source, destination)
+
+	verbose.print_(cmdStr, 4)
+	os.system(cmdStr)
+
+
 def copy(source, destination):
 	""" Copy a file or folder.
 	"""
