@@ -74,6 +74,7 @@ class icarusApp(QtGui.QDialog):
 		QtCore.QObject.connect(self.ui.publish_pushButton, QtCore.SIGNAL('clicked()'), self.initPublish)
 		QtCore.QObject.connect(self.ui.tabWidget, QtCore.SIGNAL('currentChanged(int)'), self.adjustMainUI)
 		QtCore.QObject.connect(self.ui.about_toolButton, QtCore.SIGNAL('clicked()'), self.about)
+		QtCore.QObject.connect(self.ui.batchRename_toolButton, QtCore.SIGNAL('clicked()'), self.launchBatchRename)
 
 		self.ui.minimise_checkBox.stateChanged.connect(self.setMinimiseOnAppLaunch)
 
@@ -777,6 +778,13 @@ Environment: %s
 		"""
 		import rb__main__
 		reload(rb__main__)
+
+
+	def launchBatchRename(self):
+		""" Launches GPS sequence rename tool.
+		"""
+		import rename__main__
+		reload(rename__main__)
 
 
 	##################################################Publish tab###################################################
@@ -1572,7 +1580,7 @@ else:
 		app.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint)
 
 		#centering window
-		app.move(QtGui.QDesktopWidget().availableGeometry(1).center() - app.frameGeometry().center())
+	#	app.move(QtGui.QDesktopWidget().availableGeometry(1).center() - app.frameGeometry().center())
 
 		app.show()
 		sys.exit(app.exec_())
