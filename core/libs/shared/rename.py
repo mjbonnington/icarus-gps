@@ -8,38 +8,7 @@
 # Functions for renaming and renumbering.
 
 
-import os, string, re, time
-
-
-def renameUnique(obj, newName):
-	""" Rename object.
-		Now takes pymel object, rather than string, as first argument.
-		Perhaps this function should be moved to an external module?
-	"""
-#	# Set flags for shape node renaming behaviour
-#	ignoreShape = False
-#	renameShapes = mc.radioCollection("renameShapes", query=True, select=True) # Re-write to pass in as attribute
-#	if not renameShapes == "renameShapesAuto":
-#		ignoreShape = True
-#
-#	# Split new name string after the last pipe character - allows non-unique child objects to be renamed correctly
-#	newNameTuple = newName.rpartition("|")
-#
-#	# Rename shape node(s) if applicable
-#	if renameShapes == "renameShapesForce":
-#		objName = str(obj) # Cast pymel object to string for the following code to work
-#		if mc.nodeType(objName) == "transform":
-#			shapeLs = mc.listRelatives(objName, shapes=True, fullPath=True)
-#			if shapeLs is not None:
-#				for shape in shapeLs:
-#					mc.rename(shape, newNameTuple[2] + "Shape")
-#
-#	# Rename node
-#	try:
-#		obj.rename(newNameTuple[2], ignoreShape=ignoreShape)
-#	except RuntimeError:
-#		mc.warning("Cannot rename node: %s" %str(obj))
-#		return False
+import re
 
 
 def replaceTextRE(origName, findStr, replaceStr, ignoreCase=False, regex=True, quiet=True):

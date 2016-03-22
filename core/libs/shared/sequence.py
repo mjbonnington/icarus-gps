@@ -218,6 +218,6 @@ def detectSeq(filepath):
 	#print "Found %d frames." %len(lsFrames)
 
 	#return lsFrames
-	#return (path, prefix, numRange(lsFrames, padding=padding), ext, len(lsFrames))
-	return (path, prefix, numRange(lsFrames), ext, len(lsFrames))
+	return (path, prefix, numRange(lsFrames, padding=padding), ext, len(lsFrames))
+	#return (path, prefix, numRange(lsFrames), ext, len(lsFrames))
 

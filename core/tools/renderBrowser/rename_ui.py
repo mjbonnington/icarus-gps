@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'rename_ui.ui'
 #
-# Created: Mon Mar 21 14:57:52 2016
+# Created: Tue Mar 22 14:47:43 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -137,6 +137,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_10.addWidget(self.delete_pushButton)
         self.verticalLayout.addWidget(self.renameToolbar_frame)
         self.taskList_treeWidget = QtGui.QTreeWidget(self.centralwidget)
+        self.taskList_treeWidget.setDragDropMode(QtGui.QAbstractItemView.DropOnly)
         self.taskList_treeWidget.setAlternatingRowColors(True)
         self.taskList_treeWidget.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
         self.taskList_treeWidget.setTextElideMode(QtCore.Qt.ElideMiddle)
