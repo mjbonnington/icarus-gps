@@ -11,14 +11,15 @@
 global proc gpsLightingVRay.loadBaseSettings()
 {
 	if(`pluginInfo -q -l "vrayformaya"`)
-		gpsLightingVRay.loadSettings("vrayformaya");
+		gpsLightingVRay.loadSettings();
 	else
-		loadPlugin -addCallback "gpsLightingVRay.loadSettings" "vrayformaya";
+		//loadPlugin -addCallback "gpsLightingVRay.loadSettings" "vrayformaya"; // 
+		warning "V-Ray plugin not loaded.";
 }
 
 
 // Set the render settings with some sensible defaults (V-Ray).
-global proc gpsLightingVRay.loadSettings(string $pluginName)
+global proc gpsLightingVRay.loadSettings()
 {
 	// Get environment variables
 	string $startFrame = `getenv "STARTFRAME"`;
@@ -114,7 +115,7 @@ global proc gpsLightingVRay.loadSettings(string $pluginName)
 	// Set dynamic memory limit
 	setAttr "vraySettings.sys_rayc_dynMemLimit" 3000;
 
-	print "\nV-Ray defaults loaded. ";
+	print "\nV-Ray defaults loaded.";
 }
 
 

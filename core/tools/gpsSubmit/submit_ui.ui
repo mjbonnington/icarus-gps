@@ -131,6 +131,34 @@
         </layout>
        </widget>
       </item>
+      <item>
+       <widget class="QGroupBox" name="flags_groupBox">
+        <property name="toolTip">
+         <string>Allows additional command-line flags to be specified</string>
+        </property>
+        <property name="title">
+         <string>Additional command-line flags</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <layout class="QFormLayout" name="formLayout_2">
+         <property name="fieldGrowthPolicy">
+          <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+         </property>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="flags_lineEdit">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -189,7 +217,6 @@
   <tabstop>close_pushButton</tabstop>
   <tabstop>scene_comboBox</tabstop>
   <tabstop>sceneBrowse_toolButton</tabstop>
-  <tabstop>overrideFrameRange_groupBox</tabstop>
   <tabstop>frameRange_lineEdit</tabstop>
   <tabstop>taskSize_spinBox</tabstop>
  </tabstops>

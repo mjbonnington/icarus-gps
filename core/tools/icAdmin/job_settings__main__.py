@@ -376,6 +376,10 @@ class settingsDialog(QtGui.QDialog):
 		frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].setValue(width)
 		frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].setValue(height)
 
+		# Store values (a little bit hacky and nasty but needs to be done manually as signals are blocked)
+		self.currentAttr = 'fullWidth'; self.storeValue(width)
+		self.currentAttr = 'fullHeight'; self.storeValue(height)
+
 		self.calcAspectRatio()
 		self.calcProxyRes(fullWidth=width, fullHeight=height)
 
@@ -415,6 +419,9 @@ class settingsDialog(QtGui.QDialog):
 		# Update height widget
 		frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].setValue(height)
 
+		# Store values (a little bit hacky and nasty but needs to be done manually as signals are blocked)
+		self.currentAttr = 'fullHeight'; self.storeValue(height)
+
 		self.calcProxyRes(fullWidth=width, fullHeight=height)
 
 		# Re-enable signals
@@ -451,6 +458,9 @@ class settingsDialog(QtGui.QDialog):
 		# Update width widget
 		frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].setValue(width)
 
+		# Store values (a little bit hacky and nasty but needs to be done manually as signals are blocked)
+		self.currentAttr = 'fullWidth'; self.storeValue(width)
+
 		self.calcProxyRes(fullWidth=width, fullHeight=height)
 
 		# Re-enable signals
@@ -479,6 +489,9 @@ class settingsDialog(QtGui.QDialog):
 		# Update height widget
 		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].setValue(height)
 
+		# Store values (a little bit hacky and nasty but needs to be done manually as signals are blocked)
+		self.currentAttr = 'proxyHeight'; self.storeValue(height)
+
 		# Re-enable signals
 		frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].blockSignals(False)
 
@@ -501,6 +514,9 @@ class settingsDialog(QtGui.QDialog):
 
 		# Update width widget
 		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].setValue(width)
+
+		# Store values (a little bit hacky and nasty but needs to be done manually as signals are blocked)
+		self.currentAttr = 'proxyWidth'; self.storeValue(width)
 
 		# Re-enable signals
 		frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].blockSignals(False)
@@ -686,7 +702,7 @@ class settingsDialog(QtGui.QDialog):
 		""" Stores the currently edited attribute value into the XML data
 		"""
 		self.currentValue = str(val) # value must be a string for XML
-		#verbose.print_('[%s] [%s] : %s' %(self.currentCategory, self.currentAttr, self.currentValue), 4)
+		verbose.print_('[%s] %s = %s' %(self.currentCategory, self.currentAttr, self.currentValue), 4)
 		self.jd.setValue(self.currentCategory, self.currentAttr, self.currentValue)
 
 

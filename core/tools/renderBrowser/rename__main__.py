@@ -350,9 +350,9 @@ class batchRenameApp(QtGui.QMainWindow):
 if __name__ == "__main__":
 	app = QtGui.QApplication(sys.argv)
 
-	#app.setStyle('fusion') # Set UI style - you can also use a flag e.g. '-style plastique'
-
 	import rsc_rc # TODO: Check why this isn't working from within the UI file
+
+	#app.setStyle('fusion') # Set UI style - you can also use a flag e.g. '-style plastique'
 
 	# Apply UI style sheet
 	qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")

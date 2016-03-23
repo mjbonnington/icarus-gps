@@ -57,17 +57,18 @@ global proc shelf_GPS_Lighting () {
 		-sourceType "mel" 
 		-commandRepeatable 1
 		-flat 1
-		-mi "Load Base Settings"        ( "source gpsLightingVRay.mel; gpsLightingVRay.loadBaseSettings()"  )
+		-mi "Load V-Ray Plugin"         ( "loadPlugin vrayformaya" )
+		-mi "Load Base Settings"        ( "source gpsLightingVRay.mel; gpsLightingVRay.loadBaseSettings()" )
 		-mi "Update Render Output Path" ( "source gpsLightingVRay.mel; gpsLightingVRay.setRenderPath()" )
 		-mi "Open V-Ray Framebuffer"    ( "vray showVFB;" )
-		-mi "Create Standard Elements" ( "import loadElements; loadElements.addStdElements()" )
-		-mip 3
-		-mi "Create Data Elements" ( "import loadElements; loadElements.addDataElements()" )
+		-mi "Create Standard Elements"  ( "import loadElements; loadElements.addStdElements()" )
 		-mip 4
+		-mi "Create Data Elements"      ( "import loadElements; loadElements.addDataElements()" )
+		-mip 5
 		//-mi "Create Light Contribution Element" ("import createLightSelPass; createLightSelPass.lightSelPass()")
-		//-mip 5
-		//-mi "Add V-Ray subdivision and displacement attributes" ("import vraySubDsMulti; vraySubDsMulti.subDivide(subDs=4)" )
 		//-mip 6
+		//-mi "Add V-Ray subdivision and displacement attributes" ("import vraySubDsMulti; vraySubDsMulti.subDivide(subDs=4)" )
+		//-mip 7
 		//-mi "Add V-Ray Gamma to Selected"                       ( "source gpsLightingVRay.mel; gpsLightingVRay.addVRayGamma()" )
 		//-mi "Remove V-Ray Gamma from Selected"                  ( "source gpsLightingVRay.mel; gpsLightingVRay.removeVRayGamma()" )
 		//-mi "Add V-Ray Allow Negative Colours to Selected"      ( "source gpsLightingVRay.mel; gpsLightingVRay.addVRayNegCol()" )
@@ -98,7 +99,8 @@ global proc shelf_GPS_Lighting () {
 		-sourceType "mel" 
 		-commandRepeatable 1
 		-flat 1
-		-mi "Load Base Settings" ( "source gpsLightingRedshift.mel; gpsLightingRedshift.loadBaseSettings()" )
+		-mi "Load Redshift Plugin" ( "loadPlugin redshift4maya" )
+		-mi "Load Base Settings"   ( "source gpsLightingRedshift.mel; gpsLightingRedshift.loadBaseSettings()" )
 	;
 	shelfButton
 		-enableCommandRepeat 1
@@ -121,7 +123,7 @@ global proc shelf_GPS_Lighting () {
 		-style "iconOnly" 
 		-marginWidth 1
 		-marginHeight 1
-		-command "source gpsLightingVRay.mel; gpsLightingVRay.addVRayGamma();" 
+		//-command "source gpsLightingVRay.mel; gpsLightingVRay.addVRayGamma();" 
 		-sourceType "mel" 
 		-commandRepeatable 1
 		-flat 1

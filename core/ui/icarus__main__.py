@@ -239,7 +239,7 @@ class icarusApp(QtGui.QDialog):
 		elif os.environ['ICARUSENVAWARE'] == 'MAYA':
 			pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_maya_disabled.png")
 			self.ui.appIcon_label.setPixmap(pixmap)
-			uiHideLs = ['assetSubType_listWidget', 'ma_assetTypes_listWidget'] # Removed 'icarusBanner', 
+			uiHideLs = ['assetSubType_listWidget', 'ma_assetTypes_listWidget', 'batchRename_toolButton'] # Removed 'icarusBanner', 
 			#hides UI items 
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
@@ -258,7 +258,7 @@ class icarusApp(QtGui.QDialog):
 		elif os.environ['ICARUSENVAWARE'] == 'NUKE':
 			pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_nuke_disabled.png")
 			self.ui.appIcon_label.setPixmap(pixmap)
-			uiHideLs = ['assetSubType_listWidget', 'nk_assetTypes_listWidget'] # Removed 'icarusBanner', 
+			uiHideLs = ['assetSubType_listWidget', 'nk_assetTypes_listWidget', 'batchRename_toolButton'] # Removed 'icarusBanner', 
 			#hides UI 
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem

@@ -27,6 +27,8 @@ global proc gpsLighting.setCommonOptions()
 
 	// Set resolution
 	gpsLighting.setResolution();
+
+	print "\nCommon render setting loaded.";
 }
 
 

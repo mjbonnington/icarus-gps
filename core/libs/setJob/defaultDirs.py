@@ -20,8 +20,13 @@ def create():
 
 	# ____
 	# Maya
-	for directory in ('scenes', 'playblasts', 'sourceimages', 'renders', 'cache'):
+	for directory in ('scenes', 'playblasts', 'sourceimages', 'renders'):
 		uDir = os.path.join(os.environ['MAYADIR'], directory, username)
+		if not os.path.isdir(uDir):
+			osOps.createDir(uDir)
+
+	for directory in ('cache', 'data', 'scripts'):
+		uDir = os.path.join(os.environ['MAYADIR'], directory)
 		if not os.path.isdir(uDir):
 			osOps.createDir(uDir)
 
