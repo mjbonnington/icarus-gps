@@ -134,6 +134,7 @@ def setEnv(envVars):
 	os.environ['STARTFRAME'] = getInheritedValue('time', 'rangeStart')
 	os.environ['ENDFRAME'] = getInheritedValue('time', 'rangeEnd')
 	os.environ['FRAMERANGE'] = '%s-%s' % (os.environ['STARTFRAME'], os.environ['ENDFRAME']) # Is this necessary?
+	os.environ['POSTERFRAME'] = getInheritedValue('time', 'posterFrame')
 	os.environ['RESOLUTIONX'] = getInheritedValue('resolution', 'fullWidth')
 	os.environ['RESOLUTIONY'] = getInheritedValue('resolution', 'fullHeight')
 	os.environ['RESOLUTION'] = '%sx%s' % (os.environ['RESOLUTIONX'], os.environ['RESOLUTIONY']) # Is this necessary?

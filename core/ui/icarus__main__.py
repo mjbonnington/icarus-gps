@@ -239,7 +239,7 @@ class icarusApp(QtGui.QDialog):
 		elif os.environ['ICARUSENVAWARE'] == 'MAYA':
 			pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_maya_disabled.png")
 			self.ui.appIcon_label.setPixmap(pixmap)
-			uiHideLs = ['assetSubType_listWidget', 'ma_assetTypes_listWidget', 'batchRename_toolButton'] # Removed 'icarusBanner', 
+			uiHideLs = ['assetSubType_listWidget', 'batchRename_toolButton', 'ma_assetTypes_frame'] # Removed 'icarusBanner', 
 			#hides UI items 
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
@@ -258,7 +258,7 @@ class icarusApp(QtGui.QDialog):
 		elif os.environ['ICARUSENVAWARE'] == 'NUKE':
 			pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_nuke_disabled.png")
 			self.ui.appIcon_label.setPixmap(pixmap)
-			uiHideLs = ['assetSubType_listWidget', 'nk_assetTypes_listWidget', 'batchRename_toolButton'] # Removed 'icarusBanner', 
+			uiHideLs = ['assetSubType_listWidget', 'batchRename_toolButton'] # Removed 'icarusBanner', 
 			#hides UI 
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
@@ -1043,7 +1043,7 @@ Environment: %s
 			return self.fileDialog(os.environ['MAYAPLAYBLASTSDIR'])
 		elif self.dailyType in ('lighting', 'shading', 'lookdev'):
 			return self.fileDialog(os.environ['MAYARENDERSDIR'])
-		elif self.dailyType == 'comp':
+		elif self.dailyType in ('comp', ):
 			return self.fileDialog(os.environ['NUKERENDERSDIR'])
 		else:
 			return self.fileDialog(os.environ['SHOTPATH'])
@@ -1058,14 +1058,18 @@ Environment: %s
 		self.pblNotes = self.ui.notes_textEdit.text() #.toPlainText() # Edited line as notes box is now line edit widget, not text edit
 		self.pblType = self.getPblTab()[1]
 		self.slShot = self.ui.publishToShot_comboBox.currentText()
+
 		# Get path to publish to. If selected shot doesn't match shot the correct publish path is assigned based on the selected shot
 		if self.ui.publishToShot_radioButton.isChecked() == 1:
-			if self.slShot == os.environ['SHOT']:
+			if self.slShot == os.environ['SHOT']: # publish to current shot
 				self.pblTo = os.environ['SHOTPUBLISHDIR']
-			else:
+			else: # publish to user-specified shot
 				self.pblTo = os.path.join(os.environ['JOBPATH'], self.slShot, os.environ["PUBLISHRELATIVEDIR"])
-		else:
+		elif self.ui.publishToJob_radioButton.isChecked() == 1: # publish to job
 			self.pblTo = os.environ["JOBPUBLISHDIR"]
+		elif self.ui.publishToLibrary_radioButton.isChecked() == 1: # publish to library
+			self.pblTo = os.environ["GLOBALPUBLISHDIR"]
+
 	#	if self.ui.approved_checkBox.checkState() == 2:
 	#		self.approved = True
 	#	if self.ui.mail_checkBox.checkState() == 2:
@@ -1100,10 +1104,6 @@ Environment: %s
 
 		if rowCount == 1: # only allow one sequence to be published at a time
 			dailyItem = self.ui.dailyPbl_treeWidget.topLevelItem(0)
-
-#			self.dailySeq = dailyItem.text(0)
-#			self.dailyType = dailyItem.text(2)
-#			self.dailyPath = dailyItem.text(3)
 			dailyPblOpts = (dailyItem.text(0), dailyItem.text(1), dailyItem.text(2), dailyItem.text(3))
 
 		else:
@@ -1111,11 +1111,13 @@ Environment: %s
 			dailyPblOpts = None
 
 		#self.chkLs = [self.pblNotes, rowCount]
+		self.chkLs = [rowCount]
 		return dailyPblOpts
 
 
-	#gets render publish options - THIS NEEDS RE-CODING
 	def getRenderPblOpts(self):
+		""" Get information about renders before publishing. - THIS NEEDS RE-CODING
+		"""
 		self.renderDic = {}
 		self.streamPbl, self.mainLayer = '', ''
 		if self.ui.streamPbl_checkBox.checkState() == 2:
@@ -1267,9 +1269,9 @@ Environment: %s
 		###########
 		elif self.pblType == 'Dailies':
 			import ic_dailyPbl;
-			self.getDailyPblOpts()
-			#if not pblChk.chkOpts(self.chkLs):
-			#	return
+			#self.getDailyPblOpts()
+			if not pblChk.chkOpts(self.chkLs): # check for entries in mandatory fields
+				return
 			ic_dailyPbl.publish(self.getDailyPblOpts(), self.pblTo, self.pblNotes)
 
 		###########
@@ -1278,8 +1280,8 @@ Environment: %s
 		elif self.pblType == 'Render':
 			import ic_renderPbl
 			self.getRenderPblOpts()
-			if not pblChk.chkOpts(self.chkLs):
-				return
+			#if not pblChk.chkOpts(self.chkLs): # check for entries in mandatory fields
+			#	return
 			ic_renderPbl.publish(self.renderDic, self.pblTo, self.mainLayer, self.streamPbl, self.pblNotes)
 
 
@@ -1291,18 +1293,24 @@ Environment: %s
 		if showGatherButton:
 			self.ui.gather_pushButton.setEnabled(True)
 
-	#gets gather from
+
 	def getGatherFrom(self):
+		""" Get location from which to gather assets.
+		"""
 		slShot = self.ui.gatherFromShot_comboBox.currentText()
-		#gets path to gather from. if selected shot doesn't match shot the correct publish path is assigned based on the selected shot
+
+		# Get path to gather from. If selected shot doesn't match shot the correct publish path is assigned based on the selected shot
 		if self.ui.gatherFromShot_radioButton.isChecked() == 1:
-			if slShot == os.environ['SHOT']:
+			if slShot == os.environ['SHOT']: # gather from current shot
 				self.gatherFrom = os.environ['SHOTPUBLISHDIR']
-			else:
+			else: # gather from user-specified shot
 				self.gatherFrom = os.path.join(os.environ['JOBPATH'], slShot, os.environ["PUBLISHRELATIVEDIR"])
-		else:
+		elif self.ui.gatherFromJob_radioButton.isChecked() == 1: # gather from job
 			self.gatherFrom = os.environ['JOBPUBLISHDIR']
-			
+		elif self.ui.gatherFromLibrary_radioButton.isChecked() == 1: # gather from library
+			self.gatherFrom = os.environ["GLOBALPUBLISHDIR"]
+
+
 	###################columns system, info and preview img update##################
 	#defines columns to shorten name
 	def defineColumns(self):

@@ -833,6 +833,9 @@ QToolButton:disabled {
                   <property name="enabled">
                    <bool>false</bool>
                   </property>
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Publish to the global asset library location specified in the main Icarus settings. Published assets will be available to all jobs.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
                   <property name="autoFillBackground">
                    <bool>false</bool>
                   </property>
@@ -852,6 +855,9 @@ QToolButton:disabled {
                   <property name="enabled">
                    <bool>true</bool>
                   </property>
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Publish to the assets directory for the current job. Published assets will be available to all shots belonging to this job.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
                   <property name="autoFillBackground">
                    <bool>false</bool>
                   </property>
@@ -870,6 +876,9 @@ QToolButton:disabled {
                  <widget class="QRadioButton" name="publishToShot_radioButton">
                   <property name="enabled">
                    <bool>true</bool>
+                  </property>
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Publish to the assets folder for the specified shot. Published assets will be available to this shot only.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>
                   <property name="autoFillBackground">
                    <bool>false</bool>
@@ -927,79 +936,6 @@ QToolButton:disabled {
               <string>ma Asset</string>
              </attribute>
              <layout class="QHBoxLayout" name="horizontalLayout_9">
-              <item>
-               <widget class="QListWidget" name="ma_assetTypes_listWidget">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <item>
-                 <property name="text">
-                  <string>model</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>rig</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>camera</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>geoCache</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>geo</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>animation</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>shader</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>fx</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>pointCloud</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>shot</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>scene</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>node</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
               <item>
                <widget class="QFrame" name="ma_assetTypes_frame">
                 <property name="frameShape">
@@ -1332,17 +1268,426 @@ QToolButton:disabled {
                </widget>
               </item>
               <item>
-               <spacer name="horizontalSpacer_7">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
+               <widget class="QGroupBox" name="maAssetType_groupBox">
+                <property name="title">
+                 <string>Asset Type</string>
                 </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
+                <layout class="QVBoxLayout" name="verticalLayout_7">
+                 <item>
+                  <layout class="QGridLayout" name="publishButtons_gridLayout">
+                   <item row="0" column="0">
+                    <widget class="QToolButton" name="model_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>model</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_geo.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_geo_disabled.png</disabledoff>:/rsc/rsc/publish_icon_geo.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QToolButton" name="camera_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>camera</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_camera.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_camera_disabled.png</disabledoff>:/rsc/rsc/publish_icon_camera.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QToolButton" name="rig_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>rig</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_rig.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_rig_disabled.png</disabledoff>:/rsc/rsc/publish_icon_rig.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QToolButton" name="geo_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>geo</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_geo.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_geo_disabled.png</disabledoff>:/rsc/rsc/publish_icon_geo.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="3">
+                    <widget class="QToolButton" name="geoCache_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>geoCache</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_anim.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_anim_disabled.png</disabledoff>:/rsc/rsc/publish_icon_anim.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="QToolButton" name="shader_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>shader</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_shader.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_shader_disabled.png</disabledoff>:/rsc/rsc/publish_icon_shader.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="3">
+                    <widget class="QToolButton" name="fx_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>fx</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_generic.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_generic_disabled.png</disabledoff>:/rsc/rsc/publish_icon_generic.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QToolButton" name="animation_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>animation</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_anim.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_anim_disabled.png</disabledoff>:/rsc/rsc/publish_icon_anim.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QToolButton" name="pointCloud_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>pointCloud</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_pointCloud.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_pointCloud_disabled.png</disabledoff>:/rsc/rsc/publish_icon_pointCloud.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="2">
+                    <widget class="QToolButton" name="scene_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>scene</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_scene.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_scene_disabled.png</disabledoff>:/rsc/rsc/publish_icon_scene.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QToolButton" name="shot_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>shot</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/icon_render.png</normaloff>
+                       <disabledoff>:/rsc/rsc/icon_render_disabled.png</disabledoff>:/rsc/rsc/icon_render.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="3">
+                    <widget class="QToolButton" name="node_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>node</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_generic.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_generic_disabled.png</disabledoff>:/rsc/rsc/publish_icon_generic.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <spacer name="verticalSpacer">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </widget>
               </item>
               <item>
                <widget class="QGroupBox" name="ma_assetProcessing_groupBox">
@@ -1358,28 +1703,31 @@ QToolButton:disabled {
                 <property name="title">
                  <string>Processing</string>
                 </property>
-                <layout class="QVBoxLayout" name="verticalLayout_5">
-                 <item>
-                  <widget class="QCheckBox" name="textures_checkBox">
-                   <property name="text">
-                    <string>Textures</string>
-                   </property>
-                   <property name="checked">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
+                <layout class="QFormLayout" name="formLayout">
+                 <property name="fieldGrowthPolicy">
+                  <enum>QFormLayout::ExpandingFieldsGrow</enum>
+                 </property>
+                 <item row="5" column="0">
                   <widget class="QCheckBox" name="subSet_checkBox">
                    <property name="enabled">
                     <bool>false</bool>
                    </property>
                    <property name="text">
-                    <string>Sub-Set</string>
+                    <string>Sub-set:</string>
                    </property>
                   </widget>
                  </item>
-                 <item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="assetSubType_label">
+                   <property name="text">
+                    <string>Asset sub-type:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QComboBox" name="assetSubType_comboBox"/>
+                 </item>
+                 <item row="5" column="1">
                   <widget class="QLineEdit" name="subSetName_lineEdit">
                    <property name="enabled">
                     <bool>false</bool>
@@ -1398,7 +1746,33 @@ QToolButton:disabled {
                    </property>
                   </widget>
                  </item>
-                 <item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="assetName_label">
+                   <property name="text">
+                    <string>Scene name:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QLineEdit" name="assetName_lineEdit">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="frame">
+                    <bool>true</bool>
+                   </property>
+                   <property name="readOnly">
+                    <bool>false</bool>
+                   </property>
+                   <property name="mandatoryField" stdset="0">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="6" column="1">
                   <widget class="QPlainTextEdit" name="subSetWarning_textEdit">
                    <property name="enabled">
                     <bool>false</bool>
@@ -1423,6 +1797,16 @@ QToolButton:disabled {
                    </property>
                   </widget>
                  </item>
+                 <item row="2" column="1">
+                  <widget class="QCheckBox" name="textures_checkBox">
+                   <property name="text">
+                    <string>Textures</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
                 </layout>
                </widget>
               </item>
@@ -1433,49 +1817,6 @@ QToolButton:disabled {
               <string>nk Asset</string>
              </attribute>
              <layout class="QHBoxLayout" name="horizontalLayout_12">
-              <item>
-               <widget class="QListWidget" name="nk_assetTypes_listWidget">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <item>
-                 <property name="text">
-                  <string>setup</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>card</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>comp</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>preComp</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>pointCloud</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>node</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
               <item>
                <widget class="QFrame" name="nk_assetTypes_frame">
                 <property name="frameShape">
@@ -1848,6 +2189,9 @@ QToolButton:disabled {
                 </property>
                 <property name="textElideMode">
                  <enum>Qt::ElideMiddle</enum>
+                </property>
+                <property name="rootIsDecorated">
+                 <bool>false</bool>
                 </property>
                 <property name="uniformRowHeights">
                  <bool>true</bool>
@@ -2621,10 +2965,7 @@ p, li { white-space: pre-wrap; }
   <tabstop>shaderPbl_radioButton</tabstop>
   <tabstop>scenePbl_radioButton</tabstop>
   <tabstop>scenePblName_lineEdit</tabstop>
-  <tabstop>textures_checkBox</tabstop>
   <tabstop>subSet_checkBox</tabstop>
-  <tabstop>subSetName_lineEdit</tabstop>
-  <tabstop>subSetWarning_textEdit</tabstop>
   <tabstop>assetType_listWidget</tabstop>
   <tabstop>assetName_listWidget</tabstop>
   <tabstop>assetSubType_listWidget</tabstop>
@@ -2659,12 +3000,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>59</x>
-     <y>215</y>
+     <x>44</x>
+     <y>208</y>
     </hint>
     <hint type="destinationlabel">
-     <x>251</x>
-     <y>150</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -2675,12 +3016,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>75</x>
-     <y>216</y>
+     <x>60</x>
+     <y>483</y>
     </hint>
     <hint type="destinationlabel">
-     <x>251</x>
-     <y>150</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -2691,12 +3032,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>75</x>
-     <y>215</y>
+     <x>60</x>
+     <y>263</y>
     </hint>
     <hint type="destinationlabel">
-     <x>251</x>
-     <y>150</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -2707,12 +3048,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>59</x>
-     <y>216</y>
+     <x>44</x>
+     <y>373</y>
     </hint>
     <hint type="destinationlabel">
-     <x>251</x>
-     <y>150</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -2723,12 +3064,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>59</x>
-     <y>216</y>
+     <x>44</x>
+     <y>428</y>
     </hint>
     <hint type="destinationlabel">
-     <x>251</x>
-     <y>150</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -2739,12 +3080,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>75</x>
-     <y>216</y>
+     <x>60</x>
+     <y>318</y>
     </hint>
     <hint type="destinationlabel">
-     <x>251</x>
-     <y>150</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -2755,12 +3096,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>59</x>
-     <y>215</y>
+     <x>44</x>
+     <y>208</y>
     </hint>
     <hint type="destinationlabel">
-     <x>87</x>
-     <y>146</y>
+     <x>131</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -2771,12 +3112,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>75</x>
-     <y>215</y>
+     <x>60</x>
+     <y>263</y>
     </hint>
     <hint type="destinationlabel">
-     <x>87</x>
-     <y>146</y>
+     <x>131</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -2787,12 +3128,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>75</x>
-     <y>216</y>
+     <x>60</x>
+     <y>483</y>
     </hint>
     <hint type="destinationlabel">
-     <x>87</x>
-     <y>146</y>
+     <x>131</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -2803,12 +3144,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>59</x>
-     <y>216</y>
+     <x>44</x>
+     <y>428</y>
     </hint>
     <hint type="destinationlabel">
-     <x>87</x>
-     <y>146</y>
+     <x>131</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -2819,12 +3160,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>75</x>
-     <y>215</y>
+     <x>60</x>
+     <y>263</y>
     </hint>
     <hint type="destinationlabel">
-     <x>75</x>
-     <y>222</y>
+     <x>140</x>
+     <y>541</y>
     </hint>
    </hints>
   </connection>
@@ -2835,12 +3176,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>75</x>
-     <y>215</y>
+     <x>60</x>
+     <y>263</y>
     </hint>
     <hint type="destinationlabel">
-     <x>59</x>
-     <y>222</y>
+     <x>44</x>
+     <y>541</y>
     </hint>
    </hints>
   </connection>
@@ -2851,12 +3192,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>59</x>
-     <y>215</y>
+     <x>44</x>
+     <y>208</y>
     </hint>
     <hint type="destinationlabel">
-     <x>59</x>
-     <y>222</y>
+     <x>44</x>
+     <y>541</y>
     </hint>
    </hints>
   </connection>
@@ -2867,12 +3208,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>59</x>
-     <y>215</y>
+     <x>44</x>
+     <y>208</y>
     </hint>
     <hint type="destinationlabel">
-     <x>75</x>
-     <y>222</y>
+     <x>140</x>
+     <y>541</y>
     </hint>
    </hints>
   </connection>
@@ -2883,12 +3224,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>75</x>
-     <y>216</y>
+     <x>60</x>
+     <y>318</y>
     </hint>
     <hint type="destinationlabel">
-     <x>87</x>
-     <y>146</y>
+     <x>131</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -2899,12 +3240,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>59</x>
-     <y>216</y>
+     <x>44</x>
+     <y>373</y>
     </hint>
     <hint type="destinationlabel">
-     <x>87</x>
-     <y>146</y>
+     <x>131</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -2915,12 +3256,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>59</x>
-     <y>216</y>
+     <x>44</x>
+     <y>428</y>
     </hint>
     <hint type="destinationlabel">
-     <x>59</x>
-     <y>222</y>
+     <x>44</x>
+     <y>541</y>
     </hint>
    </hints>
   </connection>
@@ -2931,12 +3272,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>59</x>
-     <y>216</y>
+     <x>44</x>
+     <y>428</y>
     </hint>
     <hint type="destinationlabel">
-     <x>75</x>
-     <y>222</y>
+     <x>140</x>
+     <y>541</y>
     </hint>
    </hints>
   </connection>
@@ -2947,12 +3288,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>75</x>
-     <y>216</y>
+     <x>60</x>
+     <y>483</y>
     </hint>
     <hint type="destinationlabel">
-     <x>75</x>
-     <y>222</y>
+     <x>140</x>
+     <y>541</y>
     </hint>
    </hints>
   </connection>
@@ -2963,12 +3304,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>75</x>
-     <y>216</y>
+     <x>60</x>
+     <y>483</y>
     </hint>
     <hint type="destinationlabel">
-     <x>59</x>
-     <y>222</y>
+     <x>44</x>
+     <y>541</y>
     </hint>
    </hints>
   </connection>
@@ -2979,12 +3320,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>59</x>
-     <y>216</y>
+     <x>44</x>
+     <y>373</y>
     </hint>
     <hint type="destinationlabel">
-     <x>59</x>
-     <y>222</y>
+     <x>44</x>
+     <y>541</y>
     </hint>
    </hints>
   </connection>
@@ -2995,12 +3336,12 @@ p, li { white-space: pre-wrap; }
    <slot>setChecked(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>525</x>
-     <y>350</y>
+     <x>113</x>
+     <y>363</y>
     </hint>
     <hint type="destinationlabel">
-     <x>147</x>
-     <y>146</y>
+     <x>182</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -3011,12 +3352,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>75</x>
-     <y>216</y>
+     <x>60</x>
+     <y>318</y>
     </hint>
     <hint type="destinationlabel">
-     <x>75</x>
-     <y>222</y>
+     <x>140</x>
+     <y>541</y>
     </hint>
    </hints>
   </connection>
@@ -3027,12 +3368,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>75</x>
-     <y>216</y>
+     <x>60</x>
+     <y>318</y>
     </hint>
     <hint type="destinationlabel">
-     <x>59</x>
-     <y>222</y>
+     <x>44</x>
+     <y>541</y>
     </hint>
    </hints>
   </connection>
@@ -3043,12 +3384,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>525</x>
-     <y>350</y>
+     <x>113</x>
+     <y>363</y>
     </hint>
     <hint type="destinationlabel">
-     <x>87</x>
-     <y>146</y>
+     <x>131</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -3059,12 +3400,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>132</x>
-     <y>414</y>
+     <x>113</x>
+     <y>394</y>
     </hint>
     <hint type="destinationlabel">
-     <x>87</x>
-     <y>146</y>
+     <x>131</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -3075,12 +3416,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>525</x>
-     <y>350</y>
+     <x>113</x>
+     <y>363</y>
     </hint>
     <hint type="destinationlabel">
-     <x>251</x>
-     <y>150</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -3091,12 +3432,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>331</x>
-     <y>414</y>
+     <x>113</x>
+     <y>425</y>
     </hint>
     <hint type="destinationlabel">
-     <x>251</x>
-     <y>150</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -3107,12 +3448,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>500</x>
-     <y>282</y>
+     <x>113</x>
+     <y>194</y>
     </hint>
     <hint type="destinationlabel">
-     <x>179</x>
-     <y>147</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -3123,12 +3464,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>331</x>
-     <y>414</y>
+     <x>113</x>
+     <y>425</y>
     </hint>
     <hint type="destinationlabel">
-     <x>87</x>
-     <y>146</y>
+     <x>131</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -3139,12 +3480,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>143</x>
-     <y>414</y>
+     <x>113</x>
+     <y>394</y>
     </hint>
     <hint type="destinationlabel">
-     <x>251</x>
-     <y>150</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -3155,12 +3496,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>478</y>
+     <x>113</x>
+     <y>519</y>
     </hint>
     <hint type="destinationlabel">
-     <x>251</x>
-     <y>150</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -3171,12 +3512,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>282</y>
+     <x>113</x>
+     <y>228</y>
     </hint>
     <hint type="destinationlabel">
-     <x>251</x>
-     <y>150</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -3187,12 +3528,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>331</x>
-     <y>350</y>
+     <x>113</x>
+     <y>330</y>
     </hint>
     <hint type="destinationlabel">
-     <x>251</x>
-     <y>150</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -3203,12 +3544,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>98</x>
-     <y>282</y>
+     <x>92</x>
+     <y>262</y>
     </hint>
     <hint type="destinationlabel">
-     <x>251</x>
-     <y>150</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -3219,12 +3560,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>126</x>
-     <y>350</y>
+     <x>113</x>
+     <y>296</y>
     </hint>
     <hint type="destinationlabel">
-     <x>251</x>
-     <y>150</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -3235,12 +3576,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>478</y>
+     <x>113</x>
+     <y>519</y>
     </hint>
     <hint type="destinationlabel">
-     <x>87</x>
-     <y>146</y>
+     <x>131</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -3251,12 +3592,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>331</x>
-     <y>350</y>
+     <x>113</x>
+     <y>330</y>
     </hint>
     <hint type="destinationlabel">
-     <x>87</x>
-     <y>146</y>
+     <x>131</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -3267,12 +3608,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>282</y>
+     <x>113</x>
+     <y>228</y>
     </hint>
     <hint type="destinationlabel">
-     <x>87</x>
-     <y>146</y>
+     <x>131</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -3283,12 +3624,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>500</x>
-     <y>282</y>
+     <x>113</x>
+     <y>194</y>
     </hint>
     <hint type="destinationlabel">
-     <x>87</x>
-     <y>146</y>
+     <x>131</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -3299,12 +3640,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>117</x>
-     <y>350</y>
+     <x>111</x>
+     <y>296</y>
     </hint>
     <hint type="destinationlabel">
-     <x>87</x>
-     <y>146</y>
+     <x>131</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -3315,12 +3656,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>525</x>
-     <y>350</y>
+     <x>113</x>
+     <y>363</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>269</y>
+     <x>568</x>
+     <y>286</y>
     </hint>
    </hints>
   </connection>
@@ -3331,12 +3672,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>98</x>
-     <y>282</y>
+     <x>92</x>
+     <y>262</y>
     </hint>
     <hint type="destinationlabel">
-     <x>87</x>
-     <y>146</y>
+     <x>131</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -3347,12 +3688,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>331</x>
-     <y>478</y>
+     <x>113</x>
+     <y>487</y>
     </hint>
     <hint type="destinationlabel">
-     <x>87</x>
-     <y>146</y>
+     <x>131</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -3363,12 +3704,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>331</x>
-     <y>350</y>
+     <x>113</x>
+     <y>330</y>
     </hint>
     <hint type="destinationlabel">
-     <x>268</x>
-     <y>478</y>
+     <x>194</x>
+     <y>521</y>
     </hint>
    </hints>
   </connection>
@@ -3379,12 +3720,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>147</x>
-     <y>146</y>
+     <x>182</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
-     <x>111</x>
-     <y>282</y>
+     <x>105</x>
+     <y>262</y>
     </hint>
    </hints>
   </connection>
@@ -3395,12 +3736,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>331</x>
-     <y>414</y>
+     <x>113</x>
+     <y>425</y>
     </hint>
     <hint type="destinationlabel">
-     <x>268</x>
-     <y>478</y>
+     <x>194</x>
+     <y>521</y>
     </hint>
    </hints>
   </connection>
@@ -3411,12 +3752,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>500</x>
-     <y>282</y>
+     <x>113</x>
+     <y>194</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>269</y>
+     <x>568</x>
+     <y>286</y>
     </hint>
    </hints>
   </connection>
@@ -3427,12 +3768,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>147</x>
-     <y>146</y>
+     <x>182</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
-     <x>331</x>
-     <y>478</y>
+     <x>113</x>
+     <y>487</y>
     </hint>
    </hints>
   </connection>
@@ -3443,12 +3784,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>147</x>
-     <y>146</y>
+     <x>182</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
-     <x>259</x>
-     <y>286</y>
+     <x>194</x>
+     <y>264</y>
     </hint>
    </hints>
   </connection>
@@ -3459,12 +3800,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>331</x>
-     <y>350</y>
+     <x>113</x>
+     <y>330</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>269</y>
+     <x>568</x>
+     <y>286</y>
     </hint>
    </hints>
   </connection>
@@ -3475,12 +3816,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>59</x>
-     <y>216</y>
+     <x>44</x>
+     <y>373</y>
     </hint>
     <hint type="destinationlabel">
-     <x>75</x>
-     <y>222</y>
+     <x>140</x>
+     <y>541</y>
     </hint>
    </hints>
   </connection>
@@ -3491,12 +3832,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>132</x>
-     <y>282</y>
+     <x>113</x>
+     <y>262</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>248</y>
+     <x>652</x>
+     <y>231</y>
     </hint>
    </hints>
   </connection>
@@ -3507,12 +3848,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>282</y>
+     <x>113</x>
+     <y>228</y>
     </hint>
     <hint type="destinationlabel">
-     <x>268</x>
-     <y>478</y>
+     <x>194</x>
+     <y>521</y>
     </hint>
    </hints>
   </connection>
@@ -3523,12 +3864,12 @@ p, li { white-space: pre-wrap; }
    <slot>setChecked(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>331</x>
-     <y>478</y>
+     <x>113</x>
+     <y>487</y>
     </hint>
     <hint type="destinationlabel">
-     <x>147</x>
-     <y>146</y>
+     <x>182</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -3539,12 +3880,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>331</x>
-     <y>478</y>
+     <x>113</x>
+     <y>487</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>269</y>
+     <x>568</x>
+     <y>286</y>
     </hint>
    </hints>
   </connection>
@@ -3555,12 +3896,12 @@ p, li { white-space: pre-wrap; }
    <slot>setChecked(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>132</x>
-     <y>282</y>
+     <x>113</x>
+     <y>262</y>
     </hint>
     <hint type="destinationlabel">
-     <x>147</x>
-     <y>146</y>
+     <x>182</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -3571,12 +3912,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>331</x>
-     <y>414</y>
+     <x>113</x>
+     <y>425</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>269</y>
+     <x>568</x>
+     <y>286</y>
     </hint>
    </hints>
   </connection>
@@ -3587,12 +3928,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>331</x>
-     <y>414</y>
+     <x>113</x>
+     <y>425</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>248</y>
+     <x>652</x>
+     <y>231</y>
     </hint>
    </hints>
   </connection>
@@ -3603,12 +3944,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>500</x>
-     <y>282</y>
+     <x>113</x>
+     <y>194</y>
     </hint>
     <hint type="destinationlabel">
-     <x>268</x>
-     <y>478</y>
+     <x>194</x>
+     <y>521</y>
     </hint>
    </hints>
   </connection>
@@ -3619,12 +3960,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>121</x>
-     <y>282</y>
+     <x>113</x>
+     <y>262</y>
     </hint>
     <hint type="destinationlabel">
-     <x>268</x>
-     <y>478</y>
+     <x>194</x>
+     <y>521</y>
     </hint>
    </hints>
   </connection>
@@ -3635,12 +3976,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>282</y>
+     <x>113</x>
+     <y>228</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>269</y>
+     <x>568</x>
+     <y>286</y>
     </hint>
    </hints>
   </connection>
@@ -3651,12 +3992,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>331</x>
-     <y>478</y>
+     <x>113</x>
+     <y>487</y>
     </hint>
     <hint type="destinationlabel">
-     <x>268</x>
-     <y>478</y>
+     <x>194</x>
+     <y>521</y>
     </hint>
    </hints>
   </connection>
@@ -3667,12 +4008,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>135</x>
-     <y>350</y>
+     <x>113</x>
+     <y>296</y>
     </hint>
     <hint type="destinationlabel">
-     <x>268</x>
-     <y>478</y>
+     <x>194</x>
+     <y>521</y>
     </hint>
    </hints>
   </connection>
@@ -3683,12 +4024,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>478</y>
+     <x>113</x>
+     <y>519</y>
     </hint>
     <hint type="destinationlabel">
-     <x>268</x>
-     <y>478</y>
+     <x>194</x>
+     <y>521</y>
     </hint>
    </hints>
   </connection>
@@ -3699,12 +4040,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>478</y>
+     <x>113</x>
+     <y>519</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>269</y>
+     <x>568</x>
+     <y>286</y>
     </hint>
    </hints>
   </connection>
@@ -3715,12 +4056,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>414</y>
+     <x>113</x>
+     <y>394</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>269</y>
+     <x>568</x>
+     <y>286</y>
     </hint>
    </hints>
   </connection>
@@ -3731,12 +4072,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>331</x>
-     <y>350</y>
+     <x>113</x>
+     <y>330</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>248</y>
+     <x>652</x>
+     <y>231</y>
     </hint>
    </hints>
   </connection>
@@ -3747,12 +4088,12 @@ p, li { white-space: pre-wrap; }
    <slot>setChecked(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>414</y>
+     <x>113</x>
+     <y>394</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>248</y>
+     <x>652</x>
+     <y>231</y>
     </hint>
    </hints>
   </connection>
@@ -3763,12 +4104,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>282</y>
+     <x>113</x>
+     <y>228</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>248</y>
+     <x>652</x>
+     <y>231</y>
     </hint>
    </hints>
   </connection>
@@ -3779,12 +4120,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>414</y>
+     <x>113</x>
+     <y>394</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>248</y>
+     <x>652</x>
+     <y>231</y>
     </hint>
    </hints>
   </connection>
@@ -3795,12 +4136,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>143</x>
-     <y>282</y>
+     <x>113</x>
+     <y>262</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>269</y>
+     <x>568</x>
+     <y>286</y>
     </hint>
    </hints>
   </connection>
@@ -3811,12 +4152,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>350</y>
+     <x>113</x>
+     <y>296</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>269</y>
+     <x>568</x>
+     <y>286</y>
     </hint>
    </hints>
   </connection>
@@ -3827,12 +4168,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>414</y>
+     <x>113</x>
+     <y>394</y>
     </hint>
     <hint type="destinationlabel">
-     <x>268</x>
-     <y>478</y>
+     <x>194</x>
+     <y>521</y>
     </hint>
    </hints>
   </connection>
@@ -3843,12 +4184,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>350</y>
+     <x>113</x>
+     <y>296</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>248</y>
+     <x>652</x>
+     <y>231</y>
     </hint>
    </hints>
   </connection>
@@ -3859,12 +4200,12 @@ p, li { white-space: pre-wrap; }
    <slot>setChecked(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>331</x>
-     <y>478</y>
+     <x>113</x>
+     <y>487</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>248</y>
+     <x>652</x>
+     <y>231</y>
     </hint>
    </hints>
   </connection>
@@ -3875,12 +4216,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>331</x>
-     <y>478</y>
+     <x>113</x>
+     <y>487</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>248</y>
+     <x>652</x>
+     <y>231</y>
     </hint>
    </hints>
   </connection>
@@ -3891,12 +4232,12 @@ p, li { white-space: pre-wrap; }
    <slot>setChecked(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>478</y>
+     <x>113</x>
+     <y>519</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>248</y>
+     <x>652</x>
+     <y>231</y>
     </hint>
    </hints>
   </connection>
@@ -3907,12 +4248,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>118</x>
-     <y>282</y>
+     <x>112</x>
+     <y>262</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>248</y>
+     <x>652</x>
+     <y>231</y>
     </hint>
    </hints>
   </connection>
@@ -3923,12 +4264,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>742</x>
-     <y>269</y>
+     <x>568</x>
+     <y>286</y>
     </hint>
     <hint type="destinationlabel">
-     <x>733</x>
-     <y>296</y>
+     <x>786</x>
+     <y>289</y>
     </hint>
    </hints>
   </connection>
@@ -3939,12 +4280,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>500</x>
-     <y>282</y>
+     <x>113</x>
+     <y>194</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>248</y>
+     <x>652</x>
+     <y>231</y>
     </hint>
    </hints>
   </connection>
@@ -3955,12 +4296,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>150</x>
-     <y>478</y>
+     <x>113</x>
+     <y>519</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>248</y>
+     <x>652</x>
+     <y>231</y>
     </hint>
    </hints>
   </connection>
@@ -3971,12 +4312,12 @@ p, li { white-space: pre-wrap; }
    <slot>setChecked(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>500</x>
-     <y>282</y>
+     <x>113</x>
+     <y>194</y>
     </hint>
     <hint type="destinationlabel">
-     <x>742</x>
-     <y>248</y>
+     <x>652</x>
+     <y>231</y>
     </hint>
    </hints>
   </connection>
@@ -3987,12 +4328,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>444</x>
-     <y>472</y>
+     <x>113</x>
+     <y>553</y>
     </hint>
     <hint type="destinationlabel">
-     <x>660</x>
-     <y>267</y>
+     <x>568</x>
+     <y>286</y>
     </hint>
    </hints>
   </connection>
@@ -4003,12 +4344,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>525</x>
-     <y>478</y>
+     <x>113</x>
+     <y>553</y>
     </hint>
     <hint type="destinationlabel">
-     <x>211</x>
-     <y>473</y>
+     <x>194</x>
+     <y>521</y>
     </hint>
    </hints>
   </connection>
@@ -4019,12 +4360,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>467</x>
-     <y>475</y>
+     <x>113</x>
+     <y>553</y>
     </hint>
     <hint type="destinationlabel">
-     <x>116</x>
-     <y>139</y>
+     <x>182</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -4035,12 +4376,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>525</x>
-     <y>478</y>
+     <x>113</x>
+     <y>553</y>
     </hint>
     <hint type="destinationlabel">
-     <x>67</x>
-     <y>139</y>
+     <x>131</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -4051,12 +4392,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>433</x>
-     <y>475</y>
+     <x>113</x>
+     <y>553</y>
     </hint>
     <hint type="destinationlabel">
-     <x>241</x>
-     <y>132</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -4067,12 +4408,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>135</x>
-     <y>137</y>
+     <x>182</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
-     <x>178</x>
-     <y>139</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -4083,12 +4424,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>68</x>
-     <y>132</y>
+     <x>131</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
-     <x>172</x>
-     <y>134</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -4099,12 +4440,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>129</x>
-     <y>134</y>
+     <x>182</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
-     <x>180</x>
-     <y>134</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -4115,12 +4456,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>66</x>
-     <y>139</y>
+     <x>131</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
-     <x>175</x>
-     <y>140</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -4131,12 +4472,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>442</x>
-     <y>403</y>
+     <x>113</x>
+     <y>456</y>
     </hint>
     <hint type="destinationlabel">
-     <x>79</x>
-     <y>138</y>
+     <x>131</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -4147,12 +4488,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>465</x>
-     <y>403</y>
+     <x>113</x>
+     <y>456</y>
     </hint>
     <hint type="destinationlabel">
-     <x>144</x>
-     <y>137</y>
+     <x>182</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -4163,12 +4504,44 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>490</x>
-     <y>405</y>
+     <x>113</x>
+     <y>456</y>
     </hint>
     <hint type="destinationlabel">
-     <x>230</x>
-     <y>142</y>
+     <x>257</x>
+     <y>112</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>publishToShot_radioButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>camera_toolButton</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>163</x>
+     <y>101</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>376</x>
+     <y>188</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>publishToShot_radioButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>shot_toolButton</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>160</x>
+     <y>102</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>320</x>
+     <y>373</y>
     </hint>
    </hints>
   </connection>

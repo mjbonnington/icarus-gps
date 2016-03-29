@@ -1,5 +1,21 @@
 <RCC>
   <qresource prefix="rsc">
+    <file>rsc/publish_icon_rig.png</file>
+    <file>rsc/publish_icon_rig_disabled.png</file>
+    <file>rsc/publish_icon_pointCloud.png</file>
+    <file>rsc/publish_icon_pointCloud_disabled.png</file>
+    <file>rsc/publish_icon_generic.png</file>
+    <file>rsc/publish_icon_generic_disabled.png</file>
+    <file>rsc/publish_icon_shader.png</file>
+    <file>rsc/publish_icon_shader_disabled.png</file>
+    <file>rsc/publish_icon_scene.png</file>
+    <file>rsc/publish_icon_scene_disabled.png</file>
+    <file>rsc/publish_icon_camera.png</file>
+    <file>rsc/publish_icon_camera_disabled.png</file>
+    <file>rsc/publish_icon_anim.png</file>
+    <file>rsc/publish_icon_anim_disabled.png</file>
+    <file>rsc/publish_icon_geo.png</file>
+    <file>rsc/publish_icon_geo_disabled.png</file>
     <file>rsc/icon_editor.png</file>
     <file>rsc/icon_editor_disabled.png</file>
     <file>rsc/icon_info_disabled.png</file>

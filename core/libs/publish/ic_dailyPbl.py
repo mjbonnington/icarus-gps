@@ -57,22 +57,15 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 
 		# File operations
 		dailyPath = os.path.expandvars(dailyPath)
-		dailyPathLs = os.listdir(dailyPath)
-		dailyPathLs = sorted(dailyPathLs)
-		#paddingLs = []
-		paddingLs = sequence.numList(dailyRange)
-
-#		# Get all frames from sequence and append to padding list
-#		for file_ in dailyPathLs:
-#			if '%s.' % dailySeq in file_:
-#				fileSplit = pblOptsPrc.render_split(file_)
-#				if fileSplit:
-#					nameBody, padding, extension = fileSplit
-#					paddingLs.append(padding)
+		paddingLs = sequence.numList(dailyRange) # need to add ability to detect sequences with inconsistent padding
 		startFrame = min(paddingLs)
 		endFrame = max(paddingLs)
-		midFrame = int((int(startFrame) + int(endFrame))/2)
-		#print startFrame, midFrame, endFrame
+		try:
+			posterFrame = int(os.environ['POSTERFRAME'])
+		except ValueError:
+			posterFrame = -1
+		if not (startFrame <= posterFrame <= endFrame): # if poster frame is not within frame range, use mid frame
+			posterFrame = int((startFrame+endFrame) / 2)
 
 		# Pass arguments to djv to process the files in djvOps
 		dailyFileBody = '%s_daily_%s' % (os.environ['SHOT'], subsetName)
@@ -83,7 +76,7 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 		#djvOps.prcImg(inFile, outFile, startFrame, endFrame, extension, outExt='jpg', fps=os.environ['FPS'])
 		djvOps.prcQt(inFile, pblDir, startFrame, endFrame, extension, name='%s_%s' % (dailyFileBody, version))
 
-		# Hard linking daily to dated folder in editorial
+		# Hard linking daily to dated folder in wips dir
 		dailyFileLs = os.listdir(pblDir)
 		dailyDateDir = time.strftime('%Y_%m_%d')
 		dailyDatePath = os.path.join(os.environ['WIPSDIR'], 'CGI', dailyDateDir, '%s_%s_%s' % (os.environ['SHOT'], subsetName, version))
@@ -96,7 +89,7 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 
 		# Create daily snapshot
 		previewoutFile = os.path.join(pblDir, 'preview')
-		djvOps.prcImg(inFile, previewoutFile, midFrame, midFrame, extension, resize=(512,288), outExt='jpg')
+		djvOps.prcImg(inFile, previewoutFile, posterFrame, posterFrame, extension, resize=(512,288), outExt='jpg')
 		#djvOps.prcQt(inFile, pblDir, startFrame, endFrame, extension, resize=(512,288))
 
 		# Store asset metadata in file
