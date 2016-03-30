@@ -1,5 +1,15 @@
 <RCC>
   <qresource prefix="rsc">
+    <file>rsc/publish_icon_comp.png</file>
+    <file>rsc/publish_icon_comp_disabled.png</file>
+    <file>rsc/publish_icon_setup.png</file>
+    <file>rsc/publish_icon_setup_disabled.png</file>
+    <file>rsc/publish_icon_card.png</file>
+    <file>rsc/publish_icon_card_disabled.png</file>
+    <file>rsc/publish_icon_fx_disabled.png</file>
+    <file>rsc/publish_icon_fx.png</file>
+    <file>rsc/publish_icon_node.png</file>
+    <file>rsc/publish_icon_node_disabled.png</file>
     <file>rsc/publish_icon_rig.png</file>
     <file>rsc/publish_icon_rig_disabled.png</file>
     <file>rsc/publish_icon_pointCloud.png</file>

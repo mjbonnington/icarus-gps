@@ -936,6 +936,9 @@ QToolButton:disabled {
               <string>ma Asset</string>
              </attribute>
              <layout class="QHBoxLayout" name="horizontalLayout_9">
+              <property name="spacing">
+               <number>12</number>
+              </property>
               <item>
                <widget class="QFrame" name="ma_assetTypes_frame">
                 <property name="frameShape">
@@ -1268,13 +1271,22 @@ QToolButton:disabled {
                </widget>
               </item>
               <item>
-               <widget class="QGroupBox" name="maAssetType_groupBox">
-                <property name="title">
-                 <string>Asset Type</string>
+               <widget class="QFrame" name="ma_assetType_frame">
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
                 </property>
-                <layout class="QVBoxLayout" name="verticalLayout_7">
+                <property name="frameShadow">
+                 <enum>QFrame::Plain</enum>
+                </property>
+                <property name="lineWidth">
+                 <number>0</number>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_5">
+                 <property name="margin">
+                  <number>0</number>
+                 </property>
                  <item>
-                  <layout class="QGridLayout" name="publishButtons_gridLayout">
+                  <layout class="QGridLayout" name="ma_assetType_gridLayout">
                    <item row="0" column="0">
                     <widget class="QToolButton" name="model_toolButton">
                      <property name="sizePolicy">
@@ -1290,39 +1302,6 @@ QToolButton:disabled {
                       <iconset resource="rsc.qrc">
                        <normaloff>:/rsc/rsc/publish_icon_geo.png</normaloff>
                        <disabledoff>:/rsc/rsc/publish_icon_geo_disabled.png</disabledoff>:/rsc/rsc/publish_icon_geo.png</iconset>
-                     </property>
-                     <property name="iconSize">
-                      <size>
-                       <width>48</width>
-                       <height>48</height>
-                      </size>
-                     </property>
-                     <property name="checkable">
-                      <bool>true</bool>
-                     </property>
-                     <property name="autoExclusive">
-                      <bool>true</bool>
-                     </property>
-                     <property name="toolButtonStyle">
-                      <enum>Qt::ToolButtonTextUnderIcon</enum>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="2">
-                    <widget class="QToolButton" name="camera_toolButton">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text">
-                      <string>camera</string>
-                     </property>
-                     <property name="icon">
-                      <iconset resource="rsc.qrc">
-                       <normaloff>:/rsc/rsc/publish_icon_camera.png</normaloff>
-                       <disabledoff>:/rsc/rsc/publish_icon_camera_disabled.png</disabledoff>:/rsc/rsc/publish_icon_camera.png</iconset>
                      </property>
                      <property name="iconSize">
                       <size>
@@ -1374,6 +1353,72 @@ QToolButton:disabled {
                      </property>
                     </widget>
                    </item>
+                   <item row="0" column="2">
+                    <widget class="QToolButton" name="camera_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>camera</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_camera.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_camera_disabled.png</disabledoff>:/rsc/rsc/publish_icon_camera.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QToolButton" name="geoCache_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>geoCache</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_anim.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_anim_disabled.png</disabledoff>:/rsc/rsc/publish_icon_anim.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
                    <item row="1" column="0">
                     <widget class="QToolButton" name="geo_toolButton">
                      <property name="sizePolicy">
@@ -1407,106 +1452,7 @@ QToolButton:disabled {
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="3">
-                    <widget class="QToolButton" name="geoCache_toolButton">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text">
-                      <string>geoCache</string>
-                     </property>
-                     <property name="icon">
-                      <iconset resource="rsc.qrc">
-                       <normaloff>:/rsc/rsc/publish_icon_anim.png</normaloff>
-                       <disabledoff>:/rsc/rsc/publish_icon_anim_disabled.png</disabledoff>:/rsc/rsc/publish_icon_anim.png</iconset>
-                     </property>
-                     <property name="iconSize">
-                      <size>
-                       <width>48</width>
-                       <height>48</height>
-                      </size>
-                     </property>
-                     <property name="checkable">
-                      <bool>true</bool>
-                     </property>
-                     <property name="autoExclusive">
-                      <bool>true</bool>
-                     </property>
-                     <property name="toolButtonStyle">
-                      <enum>Qt::ToolButtonTextUnderIcon</enum>
-                     </property>
-                    </widget>
-                   </item>
                    <item row="1" column="2">
-                    <widget class="QToolButton" name="shader_toolButton">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text">
-                      <string>shader</string>
-                     </property>
-                     <property name="icon">
-                      <iconset resource="rsc.qrc">
-                       <normaloff>:/rsc/rsc/publish_icon_shader.png</normaloff>
-                       <disabledoff>:/rsc/rsc/publish_icon_shader_disabled.png</disabledoff>:/rsc/rsc/publish_icon_shader.png</iconset>
-                     </property>
-                     <property name="iconSize">
-                      <size>
-                       <width>48</width>
-                       <height>48</height>
-                      </size>
-                     </property>
-                     <property name="checkable">
-                      <bool>true</bool>
-                     </property>
-                     <property name="autoExclusive">
-                      <bool>true</bool>
-                     </property>
-                     <property name="toolButtonStyle">
-                      <enum>Qt::ToolButtonTextUnderIcon</enum>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="3">
-                    <widget class="QToolButton" name="fx_toolButton">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text">
-                      <string>fx</string>
-                     </property>
-                     <property name="icon">
-                      <iconset resource="rsc.qrc">
-                       <normaloff>:/rsc/rsc/publish_icon_generic.png</normaloff>
-                       <disabledoff>:/rsc/rsc/publish_icon_generic_disabled.png</disabledoff>:/rsc/rsc/publish_icon_generic.png</iconset>
-                     </property>
-                     <property name="iconSize">
-                      <size>
-                       <width>48</width>
-                       <height>48</height>
-                      </size>
-                     </property>
-                     <property name="checkable">
-                      <bool>true</bool>
-                     </property>
-                     <property name="autoExclusive">
-                      <bool>true</bool>
-                     </property>
-                     <property name="toolButtonStyle">
-                      <enum>Qt::ToolButtonTextUnderIcon</enum>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="1">
                     <widget class="QToolButton" name="animation_toolButton">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -1540,6 +1486,72 @@ QToolButton:disabled {
                     </widget>
                    </item>
                    <item row="2" column="0">
+                    <widget class="QToolButton" name="shader_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>shader</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_shader.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_shader_disabled.png</disabledoff>:/rsc/rsc/publish_icon_shader.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QToolButton" name="fx_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>fx</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_fx.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_fx_disabled.png</disabledoff>:/rsc/rsc/publish_icon_fx.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="2">
                     <widget class="QToolButton" name="pointCloud_toolButton">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -1572,40 +1584,7 @@ QToolButton:disabled {
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="2">
-                    <widget class="QToolButton" name="scene_toolButton">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text">
-                      <string>scene</string>
-                     </property>
-                     <property name="icon">
-                      <iconset resource="rsc.qrc">
-                       <normaloff>:/rsc/rsc/publish_icon_scene.png</normaloff>
-                       <disabledoff>:/rsc/rsc/publish_icon_scene_disabled.png</disabledoff>:/rsc/rsc/publish_icon_scene.png</iconset>
-                     </property>
-                     <property name="iconSize">
-                      <size>
-                       <width>48</width>
-                       <height>48</height>
-                      </size>
-                     </property>
-                     <property name="checkable">
-                      <bool>true</bool>
-                     </property>
-                     <property name="autoExclusive">
-                      <bool>true</bool>
-                     </property>
-                     <property name="toolButtonStyle">
-                      <enum>Qt::ToolButtonTextUnderIcon</enum>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="1">
+                   <item row="3" column="0">
                     <widget class="QToolButton" name="shot_toolButton">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -1638,8 +1617,41 @@ QToolButton:disabled {
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="3">
-                    <widget class="QToolButton" name="node_toolButton">
+                   <item row="3" column="1">
+                    <widget class="QToolButton" name="scene_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>scene</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_scene.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_scene_disabled.png</disabledoff>:/rsc/rsc/publish_icon_scene.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="2">
+                    <widget class="QToolButton" name="ma_node_toolButton">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -1651,8 +1663,8 @@ QToolButton:disabled {
                      </property>
                      <property name="icon">
                       <iconset resource="rsc.qrc">
-                       <normaloff>:/rsc/rsc/publish_icon_generic.png</normaloff>
-                       <disabledoff>:/rsc/rsc/publish_icon_generic_disabled.png</disabledoff>:/rsc/rsc/publish_icon_generic.png</iconset>
+                       <normaloff>:/rsc/rsc/publish_icon_node.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_node_disabled.png</disabledoff>:/rsc/rsc/publish_icon_node.png</iconset>
                      </property>
                      <property name="iconSize">
                       <size>
@@ -1674,7 +1686,7 @@ QToolButton:disabled {
                   </layout>
                  </item>
                  <item>
-                  <spacer name="verticalSpacer">
+                  <spacer name="ma_assetType_verticalSpacer">
                    <property name="orientation">
                     <enum>Qt::Vertical</enum>
                    </property>
@@ -1693,12 +1705,6 @@ QToolButton:disabled {
                <widget class="QGroupBox" name="ma_assetProcessing_groupBox">
                 <property name="enabled">
                  <bool>true</bool>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
                 </property>
                 <property name="title">
                  <string>Processing</string>
@@ -1817,6 +1823,9 @@ QToolButton:disabled {
               <string>nk Asset</string>
              </attribute>
              <layout class="QHBoxLayout" name="horizontalLayout_12">
+              <property name="spacing">
+               <number>12</number>
+              </property>
               <item>
                <widget class="QFrame" name="nk_assetTypes_frame">
                 <property name="frameShape">
@@ -1860,35 +1869,6 @@ QToolButton:disabled {
                     <bool>false</bool>
                    </property>
                    <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="7" column="0">
-                  <widget class="QLabel" name="nk_PblName_label">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="text">
-                    <string>Publish Name:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="7" column="1">
-                  <widget class="QLineEdit" name="nk_PblName_lineEdit">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="frame">
-                    <bool>true</bool>
-                   </property>
-                   <property name="readOnly">
-                    <bool>false</bool>
-                   </property>
-                   <property name="mandatoryField" stdset="0">
                     <bool>true</bool>
                    </property>
                   </widget>
@@ -1964,44 +1944,258 @@ QToolButton:disabled {
                </widget>
               </item>
               <item>
-               <spacer name="horizontalSpacer_8">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
+               <widget class="QFrame" name="nk_assetType_frame">
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
                 </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
+                <property name="frameShadow">
+                 <enum>QFrame::Plain</enum>
                 </property>
-               </spacer>
+                <property name="lineWidth">
+                 <number>0</number>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_7">
+                 <property name="margin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <layout class="QGridLayout" name="nk_assetType_gridLayout">
+                   <item row="0" column="2">
+                    <widget class="QToolButton" name="pointCloud_toolButton_2">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>pointCloud</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_pointCloud.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_pointCloud_disabled.png</disabledoff>:/rsc/rsc/publish_icon_pointCloud.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QToolButton" name="card_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>card</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_card.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_card_disabled.png</disabledoff>:/rsc/rsc/publish_icon_card.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QToolButton" name="precomp_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>precomp</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_comp.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_comp_disabled.png</disabledoff>:/rsc/rsc/publish_icon_comp.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QToolButton" name="comp_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>comp</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_comp.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_comp_disabled.png</disabledoff>:/rsc/rsc/publish_icon_comp.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="QToolButton" name="nk_node_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>node</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_node.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_node_disabled.png</disabledoff>:/rsc/rsc/publish_icon_node.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QToolButton" name="setup_toolButton">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>setup</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="rsc.qrc">
+                       <normaloff>:/rsc/rsc/publish_icon_setup.png</normaloff>
+                       <disabledoff>:/rsc/rsc/publish_icon_setup_disabled.png</disabledoff>:/rsc/rsc/publish_icon_setup.png</iconset>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>48</width>
+                       <height>48</height>
+                      </size>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                     <property name="toolButtonStyle">
+                      <enum>Qt::ToolButtonTextUnderIcon</enum>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <spacer name="nk_assetType_verticalSpacer">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </widget>
               </item>
               <item>
                <widget class="QGroupBox" name="nk_assetProcessing_groupBox">
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
                 <property name="title">
                  <string>Processing</string>
                 </property>
-                <layout class="QVBoxLayout" name="verticalLayout_3">
-                 <item>
+                <layout class="QFormLayout" name="formLayout_2">
+                 <item row="1" column="0">
                   <widget class="QCheckBox" name="nk_subSet_checkBox">
                    <property name="enabled">
                     <bool>false</bool>
                    </property>
                    <property name="text">
-                    <string>Sub-Set</string>
+                    <string>Sub-set:</string>
                    </property>
                   </widget>
                  </item>
-                 <item>
+                 <item row="1" column="1">
                   <widget class="QLineEdit" name="nk_subSetName_lineEdit">
                    <property name="enabled">
                     <bool>false</bool>
@@ -2020,7 +2214,7 @@ QToolButton:disabled {
                    </property>
                   </widget>
                  </item>
-                 <item>
+                 <item row="2" column="1">
                   <widget class="QPlainTextEdit" name="nk_subSetWarning_textEdit">
                    <property name="enabled">
                     <bool>false</bool>
@@ -2042,6 +2236,35 @@ QToolButton:disabled {
                    </property>
                    <property name="plainText">
                     <string>Warning: creating sub-sets will affect version control.</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLineEdit" name="nk_PblName_lineEdit">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="frame">
+                    <bool>true</bool>
+                   </property>
+                   <property name="readOnly">
+                    <bool>false</bool>
+                   </property>
+                   <property name="mandatoryField" stdset="0">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="nk_PblName_label">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string>Publish name:</string>
                    </property>
                   </widget>
                  </item>
@@ -2980,10 +3203,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>geoCachePbl_comboBox</tabstop>
   <tabstop>nk_setupPbl_radioButton</tabstop>
   <tabstop>nk_pointCloudPbl_radioButton</tabstop>
-  <tabstop>nk_PblName_lineEdit</tabstop>
-  <tabstop>nk_subSet_checkBox</tabstop>
-  <tabstop>nk_subSetName_lineEdit</tabstop>
-  <tabstop>nk_subSetWarning_textEdit</tabstop>
   <tabstop>dailyPbl_treeWidget</tabstop>
   <tabstop>notes_textEdit</tabstop>
   <tabstop>publish_pushButton</tabstop>
@@ -3016,8 +3235,8 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>60</x>
-     <y>483</y>
+     <x>73</x>
+     <y>531</y>
     </hint>
     <hint type="destinationlabel">
      <x>257</x>
@@ -3048,8 +3267,8 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>44</x>
-     <y>373</y>
+     <x>57</x>
+     <y>405</y>
     </hint>
     <hint type="destinationlabel">
      <x>257</x>
@@ -3064,8 +3283,8 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>44</x>
-     <y>428</y>
+     <x>57</x>
+     <y>468</y>
     </hint>
     <hint type="destinationlabel">
      <x>257</x>
@@ -3080,8 +3299,8 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>60</x>
-     <y>318</y>
+     <x>73</x>
+     <y>342</y>
     </hint>
     <hint type="destinationlabel">
      <x>257</x>
@@ -3128,8 +3347,8 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>60</x>
-     <y>483</y>
+     <x>73</x>
+     <y>531</y>
     </hint>
     <hint type="destinationlabel">
      <x>131</x>
@@ -3144,8 +3363,8 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>44</x>
-     <y>428</y>
+     <x>57</x>
+     <y>468</y>
     </hint>
     <hint type="destinationlabel">
      <x>131</x>
@@ -3164,8 +3383,8 @@ p, li { white-space: pre-wrap; }
      <y>263</y>
     </hint>
     <hint type="destinationlabel">
-     <x>140</x>
-     <y>541</y>
+     <x>653</x>
+     <y>202</y>
     </hint>
    </hints>
   </connection>
@@ -3180,8 +3399,8 @@ p, li { white-space: pre-wrap; }
      <y>263</y>
     </hint>
     <hint type="destinationlabel">
-     <x>44</x>
-     <y>541</y>
+     <x>485</x>
+     <y>202</y>
     </hint>
    </hints>
   </connection>
@@ -3196,8 +3415,8 @@ p, li { white-space: pre-wrap; }
      <y>208</y>
     </hint>
     <hint type="destinationlabel">
-     <x>44</x>
-     <y>541</y>
+     <x>485</x>
+     <y>202</y>
     </hint>
    </hints>
   </connection>
@@ -3212,8 +3431,8 @@ p, li { white-space: pre-wrap; }
      <y>208</y>
     </hint>
     <hint type="destinationlabel">
-     <x>140</x>
-     <y>541</y>
+     <x>653</x>
+     <y>202</y>
     </hint>
    </hints>
   </connection>
@@ -3224,8 +3443,8 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>60</x>
-     <y>318</y>
+     <x>73</x>
+     <y>342</y>
     </hint>
     <hint type="destinationlabel">
      <x>131</x>
@@ -3240,8 +3459,8 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>44</x>
-     <y>373</y>
+     <x>57</x>
+     <y>405</y>
     </hint>
     <hint type="destinationlabel">
      <x>131</x>
@@ -3256,12 +3475,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>44</x>
-     <y>428</y>
+     <x>57</x>
+     <y>468</y>
     </hint>
     <hint type="destinationlabel">
-     <x>44</x>
-     <y>541</y>
+     <x>485</x>
+     <y>202</y>
     </hint>
    </hints>
   </connection>
@@ -3272,12 +3491,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>44</x>
-     <y>428</y>
+     <x>57</x>
+     <y>468</y>
     </hint>
     <hint type="destinationlabel">
-     <x>140</x>
-     <y>541</y>
+     <x>653</x>
+     <y>202</y>
     </hint>
    </hints>
   </connection>
@@ -3288,12 +3507,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>60</x>
-     <y>483</y>
+     <x>73</x>
+     <y>531</y>
     </hint>
     <hint type="destinationlabel">
-     <x>140</x>
-     <y>541</y>
+     <x>653</x>
+     <y>202</y>
     </hint>
    </hints>
   </connection>
@@ -3304,12 +3523,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>60</x>
-     <y>483</y>
+     <x>73</x>
+     <y>531</y>
     </hint>
     <hint type="destinationlabel">
-     <x>44</x>
-     <y>541</y>
+     <x>485</x>
+     <y>202</y>
     </hint>
    </hints>
   </connection>
@@ -3320,12 +3539,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>44</x>
-     <y>373</y>
+     <x>57</x>
+     <y>405</y>
     </hint>
     <hint type="destinationlabel">
-     <x>44</x>
-     <y>541</y>
+     <x>485</x>
+     <y>202</y>
     </hint>
    </hints>
   </connection>
@@ -3352,12 +3571,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>60</x>
-     <y>318</y>
+     <x>73</x>
+     <y>342</y>
     </hint>
     <hint type="destinationlabel">
-     <x>140</x>
-     <y>541</y>
+     <x>653</x>
+     <y>202</y>
     </hint>
    </hints>
   </connection>
@@ -3368,12 +3587,12 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>60</x>
-     <y>318</y>
+     <x>73</x>
+     <y>342</y>
     </hint>
     <hint type="destinationlabel">
-     <x>44</x>
-     <y>541</y>
+     <x>485</x>
+     <y>202</y>
     </hint>
    </hints>
   </connection>
@@ -3650,22 +3869,6 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>animPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>363</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>568</x>
-     <y>286</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>cameraPbl_radioButton</sender>
    <signal>clicked(bool)</signal>
    <receiver>publishToJob_radioButton</receiver>
@@ -3746,22 +3949,6 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>modelPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>194</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>568</x>
-     <y>286</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>publishToShot_radioButton</sender>
    <signal>toggled(bool)</signal>
    <receiver>shotPbl_radioButton</receiver>
@@ -3794,50 +3981,18 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>geoPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>330</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>568</x>
-     <y>286</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>nk_preCompPbl_radioButton</sender>
    <signal>clicked(bool)</signal>
    <receiver>nk_PblName_lineEdit</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>44</x>
-     <y>373</y>
+     <x>57</x>
+     <y>405</y>
     </hint>
     <hint type="destinationlabel">
-     <x>140</x>
-     <y>541</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cameraPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>262</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>652</x>
-     <y>231</y>
+     <x>653</x>
+     <y>202</y>
     </hint>
    </hints>
   </connection>
@@ -3874,22 +4029,6 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>shotPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>487</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>568</x>
-     <y>286</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>cameraPbl_radioButton</sender>
    <signal>clicked(bool)</signal>
    <receiver>publishToShot_radioButton</receiver>
@@ -3906,38 +4045,6 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>fxPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>425</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>568</x>
-     <y>286</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>fxPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>425</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>652</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>modelPbl_radioButton</sender>
    <signal>clicked(bool)</signal>
    <receiver>scenePblName_lineEdit</receiver>
@@ -3966,22 +4073,6 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>194</x>
      <y>521</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>rigPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>228</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>568</x>
-     <y>286</y>
     </hint>
    </hints>
   </connection>
@@ -4034,134 +4125,6 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>scenePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>519</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>568</x>
-     <y>286</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>shaderPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>394</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>568</x>
-     <y>286</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>geoPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>330</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>652</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>shaderPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>394</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>652</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>rigPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>228</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>652</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>shaderPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>394</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>652</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cameraPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>262</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>568</x>
-     <y>286</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>geoCachePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>296</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>568</x>
-     <y>286</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>shaderPbl_radioButton</sender>
    <signal>clicked(bool)</signal>
    <receiver>scenePblName_lineEdit</receiver>
@@ -4174,166 +4137,6 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>194</x>
      <y>521</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>geoCachePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>296</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>652</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>shotPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>487</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>652</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>shotPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>487</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>652</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>scenePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>519</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>652</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cameraPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>112</x>
-     <y>262</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>652</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>subSet_checkBox</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSetName_lineEdit</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>568</x>
-     <y>286</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>786</x>
-     <y>289</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>modelPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>194</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>652</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>scenePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>519</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>652</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>modelPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>194</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>652</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nodePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>553</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>568</x>
-     <y>286</y>
     </hint>
    </hints>
   </connection>
@@ -4524,8 +4327,8 @@ p, li { white-space: pre-wrap; }
      <y>101</y>
     </hint>
     <hint type="destinationlabel">
-     <x>376</x>
-     <y>188</y>
+     <x>445</x>
+     <y>231</y>
     </hint>
    </hints>
   </connection>
@@ -4540,8 +4343,440 @@ p, li { white-space: pre-wrap; }
      <y>102</y>
     </hint>
     <hint type="destinationlabel">
-     <x>320</x>
-     <y>373</y>
+     <x>308</x>
+     <y>462</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>geoPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>subSet_checkBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>330</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>532</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>animPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>subSet_checkBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>363</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>532</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>modelPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>subSet_checkBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>194</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>532</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fxPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>textures_checkBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>425</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>616</x>
+     <y>231</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>shotPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>subSet_checkBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>487</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>532</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fxPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>subSet_checkBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>425</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>532</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rigPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>subSet_checkBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>228</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>532</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>scenePbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>subSet_checkBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>519</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>532</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>shaderPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>subSet_checkBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>394</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>532</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cameraPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>textures_checkBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>262</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>616</x>
+     <y>231</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>shaderPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>textures_checkBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>394</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>616</x>
+     <y>231</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>geoPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>textures_checkBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>330</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>616</x>
+     <y>231</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rigPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>textures_checkBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>228</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>616</x>
+     <y>231</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>shaderPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>textures_checkBox</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>394</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>616</x>
+     <y>231</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cameraPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>subSet_checkBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>262</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>532</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>geoCachePbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>subSet_checkBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>296</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>532</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>shotPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>textures_checkBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>487</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>616</x>
+     <y>231</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>geoCachePbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>textures_checkBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>296</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>616</x>
+     <y>231</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>shotPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>textures_checkBox</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>487</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>616</x>
+     <y>231</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>scenePbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>textures_checkBox</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>519</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>616</x>
+     <y>231</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>modelPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>textures_checkBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>194</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>616</x>
+     <y>231</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>nodePbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>subSet_checkBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>553</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>532</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>modelPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>textures_checkBox</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>194</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>616</x>
+     <y>231</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>scenePbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>textures_checkBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>519</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>616</x>
+     <y>231</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cameraPbl_radioButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>textures_checkBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>112</x>
+     <y>262</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>616</x>
+     <y>231</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>subSet_checkBox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>subSetName_lineEdit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>532</x>
+     <y>286</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>786</x>
+     <y>289</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>publishToShot_radioButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>comp_toolButton</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>155</x>
+     <y>103</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>163</x>
+     <y>244</y>
     </hint>
    </hints>
   </connection>

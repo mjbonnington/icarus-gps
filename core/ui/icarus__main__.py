@@ -14,16 +14,16 @@ from PySide.QtGui import QStyleFactory
 from icarusUI import *
 import os, sys, env__init__
 
-
-#initializing icarus environment and adding libs to sysPath
+# Initialise Icarus environment and add libs to sys path
 env__init__.setEnv()
 
-#note: publish modules are imported on demand rather than all at once at beggining of file
+# Note: publish modules are imported on demand rather than all at once at beginning of file
 import launchApps, setJob, userPrefs, verbose, pblChk, pblOptsPrc, openDirs, jobs #, setTerm, listShots
 import sequence as seq
 
 
 class icarusApp(QtGui.QDialog):
+
 	def __init__(self, parent = None):
 		super(icarusApp, self).__init__(parent)
 		self.ui = Ui_Dialog()
@@ -258,7 +258,7 @@ class icarusApp(QtGui.QDialog):
 		elif os.environ['ICARUSENVAWARE'] == 'NUKE':
 			pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_nuke_disabled.png")
 			self.ui.appIcon_label.setPixmap(pixmap)
-			uiHideLs = ['assetSubType_listWidget', 'batchRename_toolButton'] # Removed 'icarusBanner', 
+			uiHideLs = ['assetSubType_listWidget', 'batchRename_toolButton', 'nk_assetTypes_frame'] # Removed 'icarusBanner', 
 			#hides UI 
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
