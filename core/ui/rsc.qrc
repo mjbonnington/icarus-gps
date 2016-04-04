@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="rsc">
+    <file>rsc/app_icon_maya_tab.png</file>
+    <file>rsc/app_icon_nuke_tab.png</file>
     <file>rsc/publish_icon_comp.png</file>
     <file>rsc/publish_icon_comp_disabled.png</file>
     <file>rsc/publish_icon_setup.png</file>

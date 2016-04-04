@@ -14,21 +14,21 @@ import maya.cmds as mc
 import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, inProgress
 
 
-def publish(pblTo, slShot, mdlType, textures, pblNotes):
+def publish(pblTo, slShot, subtype, textures, pblNotes):
 
 	# Get selection
 	objLs = mc.ls(sl=True)
 
-	# Checkitem count
+	# Check item count
 	if not pblChk.itemCount(objLs):
 		return
 
 	# Define main variables
 	assetType = 'ma_model'
-	subsetName = mdlType
+	subsetName = subtype
 	prefix = ''
 	convention = objLs[0]
-	suffix = '_%s_model' % mdlType
+	suffix = '_%s_model' % subtype
 	fileType = 'mayaBinary'
 	extension = 'mb'
 	autoLods = False
@@ -60,7 +60,7 @@ def publish(pblTo, slShot, mdlType, textures, pblNotes):
 		return
 
 	# Check if asset to publish is referenced
-	for allObj in allObjLs: 
+	for allObj in allObjLs:
 		if mc.referenceQuery(allObj, inr=True):
 			verbose.noRefPbl()
 			return
@@ -113,7 +113,7 @@ def publish(pblTo, slShot, mdlType, textures, pblNotes):
 			txPaths = (txFullPath, txRelPath)
 			mayaOps.relinkTexture(txPaths, txObjLs=allObjLs, updateMaya=True)
 
-		# Take snapshot	
+		# Take snapshot
 		mayaOps.snapShot(pblDir, isolate=True, fit=True)
 
 		# File operations

@@ -1,121 +1,127 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:ma_rigPbl
-#copyright	:Gramercy Park Studios
+
+# [Icarus] ma_rigPbl.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2016 Gramercy Park Studios
+#
+# Publish an asset of the type ma_rig.
 
 
-#rig publish module
 import os, sys, traceback
 import maya.cmds as mc
 import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, inProgress
-	
-def publish(pblTo, slShot, rigType, textures, pblNotes):
 
-	#gets selection
+
+def publish(pblTo, slShot, subtype, textures, pblNotes):
+
+	# Get selection
 	objLs = mc.ls(sl=True)
-	
-	#checks item count
+
+	# Check item count
 	if not pblChk.itemCount(objLs):
 		return
 
-	#defining main variables
+	# Define main variables
 	assetType = 'ma_rig'
-	subsetName = rigType
+	subsetName = subtype
 	prefix = ''
 	convention = objLs[0]
-	suffix = '_%s_rig' % rigType
-	fileType='mayaBinary'
+	suffix = '_%s_rig' % subtype
+	fileType = 'mayaBinary'
 	extension = 'mb'
-	
-	#sanitizes selection charatcers
+
+	# Check for illegal characters
 	cleanObj = osOps.sanitize(convention)
 	if cleanObj != convention:
 		verbose.illegalCharacters(convention)
 		return
-		
-	#gets all dependants	
+
+	# Get all dependents
 	allObjLs = mc.listRelatives(convention, ad=True, f=True, typ='transform')
 	if allObjLs:
 		allObjLs.append(convention)
 	else:
 		allObjLs = [convention]
-		
-	#check if asset to publish is a set
+
+	# Check if asset to publish is a set
 	if mc.nodeType(convention) == 'objectSet':
 		verbose.noSetsPbl()
 		return
-	
-	#check if asset to publish is an icSet
+
+	# Check if asset to publish is an icSet
 	if mayaOps.chkIcDataSet(convention):
 		verbose.noICSetsPbl()
 		return
 
-	#check if asset to publish is referenced
-	for allObj in allObjLs: 
+	# Check if asset to publish is referenced
+	for allObj in allObjLs:
 		if mc.referenceQuery(allObj, inr=True):
 			verbose.noRefPbl()
 			return
-		
-	#processing asset publish options
+
+	# Process asset publish options
 	assetPblName, assetDir, pblDir = pblOptsPrc.prc(pblTo, subsetName, assetType, prefix, convention, suffix)
-	
-	#adding shot name to assetPblName if asset is being publish to a shot
-	#determining publish env var for relative directory
+
+	# Add shot name to assetPblName if asset is being publish to a shot
+	# Determining publish env var for relative directory
 	if pblTo != os.environ['JOBPUBLISHDIR']:
 		assetPblName += '_%s' % slShot
-	
-	#version control	
-	version = '%s' % vCtrl.version(pblDir)
-	#if approved:
-	#	version += '_apv'
 
-	#confirmation dialog
-	dialogTitle = 'Publishing'
+	# Version control
+	version = '%s' % vCtrl.version(pblDir)
+#	if approved:
+#		version += '_apv'
+
+	# Confirmation dialog
+	dialogTitle = 'Publishing %s' % convention
 	dialogMsg = 'Asset:\t%s\n\nVersion:\t%s\n\nSubset:\t%s\n\nNotes:\t%s' % (assetPblName, version, subsetName, pblNotes)
 	dialog = pDialog.dialog()
 	if not dialog.dialogWindow(dialogMsg, dialogTitle):
 		return
-	
-	#publishing
-	try:	
+
+	# Publishing
+	try:
 		verbose.pblFeed(begin=True)
 
-		#creating publish directories
+		# Create publish directories
 		pblDir = osOps.createDir(os.path.join(pblDir, version))
 		if textures:
 			osOps.createDir(os.path.join(pblDir, 'tx'))
 
-		#creating in progress tmp file
+		# Create in-progress tmp file
 		inProgress.start(pblDir)
 
-		#ic publish data file
-		icPblData.writeData(pblDir, assetPblName, convention, assetType, extension, version, pblNotes)
+		# Store asset metadata in file
+		src = mayaOps.getScene()
+		icPblData.writeData(pblDir, assetPblName, convention, assetType, extension, version, pblNotes, src)
 
-		#publish operations
-		mayaOps.deleteICDataSet(allObjLs)	
+		# Publish operations
+		mayaOps.deleteICDataSet(allObjLs)
 		if textures:
-			#copying textures to pbl direcotry
+			# Copy textures to publish directory (use hardlink instead?)
 			txFullPath = os.path.join(pblDir, 'tx')
 			txRelPath = txFullPath.replace(os.path.expandvars('$JOBPATH'), '$JOBPATH')
 			txPaths = (txFullPath, txRelPath)
 			mayaOps.relinkTexture(txPaths, txObjLs=allObjLs, updateMaya=True)
-		
-		#snapshot
-		mayaOps.snapShot(pblDir)
 
-		#file operations
+		# Take snapshot
+		mayaOps.snapShot(pblDir, isolate=True, fit=True)
+
+		# File operations
 		pathToPblAsset = os.path.join(pblDir, '%s.%s' % (assetPblName, extension))
 		verbose.pblFeed(msg=assetPblName)
 		mayaOps.exportSelection(pathToPblAsset, fileType)
 
-		#deleting in progress tmp file
+		# Delete in-progress tmp file
 		inProgress.end(pblDir)
 
-		#published asset check
+		# Published asset check
 		pblResult = pblChk.success(pathToPblAsset)
-			
+
 		verbose.pblFeed(end=True)
-	
+
 	except:
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
@@ -124,10 +130,9 @@ def publish(pblTo, slShot, rigType, textures, pblNotes):
 		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += verbose.pblRollback()
 
-	
-	#publish result dialog
+	# Show publish result dialog
 	dialogTitle = 'Publish Report'
 	dialogMsg = 'Asset:\t%s\n\nVersion:\t%s\n\nSubset:\t%s\n\n\n%s' % (assetPblName, version, subsetName, pblResult)
 	dialog = pDialog.dialog()
 	dialog.dialogWindow(dialogMsg, dialogTitle, conf=True)
-	
+

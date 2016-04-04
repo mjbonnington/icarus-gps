@@ -45,45 +45,58 @@ class icarusApp(QtGui.QDialog):
 		self.shortcutShotInfo.setKey('Ctrl+I')
 		self.shortcutShotInfo.activated.connect(self.printShotInfo)
 
-		# Connect signals & slots
-		QtCore.QObject.connect(self.ui.job_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.populateShots)
-		QtCore.QObject.connect(self.ui.setShot_pushButton, QtCore.SIGNAL('clicked()'), self.setupJob)
-		QtCore.QObject.connect(self.ui.setNewShot_pushButton, QtCore.SIGNAL('clicked()'), self.unlockJobUI)
-		QtCore.QObject.connect(self.ui.maya_pushButton, QtCore.SIGNAL('clicked()'), self.launchMaya)
-		QtCore.QObject.connect(self.ui.mudbox_pushButton, QtCore.SIGNAL('clicked()'), self.launchMudbox)
-		QtCore.QObject.connect(self.ui.nuke_pushButton, QtCore.SIGNAL('clicked()'), self.launchNuke)
-		QtCore.QObject.connect(self.ui.mari_pushButton, QtCore.SIGNAL('clicked()'), self.launchMari)
-		QtCore.QObject.connect(self.ui.realflow_pushButton, QtCore.SIGNAL('clicked()'), self.launchRealFlow)
-		QtCore.QObject.connect(self.ui.openProdBoard_pushButton, QtCore.SIGNAL('clicked()'), launchApps.prodBoard)
-		QtCore.QObject.connect(self.ui.openReview_pushButton, QtCore.SIGNAL('clicked()'), self.launchHieroPlayer)
-		QtCore.QObject.connect(self.ui.openTerminal_pushButton, QtCore.SIGNAL('clicked()'), self.launchTerminal)
-		QtCore.QObject.connect(self.ui.browse_pushButton, QtCore.SIGNAL('clicked()'), openDirs.openShot)
-		QtCore.QObject.connect(self.ui.render_pushButton, QtCore.SIGNAL('clicked()'), self.launchSubmitRender)
 
-		#QtCore.QObject.connect(self.ui.renderPblAdd_pushButton, QtCore.SIGNAL('clicked()'), self.renderTableAdd)
-		#QtCore.QObject.connect(self.ui.renderPblRemove_pushButton, QtCore.SIGNAL('clicked()'), self.renderTableRm)
-		#QtCore.QObject.connect(self.ui.renderPblSetMain_pushButton, QtCore.SIGNAL('clicked()'), self.setLayerAsMain)
+		###########################
+		# Connect signals & slots #
+		###########################
+
+		self.ui.tabWidget.currentChanged.connect(self.adjustMainUI)
+
+		# Set shot UI
+		self.ui.job_comboBox.currentIndexChanged.connect(self.populateShots)
+		self.ui.setShot_pushButton.clicked.connect(self.setupJob)
+		self.ui.setNewShot_pushButton.clicked.connect(self.unlockJobUI)
+
+		# App launch buttons - should be dynamic?
+		self.ui.maya_pushButton.clicked.connect(self.launchMaya)
+		self.ui.mudbox_pushButton.clicked.connect(self.launchMudbox)
+		self.ui.nuke_pushButton.clicked.connect(self.launchNuke)
+		self.ui.mari_pushButton.clicked.connect(self.launchMari)
+		self.ui.realflow_pushButton.clicked.connect(self.launchRealFlow)
+		self.ui.openProdBoard_pushButton.clicked.connect(launchApps.prodBoard)
+		self.ui.openReview_pushButton.clicked.connect(self.launchHieroPlayer)
+		self.ui.openTerminal_pushButton.clicked.connect(self.launchTerminal)
+		self.ui.browse_pushButton.clicked.connect(openDirs.openShot)
+		self.ui.render_pushButton.clicked.connect(self.launchSubmitRender)
+
+		# Publishing UI
+	#	self.ui.renderPblAdd_pushButton.clicked.connect(self.renderTableAdd)
+	#	self.ui.renderPblRemove_pushButton.clicked.connect(self.renderTableRm)
+	#	self.ui.renderPblSetMain_pushButton.clicked.connect(self.setLayerAsMain) # remove when render publishing works properly
 		self.ui.renderPblAdd_pushButton.clicked.connect(self.renderTableAdd)
 		self.ui.renderPblRemove_pushButton.clicked.connect(self.renderTableRemove)
 		#self.ui.renderPblRevert_pushButton.clicked.connect(self.renderTableClear)
 		self.ui.renderPbl_treeWidget.itemDoubleClicked.connect(self.renderPreview)
 		self.ui.dailyPbl_treeWidget.itemDoubleClicked.connect(self.renderPreview)
+		self.ui.dailyPblType_comboBox.currentIndexChanged.connect(self.setDailyType)
+		self.ui.dailyPblAdd_pushButton.clicked.connect(self.dailyTableAdd)
+		self.ui.publish_pushButton.clicked.connect(self.initPublish)
 
-		QtCore.QObject.connect(self.ui.dailyPblType_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.setDailyType)
-		QtCore.QObject.connect(self.ui.dailyPblAdd_pushButton, QtCore.SIGNAL('clicked()'), self.dailyTableAdd)
-		QtCore.QObject.connect(self.ui.publish_pushButton, QtCore.SIGNAL('clicked()'), self.initPublish)
-		QtCore.QObject.connect(self.ui.tabWidget, QtCore.SIGNAL('currentChanged(int)'), self.adjustMainUI)
-		QtCore.QObject.connect(self.ui.about_toolButton, QtCore.SIGNAL('clicked()'), self.about)
-		QtCore.QObject.connect(self.ui.batchRename_toolButton, QtCore.SIGNAL('clicked()'), self.launchBatchRename)
+		# Header toolbar
+		self.ui.about_toolButton.clicked.connect(self.about)
+		self.ui.batchRename_toolButton.clicked.connect(self.launchBatchRename)
 
+		# Options
 		self.ui.minimise_checkBox.stateChanged.connect(self.setMinimiseOnAppLaunch)
 
-		# Set minimise on launch checkbox
+		# Set minimise on launch checkbox from user prefs
 		self.boolMinimiseOnAppLaunch = userPrefs.config.getboolean('main', 'minimiseonlaunch')
 		self.ui.minimise_checkBox.setChecked(self.boolMinimiseOnAppLaunch)
 
-	########################################Adding right click menus to buttons#######################################
-	##################################################################################################################
+
+		####################################
+		# Add right-click menus to buttons #
+		####################################
 
 		# Nuke
 		self.ui.nuke_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
@@ -154,8 +167,10 @@ class icarusApp(QtGui.QDialog):
 	#	self.ui.about_toolButton.addAction(self.actionPrefs)
 
 
-	##########################################UI adapt environment awareness##########################################
-	##################################################################################################################
+		######################################
+		# Adapt UI for environment awareness #
+		######################################
+
 		self.jobMngTab = self.ui.tabWidget.widget(0)
 		self.publishTab = self.ui.tabWidget.widget(1)
 		self.gatherTab = self.ui.tabWidget.widget(2)
@@ -164,10 +179,13 @@ class icarusApp(QtGui.QDialog):
 
 
 		##########################
-		# STANDALONE ENVIRONMENT #
+		# Standalone environment #
 		##########################
+
 		if os.environ['ICARUSENVAWARE'] == 'STANDALONE':
-			uiHideLs = ['setNewShot_pushButton', 'shotEnv_toolButton', 'appIcon_label'] # Hide UI items relating to app environment(s)
+
+			# Hide UI items relating to app environment(s)
+			uiHideLs = ['setNewShot_pushButton', 'shotEnv_toolButton', 'appIcon_label']
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
@@ -216,9 +234,9 @@ class icarusApp(QtGui.QDialog):
 			for i in range(0, self.ui.tabWidget.count()-1):
 				self.ui.tabWidget.removeTab(1)
 
-			# Delete 'ma_asset', 'nk_asset', 'Publish' tabs
-			for i in range(0,2):
-				self.ui.publishType_tabWidget.removeTab(0)
+			# Delete 'ma_asset', 'nk_asset', 'Publish' tabs - REMEMBER TO UNCOMMENT THE FOLLOWING TWO LINES
+		#	for i in range(0, 2):
+		#		self.ui.publishType_tabWidget.removeTab(0)
 
 			# Apply job/shot settings pop-up menu to shotEnv label (only in standalone mode)
 			self.ui.shotEnv_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
@@ -234,35 +252,43 @@ class icarusApp(QtGui.QDialog):
 			self.ui.shotEnv_toolButton.setEnabled(True)
 
 
-		##############MAYA ENVIRONMENT################
-		##############################################
+		####################
+		# Maya environment #
+		####################
+
 		elif os.environ['ICARUSENVAWARE'] == 'MAYA':
 			pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_maya_disabled.png")
 			self.ui.appIcon_label.setPixmap(pixmap)
-			uiHideLs = ['assetSubType_listWidget', 'batchRename_toolButton', 'ma_assetTypes_frame'] # Removed 'icarusBanner', 
-			#hides UI items 
+
+			# Hide certain UI items
+			uiHideLs = ['assetSubType_listWidget', 'batchRename_toolButton'] # Removed 'icarusBanner', 'ma_assetTypes_frame'
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
-			self.ui.publishType_tabWidget.removeTab(1)
+
+			self.ui.publishType_tabWidget.removeTab(1) # Remove 'nk Asset' tab
 			#update shot label in maya env
 			self.connectNewSignalsSlots()
 			self.populatePblShotLs()
 			self.populateGatherShotLs()
 			self.updateJobLabel()
 			self.ui.tabWidget.removeTab(0)
-			
-			
-		##############NUKE ENVIRONMENT################
-		##############################################
+
+
+		####################
+		# Nuke environment #
+		####################
+
 		elif os.environ['ICARUSENVAWARE'] == 'NUKE':
 			pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_nuke_disabled.png")
 			self.ui.appIcon_label.setPixmap(pixmap)
-			uiHideLs = ['assetSubType_listWidget', 'batchRename_toolButton', 'nk_assetTypes_frame'] # Removed 'icarusBanner', 
-			#hides UI 
+
+			# Hide certain UI items
+			uiHideLs = ['assetSubType_listWidget', 'batchRename_toolButton'] # Removed 'icarusBanner', 'nk_assetTypes_frame'
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
+
 			#update shot label in maya env
 			self.connectNewSignalsSlots()
 			self.populatePblShotLs()
@@ -270,99 +296,164 @@ class icarusApp(QtGui.QDialog):
 			self.updateJobLabel()
 			self.ui.tabWidget.removeTab(0)
 			#deletes Asset publish tabs
-			self.ui.publishType_tabWidget.removeTab(0)
-			
+			self.ui.publishType_tabWidget.removeTab(0) # Remove 'ma Asset' tab
 
-	##############################################Generic UI procedures############################################
-	###############################################################################################################
-	#connects new singals and slots after job and shot env is set
+	# end of function __init__
+
+
+	#########################
+	# Generic UI procedures #
+	#########################
+
 	def connectNewSignalsSlots(self):
-		QtCore.QObject.connect(self.ui.shotPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.setDropDownToShotEnv)
-		QtCore.QObject.connect(self.ui.animPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.setDropDownToShotEnv)
-		QtCore.QObject.connect(self.ui.publishType_tabWidget, QtCore.SIGNAL('currentChanged(int)'), self.adjustPblTypeUI)
-		QtCore.QObject.connect(self.ui.cameraPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.uncheckSubset)
-		QtCore.QObject.connect(self.ui.modelPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.uncheckSubset)
-		QtCore.QObject.connect(self.ui.geoCachePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.uncheckSubset)
-		QtCore.QObject.connect(self.ui.geoPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.uncheckSubset)
-		QtCore.QObject.connect(self.ui.rigPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.uncheckSubset)
-		QtCore.QObject.connect(self.ui.nodePbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.uncheckSubset)
-		QtCore.QObject.connect(self.ui.nk_compPbl_radioButton, QtCore.SIGNAL("clicked(bool)"), self.adjustPblTypeUI)
-		QtCore.QObject.connect(self.ui.gatherFromShot_radioButton, QtCore.SIGNAL('clicked(bool)'), self.adjustMainUI)
-		QtCore.QObject.connect(self.ui.gatherFromShot_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.adjustMainUI)
-		QtCore.QObject.connect(self.ui.gatherFromJob_radioButton, QtCore.SIGNAL('clicked(bool)'), self.adjustMainUI)
-		QtCore.QObject.connect(self.ui.gather_pushButton, QtCore.SIGNAL('clicked(bool)'), self.initGather)
+		""" Connects new signals and slots after job and shot env is set.
+		"""
+		self.ui.publishType_tabWidget.currentChanged.connect(self.adjustPblTypeUI)
 
-		QtCore.QObject.connect(self.ui.assetType_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateAssetNameCol)
-		QtCore.QObject.connect(self.ui.assetName_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.adjustColumns)
-		QtCore.QObject.connect(self.ui.assetSubType_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateAssetVersionCol)
-		QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateInfoField)
-		QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), self.updateImgPreview)
+		# 
+		for toolButton in self.ui.ma_assetType_frame.children()+self.ui.nk_assetType_frame.children():
+			if isinstance(toolButton, QtGui.QToolButton):
+				toolButton.clicked.connect(self.adjustPublishOptsUI) # toggled?
 
-		#QtCore.QObject.connect(self.ui.assetType_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.updateAssetNameCol)
-		#QtCore.QObject.connect(self.ui.assetName_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.adjustColumns)
-		#QtCore.QObject.connect(self.ui.assetSubType_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.updateAssetVersionCol)
-		#QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.updateInfoField)
-		#QtCore.QObject.connect(self.ui.assetVersion_listWidget, QtCore.SIGNAL('currentItemChanged(QListWidgetItem *, QListWidgetItem *)'), self.updateImgPreview)
+		self.ui.shot_toolButton.clicked.connect(self.setDropDownToShotEnv)
+		self.ui.animation_toolButton.clicked.connect(self.setDropDownToShotEnv)
+		self.ui.camera_toolButton.clicked.connect(self.uncheckSubset)
+		self.ui.model_toolButton.clicked.connect(self.uncheckSubset)
+		self.ui.geoCache_toolButton.clicked.connect(self.uncheckSubset)
+		self.ui.geo_toolButton.clicked.connect(self.uncheckSubset)
+		self.ui.rig_toolButton.clicked.connect(self.uncheckSubset)
+		self.ui.ma_node_toolButton.clicked.connect(self.uncheckSubset)
+		self.ui.comp_toolButton.clicked.connect(self.adjustPblTypeUI)
+
+		self.ui.gatherFromShot_radioButton.clicked.connect(self.adjustMainUI)
+		self.ui.gatherFromShot_comboBox.currentIndexChanged.connect(self.adjustMainUI)
+		self.ui.gatherFromJob_radioButton.clicked.connect(self.adjustMainUI)
+		self.ui.gather_pushButton.clicked.connect(self.initGather)
+
+		self.ui.assetType_listWidget.itemClicked.connect(self.updateAssetNameCol)
+		self.ui.assetName_listWidget.itemClicked.connect(self.adjustColumns)
+		self.ui.assetSubType_listWidget.itemClicked.connect(self.updateAssetVersionCol)
+		self.ui.assetVersion_listWidget.itemClicked.connect(self.updateInfoField)
+		self.ui.assetVersion_listWidget.itemClicked.connect(self.updateImgPreview)
 
 		#self.ui.assetType_listWidget.currentItemChanged.connect(self.updateAssetNameCol)
 		#self.ui.assetName_listWidget.currentItemChanged.connect(self.adjustColumns)
 		#self.ui.assetSubType_listWidget.currentItemChanged.connect(self.updateAssetVersionCol)
 		#self.ui.assetVersion_listWidget.currentItemChanged.connect(self.updateInfoField)
 		#self.ui.assetVersion_listWidget.currentItemChanged.connect(self.updateImgPreview)
-		
-	#gets the current main tab
+
+
 	def getMainTab(self):
+		""" Gets the current main tab.
+		"""
 		tabIndex = self.ui.tabWidget.currentIndex()
 		tabText = self.ui.tabWidget.tabText(tabIndex)
 		return tabIndex, tabText
-		
-	#gets current publish type tab
+
+
 	def getPblTab(self):
+		""" Gets the current publish type tab.
+		"""
 		tabIndex = self.ui.publishType_tabWidget.currentIndex()
 		tabText = self.ui.publishType_tabWidget.tabText(tabIndex)
 		return tabIndex, tabText
-		
-	#makes UI adjustments and connections based on what tab is currently selected
+
+
 	def adjustMainUI(self):
+		""" Makes UI adjustments and connections based on which tab is currently selected.
+		"""
 		mainTabName = self.getMainTab()[1]
-		if mainTabName == 'Gather' or mainTabName == 'Assets' :
+		if mainTabName == 'Gather' or mainTabName == 'Assets':
 			self.defineColumns()
 			self.updateAssetTypeCol()
-			
-	#makes UI lock adjustments based on what publish type tab is currently selected
+
+
+	def adjustPublishOptsUI(self):
+		""" Makes UI adjustments based on which asset publish type is currently selected.
+		"""
+		subtype = self.sender().text()
+		#self.ui.assetSubType_label.setText("%s sub-type:" %subtype)
+		self.ui.assetSubType_comboBox.clear()
+		self.ui.assetName_label.setEnabled(False)
+		self.ui.assetName_lineEdit.setEnabled(False)
+
+		if subtype == 'model':
+			self.ui.assetSubType_comboBox.addItem('base')
+			self.ui.assetSubType_comboBox.addItem('anim')
+		elif subtype == 'rig':
+			self.ui.assetSubType_comboBox.addItem('anim')
+			self.ui.assetSubType_comboBox.addItem('light')
+			self.ui.assetSubType_comboBox.addItem('fx')
+		elif subtype == 'camera':
+			self.ui.assetSubType_comboBox.addItem('render')
+			self.ui.assetSubType_comboBox.addItem('mm')
+			self.ui.assetSubType_comboBox.addItem('previs')
+		elif subtype == 'geo':
+			self.ui.assetSubType_comboBox.addItem('abc')
+			self.ui.assetSubType_comboBox.addItem('obj')
+			self.ui.assetSubType_comboBox.addItem('fbx')
+		elif subtype == 'geoCache':
+			self.ui.assetSubType_comboBox.addItem('anim')
+			self.ui.assetSubType_comboBox.addItem('cloth')
+			self.ui.assetSubType_comboBox.addItem('rigidBody')
+			self.ui.assetSubType_comboBox.addItem('vrmesh')
+			self.ui.assetSubType_comboBox.addItem('realflow')
+		elif subtype == 'scene':
+			self.ui.assetName_label.setEnabled(True)
+			self.ui.assetName_lineEdit.setEnabled(True)
+		elif subtype == 'node':
+			self.ui.assetSubType_comboBox.addItem('ma')
+			self.ui.assetSubType_comboBox.addItem('ic')
+
+		if self.ui.assetSubType_comboBox.count():
+			self.ui.assetSubType_label.setEnabled(True)
+			self.ui.assetSubType_comboBox.setEnabled(True)
+		else:
+			self.ui.assetSubType_label.setEnabled(False)
+			self.ui.assetSubType_comboBox.setEnabled(False)
+
+
 	def adjustPblTypeUI(self):
-		#tabText = self.ui.publishType_tabWidget.setGeometry(17, 80, 771, 215)
+		""" Makes UI lock adjustments based on which publish type tab is currently selected.
+		"""
 		tabIndex = self.ui.publishType_tabWidget.currentIndex()
 		tabText = self.ui.publishType_tabWidget.tabText(tabIndex)
+
 		if tabText == 'ma Asset':
 			self.lockPublishTo()
-		if tabText == 'nk Asset':
-			#tabText = self.ui.publishType_tabWidget.setGeometry(187, 80, 451, 215)
-			if self.ui.nk_compPbl_radioButton.isChecked() == True:
-				self.setDropDownToShotEnv()
+
+		elif tabText == 'nk Asset':
+			if self.ui.comp_toolButton.isChecked() == True:
 				self.lockPublishTo(lock=True)
+				self.setDropDownToShotEnv()
 			else:
 				self.lockPublishTo()
-		if tabText == 'Render':
+
+		elif tabText == 'Render':
 			self.lockPublishTo(lock=True)
 			self.setDropDownToShotEnv()
-		if tabText == 'Dailies':
+
+		elif tabText == 'Dailies':
 			self.lockPublishTo(lock=True)
-			self.setDropDownToShotEnv()		
-			
-	#locks Publish To section of UI based on selection		
+			self.setDropDownToShotEnv()
+
+
 	def lockPublishTo(self, lock=False):
+		""" Locks 'Publish To' section of UI based on selection.
+		"""
 		if lock:
 			self.ui.publishToJob_radioButton.setEnabled(False)
 			self.ui.publishToShot_radioButton.setChecked(True)
 			self.ui.publishToShot_comboBox.setEnabled(False)
 		else:
-			self.ui.modelPbl_radioButton.setChecked(True)
+			self.ui.model_toolButton.setChecked(True)
 			self.ui.publishToJob_radioButton.setEnabled(True)
 			self.ui.publishToShot_comboBox.setEnabled(True)
-	
-	#swicthes the shot drop down menu to the current environment shot		
+
+
 	def setDropDownToShotEnv(self):
+		""" Switches the shot drop down menu to the current environment shot
+		"""
 		self.ui.publishToShot_comboBox.setCurrentIndex(self.ui.publishToShot_comboBox.findText(os.environ['SHOT']))
 
 
@@ -790,12 +881,16 @@ Environment: %s
 	##################################################Publish tab###################################################
 	################################################################################################################
 	###################adjusting ui####################				
-	#unchecking subset checkbox based on asset type
+
+
 	def uncheckSubset(self):
+		""" Uncheck sub-set checkbox based on asset type.
+		"""
 		self.ui.subSet_checkBox.setChecked(False)
 		self.ui.subSetName_lineEdit.setEnabled(False)
-		self.ui.subSetWarning_textEdit.setEnabled(False)
-		
+	#	self.ui.subSetWarning_textEdit.setEnabled(False)
+
+
 #	#populates the render publish table
 #	def renderTableAdd(self):
 #		#processes latest path added to self.renderPaths
@@ -1076,8 +1171,9 @@ Environment: %s
 	#		self.mail = True
 
 
-	#gets asset publish options
 	def get_maya_assetPblOpts(self, genericAsset=False):
+		""" Get Maya asset publish options.
+		"""
 		self.textures, self.subsetName, self.sceneName = '', '', ''
 		self.chkLs = [] #self.chkLs = [self.pblNotes]
 		if self.ui.textures_checkBox.checkState() == 2:
@@ -1085,9 +1181,10 @@ Environment: %s
 		if self.ui.subSet_checkBox.checkState() == 2:
 			self.subsetName = '%s_sbs' % self.ui.subSetName_lineEdit.text()
 			self.chkLs.append(self.subsetName)
-		if self.ui.scenePbl_radioButton.isChecked() == True:
-			self.sceneName = self.ui.scenePblName_lineEdit.text()
+		if self.ui.scene_toolButton.isChecked() == True:
+			self.sceneName = self.ui.assetName_lineEdit.text()
 			self.chkLs.append(self.sceneName)
+
 
 	#gets nuke asset publish options
 	def get_nuke_assetPblOpts(self, name=True):
@@ -1139,6 +1236,8 @@ Environment: %s
 			Ultimately this whole system should be rewritten.
 		"""
 		self.getMainPblOpts()
+		print self.pblTo, self.pblNotes, self.pblType, self.slShot, 
+
 
 		###############
 		# MAYA ASSETS #
@@ -1150,71 +1249,71 @@ Environment: %s
 			if not pblChk.chkOpts(self.chkLs):
 				return
 
-			# Camera
-			if self.ui.cameraPbl_radioButton.isChecked() == True:
-				import ma_camPbl
-				self.camType = self.ui.cameraPbl_comboBox.currentText()
-				ma_camPbl.publish(self.pblTo, self.slShot, self.camType, self.pblNotes)
+			# Model
+			elif self.ui.model_toolButton.isChecked() == True:
+				import ma_mdlPbl
+				self.mdlType = self.ui.assetSubType_comboBox.currentText()
+				ma_mdlPbl.publish(self.pblTo, self.slShot, self.mdlType, self.textures, self.pblNotes)
 
 			# Rig
-			elif self.ui.rigPbl_radioButton.isChecked() == True:
+			elif self.ui.rig_toolButton.isChecked() == True:
 				import ma_rigPbl
-				self.rigType = self.ui.rigPbl_comboBox.currentText()
+				self.rigType = self.ui.assetSubType_comboBox.currentText()
 				ma_rigPbl.publish(self.pblTo, self.slShot, self.rigType, self.textures, self.pblNotes)
 
+			# Camera
+			if self.ui.camera_toolButton.isChecked() == True:
+				import ma_camPbl
+				self.camType = self.ui.assetSubType_comboBox.currentText()
+				ma_camPbl.publish(self.pblTo, self.slShot, self.camType, self.pblNotes)
+
+			# Geo
+			elif self.ui.geo_toolButton.isChecked() == True:
+				import ma_geoPbl
+				self.geoType = self.ui.assetSubType_comboBox.currentText()
+				ma_geoPbl.publish(self.pblTo, self.slShot, self.geoType, self.textures, self.pblNotes)
+
+			# Geo cache
+			elif self.ui.geoCache_toolButton.isChecked() == True:
+				import ma_geoChPbl
+				self.geoChType = self.ui.assetSubType_comboBox.currentText()
+				ma_geoChPbl.publish(self.pblTo, self.slShot, self.geoChType, self.pblNotes)
+
 			# Animation
-			elif self.ui.animPbl_radioButton.isChecked() == True:
+			elif self.ui.animation_toolButton.isChecked() == True:
 				import ma_animPbl
 				ma_animPbl.publish(self.pblTo, self.slShot, self.pblNotes)
 
+			# Shader
+			elif self.ui.shader_toolButton.isChecked() == True:
+				import ma_shdPbl
+				ma_shdPbl.publish(self.pblTo, self.slShot, self.subsetName, self.textures, self.pblNotes)
+
 			# FX
-			elif self.ui.fxPbl_radioButton.isChecked() == True:
+			elif self.ui.fx_toolButton.isChecked() == True:
 				import ma_fxPbl
 				ma_fxPbl.publish(self.pblTo, self.slShot, self.subsetName, self.textures, self.pblNotes)
 
 			# Point cloud
-			elif self.ui.pointCloudPbl_radioButton.isChecked() == True:
+			elif self.ui.ma_pointCloud_toolButton.isChecked() == True:
 				import ma_pointCloudPbl
 				ma_pointCloudPbl.publish(self.pblTo, self.slShot, self.subsetName, self.textures, self.pblNotes)
 
-			# Geo cache
-			elif self.ui.geoCachePbl_radioButton.isChecked() == True:
-				import ma_geoChPbl
-				self.geoChType = self.ui.geoCachePbl_comboBox.currentText()
-				ma_geoChPbl.publish(self.pblTo, self.slShot, self.geoChType, self.pblNotes)
-
-			# Geo
-			elif self.ui.geoPbl_radioButton.isChecked() == True:
-				import ma_geoPbl
-				self.geoType = self.ui.geoPbl_comboBox.currentText()
-				ma_geoPbl.publish(self.pblTo, self.slShot, self.geoType, self.textures, self.pblNotes)
-
-			# Model
-			elif self.ui.modelPbl_radioButton.isChecked() == True:
-				import ma_mdlPbl
-				self.mdlType = self.ui.modelPbl_comboBox.currentText()
-				ma_mdlPbl.publish(self.pblTo, self.slShot, self.mdlType, self.textures, self.pblNotes)
-
-			# Shader
-			elif self.ui.shaderPbl_radioButton.isChecked() == True:
-				import ma_shdPbl
-				ma_shdPbl.publish(self.pblTo, self.slShot, self.subsetName, self.textures, self.pblNotes)
-
-			# Node
-			elif self.ui.nodePbl_radioButton.isChecked() == True:
-				import ma_nodePbl
-				self.nodeType = self.ui.nodePbl_comboBox.currentText()
-				ma_nodePbl.publish(self.pblTo, self.slShot, self.nodeType, self.subsetName, self.textures, self.pblNotes)
+			# Shot
+			elif self.ui.shot_toolButton.isChecked() == True:
+				import ma_shotPbl
+				ma_shotPbl.publish(self.pblTo, self.pblNotes)
 
 			# Scene
-			elif self.ui.scenePbl_radioButton.isChecked() == True:
+			elif self.ui.scene_toolButton.isChecked() == True:
 				import ma_scnPbl
 				ma_scnPbl.publish(self.pblTo, self.slShot, self.sceneName, self.subsetName, self.textures, self.pblNotes)
 
-			# Shot
-			elif self.ui.shotPbl_radioButton.isChecked() == True:
-				import ma_shotPbl
-				ma_shotPbl.publish(self.pblTo, self.pblNotes)
+			# Node
+			elif self.ui.ma_node_toolButton.isChecked() == True:
+				import ma_nodePbl
+				self.nodeType = self.ui.assetSubType_comboBox.currentText()
+				ma_nodePbl.publish(self.pblTo, self.slShot, self.nodeType, self.subsetName, self.textures, self.pblNotes)
 
 		###############
 		# NUKE ASSETS #
@@ -1226,25 +1325,25 @@ Environment: %s
 				return
 
 			# Card
-			if self.ui.nk_cardPbl_radioButton.isChecked() == True:
+			if self.ui.card_toolButton.isChecked() == True:
 				import nk_setupPbl
 				self.pblType = 'card'
 				nk_setupPbl.publish(self.pblTo, self.slShot, self.pblType, self.pblName, self.pblNotes)
 
 			# Point cloud
-			elif self.ui.nk_pointCloudPbl_radioButton.isChecked() == True:
+			elif self.ui.nk_pointCloud_toolButton.isChecked() == True:
 				import nk_setupPbl
 				self.pblType = 'pointCloud'
 				nk_setupPbl.publish(self.pblTo, self.slShot, self.pblType, self.pblName, self.pblNotes)
 
 			# Node
-			elif self.ui.nk_nodePbl_radioButton.isChecked() == True:
+			elif self.ui.nk_node_toolButton.isChecked() == True:
 				import nk_setupPbl
 				self.pblType = 'node'
 				nk_setupPbl.publish(self.pblTo, self.slShot, self.pblType, self.pblName, self.pblNotes)
 
 			# Comp
-			elif self.ui.nk_compPbl_radioButton.isChecked() == True:
+			elif self.ui.comp_toolButton.isChecked() == True:
 				self.get_nuke_assetPblOpts(name=False)
 				if not pblChk.chkOpts(self.chkLs):
 					return
@@ -1253,13 +1352,13 @@ Environment: %s
 				nk_compPbl.publish(self.pblTo, self.slShot, self.pblType, self.pblNotes)
 
 			# Pre-comp
-			elif self.ui.nk_preCompPbl_radioButton.isChecked() == True:
+			elif self.ui.precomp_toolButton.isChecked() == True:
 				import nk_setupPbl
 				self.pblType = 'preComp'
 				nk_setupPbl.publish(self.pblTo, self.slShot, self.pblType, self.pblName, self.pblNotes)
 
 			# Setup
-			elif self.ui.nk_setupPbl_radioButton.isChecked() == True:
+			elif self.ui.setup_toolButton.isChecked() == True:
 				import nk_setupPbl
 				self.pblType = 'setup'
 				nk_setupPbl.publish(self.pblTo, self.slShot, self.pblType, self.pblName, self.pblNotes)	
@@ -1269,7 +1368,7 @@ Environment: %s
 		###########
 		elif self.pblType == 'Dailies':
 			import ic_dailyPbl;
-			#self.getDailyPblOpts()
+			self.getDailyPblOpts() # required just to get self.checkLs
 			if not pblChk.chkOpts(self.chkLs): # check for entries in mandatory fields
 				return
 			ic_dailyPbl.publish(self.getDailyPblOpts(), self.pblTo, self.pblNotes)

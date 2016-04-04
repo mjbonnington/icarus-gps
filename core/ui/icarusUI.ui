@@ -98,7 +98,7 @@ QPushButton:default, QToolButton:default {
        </widget>
       </item>
       <item>
-       <spacer name="horizontalSpacer_6">
+       <spacer name="header_horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -932,6 +932,10 @@ QToolButton:disabled {
              <number>0</number>
             </property>
             <widget class="QWidget" name="maAssetPublishTab">
+             <attribute name="icon">
+              <iconset resource="rsc.qrc">
+               <normaloff>:/rsc/rsc/app_icon_maya_tab.png</normaloff>:/rsc/rsc/app_icon_maya_tab.png</iconset>
+             </attribute>
              <attribute name="title">
               <string>ma Asset</string>
              </attribute>
@@ -939,337 +943,6 @@ QToolButton:disabled {
               <property name="spacing">
                <number>12</number>
               </property>
-              <item>
-               <widget class="QFrame" name="ma_assetTypes_frame">
-                <property name="frameShape">
-                 <enum>QFrame::NoFrame</enum>
-                </property>
-                <layout class="QGridLayout" name="gridLayout">
-                 <item row="2" column="1">
-                  <widget class="QComboBox" name="cameraPbl_comboBox">
-                   <item>
-                    <property name="text">
-                     <string>render</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>mm</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>previs</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QRadioButton" name="cameraPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>camera</string>
-                   </property>
-                   <property name="checked">
-                    <bool>false</bool>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="0">
-                  <widget class="QRadioButton" name="geoCachePbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>geoCache</string>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="6" column="0">
-                  <widget class="QRadioButton" name="shaderPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>shader</string>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="1">
-                  <widget class="QComboBox" name="geoCachePbl_comboBox">
-                   <item>
-                    <property name="text">
-                     <string>anim</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>cloth</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>rigidBody</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>vrmesh</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>realflow</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="10" column="0">
-                  <widget class="QRadioButton" name="scenePbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>scene</string>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="10" column="1">
-                  <widget class="QLineEdit" name="scenePblName_lineEdit">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="frame">
-                    <bool>true</bool>
-                   </property>
-                   <property name="readOnly">
-                    <bool>false</bool>
-                   </property>
-                   <property name="mandatoryField" stdset="0">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="5" column="0">
-                  <widget class="QRadioButton" name="animPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>animation</string>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="0">
-                  <widget class="QRadioButton" name="modelPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>model</string>
-                   </property>
-                   <property name="checked">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="0">
-                  <widget class="QRadioButton" name="geoPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>geo</string>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QComboBox" name="modelPbl_comboBox">
-                   <item>
-                    <property name="text">
-                     <string>base</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>anim</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QRadioButton" name="rigPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>rig</string>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QComboBox" name="rigPbl_comboBox">
-                   <item>
-                    <property name="text">
-                     <string>light</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>fx</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>anim</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="8" column="0">
-                  <widget class="QRadioButton" name="pointCloudPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>pointCloud</string>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="1">
-                  <widget class="QComboBox" name="geoPbl_comboBox">
-                   <item>
-                    <property name="text">
-                     <string>abc</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>obj</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>fbx</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="7" column="0">
-                  <widget class="QRadioButton" name="fxPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>fx</string>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="9" column="0">
-                  <widget class="QRadioButton" name="shotPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>shot</string>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="11" column="0">
-                  <widget class="QRadioButton" name="nodePbl_radioButton">
-                   <property name="text">
-                    <string>node</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="11" column="1">
-                  <widget class="QComboBox" name="nodePbl_comboBox">
-                   <item>
-                    <property name="text">
-                     <string>ma</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>ic</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
               <item>
                <widget class="QFrame" name="ma_assetType_frame">
                 <property name="frameShape">
@@ -1294,6 +967,9 @@ QToolButton:disabled {
                        <horstretch>0</horstretch>
                        <verstretch>0</verstretch>
                       </sizepolicy>
+                     </property>
+                     <property name="toolTip">
+                      <string>Export the selected object as a model in Maya format.</string>
                      </property>
                      <property name="text">
                       <string>model</string>
@@ -1360,6 +1036,9 @@ QToolButton:disabled {
                        <horstretch>0</horstretch>
                        <verstretch>0</verstretch>
                       </sizepolicy>
+                     </property>
+                     <property name="toolTip">
+                      <string>Export the selected camera. The camera's transforms will be baked out in world space. The published camera will be exported in Maya (.ma), FBX and Nuke formats.</string>
                      </property>
                      <property name="text">
                       <string>camera</string>
@@ -1552,7 +1231,7 @@ QToolButton:disabled {
                     </widget>
                    </item>
                    <item row="2" column="2">
-                    <widget class="QToolButton" name="pointCloud_toolButton">
+                    <widget class="QToolButton" name="ma_pointCloud_toolButton">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -1702,123 +1381,152 @@ QToolButton:disabled {
                </widget>
               </item>
               <item>
-               <widget class="QGroupBox" name="ma_assetProcessing_groupBox">
+               <widget class="QScrollArea" name="ma_assetSettings_groupBox_scrollArea">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
-                <property name="title">
-                 <string>Processing</string>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
                 </property>
-                <layout class="QFormLayout" name="formLayout">
-                 <property name="fieldGrowthPolicy">
-                  <enum>QFormLayout::ExpandingFieldsGrow</enum>
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
+                <property name="widgetResizable">
+                 <bool>true</bool>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                </property>
+                <property name="noBackground" stdset="0">
+                 <bool>true</bool>
+                </property>
+                <widget class="QWidget" name="ma_assetSettings_scrollAreaWidgetContents">
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>375</width>
+                   <height>409</height>
+                  </rect>
                  </property>
-                 <item row="5" column="0">
-                  <widget class="QCheckBox" name="subSet_checkBox">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>Sub-set:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="assetSubType_label">
-                   <property name="text">
-                    <string>Asset sub-type:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QComboBox" name="assetSubType_comboBox"/>
-                 </item>
-                 <item row="5" column="1">
-                  <widget class="QLineEdit" name="subSetName_lineEdit">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="frame">
-                    <bool>true</bool>
-                   </property>
-                   <property name="readOnly">
-                    <bool>false</bool>
-                   </property>
-                   <property name="mandatoryField" stdset="0">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="0">
-                  <widget class="QLabel" name="assetName_label">
-                   <property name="text">
-                    <string>Scene name:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="1">
-                  <widget class="QLineEdit" name="assetName_lineEdit">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="frame">
-                    <bool>true</bool>
-                   </property>
-                   <property name="readOnly">
-                    <bool>false</bool>
-                   </property>
-                   <property name="mandatoryField" stdset="0">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="6" column="1">
-                  <widget class="QPlainTextEdit" name="subSetWarning_textEdit">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::NoFrame</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Plain</enum>
-                   </property>
-                   <property name="lineWidth">
-                    <number>0</number>
-                   </property>
-                   <property name="verticalScrollBarPolicy">
-                    <enum>Qt::ScrollBarAlwaysOff</enum>
-                   </property>
-                   <property name="horizontalScrollBarPolicy">
-                    <enum>Qt::ScrollBarAlwaysOff</enum>
-                   </property>
-                   <property name="plainText">
-                    <string>Warning: creating sub-sets will affect version control.</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QCheckBox" name="textures_checkBox">
-                   <property name="text">
-                    <string>Textures</string>
-                   </property>
-                   <property name="checked">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+                 <layout class="QVBoxLayout" name="verticalLayout_3">
+                  <property name="margin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QFrame" name="ma_assetSettings_frame">
+                    <property name="frameShape">
+                     <enum>QFrame::NoFrame</enum>
+                    </property>
+                    <layout class="QFormLayout" name="formLayout_3">
+                     <property name="fieldGrowthPolicy">
+                      <enum>QFormLayout::ExpandingFieldsGrow</enum>
+                     </property>
+                     <item row="3" column="0">
+                      <widget class="QLabel" name="assetSubType_label">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                       <property name="text">
+                        <string>Asset sub-type:</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="1">
+                      <widget class="QComboBox" name="assetSubType_comboBox">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="4" column="1">
+                      <widget class="QCheckBox" name="textures_checkBox">
+                       <property name="text">
+                        <string>Textures</string>
+                       </property>
+                       <property name="checked">
+                        <bool>false</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="5" column="0">
+                      <widget class="QLabel" name="assetName_label">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                       <property name="text">
+                        <string>Asset name:</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="5" column="1">
+                      <widget class="QLineEdit" name="assetName_lineEdit">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="frame">
+                        <bool>true</bool>
+                       </property>
+                       <property name="readOnly">
+                        <bool>false</bool>
+                       </property>
+                       <property name="mandatoryField" stdset="0">
+                        <bool>false</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="7" column="0">
+                      <widget class="QCheckBox" name="subSet_checkBox">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                       <property name="toolTip">
+                        <string>Warning: creating sub-sets will affect version control.</string>
+                       </property>
+                       <property name="text">
+                        <string>Sub-set:</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="7" column="1">
+                      <widget class="QLineEdit" name="subSetName_lineEdit">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="frame">
+                        <bool>true</bool>
+                       </property>
+                       <property name="readOnly">
+                        <bool>false</bool>
+                       </property>
+                       <property name="mandatoryField" stdset="0">
+                        <bool>false</bool>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
                </widget>
               </item>
              </layout>
             </widget>
             <widget class="QWidget" name="nkAssetPublishTab">
+             <attribute name="icon">
+              <iconset resource="rsc.qrc">
+               <normaloff>:/rsc/rsc/app_icon_nuke_tab.png</normaloff>:/rsc/rsc/app_icon_nuke_tab.png</iconset>
+             </attribute>
              <attribute name="title">
               <string>nk Asset</string>
              </attribute>
@@ -1961,7 +1669,7 @@ QToolButton:disabled {
                  <item>
                   <layout class="QGridLayout" name="nk_assetType_gridLayout">
                    <item row="0" column="2">
-                    <widget class="QToolButton" name="pointCloud_toolButton_2">
+                    <widget class="QToolButton" name="nk_pointCloud_toolButton">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -2177,98 +1885,138 @@ QToolButton:disabled {
                </widget>
               </item>
               <item>
-               <widget class="QGroupBox" name="nk_assetProcessing_groupBox">
+               <widget class="QScrollArea" name="nk_assetSettings_scrollArea">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
-                <property name="title">
-                 <string>Processing</string>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
                 </property>
-                <layout class="QFormLayout" name="formLayout_2">
-                 <item row="1" column="0">
-                  <widget class="QCheckBox" name="nk_subSet_checkBox">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>Sub-set:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QLineEdit" name="nk_subSetName_lineEdit">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="frame">
-                    <bool>true</bool>
-                   </property>
-                   <property name="readOnly">
-                    <bool>false</bool>
-                   </property>
-                   <property name="mandatoryField" stdset="0">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QPlainTextEdit" name="nk_subSetWarning_textEdit">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::NoFrame</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Plain</enum>
-                   </property>
-                   <property name="lineWidth">
-                    <number>0</number>
-                   </property>
-                   <property name="verticalScrollBarPolicy">
-                    <enum>Qt::ScrollBarAlwaysOff</enum>
-                   </property>
-                   <property name="horizontalScrollBarPolicy">
-                    <enum>Qt::ScrollBarAlwaysOff</enum>
-                   </property>
-                   <property name="plainText">
-                    <string>Warning: creating sub-sets will affect version control.</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QLineEdit" name="nk_PblName_lineEdit">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="frame">
-                    <bool>true</bool>
-                   </property>
-                   <property name="readOnly">
-                    <bool>false</bool>
-                   </property>
-                   <property name="mandatoryField" stdset="0">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="nk_PblName_label">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>Publish name:</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
+                <property name="widgetResizable">
+                 <bool>true</bool>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                </property>
+                <property name="noBackground" stdset="0">
+                 <bool>true</bool>
+                </property>
+                <widget class="QWidget" name="nk_assetSettings_scrollAreaWidgetContents">
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>346</width>
+                   <height>409</height>
+                  </rect>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_8">
+                  <property name="margin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QFrame" name="nk_assetSettings_frame">
+                    <property name="frameShape">
+                     <enum>QFrame::NoFrame</enum>
+                    </property>
+                    <layout class="QFormLayout" name="formLayout">
+                     <property name="fieldGrowthPolicy">
+                      <enum>QFormLayout::ExpandingFieldsGrow</enum>
+                     </property>
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="nk_PblName_label">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                       <property name="text">
+                        <string>Publish name:</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QLineEdit" name="nk_PblName_lineEdit">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="frame">
+                        <bool>true</bool>
+                       </property>
+                       <property name="readOnly">
+                        <bool>false</bool>
+                       </property>
+                       <property name="mandatoryField" stdset="0">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QCheckBox" name="nk_subSet_checkBox">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                       <property name="text">
+                        <string>Sub-set:</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QLineEdit" name="nk_subSetName_lineEdit">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="frame">
+                        <bool>true</bool>
+                       </property>
+                       <property name="readOnly">
+                        <bool>false</bool>
+                       </property>
+                       <property name="mandatoryField" stdset="0">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="1">
+                      <widget class="QPlainTextEdit" name="nk_subSetWarning_textEdit">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                       <property name="frameShape">
+                        <enum>QFrame::NoFrame</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Plain</enum>
+                       </property>
+                       <property name="lineWidth">
+                        <number>0</number>
+                       </property>
+                       <property name="verticalScrollBarPolicy">
+                        <enum>Qt::ScrollBarAlwaysOff</enum>
+                       </property>
+                       <property name="horizontalScrollBarPolicy">
+                        <enum>Qt::ScrollBarAlwaysOff</enum>
+                       </property>
+                       <property name="plainText">
+                        <string>Warning: creating sub-sets will affect version control.</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
                </widget>
               </item>
              </layout>
@@ -3185,10 +2933,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>mari_pushButton</tabstop>
   <tabstop>realflow_pushButton</tabstop>
   <tabstop>tabWidget</tabstop>
-  <tabstop>shaderPbl_radioButton</tabstop>
-  <tabstop>scenePbl_radioButton</tabstop>
-  <tabstop>scenePblName_lineEdit</tabstop>
-  <tabstop>subSet_checkBox</tabstop>
   <tabstop>assetType_listWidget</tabstop>
   <tabstop>assetName_listWidget</tabstop>
   <tabstop>assetSubType_listWidget</tabstop>
@@ -3197,10 +2941,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>publishToShot_radioButton</tabstop>
   <tabstop>publishToShot_comboBox</tabstop>
   <tabstop>publishType_tabWidget</tabstop>
-  <tabstop>cameraPbl_radioButton</tabstop>
-  <tabstop>cameraPbl_comboBox</tabstop>
-  <tabstop>geoCachePbl_radioButton</tabstop>
-  <tabstop>geoCachePbl_comboBox</tabstop>
   <tabstop>nk_setupPbl_radioButton</tabstop>
   <tabstop>nk_pointCloudPbl_radioButton</tabstop>
   <tabstop>dailyPbl_treeWidget</tabstop>
@@ -3235,8 +2975,8 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>73</x>
-     <y>531</y>
+     <x>86</x>
+     <y>528</y>
     </hint>
     <hint type="destinationlabel">
      <x>257</x>
@@ -3251,8 +2991,8 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>60</x>
-     <y>263</y>
+     <x>73</x>
+     <y>280</y>
     </hint>
     <hint type="destinationlabel">
      <x>257</x>
@@ -3267,8 +3007,8 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>57</x>
-     <y>405</y>
+     <x>70</x>
+     <y>404</y>
     </hint>
     <hint type="destinationlabel">
      <x>257</x>
@@ -3283,8 +3023,8 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>57</x>
-     <y>468</y>
+     <x>70</x>
+     <y>466</y>
     </hint>
     <hint type="destinationlabel">
      <x>257</x>
@@ -3331,8 +3071,8 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>60</x>
-     <y>263</y>
+     <x>73</x>
+     <y>280</y>
     </hint>
     <hint type="destinationlabel">
      <x>131</x>
@@ -3347,8 +3087,8 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>73</x>
-     <y>531</y>
+     <x>86</x>
+     <y>528</y>
     </hint>
     <hint type="destinationlabel">
      <x>131</x>
@@ -3363,8 +3103,8 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>57</x>
-     <y>468</y>
+     <x>70</x>
+     <y>466</y>
     </hint>
     <hint type="destinationlabel">
      <x>131</x>
@@ -3379,12 +3119,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>60</x>
-     <y>263</y>
+     <x>73</x>
+     <y>280</y>
     </hint>
     <hint type="destinationlabel">
-     <x>653</x>
-     <y>202</y>
+     <x>667</x>
+     <y>195</y>
     </hint>
    </hints>
   </connection>
@@ -3395,12 +3135,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>60</x>
-     <y>263</y>
+     <x>73</x>
+     <y>280</y>
     </hint>
     <hint type="destinationlabel">
-     <x>485</x>
-     <y>202</y>
+     <x>499</x>
+     <y>195</y>
     </hint>
    </hints>
   </connection>
@@ -3415,8 +3155,8 @@ p, li { white-space: pre-wrap; }
      <y>208</y>
     </hint>
     <hint type="destinationlabel">
-     <x>485</x>
-     <y>202</y>
+     <x>499</x>
+     <y>195</y>
     </hint>
    </hints>
   </connection>
@@ -3431,8 +3171,8 @@ p, li { white-space: pre-wrap; }
      <y>208</y>
     </hint>
     <hint type="destinationlabel">
-     <x>653</x>
-     <y>202</y>
+     <x>667</x>
+     <y>195</y>
     </hint>
    </hints>
   </connection>
@@ -3459,8 +3199,8 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>57</x>
-     <y>405</y>
+     <x>70</x>
+     <y>404</y>
     </hint>
     <hint type="destinationlabel">
      <x>131</x>
@@ -3475,12 +3215,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>57</x>
-     <y>468</y>
+     <x>70</x>
+     <y>466</y>
     </hint>
     <hint type="destinationlabel">
-     <x>485</x>
-     <y>202</y>
+     <x>499</x>
+     <y>195</y>
     </hint>
    </hints>
   </connection>
@@ -3491,12 +3231,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>57</x>
-     <y>468</y>
+     <x>70</x>
+     <y>466</y>
     </hint>
     <hint type="destinationlabel">
-     <x>653</x>
-     <y>202</y>
+     <x>667</x>
+     <y>195</y>
     </hint>
    </hints>
   </connection>
@@ -3507,12 +3247,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>73</x>
-     <y>531</y>
+     <x>86</x>
+     <y>528</y>
     </hint>
     <hint type="destinationlabel">
-     <x>653</x>
-     <y>202</y>
+     <x>667</x>
+     <y>195</y>
     </hint>
    </hints>
   </connection>
@@ -3523,12 +3263,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>73</x>
-     <y>531</y>
+     <x>86</x>
+     <y>528</y>
     </hint>
     <hint type="destinationlabel">
-     <x>485</x>
-     <y>202</y>
+     <x>499</x>
+     <y>195</y>
     </hint>
    </hints>
   </connection>
@@ -3539,28 +3279,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>57</x>
-     <y>405</y>
+     <x>70</x>
+     <y>404</y>
     </hint>
     <hint type="destinationlabel">
-     <x>485</x>
-     <y>202</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>animPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_radioButton</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>363</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>182</x>
-     <y>110</y>
+     <x>499</x>
+     <y>195</y>
     </hint>
    </hints>
   </connection>
@@ -3575,8 +3299,8 @@ p, li { white-space: pre-wrap; }
      <y>342</y>
     </hint>
     <hint type="destinationlabel">
-     <x>653</x>
-     <y>202</y>
+     <x>667</x>
+     <y>195</y>
     </hint>
    </hints>
   </connection>
@@ -3591,392 +3315,8 @@ p, li { white-space: pre-wrap; }
      <y>342</y>
     </hint>
     <hint type="destinationlabel">
-     <x>485</x>
-     <y>202</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>animPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToJob_radioButton</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>363</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>131</x>
-     <y>110</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>shaderPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToJob_radioButton</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>394</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>131</x>
-     <y>110</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>animPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_comboBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>363</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>257</x>
-     <y>112</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>fxPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_comboBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>425</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>257</x>
-     <y>112</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>modelPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_comboBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>194</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>257</x>
-     <y>112</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>fxPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToJob_radioButton</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>425</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>131</x>
-     <y>110</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>shaderPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_comboBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>394</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>257</x>
-     <y>112</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>scenePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_comboBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>519</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>257</x>
-     <y>112</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>rigPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_comboBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>228</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>257</x>
-     <y>112</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>geoPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_comboBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>330</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>257</x>
-     <y>112</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cameraPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_comboBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>92</x>
-     <y>262</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>257</x>
-     <y>112</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>geoCachePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_comboBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>296</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>257</x>
-     <y>112</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>scenePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToJob_radioButton</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>519</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>131</x>
-     <y>110</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>geoPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToJob_radioButton</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>330</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>131</x>
-     <y>110</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>rigPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToJob_radioButton</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>228</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>131</x>
-     <y>110</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>modelPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToJob_radioButton</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>194</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>131</x>
-     <y>110</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>geoCachePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToJob_radioButton</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>111</x>
-     <y>296</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>131</x>
-     <y>110</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cameraPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToJob_radioButton</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>92</x>
-     <y>262</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>131</x>
-     <y>110</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>shotPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToJob_radioButton</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>487</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>131</x>
-     <y>110</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>geoPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>scenePblName_lineEdit</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>330</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>194</x>
-     <y>521</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>publishToShot_radioButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>cameraPbl_radioButton</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>182</x>
-     <y>110</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>105</x>
-     <y>262</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>fxPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>scenePblName_lineEdit</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>425</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>194</x>
-     <y>521</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>publishToShot_radioButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>shotPbl_radioButton</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>182</x>
-     <y>110</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>113</x>
-     <y>487</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>publishToShot_radioButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>cameraPbl_comboBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>182</x>
-     <y>110</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>194</x>
-     <y>264</y>
+     <x>499</x>
+     <y>195</y>
     </hint>
    </hints>
   </connection>
@@ -3987,220 +3327,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>57</x>
-     <y>405</y>
+     <x>70</x>
+     <y>404</y>
     </hint>
     <hint type="destinationlabel">
-     <x>653</x>
-     <y>202</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>rigPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>scenePblName_lineEdit</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>228</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>194</x>
-     <y>521</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>shotPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_radioButton</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>487</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>182</x>
-     <y>110</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cameraPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_radioButton</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>262</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>182</x>
-     <y>110</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>modelPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>scenePblName_lineEdit</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>194</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>194</x>
-     <y>521</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cameraPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>scenePblName_lineEdit</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>262</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>194</x>
-     <y>521</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>shotPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>scenePblName_lineEdit</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>487</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>194</x>
-     <y>521</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>geoCachePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>scenePblName_lineEdit</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>296</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>194</x>
-     <y>521</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>scenePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>scenePblName_lineEdit</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>519</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>194</x>
-     <y>521</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>shaderPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>scenePblName_lineEdit</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>394</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>194</x>
-     <y>521</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nodePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>scenePblName_lineEdit</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>553</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>194</x>
-     <y>521</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nodePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_radioButton</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>553</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>182</x>
-     <y>110</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nodePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToJob_radioButton</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>553</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>131</x>
-     <y>110</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nodePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_comboBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>553</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>257</x>
-     <y>112</y>
+     <x>667</x>
+     <y>195</y>
     </hint>
    </hints>
   </connection>
@@ -4259,56 +3391,8 @@ p, li { white-space: pre-wrap; }
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>131</x>
-     <y>110</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>257</x>
-     <y>112</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pointCloudPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToJob_radioButton</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>456</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>131</x>
-     <y>110</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pointCloudPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_radioButton</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>456</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>182</x>
-     <y>110</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pointCloudPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_comboBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>456</y>
+     <x>119</x>
+     <y>99</y>
     </hint>
     <hint type="destinationlabel">
      <x>257</x>
@@ -4327,8 +3411,8 @@ p, li { white-space: pre-wrap; }
      <y>101</y>
     </hint>
     <hint type="destinationlabel">
-     <x>445</x>
-     <y>231</y>
+     <x>406</x>
+     <y>234</y>
     </hint>
    </hints>
   </connection>
@@ -4343,424 +3427,8 @@ p, li { white-space: pre-wrap; }
      <y>102</y>
     </hint>
     <hint type="destinationlabel">
-     <x>308</x>
-     <y>462</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>geoPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>330</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>532</x>
-     <y>286</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>animPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>363</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>532</x>
-     <y>286</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>modelPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>194</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>532</x>
-     <y>286</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>fxPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>425</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>616</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>shotPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>487</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>532</x>
-     <y>286</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>fxPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>425</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>532</x>
-     <y>286</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>rigPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>228</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>532</x>
-     <y>286</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>scenePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>519</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>532</x>
-     <y>286</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>shaderPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>394</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>532</x>
-     <y>286</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cameraPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>262</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>616</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>shaderPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>394</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>616</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>geoPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>330</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>616</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>rigPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>228</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>616</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>shaderPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>394</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>616</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cameraPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>262</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>532</x>
-     <y>286</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>geoCachePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>296</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>532</x>
-     <y>286</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>shotPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>487</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>616</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>geoCachePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>296</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>616</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>shotPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>487</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>616</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>scenePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>519</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>616</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>modelPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>194</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>616</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nodePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSet_checkBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>553</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>532</x>
-     <y>286</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>modelPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>194</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>616</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>scenePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>113</x>
-     <y>519</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>616</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cameraPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>textures_checkBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>112</x>
-     <y>262</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>616</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>subSet_checkBox</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>subSetName_lineEdit</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>532</x>
-     <y>286</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>786</x>
-     <y>289</y>
+     <x>152</x>
+     <y>465</y>
     </hint>
    </hints>
   </connection>
@@ -4777,6 +3445,22 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>163</x>
      <y>244</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>subSet_checkBox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>subSetName_lineEdit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>493</x>
+     <y>288</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>786</x>
+     <y>282</y>
     </hint>
    </hints>
   </connection>
