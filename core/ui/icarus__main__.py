@@ -991,12 +991,16 @@ Environment: %s
 	def setLayerAsMain(self):
 		""" Sets the selected render layer as the main layer.
 		"""
+		rowCount = self.ui.renderPbl_treeWidget.topLevelItemCount()
+		for row in range(0, rowCount):
+			item = self.ui.renderPbl_treeWidget.topLevelItem(row)
+			item.setText(2, 'layer')
+
 		for item in self.ui.renderPbl_treeWidget.selectedItems():
 			item.setText(2, 'main')
 
-		# rowCount = self.ui.renderPbl_treeWidget.topLevelItemCount()
-		# for row in range(0, rowCount):
-		# 	renderLayerItem = self.ui.renderPbl_treeWidget.topLevelItem(row)
+		self.ui.renderPbl_treeWidget.resizeColumnToContents(2)
+
 
 		# 	layerName = renderLayerItem.text(0)
 		# 	filePath = renderLayerItem.text(3)
@@ -1050,6 +1054,19 @@ Environment: %s
 	# #	app.show() # This was causing an issue with the UI closing so I've commented it out fot the time being. The widget still seems to auto update.
 
 
+	def relativePath(self, absPath, token):
+		""" Convert a path to a relative path by searching for a given token.
+		"""
+		try:
+			path = absPath.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
+			path = path.replace(os.environ[token].replace('\\', '/'), '$%s' %token) # Change to relative path
+
+			return path
+
+		except:
+			return absPath
+
+
 	def renderPreview(self, item, column):
 		""" Launches sequence viewer when entry is double-clicked.
 		"""
@@ -1100,13 +1117,7 @@ Environment: %s
 					# renderLayerItem.setText(0, '%s (%d)' % (renderLayerDir, len(renderPasses)))
 					renderLayerItem.setText(0, renderLayerDir)
 					renderLayerItem.setText(2, 'layer')
-
-					# Parse asset file path
-					pathText = os.path.join(renderPath, renderLayerDir)
-					pathText = pathText.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
-					pathText = pathText.replace(os.environ['SHOTPATH'].replace('\\', '/'), '$SHOTPATH') # Change to relative path
-					renderLayerItem.setText(3, pathText)
-					#renderLayerItem.setText(3, self.relativePath(os.path.join(renderPath, renderLayerDir)))
+					renderLayerItem.setText(3, self.relativePath(os.path.join(renderPath, renderLayerDir), 'SHOTPATH'))
 
 					self.ui.renderPbl_treeWidget.addTopLevelItem(renderLayerItem)
 					renderLayerItem.setExpanded(True)
@@ -1121,14 +1132,7 @@ Environment: %s
 						if not fr_range == os.environ['FRAMERANGE']: # set red text for sequence mismatch
 							renderPassItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#c33")))
 						renderPassItem.setText(2, ext.split('.', 1)[1])
-						#renderPassItem.setText(3, path)
-
-						# Parse asset file path
-						pathText = os.path.join(renderPath, renderLayerDir, renderPass)
-						pathText = pathText.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
-						pathText = pathText.replace(os.environ['SHOTPATH'].replace('\\', '/'), '$SHOTPATH') # Change to relative path
-						renderPassItem.setText(3, pathText)
-						#renderPassItem.setText(3, self.relativePath(os.path.join(renderPath, renderLayerDir, renderPass)))
+						renderPassItem.setText(3, self.relativePath(os.path.join(renderPath, renderLayerDir, renderPass), 'SHOTPATH'))
 
 						self.ui.renderPbl_treeWidget.addTopLevelItem(renderPassItem)
 
@@ -1158,17 +1162,11 @@ Environment: %s
 		"""
 		# Parse the file path
 		dailyPath = self.dailyPblBrowse() # dailyPath is a full path to a file
+
 		if dailyPath:
 			self.ui.dailyPbl_treeWidget.clear()
-			# dailyPath = dailyPath.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
-			#self.previewPath = dailyPath
-			#seqDir = dailyPath.replace(os.environ['SHOTPATH'].replace('\\', '/'), '$SHOTPATH')
-			#seqDir = os.path.dirname(seqDir)
-			path, prefix, fr_range, ext, num_frames = seq.detectSeq(dailyPath)
 
-			# Parse asset file path
-			path = path.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
-			path = path.replace(os.environ['SHOTPATH'].replace('\\', '/'), '$SHOTPATH') # Change to relative path
+			path, prefix, fr_range, ext, num_frames = seq.detectSeq(dailyPath)
 
 			if prefix:
 				dailyItem = QtGui.QTreeWidgetItem(self.ui.dailyPbl_treeWidget)
@@ -1177,8 +1175,7 @@ Environment: %s
 				if not fr_range == os.environ['FRAMERANGE']: # set red text for sequence mismatch
 					dailyItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#c33")))
 				dailyItem.setText(2, self.dailyType)
-				dailyItem.setText(3, path)
-				#dailyItem.setText(3, self.relativePath(os.path.join(renderPath, renderLayerDir)))
+				dailyItem.setText(3, self.relativePath(path, 'SHOTPATH'))
 				self.ui.dailyPbl_treeWidget.addTopLevelItem(dailyItem)
 				#dailyItem.setExpanded(True)
 
