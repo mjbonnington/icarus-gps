@@ -116,17 +116,25 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes):
 
 		if snapShot:
 			verbose.pblSaveSnapshot()
-			startFrame = min(mainLayerPaddingLs)
-			endFrame = max(mainLayerPaddingLs)
-			midFrame = int((int(startFrame) + int(endFrame))/2)
+			startFrame = int(min(mainLayerPaddingLs))
+			endFrame = int(max(mainLayerPaddingLs))
+			# midFrame = int((int(startFrame) + int(endFrame))/2)
+
+			try:
+				posterFrame = int(os.environ['POSTERFRAME'])
+			except ValueError:
+				posterFrame = -1
+			if not (startFrame <= posterFrame <= endFrame): # if poster frame is not within frame range, use mid frame
+				posterFrame = int((startFrame+endFrame) / 2)
+
 			inFile = os.path.join(mainLayerDir, mainLayerBody)
 			outFile = os.path.join(pblDir, 'preview')
-			djvOps.prcImg(inFile, outFile, midFrame,  midFrame, mainLayerExtension, resize=(512,288), outExt='jpg')
+			djvOps.prcImg(inFile, outFile, posterFrame, posterFrame, mainLayerExtension, resize=(512,288), outExt='jpg')
 			#djvOps.prcQt(inFile, pblDir, startFrame, endFrame, mainLayerExtension, resize=(256,144))
 
 		# Store asset metadata in file
 		assetPblName += '_%s' % version
-		#src = renderDic['main']
+		# src = renderDic['main']
 		src = None
 		icPblData.writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, pblNotes, src)
 

@@ -1,82 +1,87 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:nk_setupPbl
-#copyright	:Gramercy Park Studios
+
+# [Icarus] nk_compPbl.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2016 Gramercy Park Studios
+#
+# Publish an asset of the type nk_comp.
 
 
-#nuke setup publish module
 import os, sys, traceback
 import nuke
-import pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, nukeOps, inProgress
+import nukeOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, inProgress
 
-def publish(pblTo, slShot, pblType, pblNotes):
-	
-	#gets and selects all nodes
+
+def publish(pblTo, slShot, subtype, pblNotes):
+
+	# Get selection
 	nodeLs = nuke.root().nodes()
-		
-	#defining main variables
+
+	# Define main variables
 	shot_ = ''
-	assetType = 'nk_%s' % pblType
+	assetType = 'nk_%s' % subtype
 	subsetName = ''
 	prefix = ''
-	convention = pblType
+	convention = subtype
 	suffix = ''
 	fileType='nk'
 	extension = 'nk'
-	
 
-	#processing asset publish options
+	# Process asset publish options
 	assetPblName, assetDir, pblDir = pblOptsPrc.prc(pblTo, subsetName, assetType, prefix, convention, suffix)
-	
-	#adding shot name to assetPblName if asset is being publish to a shot
+
+	# Add shot name to assetPblName if asset is being publish to a shot
 	if pblTo != os.environ['JOBPUBLISHDIR']:
 		assetPblName += '_%s' % slShot
-		
-	
-	#version control	
-	version = '%s' % vCtrl.version(pblDir)
-	#if approved:
-	#	version += '_apv'
 
-	#confirmation dialog
-	dialogTitle = 'Publishing'
-	dialogMsg = 'Asset:  %s\n\nVersion:  %s\n\nSubset:  %s\n\nNotes:  %s' % (assetPblName, version, subsetName, pblNotes)
+	# Version control
+	version = '%s' % vCtrl.version(pblDir)
+#	if approved:
+#		version += '_apv'
+
+	# Confirmation dialog
+	dialogTitle = 'Publishing %s' % convention
+	dialogMsg = 'Asset:\t%s\n\nVersion:\t%s\n\nSubset:\t%s\n\nNotes:\t%s' % (assetPblName, version, subsetName, pblNotes)
 	dialog = pDialog.dialog()
 	if not dialog.dialogWindow(dialogMsg, dialogTitle):
 		return
 
-	try:	
+	# Publishing
+	try:
 		verbose.pblFeed(begin=True)
 
-		#creating publish directories
+		# Create publish directories
 		pblDir = osOps.createDir(os.path.join(pblDir, version))
 
-		#creating in progress tmp file
+		# Create in-progress tmp file
 		inProgress.start(pblDir)
 
-		#ic publish data file
-		icPblData.writeData(pblDir, assetPblName, assetPblName, assetType, extension, version, pblNotes)
+		# Store asset metadata in file
+		src = nuke.root().name() #nukeOps.getScriptName()
+		icPblData.writeData(pblDir, assetPblName, assetPblName, assetType, extension, version, pblNotes, src)
 
-		#Nuke operations
+		# Nuke operations
 		icSet = nukeOps.createBackdrop(assetPblName, nodeLs)
 
-		#file operations
+		# File operations
 		pathToPblAsset = os.path.join(pblDir, '%s.%s' % (assetPblName, extension))
 		verbose.pblFeed(msg=assetPblName)
 		nukeOps.saveAs(pathToPblAsset)
 		nuke.delete(icSet)
-		
-		#viewer snapshot
+
+		# Take snapshot
 		nukeOps.viewerSnapshot(pblDir)
 
-		#deleting in progress tmp file
+		# Delete in-progress tmp file
 		inProgress.end(pblDir)
 
-		#published asset check
+		# Published asset check
 		pblResult = pblChk.success(pathToPblAsset)
-		
+
 		verbose.pblFeed(end=True)
-	
+
 	except:
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
@@ -85,10 +90,9 @@ def publish(pblTo, slShot, pblType, pblNotes):
 		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += verbose.pblRollback()
 
-	#publish result dialog
+	# Show publish result dialog
 	dialogTitle = 'Publish Report'
-	dialogMsg = 'Asset:  %s\n\nVersion:  %s\n\nSubset: %s\n\n\n%s' % (assetPblName, version, subsetName, pblResult)
+	dialogMsg = 'Asset:\t%s\n\nVersion:\t%s\n\nSubset:\t%s\n\n\n%s' % (assetPblName, version, subsetName, pblResult)
 	dialog = pDialog.dialog()
-	dialog.dialogWindow(dialogMsg, dialogTitle, conf=True)	
-	
+	dialog.dialogWindow(dialogMsg, dialogTitle, conf=True)
 

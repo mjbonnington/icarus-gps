@@ -20,7 +20,7 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 	extension = extension[1:] # remove leading dot from file extension
 
 	job = os.environ['JOB']
-	assetType = 'daily'
+	assetType = 'dailies'
 	prefix = ''
 	convention = ''
 	suffix = ''
@@ -68,7 +68,7 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 			posterFrame = int((startFrame+endFrame) / 2)
 
 		# Pass arguments to djv to process the files in djvOps
-		dailyFileBody = '%s_daily_%s' % (os.environ['SHOT'], subsetName)
+		dailyFileBody = '%s_dailies_%s' % (os.environ['SHOT'], subsetName)
 		dailyFile = '%s.%s.jpg' % (dailyFileBody, startFrame)
 		inFile = os.path.join(dailyPath, nameBody)
 		#print inFile

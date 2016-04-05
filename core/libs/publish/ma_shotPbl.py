@@ -17,12 +17,11 @@ import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, i
 def publish(pblTo, pblNotes):
 
 	# Define main variables
-	shot_ = os.environ['SHOT']
 	assetType = 'ma_shot'
-	prefix = ''
-	convention = shot_
-	suffix = '_shot'
 	subsetName = ''
+	prefix = ''
+	convention = os.environ['SHOT']
+	suffix = '_shot'
 	fileType = 'mayaAscii'
 	extension = 'ma'
 

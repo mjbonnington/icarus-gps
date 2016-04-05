@@ -72,12 +72,12 @@ class icarusApp(QtGui.QDialog):
 		# Publishing UI
 	#	self.ui.renderPblAdd_pushButton.clicked.connect(self.renderTableAdd)
 	#	self.ui.renderPblRemove_pushButton.clicked.connect(self.renderTableRm)
-	#	self.ui.renderPblSetMain_pushButton.clicked.connect(self.setLayerAsMain) # remove when render publishing works properly
+		self.ui.renderPblSetMain_pushButton.clicked.connect(self.setLayerAsMain) # remove when render publishing works properly
 		self.ui.renderPblAdd_pushButton.clicked.connect(self.renderTableAdd)
 		self.ui.renderPblRemove_pushButton.clicked.connect(self.renderTableRemove)
 		#self.ui.renderPblRevert_pushButton.clicked.connect(self.renderTableClear)
 		self.ui.renderPbl_treeWidget.itemDoubleClicked.connect(self.renderPreview)
-		self.ui.dailyPbl_treeWidget.itemDoubleClicked.connect(self.renderPreview)
+		# self.ui.dailyPbl_treeWidget.itemDoubleClicked.connect(self.renderPreview) # remove when preview is working correctly
 		self.ui.dailyPblType_comboBox.currentIndexChanged.connect(self.setDailyType)
 		self.ui.dailyPblAdd_pushButton.clicked.connect(self.dailyTableAdd)
 		self.ui.publish_pushButton.clicked.connect(self.initPublish)
@@ -235,8 +235,8 @@ class icarusApp(QtGui.QDialog):
 				self.ui.tabWidget.removeTab(1)
 
 			# Delete 'ma_asset', 'nk_asset', 'Publish' tabs - REMEMBER TO UNCOMMENT THE FOLLOWING TWO LINES
-		#	for i in range(0, 2):
-		#		self.ui.publishType_tabWidget.removeTab(0)
+			for i in range(0, 2):
+				self.ui.publishType_tabWidget.removeTab(0)
 
 			# Apply job/shot settings pop-up menu to shotEnv label (only in standalone mode)
 			self.ui.shotEnv_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
@@ -274,6 +274,15 @@ class icarusApp(QtGui.QDialog):
 			self.updateJobLabel()
 			self.ui.tabWidget.removeTab(0)
 
+			# Attempt to set the publish asset type button to remember the last selection - 'self.connectNewSignalsSlots()' must be called already
+			try:
+				for toolButton in self.ui.ma_assetType_frame.children():
+					if isinstance(toolButton, QtGui.QToolButton):
+						if toolButton.text() == userPrefs.config.get('main', 'lastpublishma'):
+							toolButton.setChecked(True)
+			except:
+				pass
+
 
 		####################
 		# Nuke environment #
@@ -298,6 +307,15 @@ class icarusApp(QtGui.QDialog):
 			#deletes Asset publish tabs
 			self.ui.publishType_tabWidget.removeTab(0) # Remove 'ma Asset' tab
 
+			# Attempt to set the publish asset type button to remember the last selection - 'self.connectNewSignalsSlots()' must be called already
+			try:
+				for toolButton in self.ui.nk_assetType_frame.children():
+					if isinstance(toolButton, QtGui.QToolButton):
+						if toolButton.text() == userPrefs.config.get('main', 'lastpublishnk'):
+							toolButton.setChecked(True)
+			except:
+				pass
+
 	# end of function __init__
 
 
@@ -310,37 +328,27 @@ class icarusApp(QtGui.QDialog):
 		"""
 		self.ui.publishType_tabWidget.currentChanged.connect(self.adjustPblTypeUI)
 
-		# 
-		for toolButton in self.ui.ma_assetType_frame.children()+self.ui.nk_assetType_frame.children():
+		for toolButton in self.ui.ma_assetType_frame.children():
 			if isinstance(toolButton, QtGui.QToolButton):
-				toolButton.clicked.connect(self.adjustPublishOptsUI) # toggled?
+				toolButton.toggled.connect(self.adjustPublishOptsMayaUI)
+		for toolButton in self.ui.nk_assetType_frame.children():
+			if isinstance(toolButton, QtGui.QToolButton):
+				toolButton.toggled.connect(self.adjustPublishOptsNukeUI)
 
-		self.ui.animation_toolButton.clicked.connect(self.setDropDownToShotEnv)
-		self.ui.shot_toolButton.clicked.connect(self.setDropDownToShotEnv)
-	#	self.ui.camera_toolButton.clicked.connect(self.uncheckSubset)
-	#	self.ui.model_toolButton.clicked.connect(self.uncheckSubset)
-	#	self.ui.geoCache_toolButton.clicked.connect(self.uncheckSubset)
-	#	self.ui.geo_toolButton.clicked.connect(self.uncheckSubset)
-	#	self.ui.rig_toolButton.clicked.connect(self.uncheckSubset)
-	#	self.ui.ma_node_toolButton.clicked.connect(self.uncheckSubset)
-		self.ui.comp_toolButton.clicked.connect(self.adjustPblTypeUI)
+		# self.ui.animation_toolButton.clicked.connect(self.setDropDownToShotEnv)
+		# self.ui.shot_toolButton.clicked.connect(self.setDropDownToShotEnv)
+		# self.ui.comp_toolButton.clicked.connect(self.setDropDownToShotEnv) #self.adjustPblTypeUI
 
 		self.ui.gatherFromShot_radioButton.clicked.connect(self.adjustMainUI)
 		self.ui.gatherFromShot_comboBox.currentIndexChanged.connect(self.adjustMainUI)
 		self.ui.gatherFromJob_radioButton.clicked.connect(self.adjustMainUI)
 		self.ui.gather_pushButton.clicked.connect(self.initGather)
 
-		self.ui.assetType_listWidget.itemClicked.connect(self.updateAssetNameCol)
+		self.ui.assetType_listWidget.itemClicked.connect(self.updateAssetNameCol) # currentItemChanged?
 		self.ui.assetName_listWidget.itemClicked.connect(self.adjustColumns)
 		self.ui.assetSubType_listWidget.itemClicked.connect(self.updateAssetVersionCol)
 		self.ui.assetVersion_listWidget.itemClicked.connect(self.updateInfoField)
 		self.ui.assetVersion_listWidget.itemClicked.connect(self.updateImgPreview)
-
-		#self.ui.assetType_listWidget.currentItemChanged.connect(self.updateAssetNameCol)
-		#self.ui.assetName_listWidget.currentItemChanged.connect(self.adjustColumns)
-		#self.ui.assetSubType_listWidget.currentItemChanged.connect(self.updateAssetVersionCol)
-		#self.ui.assetVersion_listWidget.currentItemChanged.connect(self.updateInfoField)
-		#self.ui.assetVersion_listWidget.currentItemChanged.connect(self.updateImgPreview)
 
 
 	def getMainTab(self):
@@ -368,42 +376,52 @@ class icarusApp(QtGui.QDialog):
 			self.updateAssetTypeCol()
 
 
-	def adjustPublishOptsUI(self):
+	def adjustPublishOptsMayaUI(self):
 		""" Makes UI adjustments based on which asset publish type is currently selected.
 		"""
-		subtype = self.sender().text()
-		#self.ui.assetSubType_label.setText("%s sub-type:" %subtype)
+		assetType = self.sender().text()
+
+		self.ui.ma_publishOptions_groupBox.setTitle("Publish options: %s" %assetType)
+
 		self.ui.assetSubType_comboBox.clear()
+		self.ui.textures_checkBox.setEnabled(True)
 		self.ui.assetName_label.setEnabled(False)
 		self.ui.assetName_lineEdit.setEnabled(False)
 
-		if subtype == 'model':
+		if assetType == 'model':
 			self.ui.assetSubType_comboBox.addItem('base')
 			self.ui.assetSubType_comboBox.addItem('anim')
-		elif subtype == 'rig':
+		elif assetType == 'rig':
 			self.ui.assetSubType_comboBox.addItem('anim')
 			self.ui.assetSubType_comboBox.addItem('light')
 			self.ui.assetSubType_comboBox.addItem('fx')
-		elif subtype == 'camera':
+		elif assetType == 'camera':
 			self.ui.assetSubType_comboBox.addItem('render')
 			self.ui.assetSubType_comboBox.addItem('mm')
 			self.ui.assetSubType_comboBox.addItem('previs')
-		elif subtype == 'geo':
+			self.ui.textures_checkBox.setEnabled(False)
+			# self.lockPublishTo(lock=True)
+		elif assetType == 'geo':
 			self.ui.assetSubType_comboBox.addItem('abc')
 			self.ui.assetSubType_comboBox.addItem('obj')
 			self.ui.assetSubType_comboBox.addItem('fbx')
-		elif subtype == 'geoCache':
+		elif assetType == 'geoCache':
 			self.ui.assetSubType_comboBox.addItem('anim')
 			self.ui.assetSubType_comboBox.addItem('cloth')
 			self.ui.assetSubType_comboBox.addItem('rigidBody')
 			self.ui.assetSubType_comboBox.addItem('vrmesh')
 			self.ui.assetSubType_comboBox.addItem('realflow')
-		elif subtype == 'scene':
+			self.ui.textures_checkBox.setEnabled(False)
+		elif assetType == 'animation':
+			self.ui.textures_checkBox.setEnabled(False)
+		elif assetType == 'scene':
 			self.ui.assetName_label.setEnabled(True)
 			self.ui.assetName_lineEdit.setEnabled(True)
-		elif subtype == 'node':
+		elif assetType == 'node':
 			self.ui.assetSubType_comboBox.addItem('ma')
 			self.ui.assetSubType_comboBox.addItem('ic')
+		# elif assetType == 'shot':
+		# 	self.lockPublishTo(lock=True)
 
 		if self.ui.assetSubType_comboBox.count():
 			self.ui.assetSubType_label.setEnabled(True)
@@ -415,6 +433,28 @@ class icarusApp(QtGui.QDialog):
 			self.ui.assetSubType_comboBox.setEnabled(False)
 			self.ui.subSet_checkBox.setEnabled(True)
 
+		# Remember last selection with entry in user prefs
+		userPrefs.edit('main', 'lastpublishma', assetType)
+
+
+	def adjustPublishOptsNukeUI(self):
+		""" Makes UI adjustments based on which asset publish type is currently selected.
+		"""
+		assetType = self.sender().text()
+
+		self.ui.nk_publishOptions_groupBox.setTitle("Publish options: %s" %assetType)
+
+		self.ui.nk_PblName_label.setEnabled(True)
+		self.ui.nk_PblName_lineEdit.setEnabled(True)
+
+		if assetType == 'comp':
+			self.ui.nk_PblName_label.setEnabled(False)
+			self.ui.nk_PblName_lineEdit.setEnabled(False)
+			# self.lockPublishTo(lock=True)
+
+		# Remember last selection with entry in user prefs
+		userPrefs.edit('main', 'lastpublishnk', assetType)
+
 
 	def adjustPblTypeUI(self):
 		""" Makes UI lock adjustments based on which publish type tab is currently selected.
@@ -423,22 +463,23 @@ class icarusApp(QtGui.QDialog):
 		tabText = self.ui.publishType_tabWidget.tabText(tabIndex)
 
 		if tabText == 'ma Asset':
-			self.lockPublishTo()
+			self.lockPublishTo(lock=False)
 
 		elif tabText == 'nk Asset':
-			if self.ui.comp_toolButton.isChecked() == True:
-				self.lockPublishTo(lock=True)
-				self.setDropDownToShotEnv()
-			else:
-				self.lockPublishTo()
-
-		elif tabText == 'Render':
-			self.lockPublishTo(lock=True)
-			self.setDropDownToShotEnv()
+			self.lockPublishTo(lock=False)
+			# if self.ui.comp_toolButton.isChecked() == True:
+			# 	self.lockPublishTo(lock=True)
+			# 	#self.setDropDownToShotEnv()
+			# else:
+			# 	self.lockPublishTo(lock=False)
 
 		elif tabText == 'Dailies':
 			self.lockPublishTo(lock=True)
-			self.setDropDownToShotEnv()
+			#self.setDropDownToShotEnv()
+
+		elif tabText == 'Render':
+			self.lockPublishTo(lock=True)
+			#self.setDropDownToShotEnv()
 
 
 	def lockPublishTo(self, lock=False):
@@ -448,14 +489,17 @@ class icarusApp(QtGui.QDialog):
 			self.ui.publishToJob_radioButton.setEnabled(False)
 			self.ui.publishToShot_radioButton.setChecked(True)
 			self.ui.publishToShot_comboBox.setEnabled(False)
+			self.setDropDownToShotEnv()
 		else:
-			self.ui.model_toolButton.setChecked(True)
 			self.ui.publishToJob_radioButton.setEnabled(True)
-			self.ui.publishToShot_comboBox.setEnabled(True)
+			if self.ui.publishToShot_radioButton.isChecked() == 1:
+				self.ui.publishToShot_comboBox.setEnabled(True)
+			#self.ui.model_toolButton.setChecked(True)
 
 
 	def setDropDownToShotEnv(self):
-		""" Switches the shot drop down menu to the current environment shot
+		""" Switches the shot drop down menu to the current environment shot.
+			Disables publishing to alternative shot.
 		"""
 		self.ui.publishToShot_comboBox.setCurrentIndex(self.ui.publishToShot_comboBox.findText(os.environ['SHOT']))
 
@@ -500,8 +544,9 @@ class icarusApp(QtGui.QDialog):
 		return dialog
 
 
-	##############################################Job management tab##############################################
-	##############################################################################################################
+	######################
+	# Job management tab #
+	######################
 
 	def populateShots(self):
 		""" Populates shot drop down menu.
@@ -545,7 +590,7 @@ class icarusApp(QtGui.QDialog):
 			return False
 
 
-	#populates publish shot drop down menu	
+	#populates publish shot drop down menu
 	def populatePblShotLs(self):
 		self.ui.publishToShot_comboBox.clear()
 		shotLs = setJob.listShots(os.environ['JOB'])
@@ -553,8 +598,8 @@ class icarusApp(QtGui.QDialog):
 			for shot in shotLs:
 				self.ui.publishToShot_comboBox.insertItem(0, shot)
 			self.ui.publishToShot_comboBox.setCurrentIndex(self.ui.publishToShot_comboBox.findText(os.environ['SHOT']))
-	
-	#populates gather shot drop down menu	
+
+	#populates gather shot drop down menu
 	def populateGatherShotLs(self):
 		self.ui.gatherFromShot_comboBox.clear()
 		shotLs = setJob.listShots(os.environ['JOB'])
@@ -656,7 +701,7 @@ class icarusApp(QtGui.QDialog):
 
 
 	def printShotInfo(self):
-		""" Print job / shot information stored in enviroment variables - used for debugging
+		""" Print job / shot information stored in enviroment variables - used for debugging.
 		"""
 		try:
 			print """
@@ -684,7 +729,7 @@ Angular units: %s
 
 
 	def about(self):
-		""" Show about dialog
+		""" Show about dialog.
 		"""
 		import PySide.QtCore
 		python_ver_str = "%d.%d.%d" %(sys.version_info[0], sys.version_info[1], sys.version_info[2])
@@ -708,7 +753,7 @@ Environment: %s
 
 
 	def openSettings(self, settingsType, autoFill=False):
-		""" Open settings dialog
+		""" Open settings dialog.
 		"""
 		if settingsType == "Job":
 			categoryLs = ['job', 'time', 'resolution', 'units', 'apps', 'other']
@@ -731,21 +776,21 @@ Environment: %s
 
 
 	def jobSettings(self):
-		""" Open job settings dialog wrapper function
+		""" Open job settings dialog wrapper function.
 		"""
 		if self.openSettings("Job"):
 			setJob.setup(self.job, self.shot) # Set up environment variables
 
 
 	def shotSettings(self):
-		""" Open shot settings dialog wrapper function
+		""" Open shot settings dialog wrapper function.
 		"""
 		if self.openSettings("Shot"):
 			setJob.setup(self.job, self.shot) # Set up environment variables
 
 
 	def userSettings(self):
-		""" Open user settings dialog wrapper function
+		""" Open user settings dialog wrapper function.
 		"""
 		if self.openSettings("User"):
 			pass
@@ -881,18 +926,11 @@ Environment: %s
 		reload(rename__main__)
 
 
-	##################################################Publish tab###################################################
-	################################################################################################################
+	###############
+	# Publish tab #
+	###############
+
 	###################adjusting ui####################				
-
-
-#	def uncheckSubset(self):
-#		""" Uncheck sub-set checkbox based on asset type.
-#		"""
-#		#print 'no sub-set'
-#		self.ui.subSet_checkBox.setChecked(False)
-#		self.ui.subSetName_lineEdit.setEnabled(False)
-#	#	self.ui.subSetWarning_textEdit.setEnabled(False)
 
 
 #	#populates the render publish table
@@ -948,49 +986,68 @@ Environment: %s
 #		rmRowLs = sorted(rmRowLs, reverse=True)
 #		for rmRow in rmRowLs:
 #			self.ui.renderPbl_tableWidget.removeRow(rmRow)
-	
-#	#sets the selected render layer as the main layer
-#	def setLayerAsMain(self, autoMainLayer=None):
-#		font = QtGui.QFont()
-#		for rowItem in range(0, self.ui.renderPbl_tableWidget.rowCount()):
-#			font.setBold(False)
-#			mainItem = self.ui.renderPbl_tableWidget.item(rowItem, 2)
-#			mainItem.setText('layer')
-#			mainItem.setFont(font)
-#			#mainItem.setBackground(QtGui.QColor(34,34,34))
-#			rowItem1 = self.ui.renderPbl_tableWidget.item(rowItem, 1)
-#			rowItem1.setFont(font)
-#			#rowItem1.setBackground(QtGui.QColor(34,34,34))
-#			rowItem0 = self.ui.renderPbl_tableWidget.item(rowItem, 0)
-#			rowItem0.setFont(font)
-#			#rowItem0.setBackground(QtGui.QColor(34,34,34))
-#		rowLs = []
-#		if autoMainLayer:
-#			selRow = self.ui.renderPbl_tableWidget.row(autoMainLayer)
-#			rowLs.append(selRow)
-#		else:
-#			for selIndex in self.ui.renderPbl_tableWidget.selectedIndexes():
-#				selItem = self.ui.renderPbl_tableWidget.itemFromIndex(selIndex)
-#				selRow = self.ui.renderPbl_tableWidget.row(selItem)
-#				if selRow not in rowLs and selRow != -1:
-#					rowLs.append(selRow)
-#		if len(rowLs) == 1:
-#			font.setBold(True)
-#			mainItem = self.ui.renderPbl_tableWidget.item(rowLs[0], 2)
-#			mainItem.setText('main')
-#			mainItem.setFont(font)
-#			#mainItem.setBackground(QtGui.QColor(60,75,40))
-#			passItem = self.ui.renderPbl_tableWidget.item(rowLs[0], 1)
-#			passName = passItem.text()
-#			passItem.setFont(font)
-#			#passItem.setBackground(QtGui.QColor(60,75,40))
-#			layerItem = self.ui.renderPbl_tableWidget.item(rowLs[0], 0)
-#			layerName = passItem.text()
-#			layerItem.setFont(font)
-#			#layerItem.setBackground(QtGui.QColor(60,75,40))
-#		#app hide and show forces thw window to update
-#	#	app.hide()
-#	#	app.show() # This was causing an issue with the UI closing so I've commented it out fot the time being. The widget still seems to auto update.
+
+
+	def setLayerAsMain(self):
+		""" Sets the selected render layer as the main layer.
+		"""
+		for item in self.ui.renderPbl_treeWidget.selectedItems():
+			item.setText(2, 'main')
+
+		# rowCount = self.ui.renderPbl_treeWidget.topLevelItemCount()
+		# for row in range(0, rowCount):
+		# 	renderLayerItem = self.ui.renderPbl_treeWidget.topLevelItem(row)
+
+		# 	layerName = renderLayerItem.text(0)
+		# 	filePath = renderLayerItem.text(3)
+		# 	self.renderDic[layerName] = filePath
+
+		# 	if renderLayerItem.text(2) == 'main':
+		# 		self.mainLayer = layerName
+
+
+	# #sets the selected render layer as the main layer
+	# def setLayerAsMain(self, autoMainLayer=None):
+	# 	font = QtGui.QFont()
+	# 	for rowItem in range(0, self.ui.renderPbl_tableWidget.rowCount()):
+	# 		font.setBold(False)
+	# 		mainItem = self.ui.renderPbl_tableWidget.item(rowItem, 2)
+	# 		mainItem.setText('layer')
+	# 		mainItem.setFont(font)
+	# 		#mainItem.setBackground(QtGui.QColor(34,34,34))
+	# 		rowItem1 = self.ui.renderPbl_tableWidget.item(rowItem, 1)
+	# 		rowItem1.setFont(font)
+	# 		#rowItem1.setBackground(QtGui.QColor(34,34,34))
+	# 		rowItem0 = self.ui.renderPbl_tableWidget.item(rowItem, 0)
+	# 		rowItem0.setFont(font)
+	# 		#rowItem0.setBackground(QtGui.QColor(34,34,34))
+	# 	rowLs = []
+	# 	if autoMainLayer:
+	# 		selRow = self.ui.renderPbl_tableWidget.row(autoMainLayer)
+	# 		rowLs.append(selRow)
+	# 	else:
+	# 		for selIndex in self.ui.renderPbl_tableWidget.selectedIndexes():
+	# 			selItem = self.ui.renderPbl_tableWidget.itemFromIndex(selIndex)
+	# 			selRow = self.ui.renderPbl_tableWidget.row(selItem)
+	# 			if selRow not in rowLs and selRow != -1:
+	# 				rowLs.append(selRow)
+	# 	if len(rowLs) == 1:
+	# 		font.setBold(True)
+	# 		mainItem = self.ui.renderPbl_tableWidget.item(rowLs[0], 2)
+	# 		mainItem.setText('main')
+	# 		mainItem.setFont(font)
+	# 		#mainItem.setBackground(QtGui.QColor(60,75,40))
+	# 		passItem = self.ui.renderPbl_tableWidget.item(rowLs[0], 1)
+	# 		passName = passItem.text()
+	# 		passItem.setFont(font)
+	# 		#passItem.setBackground(QtGui.QColor(60,75,40))
+	# 		layerItem = self.ui.renderPbl_tableWidget.item(rowLs[0], 0)
+	# 		layerName = passItem.text()
+	# 		layerItem.setFont(font)
+	# 		#layerItem.setBackground(QtGui.QColor(60,75,40))
+	# 	#app hide and show forces thw window to update
+	# #	app.hide()
+	# #	app.show() # This was causing an issue with the UI closing so I've commented it out fot the time being. The widget still seems to auto update.
 
 
 	def renderPreview(self, item, column):
@@ -1040,10 +1097,17 @@ Environment: %s
 
 				if renderPasses: # only continue if render pass sequences exist in this directory
 					renderLayerItem = QtGui.QTreeWidgetItem(self.ui.renderPbl_treeWidget)
-					renderLayerItem.setText(0, '%s (%d)' % (renderLayerDir, len(renderPasses)))
+					# renderLayerItem.setText(0, '%s (%d)' % (renderLayerDir, len(renderPasses)))
+					renderLayerItem.setText(0, renderLayerDir)
 					renderLayerItem.setText(2, 'layer')
-					renderLayerItem.setText(3, os.path.join(renderPath, renderLayerDir))
+
+					# Parse asset file path
+					pathText = os.path.join(renderPath, renderLayerDir)
+					pathText = pathText.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
+					pathText = pathText.replace(os.environ['SHOTPATH'].replace('\\', '/'), '$SHOTPATH') # Change to relative path
+					renderLayerItem.setText(3, pathText)
 					#renderLayerItem.setText(3, self.relativePath(os.path.join(renderPath, renderLayerDir)))
+
 					self.ui.renderPbl_treeWidget.addTopLevelItem(renderLayerItem)
 					renderLayerItem.setExpanded(True)
 
@@ -1051,14 +1115,21 @@ Environment: %s
 					for renderPass in renderPasses:
 						renderPassItem = QtGui.QTreeWidgetItem(renderLayerItem)
 						path, prefix, fr_range, ext, num_frames = seq.getSequence( os.path.join(renderPath, renderLayerDir), renderPass )
+
 						renderPassItem.setText(0, prefix)
 						renderPassItem.setText(1, fr_range)
 						if not fr_range == os.environ['FRAMERANGE']: # set red text for sequence mismatch
 							renderPassItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#c33")))
 						renderPassItem.setText(2, ext.split('.', 1)[1])
 						#renderPassItem.setText(3, path)
-						renderPassItem.setText(3, os.path.join(renderPath, renderLayerDir, renderPass))
+
+						# Parse asset file path
+						pathText = os.path.join(renderPath, renderLayerDir, renderPass)
+						pathText = pathText.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
+						pathText = pathText.replace(os.environ['SHOTPATH'].replace('\\', '/'), '$SHOTPATH') # Change to relative path
+						renderPassItem.setText(3, pathText)
 						#renderPassItem.setText(3, self.relativePath(os.path.join(renderPath, renderLayerDir, renderPass)))
+
 						self.ui.renderPbl_treeWidget.addTopLevelItem(renderPassItem)
 
 			# Resize columns
@@ -1089,11 +1160,16 @@ Environment: %s
 		dailyPath = self.dailyPblBrowse() # dailyPath is a full path to a file
 		if dailyPath:
 			self.ui.dailyPbl_treeWidget.clear()
-			dailyPath = dailyPath.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
+			# dailyPath = dailyPath.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
 			#self.previewPath = dailyPath
-			#seqDir = dailyPath.replace(os.environ['SHOTPATH'].replace('\\', '/'), '$SHOTPATH') # Change to relative path
+			#seqDir = dailyPath.replace(os.environ['SHOTPATH'].replace('\\', '/'), '$SHOTPATH')
 			#seqDir = os.path.dirname(seqDir)
 			path, prefix, fr_range, ext, num_frames = seq.detectSeq(dailyPath)
+
+			# Parse asset file path
+			path = path.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
+			path = path.replace(os.environ['SHOTPATH'].replace('\\', '/'), '$SHOTPATH') # Change to relative path
+
 			if prefix:
 				dailyItem = QtGui.QTreeWidgetItem(self.ui.dailyPbl_treeWidget)
 				dailyItem.setText(0, '%s%s' % (prefix, ext))
@@ -1190,8 +1266,9 @@ Environment: %s
 			self.chkLs.append(self.sceneName)
 
 
-	#gets nuke asset publish options
 	def get_nuke_assetPblOpts(self, name=True):
+		""" Get Nuke asset publish options.
+		"""
 		self.chkLs = [self.pblNotes]
 		if name:
 			self.pblName = self.ui.nk_PblName_lineEdit.text()
@@ -1223,16 +1300,24 @@ Environment: %s
 		self.streamPbl, self.mainLayer = '', ''
 		if self.ui.streamPbl_checkBox.checkState() == 2:
 			self.streamPbl = True
-		rowCount = self.ui.renderPbl_tableWidget.rowCount()
+
+		rowCount = self.ui.renderPbl_treeWidget.topLevelItemCount()
 		for row in range(0, rowCount):
-			layerName = self.ui.renderPbl_tableWidget.item(row, 0).text()
-			filePath = self.ui.renderPbl_tableWidget.item(row, 1).text()
+			renderLayerItem = self.ui.renderPbl_treeWidget.topLevelItem(row)
+
+			layerName = renderLayerItem.text(0)
+			filePath = renderLayerItem.text(3)
 			self.renderDic[layerName] = filePath
-			if self.ui.renderPbl_tableWidget.item(row, 2).text() == 'main':
+
+			if renderLayerItem.text(2) == 'main':
 				self.mainLayer = layerName
+
 		if not rowCount:
 			rowCount = None
-		self.chkLs = [self.pblNotes, rowCount]
+
+		#self.chkLs = [self.pblNotes, rowCount]
+		self.chkLs = [rowCount]
+		print self.renderDic, self.streamPbl, self.mainLayer
 
 
 	def initPublish(self):
@@ -1306,7 +1391,7 @@ Environment: %s
 			# Shot
 			elif self.ui.shot_toolButton.isChecked() == True:
 				import ma_shotPbl
-				ma_shotPbl.publish(self.pblTo, self.pblNotes)
+				ma_shotPbl.publish(self.pblTo, self.pblNotes) # self.subsetName, self.textures ?
 
 			# Scene
 			elif self.ui.scene_toolButton.isChecked() == True:
@@ -1316,8 +1401,8 @@ Environment: %s
 			# Node
 			elif self.ui.ma_node_toolButton.isChecked() == True:
 				import ma_nodePbl
-				subtype = self.ui.assetSubType_comboBox.currentText()
-				ma_nodePbl.publish(self.pblTo, self.slShot, subtype, self.subsetName, self.textures, self.pblNotes)
+				subtype = ""#self.ui.assetSubType_comboBox.currentText()
+				ma_nodePbl.publish(self.pblTo, self.slShot, subtype, self.textures, self.pblNotes)
 
 		###############
 		# NUKE ASSETS #
@@ -1388,8 +1473,10 @@ Environment: %s
 			ic_renderPbl.publish(self.renderDic, self.pblTo, self.mainLayer, self.streamPbl, self.pblNotes)
 
 
-	##################################################Gather tab####################################################
-	################################################################################################################
+	##############
+	# Gather tab #
+	##############
+
 	#ui adjustments
 	def adjustGatherTab(self, showGatherButton = False):
 		self.ui.gather_pushButton.setEnabled(False)
@@ -1434,7 +1521,7 @@ Environment: %s
 		elif os.environ['ICARUSENVAWARE'] == 'NUKE':
 			return ('nk', 'ic', 'render')
 		else:
-			return ('ma', 'nk', 'ic', 'render', 'daily')
+			return ('ma', 'nk', 'ic', 'render', 'daily', 'dailies') # daily -> dailies
 		
 	#populates columns
 	def fillColumn(self, column, searchPath):
@@ -1639,12 +1726,14 @@ Environment: %s
 				nk_assetGather.gather(self.gatherPath)
 
 
-##############################RUNS ICARUS WITH ENVIRONMENT AWARENESS##############################
-##################################################################################################
-#version verbosity
+#########################################
+# RUN ICARUS WITH ENVIRONMENT AWARENESS #
+#########################################
+
+# Version verbosity
 verbose.icarusLaunch(os.environ['ICARUSVERSION'], os.environ['ICWORKINGDIR']) #os.environ['PIPELINE'])
 
-#detecting environment and runnig application
+# Detect environment and run application
 if os.environ['ICARUSENVAWARE'] == 'MAYA' or os.environ['ICARUSENVAWARE'] == 'NUKE':
 	app = icarusApp()
 
@@ -1653,27 +1742,32 @@ if os.environ['ICARUSENVAWARE'] == 'MAYA' or os.environ['ICARUSENVAWARE'] == 'NU
 	with open(qss, "r") as fh:
 		app.setStyleSheet(fh.read())
 
-	#setting qt windows flags based on running OS
+	# Set Qt window flags based on running OS
 	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
 		app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint)
 	else:
 		app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WindowCloseButtonHint)
 
-	#centering window
-	app.move(QtGui.QDesktopWidget().availableGeometry(1).center() - app.frameGeometry().center())
+	# Centre window
+#	app.move(QtGui.QDesktopWidget().availableGeometry(1).center() - app.frameGeometry().center())
 	app.show()
 
 #CLARISSE ENV - Waiting until clarisse purchase
 #elif os.environ['ICARUSENVAWARE'] == 'CLARISSE':
 #	import clarisse_icarusEventLoop
 #	try:
-#	    mainApp = QtGui.QApplication('Icarus')
+#		mainApp = QtGui.QApplication('Icarus')
 #	except RuntimeError:
-#	    mainApp = QtCore.QCoreApplication.instance()
+#		mainApp = QtCore.QCoreApplication.instance()
 #	app = icarusApp()
 #	app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint)
 #	app.show()
 #	icarus_clarisseWrap.exec_(mainApp)
+
+
+#################################
+# RUN ICARUS IN STANDALONE MODE #
+#################################
 
 else:
 	if __name__ == '__main__':
@@ -1687,11 +1781,12 @@ else:
 
 		app = icarusApp()
 
-		#passing window flags
+		# Window flags
 		app.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint)
 
-		#centering window
+		# Centre window
 	#	app.move(QtGui.QDesktopWidget().availableGeometry(1).center() - app.frameGeometry().center())
 
 		app.show()
 		sys.exit(app.exec_())
+

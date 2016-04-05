@@ -16,7 +16,7 @@ import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, i
 
 def publish(pblTo, slShot, scnName, subtype, textures, pblNotes):
 
-	# Defining main variables
+	# Define main variables
 	assetType = 'ma_scene'
 	subsetName = subtype
 	prefix = ''
@@ -48,8 +48,8 @@ def publish(pblTo, slShot, scnName, subtype, textures, pblNotes):
 	# Process asset publish options
 	assetPblName, assetDir, pblDir = pblOptsPrc.prc(pblTo, subsetName, assetType, prefix, convention, suffix)
 
-	#adding shot name to assetPblName if asset is being publish to a shot
-	#determining publish env var for relative directory
+	# Add shot name to assetPblName if asset is being publish to a shot
+	# Determining publish env var for relative directory
 	if pblTo != os.environ['JOBPUBLISHDIR']:
 		assetPblName += '_%s' % slShot
 

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# [Icarus] ma_fxPbl.py
+# [Icarus] ma_pointCloudPbl.py
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>

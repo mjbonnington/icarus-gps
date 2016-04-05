@@ -97,7 +97,7 @@ def publish(pblTo, slShot, subtype, textures, pblNotes):
 		src = mayaOps.getScene()
 		icPblData.writeData(pblDir, assetPblName, convention, assetType, extension, version, pblNotes, src)
 
-		# Publish operations
+		# Maya operations
 		mayaOps.deleteICDataSet(allObjLs)
 		if textures:
 			# Copy textures to publish directory (use hardlink instead?)

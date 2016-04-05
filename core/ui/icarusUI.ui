@@ -1381,143 +1381,176 @@ QToolButton:disabled {
                </widget>
               </item>
               <item>
-               <widget class="QScrollArea" name="ma_assetSettings_groupBox_scrollArea">
-                <property name="enabled">
-                 <bool>true</bool>
+               <widget class="QGroupBox" name="ma_publishOptions_groupBox">
+                <property name="title">
+                 <string>Publish options</string>
                 </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true"/>
-                </property>
-                <property name="widgetResizable">
-                 <bool>true</bool>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-                </property>
-                <property name="noBackground" stdset="0">
-                 <bool>true</bool>
-                </property>
-                <widget class="QWidget" name="ma_assetSettings_scrollAreaWidgetContents">
-                 <property name="geometry">
-                  <rect>
-                   <x>0</x>
-                   <y>0</y>
-                   <width>350</width>
-                   <height>344</height>
-                  </rect>
+                <layout class="QVBoxLayout" name="verticalLayout_10">
+                 <property name="margin">
+                  <number>3</number>
                  </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_3">
-                  <property name="margin">
-                   <number>0</number>
-                  </property>
-                  <item>
-                   <widget class="QFrame" name="ma_assetSettings_frame">
-                    <property name="frameShape">
-                     <enum>QFrame::NoFrame</enum>
+                 <item>
+                  <widget class="QScrollArea" name="ma_assetSettings_groupBox_scrollArea">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true"/>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::NoFrame</enum>
+                   </property>
+                   <property name="lineWidth">
+                    <number>0</number>
+                   </property>
+                   <property name="widgetResizable">
+                    <bool>true</bool>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                   </property>
+                   <property name="noBackground" stdset="0">
+                    <bool>true</bool>
+                   </property>
+                   <widget class="QWidget" name="ma_assetSettings_scrollAreaWidgetContents">
+                    <property name="geometry">
+                     <rect>
+                      <x>0</x>
+                      <y>0</y>
+                      <width>369</width>
+                      <height>416</height>
+                     </rect>
                     </property>
-                    <layout class="QFormLayout" name="formLayout_3">
-                     <property name="fieldGrowthPolicy">
-                      <enum>QFormLayout::ExpandingFieldsGrow</enum>
+                    <layout class="QVBoxLayout" name="verticalLayout_3">
+                     <property name="margin">
+                      <number>0</number>
                      </property>
-                     <item row="3" column="0">
-                      <widget class="QLabel" name="assetSubType_label">
-                       <property name="enabled">
-                        <bool>false</bool>
+                     <item>
+                      <widget class="QFrame" name="ma_assetSettings_frame">
+                       <property name="frameShape">
+                        <enum>QFrame::NoFrame</enum>
                        </property>
-                       <property name="text">
-                        <string>Asset sub-type:</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="3" column="1">
-                      <widget class="QComboBox" name="assetSubType_comboBox">
-                       <property name="enabled">
-                        <bool>false</bool>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="4" column="1">
-                      <widget class="QCheckBox" name="textures_checkBox">
-                       <property name="text">
-                        <string>Textures</string>
-                       </property>
-                       <property name="checked">
-                        <bool>false</bool>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="5" column="0">
-                      <widget class="QLabel" name="assetName_label">
-                       <property name="enabled">
-                        <bool>false</bool>
-                       </property>
-                       <property name="text">
-                        <string>Asset name:</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="5" column="1">
-                      <widget class="QLineEdit" name="assetName_lineEdit">
-                       <property name="enabled">
-                        <bool>false</bool>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="frame">
-                        <bool>true</bool>
-                       </property>
-                       <property name="readOnly">
-                        <bool>false</bool>
-                       </property>
-                       <property name="mandatoryField" stdset="0">
-                        <bool>false</bool>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="7" column="0">
-                      <widget class="QCheckBox" name="subSet_checkBox">
-                       <property name="enabled">
-                        <bool>false</bool>
-                       </property>
-                       <property name="toolTip">
-                        <string>Warning: creating sub-sets will affect version control.</string>
-                       </property>
-                       <property name="text">
-                        <string>Sub-set:</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="7" column="1">
-                      <widget class="QLineEdit" name="subSetName_lineEdit">
-                       <property name="enabled">
-                        <bool>false</bool>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="frame">
-                        <bool>true</bool>
-                       </property>
-                       <property name="readOnly">
-                        <bool>false</bool>
-                       </property>
-                       <property name="mandatoryField" stdset="0">
-                        <bool>false</bool>
-                       </property>
+                       <layout class="QFormLayout" name="formLayout_3">
+                        <property name="fieldGrowthPolicy">
+                         <enum>QFormLayout::ExpandingFieldsGrow</enum>
+                        </property>
+                        <property name="leftMargin">
+                         <number>6</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>12</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>6</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>6</number>
+                        </property>
+                        <item row="6" column="0">
+                         <widget class="QLabel" name="assetName_label">
+                          <property name="enabled">
+                           <bool>false</bool>
+                          </property>
+                          <property name="text">
+                           <string>Asset name:</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="6" column="1">
+                         <widget class="QLineEdit" name="assetName_lineEdit">
+                          <property name="enabled">
+                           <bool>false</bool>
+                          </property>
+                          <property name="text">
+                           <string/>
+                          </property>
+                          <property name="frame">
+                           <bool>true</bool>
+                          </property>
+                          <property name="readOnly">
+                           <bool>false</bool>
+                          </property>
+                          <property name="mandatoryField" stdset="0">
+                           <bool>false</bool>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="8" column="0">
+                         <widget class="QCheckBox" name="subSet_checkBox">
+                          <property name="enabled">
+                           <bool>false</bool>
+                          </property>
+                          <property name="toolTip">
+                           <string>Warning: creating sub-sets will affect version control.</string>
+                          </property>
+                          <property name="text">
+                           <string>Sub-set:</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="2" column="0">
+                         <widget class="QLabel" name="assetSubType_label">
+                          <property name="enabled">
+                           <bool>false</bool>
+                          </property>
+                          <property name="text">
+                           <string>Asset sub-type:</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="2" column="1">
+                         <widget class="QComboBox" name="assetSubType_comboBox">
+                          <property name="enabled">
+                           <bool>false</bool>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="3" column="1">
+                         <widget class="QCheckBox" name="textures_checkBox">
+                          <property name="enabled">
+                           <bool>false</bool>
+                          </property>
+                          <property name="text">
+                           <string>Textures</string>
+                          </property>
+                          <property name="checked">
+                           <bool>false</bool>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="8" column="1">
+                         <widget class="QLineEdit" name="subSetName_lineEdit">
+                          <property name="enabled">
+                           <bool>false</bool>
+                          </property>
+                          <property name="text">
+                           <string/>
+                          </property>
+                          <property name="frame">
+                           <bool>true</bool>
+                          </property>
+                          <property name="readOnly">
+                           <bool>false</bool>
+                          </property>
+                          <property name="mandatoryField" stdset="0">
+                           <bool>false</bool>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
                       </widget>
                      </item>
                     </layout>
                    </widget>
-                  </item>
-                 </layout>
-                </widget>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
              </layout>
@@ -1534,123 +1567,6 @@ QToolButton:disabled {
               <property name="spacing">
                <number>12</number>
               </property>
-              <item>
-               <widget class="QFrame" name="nk_assetTypes_frame">
-                <property name="frameShape">
-                 <enum>QFrame::NoFrame</enum>
-                </property>
-                <layout class="QGridLayout" name="gridLayout_2">
-                 <property name="margin">
-                  <number>0</number>
-                 </property>
-                 <item row="0" column="0">
-                  <widget class="QRadioButton" name="nk_setupPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>setup</string>
-                   </property>
-                   <property name="checked">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="0">
-                  <widget class="QRadioButton" name="nk_pointCloudPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>pointCloud</string>
-                   </property>
-                   <property name="checked">
-                    <bool>false</bool>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QRadioButton" name="nk_cardPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>card</string>
-                   </property>
-                   <property name="checked">
-                    <bool>false</bool>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="0">
-                  <widget class="QRadioButton" name="nk_preCompPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>preComp</string>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QRadioButton" name="nk_compPbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>comp</string>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="5" column="0">
-                  <widget class="QRadioButton" name="nk_nodePbl_radioButton">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoFillBackground">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>node</string>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
               <item>
                <widget class="QFrame" name="nk_assetType_frame">
                 <property name="frameShape">
@@ -1885,138 +1801,155 @@ QToolButton:disabled {
                </widget>
               </item>
               <item>
-               <widget class="QScrollArea" name="nk_assetSettings_scrollArea">
-                <property name="enabled">
-                 <bool>true</bool>
+               <widget class="QGroupBox" name="nk_publishOptions_groupBox">
+                <property name="title">
+                 <string>Publish options</string>
                 </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true"/>
-                </property>
-                <property name="widgetResizable">
-                 <bool>true</bool>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-                </property>
-                <property name="noBackground" stdset="0">
-                 <bool>true</bool>
-                </property>
-                <widget class="QWidget" name="nk_assetSettings_scrollAreaWidgetContents">
-                 <property name="geometry">
-                  <rect>
-                   <x>0</x>
-                   <y>0</y>
-                   <width>197</width>
-                   <height>172</height>
-                  </rect>
+                <layout class="QVBoxLayout" name="verticalLayout_14">
+                 <property name="leftMargin">
+                  <number>3</number>
                  </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_8">
-                  <property name="margin">
-                   <number>0</number>
-                  </property>
-                  <item>
-                   <widget class="QFrame" name="nk_assetSettings_frame">
-                    <property name="frameShape">
-                     <enum>QFrame::NoFrame</enum>
+                 <property name="topMargin">
+                  <number>3</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>3</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>2</number>
+                 </property>
+                 <item>
+                  <widget class="QScrollArea" name="nk_assetSettings_scrollArea">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true"/>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::NoFrame</enum>
+                   </property>
+                   <property name="lineWidth">
+                    <number>0</number>
+                   </property>
+                   <property name="widgetResizable">
+                    <bool>true</bool>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                   </property>
+                   <property name="noBackground" stdset="0">
+                    <bool>true</bool>
+                   </property>
+                   <widget class="QWidget" name="nk_assetSettings_scrollAreaWidgetContents">
+                    <property name="geometry">
+                     <rect>
+                      <x>0</x>
+                      <y>0</y>
+                      <width>369</width>
+                      <height>417</height>
+                     </rect>
                     </property>
-                    <layout class="QFormLayout" name="formLayout">
-                     <property name="fieldGrowthPolicy">
-                      <enum>QFormLayout::ExpandingFieldsGrow</enum>
+                    <layout class="QVBoxLayout" name="verticalLayout_8">
+                     <property name="margin">
+                      <number>0</number>
                      </property>
-                     <item row="1" column="0">
-                      <widget class="QLabel" name="nk_PblName_label">
-                       <property name="enabled">
-                        <bool>false</bool>
-                       </property>
-                       <property name="text">
-                        <string>Publish name:</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="1" column="1">
-                      <widget class="QLineEdit" name="nk_PblName_lineEdit">
-                       <property name="enabled">
-                        <bool>false</bool>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="frame">
-                        <bool>true</bool>
-                       </property>
-                       <property name="readOnly">
-                        <bool>false</bool>
-                       </property>
-                       <property name="mandatoryField" stdset="0">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="2" column="0">
-                      <widget class="QCheckBox" name="nk_subSet_checkBox">
-                       <property name="enabled">
-                        <bool>false</bool>
-                       </property>
-                       <property name="text">
-                        <string>Sub-set:</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="2" column="1">
-                      <widget class="QLineEdit" name="nk_subSetName_lineEdit">
-                       <property name="enabled">
-                        <bool>false</bool>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="frame">
-                        <bool>true</bool>
-                       </property>
-                       <property name="readOnly">
-                        <bool>false</bool>
-                       </property>
-                       <property name="mandatoryField" stdset="0">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="3" column="1">
-                      <widget class="QPlainTextEdit" name="nk_subSetWarning_textEdit">
-                       <property name="enabled">
-                        <bool>false</bool>
-                       </property>
+                     <item>
+                      <widget class="QFrame" name="nk_assetSettings_frame">
                        <property name="frameShape">
                         <enum>QFrame::NoFrame</enum>
                        </property>
-                       <property name="frameShadow">
-                        <enum>QFrame::Plain</enum>
-                       </property>
-                       <property name="lineWidth">
-                        <number>0</number>
-                       </property>
-                       <property name="verticalScrollBarPolicy">
-                        <enum>Qt::ScrollBarAlwaysOff</enum>
-                       </property>
-                       <property name="horizontalScrollBarPolicy">
-                        <enum>Qt::ScrollBarAlwaysOff</enum>
-                       </property>
-                       <property name="plainText">
-                        <string>Warning: creating sub-sets will affect version control.</string>
-                       </property>
+                       <layout class="QFormLayout" name="formLayout">
+                        <property name="fieldGrowthPolicy">
+                         <enum>QFormLayout::ExpandingFieldsGrow</enum>
+                        </property>
+                        <property name="leftMargin">
+                         <number>6</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>12</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>6</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>6</number>
+                        </property>
+                        <item row="1" column="0">
+                         <widget class="QLabel" name="nk_PblName_label">
+                          <property name="enabled">
+                           <bool>false</bool>
+                          </property>
+                          <property name="text">
+                           <string>Asset name:</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="1" column="1">
+                         <widget class="QLineEdit" name="nk_PblName_lineEdit">
+                          <property name="enabled">
+                           <bool>false</bool>
+                          </property>
+                          <property name="text">
+                           <string/>
+                          </property>
+                          <property name="frame">
+                           <bool>true</bool>
+                          </property>
+                          <property name="readOnly">
+                           <bool>false</bool>
+                          </property>
+                          <property name="mandatoryField" stdset="0">
+                           <bool>false</bool>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="2" column="0">
+                         <widget class="QCheckBox" name="nk_subSet_checkBox">
+                          <property name="enabled">
+                           <bool>false</bool>
+                          </property>
+                          <property name="toolTip">
+                           <string>Warning: creating sub-sets will affect version control.</string>
+                          </property>
+                          <property name="text">
+                           <string>Sub-set:</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="2" column="1">
+                         <widget class="QLineEdit" name="nk_subSetName_lineEdit">
+                          <property name="enabled">
+                           <bool>false</bool>
+                          </property>
+                          <property name="text">
+                           <string/>
+                          </property>
+                          <property name="frame">
+                           <bool>true</bool>
+                          </property>
+                          <property name="readOnly">
+                           <bool>false</bool>
+                          </property>
+                          <property name="mandatoryField" stdset="0">
+                           <bool>false</bool>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
                       </widget>
                      </item>
                     </layout>
                    </widget>
-                  </item>
-                 </layout>
-                </widget>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
              </layout>
@@ -2849,7 +2782,7 @@ QToolButton:disabled {
                 <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Helvetica'; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
               </widget>
@@ -2941,8 +2874,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>publishToShot_radioButton</tabstop>
   <tabstop>publishToShot_comboBox</tabstop>
   <tabstop>publishType_tabWidget</tabstop>
-  <tabstop>nk_setupPbl_radioButton</tabstop>
-  <tabstop>nk_pointCloudPbl_radioButton</tabstop>
   <tabstop>dailyPbl_treeWidget</tabstop>
   <tabstop>notes_textEdit</tabstop>
   <tabstop>publish_pushButton</tabstop>
@@ -2953,418 +2884,18 @@ p, li { white-space: pre-wrap; }
  </resources>
  <connections>
   <connection>
-   <sender>nk_setupPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_comboBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>62</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>146</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_nodePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_comboBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>104</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>146</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_cardPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_comboBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>91</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>146</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_preCompPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_comboBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>88</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>146</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_pointCloudPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_comboBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>88</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>146</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_compPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToShot_comboBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>91</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>146</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_setupPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToJob_radioButton</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>62</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>172</x>
-     <y>143</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_cardPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToJob_radioButton</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>91</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>172</x>
-     <y>143</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_nodePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToJob_radioButton</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>104</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>172</x>
-     <y>143</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_pointCloudPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToJob_radioButton</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>88</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>172</x>
-     <y>143</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_cardPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>nk_PblName_lineEdit</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>91</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>206</x>
-     <y>237</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_cardPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>nk_PblName_label</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>91</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>206</x>
-     <y>237</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_setupPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>nk_PblName_label</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>62</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>206</x>
-     <y>237</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_setupPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>nk_PblName_lineEdit</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>62</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>206</x>
-     <y>237</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_compPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToJob_radioButton</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>91</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>172</x>
-     <y>143</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_preCompPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>publishToJob_radioButton</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>88</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>172</x>
-     <y>143</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_pointCloudPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>nk_PblName_label</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>88</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>206</x>
-     <y>237</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_pointCloudPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>nk_PblName_lineEdit</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>88</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>206</x>
-     <y>237</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_nodePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>nk_PblName_lineEdit</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>104</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>206</x>
-     <y>237</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_nodePbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>nk_PblName_label</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>104</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>206</x>
-     <y>237</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_preCompPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>nk_PblName_label</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>88</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>206</x>
-     <y>237</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_compPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>nk_PblName_lineEdit</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>91</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>206</x>
-     <y>237</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_compPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>nk_PblName_label</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>91</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>206</x>
-     <y>237</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>nk_preCompPbl_radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>nk_PblName_lineEdit</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>88</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>206</x>
-     <y>237</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>publishToShot_radioButton</sender>
    <signal>toggled(bool)</signal>
    <receiver>publishToShot_comboBox</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>235</x>
-     <y>143</y>
+     <x>182</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
-     <x>353</x>
-     <y>146</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>publishToJob_radioButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>publishToShot_comboBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>172</x>
-     <y>143</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>146</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -3375,28 +2906,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>235</x>
-     <y>143</y>
+     <x>182</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
-     <x>353</x>
-     <y>146</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>gatherFromJob_radioButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>gatherFromShot_comboBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>172</x>
-     <y>143</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>146</y>
+     <x>257</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>
@@ -3407,8 +2922,8 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>235</x>
-     <y>143</y>
+     <x>182</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
      <x>406</x>
@@ -3423,8 +2938,8 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>235</x>
-     <y>143</y>
+     <x>182</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
      <x>152</x>
@@ -3439,12 +2954,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>235</x>
-     <y>143</y>
+     <x>182</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
-     <x>181</x>
-     <y>236</y>
+     <x>133</x>
+     <y>311</y>
     </hint>
    </hints>
   </connection>
@@ -3455,12 +2970,28 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>543</x>
-     <y>360</y>
+     <x>493</x>
+     <y>313</y>
     </hint>
     <hint type="destinationlabel">
-     <x>760</x>
-     <y>364</y>
+     <x>768</x>
+     <y>316</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>nk_subSet_checkBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>nk_subSetName_lineEdit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>492</x>
+     <y>231</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>558</x>
+     <y>236</y>
     </hint>
    </hints>
   </connection>

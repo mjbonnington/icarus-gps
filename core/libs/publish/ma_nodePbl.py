@@ -14,7 +14,7 @@ import maya.cmds as mc
 import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, inProgress
 
 
-def publish(pblTo, slShot, nodeType, subtype, textures, pblNotes):
+def publish(pblTo, slShot, nodeType, textures, pblNotes):
 
 	# Get selection
 	objLs = mc.ls(sl=True)
@@ -25,13 +25,12 @@ def publish(pblTo, slShot, nodeType, subtype, textures, pblNotes):
 
 	# Define main variables
 	assetType = '%s_node' % nodeType
-#	subsetName = subtype
+	subsetName = mc.nodeType(objLs[0])
 	prefix = ''
 	convention = objLs[0]
 	suffix = '_node'
 	fileType = 'mayaAscii'
 	extension = 'ma'
-	subsetName = mc.nodeType(convention)
 
 	# Check for illegal characters
 	cleanObj = osOps.sanitize(convention)
