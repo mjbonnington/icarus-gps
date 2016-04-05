@@ -1,29 +1,39 @@
 #!/usr/bin/python
 
-# [Icarus] ma_scnPbl.py
+# [Icarus] assetPublish.py
 #
-# Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
 # (c) 2013-2016 Gramercy Park Studios
 #
-# Publish an asset of the type ma_scene.
+# Generic asset publishing module.
 
 
 import os, sys, traceback
-import maya.cmds as mc
+#import maya.cmds as mc
 import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, inProgress
 
 
-def publish(pblTo, slShot, scnName, subtype, textures, pblNotes):
+#def publish(publishTo, slShot, subtype, textures, pblNotes):
+def publish(genericOpts, assetType, assetTypeOpts):
+	publishTo, slShot, pblNotes = genericOpts
+	subtype, name, textures = assetTypeOpts
 
-	# Defining main variables
-	assetType = 'ma_scene'
+	# Get selection
+	objLs = mc.ls(sl=True)
+
+	# Check item count
+	if not pblChk.itemCount(objLs):
+		return
+
+	# Define main variables
+#	assetType = 'ma_rig'
 	subsetName = subtype
 	prefix = ''
-	convention = scnName
-	suffix = '_scene'
-	fileType = 'mayaAscii'
-	extension = 'ma'
+	convention = objLs[0]
+	suffix = '_%s_rig' % subtype
+	fileType = 'mayaBinary'
+	extension = 'mb'
 
 	# Check for illegal characters
 	cleanObj = osOps.sanitize(convention)
@@ -32,12 +42,21 @@ def publish(pblTo, slShot, scnName, subtype, textures, pblNotes):
 		return
 
 	# Get all dependents
-	allObjLs = mc.ls(tr=True)
+	allObjLs = mc.listRelatives(convention, ad=True, f=True, typ='transform')
+	if allObjLs:
+		allObjLs.append(convention)
+	else:
+		allObjLs = [convention]
 
-	# Remove Maya's default cameras from list
-	defaultCamLs = ['front', 'persp', 'side', 'top']
-	for defaultCam in defaultCamLs:
-		allObjLs.remove(defaultCam)
+	# Check if asset to publish is a set
+	if mc.nodeType(convention) == 'objectSet':
+		verbose.noSetsPbl()
+		return
+
+	# Check if asset to publish is an icSet
+	if mayaOps.chkIcDataSet(convention):
+		verbose.noICSetsPbl()
+		return
 
 	# Check if asset to publish is referenced
 	for allObj in allObjLs:
@@ -46,11 +65,11 @@ def publish(pblTo, slShot, scnName, subtype, textures, pblNotes):
 			return
 
 	# Process asset publish options
-	assetPblName, assetDir, pblDir = pblOptsPrc.prc(pblTo, subsetName, assetType, prefix, convention, suffix)
+	assetPblName, assetDir, pblDir = pblOptsPrc.prc(publishTo, subsetName, assetType, prefix, convention, suffix)
 
-	#adding shot name to assetPblName if asset is being publish to a shot
-	#determining publish env var for relative directory
-	if pblTo != os.environ['JOBPUBLISHDIR']:
+	# Add shot name to assetPblName if asset is being publish to a shot
+	# Determining publish env var for relative directory
+	if publishTo != os.environ['JOBPUBLISHDIR']:
 		assetPblName += '_%s' % slShot
 
 	# Version control
@@ -82,30 +101,21 @@ def publish(pblTo, slShot, scnName, subtype, textures, pblNotes):
 		icPblData.writeData(pblDir, assetPblName, convention, assetType, extension, version, pblNotes, src)
 
 		# Publish operations
-		try:
-			mc.select('ICSet_*', ne=True, r=True)
-			icSetLs = mc.ls(sl=True)
-			for icSet in icSetLs:
-				mc.delete(icSet)
-		except:
-			pass
+		mayaOps.deleteICDataSet(allObjLs)
 		if textures:
 			# Copy textures to publish directory (use hardlink instead?)
 			txFullPath = os.path.join(pblDir, 'tx')
 			txRelPath = txFullPath.replace(os.path.expandvars('$JOBPATH'), '$JOBPATH')
 			txPaths = (txFullPath, txRelPath)
-			mayaOps.relinkTexture(txPaths, updateMaya=True)
+			mayaOps.relinkTexture(txPaths, txObjLs=allObjLs, updateMaya=True)
 
 		# Take snapshot
-		mayaOps.snapShot(pblDir, isolate=False, fit=False)
+		mayaOps.snapShot(pblDir, isolate=True, fit=True)
 
 		# File operations
 		pathToPblAsset = os.path.join(pblDir, '%s.%s' % (assetPblName, extension))
 		verbose.pblFeed(msg=assetPblName)
-		activeScene = mayaOps.getScene()
-		mayaOps.redirectScene(pathToPblAsset)
-		mayaOps.saveFile(fileType, updateRecentFiles=False)
-		mayaOps.redirectScene(activeScene)
+		mayaOps.exportSelection(pathToPblAsset, fileType)
 
 		# Delete in-progress tmp file
 		inProgress.end(pblDir)

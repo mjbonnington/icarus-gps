@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'icarusUI.ui'
 #
-# Created: Mon Apr 04 19:06:10 2016
-#      by: pyside-uic 0.2.15 running on PySide 1.2.4
+# Created: Mon Apr  4 21:17:53 2016
+#      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -13,7 +13,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.setEnabled(True)
-        Dialog.resize(832, 640)
+        Dialog.resize(832, 666)
         Dialog.setWindowTitle("Icarus")
         Dialog.setStyleSheet("")
         self.verticalLayout = QtGui.QVBoxLayout(Dialog)
@@ -679,7 +679,7 @@ class Ui_Dialog(object):
         self.ma_assetSettings_groupBox_scrollArea.setProperty("noBackground", True)
         self.ma_assetSettings_groupBox_scrollArea.setObjectName("ma_assetSettings_groupBox_scrollArea")
         self.ma_assetSettings_scrollAreaWidgetContents = QtGui.QWidget()
-        self.ma_assetSettings_scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 375, 409))
+        self.ma_assetSettings_scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 350, 344))
         self.ma_assetSettings_scrollAreaWidgetContents.setObjectName("ma_assetSettings_scrollAreaWidgetContents")
         self.verticalLayout_3 = QtGui.QVBoxLayout(self.ma_assetSettings_scrollAreaWidgetContents)
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -897,7 +897,7 @@ class Ui_Dialog(object):
         self.nk_assetSettings_scrollArea.setProperty("noBackground", True)
         self.nk_assetSettings_scrollArea.setObjectName("nk_assetSettings_scrollArea")
         self.nk_assetSettings_scrollAreaWidgetContents = QtGui.QWidget()
-        self.nk_assetSettings_scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 346, 409))
+        self.nk_assetSettings_scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 197, 172))
         self.nk_assetSettings_scrollAreaWidgetContents.setObjectName("nk_assetSettings_scrollAreaWidgetContents")
         self.verticalLayout_8 = QtGui.QVBoxLayout(self.nk_assetSettings_scrollAreaWidgetContents)
         self.verticalLayout_8.setContentsMargins(0, 0, 0, 0)
@@ -1321,7 +1321,7 @@ class Ui_Dialog(object):
         QtCore.QObject.connect(self.publishToShot_radioButton, QtCore.SIGNAL("toggled(bool)"), self.camera_toolButton.setEnabled)
         QtCore.QObject.connect(self.publishToShot_radioButton, QtCore.SIGNAL("toggled(bool)"), self.shot_toolButton.setEnabled)
         QtCore.QObject.connect(self.publishToShot_radioButton, QtCore.SIGNAL("toggled(bool)"), self.comp_toolButton.setEnabled)
-        QtCore.QObject.connect(self.subSet_checkBox, QtCore.SIGNAL("clicked(bool)"), self.subSetName_lineEdit.setEnabled)
+        QtCore.QObject.connect(self.subSet_checkBox, QtCore.SIGNAL("toggled(bool)"), self.subSetName_lineEdit.setEnabled)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
         Dialog.setTabOrder(self.job_comboBox, self.shot_comboBox)
         Dialog.setTabOrder(self.shot_comboBox, self.setShot_pushButton)
@@ -1468,7 +1468,7 @@ class Ui_Dialog(object):
         self.gatherInfo_textEdit.setHtml(QtGui.QApplication.translate("Dialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"</style></head><body style=\" font-family:\'Lucida Grande\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Helvetica\'; font-size:11pt;\"><br /></span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.gather_pushButton.setText(QtGui.QApplication.translate("Dialog", "Gather", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.gather_tab), QtGui.QApplication.translate("Dialog", "Gather", None, QtGui.QApplication.UnicodeUTF8))

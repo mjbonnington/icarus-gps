@@ -315,14 +315,14 @@ class icarusApp(QtGui.QDialog):
 			if isinstance(toolButton, QtGui.QToolButton):
 				toolButton.clicked.connect(self.adjustPublishOptsUI) # toggled?
 
-		self.ui.shot_toolButton.clicked.connect(self.setDropDownToShotEnv)
 		self.ui.animation_toolButton.clicked.connect(self.setDropDownToShotEnv)
-		self.ui.camera_toolButton.clicked.connect(self.uncheckSubset)
-		self.ui.model_toolButton.clicked.connect(self.uncheckSubset)
-		self.ui.geoCache_toolButton.clicked.connect(self.uncheckSubset)
-		self.ui.geo_toolButton.clicked.connect(self.uncheckSubset)
-		self.ui.rig_toolButton.clicked.connect(self.uncheckSubset)
-		self.ui.ma_node_toolButton.clicked.connect(self.uncheckSubset)
+		self.ui.shot_toolButton.clicked.connect(self.setDropDownToShotEnv)
+	#	self.ui.camera_toolButton.clicked.connect(self.uncheckSubset)
+	#	self.ui.model_toolButton.clicked.connect(self.uncheckSubset)
+	#	self.ui.geoCache_toolButton.clicked.connect(self.uncheckSubset)
+	#	self.ui.geo_toolButton.clicked.connect(self.uncheckSubset)
+	#	self.ui.rig_toolButton.clicked.connect(self.uncheckSubset)
+	#	self.ui.ma_node_toolButton.clicked.connect(self.uncheckSubset)
 		self.ui.comp_toolButton.clicked.connect(self.adjustPblTypeUI)
 
 		self.ui.gatherFromShot_radioButton.clicked.connect(self.adjustMainUI)
@@ -408,9 +408,12 @@ class icarusApp(QtGui.QDialog):
 		if self.ui.assetSubType_comboBox.count():
 			self.ui.assetSubType_label.setEnabled(True)
 			self.ui.assetSubType_comboBox.setEnabled(True)
+			self.ui.subSet_checkBox.setEnabled(False)
+			self.ui.subSet_checkBox.setChecked(False)
 		else:
 			self.ui.assetSubType_label.setEnabled(False)
 			self.ui.assetSubType_comboBox.setEnabled(False)
+			self.ui.subSet_checkBox.setEnabled(True)
 
 
 	def adjustPblTypeUI(self):
@@ -883,12 +886,13 @@ Environment: %s
 	###################adjusting ui####################				
 
 
-	def uncheckSubset(self):
-		""" Uncheck sub-set checkbox based on asset type.
-		"""
-		self.ui.subSet_checkBox.setChecked(False)
-		self.ui.subSetName_lineEdit.setEnabled(False)
-	#	self.ui.subSetWarning_textEdit.setEnabled(False)
+#	def uncheckSubset(self):
+#		""" Uncheck sub-set checkbox based on asset type.
+#		"""
+#		#print 'no sub-set'
+#		self.ui.subSet_checkBox.setChecked(False)
+#		self.ui.subSetName_lineEdit.setEnabled(False)
+#	#	self.ui.subSetWarning_textEdit.setEnabled(False)
 
 
 #	#populates the render publish table
@@ -1236,8 +1240,7 @@ Environment: %s
 			Ultimately this whole system should be rewritten.
 		"""
 		self.getMainPblOpts()
-		print self.pblTo, self.pblNotes, self.pblType, self.slShot, 
-
+		print self.pblTo, self.pblNotes, self.pblType, self.slShot
 
 		###############
 		# MAYA ASSETS #
@@ -1252,32 +1255,33 @@ Environment: %s
 			# Model
 			elif self.ui.model_toolButton.isChecked() == True:
 				import ma_mdlPbl
-				self.mdlType = self.ui.assetSubType_comboBox.currentText()
-				ma_mdlPbl.publish(self.pblTo, self.slShot, self.mdlType, self.textures, self.pblNotes)
+				subtype = self.ui.assetSubType_comboBox.currentText()
+				ma_mdlPbl.publish(self.pblTo, self.slShot, subtype, self.textures, self.pblNotes)
+				#assetPublish.publish(genericOpts, 'ma_model', assetTypeOpts)
 
 			# Rig
 			elif self.ui.rig_toolButton.isChecked() == True:
 				import ma_rigPbl
-				self.rigType = self.ui.assetSubType_comboBox.currentText()
-				ma_rigPbl.publish(self.pblTo, self.slShot, self.rigType, self.textures, self.pblNotes)
+				subtype = self.ui.assetSubType_comboBox.currentText()
+				ma_rigPbl.publish(self.pblTo, self.slShot, subtype, self.textures, self.pblNotes)
 
 			# Camera
 			if self.ui.camera_toolButton.isChecked() == True:
 				import ma_camPbl
-				self.camType = self.ui.assetSubType_comboBox.currentText()
-				ma_camPbl.publish(self.pblTo, self.slShot, self.camType, self.pblNotes)
+				subtype = self.ui.assetSubType_comboBox.currentText()
+				ma_camPbl.publish(self.pblTo, self.slShot, subtype, self.pblNotes)
 
 			# Geo
 			elif self.ui.geo_toolButton.isChecked() == True:
 				import ma_geoPbl
-				self.geoType = self.ui.assetSubType_comboBox.currentText()
-				ma_geoPbl.publish(self.pblTo, self.slShot, self.geoType, self.textures, self.pblNotes)
+				subtype = self.ui.assetSubType_comboBox.currentText()
+				ma_geoPbl.publish(self.pblTo, self.slShot, subtype, self.textures, self.pblNotes)
 
 			# Geo cache
 			elif self.ui.geoCache_toolButton.isChecked() == True:
 				import ma_geoChPbl
-				self.geoChType = self.ui.assetSubType_comboBox.currentText()
-				ma_geoChPbl.publish(self.pblTo, self.slShot, self.geoChType, self.pblNotes)
+				subtype = self.ui.assetSubType_comboBox.currentText()
+				ma_geoChPbl.publish(self.pblTo, self.slShot, subtype, self.pblNotes)
 
 			# Animation
 			elif self.ui.animation_toolButton.isChecked() == True:
@@ -1312,8 +1316,8 @@ Environment: %s
 			# Node
 			elif self.ui.ma_node_toolButton.isChecked() == True:
 				import ma_nodePbl
-				self.nodeType = self.ui.assetSubType_comboBox.currentText()
-				ma_nodePbl.publish(self.pblTo, self.slShot, self.nodeType, self.subsetName, self.textures, self.pblNotes)
+				subtype = self.ui.assetSubType_comboBox.currentText()
+				ma_nodePbl.publish(self.pblTo, self.slShot, subtype, self.subsetName, self.textures, self.pblNotes)
 
 		###############
 		# NUKE ASSETS #

@@ -1,7 +1,7 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:inProgress
-#copyright	:Gramercy Park Studios
+#support    :Nuno Pereira - nuno.pereira@gps-ldn.com
+#title      :inProgress
+#copyright  :Gramercy Park Studios
 
 
 import os
