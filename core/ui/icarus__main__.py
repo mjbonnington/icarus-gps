@@ -76,6 +76,7 @@ class icarusApp(QtGui.QDialog):
 		self.ui.renderPblAdd_pushButton.clicked.connect(self.renderTableAdd)
 		self.ui.renderPblRemove_pushButton.clicked.connect(self.renderTableRemove)
 		#self.ui.renderPblRevert_pushButton.clicked.connect(self.renderTableClear)
+		self.ui.renderPbl_treeWidget.currentItemChanged.connect(self.updateRenderPublishUI)
 		self.ui.renderPbl_treeWidget.itemDoubleClicked.connect(self.renderPreview)
 		# self.ui.dailyPbl_treeWidget.itemDoubleClicked.connect(self.renderPreview) # remove when preview is working correctly
 		self.ui.dailyPblType_comboBox.currentIndexChanged.connect(self.setDailyType)
@@ -988,28 +989,6 @@ Environment: %s
 #			self.ui.renderPbl_tableWidget.removeRow(rmRow)
 
 
-	def setLayerAsMain(self):
-		""" Sets the selected render layer as the main layer.
-		"""
-		rowCount = self.ui.renderPbl_treeWidget.topLevelItemCount()
-		for row in range(0, rowCount):
-			item = self.ui.renderPbl_treeWidget.topLevelItem(row)
-			item.setText(2, 'layer')
-
-		for item in self.ui.renderPbl_treeWidget.selectedItems():
-			item.setText(2, 'main')
-
-		self.ui.renderPbl_treeWidget.resizeColumnToContents(2)
-
-
-		# 	layerName = renderLayerItem.text(0)
-		# 	filePath = renderLayerItem.text(3)
-		# 	self.renderDic[layerName] = filePath
-
-		# 	if renderLayerItem.text(2) == 'main':
-		# 		self.mainLayer = layerName
-
-
 	# #sets the selected render layer as the main layer
 	# def setLayerAsMain(self, autoMainLayer=None):
 	# 	font = QtGui.QFont()
@@ -1067,24 +1046,56 @@ Environment: %s
 			return absPath
 
 
+	def updateRenderPublishUI(self, current, previous):
+		""" Update the render publish UI based on the current selection.
+		"""
+		# print self.sender()
+		# print current, previous
+
+
 	def renderPreview(self, item, column):
 		""" Launches sequence viewer when entry is double-clicked.
 		"""
-		#print item.text(column), column
 		path = seq.getFirst( item.text(3) )
-		#path = seq.getFirst( self.absolutePath(item.text(3)) )
-		#print path
-		#djvOps.viewer(path)
 		self.preview(path)
 
 
-#	def cell_was_clicked(self, row, column):
-#		""" TEMPORARY FUNCTION - catches double-click signal on dailies table and launches sequence in viewer
-#		"""
-#		item = self.ui.dailyPbl_treeWidget.itemAt(row, column)
-#		print("Row %d and column %d was clicked: %s" % (row, column, item.text()))
-#		#self.ID = item.text()
-#		self.preview(self.previewPath)
+	def setLayerAsMain(self):
+		""" Sets the selected render layer as the main layer.
+		"""
+		rowCount = self.ui.renderPbl_treeWidget.topLevelItemCount()
+		for row in range(0, rowCount):
+			item = self.ui.renderPbl_treeWidget.topLevelItem(row)
+			item.setText(2, 'layer')
+
+		for item in self.ui.renderPbl_treeWidget.selectedItems():
+			# item.setText(2, 'main')
+			try:
+				selectedItem = self.ui.renderPbl_treeWidget.topLevelItem( self.ui.renderPbl_treeWidget.indexOfTopLevelItem(item) )
+				selectedItem.setText(2, 'main')
+			except AttributeError:
+				print "Warning: Only render layers (not render passes / AOVs) can be set as the main layer."
+
+		self.ui.renderPbl_treeWidget.resizeColumnToContents(2)
+
+
+	def renderTableAdd(self):
+		""" Adds entries to the render layer tree view widget.
+		"""
+		self.renderPath = self.folderDialog(os.environ['MAYARENDERSDIR'])
+		self.renderTableUpdate()
+
+
+	def renderTableRemove(self):
+		""" Removes the selected entry from the render layer tree view widget.
+		"""
+		root = self.ui.renderPbl_treeWidget.invisibleRootItem()
+		for item in self.ui.renderPbl_treeWidget.selectedItems():
+			(item.parent() or root).removeChild(item)
+		# for item in self.ui.renderPbl_treeWidget.selectedItems():
+		# 	print self.ui.renderPbl_treeWidget.indexFromItem(item)
+		# 	print type(item)
+		# 	#self.ui.renderPbl_treeWidget.takeTopLevelItem( self.ui.renderPbl_treeWidget.indexOfTopLevelItem(item) )
 
 
 	def renderTableUpdate(self):
@@ -1106,7 +1117,7 @@ Environment: %s
 				renderLayerDirs = [os.path.basename(renderPath)]
 				renderPath = os.path.dirname(renderPath)
 
-			self.ui.renderPbl_treeWidget.setIconSize(QtCore.QSize(128, 72))
+			# self.ui.renderPbl_treeWidget.setIconSize(QtCore.QSize(128, 72))
 
 			# Add render layers
 			for renderLayerDir in renderLayerDirs:
@@ -1140,21 +1151,6 @@ Environment: %s
 			self.ui.renderPbl_treeWidget.resizeColumnToContents(0)
 			self.ui.renderPbl_treeWidget.resizeColumnToContents(1)
 			self.ui.renderPbl_treeWidget.resizeColumnToContents(2)
-
-
-	def renderTableAdd(self):
-		""" Adds entries to the render layer tree view widget.
-		"""
-		self.renderPath = self.folderDialog(os.environ['MAYARENDERSDIR'])
-		self.renderTableUpdate()
-
-
-	def renderTableRemove(self):
-		""" Removes the selected entry from the render layer tree view widget.
-			TODO: allow passes to be removed as well as layers.
-		"""
-		for item in self.ui.renderPbl_treeWidget.selectedItems():
-			self.ui.renderPbl_treeWidget.takeTopLevelItem( self.ui.renderPbl_treeWidget.indexOfTopLevelItem(item) )
 
 
 	def dailyTableAdd(self):

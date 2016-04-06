@@ -129,7 +129,7 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes):
 
 			inFile = os.path.join(mainLayerDir, mainLayerBody)
 			outFile = os.path.join(pblDir, 'preview')
-			djvOps.prcImg(inFile, outFile, posterFrame, posterFrame, mainLayerExtension, resize=(512,288), outExt='jpg')
+			djvOps.prcImg(inFile, outFile, posterFrame, posterFrame, mainLayerExtension[1:], resize=(512,288), outExt='jpg')
 			#djvOps.prcQt(inFile, pblDir, startFrame, endFrame, mainLayerExtension, resize=(256,144))
 
 		# Store asset metadata in file
