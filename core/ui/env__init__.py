@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2015 Gramercy Park Studios
+# (c) 2013-2016 Gramercy Park Studios
 #
 # Initialises main pipeline environment.
 
@@ -28,7 +28,7 @@ def setEnv():
 	except KeyError:
 		os.environ['ICARUSENVAWARE'] = 'STANDALONE'
 
-	os.environ['ICARUSVERSION'] = 'v0.8.16-20151217'
+	os.environ['ICARUSVERSION'] = 'v0.9.0-20160406'
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
 	os.environ['ICWORKINGDIR'] = icarusWorkingDir
 	icarusUIDir = os.path.join('core', 'ui')
@@ -37,10 +37,10 @@ def setEnv():
 	os.environ['ICUSERPREFS'] = os.path.join(os.environ['ICCONFIGDIR'], 'users', os.environ['USERNAME']) # User prefs stored on server
 	#os.environ['ICUSERPREFS'] = os.path.join(os.environ['HOME'], '.icarus') # User prefs stored in user home folder
 
+	# Hard-coded relative data directories required by Icarus
 	os.environ['SHOTSROOTRELATIVEDIR'] = 'Vfx'
 	os.environ['DATAFILESRELATIVEDIR'] = '.icarus'
-	#os.environ['JOBDATAFILE'] = 'jobData' # Change when data is stored as XML
-	#os.environ['SHOTDATAFILE'] = 'shotData' # Change when data is stored as XML
+
 	appendSysPaths()
 
 
@@ -51,10 +51,12 @@ def appendSysPaths():
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusTools, 'icAdmin'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusTools, 'gpsSubmit'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusTools, 'gpsPreview'))
-	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'ui'))
+	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusTools, 'renderBrowser'))
+#	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'ui'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'gather'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'publish'))
-	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'scnMng'))
+#	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'scnMng'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'setJob'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'shared'))
-	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'py_modules'))
+#	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'py_modules'))
+

@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2015 Gramercy Park Studios
+# (c) 2013-2016 Gramercy Park Studios
 #
 # Launches software applications.
 
@@ -13,61 +13,143 @@ import os, sys, subprocess
 import verbose
 
 
-def maya():
-	verbose.launchApp('Maya')
-	cmdStr = '"%s" -proj %s' % (os.environ['MAYAVERSION'], os.environ['MAYADIR'])
-	verbose.print_(cmdStr, 4)
-	subprocess.Popen(cmdStr, shell=True)
+def launch(app=None):
+	""" Launch the specified application.
+	"""
+	execPath = ""
+	cmdStr = ""
 
-def mudbox():
-	verbose.launchApp('Mudbox')
-	cmdStr = '"%s"' % os.environ['MUDBOXVERSION']
-	verbose.print_(cmdStr, 4)
-	subprocess.Popen(cmdStr, shell=True)
+	# Build command string depending on app
+	if app is None:
+		execPath = ""
+		cmdStr = ""
 
-def mari():
-	verbose.launchApp('Mari')
-	cmdStr = '"%s"' % os.environ['MARIVERSION']
-	verbose.print_(cmdStr, 4)
-	subprocess.Popen(cmdStr, shell=True)
+	elif app is 'Maya':
+		execPath = os.environ['MAYAVERSION']
+		cmdStr = '"%s" -proj %s' % (execPath, os.environ['MAYADIR'])
 
-def hieroPlayer():
-	verbose.launchApp('HieroPlayer')
-	cmdStr = '"%s" -q' % os.environ['HIEROPLAYERVERSION']
-	verbose.print_(cmdStr, 4)
-	subprocess.Popen(cmdStr, shell=True)
+	elif app is 'Mudbox':
+		execPath = os.environ['MUDBOXVERSION']
+		cmdStr = '"%s"' % execPath
 
-def deadlineMonitor():
-	verbose.launchApp('Deadline Monitor')
-	cmdStr = '"%s"' % os.environ['DEADLINEMONITORVERSION']
-	verbose.print_(cmdStr, 4)
-	subprocess.Popen(cmdStr, shell=True)
+	elif app is 'Nuke':
+		execPath = os.environ['NUKEVERSION']
+		cmdStr = '"%s"' % execPath
 
-def deadlineSlave():
-	verbose.launchApp('Deadline Slave')
-	cmdStr = '"%s"' % os.environ['DEADLINESLAVEVERSION']
-	verbose.print_(cmdStr, 4)
-	subprocess.Popen(cmdStr, shell=True)
+	elif app is 'NukeX':
+		execPath = os.environ['NUKEVERSION']
+		cmdStr = '"%s" --nukex' % execPath
 
-def nuke(nukeType):
-	verbose.launchApp(nukeType)
-	if nukeType in ('nuke', 'Nuke'):
-		cmdStr = '"%s"' % os.environ['NUKEVERSION']
-	elif nukeType in ('nukex', 'NukeX'):
-		cmdStr = '"%s" --nukex' % os.environ['NUKEVERSION']
-	elif nukeType in ('nukestudio', 'NukeStudio'):
-		cmdStr = '"%s" --studio' % os.environ['NUKEVERSION']
-	verbose.print_(cmdStr, 4)
-	subprocess.Popen(cmdStr, shell=True)
+	elif app is 'NukeStudio':
+		execPath = os.environ['NUKEVERSION']
+		cmdStr = '"%s" --studio' % execPath
 
-def realflow():
-	sys.path.append(os.path.join(os.environ['PIPELINE'], 'rsc', 'realflow', 'scripts'))
-	import startup
-	verbose.launchApp('RealFlow')
-	startup.autoDeploy()
-	cmdStr = '"%s"' % os.environ['REALFLOWVERSION']
+	elif app is 'Mari':
+		execPath = os.environ['MARIVERSION']
+		cmdStr = '"%s"' % execPath
+
+	elif app is 'HieroPlayer':
+		execPath = os.environ['HIEROPLAYERVERSION']
+		cmdStr = '"%s" -q' % execPath
+
+	elif app is 'RealFlow':
+		execPath = os.environ['REALFLOWVERSION']
+		sys.path.append(os.path.join(os.environ['PIPELINE'], 'rsc', 'realflow', 'scripts'))
+		import startup
+		startup.autoDeploy()
+		cmdStr = '"%s"' % execPath
+
+	elif app is 'DeadlineMonitor':
+		execPath = os.environ['DEADLINEMONITORVERSION']
+		cmdStr = '"%s"' % execPath
+
+	elif app is 'DeadlineSlave':
+		execPath = os.environ['DEADLINESLAVEVERSION']
+		cmdStr = '"%s"' % execPath
+
+	#elif app is 'djv_view':
+	#	execPath = os.environ['DJVVERSION']
+	#	import djvOps
+	#	#djvOps.viewer(os.environ['SHOTPATH'])
+	#	djvOps.viewer()
+	#	cmdStr = '"%s"' % execPath
+
+	# Check executable path is set and exists, and launch app
+	if execPath:
+		if os.path.isfile(execPath):
+			verbose.launchApp(app)
+			subprocess.Popen(cmdStr, shell=True)
+		else:
+			verbose.launchAppNotFound(app)
+	else:
+		verbose.launchAppNotSet(app)
+
+	# Print debug output
 	verbose.print_(cmdStr, 4)
-	subprocess.Popen(cmdStr, shell=True)
+
+
+#def maya():
+#	execPath = os.environ['MAYAVERSION']
+#	if execPath:
+#		if os.path.isfile(execPath):
+#			verbose.launchApp('Maya')
+#			cmdStr = '"%s" -proj %s' % (execPath, os.environ['MAYADIR'])
+#			verbose.print_(cmdStr, 4)
+#			subprocess.Popen(cmdStr, shell=True)
+#		else:
+#			verbose.launchAppNotFound('Maya')
+#	else:
+#		verbose.launchAppNotSet('Maya')
+#
+#def mudbox():
+#	verbose.launchApp('Mudbox')
+#	cmdStr = '"%s"' % os.environ['MUDBOXVERSION']
+#	verbose.print_(cmdStr, 4)
+#	subprocess.Popen(cmdStr, shell=True)
+#
+#def mari():
+#	verbose.launchApp('Mari')
+#	cmdStr = '"%s"' % os.environ['MARIVERSION']
+#	verbose.print_(cmdStr, 4)
+#	subprocess.Popen(cmdStr, shell=True)
+#
+#def hieroPlayer():
+#	verbose.launchApp('HieroPlayer')
+#	cmdStr = '"%s" -q' % os.environ['HIEROPLAYERVERSION']
+#	verbose.print_(cmdStr, 4)
+#	subprocess.Popen(cmdStr, shell=True)
+#
+#def deadlineMonitor():
+#	verbose.launchApp('Deadline Monitor')
+#	cmdStr = '"%s"' % os.environ['DEADLINEMONITORVERSION']
+#	verbose.print_(cmdStr, 4)
+#	subprocess.Popen(cmdStr, shell=True)
+#
+#def deadlineSlave():
+#	verbose.launchApp('Deadline Slave')
+#	cmdStr = '"%s"' % os.environ['DEADLINESLAVEVERSION']
+#	verbose.print_(cmdStr, 4)
+#	subprocess.Popen(cmdStr, shell=True)
+#
+#def nuke(nukeType):
+#	verbose.launchApp(nukeType)
+#	if nukeType in ('nuke', 'Nuke'):
+#		cmdStr = '"%s"' % os.environ['NUKEVERSION']
+#	elif nukeType in ('nukex', 'NukeX'):
+#		cmdStr = '"%s" --nukex' % os.environ['NUKEVERSION']
+#	elif nukeType in ('nukestudio', 'NukeStudio'):
+#		cmdStr = '"%s" --studio' % os.environ['NUKEVERSION']
+#	verbose.print_(cmdStr, 4)
+#	subprocess.Popen(cmdStr, shell=True)
+#
+#def realflow():
+#	sys.path.append(os.path.join(os.environ['PIPELINE'], 'rsc', 'realflow', 'scripts'))
+#	import startup
+#	verbose.launchApp('RealFlow')
+#	startup.autoDeploy()
+#	cmdStr = '"%s"' % os.environ['REALFLOWVERSION']
+#	verbose.print_(cmdStr, 4)
+#	subprocess.Popen(cmdStr, shell=True)
 
 def djv():
 	verbose.launchApp('djv_view')

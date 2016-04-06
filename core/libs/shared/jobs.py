@@ -51,8 +51,8 @@ try:
 except:
 	sys.exit("ERROR: Jobs file not found, or contents are invalid.")
 
-if not dic:
-	sys.exit("ERROR: No active jobs found.")
+#if not dic:
+#	sys.exit("ERROR: No active jobs found.")
 
 
 class jobs():

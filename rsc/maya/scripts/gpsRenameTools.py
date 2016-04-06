@@ -1,8 +1,13 @@
-# GPS Rename Tools
-# v0.5
+#!/usr/bin/python
+
+# [GPS] Rename Tools
+# v0.5.1
 #
-# Michael Bonnington 2014-2015
-# Gramercy Park Studios
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2014-2016 Gramercy Park Studios
+#
+# Advanced renaming of objects.
+
 
 import string, re, time
 import maya.cmds as mc
@@ -22,11 +27,10 @@ class gpsRenameTools():
 
 
 	def renameUnique(self, obj, newName):
-		"""Rename object
-		Now takes pymel object, rather than string, as first argument.
-		Perhaps this function should be moved to an external module?
+		""" Rename object.
+			Now takes pymel object, rather than string, as first argument.
+			Perhaps this function should be moved to an external module?
 		"""
-
 		# Set flags for shape node renaming behaviour
 		ignoreShape = False
 		renameShapes = mc.radioCollection("renameShapes", query=True, select=True) # Re-write to pass in as attribute
@@ -54,8 +58,8 @@ class gpsRenameTools():
 
 
 	def replaceTextRE(self):
-		"""Find and replace using regular expressions"""
-
+		""" Find and replace using regular expressions.
+		"""
 		# Get options
 		findStr = mc.textFieldGrp("findStr", query=True, text=True)
 		replaceStr = mc.textFieldGrp("replaceStr", query=True, text=True)
@@ -98,8 +102,8 @@ class gpsRenameTools():
 
 
 	def renumber(self):
-		"""Renumber objects"""
-
+		""" Renumber objects. 
+		"""
 		# Get options
 		preserve = mc.checkBox("preserve", query=True, value=True)
 		start = mc.intSliderGrp("start", query=True, value=True)
@@ -209,7 +213,8 @@ class gpsRenameTools():
 
 
 	def UI(self):
-
+		""" Create UI.
+		"""
 		# Check if UI window already exists
 		if mc.window(self.winName, exists=True):
 			mc.deleteUI(self.winName)
@@ -233,7 +238,8 @@ class gpsRenameTools():
 
 
 	def scopePanelUI(self, name, parent, collapse=False):
-		"""Create scope panel UI controls"""
+		""" Create scope panel UI controls.
+		"""
 		mc.frameLayout(width=400, collapsable=True, cl=collapse, borderStyle="etchedIn", label="Scope")
 		mc.columnLayout(name)
 
@@ -247,8 +253,8 @@ class gpsRenameTools():
 
 
 	def findReplacePanelUI(self, name, parent, collapse=False):
-		"""Create find and replace panel UI controls"""
-
+		""" Create find and replace panel UI controls.
+		"""
 		mc.frameLayout(width=400, collapsable=True, cl=collapse, borderStyle="etchedIn", label="Find and Replace")
 		mc.columnLayout(name)
 
@@ -276,8 +282,8 @@ class gpsRenameTools():
 
 
 	def renumberPanelUI(self, name, parent, collapse=False):
-		"""Create renumber panel UI controls"""
-
+		""" Create renumber panel UI controls.
+		"""
 		mc.frameLayout(width=400, collapsable=True, cl=collapse, borderStyle="etchedIn", label="Renumber")
 		mc.columnLayout(name)
 		mc.separator(height=4, style="none")
@@ -304,8 +310,8 @@ class gpsRenameTools():
 
 
 	def advOptPanelUI(self, name, parent, collapse=False):
-		"""Create advanced options panel UI controls"""
-
+		""" Create advanced options panel UI controls.
+		"""
 		mc.frameLayout(width=400, collapsable=True, cl=collapse, borderStyle="etchedIn", label="Advanced Options")
 		mc.columnLayout(name)
 		mc.separator(height=4, style="none")
@@ -322,3 +328,4 @@ class gpsRenameTools():
 		mc.setParent(name)
 		mc.separator(height=8, style="none")
 		mc.setParent(parent)
+

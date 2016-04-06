@@ -1,8 +1,8 @@
 // [GPS] Build Menus
-// v0.1
 //
-// Michael Bonnington, Nuno Pereira
-// (c) 2015 Gramercy Park Studios
+// Nuno Pereira <nuno.pereira@gps-ldn.com>
+// Mike Bonnington <mike.bonnington@gps-ldn.com>
+// (c) 2015-2016 Gramercy Park Studios
 //
 // Dynamically modifies Maya's menus without the need to edit Maya's UI MEL scripts directly.
 
@@ -231,7 +231,8 @@ iconTextButton -image1 "editor.png"
 
 // GPS - Add popup menu for common editors
 string $menu = `popupMenu -b 1 -p editorsButton`;
-	menuItem -label "Outliner" -c "OutlinerWindow";
+	//menuItem -label "Outliner" -c "OutlinerWindow";
+	menuItem -label "Outliner" -c "source dev_dockOutliner;dev_dockOutliner()"; // Dockable Outliner
 	menuItem -label "Node Editor" -c "NodeEditorWindow";
 	menuItem -divider true;
 	menuItem -label "Hypershade" -c "HypershadeWindow";

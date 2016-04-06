@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'submit_ui.ui'
 #
-# Created: Thu May  7 14:07:45 2015
-#      by: pyside-uic 0.2.13 running on PySide 1.1.1
+# Created: Wed Mar 23 12:55:00 2016
+#      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -59,6 +59,7 @@ class Ui_Dialog(object):
         self.formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.taskSize_label)
         self.taskSize_spinBox = QtGui.QSpinBox(self.overrideFrameRange_groupBox)
         self.taskSize_spinBox.setMinimum(1)
+        self.taskSize_spinBox.setMaximum(9999)
         self.taskSize_spinBox.setObjectName("taskSize_spinBox")
         self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.taskSize_spinBox)
         self.frameRange_label = QtGui.QLabel(self.overrideFrameRange_groupBox)
@@ -69,6 +70,18 @@ class Ui_Dialog(object):
         self.frameRange_lineEdit.setObjectName("frameRange_lineEdit")
         self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.frameRange_lineEdit)
         self.verticalLayout.addWidget(self.overrideFrameRange_groupBox)
+        self.flags_groupBox = QtGui.QGroupBox(self.main_frame)
+        self.flags_groupBox.setCheckable(True)
+        self.flags_groupBox.setChecked(False)
+        self.flags_groupBox.setObjectName("flags_groupBox")
+        self.formLayout_2 = QtGui.QFormLayout(self.flags_groupBox)
+        self.formLayout_2.setFieldGrowthPolicy(QtGui.QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout_2.setObjectName("formLayout_2")
+        self.flags_lineEdit = QtGui.QLineEdit(self.flags_groupBox)
+        self.flags_lineEdit.setText("")
+        self.flags_lineEdit.setObjectName("flags_lineEdit")
+        self.formLayout_2.setWidget(0, QtGui.QFormLayout.FieldRole, self.flags_lineEdit)
+        self.verticalLayout.addWidget(self.flags_groupBox)
         self.verticalLayout_2.addWidget(self.main_frame)
         spacerItem = QtGui.QSpacerItem(20, 12, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.verticalLayout_2.addItem(spacerItem)
@@ -94,8 +107,7 @@ class Ui_Dialog(object):
         Dialog.setTabOrder(self.killComplete_pushButton, self.close_pushButton)
         Dialog.setTabOrder(self.close_pushButton, self.scene_comboBox)
         Dialog.setTabOrder(self.scene_comboBox, self.sceneBrowse_toolButton)
-        Dialog.setTabOrder(self.sceneBrowse_toolButton, self.overrideFrameRange_groupBox)
-        Dialog.setTabOrder(self.overrideFrameRange_groupBox, self.frameRange_lineEdit)
+        Dialog.setTabOrder(self.sceneBrowse_toolButton, self.frameRange_lineEdit)
         Dialog.setTabOrder(self.frameRange_lineEdit, self.taskSize_spinBox)
 
     def retranslateUi(self, Dialog):
@@ -109,6 +121,8 @@ class Ui_Dialog(object):
         self.taskSize_spinBox.setSuffix(QtGui.QApplication.translate("Dialog", " frame(s)", None, QtGui.QApplication.UnicodeUTF8))
         self.frameRange_label.setText(QtGui.QApplication.translate("Dialog", "Frame range:", None, QtGui.QApplication.UnicodeUTF8))
         self.frameRange_lineEdit.setToolTip(QtGui.QApplication.translate("Dialog", "List of frames to be rendered. Individual frames should be separated with commas, and sequences can be specified using a hyphen, e.g. 1, 5-10", None, QtGui.QApplication.UnicodeUTF8))
+        self.flags_groupBox.setToolTip(QtGui.QApplication.translate("Dialog", "Allows additional command-line flags to be specified", None, QtGui.QApplication.UnicodeUTF8))
+        self.flags_groupBox.setTitle(QtGui.QApplication.translate("Dialog", "Additional command-line flags", None, QtGui.QApplication.UnicodeUTF8))
         self.submit_pushButton.setText(QtGui.QApplication.translate("Dialog", "Submit", None, QtGui.QApplication.UnicodeUTF8))
         self.killComplete_pushButton.setText(QtGui.QApplication.translate("Dialog", "Kill/Complete", None, QtGui.QApplication.UnicodeUTF8))
         self.close_pushButton.setText(QtGui.QApplication.translate("Dialog", "Close", None, QtGui.QApplication.UnicodeUTF8))

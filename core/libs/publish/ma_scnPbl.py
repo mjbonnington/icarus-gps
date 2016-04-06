@@ -1,100 +1,105 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:ma_scnPbl
-#copyright	:Gramercy Park Studios
+
+# [Icarus] ma_scnPbl.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2016 Gramercy Park Studios
+#
+# Publish an asset of the type ma_scene.
 
 
-#maya scene publish module
 import os, sys, traceback
 import maya.cmds as mc
-import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, approvePbl, inProgress
+import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, inProgress
 
 
-def publish(pblTo, slShot, scnName, subsetName, textures, pblNotes, mail, approved):
+def publish(pblTo, slShot, scnName, subtype, textures, pblNotes):
 
-	
-	#defining main variables
+	# Define main variables
 	assetType = 'ma_scene'
+	subsetName = subtype
 	prefix = ''
 	convention = scnName
 	suffix = '_scene'
 	fileType = 'mayaAscii'
 	extension = 'ma'
 
-	#sanitizes selection charatcers
+	# Check for illegal characters
 	cleanObj = osOps.sanitize(convention)
 	if cleanObj != convention:
 		verbose.illegalCharacters(convention)
 		return
-	
-	#gets all dependants
+
+	# Get all dependents
 	allObjLs = mc.ls(tr=True)
-	
-	#removing maya's default cameras from list 
+
+	# Remove Maya's default cameras from list
 	defaultCamLs = ['front', 'persp', 'side', 'top']
 	for defaultCam in defaultCamLs:
 		allObjLs.remove(defaultCam)
-		
-	#check if asset to publish is referenced
-	for allObj in allObjLs: 
+
+	# Check if asset to publish is referenced
+	for allObj in allObjLs:
 		if mc.referenceQuery(allObj, inr=True):
 			verbose.noRefPbl()
 			return
-			
-	#processing asset publish options
+
+	# Process asset publish options
 	assetPblName, assetDir, pblDir = pblOptsPrc.prc(pblTo, subsetName, assetType, prefix, convention, suffix)
-	
-	#adding shot name to assetPblName if asset is being publish to a shot
-	#determining publish env var for relative directory
+
+	# Add shot name to assetPblName if asset is being publish to a shot
+	# Determining publish env var for relative directory
 	if pblTo != os.environ['JOBPUBLISHDIR']:
 		assetPblName += '_%s' % slShot
-	
-	#version control	
-	version = '%s' % vCtrl.version(pblDir)
-	if approved:
-		version += '_apv'
 
-	#confirmation dialog
-	dialogTitle = 'Publishing'
+	# Version control
+	version = '%s' % vCtrl.version(pblDir)
+#	if approved:
+#		version += '_apv'
+
+	# Confirmation dialog
+	dialogTitle = 'Publishing %s' % convention
 	dialogMsg = 'Asset:\t%s\n\nVersion:\t%s\n\nSubset:\t%s\n\nNotes:\t%s' % (assetPblName, version, subsetName, pblNotes)
 	dialog = pDialog.dialog()
 	if not dialog.dialogWindow(dialogMsg, dialogTitle):
 		return
 
-	#publishing
-	try:	
+	# Publishing
+	try:
 		verbose.pblFeed(begin=True)
 
-		#creating publish directories
+		# Create publish directories
 		pblDir = osOps.createDir(os.path.join(pblDir, version))
 		if textures:
 			osOps.createDir(os.path.join(pblDir, 'tx'))
 
-		#creating in progress tmp file
+		# Create in-progress tmp file
 		inProgress.start(pblDir)
 
-		#ic publish data file
-		icPblData.writeData(pblDir, assetPblName, convention, assetType, extension, version, pblNotes)
-	
-		#publish operations
+		# Store asset metadata in file
+		src = mayaOps.getScene()
+		icPblData.writeData(pblDir, assetPblName, convention, assetType, extension, version, pblNotes, src)
+
+		# Publish operations
 		try:
 			mc.select('ICSet_*', ne=True, r=True)
 			icSetLs = mc.ls(sl=True)
 			for icSet in icSetLs:
-   				mc.delete(icSet)
-   		except:
-   			pass
+				mc.delete(icSet)
+		except:
+			pass
 		if textures:
-			#copying textures to pbl direcotry
+			# Copy textures to publish directory (use hardlink instead?)
 			txFullPath = os.path.join(pblDir, 'tx')
 			txRelPath = txFullPath.replace(os.path.expandvars('$JOBPATH'), '$JOBPATH')
 			txPaths = (txFullPath, txRelPath)
 			mayaOps.relinkTexture(txPaths, updateMaya=True)
-			
-		#snapshot
-		mayaOps.snapShot(pblDir)
 
-		#file operations
+		# Take snapshot
+		mayaOps.snapShot(pblDir, isolate=False, fit=False)
+
+		# File operations
 		pathToPblAsset = os.path.join(pblDir, '%s.%s' % (assetPblName, extension))
 		verbose.pblFeed(msg=assetPblName)
 		activeScene = mayaOps.getScene()
@@ -102,14 +107,14 @@ def publish(pblTo, slShot, scnName, subsetName, textures, pblNotes, mail, approv
 		mayaOps.saveFile(fileType, updateRecentFiles=False)
 		mayaOps.redirectScene(activeScene)
 
-		#deleting in progress tmp file
+		# Delete in-progress tmp file
 		inProgress.end(pblDir)
 
-		#published asset check
+		# Published asset check
 		pblResult = pblChk.success(pathToPblAsset)
-			
+
 		verbose.pblFeed(end=True)
-	
+
 	except:
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
@@ -117,8 +122,8 @@ def publish(pblTo, slShot, scnName, subsetName, textures, pblNotes, mail, approv
 		osOps.recurseRemove(pblDir)
 		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += verbose.pblRollback()
-	
-	#publish result dialog
+
+	# Show publish result dialog
 	dialogTitle = 'Publish Report'
 	dialogMsg = 'Asset:\t%s\n\nVersion:\t%s\n\nSubset:\t%s\n\n\n%s' % (assetPblName, version, subsetName, pblResult)
 	dialog = pDialog.dialog()

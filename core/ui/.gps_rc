@@ -54,7 +54,9 @@ alias cls="clear"
 alias dir="ls -l"
 alias ll="ls -ltr"
 alias lseq="$PIPELINE/core/libs/shared/sequenceLs.py"
-alias submit="$PIPELINE/core/tools/gpsSubmit/submit__main__.py"
+alias rb="$PIPELINE/core/tools/renderBrowser/rb__main__.py -style fusion"
+alias br="$PIPELINE/core/tools/renderBrowser/rename__main__.py -style fusion"
+alias submit="$PIPELINE/core/tools/gpsSubmit/submit__main__.py -style fusion"
 
 #############################
 # Sourcing user own aliases

@@ -1,6 +1,13 @@
 #!/usr/bin/python
-#support		:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:gpsMayaPreview
+
+# [GPS Preview] gpsMayaPreview.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2014-2016 Gramercy Park Studios
+#
+# Generate playblasts for GPS Preview.
+
 
 import maya.cmds as mc
 import os, time
@@ -8,10 +15,12 @@ import verbose
 
 
 class preview():
-	def __init__(self, outputDir, outputFile, res, frRange, offscreen, noSelect, guides, slate):	
+
+	def __init__(self, outputDir, outputFile, res, frRange, offscreen, noSelect, guides, slate):
 		self.playblastDir = outputDir
 		self.outputFile = outputFile
 		self.res = res
+
 		if frRange == 'timeline':
 			self.frRange = (int(mc.playbackOptions(min=True, q=True)), int(mc.playbackOptions(max=True, q=True)))
 			self.rangeType = frRange
@@ -21,54 +30,49 @@ class preview():
 		else:
 			self.frRange = (int(frRange[0]), int(frRange[1]))
 			self.rangeType = self.frRange
+
 		self.offscreen = offscreen
 		self.noSelect = noSelect
 		self.guides = guides
 		self.slate = slate
-		
+
 	##slate##
 	#maya scene
 	def hudScene(self):
-		sceneFile = os.path.split(mc.file(exn=True, q=True))[1]
-		return sceneFile
-		
-	#camera info	
+		return os.path.split(mc.file(exn=True, q=True))[1]
+
+	#camera info
 	def hudCamera(self):
 		activeCamera = self.getActiveCamera()
 		cameraShape = [activeCamera]
 		if mc.nodeType(activeCamera) != 'camera':
-		    cameraShape = mc.listRelatives(activeCamera, s=True)
+			cameraShape = mc.listRelatives(activeCamera, s=True)
 		cameraLens = mc.getAttr(cameraShape[0] + '.focalLength')
 		cameraLens = round(cameraLens, 2)
 		cameraLens = `cameraLens` + ' mm'
 		camInfo = '%s %s' % (activeCamera, cameraLens)
 		return camInfo
-	
-	#time	
+
+	#time
 	def hudTime(self):
-		currentTime = time.strftime("%d/%b/%Y %H:%M")
-		return currentTime
-	
+		return time.strftime("%d/%m/%Y %H:%M")
+
 	#current project
 	def hudJob(self):
-		job = os.environ['JOB']
-		shot_ = os.environ['SHOT']
-		return '%s - %s\t\t' % (job, shot_)
-	
+		return '%s - %s\t\t' % (os.environ['JOB'], os.environ['SHOT'])
+
 	#current frame
 	def hudFrame(self):
-		currentFrame = mc.currentTime(q=True)
-		return currentFrame
-	
+		return mc.currentTime(q=True)
+
 	#artist
 	def hudArtist(self):
-		artistName = os.environ['USERNAME']
-		return artistName
-	
+		return os.environ['USERNAME']
+
 	#GPS
 	def hudGPS(self):
 		return 'GPS'
-	
+
 	#turns slate on
 	def slateOn(self):
 		mc.headsUpDisplay(rp=(0,0))
@@ -173,27 +177,29 @@ class preview():
 	
 	##end slate##
 
-	#sets playblast options and runs playblast
+
 	def playblast_(self):
-		#changing image foramt globals to jpg
+		""" Sets playblast options and runs playblast.
+		"""
+		# Change image format globals to jpg
 		mc.setAttr('defaultRenderGlobals.imageFormat', 8)
-		
-		#stores and then clears selection
+
+		# Store and then clear selection
 		if self.noSelect:
 			currentSl = mc.ls(sl=True)
 			mc.select(cl=True)
-		
-		#gets active camera
+
+		# Get active camera
 		if not self.getActiveCamera():
 			return
 
-		#turns slate on
+		# Display slate
 		if self.slate:
 			self.slateOn()
 		else:
 			self.slateOff()
 
-		#turns guides on
+		# Display guides
 		if self.guides:
 			activeCamera = self.getActiveCamera()
 			cameraShape = [activeCamera]
@@ -203,42 +209,44 @@ class preview():
 			pre_safeTitle = mc.getAttr('%s.displaySafeTitle' % cameraShape[0])
 			mc.setAttr("%s.displaySafeAction" % cameraShape[0], 1)
 			mc.setAttr("%s.displaySafeTitle" % cameraShape[0], 1)
-			
-		#storing current overscan value and sets it to 1.0
+		else:
+			mc.setAttr("%s.displaySafeAction" % cameraShape[0], 0)
+			mc.setAttr("%s.displaySafeTitle" % cameraShape[0], 0)
+
+		# Store current overscan value and set it to 1.0
 		overscanValue = self.overscan(get=True)
 		self.overscan(set=True)
 
-		#running playblast
+		# Generate playblast
 		self.run_playblast()
-		
-		#turning off sltate
+
+		# Hide slate
 		if self.slate:
 			self.slateOff()
-			
-		#restoring overscan to original
+
+		# Restore overscan to original value
 		self.overscan(set=True, setValue=overscanValue)
-		
-		#restoring imageFormat globals
+
+		# Restore imageFormat globals
 		mc.setAttr('defaultRenderGlobals.imageFormat', 7)
 
-		#restoring selection
+		# Restore selection
 		if self.noSelect:
 			for sl in currentSl:
 				mc.select(sl, add=True)
-		
-		#restoring guides
+
+		# Restore guides
 		if self.guides:
 			if not pre_safeAction:
 				mc.setAttr("%s.displaySafeAction" % cameraShape[0], 0)
 			if not pre_safeTitle:
 				mc.setAttr("%s.displaySafeTitle" % cameraShape[0], 0)
-			
-			
+
 		#returns frRange and file extension
 		return self.frRange , 'jpg'
-	
-	
-	#stores averscan info and changes to 1.0
+
+
+	#stores overscan info and changes to 1.0
 	def overscan(self, set=False, setValue=1.0, get=False):
 		activeCamera = self.getActiveCamera()
 		cameraShape = [activeCamera]
@@ -248,10 +256,9 @@ class preview():
 			mc.setAttr('%s.overscan' % cameraShape[0], setValue)
 			return
 		if get:
-			setValue = (mc.getAttr('%s.overscan' % cameraShape[0]))
-			return setValue
-			
-	
+			return mc.getAttr('%s.overscan' % cameraShape[0])
+
+
 	#gets the current active camera
 	def getActiveCamera(self):
 		try:
@@ -259,20 +266,23 @@ class preview():
 			return activeCamera
 		except RuntimeError:
 			verbose.chooseCameraPreview()
-			
-			
-	#runs playblast
+			mc.warning("No active view selected. Please choose a camera view to preview.")
+
+
 	def run_playblast(self):
-		mc.playblast(f='%s/%s' % (self.playblastDir, self.outputFile), 
-		st=self.frRange[0], 
-		et=self.frRange[1],
-		fp=4, 
-		w=self.res[0], 
-		h=self.res[1], 
-		p=100,
-		fmt='image',
-		c='jpg',
-		v=False,
-		os=self.offscreen, 
-		cc=True, 
-		orn=True)
+		""" Generate playblast.
+		"""
+		mc.playblast(filename='%s/%s' % (self.playblastDir, self.outputFile), 
+		             startTime=self.frRange[0], 
+		             endTime=self.frRange[1], 
+		             framePadding=4, 
+		             width=self.res[0], 
+		             height=self.res[1], 
+		             percent=100, 
+		             format='image', 
+		             compression='jpg', 
+		             viewer=False, 
+		             offScreen=self.offscreen, 
+		             clearCache=True, 
+		             showOrnaments=True)
+

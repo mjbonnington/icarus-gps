@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'pDialogUI.ui'
 #
-# Created: Mon Dec 15 16:56:46 2014
-#      by: pyside-uic 0.2.13 running on PySide 1.1.1
+# Created: Wed Jan 13 14:18:54 2016
+#      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -34,13 +34,13 @@ class Ui_Dialog(object):
         self.horizontalLayout = QtGui.QHBoxLayout(self.frame)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.cancel_pushButton = QtGui.QPushButton(self.frame)
-        self.cancel_pushButton.setObjectName("cancel_pushButton")
-        self.horizontalLayout.addWidget(self.cancel_pushButton)
         self.ok_pushButton = QtGui.QPushButton(self.frame)
         self.ok_pushButton.setDefault(True)
         self.ok_pushButton.setObjectName("ok_pushButton")
         self.horizontalLayout.addWidget(self.ok_pushButton)
+        self.cancel_pushButton = QtGui.QPushButton(self.frame)
+        self.cancel_pushButton.setObjectName("cancel_pushButton")
+        self.horizontalLayout.addWidget(self.cancel_pushButton)
         self.verticalLayout.addWidget(self.frame)
         self.horizontalLayout_2.addWidget(self.main_frame)
 
@@ -52,8 +52,8 @@ class Ui_Dialog(object):
         self.message_textEdit.setHtml(QtGui.QApplication.translate("Dialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Lucida Grande\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Helvetica\'; font-size:12pt;\"><br /></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.cancel_pushButton.setText(QtGui.QApplication.translate("Dialog", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
         self.ok_pushButton.setText(QtGui.QApplication.translate("Dialog", "Ok", None, QtGui.QApplication.UnicodeUTF8))
+        self.cancel_pushButton.setText(QtGui.QApplication.translate("Dialog", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
 

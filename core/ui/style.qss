@@ -83,16 +83,17 @@ QAbstractScrollArea:disabled {
  */
 
 QHeaderView {
-	background: #444;
+	/*background: #444;*/
 	border: none;
 }
 
 QHeaderView::section {
-	padding: 1px 4px 2px 4px;
-	background: #555;
+	padding: 4px 4px 5px 4px;
+	background: #333;
 	border: none;
-	border-right: 1px solid #333;
-	border-bottom: 1px solid #333;
+	border-right: 1px solid #222;
+	border-bottom: 1px solid #222;
+	/*text-align: left;*/
 }
 
 QHeaderView::section:checked
@@ -534,6 +535,18 @@ QTreeView {
 	background: #222;*/
 }
 
+/*QTreeView::item {
+	padding: 16px;
+}
+
+QTreeView::icon {
+	height: 18px;
+}*/
+
+/*QTreeView::branch {
+	border-image: none;
+}
+
 QTreeView::branch:has-siblings:!adjoins-item {
 	image: url(:/images/vline.png);
 }
@@ -544,7 +557,7 @@ QTreeView::branch:has-siblings:adjoins-item {
 
 QTreeView::branch:!has-children:!has-siblings:adjoins-item {
 	image: url(:/images/branch-end.png);
-}
+}*/
 
 QTreeView::branch:has-children:!has-siblings:closed,
 QTreeView::branch:closed:has-children:has-siblings {
