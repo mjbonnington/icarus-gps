@@ -1394,7 +1394,7 @@ Environment: %s
 			# Node
 			elif self.ui.ma_node_toolButton.isChecked() == True:
 				import ma_nodePbl
-				subtype = ""#self.ui.assetSubType_comboBox.currentText()
+				subtype = self.ui.assetSubType_comboBox.currentText()
 				ma_nodePbl.publish(self.pblTo, self.slShot, subtype, self.textures, self.pblNotes)
 
 		###############
@@ -1740,6 +1740,7 @@ if os.environ['ICARUSENVAWARE'] == 'MAYA' or os.environ['ICARUSENVAWARE'] == 'NU
 		app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint)
 	else:
 		app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WindowCloseButtonHint)
+		#app.setWindowFlags(QtCore.Qt.WindowCloseButtonHint)
 
 	# Centre window
 #	app.move(QtGui.QDesktopWidget().availableGeometry(1).center() - app.frameGeometry().center())
