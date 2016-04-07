@@ -1394,7 +1394,7 @@ Environment: %s
 			# Node
 			elif self.ui.ma_node_toolButton.isChecked() == True:
 				import ma_nodePbl
-				subtype = ""#self.ui.assetSubType_comboBox.currentText()
+				subtype = self.ui.assetSubType_comboBox.currentText()
 				ma_nodePbl.publish(self.pblTo, self.slShot, subtype, self.textures, self.pblNotes)
 
 		###############
