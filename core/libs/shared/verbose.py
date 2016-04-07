@@ -66,9 +66,6 @@ def assetUpdateMatch():
 def chkDirSize():
 	print_( 'Comparing directory sizes...', 3 )
 
-def chooseCameraPreview():
-	print_( 'Please choose a camera view to preview from', 1 )
-
 def concurrentPublish():
 	return 'Another publish for the same asset is currently under progress. Please check your settings or try again later.'
 

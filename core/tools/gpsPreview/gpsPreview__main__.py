@@ -28,7 +28,7 @@ class previewUI(QtGui.QDialog):
 		with open(qss, "r") as fh:
 			self.ui.main_frame.setStyleSheet(fh.read())
 
-		#connecting signals and slots
+		# Connect signals & slots
 		QtCore.QObject.connect(self.ui.preview_pushButton, QtCore.SIGNAL("clicked()"), self.preview)
 		QtCore.QObject.connect(self.ui.resolution_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.updateResGrp)
 		QtCore.QObject.connect(self.ui.range_comboBox, QtCore.SIGNAL('currentIndexChanged(int)'), self.updateRangeGrp)
@@ -50,7 +50,7 @@ class previewUI(QtGui.QDialog):
 		self.ui.launchViewer_checkBox.setChecked(userPrefs.config.getboolean('gpspreview', 'launchviewer'))
 		self.ui.createQuicktime_checkBox.setChecked(userPrefs.config.getboolean('gpspreview', 'createqt'))
 	
-		#populating UI with env vars
+		# Populate UI with env vars
 		self.setupUI()
 
 	############################################################## UI ##############################################################

@@ -1740,6 +1740,7 @@ if os.environ['ICARUSENVAWARE'] == 'MAYA' or os.environ['ICARUSENVAWARE'] == 'NU
 		app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint)
 	else:
 		app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WindowCloseButtonHint)
+		#app.setWindowFlags(QtCore.Qt.WindowCloseButtonHint)
 
 	# Centre window
 #	app.move(QtGui.QDesktopWidget().availableGeometry(1).center() - app.frameGeometry().center())
