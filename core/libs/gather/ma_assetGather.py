@@ -106,7 +106,7 @@ def gather(gatherPath):
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		dialogTitle = 'Gather Warning'
-		dialogMsg = 'Errors occured during asset update.\nPlease check console for details'
+		dialogMsg = 'Errors occured during asset update.\nPlease check console for more information.\n\n%s' % traceback.format_exc()
 		dialog = pDialog.dialog()
 		dialog.dialogWindow(dialogMsg, dialogTitle, conf=True)
 
@@ -116,9 +116,4 @@ def chkNameConflict(obj):
 		verbose.nameConflict(obj)
 		objSetLs = mc.listSets(o=obj)
 		newObjName = mayaOps.renameObj([obj], '%s_' % obj, oldName=False)[0]
-		
-		
-		
-		
-		
-		
+

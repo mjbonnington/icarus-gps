@@ -61,7 +61,7 @@ def publish(pblTo, slShot, subtype, pblNotes):
 #		version += '_apv'
 
 	# Confirmation dialog
-	dialogTitle = 'Publishing %s' % convention
+	dialogTitle = 'Publishing %s' % assetPblName # convention
 	dialogMsg = 'Asset:\t%s\n\nVersion:\t%s\n\nSubset:\t%s\n\nNotes:\t%s' % (assetPblName, version, subsetName, pblNotes)
 	dialog = pDialog.dialog()
 	if not dialog.dialogWindow(dialogMsg, dialogTitle):
@@ -79,8 +79,8 @@ def publish(pblTo, slShot, subtype, pblNotes):
 
 		# Store asset metadata in file
 		src = mayaOps.getScene()
-		icPblData.writeData(pblDir, assetPblName, convention, assetType, extension, version, pblNotes, src)
-	#	icPblData.writeData(pblDir, assetPblName, assetPblName, assetType, extension, version, pblNotes)
+		# icPblData.writeData(pblDir, assetPblName, convention, assetType, extension, version, pblNotes, src)
+		icPblData.writeData(pblDir, assetPblName, assetPblName, assetType, extension, version, pblNotes, src)
 
 		# Maya operations
 		mayaOps.deleteICDataSet(allObjLs)
