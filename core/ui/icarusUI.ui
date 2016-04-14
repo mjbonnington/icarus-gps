@@ -21,22 +21,34 @@
    <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
    <item>
-    <widget class="QFrame" name="header_frame">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>24</height>
-      </size>
+    <widget class="QFrame" name="main_frame">
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
      </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>24</height>
-      </size>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel {
+     <layout class="QVBoxLayout" name="verticalLayout_12">
+      <property name="margin">
+       <number>8</number>
+      </property>
+      <item>
+       <widget class="QFrame" name="header_frame">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel {
 	margin: 0px;
 	padding:  0px;
 	background-color: transparent;
@@ -76,75 +88,75 @@ QPushButton:pressed, QToolButton:pressed {
 QPushButton:default, QToolButton:default {
 	border-color: transparent;
 }</string>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
-      <property name="margin">
-       <number>0</number>
-      </property>
-      <item>
-       <widget class="QLabel" name="icarusHeader_label">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
         </property>
-        <property name="pixmap">
-         <pixmap resource="rsc.qrc">:/rsc/rsc/icarus_header.png</pixmap>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
         </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="header_horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>24</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QLabel" name="appIcon_label">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>15</width>
-          <height>15</height>
-         </size>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="scaledContents">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="shotEnv_toolButton">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QToolButton {
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="icarusHeader_label">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="rsc.qrc">:/rsc/rsc/icarus_header.png</pixmap>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="header_horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>24</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="appIcon_label">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>15</width>
+             <height>15</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="shotEnv_toolButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QToolButton {
 	padding: 1px 12px 2px 1px;
 }
 
@@ -156,83 +168,74 @@ QToolButton:disabled {
 	color: #ccc;
 }
 </string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="rsc.qrc">
-          <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
-          <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>15</width>
-          <height>15</height>
-         </size>
-        </property>
-        <property name="popupMode">
-         <enum>QToolButton::InstantPopup</enum>
-        </property>
-        <property name="toolButtonStyle">
-         <enum>Qt::ToolButtonTextBesideIcon</enum>
-        </property>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="rsc.qrc">
+             <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
+             <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>15</width>
+             <height>15</height>
+            </size>
+           </property>
+           <property name="popupMode">
+            <enum>QToolButton::InstantPopup</enum>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="batchRename_toolButton">
+           <property name="toolTip">
+            <string>Batch Rename Tool</string>
+           </property>
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="rsc.qrc">
+             <normaloff>:/rsc/rsc/icon_editor.png</normaloff>
+             <disabledoff>:/rsc/rsc/icon_editor_disabled.png</disabledoff>:/rsc/rsc/icon_editor.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>15</width>
+             <height>15</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="about_toolButton">
+           <property name="toolTip">
+            <string>About Icarus</string>
+           </property>
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="rsc.qrc">
+             <normaloff>:/rsc/rsc/icon_info.png</normaloff>
+             <disabledoff>:/rsc/rsc/icon_info_disabled.png</disabledoff>:/rsc/rsc/icon_info.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>15</width>
+             <height>15</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
-      <item>
-       <widget class="QToolButton" name="batchRename_toolButton">
-        <property name="toolTip">
-         <string>Batch Rename Tool</string>
-        </property>
-        <property name="text">
-         <string>...</string>
-        </property>
-        <property name="icon">
-         <iconset resource="rsc.qrc">
-          <normaloff>:/rsc/rsc/icon_editor.png</normaloff>
-          <disabledoff>:/rsc/rsc/icon_editor_disabled.png</disabledoff>:/rsc/rsc/icon_editor.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>15</width>
-          <height>15</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="about_toolButton">
-        <property name="toolTip">
-         <string>About Icarus</string>
-        </property>
-        <property name="text">
-         <string>...</string>
-        </property>
-        <property name="icon">
-         <iconset resource="rsc.qrc">
-          <normaloff>:/rsc/rsc/icon_info.png</normaloff>
-          <disabledoff>:/rsc/rsc/icon_info_disabled.png</disabledoff>:/rsc/rsc/icon_info.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>15</width>
-          <height>15</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QFrame" name="main_frame">
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_12">
-      <property name="margin">
-       <number>0</number>
-      </property>
       <item>
        <widget class="QTabWidget" name="tabWidget">
         <property name="enabled">
@@ -469,6 +472,9 @@ QToolButton:disabled {
                  <property name="toolTip">
                   <string>Launch RealFlow</string>
                  </property>
+                 <property name="statusTip">
+                  <string>Launch RealFlow</string>
+                 </property>
                  <property name="text">
                   <string>RealFlow</string>
                  </property>
@@ -497,6 +503,9 @@ QToolButton:disabled {
                   </sizepolicy>
                  </property>
                  <property name="toolTip">
+                  <string>Launch Maya</string>
+                 </property>
+                 <property name="statusTip">
                   <string>Launch Maya</string>
                  </property>
                  <property name="text">
@@ -529,6 +538,9 @@ QToolButton:disabled {
                  <property name="toolTip">
                   <string>Launch Mudbox</string>
                  </property>
+                 <property name="statusTip">
+                  <string>Launch Mudbox</string>
+                 </property>
                  <property name="text">
                   <string>Mudbox</string>
                  </property>
@@ -557,6 +569,9 @@ QToolButton:disabled {
                   </sizepolicy>
                  </property>
                  <property name="toolTip">
+                  <string>Launch Nuke or NukeX</string>
+                 </property>
+                 <property name="statusTip">
                   <string>Launch Nuke or NukeX</string>
                  </property>
                  <property name="text">
@@ -589,6 +604,9 @@ QToolButton:disabled {
                  <property name="toolTip">
                   <string>Submit and monitor local and network renders</string>
                  </property>
+                 <property name="statusTip">
+                  <string>Submit and monitor local and network renders</string>
+                 </property>
                  <property name="text">
                   <string>Render</string>
                  </property>
@@ -617,6 +635,9 @@ QToolButton:disabled {
                   </sizepolicy>
                  </property>
                  <property name="toolTip">
+                  <string>Open production board in web browser</string>
+                 </property>
+                 <property name="statusTip">
                   <string>Open production board in web browser</string>
                  </property>
                  <property name="text">
@@ -649,6 +670,9 @@ QToolButton:disabled {
                  <property name="toolTip">
                   <string>Launch Mari</string>
                  </property>
+                 <property name="statusTip">
+                  <string>Launch Mari</string>
+                 </property>
                  <property name="text">
                   <string>Mari</string>
                  </property>
@@ -677,6 +701,9 @@ QToolButton:disabled {
                   </sizepolicy>
                  </property>
                  <property name="toolTip">
+                  <string>Enables the command-line prompt</string>
+                 </property>
+                 <property name="statusTip">
                   <string>Enables the command-line prompt</string>
                  </property>
                  <property name="text">
@@ -709,6 +736,9 @@ QToolButton:disabled {
                  <property name="toolTip">
                   <string>Browse project folders</string>
                  </property>
+                 <property name="statusTip">
+                  <string>Browse project folders</string>
+                 </property>
                  <property name="text">
                   <string>Browse</string>
                  </property>
@@ -737,6 +767,9 @@ QToolButton:disabled {
                   </sizepolicy>
                  </property>
                  <property name="toolTip">
+                  <string>Launch HieroPlayer or djv_view</string>
+                 </property>
+                 <property name="statusTip">
                   <string>Launch HieroPlayer or djv_view</string>
                  </property>
                  <property name="text">
@@ -1423,8 +1456,8 @@ QToolButton:disabled {
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>369</width>
-                      <height>416</height>
+                      <width>370</width>
+                      <height>410</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -1852,8 +1885,8 @@ QToolButton:disabled {
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>369</width>
-                      <height>417</height>
+                      <width>136</width>
+                      <height>70</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -2852,6 +2885,16 @@ p, li { white-space: pre-wrap; }
       </item>
      </layout>
     </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="statusBar_horizontalLayout">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+    </layout>
    </item>
   </layout>
  </widget>
