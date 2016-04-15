@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'icarusUI.ui'
 #
-# Created: Thu Apr 14 18:42:23 2016
+# Created: Fri Apr 15 16:01:05 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ class Ui_Dialog(object):
         self.main_frame.setFrameShape(QtGui.QFrame.NoFrame)
         self.main_frame.setObjectName("main_frame")
         self.verticalLayout_12 = QtGui.QVBoxLayout(self.main_frame)
-        self.verticalLayout_12.setContentsMargins(8, 8, 8, 8)
+        self.verticalLayout_12.setContentsMargins(8, 6, 8, 2)
         self.verticalLayout_12.setObjectName("verticalLayout_12")
         self.header_frame = QtGui.QFrame(self.main_frame)
         self.header_frame.setMinimumSize(QtCore.QSize(0, 24))
@@ -687,7 +687,7 @@ class Ui_Dialog(object):
         self.ma_assetSettings_groupBox_scrollArea.setProperty("noBackground", True)
         self.ma_assetSettings_groupBox_scrollArea.setObjectName("ma_assetSettings_groupBox_scrollArea")
         self.ma_assetSettings_scrollAreaWidgetContents = QtGui.QWidget()
-        self.ma_assetSettings_scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 370, 410))
+        self.ma_assetSettings_scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 370, 418))
         self.ma_assetSettings_scrollAreaWidgetContents.setObjectName("ma_assetSettings_scrollAreaWidgetContents")
         self.verticalLayout_3 = QtGui.QVBoxLayout(self.ma_assetSettings_scrollAreaWidgetContents)
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)

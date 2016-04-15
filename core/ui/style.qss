@@ -1228,3 +1228,21 @@ QProgressBar::chunk:disabled {
 
 /* End Progress Bar */
 
+
+
+/* Status Bar
+ *
+ */
+
+
+QStatusBar {
+    background: #333;
+}
+
+/*QStatusBar::item {
+    border: 1px solid red;
+    border-radius: 3px;
+}*/
+
+/* End Status Bar */
+
