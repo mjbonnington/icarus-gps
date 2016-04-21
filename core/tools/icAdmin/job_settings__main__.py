@@ -220,7 +220,7 @@ class settingsDialog(QtGui.QDialog):
 						widget.setPlainText(text)
 					#print "%s: %s" %(attr, widget.text())
 					widget.textChanged.connect(signalMapper.map)
-					widget.textChanged.connect( lambda current: self.storeValue(current) ) # This seems to give an TypeError, but still works as expected
+					widget.textChanged.connect( lambda: self.storeValue() ) # This seems to give an TypeError, but still works as expected
 
 				# Spin box(es)...
 				if isinstance(widget, QtGui.QSpinBox):
@@ -698,7 +698,7 @@ class settingsDialog(QtGui.QDialog):
 		self.openProperties('apps')
 
 
-	def storeValue(self, val):
+	def storeValue(self, val=""):
 		""" Stores the currently edited attribute value into the XML data
 		"""
 		self.currentValue = str(val) # value must be a string for XML

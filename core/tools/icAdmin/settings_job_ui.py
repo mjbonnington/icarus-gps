@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'settings_job_ui.ui'
 #
-# Created: Tue May 26 14:37:08 2015
-#      by: pyside-uic 0.2.13 running on PySide 1.1.1
+# Created: Thu Apr 21 17:03:02 2016
+#      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_settings_frame(object):
     def setupUi(self, settings_frame):
         settings_frame.setObjectName("settings_frame")
-        settings_frame.resize(400, 240)
+        settings_frame.resize(400, 288)
         settings_frame.setFrameShape(QtGui.QFrame.NoFrame)
         self.formLayout = QtGui.QFormLayout(settings_frame)
         self.formLayout.setFieldGrowthPolicy(QtGui.QFormLayout.ExpandingFieldsGrow)
@@ -64,6 +64,12 @@ class Ui_settings_frame(object):
         self.deliverable_lineEdit = QtGui.QLineEdit(settings_frame)
         self.deliverable_lineEdit.setObjectName("deliverable_lineEdit")
         self.formLayout.setWidget(5, QtGui.QFormLayout.FieldRole, self.deliverable_lineEdit)
+        self.notes_label = QtGui.QLabel(settings_frame)
+        self.notes_label.setObjectName("notes_label")
+        self.formLayout.setWidget(6, QtGui.QFormLayout.LabelRole, self.notes_label)
+        self.plainTextEdit = QtGui.QPlainTextEdit(settings_frame)
+        self.plainTextEdit.setObjectName("plainTextEdit")
+        self.formLayout.setWidget(6, QtGui.QFormLayout.FieldRole, self.plainTextEdit)
 
         self.retranslateUi(settings_frame)
         QtCore.QMetaObject.connectSlotsByName(settings_frame)
@@ -87,4 +93,6 @@ class Ui_settings_frame(object):
         self.title_lineEdit.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "title", None, QtGui.QApplication.UnicodeUTF8))
         self.deliverable_label.setText(QtGui.QApplication.translate("settings_frame", "Deliverable:", None, QtGui.QApplication.UnicodeUTF8))
         self.deliverable_lineEdit.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "deliverable", None, QtGui.QApplication.UnicodeUTF8))
+        self.notes_label.setText(QtGui.QApplication.translate("settings_frame", "Notes:", None, QtGui.QApplication.UnicodeUTF8))
+        self.plainTextEdit.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "notes", None, QtGui.QApplication.UnicodeUTF8))
 
