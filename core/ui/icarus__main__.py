@@ -172,6 +172,14 @@ class icarusApp(QtGui.QDialog):
 	#	self.ui.about_toolButton.addAction(self.actionPrefs)
 
 
+		# Add status bar
+		statusBar = QtGui.QStatusBar(self)
+		self.ui.statusBar_horizontalLayout.addWidget(statusBar)
+		#statusBar.showMessage("ARSE")
+		#self.ui.nuke_pushButton.setStatusTip("FUCK") # status tips not working with this status bar for some reason?
+		verbose.registerStatusBar(statusBar)
+
+
 		######################################
 		# Adapt UI for environment awareness #
 		######################################

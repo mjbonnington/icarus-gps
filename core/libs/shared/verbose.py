@@ -15,8 +15,13 @@ if not userPrefs.config.has_option('main', 'verbosity'):
 	userPrefs.config.set('main', 'verbosity', '3')
 
 
-def print_(message, verbosityLevel=3, log=False):
-	""" Print the message to the console. If log is True, the messages will be written to a logfile (not yet implemented)
+statusBar = None
+
+
+def print_(message, verbosityLevel=3, status=True, log=False):
+	""" Print the message to the console.
+		if status
+		If log is True, the messages will be written to a logfile (not yet implemented)
 
 		Verbosity Levels:
 		0 - Nothing is output
@@ -25,9 +30,22 @@ def print_(message, verbosityLevel=3, log=False):
 		3 - Info message (default)
 		4 - Detailed info messages
 	"""
+	global statusBar
+
 	userPrefs.read()
+
 	if verbosityLevel <= userPrefs.config.getint('main', 'verbosity'):
 		print message
+
+	if verbosityLevel <= 3 and status and statusBar is not None:
+		statusBar.showMessage(message, 10000)
+
+
+def registerStatusBar(statusBarObj):
+	""" Register a QStatusBar object with this module so that messages can be printed to the appropriate UI status bar.
+	"""
+	global statusBar
+	statusBar = statusBarObj
 
 
 # Messages follow in alphabetical order...
