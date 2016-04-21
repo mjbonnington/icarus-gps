@@ -30,7 +30,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="usesScrollButtons">
        <bool>true</bool>
@@ -194,7 +194,16 @@
                  <enum>QFrame::Raised</enum>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_6">
-                 <property name="margin">
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
                   <number>0</number>
                  </property>
                  <item>
@@ -316,7 +325,16 @@
                  <enum>QFrame::Raised</enum>
                 </property>
                 <layout class="QGridLayout" name="gridLayout">
-                 <property name="margin">
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
                   <number>0</number>
                  </property>
                  <item row="0" column="0">
@@ -741,12 +759,6 @@
            <bool>true</bool>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
-           <item row="1" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
-           </item>
-           <item row="1" column="3">
-            <widget class="QDateEdit" name="dateEdit"/>
-           </item>
            <item row="0" column="0">
             <widget class="QLabel" name="label_4">
              <property name="text">
@@ -757,8 +769,11 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="3">
-            <widget class="QTimeEdit" name="timeEdit"/>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+           </item>
+           <item row="1" column="3">
+            <widget class="QDateEdit" name="dateEdit"/>
            </item>
            <item row="2" column="3">
             <widget class="QDateTimeEdit" name="dateTimeEdit"/>
@@ -766,10 +781,23 @@
            <item row="0" column="1">
             <widget class="QSpinBox" name="spinBox"/>
            </item>
+           <item row="0" column="3">
+            <widget class="QTimeEdit" name="timeEdit"/>
+           </item>
            <item row="1" column="0">
             <widget class="QLabel" name="label_5">
              <property name="text">
               <string>Double Spin Box:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="label_8">
+             <property name="text">
+              <string>Time/Date Edit:</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -796,13 +824,17 @@
              </property>
             </widget>
            </item>
-           <item row="2" column="2">
-            <widget class="QLabel" name="label_8">
-             <property name="text">
-              <string>Time/Date Edit:</string>
+           <item row="3" column="3">
+            <widget class="QSlider" name="horizontalSlider">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
              </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QSlider" name="verticalSlider">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
              </property>
             </widget>
            </item>
@@ -827,7 +859,16 @@
               <enum>QFrame::Raised</enum>
              </property>
              <layout class="QGridLayout" name="gridLayout_5">
-              <property name="margin">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
                <number>0</number>
               </property>
               <item row="0" column="1">
@@ -954,7 +995,16 @@
               <enum>QFrame::Raised</enum>
              </property>
              <layout class="QGridLayout" name="gridLayout_4">
-              <property name="margin">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
                <number>0</number>
               </property>
               <item row="0" column="1">
@@ -977,7 +1027,7 @@
                  <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:20pt; font-weight:600; color:#2f9ca5;&quot;&gt;Lorem ipsum dolor sit amet&lt;/span&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:20pt; color:#2f9ca5;&quot;&gt;,&lt;/span&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:24pt; color:#2f9ca5;&quot;&gt; &lt;/span&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:14pt; color:#2f9ca5;&quot;&gt;consectetur &lt;/span&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:14pt; font-style:italic; color:#2f9ca5;&quot;&gt;adipiscing&lt;/span&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:14pt; color:#2f9ca5;&quot;&gt; elit. Mauris placerat &lt;/span&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:14pt; text-decoration: underline; color:#2f9ca5;&quot;&gt;pharetra&lt;/span&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:14pt; color:#2f9ca5;&quot;&gt; turpis, in pharetra purus ultrices quis. Vivamus eget sem vel dolor scelerisque cursus eget eget ipsum. In hac habitasse platea dictumst. Aliquam &lt;/span&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:14pt; font-style:italic; color:#2f9ca5;&quot;&gt;elementum&lt;/span&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:14pt; color:#2f9ca5;&quot;&gt; odio sed lacus laoreet blandit. Nulla lobortis, neque at vulputate lacinia, enim libero feugiat mauris, at efficitur quam nulla sit amet tortor. Donec egestas magna eget lectus lobortis, at dapibus lorem laoreet. Ut ullamcorper augue sit amet auctor semper. In hac habitasse platea dictumst. Morbi faucibus nibh eu justo laoreet, a tempor enim egestas. Mauris non mi &lt;/span&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:14pt; text-decoration: underline; color:#2f9ca5;&quot;&gt;maximus&lt;/span&gt;&lt;span style=&quot; font-family:'Arial,Helvetica,sans'; font-size:14pt; color:#2f9ca5;&quot;&gt;, porta neque ut, bibendum risus. Nam eu nibh aliquam, cursus sapien nec, scelerisque nisl. Nam ac egestas turpis, ac gravida elit.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
@@ -1964,7 +2014,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>677</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

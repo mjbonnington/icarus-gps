@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'submit_ui.ui'
 #
-# Created: Wed Mar 23 12:55:00 2016
-#      by: pyside-uic 0.2.15 running on PySide 1.2.4
+# Created: Tue Apr 12 22:35:20 2016
+#      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(512, 256)
+        Dialog.resize(512, 320)
         self.verticalLayout_2 = QtGui.QVBoxLayout(Dialog)
         self.verticalLayout_2.setContentsMargins(8, 8, 8, 8)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
@@ -83,7 +83,33 @@ class Ui_Dialog(object):
         self.formLayout_2.setWidget(0, QtGui.QFormLayout.FieldRole, self.flags_lineEdit)
         self.verticalLayout.addWidget(self.flags_groupBox)
         self.verticalLayout_2.addWidget(self.main_frame)
-        spacerItem = QtGui.QSpacerItem(20, 12, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        self.groupBox = QtGui.QGroupBox(Dialog)
+        self.groupBox.setObjectName("groupBox")
+        self.formLayout_3 = QtGui.QFormLayout(self.groupBox)
+        self.formLayout_3.setObjectName("formLayout_3")
+        self.priority_label = QtGui.QLabel(self.groupBox)
+        self.priority_label.setObjectName("priority_label")
+        self.formLayout_3.setWidget(0, QtGui.QFormLayout.LabelRole, self.priority_label)
+        self.priority_horizontalLayout = QtGui.QHBoxLayout()
+        self.priority_horizontalLayout.setObjectName("priority_horizontalLayout")
+        self.priority_spinBox = QtGui.QSpinBox(self.groupBox)
+        self.priority_spinBox.setMinimum(0)
+        self.priority_spinBox.setMaximum(100)
+        self.priority_spinBox.setProperty("value", 50)
+        self.priority_spinBox.setObjectName("priority_spinBox")
+        self.priority_horizontalLayout.addWidget(self.priority_spinBox)
+        self.priority_slider = QtGui.QSlider(self.groupBox)
+        self.priority_slider.setMinimum(0)
+        self.priority_slider.setMaximum(100)
+        self.priority_slider.setProperty("value", 50)
+        self.priority_slider.setOrientation(QtCore.Qt.Horizontal)
+        self.priority_slider.setTickPosition(QtGui.QSlider.NoTicks)
+        self.priority_slider.setTickInterval(10)
+        self.priority_slider.setObjectName("priority_slider")
+        self.priority_horizontalLayout.addWidget(self.priority_slider)
+        self.formLayout_3.setLayout(0, QtGui.QFormLayout.FieldRole, self.priority_horizontalLayout)
+        self.verticalLayout_2.addWidget(self.groupBox)
+        spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.verticalLayout_2.addItem(spacerItem)
         self.buttonBox_horizontalLayout = QtGui.QHBoxLayout()
         self.buttonBox_horizontalLayout.setObjectName("buttonBox_horizontalLayout")
@@ -91,10 +117,6 @@ class Ui_Dialog(object):
         self.submit_pushButton.setAutoDefault(False)
         self.submit_pushButton.setObjectName("submit_pushButton")
         self.buttonBox_horizontalLayout.addWidget(self.submit_pushButton)
-        self.killComplete_pushButton = QtGui.QPushButton(Dialog)
-        self.killComplete_pushButton.setAutoDefault(False)
-        self.killComplete_pushButton.setObjectName("killComplete_pushButton")
-        self.buttonBox_horizontalLayout.addWidget(self.killComplete_pushButton)
         self.close_pushButton = QtGui.QPushButton(Dialog)
         self.close_pushButton.setAutoDefault(False)
         self.close_pushButton.setObjectName("close_pushButton")
@@ -102,16 +124,22 @@ class Ui_Dialog(object):
         self.verticalLayout_2.addLayout(self.buttonBox_horizontalLayout)
 
         self.retranslateUi(Dialog)
+        QtCore.QObject.connect(self.priority_spinBox, QtCore.SIGNAL("valueChanged(int)"), self.priority_slider.setValue)
+        QtCore.QObject.connect(self.priority_slider, QtCore.SIGNAL("valueChanged(int)"), self.priority_spinBox.setValue)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
-        Dialog.setTabOrder(self.submit_pushButton, self.killComplete_pushButton)
-        Dialog.setTabOrder(self.killComplete_pushButton, self.close_pushButton)
+        Dialog.setTabOrder(self.submit_pushButton, self.close_pushButton)
         Dialog.setTabOrder(self.close_pushButton, self.scene_comboBox)
         Dialog.setTabOrder(self.scene_comboBox, self.sceneBrowse_toolButton)
-        Dialog.setTabOrder(self.sceneBrowse_toolButton, self.frameRange_lineEdit)
+        Dialog.setTabOrder(self.sceneBrowse_toolButton, self.overrideFrameRange_groupBox)
+        Dialog.setTabOrder(self.overrideFrameRange_groupBox, self.frameRange_lineEdit)
         Dialog.setTabOrder(self.frameRange_lineEdit, self.taskSize_spinBox)
+        Dialog.setTabOrder(self.taskSize_spinBox, self.flags_groupBox)
+        Dialog.setTabOrder(self.flags_groupBox, self.flags_lineEdit)
+        Dialog.setTabOrder(self.flags_lineEdit, self.priority_spinBox)
+        Dialog.setTabOrder(self.priority_spinBox, self.priority_slider)
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Submit Command-Line Render", None, QtGui.QApplication.UnicodeUTF8))
+        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Submit Maya Render", None, QtGui.QApplication.UnicodeUTF8))
         self.scene_label.setText(QtGui.QApplication.translate("Dialog", "Scene:", None, QtGui.QApplication.UnicodeUTF8))
         self.sceneBrowse_toolButton.setText(QtGui.QApplication.translate("Dialog", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.overrideFrameRange_groupBox.setToolTip(QtGui.QApplication.translate("Dialog", "Allows the frame range(s) to be explicitly stated. If unchecked, the start and end frames will be read from the scene", None, QtGui.QApplication.UnicodeUTF8))
@@ -123,7 +151,8 @@ class Ui_Dialog(object):
         self.frameRange_lineEdit.setToolTip(QtGui.QApplication.translate("Dialog", "List of frames to be rendered. Individual frames should be separated with commas, and sequences can be specified using a hyphen, e.g. 1, 5-10", None, QtGui.QApplication.UnicodeUTF8))
         self.flags_groupBox.setToolTip(QtGui.QApplication.translate("Dialog", "Allows additional command-line flags to be specified", None, QtGui.QApplication.UnicodeUTF8))
         self.flags_groupBox.setTitle(QtGui.QApplication.translate("Dialog", "Additional command-line flags", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupBox.setTitle(QtGui.QApplication.translate("Dialog", "Submission options", None, QtGui.QApplication.UnicodeUTF8))
+        self.priority_label.setText(QtGui.QApplication.translate("Dialog", "Priority:", None, QtGui.QApplication.UnicodeUTF8))
         self.submit_pushButton.setText(QtGui.QApplication.translate("Dialog", "Submit", None, QtGui.QApplication.UnicodeUTF8))
-        self.killComplete_pushButton.setText(QtGui.QApplication.translate("Dialog", "Kill/Complete", None, QtGui.QApplication.UnicodeUTF8))
         self.close_pushButton.setText(QtGui.QApplication.translate("Dialog", "Close", None, QtGui.QApplication.UnicodeUTF8))
 

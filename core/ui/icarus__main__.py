@@ -140,11 +140,15 @@ class icarusApp(QtGui.QDialog):
 		# Render
 		self.ui.render_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
-		self.actionSubmitLocal = QtGui.QAction("Submit Maya command-line render (local)", None)
-		self.actionSubmitLocal.triggered.connect(self.launchSubmitRender)
-		self.ui.render_pushButton.addAction(self.actionSubmitLocal)
+		self.actionSubmitRender = QtGui.QAction("Submit Render", None)
+		self.actionSubmitRender.triggered.connect(self.launchSubmitRender)
+		self.ui.render_pushButton.addAction(self.actionSubmitRender)
 
-		self.actionBrowseRenders = QtGui.QAction("Browse renders", None)
+		self.actionRenderQueue = QtGui.QAction("Render Queue", None)
+		self.actionRenderQueue.triggered.connect(self.launchRenderQueue)
+		self.ui.render_pushButton.addAction(self.actionRenderQueue)
+
+		self.actionBrowseRenders = QtGui.QAction("Browse Renders", None)
 		self.actionBrowseRenders.triggered.connect(self.launchRenderBrowser)
 		self.ui.render_pushButton.addAction(self.actionBrowseRenders)
 
@@ -904,13 +908,20 @@ Environment: %s
 
 
 	def launchSubmitRender(self):
-		""" Launches GPS command-line render script.
+		""" Launches GPS Submit Render dialog.
 		"""
 		import submit__main__
 		reload(submit__main__)
 	#	gpsSubmitRenderApp = submit__main__.gpsSubmitRender(parent=app)
 	#	gpsSubmitRenderApp.setWindowFlags(QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinMaxButtonsHint )
 	#	gpsSubmitRenderApp.show()
+
+
+	def launchRenderQueue(self):
+		""" Launches GPS Render Queue Manager window.
+		"""
+		import queue__main__
+		reload(queue__main__)
 
 
 	def launchRenderBrowser(self):

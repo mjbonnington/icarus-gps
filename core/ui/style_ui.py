@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'style.ui'
+# Form implementation generated from reading ui file 'style_ui.ui'
 #
-# Created: Thu Dec 18 13:10:33 2014
-#      by: pyside-uic 0.2.13 running on PySide 1.1.1
+# Created: Wed Apr 20 22:02:43 2016
+#      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -318,29 +318,33 @@ class Ui_MainWindow(object):
         self.groupBox_6.setObjectName("groupBox_6")
         self.gridLayout_3 = QtGui.QGridLayout(self.groupBox_6)
         self.gridLayout_3.setObjectName("gridLayout_3")
+        self.label_4 = QtGui.QLabel(self.groupBox_6)
+        self.label_4.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_4.setObjectName("label_4")
+        self.gridLayout_3.addWidget(self.label_4, 0, 0, 1, 1)
         self.doubleSpinBox = QtGui.QDoubleSpinBox(self.groupBox_6)
         self.doubleSpinBox.setObjectName("doubleSpinBox")
         self.gridLayout_3.addWidget(self.doubleSpinBox, 1, 1, 1, 1)
         self.dateEdit = QtGui.QDateEdit(self.groupBox_6)
         self.dateEdit.setObjectName("dateEdit")
         self.gridLayout_3.addWidget(self.dateEdit, 1, 3, 1, 1)
-        self.label_4 = QtGui.QLabel(self.groupBox_6)
-        self.label_4.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.label_4.setObjectName("label_4")
-        self.gridLayout_3.addWidget(self.label_4, 0, 0, 1, 1)
-        self.timeEdit = QtGui.QTimeEdit(self.groupBox_6)
-        self.timeEdit.setObjectName("timeEdit")
-        self.gridLayout_3.addWidget(self.timeEdit, 0, 3, 1, 1)
         self.dateTimeEdit = QtGui.QDateTimeEdit(self.groupBox_6)
         self.dateTimeEdit.setObjectName("dateTimeEdit")
         self.gridLayout_3.addWidget(self.dateTimeEdit, 2, 3, 1, 1)
         self.spinBox = QtGui.QSpinBox(self.groupBox_6)
         self.spinBox.setObjectName("spinBox")
         self.gridLayout_3.addWidget(self.spinBox, 0, 1, 1, 1)
+        self.timeEdit = QtGui.QTimeEdit(self.groupBox_6)
+        self.timeEdit.setObjectName("timeEdit")
+        self.gridLayout_3.addWidget(self.timeEdit, 0, 3, 1, 1)
         self.label_5 = QtGui.QLabel(self.groupBox_6)
         self.label_5.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_5.setObjectName("label_5")
         self.gridLayout_3.addWidget(self.label_5, 1, 0, 1, 1)
+        self.label_8 = QtGui.QLabel(self.groupBox_6)
+        self.label_8.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_8.setObjectName("label_8")
+        self.gridLayout_3.addWidget(self.label_8, 2, 2, 1, 1)
         self.label_6 = QtGui.QLabel(self.groupBox_6)
         self.label_6.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_6.setObjectName("label_6")
@@ -349,10 +353,14 @@ class Ui_MainWindow(object):
         self.label_7.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_7.setObjectName("label_7")
         self.gridLayout_3.addWidget(self.label_7, 1, 2, 1, 1)
-        self.label_8 = QtGui.QLabel(self.groupBox_6)
-        self.label_8.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.label_8.setObjectName("label_8")
-        self.gridLayout_3.addWidget(self.label_8, 2, 2, 1, 1)
+        self.horizontalSlider = QtGui.QSlider(self.groupBox_6)
+        self.horizontalSlider.setOrientation(QtCore.Qt.Horizontal)
+        self.horizontalSlider.setObjectName("horizontalSlider")
+        self.gridLayout_3.addWidget(self.horizontalSlider, 3, 3, 1, 1)
+        self.verticalSlider = QtGui.QSlider(self.groupBox_6)
+        self.verticalSlider.setOrientation(QtCore.Qt.Vertical)
+        self.verticalSlider.setObjectName("verticalSlider")
+        self.gridLayout_3.addWidget(self.verticalSlider, 3, 1, 1, 1)
         self.verticalLayout_8.addWidget(self.groupBox_6)
         self.groupBox_7 = QtGui.QGroupBox(self.tab_3)
         self.groupBox_7.setCheckable(True)
@@ -733,8 +741,8 @@ class Ui_MainWindow(object):
         self.buttonBox.setObjectName("buttonBox")
         self.verticalLayout.addWidget(self.buttonBox)
         MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QtGui.QMenuBar()
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 677, 22))
+        self.menubar = QtGui.QMenuBar(MainWindow)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 677, 21))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
@@ -770,7 +778,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuEdit.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -828,9 +836,9 @@ class Ui_MainWindow(object):
         self.groupBox_6.setTitle(QtGui.QApplication.translate("MainWindow", "Spin Boxes, etc.", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("MainWindow", "Spin Box:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("MainWindow", "Double Spin Box:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_8.setText(QtGui.QApplication.translate("MainWindow", "Time/Date Edit:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_6.setText(QtGui.QApplication.translate("MainWindow", "Time Edit:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_7.setText(QtGui.QApplication.translate("MainWindow", "Date Edit:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_8.setText(QtGui.QApplication.translate("MainWindow", "Time/Date Edit:", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_7.setTitle(QtGui.QApplication.translate("MainWindow", "Text Input", None, QtGui.QApplication.UnicodeUTF8))
         self.lineEdit.setText(QtGui.QApplication.translate("MainWindow", "Type here...", None, QtGui.QApplication.UnicodeUTF8))
         self.lineEdit_5.setText(QtGui.QApplication.translate("MainWindow", "Type here....", None, QtGui.QApplication.UnicodeUTF8))
@@ -847,7 +855,7 @@ class Ui_MainWindow(object):
         self.textEdit.setHtml(QtGui.QApplication.translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Lucida Grande\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial,Helvetica,sans\'; font-size:20pt; font-weight:600; color:#2f9ca5;\">Lorem ipsum dolor sit amet</span><span style=\" font-family:\'Arial,Helvetica,sans\'; font-size:20pt; color:#2f9ca5;\">,</span><span style=\" font-family:\'Arial,Helvetica,sans\'; font-size:24pt; color:#2f9ca5;\"> </span><span style=\" font-family:\'Arial,Helvetica,sans\'; font-size:14pt; color:#2f9ca5;\">consectetur </span><span style=\" font-family:\'Arial,Helvetica,sans\'; font-size:14pt; font-style:italic; color:#2f9ca5;\">adipiscing</span><span style=\" font-family:\'Arial,Helvetica,sans\'; font-size:14pt; color:#2f9ca5;\"> elit. Mauris placerat </span><span style=\" font-family:\'Arial,Helvetica,sans\'; font-size:14pt; text-decoration: underline; color:#2f9ca5;\">pharetra</span><span style=\" font-family:\'Arial,Helvetica,sans\'; font-size:14pt; color:#2f9ca5;\"> turpis, in pharetra purus ultrices quis. Vivamus eget sem vel dolor scelerisque cursus eget eget ipsum. In hac habitasse platea dictumst. Aliquam </span><span style=\" font-family:\'Arial,Helvetica,sans\'; font-size:14pt; font-style:italic; color:#2f9ca5;\">elementum</span><span style=\" font-family:\'Arial,Helvetica,sans\'; font-size:14pt; color:#2f9ca5;\"> odio sed lacus laoreet blandit. Nulla lobortis, neque at vulputate lacinia, enim libero feugiat mauris, at efficitur quam nulla sit amet tortor. Donec egestas magna eget lectus lobortis, at dapibus lorem laoreet. Ut ullamcorper augue sit amet auctor semper. In hac habitasse platea dictumst. Morbi faucibus nibh eu justo laoreet, a tempor enim egestas. Mauris non mi </span><span style=\" font-family:\'Arial,Helvetica,sans\'; font-size:14pt; text-decoration: underline; color:#2f9ca5;\">maximus</span><span style=\" font-family:\'Arial,Helvetica,sans\'; font-size:14pt; color:#2f9ca5;\">, porta neque ut, bibendum risus. Nam eu nibh aliquam, cursus sapien nec, scelerisque nisl. Nam ac egestas turpis, ac gravida elit.</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.plainTextEdit.setPlainText(QtGui.QApplication.translate("MainWindow", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris placerat pharetra turpis, in pharetra purus ultrices quis. Vivamus eget sem vel dolor scelerisque cursus eget eget ipsum. In hac habitasse platea dictumst. Aliquam elementum odio sed lacus laoreet blandit. Nulla lobortis, neque at vulputate lacinia, enim libero feugiat mauris, at efficitur quam nulla sit amet tortor. Donec egestas magna eget lectus lobortis, at dapibus lorem laoreet. Ut ullamcorper augue sit amet auctor semper. In hac habitasse platea dictumst. Morbi faucibus nibh eu justo laoreet, a tempor enim egestas. Mauris non mi maximus, porta neque ut, bibendum risus. Nam eu nibh aliquam, cursus sapien nec, scelerisque nisl. Nam ac egestas turpis, ac gravida elit.", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QtGui.QApplication.translate("MainWindow", "Input Widgets", None, QtGui.QApplication.UnicodeUTF8))

@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1024</width>
+    <height>360</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Render Queue</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QFrame" name="renderPblToolbar_frame">
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_10">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>6</number>
+       </property>
+       <item>
+        <widget class="QToolButton" name="jobSubmit_toolButton">
+         <property name="text">
+          <string>Submit</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="jobPauseResume_toolButton">
+         <property name="text">
+          <string>Pause / Resume</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="jobKill_toolButton">
+         <property name="text">
+          <string>Kill</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="jobDelete_toolButton">
+         <property name="text">
+          <string>Delete</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="jobEdit_toolButton">
+         <property name="text">
+          <string>Edit</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="jobResubmit_toolButton">
+         <property name="text">
+          <string>Resubmit</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_1">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>16</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QToolButton" name="taskComplete_toolButton">
+         <property name="text">
+          <string>Complete</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="taskFail_toolButton">
+         <property name="text">
+          <string>Fail</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="taskRequeue_toolButton">
+         <property name="text">
+          <string>Requeue</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTreeWidget" name="renderQueue_treeWidget">
+      <property name="alternatingRowColors">
+       <bool>true</bool>
+      </property>
+      <property name="rootIsDecorated">
+       <bool>true</bool>
+      </property>
+      <property name="uniformRowHeights">
+       <bool>true</bool>
+      </property>
+      <property name="sortingEnabled">
+       <bool>false</bool>
+      </property>
+      <property name="animated">
+       <bool>true</bool>
+      </property>
+      <property name="headerHidden">
+       <bool>false</bool>
+      </property>
+      <property name="expandsOnDoubleClick">
+       <bool>true</bool>
+      </property>
+      <column>
+       <property name="text">
+        <string>Job / Task</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Priority</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Status</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Slave</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Frames</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Command</string>
+       </property>
+      </column>
+      <item>
+       <property name="text">
+        <string>SH010_lighting_v007</string>
+       </property>
+       <property name="text">
+        <string>50</string>
+       </property>
+       <property name="text">
+        <string>In Progress</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="text">
+        <string>1001-1050</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <item>
+        <property name="text">
+         <string>Task 1</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="text">
+         <string>Completed</string>
+        </property>
+        <property name="text">
+         <string>3dws01</string>
+        </property>
+        <property name="text">
+         <string>1001-1010</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Task 2</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="text">
+         <string>In Progress</string>
+        </property>
+        <property name="text">
+         <string>3dws02</string>
+        </property>
+        <property name="text">
+         <string>1011-1020</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Task 3</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="text">
+         <string>In Progress</string>
+        </property>
+        <property name="text">
+         <string>3dws01</string>
+        </property>
+        <property name="text">
+         <string>1021-1030</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Task 4</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="text">
+         <string>Queued</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="text">
+         <string>1031-1040</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Task 5</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="text">
+         <string>Queued</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="text">
+         <string>1041-1050</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </item>
+      </item>
+      <item>
+       <property name="text">
+        <string>SH020_lighting_v003</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="text">
+        <string>Queued</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="text">
+        <string>1001-1025</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
