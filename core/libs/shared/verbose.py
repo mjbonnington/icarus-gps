@@ -20,8 +20,8 @@ statusBar = None
 
 def print_(message, verbosityLevel=3, status=True, log=False):
 	""" Print the message to the console.
-		if status
-		If log is True, the messages will be written to a logfile (not yet implemented)
+		If 'status' is True, the message will be shown on the main UI status bar.
+		If 'log' is True, the message will be written to a logfile (not yet implemented).
 
 		Verbosity Levels:
 		0 - Nothing is output
@@ -121,7 +121,7 @@ def launchAppNotFound(application):
 	print_( 'ERROR: Unable to launch %s - the executable could not be found.' % application, 2 )
 
 def launchAppNotSet(application):
-	print_( 'ERROR: Unable to launch %s - executable path not set.\nPlease set the correct location from the job settings window.' % application, 2 )
+	print_( 'ERROR: Unable to launch %s - executable path not set. Please set the correct location from the job settings window.' % application, 2 )
 
 def jobSet(job, shot):
 	print_( 'Shot set: Now working on %s - %s' % (job, shot), 3 )
