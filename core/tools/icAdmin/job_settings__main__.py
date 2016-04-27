@@ -180,7 +180,7 @@ class settingsDialog(QtGui.QDialog):
 			#attr = widget.objectName().split('_')[0] # use first part of widget object's name
 			attr = widget.property('xmlTag') # use widget's dynamic 'xmlTag' 
 
-			if attr is not None:
+			if attr:
 				signalMapper.setMapping(widget, attr)
 
 				#text = self.jd.getValue(category, attr)
@@ -237,6 +237,10 @@ class settingsDialog(QtGui.QDialog):
 					#print "%s: %s" %(attr, widget.value())
 					widget.valueChanged.connect(signalMapper.map)
 					widget.valueChanged.connect( lambda current: self.storeValue(current) )
+
+		# Run special function to deal with resolution panel
+		if category == 'time':
+			self.setupTime()
 
 		# Run special function to deal with resolution panel
 		if category == 'resolution':
@@ -313,6 +317,50 @@ class settingsDialog(QtGui.QDialog):
 	#	"""
 	#	frame = self.ui.settings_frame
 	#	frame.findChildren(QtGui.QSpinBox, 'time_comboBox')[0].setCurrentIndex(0)
+
+
+	def setupTime(self):
+		""" Setup time properties panel
+		"""
+		frame = self.ui.settings_frame
+
+		self.calcTimeValues()
+
+		# Connect signals and slots
+		frame.findChildren(QtGui.QSpinBox, 'rangeStart_spinBox')[0].valueChanged.connect(self.calcTimeValues)
+		frame.findChildren(QtGui.QSpinBox, 'rangeEnd_spinBox')[0].valueChanged.connect(self.calcTimeValues)
+		frame.findChildren(QtGui.QSpinBox, 'in_spinBox')[0].valueChanged.connect(self.calcTimeValues)
+		frame.findChildren(QtGui.QSpinBox, 'out_spinBox')[0].valueChanged.connect(self.calcTimeValues)
+
+
+	def calcTimeValues(self):
+		""" Calculate time values (frame range, duration, in/out, etc.)
+		"""
+		frame = self.ui.settings_frame
+
+		rangeStart = frame.findChildren(QtGui.QSpinBox, 'rangeStart_spinBox')[0].value()
+		rangeEnd = frame.findChildren(QtGui.QSpinBox, 'rangeEnd_spinBox')[0].value()
+		inFrame = frame.findChildren(QtGui.QSpinBox, 'in_spinBox')[0].value()
+		outFrame = frame.findChildren(QtGui.QSpinBox, 'out_spinBox')[0].value()
+		durationFull = (rangeEnd - rangeStart) + 1
+		durationEdit = (outFrame - inFrame) + 1
+		handlesStart = inFrame - rangeStart
+		handlesEnd = rangeEnd - outFrame
+
+		# Update widgets
+		frame.findChildren(QtGui.QLabel, 'rangeInfo_label')[0].setText("(%d frames)" %durationFull)
+		frame.findChildren(QtGui.QLabel, 'inOutInfo_label')[0].setText("(%d frames)" %durationEdit)
+		frame.findChildren(QtGui.QSpinBox, 'handlesStart_spinBox')[0].setValue(handlesStart)
+		frame.findChildren(QtGui.QSpinBox, 'handlesEnd_spinBox')[0].setValue(handlesEnd)
+
+		frame.findChildren(QtGui.QSpinBox, 'rangeStart_spinBox')[0].setMaximum(rangeEnd)
+		frame.findChildren(QtGui.QSpinBox, 'rangeEnd_spinBox')[0].setMinimum(rangeStart)
+		frame.findChildren(QtGui.QSpinBox, 'in_spinBox')[0].setMinimum(rangeStart)
+		frame.findChildren(QtGui.QSpinBox, 'in_spinBox')[0].setMaximum(outFrame)
+		frame.findChildren(QtGui.QSpinBox, 'out_spinBox')[0].setMinimum(inFrame)
+		frame.findChildren(QtGui.QSpinBox, 'out_spinBox')[0].setMaximum(rangeEnd)
+		frame.findChildren(QtGui.QSpinBox, 'posterFrame_spinBox')[0].setMinimum(rangeStart)
+		frame.findChildren(QtGui.QSpinBox, 'posterFrame_spinBox')[0].setMaximum(rangeEnd)
 
 
 	def setupRes(self):
@@ -702,7 +750,7 @@ class settingsDialog(QtGui.QDialog):
 		""" Stores the currently edited attribute value into the XML data
 		"""
 		self.currentValue = str(val) # value must be a string for XML
-		verbose.print_('[%s] %s = %s' %(self.currentCategory, self.currentAttr, self.currentValue), 4)
+		verbose.print_('%s.%s = %s' %(self.currentCategory, self.currentAttr, self.currentValue), 4)
 		self.jd.setValue(self.currentCategory, self.currentAttr, self.currentValue)
 
 
@@ -723,7 +771,7 @@ class settingsDialog(QtGui.QDialog):
 			attr = widget.property('xmlTag')
 
 			# Only store values of wigets which have the dynamic property 'xmlTag' set
-			if attr is not None:
+			if attr:
 				self.currentAttr = attr
 
 				# Combo box(es)...
@@ -756,7 +804,7 @@ class settingsDialog(QtGui.QDialog):
 		for widget in widgets:
 			attr = widget.property('xmlTag')
 
-			if attr is not None:
+			if attr:
 				self.jd.removeElement(self.currentCategory, attr)
 
 		self.openProperties(self.currentCategory, storeProperties=False)

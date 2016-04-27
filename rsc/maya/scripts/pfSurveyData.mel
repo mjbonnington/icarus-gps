@@ -1,0 +1,61 @@
+// [GPS] PFTrack Survey Points
+// 
+// Mike Bonnington <mike.bonnington@gps-ldn.com>
+// (c) 2015-2016 Gramercy Park Studios
+//
+// Import or export survey point data for PFTrack.
+
+
+global proc importPFSurveyPoints (string $filePath)
+{
+
+	$fileId = `fopen $filePath "r"`;
+
+	string $nextLine = `fgetline $fileId`;
+	int $n = 0;
+
+	while (size($nextLine) > 0)
+	{
+		string $cleanLine = strip($nextLine);
+		string $buffer[];
+		string $name[];
+		tokenize $cleanLine "\t" $buffer;
+		tokenize $buffer[0] "\"" $name;
+
+		if($n)
+		{
+			spaceLocator -name $name /*-position $buffer[1] $buffer[2] $buffer[3]*/;
+			move $buffer[1] $buffer[2] $buffer[3];
+			scale $buffer[4] $buffer[4] $buffer[4]
+		}
+
+		$nextLine = `fgetline $fileId`;
+		$n++;
+	}
+
+}
+
+
+global proc exportPFSurveyPoints (string $filePath)
+{
+
+	string $sel[] = `ls -sl`;
+	string $myStrArray[] = {"# Name	\t\tSurveyX\t\tSurveyY\t\tSurveyZ\t\tUncertainty"};
+
+	$fileId = `fopen $filePath "w"`;
+
+	for ($obj in $sel)
+	{
+		float $surveyX = `getAttr ($obj + ".tx")`;
+		float $surveyY = `getAttr ($obj + ".ty")`;
+		float $surveyZ = `getAttr ($obj + ".tz")`;
+		float $uncertainty = `getAttr ($obj + ".sy")`;
+		string $newLine = "\"" + $obj + "\"\t" + $surveyX + "\t" + $surveyY + "\t" + $surveyZ + "\t" + $uncertainty;
+		$myStrArray[size($myStrArray)] = $newLine;
+	}
+
+	for ($line in $myStrArray) fprint $fileId ($line+"\n");
+
+	fclose $fileId;
+}
+
