@@ -21,7 +21,7 @@ global proc shelf_GPS_Lighting () {
 		-style "iconOnly" 
 		-marginWidth 1
 		-marginHeight 1
-		-command "source gpsLighting.mel; gpsLighting.setCommonOptions()" 
+		//-command "source gpsLighting.mel; gpsLighting.setCommonOptions()" 
 		-sourceType "mel" 
 		-commandRepeatable 1
 		-flat 1
@@ -32,6 +32,40 @@ global proc shelf_GPS_Lighting () {
 		-mi "Add AOV Selector to Maya Render View" ( "import gpsRenderViewSelectAOV; reload(gpsRenderViewSelectAOV); gpsRenderViewSelectAOV.selectAOV()" )
 		-mip 4
 	;
+
+	addShelfSeparator();
+
+	shelfButton
+		-enableCommandRepeat 1
+		-enable 1
+		-width 35
+		-height 35
+		-manage 1
+		-visible 1
+		-preventOverride 0
+		-annotation "Renderer options: Redshift" 
+		-enableBackground 0
+		-align "center" 
+		-label "redshiftSettings" 
+		-labelOffset 0
+		-font "tinyBoldLabelFont" 
+		-overlayLabelColor 0.8 0.8 0.8 
+		-overlayLabelBackColor 0 0 0 0.2 
+		-image "redshiftSettings.png" 
+		-image1 "redshiftSettings.png" 
+		-style "iconOnly" 
+		-marginWidth 1
+		-marginHeight 1
+		//-command "source gpsLightingRedshift.mel; gpsLightingRedshift.loadBaseSettings()" 
+		-sourceType "mel" 
+		-commandRepeatable 1
+		-flat 1
+		-mi "Load Redshift Plugin" ( "loadPlugin redshift4maya" )
+		-mi "Load Base Settings"   ( "source gpsLightingRedshift.mel; gpsLightingRedshift.loadBaseSettings()" )
+	;
+
+	addShelfSeparator();
+
 	shelfButton
 		-enableCommandRepeat 1
 		-enable 1
@@ -53,7 +87,7 @@ global proc shelf_GPS_Lighting () {
 		-style "iconOnly" 
 		-marginWidth 1
 		-marginHeight 1
-		-command "source gpsLightingVRay.mel; gpsLightingVRay.loadBaseSettings()" 
+		//-command "source gpsLightingVRay.mel; gpsLightingVRay.loadBaseSettings()" 
 		-sourceType "mel" 
 		-commandRepeatable 1
 		-flat 1
@@ -82,35 +116,7 @@ global proc shelf_GPS_Lighting () {
 		-manage 1
 		-visible 1
 		-preventOverride 0
-		-annotation "Renderer options: Redshift" 
-		-enableBackground 0
-		-align "center" 
-		-label "redshiftSettings" 
-		-labelOffset 0
-		-font "tinyBoldLabelFont" 
-		-overlayLabelColor 0.8 0.8 0.8 
-		-overlayLabelBackColor 0 0 0 0.2 
-		-image "redshiftSettings.png" 
-		-image1 "redshiftSettings.png" 
-		-style "iconOnly" 
-		-marginWidth 1
-		-marginHeight 1
-		-command "source gpsLightingRedshift.mel; gpsLightingRedshift.loadBaseSettings()" 
-		-sourceType "mel" 
-		-commandRepeatable 1
-		-flat 1
-		-mi "Load Redshift Plugin" ( "loadPlugin redshift4maya" )
-		-mi "Load Base Settings"   ( "source gpsLightingRedshift.mel; gpsLightingRedshift.loadBaseSettings()" )
-	;
-	shelfButton
-		-enableCommandRepeat 1
-		-enable 1
-		-width 35
-		-height 35
-		-manage 1
-		-visible 1
-		-preventOverride 0
-		-annotation "Gamma workflow tools" 
+		-annotation "V-Ray gamma workflow tools" 
 		-enableBackground 0
 		-align "center" 
 		-label "Gamma Tools" 
@@ -140,7 +146,7 @@ global proc shelf_GPS_Lighting () {
 		-manage 1
 		-visible 1
 		-preventOverride 0
-		-annotation "Create VRay Shaders" 
+		-annotation "Create V-Ray Shaders" 
 		-enableBackground 0
 		-align "center" 
 		-label "vRayShaders" 
@@ -156,13 +162,13 @@ global proc shelf_GPS_Lighting () {
 		-sourceType "mel" 
 		-commandRepeatable 1
 		-flat 1
-		-mi "VRay Material" ( "source gpsLightingVRay.mel; gpsLightingVRay.createMaterial(\"VRayMtl\",\"vrayMaterial\")" )
-		-mi "VRay Material 2 Sided" ( "source gpsLightingVRay.mel; gpsLightingVRay.createMaterial(\"VRayMtl2Sided\",\"vray2Sided\")" )
-		-mi "VRay Material Wrapper" ( "source gpsLightingVRay.mel; gpsLightingVRay.createMaterial(\"VRayMtlWrapper\",\"wrapper\")" )
-		-mi "VRay Skin Material" ( "source gpsLightingVRay.mel; gpsLightingVRay.createMaterial(\"VRaySkinMtl\",\"vraySkin\")" )
-		-mi "VRay Light Material" ( "source gpsLightingVRay.mel; gpsLightingVRay.createMaterial(\"VRayLightMtl\",\"vrayLight\")" )
-		-mi "VRay Car Paint" ( "source gpsLightingVRay.mel; gpsLightingVRay.createMaterial(\"VRayCarPaintMtl\",\"carPaint\")" )
-		-mi "VRay Blend Material" ( "source gpsLightingVRay.mel; gpsLightingVRay.createMaterial(\"VRayBlendMtl\",\"vrayBlend\")" )
+		-mi "V-Ray Material" ( "source gpsLightingVRay.mel; gpsLightingVRay.createMaterial(\"VRayMtl\",\"vrayMaterial\")" )
+		-mi "V-Ray Material 2 Sided" ( "source gpsLightingVRay.mel; gpsLightingVRay.createMaterial(\"VRayMtl2Sided\",\"vray2Sided\")" )
+		-mi "V-Ray Material Wrapper" ( "source gpsLightingVRay.mel; gpsLightingVRay.createMaterial(\"VRayMtlWrapper\",\"wrapper\")" )
+		-mi "V-Ray Skin Material" ( "source gpsLightingVRay.mel; gpsLightingVRay.createMaterial(\"VRaySkinMtl\",\"vraySkin\")" )
+		-mi "V-Ray Light Material" ( "source gpsLightingVRay.mel; gpsLightingVRay.createMaterial(\"VRayLightMtl\",\"vrayLight\")" )
+		-mi "V-Ray Car Paint" ( "source gpsLightingVRay.mel; gpsLightingVRay.createMaterial(\"VRayCarPaintMtl\",\"carPaint\")" )
+		-mi "V-Ray Blend Material" ( "source gpsLightingVRay.mel; gpsLightingVRay.createMaterial(\"VRayBlendMtl\",\"vrayBlend\")" )
 	;
 	shelfButton
 		-enableCommandRepeat 1
@@ -172,7 +178,7 @@ global proc shelf_GPS_Lighting () {
 		-manage 1
 		-visible 1
 		-preventOverride 0
-		-annotation "Create VRay Lights" 
+		-annotation "Create V-Ray Lights" 
 		-enableBackground 0
 		-align "center" 
 		-label "vRayLights" 
@@ -188,16 +194,16 @@ global proc shelf_GPS_Lighting () {
 		-sourceType "mel" 
 		-commandRepeatable 1
 		-flat 1
-		-mi "VRay Rect Light" ("import createVRayLights; createVRayLights.create('VRayLightRectShape', 'VRayLightRect')")
+		-mi "V-Ray Rect Light" ("import createVRayLights; createVRayLights.create('VRayLightRectShape', 'VRayLightRect')")
 		-mip 0
-		-mi "VRay Dome Light" ("import createVRayLights; createVRayLights.create('VRayLightDomeShape', 'VRayLightDome')")
+		-mi "V-Ray Dome Light" ("import createVRayLights; createVRayLights.create('VRayLightDomeShape', 'VRayLightDome')")
 		-mip 1
-		-mi "VRay Sphere Light" ("import createVRayLights; createVRayLights.create('VRayLightSphereShape', 'VRayLightSphere')")
+		-mi "V-Ray Sphere Light" ("import createVRayLights; createVRayLights.create('VRayLightSphereShape', 'VRayLightSphere')")
 		-mip 2
-		-mi "VRay IES Light" ("import createVRayLights; createVRayLights.create('VRayLightIESShape', 'VRayLightIES')")
+		-mi "V-Ray IES Light" ("import createVRayLights; createVRayLights.create('VRayLightIESShape', 'VRayLightIES')")
 		-mip 3
-		-mi "VRay Sun" ("vrayCreateVRaySun;")
-		-mi "Create Light Contribution Element" ("import createLightSelPass\ncreateLightSelPass.lightSelPass()")
+		-mi "V-Ray Sun" ("vrayCreateVRaySun;")
+		-mi "Create Light Contribution Element" ("import createLightSelPass; createLightSelPass.lightSelPass()")
 		-mip 5
 		;
 	shelfButton
@@ -208,7 +214,7 @@ global proc shelf_GPS_Lighting () {
 		-manage 1
 		-visible 1
 		-preventOverride 0
-		-annotation "Add VRay subdivision and displacement attributes" 
+		-annotation "Add V-Ray subdivision and displacement attributes" 
 		-enableBackground 0
 		-align "center" 
 		-label "vraySubDsMulti" 
@@ -234,7 +240,7 @@ global proc shelf_GPS_Lighting () {
 		-manage 1
 		-visible 1
 		-preventOverride 0
-		-annotation "Create Object IDs and Multimattes" 
+		-annotation "Create V-Ray Object IDs and Multimatte passes" 
 		-enableBackground 0
 		-align "center" 
 		-label "Multimatte" 
@@ -259,6 +265,9 @@ global proc shelf_GPS_Lighting () {
 		-mi "Create Object Multimattes Selection" ( "import createMultimattes\ncreateMultimattes.objMultiMatte(all=False)" )
 		-mip 3
 	;
+
+	addShelfSeparator();
+
 	shelfButton
 		-enableCommandRepeat 1
 		-enable 1
