@@ -1732,7 +1732,13 @@ Environment: %s
 #########################################
 
 # Version verbosity
-verbose.icarusLaunch(os.environ['ICARUSVERSION'], os.environ['ICWORKINGDIR']) #os.environ['PIPELINE'])
+verbose.icarusLaunch(os.environ['ICARUSVERSION'], os.environ['PIPELINE'])
+
+# Python version check
+try:
+	assert sys.version_info >= (2,7)
+except AssertionError:
+	sys.exit("ERROR: Icarus requires Python version 2.7 or above.")
 
 # Detect environment and run application
 if os.environ['ICARUSENVAWARE'] == 'MAYA' or os.environ['ICARUSENVAWARE'] == 'NUKE':

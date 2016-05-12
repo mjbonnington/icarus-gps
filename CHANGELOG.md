@@ -1,3 +1,7 @@
+v0.9.4 (TBC)
+-	[Icarus] Status bar messages are displayed for a variable duration dependent on message length.
+-	[Icarus] Implemented check for Python version at startup - Icarus requires at least version 2.7.
+
 v0.9.3 (2016-05-10)
 -	[Icarus] Added status bar to main Icarus window to display errors, warnings and info messages.
 -	[Icarus] Added Notes field to job settings.
