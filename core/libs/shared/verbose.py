@@ -34,11 +34,14 @@ def print_(message, verbosityLevel=3, status=True, log=False):
 
 	userPrefs.read()
 
+	# Print message to the console
 	if verbosityLevel <= userPrefs.config.getint('main', 'verbosity'):
 		print message
 
+	# Print message to the status bar
 	if verbosityLevel <= 3 and status and statusBar is not None:
-		statusBar.showMessage(message, 10000)
+		timeout = 1800 + max(2400, len(message)*60)
+		statusBar.showMessage(message, timeout)
 
 
 def registerStatusBar(statusBarObj):
