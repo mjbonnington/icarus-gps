@@ -1704,8 +1704,9 @@ Environment: %s
 #				self.ui.gatherImgPreview_label.removeAction(self.actionPreview)
 
 
-	##################intializes gather################
 	def initGather(self):
+		""" Initialise gather.
+		"""
 		if os.environ['ICARUSENVAWARE'] == 'MAYA':
 			if self.assetType == 'ma_anim':
 				import ma_animGather
@@ -1713,8 +1714,9 @@ Environment: %s
 			else:
 				import ma_assetGather
 				ma_assetGather.gather(self.gatherPath)
+
 		elif os.environ['ICARUSENVAWARE'] == 'NUKE':
-			if self.assetType in ('ic_geo', 'ic_pointCloud') :
+			if self.assetType in ('ic_geo', 'ic_pointCloud'):
 				import nk_geoGather
 				nk_geoGather.gather(self.gatherPath)
 			elif self.assetType == 'render':
