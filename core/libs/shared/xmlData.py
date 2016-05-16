@@ -3,7 +3,7 @@
 # [Icarus] xmlData.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2106 Gramercy Park Studios
+# (c) 2015-2016 Gramercy Park Studios
 #
 # Class for handling generic XML data files via ElementTree.
 # Classes written to handle specific data files should inherit this class.

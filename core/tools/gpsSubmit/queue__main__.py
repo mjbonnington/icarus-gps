@@ -21,6 +21,7 @@ env__init__.setEnv()
 
 # Import custom modules
 #import osOps, rename, sequence
+import renderQueue
 
 
 class gpsRenderQueueApp(QtGui.QMainWindow):
@@ -30,7 +31,13 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 		self.ui = Ui_MainWindow()
 		self.ui.setupUi(self)
 
+		# Instantiate render queue class and load data
+		self.rq = renderQueue.renderQueue()
+		self.rq.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'renderQueue.xml'))
+
 		# Connect signals & slots
+		self.ui.jobSubmit_toolButton.clicked.connect(self.launchRenderSubmit)
+		self.ui.refresh_toolButton.clicked.connect(self.updateTaskListView)
 
 		self.updateTaskListView()
 
@@ -38,7 +45,41 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 	def updateTaskListView(self):
 		""" Populates the render queue tree view widget with entries for render jobs and tasks.
 		"""
-		pass
+		self.rq.loadXML(quiet=True) # reload XML data
+
+		self.ui.renderQueue_treeWidget.clear()
+
+		# Populate render jobs
+		for jobElement in self.rq.getJobs():
+			renderJobItem = QtGui.QTreeWidgetItem(self.ui.renderQueue_treeWidget)
+
+			renderJobItem.setText(0, jobElement.find('name').text)
+			renderJobItem.setText(1, jobElement.find('priority').text)
+			renderJobItem.setText(2, jobElement.find('status').text)
+			renderJobItem.setText(3, jobElement.find('frames').text)
+
+			#renderJobItem.setExpanded(True)
+
+			# Populate render tasks
+			for taskElement in jobElement.findall('task'):
+				renderTaskItem = QtGui.QTreeWidgetItem(renderJobItem)
+
+				renderTaskItem.setText(0, "Task %s" %taskElement.get('id'))
+				renderTaskItem.setText(2, taskElement.find('status').text)
+				renderTaskItem.setText(3, taskElement.find('frames').text)
+				renderTaskItem.setText(4, taskElement.find('slave').text)
+				renderTaskItem.setText(5, taskElement.find('command').text)
+
+			# Resize columns
+			for i in range(0, self.ui.renderQueue_treeWidget.columnCount()):
+				self.ui.renderQueue_treeWidget.resizeColumnToContents(i)
+
+
+	def launchRenderSubmit(self):
+		""" Launches GPS Submit Render dialog.
+		"""
+		import submit__main__
+		reload(submit__main__)
 
 
 if __name__ == "__main__":

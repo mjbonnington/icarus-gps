@@ -20,6 +20,7 @@ import env__init__
 env__init__.setEnv()
 
 # Import custom modules
+import renderQueue
 import sequence as seq
 
 
@@ -34,6 +35,10 @@ class gpsSubmitRender(QtGui.QDialog):
 		self.relativeScenesToken = '...' # representative string to replace the path specified above
 		self.numList = []
 		self.resetFrameList()
+
+		# Instantiate render queue class and load data
+		self.rq = renderQueue.renderQueue()
+		self.rq.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'renderQueue.xml'))
 
 		# Clear scene menu and populate with recent scenes
 		self.ui.scene_comboBox.clear()
@@ -50,7 +55,7 @@ class gpsSubmitRender(QtGui.QDialog):
 		# Connect signals & slots
 		self.ui.sceneBrowse_toolButton.clicked.connect(self.sceneBrowse)
 
-		#QtCore.QObject.connect(self.ui.frameRange_lineEdit, QtCore.SIGNAL('textEdited()'), self.validateFrameList) # can't get this to work
+		#QtCore.QObject.connect(self.ui.frameRange_lineEdit, QtCore.SIGNAL('textEdited()'), self.validateFrameList) # can't get this to work - look at the validator in rename__main__.py
 		self.ui.frameRange_lineEdit.editingFinished.connect(self.calcFrameList)
 		self.ui.taskSize_spinBox.valueChanged.connect(self.calcFrameList)
 
@@ -175,6 +180,54 @@ class gpsSubmitRender(QtGui.QDialog):
 
 
 	def submit(self):
+		""" Submit render to queue.
+		"""
+		self.calcFrameList(quiet=True)
+
+		try:
+			renderCmd = '"%s"' %os.environ['MAYARENDERVERSION']
+		except KeyError:
+			print "ERROR: Path to Maya Render command executable not found. This can be set with the environment variable 'MAYARENDERVERSION'."
+
+		priority = self.ui.priority_spinBox.value()
+		frames = self.ui.frameRange_lineEdit.text()
+		#print priority, frames
+
+		cmdStr = []
+		frameStrLs = []
+		args = '-proj "%s"' %os.environ['MAYADIR']
+		frameRangeArgs = ''
+
+		sceneName = '"%s"' %self.absolutePath(self.ui.scene_comboBox.currentText())
+		jobName = os.path.basename(self.absolutePath(self.ui.scene_comboBox.currentText()))
+
+		# Check we're not working in an unsaved scene
+		if sceneName:
+
+			if self.ui.flags_groupBox.isChecked():
+				args += ' %s' %self.ui.flags_lineEdit.text()
+
+			# Construct command(s)
+			if self.ui.overrideFrameRange_groupBox.isChecked():
+				for frame in self.taskList:
+					frameRangeArgs = '-s %d -e %d' %(frame[0], frame[1])
+
+					cmdStr.append('%s %s %s %s' %(renderCmd, args, frameRangeArgs, sceneName))
+					frameStrLs.append('%d-%d' %(frame[0], frame[1]))
+
+			else:
+				cmdStr.append('%s %s %s' %(renderCmd, args, sceneName))
+				frameStrLs.append(frames)
+
+			#print frameStrLs, cmdStr
+			self.rq.newJob(jobName, priority, frames, frameStrLs, cmdStr)
+			self.rq.saveXML()
+
+		else:
+			print "ERROR: Scene not specified."
+
+
+	def submit_OLD(self):
 		""" Submit render.
 		"""
 		self.calcFrameList(quiet=False)
@@ -247,13 +300,13 @@ if __name__ == "__main__":
 		app.setStyleSheet(fh.read())
 
 	gpsSubmitRenderApp = gpsSubmitRender()
-	gpsSubmitRenderApp.setWindowFlags(QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinMaxButtonsHint )
+	# gpsSubmitRenderApp.setWindowFlags(QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinMaxButtonsHint )
 
 	gpsSubmitRenderApp.show()
 	sys.exit(gpsSubmitRenderApp.exec_())
 
 else:
 	gpsSubmitRenderApp = gpsSubmitRender()
-	gpsSubmitRenderApp.setWindowFlags(QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinMaxButtonsHint )
+	# gpsSubmitRenderApp.setWindowFlags(QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinMaxButtonsHint )
 
 	gpsSubmitRenderApp.show()

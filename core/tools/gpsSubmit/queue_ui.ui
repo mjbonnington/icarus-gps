@@ -128,6 +128,13 @@
          </property>
         </spacer>
        </item>
+       <item>
+        <widget class="QToolButton" name="refresh_toolButton">
+         <property name="text">
+          <string>Refresh</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
@@ -171,12 +178,12 @@
       </column>
       <column>
        <property name="text">
-        <string>Slave</string>
+        <string>Frames</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>Frames</string>
+        <string>Slave</string>
        </property>
       </column>
       <column>
@@ -195,10 +202,10 @@
         <string>In Progress</string>
        </property>
        <property name="text">
-        <string/>
+        <string>1001-1050</string>
        </property>
        <property name="text">
-        <string>1001-1050</string>
+        <string/>
        </property>
        <property name="text">
         <string/>
@@ -214,10 +221,10 @@
          <string>Completed</string>
         </property>
         <property name="text">
-         <string>3dws01</string>
+         <string>1001-1010</string>
         </property>
         <property name="text">
-         <string>1001-1010</string>
+         <string>3dws01</string>
         </property>
         <property name="text">
          <string/>
@@ -234,10 +241,10 @@
          <string>In Progress</string>
         </property>
         <property name="text">
-         <string>3dws02</string>
+         <string>1011-1020</string>
         </property>
         <property name="text">
-         <string>1011-1020</string>
+         <string>3dws02</string>
         </property>
         <property name="text">
          <string/>
@@ -254,10 +261,10 @@
          <string>In Progress</string>
         </property>
         <property name="text">
-         <string>3dws01</string>
+         <string>1021-1030</string>
         </property>
         <property name="text">
-         <string>1021-1030</string>
+         <string>3dws01</string>
         </property>
         <property name="text">
          <string/>
@@ -274,10 +281,10 @@
          <string>Queued</string>
         </property>
         <property name="text">
-         <string/>
+         <string>1031-1040</string>
         </property>
         <property name="text">
-         <string>1031-1040</string>
+         <string/>
         </property>
         <property name="text">
          <string/>
@@ -294,10 +301,10 @@
          <string>Queued</string>
         </property>
         <property name="text">
-         <string/>
+         <string>1041-1050</string>
         </property>
         <property name="text">
-         <string>1041-1050</string>
+         <string/>
         </property>
         <property name="text">
          <string/>
@@ -315,10 +322,10 @@
         <string>Queued</string>
        </property>
        <property name="text">
-        <string/>
+        <string>1001-1025</string>
        </property>
        <property name="text">
-        <string>1001-1025</string>
+        <string/>
        </property>
        <property name="text">
         <string/>
