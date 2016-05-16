@@ -38,7 +38,7 @@ global proc gpsRenderSetupVRay.loadSettings()
 	}
 
 	// Set render file name prefix
-	gpsRenderSetupVRay.setRenderPath();
+	gpsRenderSetupVRay.setOutputPath();
 
 	// Enable V-Ray Framebuffer
 	setAttr "vraySettings.vfbOn" 1;
@@ -119,8 +119,8 @@ global proc gpsRenderSetupVRay.loadSettings()
 }
 
 
-// Set up render file name prefix format
-global proc gpsRenderSetupVRay.setRenderPath()
+// Set up render file name prefix format.
+global proc gpsRenderSetupVRay.setOutputPath()
 {
 	string $user = `getenv "USER"`;
 	string $shot = `getenv "SHOT"`;
@@ -133,7 +133,7 @@ global proc gpsRenderSetupVRay.setRenderPath()
 }
 
 
-// Load adaptive DMC settings
+// Load adaptive DMC settings.
 global proc gpsRenderSetupVRay.loadDMCSettings()
 {
 	setAttr "vraySettings.samplerType" 1;
@@ -151,51 +151,5 @@ global proc gpsRenderSetupVRay.loadDMCSettings()
 	setAttr "vraySettings.secondaryEngine" 2;
 	setAttr "vraySettings.numPasses" 12;
 	setAttr "vraySettings.subdivs" 2000;
-}
-
-
-//vray shaders - MOVE THIS FUNCTION TO gpsRenderToolsVRay.py AND TRANSLATE TO PYTHON
-global proc string gpsRenderSetupVRay.createMaterial(string $type,string $name)
-{
-  if(!`pluginInfo -q -l vrayformaya`) {loadPlugin "vrayformaya";}
-
-  string $materialName = $name;
-
-  int $disableNaming = `optionVar -q "vrayDisableShaderNaming"`; //check option to pop up naming dialog
-  print $disableNaming;
-  if($disableNaming < 1)
-  {
-    string $result = `promptDialog
-    -title "Material name"
-    -message "Enter Name:"
-    -button "OK" -button "Cancel"
-    -defaultButton "OK" -cancelButton "Cancel"
-    -dismissString "Cancel"`;
-
-    if ($result == "OK") {
-        $materialName = `promptDialog -query -text`;
-    }    
-  }
-
-  //stash selection
-  string $objSel[] = `ls -sl -type transform`;
-
-
-  //create the node
-  string $shdrNode = `shadingNode -asShader $type`;
-  $shdrNode = `rename $shdrNode ($materialName + "_" + $type)`;
-  //create a shading group
-  string $shdrGrp = `sets -renderable true -noSurfaceShader true -empty`;
-  $shdrGrp = `rename $shdrGrp ($materialName)`;
-  //connect the two together
-  connectAttr -f ($shdrNode+".outColor") ($shdrGrp+".surfaceShader");
-
-  //assign to all the selected objects
-  for($obj in $objSel)
-  {
-    assignSG $shdrNode $obj;
-  }
-
-  return $shdrNode;
 }
 

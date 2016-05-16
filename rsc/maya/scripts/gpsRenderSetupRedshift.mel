@@ -55,3 +55,4 @@ global proc gpsRenderSetupRedshift.loadSettings()
 
 	print "\nRedshift defaults loaded.";
 }
+

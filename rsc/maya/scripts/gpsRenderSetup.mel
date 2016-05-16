@@ -20,7 +20,7 @@ global proc gpsRenderSetup.setCommonOptions()
 	setAttr defaultRenderGlobals.extensionPadding 4;
 
 	// Set render file name prefix
-	gpsRenderSetup.setRenderPath();
+	gpsRenderSetup.setOutputPath();
 
 	// Set frame range
 	gpsRenderSetup.setFrameRange();
@@ -33,7 +33,7 @@ global proc gpsRenderSetup.setCommonOptions()
 
 
 // Set render file name prefix format.
-global proc gpsRenderSetup.setRenderPath()
+global proc gpsRenderSetup.setOutputPath()
 {
 	string $user = `getenv "USER"`;
 	string $shot = `getenv "SHOT"`;
@@ -68,3 +68,4 @@ global proc gpsRenderSetup.setResolution()
 	// Set render test resolution
 	//setTestResolutionVar(4);
 }
+

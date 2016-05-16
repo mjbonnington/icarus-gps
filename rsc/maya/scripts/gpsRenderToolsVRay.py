@@ -11,59 +11,62 @@
 
 import maya.cmds as mc
 import maya.mel as mel
-import verbose
 
 
-# // Create V-Ray shaders
-# global proc string gpsRenderSetupVRay.createMaterial(string $type,string $name)
-# {
-#	 if(!`pluginInfo -q -l vrayformaya`) {loadPlugin "vrayformaya";}
-
-#	 string $materialName = $name;
-
-#	 int $disableNaming = `optionVar -q "vrayDisableShaderNaming"`; //check option to pop up naming dialog
-#	 print $disableNaming;
-#	 if($disableNaming < 1)
-#	 {
-#		 string $result = `promptDialog
-#		 -title "Material name"
-#		 -message "Enter Name:"
-#		 -button "OK" -button "Cancel"
-#		 -defaultButton "OK" -cancelButton "Cancel"
-#		 -dismissString "Cancel"`;
-
-#		 if ($result == "OK") {
-#				 $materialName = `promptDialog -query -text`;
-#		 }		
-#	 }
-
-#	 //stash selection
-#	 string $objSel[] = `ls -sl -type transform`;
+def pluginCheck():
+	if mc.pluginInfo("vrayformaya", query=True, loaded=True):
+		return True
+	else:
+		mc.warning("V-Ray plugin not loaded.")
+		return False
 
 
-#	 //create the node
-#	 string $shdrNode = `shadingNode -asShader $type`;
-#	 $shdrNode = `rename $shdrNode ($materialName + "_" + $type)`;
-#	 //create a shading group
-#	 string $shdrGrp = `sets -renderable true -noSurfaceShader true -empty`;
-#	 $shdrGrp = `rename $shdrGrp ($materialName)`;
-#	 //connect the two together
-#	 connectAttr -f ($shdrNode+".outColor") ($shdrGrp+".surfaceShader");
+def createMaterial(materialType, materialName):
+	""" Create V-Ray shaders.
+	"""
+	if not pluginCheck():
+		return
 
-#	 //assign to all the selected objects
-#	 for($obj in $objSel)
-#	 {
-#		 assignSG $shdrNode $obj;
-#	 }
+	# Check option to pop up naming dialog
+	if mc.optionVar(q='vrayDisableShaderNaming') < 1:
+		dialogResult = mc.promptDialog( title = 'Create V-Ray Material', 
+										message = 'Material Name:', 
+										button = ['OK', 'Cancel'], 
+										defaultButton = 'OK', 
+										cancelButton = 'Cancel', 
+										dismissString = 'Cancel' )
 
-#	 return $shdrNode;
-# }
+		if dialogResult:
+			materialName = mc.promptDialog(text=True, q=True)
+
+	# Stash selection
+	objLs = mc.ls(sl=True, type='transform')
+
+	# Create the node
+	shaderNode = mc.shadingNode(materialType, asShader=True)
+	shaderNode = mc.rename(shaderNode, "%s_%s" %(materialName, materialType))
+
+	# Create a shading group
+	shadingGrp = mc.sets(empty=True, renderable=True, noSurfaceShader=True)
+	shadingGrp = mc.rename(shadingGrp, materialName+"SG")
+
+	# Connect the two together
+	mc.connectAttr( (shaderNode+".outColor"), (shadingGrp+".surfaceShader"), force=True)
+
+	# Assign to all the selected objects
+#	for obj in objLs:
+#		mc.assignSG(shaderNode, obj)
+
+	return shaderNode
 
 
-def createVRayLight(lightNodeType, lightType):
+def createLight(lightNodeType, lightType):
 	""" Create V-Ray lights.
 	"""
-	dialogResult = mc.promptDialog( title = 'Create Light', 
+	if not pluginCheck():
+		return
+
+	dialogResult = mc.promptDialog( title = 'Create V-Ray Light', 
 									message = 'Light Name:', 
 									button = ['OK', 'Cancel'], 
 									defaultButton = 'OK', 
@@ -90,22 +93,25 @@ def createVRayLight(lightNodeType, lightType):
 
 
 def createLightSelPass():
-	""" Create a light contribution pass (render element) for the selected lights (V-Ray).
+	""" Create a light contribution pass (render element) for the selected lights.
 	"""
+	if not pluginCheck():
+		return
+
 	objLs = mc.ls(sl=True)
 
 	if not objLs:
-		mc.warning('No lights selected.')
+		mc.warning("No lights selected.")
 		return
 
-	pDialog = mc.promptDialog(  title='Light Pass', 
-								message='Light Pass Name:', 
-								button=['OK', 'Cancel'], 
-								defaultButton='OK', 
-								cancelButton='Cancel', 
-								dismissString='Cancel' )
+	dialogResult = mc.promptDialog( title='Create V-Ray Light Pass', 
+									message='Light Pass Name:', 
+									button=['OK', 'Cancel'], 
+									defaultButton='OK', 
+									cancelButton='Cancel', 
+									dismissString='Cancel' )
 
-	if pDialog == 'OK':
+	if dialogResult:
 		lightPassName = mc.promptDialog(text=True, q=True)
 		lightPassSet = mel.eval("vrayAddRenderElement LightSelectElement")
 		for obj in objLs:
@@ -117,6 +123,9 @@ def createLightSelPass():
 def addStdElements():
 	""" Create a standard set of render elements.
 	"""
+	if not pluginCheck():
+		return
+
 	stdElementDict = {'vrayRE_Diffuse':'diffuseChannel', 'vrayRE_Reflection':'reflectChannel', 'vrayRE_Lighting':'lightingChannel', 'vrayRE_Shadow':'shadowChannel'}
 
 	if mc.getAttr("vraySettings.giOn"):
@@ -144,6 +153,9 @@ def addStdElements():
 def addDataElements():
 	""" Create a standard set of utility passes.
 	"""
+	if not pluginCheck():
+		return
+
 	dataElementDict = {'vrayRE_Normals':'normalsChannel', 'vrayRE_BumpNormals':'bumpNormalsChannel', 'vrayRE_Z_depth':'zdepthChannel', 'vrayRE_Velocity':'velocityChannel'}
 
 	for key in dataElementDict.keys():
@@ -242,6 +254,9 @@ def addDataElements():
 def addVRayGamma():
 	""" Add V-Ray Texture Input Gamma attributes to selection.
 	"""
+	if not pluginCheck():
+		return
+
 	objLs = mc.ls(sl=True)
 
 	for obj in objLs:
@@ -254,6 +269,9 @@ def addVRayGamma():
 def removeVRayGamma():
 	""" Remove V-Ray Texture Input Gamma attributes from selection.
 	"""
+	if not pluginCheck():
+		return
+
 	objLs = mc.ls(sl=True)
 
 	for obj in objLs:
@@ -266,6 +284,9 @@ def removeVRayGamma():
 def addVRayNegCol():
 	""" Add V-Ray Allow Negative Colors attributes to selection.
 	"""
+	if not pluginCheck():
+		return
+
 	objLs = mc.ls(sl=True)
 
 	for obj in objLs:
@@ -276,6 +297,9 @@ def addVRayNegCol():
 def removeVRayNegCol():
 	""" Remove V-Ray Allow Negative Colors attributes from selection.
 	"""
+	if not pluginCheck():
+		return
+
 	objLs = mc.ls(sl=True)
 
 	for obj in objLs:
@@ -287,6 +311,9 @@ def addSubD(subDs = 2):
 	""" Add V-Ray subdivision and displacement attributes to selected meshes.
 		TODO: Add appropriate presets for data from ZBrush, Mudbox, etc.
 	"""
+	if not pluginCheck():
+		return
+
 	objLs = mc.ls(sl=True, l=True)
 	for obj in objLs:
 		objSh = mc.listRelatives(obj, s=True, f=True)[0]
@@ -302,6 +329,9 @@ def addSubD(subDs = 2):
 def removeSubD():
 	""" Remove V-Ray subdivision and displacement attributes from selected meshes.
 	"""
+	if not pluginCheck():
+		return
+
 	objLs = mc.ls(sl=True, l=True)
 	for obj in objLs:
 		objSh = mc.listRelatives(obj, s=True, f=True)[0]
@@ -313,12 +343,15 @@ def removeSubD():
 def objID(single=False):
 	""" Add V-Ray object ID attributes.
 	"""
+	if not pluginCheck():
+		return
+
 	allObjLs = mc.ls(tr=True, l=True)
 	objLs = mc.ls(sl=True, l=True)
 	newId = 1
 	idLs = []
 	if not objLs:
-		verbose.noSel()
+		mc.warning("Nothing selected.")
 	for allObj in allObjLs:
 		try:
 			allObjSh = mc.listRelatives(allObj, s=True, f=True)[0]
@@ -345,13 +378,16 @@ def objID(single=False):
 def objMultiMatte(all=False):
 	""" Create V-Ray multimatte render elements automatically.
 	"""
+	if not pluginCheck():
+		return
+
 	idLs = []
 	if all:
 		objLs = mc.ls(tr=True, l=True)
 	else:
 		objLs = mc.ls(sl=True, l=True)
 	if not objLs:
-		verbose.noSel()
+		mc.warning("Nothing selected.")
 	for obj in objLs:
 		try:
 			objSh = mc.listRelatives(obj, s=True, f=True)[0]
