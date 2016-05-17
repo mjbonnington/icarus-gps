@@ -34,31 +34,39 @@ class renderQueue(xmlData.xmlData):
 		return self.root.findall("./job")
 
 
-	# def getTasks(self, job):
-	# 	""" Return list of render tasks associated with job.
-	# 	"""
-	# 	elements = self.root.findall("./job[@name='%s']/path" %app)
-	# 	tasks = []
-	# 	for element in elements:
-	# 		tasks.append( element.get('id') )
-	# 		rank = element.find('rank').text
-	# 	return tasks
+	def getValue(self, element, tag):
+		""" Return the specified value.
+		"""
+		elem = element.find(tag)
+		if elem is not None:
+			text = elem.text
+			if text is not None:
+				return text
+
+		#return "" # return an empty string, not None, so value can be stored in an environment variable without raising an error
 
 
 	def getNextID(self):
 		""" Return the next unused job ID integer.
 		"""
-		elements = self.root.findall("./job")
-		jobIDs = []
-		for element in elements:
-			jobIDs.append( int(element.get('id')) )
-		return max(jobIDs)+1
+		try:
+			elements = self.root.findall("./job")
+			jobIDs = []
+			for element in elements:
+				jobIDs.append( int(element.get('id')) )
+			return max(jobIDs)+1
+
+		except ValueError:
+			return 0
 
 
-	def newJob(self, jobName, priority, frames, taskFrames, taskCmds):
+	def newJob(self, genericOpts, mayaOpts, tasks, user, submitTime):
 		""" Create a new render job on submission.
 		"""
 		jobID = self.getNextID()
+
+		jobName, priority, frames, taskSize = genericOpts
+		mayaScene, mayaProject, mayaFlags = mayaOpts
 
 		jobElement = self.root.find("job[@id='%s']" %jobID)
 		if jobElement is None:
@@ -77,7 +85,25 @@ class renderQueue(xmlData.xmlData):
 			framesElement = ET.SubElement(jobElement, 'frames')
 			framesElement.text = str(frames)
 
-			for i in range(len(taskCmds)):
+			taskSizeElement = ET.SubElement(jobElement, 'taskSize')
+			taskSizeElement.text = str(taskSize)
+
+			userElement = ET.SubElement(jobElement, 'user')
+			userElement.text = str(user)
+
+			submitTimeElement = ET.SubElement(jobElement, 'submitTime')
+			submitTimeElement.text = str(submitTime)
+
+			mayaSceneElement = ET.SubElement(jobElement, 'mayaScene')
+			mayaSceneElement.text = str(mayaScene)
+
+			mayaProjectElement = ET.SubElement(jobElement, 'mayaProject')
+			mayaProjectElement.text = str(mayaProject)
+
+			mayaFlagsElement = ET.SubElement(jobElement, 'mayaFlags')
+			mayaFlagsElement.text = str(mayaFlags)
+
+			for i in range(len(tasks)):
 				taskElement = ET.SubElement(jobElement, 'task')
 				taskElement.set('id', str(i))
 
@@ -85,10 +111,26 @@ class renderQueue(xmlData.xmlData):
 				taskStatusElement.text = "Queued"
 
 				taskFramesElement = ET.SubElement(taskElement, 'frames')
-				taskFramesElement.text = str(taskFrames[i])
+				taskFramesElement.text = str(tasks[i])
 
 				taskFramesElement = ET.SubElement(taskElement, 'slave')
 
 				commandElement = ET.SubElement(taskElement, 'command')
-				commandElement.text = str(taskCmds[i].replace("\\", "/"))
+				#commandElement.text = str(taskCmds[i].replace("\\", "/"))
+
+
+	def deleteJob(self, jobID):
+		""" Delete a new render job.
+		"""
+		for element in self.root.findall('./job'):
+			if int(element.get('id')) == jobID:
+				self.root.remove(element)
+
+
+	def setPriority(self, jobID, priority):
+		""" Set the priority of a render job.
+		"""
+		element = self.root.find("./job[@id='%s']/priority" %jobID)
+		if 0 <= priority <= 100:
+			element.text = str(priority)
 

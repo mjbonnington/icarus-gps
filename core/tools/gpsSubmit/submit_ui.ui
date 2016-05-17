@@ -14,16 +14,7 @@
    <string>Submit Maya Render</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
-   <property name="leftMargin">
-    <number>8</number>
-   </property>
-   <property name="topMargin">
-    <number>8</number>
-   </property>
-   <property name="rightMargin">
-    <number>8</number>
-   </property>
-   <property name="bottomMargin">
+   <property name="margin">
     <number>8</number>
    </property>
    <item>
@@ -38,16 +29,7 @@
       <number>0</number>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
-      <property name="leftMargin">
-       <number>0</number>
-      </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <property name="bottomMargin">
+      <property name="margin">
        <number>0</number>
       </property>
       <item>
@@ -97,7 +79,7 @@
       <item>
        <widget class="QGroupBox" name="overrideFrameRange_groupBox">
         <property name="toolTip">
-         <string>Allows the frame range(s) to be explicitly stated. If unchecked, the start and end frames will be read from the scene</string>
+         <string>Allows the frame range(s) to be explicitly stated. If unchecked, the start and end frames will be read from the scene.</string>
         </property>
         <property name="title">
          <string>Override frame range</string>
@@ -113,38 +95,64 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="1">
-          <widget class="QSpinBox" name="taskSize_spinBox">
-           <property name="toolTip">
-            <string>How many frames to submit for each task</string>
-           </property>
-           <property name="suffix">
-            <string> frame(s)</string>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>9999</number>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="0">
           <widget class="QLabel" name="frameRange_label">
            <property name="text">
-            <string>Frame range:</string>
+            <string>Frames:</string>
            </property>
           </widget>
          </item>
          <item row="0" column="1">
           <widget class="QLineEdit" name="frameRange_lineEdit">
            <property name="toolTip">
-            <string>List of frames to be rendered. Individual frames should be separated with commas, and sequences can be specified using a hyphen, e.g. 1, 5-10</string>
+            <string>List of frames to be rendered. Individual frames should be separated with commas, and sequences can be specified using a hyphen, e.g. 1, 5-10.</string>
            </property>
            <property name="text">
             <string/>
            </property>
           </widget>
+         </item>
+         <item row="2" column="1">
+          <layout class="QHBoxLayout" name="taskSize_horizontalLayout">
+           <item>
+            <widget class="QSpinBox" name="taskSize_spinBox">
+             <property name="toolTip">
+              <string>How many frames to submit for each task.</string>
+             </property>
+             <property name="suffix">
+              <string> frame(s)</string>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>9999</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSlider" name="taskSize_slider">
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>1</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="tickPosition">
+              <enum>QSlider::NoTicks</enum>
+             </property>
+             <property name="tickInterval">
+              <number>10</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </widget>
@@ -152,7 +160,7 @@
       <item>
        <widget class="QGroupBox" name="flags_groupBox">
         <property name="toolTip">
-         <string>Allows additional command-line flags to be specified</string>
+         <string>Allows additional command-line flags to be specified.</string>
         </property>
         <property name="title">
          <string>Additional command-line flags</string>
@@ -197,6 +205,9 @@
        <layout class="QHBoxLayout" name="priority_horizontalLayout">
         <item>
          <widget class="QSpinBox" name="priority_spinBox">
+          <property name="toolTip">
+           <string>Set the priority for this render job. Setting the priority to zero will pause the job.</string>
+          </property>
           <property name="minimum">
            <number>0</number>
           </property>
@@ -282,6 +293,7 @@
   <tabstop>overrideFrameRange_groupBox</tabstop>
   <tabstop>frameRange_lineEdit</tabstop>
   <tabstop>taskSize_spinBox</tabstop>
+  <tabstop>taskSize_slider</tabstop>
   <tabstop>flags_groupBox</tabstop>
   <tabstop>flags_lineEdit</tabstop>
   <tabstop>priority_spinBox</tabstop>
@@ -318,6 +330,38 @@
     <hint type="destinationlabel">
      <x>93</x>
      <y>237</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>taskSize_spinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>taskSize_slider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>119</x>
+     <y>110</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>216</x>
+     <y>106</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>taskSize_slider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>taskSize_spinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>258</x>
+     <y>120</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>130</x>
+     <y>119</y>
     </hint>
    </hints>
   </connection>
