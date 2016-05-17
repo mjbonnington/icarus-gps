@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QFrame" name="renderPblToolbar_frame">
+     <widget class="QFrame" name="renderQueueToolbar_frame">
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
       </property>

@@ -67,7 +67,7 @@ class icarusApp(QtGui.QDialog):
 		self.ui.openReview_pushButton.clicked.connect(self.launchHieroPlayer)
 		self.ui.openTerminal_pushButton.clicked.connect(self.launchTerminal)
 		self.ui.browse_pushButton.clicked.connect(openDirs.openShot)
-		self.ui.render_pushButton.clicked.connect(self.launchSubmitRender)
+		self.ui.render_pushButton.clicked.connect(self.launchRenderSubmit)
 
 		# Publishing UI
 	#	self.ui.renderPblAdd_pushButton.clicked.connect(self.renderTableAdd)
@@ -140,13 +140,17 @@ class icarusApp(QtGui.QDialog):
 		# Render
 		self.ui.render_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
-		self.actionSubmitRender = QtGui.QAction("Submit Render", None)
-		self.actionSubmitRender.triggered.connect(self.launchSubmitRender)
-		self.ui.render_pushButton.addAction(self.actionSubmitRender)
+		self.actionRenderSubmit = QtGui.QAction("Submit Render", None)
+		self.actionRenderSubmit.triggered.connect(self.launchRenderSubmit)
+		self.ui.render_pushButton.addAction(self.actionRenderSubmit)
 
 		self.actionRenderQueue = QtGui.QAction("Render Queue", None)
 		self.actionRenderQueue.triggered.connect(self.launchRenderQueue)
 		self.ui.render_pushButton.addAction(self.actionRenderQueue)
+
+		self.actionRenderSlave = QtGui.QAction("Render Slave", None)
+		self.actionRenderSlave.triggered.connect(self.launchRenderSlave)
+		self.ui.render_pushButton.addAction(self.actionRenderSlave)
 
 		self.actionBrowseRenders = QtGui.QAction("Browse Renders", None)
 		self.actionBrowseRenders.triggered.connect(self.launchRenderBrowser)
@@ -915,14 +919,15 @@ Environment: %s
 			djvOps.viewer(path)
 
 
-	def launchSubmitRender(self):
-		""" Launches GPS Submit Render dialog.
+	def launchRenderSubmit(self):
+		""" Launches GPS Render Submitter window.
 		"""
 		import submit__main__
 		reload(submit__main__)
-	#	gpsSubmitRenderApp = submit__main__.gpsSubmitRender(parent=app)
-	#	gpsSubmitRenderApp.setWindowFlags(QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinMaxButtonsHint )
-	#	gpsSubmitRenderApp.show()
+		# renderSubmitApp = submit__main__.gpsRenderSubmitApp() #parent=app
+		# # renderSubmitApp.setWindowFlags(QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinMaxButtonsHint )
+		# print renderSubmitApp
+		# renderSubmitApp.show()
 
 
 	def launchRenderQueue(self):
@@ -930,6 +935,16 @@ Environment: %s
 		"""
 		import queue__main__
 		reload(queue__main__)
+		# renderQueueApp = queue__main__.gpsRenderQueueApp()
+		# print renderQueueApp
+		# renderQueueApp.show()
+
+
+	def launchRenderSlave(self):
+		""" Launches GPS Render Slave window.
+		"""
+		import slave__main__
+		reload(slave__main__)
 
 
 	def launchRenderBrowser(self):
