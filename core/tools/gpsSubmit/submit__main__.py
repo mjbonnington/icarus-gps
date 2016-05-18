@@ -6,7 +6,7 @@
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2015-2016 Gramercy Park Studios
 #
-# Front end for submitting command-line renders.
+# A UI for creating render jobs to send to the render queue.
 
 
 from PySide import QtCore, QtGui
@@ -167,8 +167,8 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 		self.calcFrameList(quiet=True)
 
 		taskLs = []
-		mayaScene = self.absolutePath(self.ui.scene_comboBox.currentText()) # implicit if submitting from Maya UI
-		mayaProject = os.environ['MAYADIR'] # implicit if job is set
+		mayaScene = self.absolutePath(self.ui.scene_comboBox.currentText()).replace("\\", "/") # implicit if submitting from Maya UI
+		mayaProject = os.environ['MAYADIR'].replace("\\", "/") # implicit if job is set
 		jobName = os.path.basename(mayaScene)
 		priority = self.ui.priority_spinBox.value()
 		if self.ui.overrideFrameRange_groupBox.isChecked():
@@ -187,9 +187,13 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 			mayaFlags = self.ui.flags_lineEdit.text()
 		else:
 			mayaFlags = ""
+		try:
+			mayaRenderCmd = os.environ['MAYARENDERVERSION'].replace("\\", "/")
+		except KeyError:
+			print "ERROR: Path to Maya Render command executable not found. This can be set with the environment variable 'MAYARENDERVERSION'."
 
 		genericOpts = jobName, priority, frames, taskSize
-		mayaOpts = mayaScene, mayaProject, mayaFlags
+		mayaOpts = mayaScene, mayaProject, mayaFlags, mayaRenderCmd
 
 		# Confirmation dialog
 		import pDialog
@@ -197,7 +201,7 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 		dialogTitle = 'Submit Render'
 		dialogMsg = ''
 		dialogMsg += 'Name:\t%s\nPriority:\t%s\nFrames:\t%s\nTask size:\t%s\n\n' %genericOpts
-		#dialogMsg += 'Scene:\t%s\nProject:\t%s\nFlags:\t%s\n\n' %mayaOpts
+		#dialogMsg += 'Scene:\t%s\nProject:\t%s\nFlags:\t%s\nCommand:\t%s\n\n' %mayaOpts
 		dialogMsg += framesMsg
 		dialogMsg += 'Do you wish to continue?'
 

@@ -6,7 +6,7 @@
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2016 Gramercy Park Studios
 #
-# Render Slave UI - looks for batch render jobs to render.
+# Runs on the client machine and looks in the render queue for render jobs to execute.
 
 
 from PySide import QtCore, QtGui
@@ -15,6 +15,7 @@ import os, socket, sys, time
 
 # Import custom modules
 import renderQueue
+import sequence as seq
 
 
 class gpsRenderSlaveApp(QtGui.QDialog):
@@ -33,21 +34,35 @@ class gpsRenderSlaveApp(QtGui.QDialog):
 		# Connect signals & slots
 		self.ui.close_pushButton.clicked.connect(self.exit)
 
-		self.ui.info_lineEdit.setText(self.localhost)
 		self.dequeue() # should only be done if slave is idle
 
 
 	def dequeue(self):
 		""" THIS IS ALL A BIT ROPEY ATM
 		"""
+		timeFormatStr = "%Y/%m/%d %H:%M:%S" # "%a, %d %b %Y %H:%M:%S"
+
 		self.rq.loadXML(quiet=True) # reload XML data
 
 		self.jobElement = self.rq.getHighestPriorityJob()
-		frames = self.rq.dequeueTask(self.jobElement, self.localhost)
+		frameList = seq.numList(self.rq.dequeueTask(self.jobElement, self.localhost))
+		self.startFrame = min(frameList)
+		self.endFrame = max(frameList)
 
-		self.startFrame, self.endFrame = frames.split('-') # temp and a bit hacky
+		# Fill info fields
+		self.ui.slave_lineEdit.setText(self.localhost)
+		self.ui.job_lineEdit.setText(self.rq.getValue(self.jobElement, 'name'))
+		self.ui.user_lineEdit.setText(self.rq.getValue(self.jobElement, 'user'))
 
-		self.ui.info_lineEdit.setText("%s" %(self.localhost))
+		self.ui.submitted_lineEdit.setText(self.rq.getValue(self.jobElement, 'submitTime'))
+		self.ui.started_lineEdit.setText(time.strftime(timeFormatStr))
+		self.ui.elapsed_lineEdit.setText("")
+
+		self.ui.scene_lineEdit.setText(self.rq.getValue(self.jobElement, 'mayaScene'))
+		self.ui.project_lineEdit.setText(self.rq.getValue(self.jobElement, 'mayaProject'))
+		self.ui.flags_lineEdit.setText(self.rq.getValue(self.jobElement, 'mayaFlags'))
+		self.ui.command_lineEdit.setText(self.rq.getValue(self.jobElement, 'mayaRenderCmd'))
+		#self.ui.Dialog.setWindowTitle("Render Slave: %s" %(self.localhost)) # this doesn't seem to work
 
 		self.render()
 		# for jobElement in self.rq.getJobs():
@@ -62,10 +77,11 @@ class gpsRenderSlaveApp(QtGui.QDialog):
 
 		#self.calcFrameList(quiet=False)
 
-		try:
-			renderCmd = '"%s"' %os.environ['MAYARENDERVERSION'] # store this in XML as maya version may vary with project
-		except KeyError:
-			print "ERROR: Path to Maya Render command executable not found. This can be set with the environment variable 'MAYARENDERVERSION'."
+		# try:
+		# 	renderCmd = '"%s"' %os.environ['MAYARENDERVERSION'] # store this in XML as maya version may vary with project
+		# except KeyError:
+		# 	print "ERROR: Path to Maya Render command executable not found. This can be set with the environment variable 'MAYARENDERVERSION'."
+		renderCmd = '"%s"' %self.rq.getValue(self.jobElement, 'mayaRenderCmd')
 
 		cmdStr = ''
 		args = '-proj "%s"' %self.rq.getValue(self.jobElement, 'mayaProject')

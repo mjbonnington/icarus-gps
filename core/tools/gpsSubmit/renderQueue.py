@@ -66,6 +66,15 @@ class renderQueue(xmlData.xmlData):
 		self.saveXML()
 
 
+	# def setStatus(self, element, status):
+	# 	""" Set the status of a render job or task.
+	# 	"""
+	# 	self.loadXML(quiet=True) # reload XML data
+	# 	elem = element.find('./priority')
+	# 	elem.text = str(status)
+	# 	self.saveXML()
+
+
 	def newJob(self, genericOpts, mayaOpts, tasks, user, submitTime):
 		""" Create a new render job on submission.
 		"""
@@ -73,7 +82,7 @@ class renderQueue(xmlData.xmlData):
 		jobID = self.getNextID()
 
 		jobName, priority, frames, taskSize = genericOpts
-		mayaScene, mayaProject, mayaFlags = mayaOpts
+		mayaScene, mayaProject, mayaFlags, mayaRenderCmd = mayaOpts
 
 		jobElement = self.root.find("job[@id='%s']" %jobID)
 		if jobElement is None:
@@ -106,6 +115,9 @@ class renderQueue(xmlData.xmlData):
 
 			mayaProjectElement = ET.SubElement(jobElement, 'mayaProject')
 			mayaProjectElement.text = str(mayaProject)
+
+			mayaRenderCmdElement = ET.SubElement(jobElement, 'mayaRenderCmd')
+			mayaRenderCmdElement.text = str(mayaRenderCmd)
 
 			mayaFlagsElement = ET.SubElement(jobElement, 'mayaFlags')
 			mayaFlagsElement.text = str(mayaFlags)
@@ -157,10 +169,16 @@ class renderQueue(xmlData.xmlData):
 		self.loadXML(quiet=True) # reload XML data
 		taskElement = jobElement.find("./task/[status='Queued']")
 
+		print jobElement.find('status').text
 		print taskElement.find('status').text
-		taskElement.find('slave').text = str(hostID)
+		print taskElement.find('slave').text
+		jobElement.find('status').text = "In Progress"
 		taskElement.find('status').text = "In Progress"
+		taskElement.find('slave').text = str(hostID)
+		print jobElement.find('status').text
 		print taskElement.find('status').text
+		print taskElement.find('slave').text
+		# self.setStatus(jobElement, "In Progress")
 
 		self.saveXML()
 		return taskElement.find('frames').text
