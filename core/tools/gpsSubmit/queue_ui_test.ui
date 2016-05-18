@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1024</width>
+    <height>360</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Render Queue</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="margin">
+     <number>6</number>
+    </property>
+    <item>
+     <widget class="QTreeWidget" name="renderQueue_treeWidget">
+      <property name="alternatingRowColors">
+       <bool>true</bool>
+      </property>
+      <property name="rootIsDecorated">
+       <bool>true</bool>
+      </property>
+      <property name="uniformRowHeights">
+       <bool>true</bool>
+      </property>
+      <property name="sortingEnabled">
+       <bool>true</bool>
+      </property>
+      <property name="animated">
+       <bool>true</bool>
+      </property>
+      <property name="headerHidden">
+       <bool>false</bool>
+      </property>
+      <property name="expandsOnDoubleClick">
+       <bool>true</bool>
+      </property>
+      <attribute name="headerShowSortIndicator" stdset="0">
+       <bool>true</bool>
+      </attribute>
+      <column>
+       <property name="text">
+        <string>Job / Task</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>ID</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Frames</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Status</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Priority</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>User</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Submitted</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Elapsed time</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Slave</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Command</string>
+       </property>
+      </column>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1024</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuSubmit">
+    <property name="title">
+     <string>Submit</string>
+    </property>
+    <addaction name="actionMaya"/>
+   </widget>
+   <widget class="QMenu" name="menuJob">
+    <property name="title">
+     <string>Job</string>
+    </property>
+    <addaction name="actionEdit"/>
+    <addaction name="actionPause"/>
+    <addaction name="actionDelete"/>
+    <addaction name="actionResubmit"/>
+   </widget>
+   <widget class="QMenu" name="menuTask">
+    <property name="title">
+     <string>Task</string>
+    </property>
+    <addaction name="actionComplete"/>
+    <addaction name="actionFail"/>
+    <addaction name="actionRequeue"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionRefresh"/>
+    <addaction name="actionOptions"/>
+   </widget>
+   <widget class="QMenu" name="menuSlave">
+    <property name="title">
+     <string>Render</string>
+    </property>
+    <addaction name="actionStart_loacal_slave"/>
+   </widget>
+   <addaction name="menuSubmit"/>
+   <addaction name="menuJob"/>
+   <addaction name="menuTask"/>
+   <addaction name="menuView"/>
+   <addaction name="menuSlave"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionMaya">
+   <property name="text">
+    <string>Maya...</string>
+   </property>
+  </action>
+  <action name="actionPause">
+   <property name="text">
+    <string>Pause</string>
+   </property>
+  </action>
+  <action name="actionResubmit">
+   <property name="text">
+    <string>Resubmit</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+  </action>
+  <action name="actionEdit">
+   <property name="text">
+    <string>Edit...</string>
+   </property>
+  </action>
+  <action name="actionComplete">
+   <property name="text">
+    <string>Complete</string>
+   </property>
+  </action>
+  <action name="actionFail">
+   <property name="text">
+    <string>Fail</string>
+   </property>
+  </action>
+  <action name="actionRequeue">
+   <property name="text">
+    <string>Requeue</string>
+   </property>
+  </action>
+  <action name="actionRefresh">
+   <property name="text">
+    <string>Refresh</string>
+   </property>
+  </action>
+  <action name="actionStart_loacal_slave">
+   <property name="text">
+    <string>Start Local Slave...</string>
+   </property>
+  </action>
+  <action name="actionOptions">
+   <property name="text">
+    <string>Options...</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

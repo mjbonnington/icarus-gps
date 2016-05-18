@@ -6,7 +6,7 @@
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2015-2016 Gramercy Park Studios
 #
-# Front end for submitting command-line renders
+# Front end for submitting command-line renders.
 
 
 from PySide import QtCore, QtGui
@@ -159,23 +159,6 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 				print "%d frames to be rendered; %d task(s) to be submitted:" %(len(self.numList), len(self.taskList))
 
 
-	# def kill(self):
-	# 	""" Kill the rendering process.
-	# 	"""
-	# 	try:
-	# 		print "Attempting to kill rendering process (PID=%s)" %self.renderProcess.pid
-	# 		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-	# 			os.killpg(self.renderProcess.pid, signal.SIGTERM)
-	# 		else:
-	# 			os.kill(self.renderProcess.pid, signal.CTRL_C_EVENT)
-
-	# 	except (OSError, AttributeError):
-	# 		print "Warning: Cannot kill rendering process as there is no render in progress."
-
-	# 	# Re-enable UI
-	# 	self.tglUI(True)
-
-
 	def submit(self):
 		""" Submit render to queue.
 		"""
@@ -220,67 +203,9 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 
 		dialog = pDialog.dialog()
 		if dialog.dialogWindow(dialogMsg, dialogTitle):
-			self.rq.loadXML(quiet=True) # reload XML data
 			self.rq.newJob(genericOpts, mayaOpts, self.taskList, os.environ['USERNAME'], time.strftime(timeFormatStr))
-			self.rq.saveXML() # move load and save ops into newJob function?
 		else:
 			return
-
-
-	# def submit_DIRECT(self):
-	# 	""" Submit render.
-	# 	"""
-	# 	import signal, subprocess
-
-	# 	self.calcFrameList(quiet=False)
-
-	# 	try:
-	# 		renderCmd = '"%s"' %os.environ['MAYARENDERVERSION']
-	# 	except KeyError:
-	# 		print "ERROR: Path to Maya Render command executable not found. This can be set with the environment variable 'MAYARENDERVERSION'."
-
-	# 	cmdStr = ''
-	# 	args = '-proj "%s"' %os.environ['MAYADIR']
-	# 	frameRangeArgs = ''
-
-	# 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-	# 		cmdSep = ' & '
-	# 	else:
-	# 		cmdSep = '; '
-	# 	# Additional command-line arguments
-	# 	#if mc.checkBox("skipExistingFrames", query=True, value=True):
-	# 	#	args = args + " -skipExistingFrames true"
-
-	# 	sceneName = '"%s"' %self.absolutePath(self.ui.scene_comboBox.currentText())
-
-	# 	# Check we're not working in an unsaved scene
-	# 	if sceneName:
-
-	# 		if self.ui.flags_groupBox.isChecked():
-	# 			args += ' %s' %self.ui.flags_lineEdit.text()
-
-	# 		# Construct command(s)
-	# 		if self.ui.overrideFrameRange_groupBox.isChecked():
-	# 			for frame in self.taskList:
-	# 				frameRangeArgs = '-s %d -e %d' %(frame[0], frame[1])
-
-	# 				cmdStr = cmdStr + '%s %s %s %s%s' %(renderCmd, args, frameRangeArgs, sceneName, cmdSep)
-
-	# 		else:
-	# 			cmdStr = '%s %s %s%s' %(renderCmd, args, sceneName, cmdSep)
-
-	# 		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-	# 			#print cmdStr
-	# 			self.renderProcess = subprocess.Popen(cmdStr, shell=True) #, stdout=subprocess.PIPE, shell=True)
-	# 		else:
-	# 			#print cmdStr
-	# 			self.renderProcess = subprocess.Popen(cmdStr, stdout=subprocess.PIPE, shell=True, preexec_fn=os.setsid)
-
-	# 		# Disable UI to prevent new renders being submitted
-	# 		self.tglUI(False)
-
-	# 	else:
-	# 		print "ERROR: Scene not specified."
 
 
 	def exit(self):

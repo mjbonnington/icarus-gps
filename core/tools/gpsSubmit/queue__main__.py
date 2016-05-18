@@ -30,8 +30,11 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 
 		# Connect signals & slots
 		self.ui.jobSubmit_toolButton.clicked.connect(self.launchRenderSubmit)
-		self.ui.jobPriorityInc_toolButton.clicked.connect(lambda *args: self.changePriority(1))
-		self.ui.jobPriorityDec_toolButton.clicked.connect(lambda *args: self.changePriority(-1))
+		self.ui.slave_toolButton.clicked.connect(self.launchRenderSlave)
+		# self.ui.jobPriorityInc_toolButton.clicked.connect(lambda *args: self.changePriority(1))
+		# self.ui.jobPriorityDec_toolButton.clicked.connect(lambda *args: self.changePriority(-1))
+		self.ui.jobPriority_slider.sliderMoved.connect(lambda value: self.changePriority(value)) # valueChanged
+		self.ui.jobPriority_slider.sliderReleased.connect(self.updatePriority)
 		self.ui.jobDelete_toolButton.clicked.connect(self.deleteRenderJob)
 		self.ui.refresh_toolButton.clicked.connect(self.updateRenderQueueView)
 
@@ -105,15 +108,10 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 		try:
 			for item in self.ui.renderQueue_treeWidget.selectedItems():
 				indices.append(int(item.text(1)))
-				#indices.append(self.ui.renderQueue_treeWidget.indexOfTopLevelItem(item))
-
-			#indices.sort(reverse=True) # iterate over the list in reverse order to prevent the indices changing mid-operation
 
 			for index in indices:
 				print "Deleting job with ID %d" %index
-				self.rq.loadXML(quiet=True) # reload XML data
 				self.rq.deleteJob(index)
-				self.rq.saveXML() # move load and save ops into delete function?
 
 			self.updateRenderQueueView()
 
@@ -127,15 +125,36 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 		try:
 			for item in self.ui.renderQueue_treeWidget.selectedItems():
 				index = int(item.text(1))
-				priority = int(item.text(4))+amount
-				self.rq.loadXML(quiet=True) # reload XML data
+				minPriority = 0
+				maxPriority = 100
+				currentPriority = self.rq.getPriority(index)
+				newPriority = currentPriority+amount
+				if newPriority <= minPriority:
+					item.setText(4, str(minPriority))
+				elif newPriority >= maxPriority:
+					item.setText(4, str(maxPriority))
+				else:
+					item.setText(4, str(newPriority))
+
+		except ValueError:
+			pass
+
+
+	def updatePriority(self):
+		""" Update the changed priority value(s).
+		"""
+		try:
+			for item in self.ui.renderQueue_treeWidget.selectedItems():
+				index = int(item.text(1))
+				priority = int(item.text(4))
 				self.rq.setPriority(index, priority)
-				self.rq.saveXML() # move load and save ops into delete function?
 
 			self.updateRenderQueueView()
 
 		except ValueError:
 			pass
+
+		self.ui.jobPriority_slider.setValue(0) # reset priority slider to zero when released
 
 
 	def launchRenderSubmit(self):
@@ -143,6 +162,13 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 		"""
 		import submit__main__
 		reload(submit__main__)
+
+
+	def launchRenderSlave(self):
+		""" Launches GPS Render Slave dialog.
+		"""
+		import slave__main__
+		reload(slave__main__)
 
 
 	def exit(self):

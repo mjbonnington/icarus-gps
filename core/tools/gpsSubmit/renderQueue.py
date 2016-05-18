@@ -17,25 +17,14 @@ class renderQueue(xmlData.xmlData):
 		Inherits xmlData class
 	"""
 
-	def getJobs(self, activeOnly=False):
-		""" Return a list of render jobs.
+	def getJobs(self):
+		""" Return a render job elements.
 		"""
-		# elements = self.root.findall("./job")
-		# jobs = []
-		# for element in elements:
-		# 	print element.tag, element.attrib
-		# 	print element.find('name').text
-		# 	print element.find('priority').text
-		# 	print element.find('status').text
-		# 	print element.find('frames').text
-		# 	print element.find('taskSize').text
-		# 	jobs.append( element.get('id') )
-		# return jobs
 		return self.root.findall("./job")
 
 
 	def getValue(self, element, tag):
-		""" Return the specified value.
+		""" Return the specified value of tag belonging to specified element.
 		"""
 		elem = element.find(tag)
 		if elem is not None:
@@ -60,9 +49,27 @@ class renderQueue(xmlData.xmlData):
 			return 0
 
 
+	def getPriority(self, jobID):
+		""" Get the priority of a render job.
+		"""
+		element = self.root.find("./job[@id='%s']/priority" %jobID)
+		return int(element.text)
+
+
+	def setPriority(self, jobID, priority):
+		""" Set the priority of a render job.
+		"""
+		self.loadXML(quiet=True) # reload XML data
+		element = self.root.find("./job[@id='%s']/priority" %jobID)
+		if 0 <= priority <= 100:
+			element.text = str(priority)
+		self.saveXML()
+
+
 	def newJob(self, genericOpts, mayaOpts, tasks, user, submitTime):
 		""" Create a new render job on submission.
 		"""
+		self.loadXML(quiet=True) # reload XML data
 		jobID = self.getNextID()
 
 		jobName, priority, frames, taskSize = genericOpts
@@ -113,24 +120,48 @@ class renderQueue(xmlData.xmlData):
 				taskFramesElement = ET.SubElement(taskElement, 'frames')
 				taskFramesElement.text = str(tasks[i])
 
-				taskFramesElement = ET.SubElement(taskElement, 'slave')
+				taskSlaveElement = ET.SubElement(taskElement, 'slave')
 
-				commandElement = ET.SubElement(taskElement, 'command')
+				#commandElement = ET.SubElement(taskElement, 'command')
 				#commandElement.text = str(taskCmds[i].replace("\\", "/"))
+
+		self.saveXML()
 
 
 	def deleteJob(self, jobID):
 		""" Delete a new render job.
 		"""
+		self.loadXML(quiet=True) # reload XML data
 		for element in self.root.findall('./job'):
 			if int(element.get('id')) == jobID:
 				self.root.remove(element)
+		self.saveXML()
 
 
-	def setPriority(self, jobID, priority):
-		""" Set the priority of a render job.
+	def getHighestPriorityJob(self):
+		""" Find the highest priority job and return the first queued task found.
 		"""
-		element = self.root.find("./job[@id='%s']/priority" %jobID)
-		if 0 <= priority <= 100:
-			element.text = str(priority)
+		#self.loadXML(quiet=True) # reload XML data
+		elements = self.root.findall('./job/priority')
+		priorityLs = []
+		for element in elements:
+			priorityLs.append( int(element.text) )
+		priorityLs.sort(reverse=True)
+
+		return self.root.find("./job/[priority='%s']" %priorityLs[0])
+
+
+	def dequeueTask(self, jobElement, hostID):
+		""" Dequeue the first queued task found belonging to the given job element.
+		"""
+		self.loadXML(quiet=True) # reload XML data
+		taskElement = jobElement.find("./task/[status='Queued']")
+
+		print taskElement.find('status').text
+		taskElement.find('slave').text = str(hostID)
+		taskElement.find('status').text = "In Progress"
+		print taskElement.find('status').text
+
+		self.saveXML()
+		return taskElement.find('frames').text
 
