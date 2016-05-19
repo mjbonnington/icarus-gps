@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'queue_ui.ui'
 #
-# Created: Wed May 18 16:48:34 2016
+# Created: Thu May 19 19:42:25 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -42,10 +42,9 @@ class Ui_MainWindow(object):
         self.jobSubmit_toolButton = QtGui.QToolButton(self.job_groupBox)
         self.jobSubmit_toolButton.setObjectName("jobSubmit_toolButton")
         self.horizontalLayout.addWidget(self.jobSubmit_toolButton)
-        self.jobPauseResume_toolButton = QtGui.QToolButton(self.job_groupBox)
-        self.jobPauseResume_toolButton.setEnabled(False)
-        self.jobPauseResume_toolButton.setObjectName("jobPauseResume_toolButton")
-        self.horizontalLayout.addWidget(self.jobPauseResume_toolButton)
+        self.jobPause_toolButton = QtGui.QToolButton(self.job_groupBox)
+        self.jobPause_toolButton.setObjectName("jobPause_toolButton")
+        self.horizontalLayout.addWidget(self.jobPause_toolButton)
         self.jobKill_toolButton = QtGui.QToolButton(self.job_groupBox)
         self.jobKill_toolButton.setEnabled(False)
         self.jobKill_toolButton.setObjectName("jobKill_toolButton")
@@ -78,7 +77,6 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.setContentsMargins(6, 4, 6, 4)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.taskComplete_toolButton = QtGui.QToolButton(self.task_groupBox)
-        self.taskComplete_toolButton.setEnabled(False)
         self.taskComplete_toolButton.setObjectName("taskComplete_toolButton")
         self.horizontalLayout_2.addWidget(self.taskComplete_toolButton)
         self.taskFail_toolButton = QtGui.QToolButton(self.task_groupBox)
@@ -86,7 +84,6 @@ class Ui_MainWindow(object):
         self.taskFail_toolButton.setObjectName("taskFail_toolButton")
         self.horizontalLayout_2.addWidget(self.taskFail_toolButton)
         self.taskRequeue_toolButton = QtGui.QToolButton(self.task_groupBox)
-        self.taskRequeue_toolButton.setEnabled(False)
         self.taskRequeue_toolButton.setObjectName("taskRequeue_toolButton")
         self.horizontalLayout_2.addWidget(self.taskRequeue_toolButton)
         self.horizontalLayout_10.addWidget(self.task_groupBox)
@@ -122,7 +119,7 @@ class Ui_MainWindow(object):
         self.refresh_toolButton.setText(QtGui.QApplication.translate("MainWindow", "Refresh", None, QtGui.QApplication.UnicodeUTF8))
         self.job_groupBox.setTitle(QtGui.QApplication.translate("MainWindow", "Job", None, QtGui.QApplication.UnicodeUTF8))
         self.jobSubmit_toolButton.setText(QtGui.QApplication.translate("MainWindow", "Submit", None, QtGui.QApplication.UnicodeUTF8))
-        self.jobPauseResume_toolButton.setText(QtGui.QApplication.translate("MainWindow", "Pause", None, QtGui.QApplication.UnicodeUTF8))
+        self.jobPause_toolButton.setText(QtGui.QApplication.translate("MainWindow", "Pause", None, QtGui.QApplication.UnicodeUTF8))
         self.jobKill_toolButton.setText(QtGui.QApplication.translate("MainWindow", "Kill", None, QtGui.QApplication.UnicodeUTF8))
         self.jobDelete_toolButton.setText(QtGui.QApplication.translate("MainWindow", "Delete", None, QtGui.QApplication.UnicodeUTF8))
         self.jobResubmit_toolButton.setText(QtGui.QApplication.translate("MainWindow", "Resubmit", None, QtGui.QApplication.UnicodeUTF8))

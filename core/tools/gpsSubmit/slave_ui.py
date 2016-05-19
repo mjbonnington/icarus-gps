@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'slave_ui.ui'
 #
-# Created: Wed May 18 23:14:13 2016
-#      by: pyside-uic 0.2.15 running on PySide 1.2.2
+# Created: Thu May 19 14:43:26 2016
+#      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -98,18 +98,25 @@ class Ui_Dialog(object):
         self.mayaInfo_formLayout.setWidget(1, QtGui.QFormLayout.FieldRole, self.project_lineEdit)
         self.flags_label = QtGui.QLabel(self.tab)
         self.flags_label.setObjectName("flags_label")
-        self.mayaInfo_formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.flags_label)
+        self.mayaInfo_formLayout.setWidget(3, QtGui.QFormLayout.LabelRole, self.flags_label)
         self.flags_lineEdit = QtGui.QLineEdit(self.tab)
         self.flags_lineEdit.setReadOnly(True)
         self.flags_lineEdit.setObjectName("flags_lineEdit")
-        self.mayaInfo_formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.flags_lineEdit)
+        self.mayaInfo_formLayout.setWidget(3, QtGui.QFormLayout.FieldRole, self.flags_lineEdit)
         self.command_label = QtGui.QLabel(self.tab)
         self.command_label.setObjectName("command_label")
-        self.mayaInfo_formLayout.setWidget(3, QtGui.QFormLayout.LabelRole, self.command_label)
+        self.mayaInfo_formLayout.setWidget(4, QtGui.QFormLayout.LabelRole, self.command_label)
         self.command_lineEdit = QtGui.QLineEdit(self.tab)
         self.command_lineEdit.setReadOnly(True)
         self.command_lineEdit.setObjectName("command_lineEdit")
-        self.mayaInfo_formLayout.setWidget(3, QtGui.QFormLayout.FieldRole, self.command_lineEdit)
+        self.mayaInfo_formLayout.setWidget(4, QtGui.QFormLayout.FieldRole, self.command_lineEdit)
+        self.frames_label = QtGui.QLabel(self.tab)
+        self.frames_label.setObjectName("frames_label")
+        self.mayaInfo_formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.frames_label)
+        self.frames_lineEdit = QtGui.QLineEdit(self.tab)
+        self.frames_lineEdit.setReadOnly(True)
+        self.frames_lineEdit.setObjectName("frames_lineEdit")
+        self.mayaInfo_formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.frames_lineEdit)
         self.verticalLayout_3.addLayout(self.mayaInfo_formLayout)
         spacerItem1 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.verticalLayout_3.addItem(spacerItem1)
@@ -120,16 +127,23 @@ class Ui_Dialog(object):
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
         self.output_textEdit = QtGui.QTextEdit(self.output_tab)
+        font = QtGui.QFont()
+        font.setFamily("Consolas")
+        self.output_textEdit.setFont(font)
         self.output_textEdit.setReadOnly(True)
         self.output_textEdit.setObjectName("output_textEdit")
         self.verticalLayout.addWidget(self.output_textEdit)
         self.tabWidget.addTab(self.output_tab, "")
         self.verticalLayout_2.addWidget(self.tabWidget)
         self.stopAfterTask_checkBox = QtGui.QCheckBox(Dialog)
+        self.stopAfterTask_checkBox.setEnabled(False)
         self.stopAfterTask_checkBox.setObjectName("stopAfterTask_checkBox")
         self.verticalLayout_2.addWidget(self.stopAfterTask_checkBox)
         self.buttonBox_horizontalLayout = QtGui.QHBoxLayout()
         self.buttonBox_horizontalLayout.setObjectName("buttonBox_horizontalLayout")
+        self.dequeue_pushButton = QtGui.QPushButton(Dialog)
+        self.dequeue_pushButton.setObjectName("dequeue_pushButton")
+        self.buttonBox_horizontalLayout.addWidget(self.dequeue_pushButton)
         self.close_pushButton = QtGui.QPushButton(Dialog)
         self.close_pushButton.setAutoDefault(False)
         self.close_pushButton.setObjectName("close_pushButton")
@@ -152,9 +166,11 @@ class Ui_Dialog(object):
         self.project_label.setText(QtGui.QApplication.translate("Dialog", "Project:", None, QtGui.QApplication.UnicodeUTF8))
         self.flags_label.setText(QtGui.QApplication.translate("Dialog", "Flags:", None, QtGui.QApplication.UnicodeUTF8))
         self.command_label.setText(QtGui.QApplication.translate("Dialog", "Command:", None, QtGui.QApplication.UnicodeUTF8))
+        self.frames_label.setText(QtGui.QApplication.translate("Dialog", "Frames:", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("Dialog", "Info", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.output_tab), QtGui.QApplication.translate("Dialog", "Output", None, QtGui.QApplication.UnicodeUTF8))
         self.stopAfterTask_checkBox.setToolTip(QtGui.QApplication.translate("Dialog", "Stop this slave when the current task completes.", None, QtGui.QApplication.UnicodeUTF8))
         self.stopAfterTask_checkBox.setText(QtGui.QApplication.translate("Dialog", "Stop after current task", None, QtGui.QApplication.UnicodeUTF8))
+        self.dequeue_pushButton.setText(QtGui.QApplication.translate("Dialog", "Dequeue", None, QtGui.QApplication.UnicodeUTF8))
         self.close_pushButton.setText(QtGui.QApplication.translate("Dialog", "Stop Slave", None, QtGui.QApplication.UnicodeUTF8))
 

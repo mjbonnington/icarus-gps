@@ -17,14 +17,97 @@ class renderQueue(xmlData.xmlData):
 		Inherits xmlData class
 	"""
 
+	def newJob(self, genericOpts, mayaOpts, tasks, user, submitTime):
+		""" Create a new render job on submission.
+		"""
+		self.loadXML(quiet=True) # reload XML data
+		jobID = self.getNextID()
+
+		jobName, priority, frames, taskSize = genericOpts
+		mayaScene, mayaProject, mayaFlags, mayaRenderCmd = mayaOpts
+
+		jobElement = self.root.find("job[@id='%s']" %jobID)
+		if jobElement is None:
+			jobElement = ET.SubElement(self.root, 'job')
+			jobElement.set('id', str(jobID))
+
+			nameElement = ET.SubElement(jobElement, 'name')
+			nameElement.text = str(jobName)
+
+			priorityElement = ET.SubElement(jobElement, 'priority')
+			priorityElement.text = str(priority)
+
+			statusElement = ET.SubElement(jobElement, 'status')
+			statusElement.text = "Queued"
+
+			framesElement = ET.SubElement(jobElement, 'frames')
+			framesElement.text = str(frames)
+
+			taskSizeElement = ET.SubElement(jobElement, 'taskSize')
+			taskSizeElement.text = str(taskSize)
+
+			userElement = ET.SubElement(jobElement, 'user')
+			userElement.text = str(user)
+
+			submitTimeElement = ET.SubElement(jobElement, 'submitTime')
+			submitTimeElement.text = str(submitTime)
+
+			# totalTimeElement = ET.SubElement(jobElement, 'totalTime')
+			# totalTimeElement.text = "0"
+
+			mayaSceneElement = ET.SubElement(jobElement, 'mayaScene')
+			mayaSceneElement.text = str(mayaScene)
+
+			mayaProjectElement = ET.SubElement(jobElement, 'mayaProject')
+			mayaProjectElement.text = str(mayaProject)
+
+			mayaFlagsElement = ET.SubElement(jobElement, 'mayaFlags')
+			mayaFlagsElement.text = str(mayaFlags)
+
+			mayaRenderCmdElement = ET.SubElement(jobElement, 'mayaRenderCmd')
+			mayaRenderCmdElement.text = str(mayaRenderCmd)
+
+			for i in range(len(tasks)):
+				taskElement = ET.SubElement(jobElement, 'task')
+				taskElement.set('id', str(i))
+
+				taskStatusElement = ET.SubElement(taskElement, 'status')
+				taskStatusElement.text = "Queued"
+
+				taskFramesElement = ET.SubElement(taskElement, 'frames')
+				taskFramesElement.text = str(tasks[i])
+
+				# taskStartTimeElement = ET.SubElement(taskElement, 'startTime')
+
+				taskTotalTimeElement = ET.SubElement(taskElement, 'totalTime')
+				taskTotalTimeElement.text = "0"
+
+				taskSlaveElement = ET.SubElement(taskElement, 'slave')
+
+				# commandElement = ET.SubElement(taskElement, 'command')
+				# commandElement.text = str(taskCmds[i].replace("\\", "/"))
+
+		self.saveXML()
+
+
+	def deleteJob(self, jobID):
+		""" Delete a render job.
+		"""
+		self.loadXML(quiet=True) # reload XML data
+		for element in self.root.findall('./job'):
+			if int(element.get('id')) == jobID:
+				self.root.remove(element)
+		self.saveXML()
+
+
 	def getJobs(self):
-		""" Return a render job elements.
+		""" Return all render jobs as elements.
 		"""
 		return self.root.findall("./job")
 
 
 	def getValue(self, element, tag):
-		""" Return the specified value of tag belonging to specified element.
+		""" Return the value of 'tag' belonging to 'element'.
 		"""
 		elem = element.find(tag)
 		if elem is not None:
@@ -66,120 +149,89 @@ class renderQueue(xmlData.xmlData):
 		self.saveXML()
 
 
-	# def setStatus(self, element, status):
-	# 	""" Set the status of a render job or task.
-	# 	"""
-	# 	self.loadXML(quiet=True) # reload XML data
-	# 	elem = element.find('./priority')
-	# 	elem.text = str(status)
-	# 	self.saveXML()
-
-
-	def newJob(self, genericOpts, mayaOpts, tasks, user, submitTime):
-		""" Create a new render job on submission.
+	def setStatus(self, jobID, status):
+		""" Set the status of a render job.
 		"""
 		self.loadXML(quiet=True) # reload XML data
-		jobID = self.getNextID()
-
-		jobName, priority, frames, taskSize = genericOpts
-		mayaScene, mayaProject, mayaFlags, mayaRenderCmd = mayaOpts
-
-		jobElement = self.root.find("job[@id='%s']" %jobID)
-		if jobElement is None:
-			jobElement = ET.SubElement(self.root, 'job')
-			jobElement.set('id', str(jobID))
-
-			nameElement = ET.SubElement(jobElement, 'name')
-			nameElement.text = str(jobName)
-
-			priorityElement = ET.SubElement(jobElement, 'priority')
-			priorityElement.text = str(priority)
-
-			statusElement = ET.SubElement(jobElement, 'status')
-			statusElement.text = "Queued"
-
-			framesElement = ET.SubElement(jobElement, 'frames')
-			framesElement.text = str(frames)
-
-			taskSizeElement = ET.SubElement(jobElement, 'taskSize')
-			taskSizeElement.text = str(taskSize)
-
-			userElement = ET.SubElement(jobElement, 'user')
-			userElement.text = str(user)
-
-			submitTimeElement = ET.SubElement(jobElement, 'submitTime')
-			submitTimeElement.text = str(submitTime)
-
-			mayaSceneElement = ET.SubElement(jobElement, 'mayaScene')
-			mayaSceneElement.text = str(mayaScene)
-
-			mayaProjectElement = ET.SubElement(jobElement, 'mayaProject')
-			mayaProjectElement.text = str(mayaProject)
-
-			mayaRenderCmdElement = ET.SubElement(jobElement, 'mayaRenderCmd')
-			mayaRenderCmdElement.text = str(mayaRenderCmd)
-
-			mayaFlagsElement = ET.SubElement(jobElement, 'mayaFlags')
-			mayaFlagsElement.text = str(mayaFlags)
-
-			for i in range(len(tasks)):
-				taskElement = ET.SubElement(jobElement, 'task')
-				taskElement.set('id', str(i))
-
-				taskStatusElement = ET.SubElement(taskElement, 'status')
-				taskStatusElement.text = "Queued"
-
-				taskFramesElement = ET.SubElement(taskElement, 'frames')
-				taskFramesElement.text = str(tasks[i])
-
-				taskSlaveElement = ET.SubElement(taskElement, 'slave')
-
-				#commandElement = ET.SubElement(taskElement, 'command')
-				#commandElement.text = str(taskCmds[i].replace("\\", "/"))
-
+		element = self.root.find("./job[@id='%s']/status" %jobID)
+		#print "Set status", element
+		element.text = str(status)
 		self.saveXML()
 
 
-	def deleteJob(self, jobID):
-		""" Delete a new render job.
+	def dequeueJob(self):
+		""" Find the highest priority job and return the first uncompleted task found.
 		"""
 		self.loadXML(quiet=True) # reload XML data
-		for element in self.root.findall('./job'):
-			if int(element.get('id')) == jobID:
-				self.root.remove(element)
+
+		# priority = 100
+		# while priority > 0:
+		# 	print priority,
+		# 	element = self.root.find("./job/[priority='%s']" %priority) # get the first <job> element with the highest priority
+		# 	if element is not None:
+		# 		print "Job ID %s: %s (%s)" %(element.get('id'), element.find('name').text, element.find('status').text)
+		# 		if element.find('status').text != "Done":
+		# 			print "Found"
+		# 			#return element
+		# 		else:
+		# 			print "Not found yet"
+		# 			element = None
+		# 	priority -= 1
+
+		for priority in range(100, 0, -1): # iterate over range starting at 100 and ending at 1 (zero is omitted)
+			element = self.root.find("./job/[priority='%s']" %priority) # get the first <job> element with the highest priority
+			if element is not None:
+				if element.find('status').text != "Done":
+					return element
+
+		# elements = self.root.findall('./job/priority')
+		# priorityLs = []
+		# for element in elements:
+		# 	priorityLs.append( int(element.text) )
+		# priorityLs.sort(reverse=True)
+
+		# element = self.root.find("./job/[priority='%s']" %priorityLs[0]) # get the first <job> element with the highest priority
+		# if element is not None:
+		# 	if element.find('status') is not "Done":
+		# 		return element
+
+		return None
+
+
+	def dequeueTask(self, jobID, hostID):
+		""" Dequeue the next queued task belonging to the specified job, mark it as 'In Progress', and return the task ID and the frame range.
+		"""
+		self.loadXML(quiet=True) # reload XML data
+		element = self.root.find("./job[@id='%s']/task/[status='Queued']" %jobID) # get the first <task> element with 'Queued' status
+		#element = self.root.find("./job[@id='%s']/task" %jobID) # get the first <task> element
+		if element is not None:
+			#if element.find('status').text is not "Done":
+			element.find('status').text = "In Progress"
+			element.find('slave').text = str(hostID)
+			self.saveXML()
+			return element.get('id'), element.find('frames').text
+
+		else:
+			return False, False
+
+
+	def completeTask(self, jobID, taskID, taskTime):
+		""" Mark the specified task as 'Done'.
+		"""
+		self.loadXML(quiet=True) # reload XML data
+		element = self.root.find("./job[@id='%s']/task[@id='%s']" %(jobID, taskID)) # get the <task> element
+		element.find('status').text = "Done"
+		element.find('totalTime').text = str(taskTime)
 		self.saveXML()
 
 
-	def getHighestPriorityJob(self):
-		""" Find the highest priority job and return the first queued task found.
-		"""
-		#self.loadXML(quiet=True) # reload XML data
-		elements = self.root.findall('./job/priority')
-		priorityLs = []
-		for element in elements:
-			priorityLs.append( int(element.text) )
-		priorityLs.sort(reverse=True)
-
-		return self.root.find("./job/[priority='%s']" %priorityLs[0])
-
-
-	def dequeueTask(self, jobElement, hostID):
-		""" Dequeue the first queued task found belonging to the given job element.
+	def requeueTask(self, jobID, taskID):
+		""" Requeue the specified task, mark it as 'Queued'.
 		"""
 		self.loadXML(quiet=True) # reload XML data
-		taskElement = jobElement.find("./task/[status='Queued']")
-
-		print jobElement.find('status').text
-		print taskElement.find('status').text
-		print taskElement.find('slave').text
-		jobElement.find('status').text = "In Progress"
-		taskElement.find('status').text = "In Progress"
-		taskElement.find('slave').text = str(hostID)
-		print jobElement.find('status').text
-		print taskElement.find('status').text
-		print taskElement.find('slave').text
-		# self.setStatus(jobElement, "In Progress")
-
+		element = self.root.find("./job[@id='%s']/task[@id='%s']" %(jobID, taskID)) # get the <task> element
+		element.find('status').text = "Queued"
+		element.find('totalTime').text = ""
+		element.find('slave').text = ""
 		self.saveXML()
-		return taskElement.find('frames').text
 

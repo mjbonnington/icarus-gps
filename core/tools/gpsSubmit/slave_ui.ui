@@ -14,16 +14,7 @@
    <string>Render Slave</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
-   <property name="leftMargin">
-    <number>8</number>
-   </property>
-   <property name="topMargin">
-    <number>8</number>
-   </property>
-   <property name="rightMargin">
-    <number>8</number>
-   </property>
-   <property name="bottomMargin">
+   <property name="margin">
     <number>8</number>
    </property>
    <item>
@@ -185,29 +176,43 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="0">
+         <item row="3" column="0">
           <widget class="QLabel" name="flags_label">
            <property name="text">
             <string>Flags:</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="1">
+         <item row="3" column="1">
           <widget class="QLineEdit" name="flags_lineEdit">
            <property name="readOnly">
             <bool>true</bool>
            </property>
           </widget>
          </item>
-         <item row="3" column="0">
+         <item row="4" column="0">
           <widget class="QLabel" name="command_label">
            <property name="text">
             <string>Command:</string>
            </property>
           </widget>
          </item>
-         <item row="3" column="1">
+         <item row="4" column="1">
           <widget class="QLineEdit" name="command_lineEdit">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="frames_label">
+           <property name="text">
+            <string>Frames:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="frames_lineEdit">
            <property name="readOnly">
             <bool>true</bool>
            </property>
@@ -235,20 +240,16 @@
        <string>Output</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
+       <property name="margin">
         <number>0</number>
        </property>
        <item>
         <widget class="QTextEdit" name="output_textEdit">
+         <property name="font">
+          <font>
+           <family>Consolas</family>
+          </font>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -260,6 +261,9 @@
    </item>
    <item>
     <widget class="QCheckBox" name="stopAfterTask_checkBox">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="toolTip">
       <string>Stop this slave when the current task completes.</string>
      </property>
@@ -270,6 +274,13 @@
    </item>
    <item>
     <layout class="QHBoxLayout" name="buttonBox_horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="dequeue_pushButton">
+       <property name="text">
+        <string>Dequeue</string>
+       </property>
+      </widget>
+     </item>
      <item>
       <widget class="QPushButton" name="close_pushButton">
        <property name="text">

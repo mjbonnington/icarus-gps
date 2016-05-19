@@ -32,93 +32,108 @@ class gpsRenderSlaveApp(QtGui.QDialog):
 		self.rq.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'renderQueue.xml'))
 
 		# Connect signals & slots
+		self.ui.dequeue_pushButton.clicked.connect(self.dequeue)
 		self.ui.close_pushButton.clicked.connect(self.exit)
 
-		self.dequeue() # should only be done if slave is idle
+		#self.dequeue() # should only be done if slave is idle
 
 
 	def dequeue(self):
 		""" THIS IS ALL A BIT ROPEY ATM
 		"""
+		import signal, subprocess
+
 		timeFormatStr = "%Y/%m/%d %H:%M:%S" # "%a, %d %b %Y %H:%M:%S"
+		startTimeSec = time.time() # used for measuring the time spent rendering
+		startTime = time.strftime(timeFormatStr)
 
-		self.rq.loadXML(quiet=True) # reload XML data
+		#self.rq.loadXML(quiet=True) # reload XML data - this is being done by the dequeuing function
 
-		self.jobElement = self.rq.getHighestPriorityJob()
-		frameList = seq.numList(self.rq.dequeueTask(self.jobElement, self.localhost))
-		self.startFrame = min(frameList)
-		self.endFrame = max(frameList)
+		jobElement = self.rq.dequeueJob()
+		if jobElement is None:
+			print "No jobs to render."
+			return False
+		jobID = jobElement.get('id')
+
+		taskID, frames = self.rq.dequeueTask(jobID, self.localhost)
+		if not taskID:
+			print "Job ID %s: no tasks to render." %jobID
+			return False
+
+		print "Job ID %s, Task ID %s: Rendering..." %(jobID, taskID)
+		frameList = seq.numList(frames)
+		startFrame = min(frameList)
+		endFrame = max(frameList)
+
+		slaveStatus = "Busy"
+		self.ui.dequeue_pushButton.setEnabled(False)
 
 		# Fill info fields
 		self.ui.slave_lineEdit.setText(self.localhost)
-		self.ui.job_lineEdit.setText(self.rq.getValue(self.jobElement, 'name'))
-		self.ui.user_lineEdit.setText(self.rq.getValue(self.jobElement, 'user'))
+		self.ui.job_lineEdit.setText(self.rq.getValue(jobElement, 'name'))
+		self.ui.user_lineEdit.setText(self.rq.getValue(jobElement, 'user'))
 
-		self.ui.submitted_lineEdit.setText(self.rq.getValue(self.jobElement, 'submitTime'))
-		self.ui.started_lineEdit.setText(time.strftime(timeFormatStr))
+		self.ui.submitted_lineEdit.setText(self.rq.getValue(jobElement, 'submitTime'))
+		self.ui.started_lineEdit.setText(startTime)
 		self.ui.elapsed_lineEdit.setText("")
 
-		self.ui.scene_lineEdit.setText(self.rq.getValue(self.jobElement, 'mayaScene'))
-		self.ui.project_lineEdit.setText(self.rq.getValue(self.jobElement, 'mayaProject'))
-		self.ui.flags_lineEdit.setText(self.rq.getValue(self.jobElement, 'mayaFlags'))
-		self.ui.command_lineEdit.setText(self.rq.getValue(self.jobElement, 'mayaRenderCmd'))
+		self.ui.scene_lineEdit.setText(self.rq.getValue(jobElement, 'mayaScene'))
+		self.ui.project_lineEdit.setText(self.rq.getValue(jobElement, 'mayaProject'))
+		self.ui.frames_lineEdit.setText(frames)
+		self.ui.flags_lineEdit.setText(self.rq.getValue(jobElement, 'mayaFlags'))
+		self.ui.command_lineEdit.setText(self.rq.getValue(jobElement, 'mayaRenderCmd'))
 		#self.ui.Dialog.setWindowTitle("Render Slave: %s" %(self.localhost)) # this doesn't seem to work
-
-		self.render()
-		# for jobElement in self.rq.getJobs():
-		# 	for taskElement in jobElement.findall('task'):
-		# 		renderTaskItem = QtGui.QTreeWidgetItem(renderJobItem)
-
-
-	def render(self):
-		""" Construct render command.
-		"""
-		import signal, subprocess
-
-		#self.calcFrameList(quiet=False)
 
 		# try:
 		# 	renderCmd = '"%s"' %os.environ['MAYARENDERVERSION'] # store this in XML as maya version may vary with project
 		# except KeyError:
 		# 	print "ERROR: Path to Maya Render command executable not found. This can be set with the environment variable 'MAYARENDERVERSION'."
-		renderCmd = '"%s"' %self.rq.getValue(self.jobElement, 'mayaRenderCmd')
+		#renderCmd = '"%s"' %os.path.normpath(self.rq.getValue(jobElement, 'mayaRenderCmd'))
+		renderCmd = '"%s"' %self.rq.getValue(jobElement, 'mayaRenderCmd')
 
 		cmdStr = ''
-		args = '-proj "%s"' %self.rq.getValue(self.jobElement, 'mayaProject')
+		args = '-proj "%s"' %self.rq.getValue(jobElement, 'mayaProject')
 		frameRangeArgs = ''
 
-		sceneName = '"%s"' %self.rq.getValue(self.jobElement, 'mayaScene')
+		sceneName = '"%s"' %self.rq.getValue(jobElement, 'mayaScene')
 
-		# Check we're not working in an unsaved scene
-		if sceneName:
+		mayaFlags = self.rq.getValue(jobElement, 'mayaFlags')
+		if mayaFlags is not None:
+			args += ' %s' %self.rq.getValue(jobElement, 'mayaFlags')
 
-			mayaFlags = self.rq.getValue(self.jobElement, 'mayaFlags')
-			if mayaFlags is not None:
-				args += ' %s' %self.rq.getValue(self.jobElement, 'mayaFlags')
+		# Construct command(s)
+		if True: # replace with check if the job jas any tasks
+			frameRangeArgs = '-s %d -e %d' %(int(startFrame), int(endFrame))
 
-			# Construct command(s)
-			if True: # replace with check if the job jas any tasks
-				frameRangeArgs = '-s %d -e %d' %(int(self.startFrame), int(self.endFrame))
-
-				cmdStr += '%s %s %s %s' %(renderCmd, args, frameRangeArgs, sceneName)
-
-			else:
-				cmdStr = '%s %s %s' %(renderCmd, args, sceneName)
-
-			if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-				#print cmdStr
-				self.ui.output_textEdit.setPlainText(cmdStr)
-				#self.renderProcess = subprocess.Popen(cmdStr, shell=True) #, stdout=subprocess.PIPE, shell=True)
-			else:
-				#print cmdStr
-				self.ui.output_textEdit.setPlainText(cmdStr)
-				#self.renderProcess = subprocess.Popen(cmdStr, stdout=subprocess.PIPE, shell=True, preexec_fn=os.setsid)
-
-			# Disable UI to prevent new renders being submitted
-			#self.tglUI(False)
+			cmdStr += '%s %s %s %s' %(renderCmd, args, frameRangeArgs, sceneName)
 
 		else:
-			print "ERROR: Scene not specified."
+			cmdStr = '%s %s %s' %(renderCmd, args, sceneName)
+
+		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+			print cmdStr
+			#self.ui.output_textEdit.setPlainText(cmdStr)
+			#self.renderProcess = subprocess.Popen(cmdStr, shell=True) #, stdout=subprocess.PIPE, shell=True)
+			output = subprocess.Popen(cmdStr, stdout=subprocess.PIPE).communicate()[0] # find a way to do this without locking the UI
+			self.ui.output_textEdit.setPlainText(output)
+			#os.system(cmdStr) #, stdout=subprocess.PIPE, shell=True)
+		else:
+			#print cmdStr
+			self.ui.output_textEdit.setPlainText(cmdStr)
+			#self.renderProcess = subprocess.Popen(cmdStr, stdout=subprocess.PIPE, shell=True, preexec_fn=os.setsid)
+
+		# Disable UI to prevent new renders being submitted
+		#self.tglUI(False)
+
+		# print "waiting 3 sec"
+		# time.sleep(3) # wait 3 seconds
+		slaveStatus = "Idle"
+		self.ui.dequeue_pushButton.setEnabled(True)
+		#self.rq.setStatus(jobID, "In Progress (0%)")
+		totalTimeSec = time.time() - startTimeSec # calculate time spent rendering task
+
+		self.rq.completeTask(jobID, taskID, totalTimeSec)
+
 
 
 	# def kill(self):

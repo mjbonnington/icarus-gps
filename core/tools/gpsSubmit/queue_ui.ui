@@ -84,10 +84,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="jobPauseResume_toolButton">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
+           <widget class="QToolButton" name="jobPause_toolButton">
             <property name="text">
              <string>Pause</string>
             </property>
@@ -188,9 +185,6 @@
           </property>
           <item>
            <widget class="QToolButton" name="taskComplete_toolButton">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
             <property name="text">
              <string>Complete</string>
             </property>
@@ -208,9 +202,6 @@
           </item>
           <item>
            <widget class="QToolButton" name="taskRequeue_toolButton">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
             <property name="text">
              <string>Requeue</string>
             </property>
