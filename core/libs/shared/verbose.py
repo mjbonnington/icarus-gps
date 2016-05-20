@@ -277,3 +277,28 @@ def userPrefs_notWritten():
 def xmlData_readError(datafile):
 	print_( "Warning: XML data file is invalid or doesn't exist: %s" % datafile, 2 )
 
+
+def pluralise(noun, ls=None):
+	""" Pluralise nouns.
+		if 'list' is given, return singular if list length is 1, otherwise return plural form.
+		In the name of simplicity, this function is far from exhaustive.
+	"""
+	if ls is not None:
+		if len(ls) == 1:
+			return noun
+
+	import re
+
+	if re.search('[^fhms][ei]x$', noun):
+		return re.sub('[ei]x$', 'ices', noun)
+	elif re.search('[sxz]$', noun):
+		return re.sub('$', 'es', noun)
+	elif re.search('[^aeioudgkprt]h$', noun):
+		return re.sub('$', 'es', noun)
+	elif re.search('[^aeiou]y$', noun):
+		return re.sub('y$', 'ies', noun)
+	elif re.search('ies$', noun):
+		return noun
+	else:
+		return noun + 's'
+

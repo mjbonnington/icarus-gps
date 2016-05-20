@@ -148,9 +148,9 @@ class icarusApp(QtGui.QDialog):
 		self.actionRenderQueue.triggered.connect(self.launchRenderQueue)
 		self.ui.render_pushButton.addAction(self.actionRenderQueue)
 
-		self.actionRenderSlave = QtGui.QAction("Render Slave", None)
-		self.actionRenderSlave.triggered.connect(self.launchRenderSlave)
-		self.ui.render_pushButton.addAction(self.actionRenderSlave)
+		# self.actionRenderSlave = QtGui.QAction("Render Slave", None)
+		# self.actionRenderSlave.triggered.connect(self.launchRenderSlave)
+		# self.ui.render_pushButton.addAction(self.actionRenderSlave)
 
 		self.actionBrowseRenders = QtGui.QAction("Browse Renders", None)
 		self.actionBrowseRenders.triggered.connect(self.launchRenderBrowser)
@@ -940,11 +940,11 @@ Environment: %s
 		# renderQueueApp.show()
 
 
-	def launchRenderSlave(self):
-		""" Launches GPS Render Slave window.
-		"""
-		import slave__main__
-		reload(slave__main__)
+	# def launchRenderSlave(self):
+	# 	""" Launches GPS Render Slave window.
+	# 	"""
+	# 	import slave__main__
+	# 	reload(slave__main__)
 
 
 	def launchRenderBrowser(self):

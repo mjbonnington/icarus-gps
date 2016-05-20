@@ -173,8 +173,7 @@ class renderQueue(xmlData.xmlData):
 					if element.find('status').text != "Done":
 						#print "This will do, let's render it!"
 						return element
-					#else:
-					#	print "Not yet, keep searching..."
+					#print "Not yet, keep searching..."
 
 		return None
 

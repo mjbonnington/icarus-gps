@@ -733,6 +733,34 @@ QFrame:no-frame {
 
 
 
+/* Splitter
+ *
+ */
+
+QSplitter::handle {
+	background: transparent;
+}
+
+/*QSplitter::handle:hover {
+	background: #666;
+}*/
+
+QSplitter::handle:horizontal {
+	width: 5px;
+}
+
+QSplitter::handle:vertical {
+	height: 5px;
+}
+
+QSplitter::handle:pressed {
+	background: #555;
+}
+
+/* End Splitter */
+
+
+
 /* Combo Box
  *
  */
