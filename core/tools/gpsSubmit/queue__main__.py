@@ -197,25 +197,26 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 		"""
 		try:
 			for item in self.ui.renderQueue_treeWidget.selectedItems():
-				index = int(item.text(1))
-				minPriority = 0
-				maxPriority = 100
+				if not item.parent(): # if item has no parent then it must be a top level item, and therefore also a job
+					index = int(item.text(1))
+					minPriority = 0
+					maxPriority = 100
 
-				if absolute:
-					newPriority = amount
-				else:
-					currentPriority = self.rq.getPriority(index)
-					newPriority = currentPriority+amount
+					if absolute:
+						newPriority = amount
+					else:
+						currentPriority = self.rq.getPriority(index)
+						newPriority = currentPriority+amount
 
-				if newPriority <= minPriority:
-					item.setText(4, str(minPriority))
-				elif newPriority >= maxPriority:
-					item.setText(4, str(maxPriority))
-				else:
-					item.setText(4, str(newPriority))
+					if newPriority <= minPriority:
+						item.setText(4, str(minPriority))
+					elif newPriority >= maxPriority:
+						item.setText(4, str(maxPriority))
+					else:
+						item.setText(4, str(newPriority))
 
-				if absolute:
-					self.updatePriority()
+					if absolute:
+						self.updatePriority()
 
 		except ValueError:
 			pass
@@ -226,9 +227,10 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 		"""
 		try:
 			for item in self.ui.renderQueue_treeWidget.selectedItems():
-				index = int(item.text(1))
-				priority = int(item.text(4))
-				self.rq.setPriority(index, priority)
+				if not item.parent(): # if item has no parent then it must be a top level item, and therefore also a job
+					index = int(item.text(1))
+					priority = int(item.text(4))
+					self.rq.setPriority(index, priority)
 
 			self.updateRenderQueueView()
 

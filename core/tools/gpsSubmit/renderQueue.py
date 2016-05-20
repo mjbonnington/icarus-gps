@@ -160,40 +160,21 @@ class renderQueue(xmlData.xmlData):
 
 
 	def dequeueJob(self):
-		""" Find the highest priority job and return the first uncompleted task found.
+		""" Find a job with the highest priority that isn't paused or completed.
 		"""
 		self.loadXML(quiet=True) # reload XML data
 
-		# priority = 100
-		# while priority > 0:
-		# 	print priority,
-		# 	element = self.root.find("./job/[priority='%s']" %priority) # get the first <job> element with the highest priority
-		# 	if element is not None:
-		# 		print "Job ID %s: %s (%s)" %(element.get('id'), element.find('name').text, element.find('status').text)
-		# 		if element.find('status').text != "Done":
-		# 			print "Found"
-		# 			#return element
-		# 		else:
-		# 			print "Not found yet"
-		# 			element = None
-		# 	priority -= 1
-
 		for priority in range(100, 0, -1): # iterate over range starting at 100 and ending at 1 (zero is omitted)
-			element = self.root.find("./job/[priority='%s']" %priority) # get the first <job> element with the highest priority
-			if element is not None:
-				if element.find('status').text != "Done":
-					return element
-
-		# elements = self.root.findall('./job/priority')
-		# priorityLs = []
-		# for element in elements:
-		# 	priorityLs.append( int(element.text) )
-		# priorityLs.sort(reverse=True)
-
-		# element = self.root.find("./job/[priority='%s']" %priorityLs[0]) # get the first <job> element with the highest priority
-		# if element is not None:
-		# 	if element.find('status') is not "Done":
-		# 		return element
+			#print priority,
+			elements = self.root.findall("./job/[priority='%s']" %priority) # get all <job> elements with the highest priority
+			if elements is not None:
+				for element in elements:
+					#print "Job ID %s: %s (%s)" %(element.get('id'), element.find('name').text, element.find('status').text),
+					if element.find('status').text != "Done":
+						#print "This will do, let's render it!"
+						return element
+					#else:
+					#	print "Not yet, keep searching..."
 
 		return None
 

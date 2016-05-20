@@ -16,6 +16,7 @@ import os, socket, sys, time
 # Import custom modules
 import renderQueue
 import sequence as seq
+import verbose
 
 
 class gpsRenderSlaveApp(QtGui.QDialog):
@@ -111,7 +112,7 @@ class gpsRenderSlaveApp(QtGui.QDialog):
 			cmdStr = '%s %s %s' %(renderCmd, args, sceneName)
 
 		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-			print cmdStr
+			verbose.print_(cmdStr, 4)
 			#self.ui.output_textEdit.setPlainText(cmdStr)
 			#self.renderProcess = subprocess.Popen(cmdStr, shell=True) #, stdout=subprocess.PIPE, shell=True)
 			output = subprocess.Popen(cmdStr, stdout=subprocess.PIPE).communicate()[0] # find a way to do this without locking the UI
