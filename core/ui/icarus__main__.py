@@ -934,7 +934,7 @@ Environment: %s
 		""" Launches GPS Render Queue Manager window.
 		"""
 		import queue__main__
-		reload(queue__main__)
+	#	reload(queue__main__)
 		# renderQueueApp = queue__main__.gpsRenderQueueApp()
 		# print renderQueueApp
 		# renderQueueApp.show()

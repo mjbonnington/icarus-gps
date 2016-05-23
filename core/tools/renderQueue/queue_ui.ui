@@ -47,15 +47,55 @@
           </property>
           <item>
            <widget class="QToolButton" name="jobSubmit_toolButton">
+            <property name="minimumSize">
+             <size>
+              <width>64</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="text">
              <string>Submit</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../../ui/rsc.qrc">
+              <normaloff>:/rsc/rsc/app_icon_maya.png</normaloff>
+              <disabledoff>:/rsc/rsc/app_icon_maya_disabled.png</disabledoff>:/rsc/rsc/app_icon_maya.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QToolButton" name="refresh_toolButton">
+            <property name="minimumSize">
+             <size>
+              <width>64</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="text">
              <string>Refresh</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../../ui/rsc.qrc">
+              <normaloff>:/rsc/rsc/icon_refresh.png</normaloff>
+              <disabledoff>:/rsc/rsc/icon_refresh_disabled.png</disabledoff>:/rsc/rsc/icon_refresh.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
@@ -82,8 +122,28 @@
           </property>
           <item>
            <widget class="QToolButton" name="jobPause_toolButton">
+            <property name="minimumSize">
+             <size>
+              <width>64</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="text">
              <string>Pause</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../../ui/rsc.qrc">
+              <normaloff>:/rsc/rsc/icon_pause.png</normaloff>
+              <disabledoff>:/rsc/rsc/icon_pause_disabled.png</disabledoff>:/rsc/rsc/icon_pause.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
@@ -92,15 +152,55 @@
             <property name="enabled">
              <bool>false</bool>
             </property>
+            <property name="minimumSize">
+             <size>
+              <width>64</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="text">
              <string>Kill</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../../ui/rsc.qrc">
+              <normaloff>:/rsc/rsc/icon_cross.png</normaloff>
+              <disabledoff>:/rsc/rsc/icon_cross_disabled.png</disabledoff>:/rsc/rsc/icon_cross.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QToolButton" name="jobDelete_toolButton">
+            <property name="minimumSize">
+             <size>
+              <width>64</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="text">
              <string>Delete</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../../ui/rsc.qrc">
+              <normaloff>:/rsc/rsc/icon_delete.png</normaloff>
+              <disabledoff>:/rsc/rsc/icon_delete_disabled.png</disabledoff>:/rsc/rsc/icon_delete.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
@@ -109,8 +209,28 @@
             <property name="enabled">
              <bool>false</bool>
             </property>
+            <property name="minimumSize">
+             <size>
+              <width>64</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="text">
              <string>Resubmit</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../../ui/rsc.qrc">
+              <normaloff>:/rsc/rsc/icon_resubmit.png</normaloff>
+              <disabledoff>:/rsc/rsc/icon_resubmit_disabled.png</disabledoff>:/rsc/rsc/icon_resubmit.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
@@ -188,15 +308,55 @@
           </property>
           <item>
            <widget class="QToolButton" name="taskComplete_toolButton">
+            <property name="minimumSize">
+             <size>
+              <width>64</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="text">
              <string>Complete</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../../ui/rsc.qrc">
+              <normaloff>:/rsc/rsc/icon_tick.png</normaloff>
+              <disabledoff>:/rsc/rsc/icon_tick_disabled.png</disabledoff>:/rsc/rsc/icon_tick.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QToolButton" name="taskRequeue_toolButton">
+            <property name="minimumSize">
+             <size>
+              <width>64</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="text">
              <string>Requeue</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../../ui/rsc.qrc">
+              <normaloff>:/rsc/rsc/icon_resubmit.png</normaloff>
+              <disabledoff>:/rsc/rsc/icon_resubmit_disabled.png</disabledoff>:/rsc/rsc/icon_resubmit.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
@@ -223,11 +383,31 @@
           </property>
           <item>
            <widget class="QToolButton" name="slave_toolButton">
-            <property name="enabled">
-             <bool>false</bool>
+            <property name="minimumSize">
+             <size>
+              <width>64</width>
+              <height>0</height>
+             </size>
             </property>
             <property name="text">
              <string>Start Local Slave</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../../ui/rsc.qrc">
+              <normaloff>:/rsc/rsc/icon_render.png</normaloff>
+              <disabledoff>:/rsc/rsc/icon_render_disabled.png</disabledoff>:/rsc/rsc/icon_render.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
           </item>
@@ -317,7 +497,7 @@
        </column>
        <column>
         <property name="text">
-         <string>Command</string>
+         <string>Type</string>
         </property>
        </column>
       </widget>
@@ -345,16 +525,53 @@
             </widget>
            </item>
            <item>
+            <widget class="QToolButton" name="processKill_toolButton">
+             <property name="minimumSize">
+              <size>
+               <width>64</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Kill</string>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>32</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="toolButtonStyle">
+              <enum>Qt::ToolButtonTextUnderIcon</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QToolButton" name="dequeue_toolButton">
+             <property name="minimumSize">
+              <size>
+               <width>64</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="text">
               <string>Dequeue</string>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>32</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="toolButtonStyle">
+              <enum>Qt::ToolButtonTextUnderIcon</enum>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QCheckBox" name="stopAfterTask_checkBox">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="sizePolicy">
               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -369,7 +586,7 @@
               <string>Stop after current task</string>
              </property>
              <property name="checked">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
             </widget>
            </item>
@@ -454,6 +671,8 @@
    </layout>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../ui/rsc.qrc"/>
+ </resources>
  <connections/>
 </ui>

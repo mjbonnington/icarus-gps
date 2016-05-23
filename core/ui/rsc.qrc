@@ -1,5 +1,15 @@
 <RCC>
   <qresource prefix="rsc">
+    <file>rsc/icon_resubmit_disabled.png</file>
+    <file>rsc/icon_resubmit.png</file>
+    <file>rsc/icon_cross.png</file>
+    <file>rsc/icon_cross_disabled.png</file>
+    <file>rsc/icon_pause.png</file>
+    <file>rsc/icon_pause_disabled.png</file>
+    <file>rsc/icon_tick.png</file>
+    <file>rsc/icon_tick_disabled.png</file>
+    <file>rsc/icon_refresh.png</file>
+    <file>rsc/icon_refresh_disabled.png</file>
     <file>rsc/app_icon_maya_tab.png</file>
     <file>rsc/app_icon_nuke_tab.png</file>
     <file>rsc/publish_icon_comp.png</file>

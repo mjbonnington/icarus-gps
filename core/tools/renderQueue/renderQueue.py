@@ -80,7 +80,7 @@ class renderQueue(xmlData.xmlData):
 				# taskStartTimeElement = ET.SubElement(taskElement, 'startTime')
 
 				taskTotalTimeElement = ET.SubElement(taskElement, 'totalTime')
-				taskTotalTimeElement.text = "0"
+				#taskTotalTimeElement.text = "0"
 
 				taskSlaveElement = ET.SubElement(taskElement, 'slave')
 
@@ -152,11 +152,14 @@ class renderQueue(xmlData.xmlData):
 	def setStatus(self, jobID, status):
 		""" Set the status of a render job.
 		"""
-		self.loadXML(quiet=True) # reload XML data
+		#self.loadXML(quiet=True) # reload XML data
 		element = self.root.find("./job[@id='%s']/status" %jobID)
 		#print "Set status", element
-		element.text = str(status)
-		self.saveXML()
+		if element.text == str(status):
+			return
+		else:
+			element.text = str(status)
+			self.saveXML()
 
 
 	def dequeueJob(self):

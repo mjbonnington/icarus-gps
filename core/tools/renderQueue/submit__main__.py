@@ -181,7 +181,7 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 			frames = 'Unknown'
 			taskSize = 'Unknown'
 			self.numList = []
-			self.taskList = []
+			self.taskList = [frames, ]
 			framesMsg = 'The frame range was not specified so the job cannot be distributed into tasks. The job will be submitted as a single task and the frame range will be read from the scene at render time.\n'
 		if self.ui.flags_groupBox.isChecked():
 			mayaFlags = self.ui.flags_lineEdit.text()
