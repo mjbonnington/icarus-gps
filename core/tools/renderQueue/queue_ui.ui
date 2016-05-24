@@ -53,6 +53,9 @@
               <height>0</height>
              </size>
             </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Submit a new render job&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Currently only Maya render jobs are supported.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Submit</string>
             </property>
@@ -79,6 +82,9 @@
               <width>64</width>
               <height>0</height>
              </size>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Refresh the render queue view&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Force reload the render queue database and update the view. Note the view is automatically updated every 5 seconds.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>Refresh</string>
@@ -128,6 +134,9 @@
               <height>0</height>
              </size>
             </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pause the selected render job(s)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;This is the same as setting the priority to zero. Tasks currently in progress will continue normally, but no more tasks will be rendered until the priority is increased.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Pause</string>
             </property>
@@ -158,6 +167,9 @@
               <height>0</height>
              </size>
             </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Kill the selected render job(s)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;All rendering tasks will be stopped immediately.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Kill</string>
             </property>
@@ -184,6 +196,9 @@
               <width>64</width>
               <height>0</height>
              </size>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Delete the selected render job(s)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;The job(s) will be removed from the render queue database. This can be used to clean up old render jobs and improve responsiveness.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>Delete</string>
@@ -214,6 +229,9 @@
               <width>64</width>
               <height>0</height>
              </size>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Resubmit the selected render job(s)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;For each job selected, a new job will be created with the same settings and added to the queue.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>Resubmit</string>
@@ -251,38 +269,71 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLabel" name="jobPriority_label">
-            <property name="text">
-             <string>Reprioritise:</string>
+           <widget class="QFrame" name="jobPriorityWidget_frame">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Adjust the priority for the selected render job(s)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Drag the slider to change the priority value relatively. Higher priority jobs will render first.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSlider" name="jobPriority_slider">
-            <property name="minimumSize">
-             <size>
-              <width>100</width>
-              <height>0</height>
-             </size>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
             </property>
-            <property name="minimum">
-             <number>-100</number>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
             </property>
-            <property name="maximum">
-             <number>100</number>
-            </property>
-            <property name="pageStep">
-             <number>0</number>
-            </property>
-            <property name="value">
-             <number>0</number>
-            </property>
-            <property name="tracking">
-             <bool>false</bool>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <property name="spacing">
+              <number>3</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>15</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QSlider" name="jobPriority_slider">
+               <property name="minimumSize">
+                <size>
+                 <width>100</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="minimum">
+                <number>-100</number>
+               </property>
+               <property name="maximum">
+                <number>100</number>
+               </property>
+               <property name="pageStep">
+                <number>0</number>
+               </property>
+               <property name="value">
+                <number>0</number>
+               </property>
+               <property name="tracking">
+                <bool>false</bool>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="jobPriority_label">
+               <property name="text">
+                <string>Reprioritise</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>
@@ -314,6 +365,9 @@
               <height>0</height>
              </size>
             </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Complete the selected task(s)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Tasks marked as 'Done' will not be queued for rendering.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Complete</string>
             </property>
@@ -340,6 +394,9 @@
               <width>64</width>
               <height>0</height>
              </size>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Requeue the selected task(s)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;These tasks will be marked as 'Queued'. This can be used to re-render failed tasks.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>Requeue</string>
@@ -388,6 +445,9 @@
               <width>64</width>
               <height>0</height>
              </size>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Toggle the local render slave&lt;/span&gt;&lt;/p&gt;&lt;p&gt;When enabled, the local slave will periodically look for jobs to render.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>Start Local Slave</string>
@@ -462,6 +522,11 @@
        </column>
        <column>
         <property name="text">
+         <string>Type</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
          <string>Frames</string>
         </property>
        </column>
@@ -493,11 +558,6 @@
        <column>
         <property name="text">
          <string>Slave</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Type</string>
         </property>
        </column>
       </widget>

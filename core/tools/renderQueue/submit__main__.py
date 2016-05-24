@@ -166,16 +166,14 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 
 		self.calcFrameList(quiet=True)
 
-		taskLs = []
 		mayaScene = self.absolutePath(self.ui.scene_comboBox.currentText()).replace("\\", "/") # implicit if submitting from Maya UI
 		mayaProject = os.environ['MAYADIR'].replace("\\", "/") # implicit if job is set
 		jobName = os.path.basename(mayaScene)
+		jobType = "Maya" # eventually allow Nuke and other types of job to be submitted
 		priority = self.ui.priority_spinBox.value()
 		if self.ui.overrideFrameRange_groupBox.isChecked():
 			frames = self.ui.frameRange_lineEdit.text()
 			taskSize = self.ui.taskSize_spinBox.value()
-			# for frame in self.taskList:
-			# 	taskLs.append(frame)
 			framesMsg = '%d frames to be rendered; %d task(s) to be submitted.\n' %(len(self.numList), len(self.taskList))
 		else:
 			frames = 'Unknown'
@@ -192,7 +190,7 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 		except KeyError:
 			print "ERROR: Path to Maya Render command executable not found. This can be set with the environment variable 'MAYARENDERVERSION'."
 
-		genericOpts = jobName, priority, frames, taskSize
+		genericOpts = jobName, jobType, priority, frames, taskSize
 		mayaOpts = mayaScene, mayaProject, mayaFlags, mayaRenderCmd
 
 		# Confirmation dialog
@@ -200,7 +198,7 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 
 		dialogTitle = 'Submit Render'
 		dialogMsg = ''
-		dialogMsg += 'Name:\t%s\nPriority:\t%s\nFrames:\t%s\nTask size:\t%s\n\n' %genericOpts
+		dialogMsg += 'Name:\t%s\nType:\t%s\nPriority:\t%s\nFrames:\t%s\nTask size:\t%s\n\n' %genericOpts
 		#dialogMsg += 'Scene:\t%s\nProject:\t%s\nFlags:\t%s\nCommand:\t%s\n\n' %mayaOpts
 		dialogMsg += framesMsg
 		dialogMsg += 'Do you wish to continue?'
@@ -222,7 +220,7 @@ if __name__ == "__main__":
 	app = QtGui.QApplication(sys.argv)
 
 	# Initialise Icarus environment
-	os.environ['ICWORKINGDIR'] = "N:\Dev\icarus\core\ui" # temp assignment
+	#os.environ['ICWORKINGDIR'] = "N:\Dev\icarus\core\ui" # temp assignment
 	sys.path.append(os.environ['ICWORKINGDIR'])
 	import env__init__
 	env__init__.setEnv()
@@ -242,6 +240,6 @@ if __name__ == "__main__":
 
 else:
 	renderSubmitApp = gpsRenderSubmitApp()
-	print renderSubmitApp
+	#print renderSubmitApp
 	renderSubmitApp.show()
 

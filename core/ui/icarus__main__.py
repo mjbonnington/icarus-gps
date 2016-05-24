@@ -67,7 +67,7 @@ class icarusApp(QtGui.QDialog):
 		self.ui.openReview_pushButton.clicked.connect(self.launchHieroPlayer)
 		self.ui.openTerminal_pushButton.clicked.connect(self.launchTerminal)
 		self.ui.browse_pushButton.clicked.connect(openDirs.openShot)
-		self.ui.render_pushButton.clicked.connect(self.launchRenderSubmit)
+		self.ui.render_pushButton.clicked.connect(self.launchRenderQueue) # was self.launchRenderSubmit
 
 		# Publishing UI
 	#	self.ui.renderPblAdd_pushButton.clicked.connect(self.renderTableAdd)
@@ -140,17 +140,13 @@ class icarusApp(QtGui.QDialog):
 		# Render
 		self.ui.render_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
-		self.actionRenderSubmit = QtGui.QAction("Submit Render", None)
-		self.actionRenderSubmit.triggered.connect(self.launchRenderSubmit)
-		self.ui.render_pushButton.addAction(self.actionRenderSubmit)
-
 		self.actionRenderQueue = QtGui.QAction("Render Queue", None)
 		self.actionRenderQueue.triggered.connect(self.launchRenderQueue)
 		self.ui.render_pushButton.addAction(self.actionRenderQueue)
 
-		# self.actionRenderSlave = QtGui.QAction("Render Slave", None)
-		# self.actionRenderSlave.triggered.connect(self.launchRenderSlave)
-		# self.ui.render_pushButton.addAction(self.actionRenderSlave)
+		self.actionRenderSubmit = QtGui.QAction("Submit Render", None)
+		self.actionRenderSubmit.triggered.connect(self.launchRenderSubmit)
+		self.ui.render_pushButton.addAction(self.actionRenderSubmit)
 
 		self.actionBrowseRenders = QtGui.QAction("Browse Renders", None)
 		self.actionBrowseRenders.triggered.connect(self.launchRenderBrowser)
@@ -924,20 +920,27 @@ Environment: %s
 		"""
 		import submit__main__
 		reload(submit__main__)
-		# renderSubmitApp = submit__main__.gpsRenderSubmitApp() #parent=app
-		# # renderSubmitApp.setWindowFlags(QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowMinMaxButtonsHint )
-		# print renderSubmitApp
-		# renderSubmitApp.show()
+		# try:
+		# 	self.renderSubmitApp.show()
+		# 	self.renderSubmitApp.raise_()
+		# except AttributeError:
+		# 	self.renderSubmitApp = submit__main__.gpsRenderSubmitApp()
+		# 	#print self.renderSubmitApp
+		# 	self.renderSubmitApp.show()
 
 
 	def launchRenderQueue(self):
 		""" Launches GPS Render Queue Manager window.
 		"""
 		import queue__main__
-	#	reload(queue__main__)
-		# renderQueueApp = queue__main__.gpsRenderQueueApp()
-		# print renderQueueApp
-		# renderQueueApp.show()
+		reload(queue__main__)
+		try:
+			self.renderQueueApp.show()
+			self.renderQueueApp.raise_()
+		except AttributeError:
+			self.renderQueueApp = queue__main__.gpsRenderQueueApp()
+			#print self.renderQueueApp
+			self.renderQueueApp.show()
 
 
 	# def launchRenderSlave(self):

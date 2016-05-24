@@ -23,7 +23,7 @@ class renderQueue(xmlData.xmlData):
 		self.loadXML(quiet=True) # reload XML data
 		jobID = self.getNextID()
 
-		jobName, priority, frames, taskSize = genericOpts
+		jobName, jobType, priority, frames, taskSize = genericOpts
 		mayaScene, mayaProject, mayaFlags, mayaRenderCmd = mayaOpts
 
 		jobElement = self.root.find("job[@id='%s']" %jobID)
@@ -33,6 +33,9 @@ class renderQueue(xmlData.xmlData):
 
 			nameElement = ET.SubElement(jobElement, 'name')
 			nameElement.text = str(jobName)
+
+			typeElement = ET.SubElement(jobElement, 'type')
+			typeElement.text = str(jobType)
 
 			priorityElement = ET.SubElement(jobElement, 'priority')
 			priorityElement.text = str(priority)
