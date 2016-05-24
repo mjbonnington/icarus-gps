@@ -1,5 +1,9 @@
 <RCC>
   <qresource prefix="rsc">
+    <file>rsc/status_icon_ready.png</file>
+    <file>rsc/status_icon_stopped.png</file>
+    <file>rsc/status_icon_waiting.png</file>
+    <file>rsc/status_icon_ok.png</file>
     <file>rsc/icon_resubmit_disabled.png</file>
     <file>rsc/icon_resubmit.png</file>
     <file>rsc/icon_cross.png</file>

@@ -161,13 +161,13 @@ QMenu::item:selected:disabled {
 }
 
 QMenu::icon:checked { /* appearance of a 'checked' icon */
-	/*border-color: #709e32;
+	border-color: #709e32;
 	background: #709e32;
 	position: absolute;
 	top: 1px;
 	right: 1px;
 	bottom: 1px;
-	left: 1px;*/
+	left: 1px;
 }
 
 QMenu::separator {

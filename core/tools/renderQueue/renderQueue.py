@@ -201,7 +201,7 @@ class renderQueue(xmlData.xmlData):
 			return False, False
 
 
-	def completeTask(self, jobID, taskID, taskTime):
+	def completeTask(self, jobID, taskID, taskTime=0):
 		""" Mark the specified task as 'Done'.
 		"""
 		self.loadXML(quiet=True) # reload XML data

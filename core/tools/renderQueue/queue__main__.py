@@ -26,7 +26,6 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 
 		self.timeFormatStr = "%Y/%m/%d %H:%M:%S"
 		self.localhost = socket.gethostname()
-		self.slaveStatus = "disabled"
 		self.selection = []
 		#verbose.registerStatusBar(self.ui.statusbar)
 
@@ -50,10 +49,34 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 		self.ui.taskComplete_toolButton.clicked.connect(self.completeTask)
 		self.ui.taskRequeue_toolButton.clicked.connect(self.requeueTask)
 
-		self.ui.slave_toolButton.clicked.connect(self.toggleSlave)
-		self.ui.dequeue_toolButton.clicked.connect(self.dequeue)
-		self.ui.processKill_toolButton.clicked.connect(self.killRenderProcess)
-		#self.ui.close_pushButton.clicked.connect(self.exit)
+		#self.ui.slave_toolButton.clicked.connect(self.toggleSlave)
+		#self.ui.dequeue_toolButton.clicked.connect(self.dequeue)
+		#self.ui.processKill_toolButton.clicked.connect(self.killRenderProcess)
+
+		# Add context menu to slave control tool button
+		self.ui.slaveControl_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+
+		self.actionSlaveStart = QtGui.QAction("Start Slave", None)
+		self.actionSlaveStart.triggered.connect(self.toggleSlave)
+		#self.ui.slaveControl_toolButton.addAction(self.actionSlaveStart)
+
+		self.actionSlaveStop = QtGui.QAction("Stop Slave", None)
+		self.actionSlaveStop.triggered.connect(self.toggleSlave)
+		#self.ui.slaveControl_toolButton.addAction(self.actionSlaveStop)
+
+		self.actionKillTask = QtGui.QAction("Kill Current Task", None)
+		self.actionKillTask.triggered.connect(self.killRenderProcess)
+		#self.ui.slaveControl_toolButton.addAction(self.actionKillTask)
+
+		self.actionSlaveStopAfterTask = QtGui.QAction("Stop Slave After Current Task Completion", None)
+		self.actionSlaveStopAfterTask.triggered.connect(self.killRenderProcess)
+		self.actionSlaveStopAfterTask.setCheckable(True)
+		#self.ui.slaveControl_toolButton.addAction(self.actionSlaveStopAfterTask)
+
+		self.setSlaveStatus("disabled")
+		# statusIcon = QtGui.QIcon()
+		# statusIcon.addPixmap(QtGui.QPixmap(":/rsc/rsc/status_icon_stopped.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		# self.ui.slaveControl_toolButton.setIcon(statusIcon)
 
 		# Create timer to refresh the view and dequeue tasks every n milliseconds
 		timer = QtCore.QTimer(self)
@@ -66,13 +89,13 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 		self.updateToolbarUI()
 
 
-	def getCheckBoxValue(self, checkBox):
-		""" Get the value from a checkbox and return a Boolean value.
-		"""
-		if checkBox.checkState() == QtCore.Qt.Checked:
-			return True
-		else:
-			return False
+	# def getCheckBoxValue(self, checkBox):
+	# 	""" Get the value from a checkbox and return a Boolean value.
+	# 	"""
+	# 	if checkBox.checkState() == QtCore.Qt.Checked:
+	# 		return True
+	# 	else:
+	# 		return False
 
 
 	def launchRenderSubmit(self):
@@ -116,6 +139,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 			renderJobItem = QtGui.QTreeWidgetItem(self.ui.renderQueue_treeWidget)
 
 			jobTotalTimeSeconds = 0
+			inProgressTasks = 0
 			completedTasks = 0
 
 			# Populate render tasks
@@ -130,8 +154,11 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 				taskStatus = self.rq.getValue(taskElement, 'status')
 				renderTaskItem.setText(4, taskStatus)
 
+				if taskStatus == "In Progress":
+					inProgressTasks += 1
 				if taskStatus == "Done":
 					completedTasks += 1
+
 				try:
 					totalTimeSeconds = float(self.rq.getValue(taskElement, 'totalTime')) # use float and round for millisecs
 					jobTotalTimeSeconds += totalTimeSeconds
@@ -148,9 +175,13 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 			renderJobItem.setText(2, self.rq.getValue(jobElement, 'type'))
 			renderJobItem.setText(3, self.rq.getValue(jobElement, 'frames'))
 
-			percentComplete = (float(completedTasks) / float(len(taskElements))) * 100
+			# Calculate job progress and update status
+			percentComplete = (float(completedTasks) / float(len(taskElements))) * 100 # this logic is wrong if tasks are unequal size
 			if percentComplete == 0:
-				jobStatus = "Queued"
+				if inProgressTasks == 0:
+					jobStatus = "Queued"
+				else:
+					jobStatus = "In Progress (0%)"
 			elif percentComplete == 100:
 				jobStatus = "Done"
 			else:
@@ -162,6 +193,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 			renderJobItem.setText(6, self.rq.getValue(jobElement, 'user'))
 			renderJobItem.setText(7, self.rq.getValue(jobElement, 'submitTime'))
 
+			# Calculate time taken
 			try:
 				jobTotalTime = str(datetime.timedelta(seconds=int(jobTotalTimeSeconds)))
 			except (TypeError, ValueError):
@@ -195,7 +227,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 	def updateSlaveView(self):
 		""" Update the information in the slave info area.
 		"""
-		self.ui.slaveStatus_label.setText("%s (%s)" %(self.localhost, self.slaveStatus))
+		self.ui.slaveControl_toolButton.setText("%s (%s)" %(self.localhost, self.slaveStatus))
 
 
 	def updateToolbarUI(self):
@@ -410,11 +442,45 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 		""" Enable or disable the local slave.
 		"""
 		if self.slaveStatus == "disabled":
-			self.slaveStatus = "idle"
+			self.setSlaveStatus("idle")
+			# self.slaveStatus = "idle"
+			# statusIcon = QtGui.QIcon()
+			# statusIcon.addPixmap(QtGui.QPixmap(":/rsc/rsc/status_icon_waiting.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+			# self.ui.slaveControl_toolButton.setIcon(statusIcon)
 		else:
-			self.slaveStatus = "disabled"
+			self.setSlaveStatus("disabled")
+			# self.slaveStatus = "disabled"
+			# statusIcon = QtGui.QIcon()
+			# statusIcon.addPixmap(QtGui.QPixmap(":/rsc/rsc/status_icon_stopped.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+			# self.ui.slaveControl_toolButton.setIcon(statusIcon)
 
 		self.updateSlaveView()
+
+
+	def setSlaveStatus(self, status):
+		""" Enable or disable the local slave.
+			TODO: dynamically update the pop-up menu options
+		"""
+		self.slaveStatus = status
+		statusIcon = QtGui.QIcon()
+
+		if status == "disabled":
+			statusIcon.addPixmap(QtGui.QPixmap(":/rsc/rsc/status_icon_stopped.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+			self.ui.slaveControl_toolButton.setChecked(False)
+			self.ui.slaveControl_toolButton.addAction(self.actionSlaveStart)
+		elif status == "idle":
+			self.ui.slaveControl_toolButton.setChecked(True)
+			statusIcon.addPixmap(QtGui.QPixmap(":/rsc/rsc/status_icon_ready.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+			self.ui.slaveControl_toolButton.addAction(self.actionSlaveStop)
+		elif status == "rendering":
+			self.ui.slaveControl_toolButton.setChecked(True)
+			statusIcon.addPixmap(QtGui.QPixmap(":/rsc/rsc/status_icon_ok.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+			self.ui.slaveControl_toolButton.addAction(self.actionSlaveStop)
+			self.ui.slaveControl_toolButton.addAction(self.actionKillTask)
+			self.ui.slaveControl_toolButton.addAction(self.actionSlaveStopAfterTask)
+
+		self.ui.slaveControl_toolButton.setIcon(statusIcon)
+		#self.updateSlaveView()
 
 
 	def dequeue(self):
@@ -453,7 +519,8 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 
 		# Fill info fields
 		self.ui.taskInfo_label.setText("Rendering %s %s from '%s'" %(verbose.pluralise("frame", frameList), frames, self.rq.getValue(jobElement, 'name')))
-		self.ui.runningTime_label.setText(self.rq.getValue(jobElement, 'submitTime')) # change this to display the task running time
+		#self.ui.runningTime_label.setText(self.rq.getValue(jobElement, 'submitTime')) # change this to display the task running time
+		self.ui.runningTime_label.setText(startTime) # change this to display the task running time
 
 		# try:
 		# 	renderCmd = '"%s"' %os.environ['MAYARENDERVERSION'] # store this in XML as maya version may vary with project
@@ -485,28 +552,37 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 		else:
 			cmdStr += '"%s" %s -s %d -e %d "%s"' %(renderCmd, args, int(startFrame), int(endFrame), sceneName)
 
-		self.slaveStatus = "rendering"
-		self.ui.dequeue_toolButton.setEnabled(False)
-		self.ui.slaveStatus_label.setText("%s (%s)" %(self.localhost, self.slaveStatus))
+		# Set rendering status
+		self.setSlaveStatus("rendering")
+		# statusIcon = QtGui.QIcon()
+		# statusIcon.addPixmap(QtGui.QPixmap(":/rsc/rsc/status_icon_ok.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		# self.ui.slaveControl_toolButton.setIcon(statusIcon)
 
-		self.ui.command_lineEdit.setText(cmdStr)
+		#self.ui.processKill_toolButton.setEnabled(True)
+		#self.ui.dequeue_toolButton.setEnabled(False)
+		self.ui.slaveControl_toolButton.setText("%s (%s)" %(self.localhost, self.slaveStatus))
+
+		#self.ui.command_lineEdit.setText(cmdStr)
 		self.startRender(cmdStr) # start the rendering command
 
-		totalTimeSec = time.time() - startTimeSec # calculate time spent rendering task
+		if self.renderProcess.poll() is not None:
+			totalTimeSec = time.time() - startTimeSec # calculate time spent rendering task
 
-		if self.getCheckBoxValue(self.ui.stopAfterTask_checkBox):
-			self.slaveStatus = "disabled"
-			self.ui.slave_toolButton.setChecked(False)
-		else:
-			self.slaveStatus = "idle"
-			#self.ui.slave_toolButton.setChecked(True)
+			# if self.getCheckBoxValue(self.ui.stopAfterTask_checkBox):
+			# 	self.slaveStatus = "disabled"
+			# 	self.ui.slave_toolButton.setChecked(False)
+			# else:
+			# 	self.slaveStatus = "idle"
+			# 	#self.ui.slave_toolButton.setChecked(True)
 
-		self.ui.dequeue_toolButton.setEnabled(True)
-		self.ui.taskInfo_label.setText("")
-		self.ui.runningTime_label.setText("")
-		#self.rq.setStatus(jobID, "In Progress (0%)")
-		self.rq.completeTask(jobID, taskID, totalTimeSec)
-		self.updateRenderQueueView()
+			self.setSlaveStatus("idle")
+
+			#self.ui.dequeue_toolButton.setEnabled(True)
+			self.ui.taskInfo_label.setText("")
+			self.ui.runningTime_label.setText("")
+			#self.rq.setStatus(jobID, "In Progress (0%)")
+			self.rq.completeTask(jobID, taskID, totalTimeSec)
+			self.updateRenderQueueView()
 
 
 	def startRender(self, cmdStr):
@@ -518,12 +594,12 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 
 		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
 			verbose.print_(cmdStr, 4)
-			self.renderProcess = subprocess.Popen(cmdStr, stdout=subprocess.PIPE)
+			self.renderProcess = subprocess.Popen(cmdStr, shell=False, stdout=subprocess.PIPE)
 			output = self.renderProcess.communicate()[0] # find a way to do this without locking the UI
 			self.ui.output_textEdit.setPlainText(output)
-			#self.renderProcess = subprocess.Popen(cmdStr, shell=True) #, stdout=subprocess.PIPE, shell=True)
-			#print self.renderProcess
-			#output = subprocess.Popen(cmdStr, stdout=subprocess.PIPE).communicate()[0] # find a way to do this without locking the UI
+
+		#	self.renderProcess = subprocess.Popen(cmdStr, shell=False)
+
 			#os.system(cmdStr) #, stdout=subprocess.PIPE, shell=True)
 		else:
 			verbose.print_(cmdStr, 4)
@@ -540,10 +616,30 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 		#import signal
 		#import subprocess
 
-		if self.slaveStatus == "rendering":
-			self.renderProcess.terminate()
-		else:
-			print "No render in progress."
+		print "Attempting to kill process %s" %self.renderProcess
+		self.renderProcess.terminate() # kill()
+		# if self.slaveStatus == "rendering":
+		# 	self.renderProcess.terminate()
+		# else:
+		# 	print "No render in progress."
+
+		#totalTimeSec = time.time() - startTimeSec # calculate time spent rendering task
+
+		# if self.getCheckBoxValue(self.ui.stopAfterTask_checkBox):
+		# 	self.slaveStatus = "disabled"
+		# 	self.ui.slave_toolButton.setChecked(False)
+		# else:
+		# 	self.slaveStatus = "idle"
+
+		self.setSlaveStatus("idle")
+		# statusIcon = QtGui.QIcon()
+		# statusIcon.addPixmap(QtGui.QPixmap(":/rsc/rsc/status_icon_waiting.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		# self.ui.slaveControl_toolButton.setIcon(statusIcon)
+
+		self.ui.taskInfo_label.setText("")
+		self.ui.runningTime_label.setText("")
+		self.rq.completeTask(jobID, taskID)
+		self.updateRenderQueueView()
 
 
 
