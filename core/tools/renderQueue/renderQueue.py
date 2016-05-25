@@ -158,7 +158,7 @@ class renderQueue(xmlData.xmlData):
 		#self.loadXML(quiet=True) # reload XML data
 		element = self.root.find("./job[@id='%s']/status" %jobID)
 		#print "Set status", element
-		if element.text == str(status):
+		if element.text == str(status): # do nothing if status hasn't changed
 			return
 		else:
 			element.text = str(status)
@@ -206,9 +206,12 @@ class renderQueue(xmlData.xmlData):
 		"""
 		self.loadXML(quiet=True) # reload XML data
 		element = self.root.find("./job[@id='%s']/task[@id='%s']" %(jobID, taskID)) # get the <task> element
-		element.find('status').text = "Done"
-		element.find('totalTime').text = str(taskTime)
-		self.saveXML()
+		if element.find('status').text == "Done": # do nothing if status is 'Done'
+			return
+		else:
+			element.find('status').text = "Done"
+			element.find('totalTime').text = str(taskTime)
+			self.saveXML()
 
 
 	def requeueTask(self, jobID, taskID):
@@ -216,8 +219,11 @@ class renderQueue(xmlData.xmlData):
 		"""
 		self.loadXML(quiet=True) # reload XML data
 		element = self.root.find("./job[@id='%s']/task[@id='%s']" %(jobID, taskID)) # get the <task> element
-		element.find('status').text = "Queued"
-		element.find('totalTime').text = ""
-		element.find('slave').text = ""
-		self.saveXML()
+		if element.find('status').text == "Queued": # do nothing if status is 'Queued'
+			return
+		else:
+			element.find('status').text = "Queued"
+			element.find('totalTime').text = ""
+			element.find('slave').text = ""
+			self.saveXML()
 
