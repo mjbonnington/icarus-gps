@@ -208,6 +208,8 @@ class renderQueue(xmlData.xmlData):
 		element = self.root.find("./job[@id='%s']/task[@id='%s']" %(jobID, taskID)) # get the <task> element
 		if element.find('status').text == "Done": # do nothing if status is 'Done'
 			return
+		# elif element.find('status').text == "In Progress": # do nothing if status is 'In Progress'
+		# 	return
 		else:
 			element.find('status').text = "Done"
 			element.find('totalTime').text = str(taskTime)
@@ -221,6 +223,8 @@ class renderQueue(xmlData.xmlData):
 		element = self.root.find("./job[@id='%s']/task[@id='%s']" %(jobID, taskID)) # get the <task> element
 		if element.find('status').text == "Queued": # do nothing if status is 'Queued'
 			return
+		# elif element.find('status').text == "In Progress": # do nothing if status is 'In Progress'
+		# 	return
 		else:
 			element.find('status').text = "Queued"
 			element.find('totalTime').text = ""

@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'style_ui.ui'
 #
-# Created: Wed Apr 20 22:02:43 2016
-#      by: pyside-uic 0.2.15 running on PySide 1.2.2
+# Created: Thu May 26 12:57:56 2016
+#      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -752,12 +752,15 @@ class Ui_MainWindow(object):
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-        self.actionTest = QtGui.QAction(MainWindow)
-        self.actionTest.setObjectName("actionTest")
         self.actionMenu = QtGui.QAction(MainWindow)
         self.actionMenu.setObjectName("actionMenu")
-        self.actionItems = QtGui.QAction(MainWindow)
-        self.actionItems.setObjectName("actionItems")
+        self.actionMenu_disabled = QtGui.QAction(MainWindow)
+        self.actionMenu_disabled.setEnabled(False)
+        self.actionMenu_disabled.setObjectName("actionMenu_disabled")
+        self.actionChecked = QtGui.QAction(MainWindow)
+        self.actionChecked.setCheckable(True)
+        self.actionChecked.setChecked(True)
+        self.actionChecked.setObjectName("actionChecked")
         self.actionExit = QtGui.QAction(MainWindow)
         self.actionExit.setObjectName("actionExit")
         self.actionMore = QtGui.QAction(MainWindow)
@@ -766,9 +769,26 @@ class Ui_MainWindow(object):
         self.actionTest_2.setObjectName("actionTest_2")
         self.actionMenu_2 = QtGui.QAction(MainWindow)
         self.actionMenu_2.setObjectName("actionMenu_2")
-        self.menuFile.addAction(self.actionTest)
+        self.actionUnchecked = QtGui.QAction(MainWindow)
+        self.actionUnchecked.setCheckable(True)
+        self.actionUnchecked.setObjectName("actionUnchecked")
+        self.actionChecked_disabled = QtGui.QAction(MainWindow)
+        self.actionChecked_disabled.setCheckable(True)
+        self.actionChecked_disabled.setChecked(True)
+        self.actionChecked_disabled.setEnabled(False)
+        self.actionChecked_disabled.setObjectName("actionChecked_disabled")
+        self.actionUnchecked_disabled = QtGui.QAction(MainWindow)
+        self.actionUnchecked_disabled.setCheckable(True)
+        self.actionUnchecked_disabled.setEnabled(False)
+        self.actionUnchecked_disabled.setObjectName("actionUnchecked_disabled")
         self.menuFile.addAction(self.actionMenu)
-        self.menuFile.addAction(self.actionItems)
+        self.menuFile.addAction(self.actionMenu_disabled)
+        self.menuFile.addSeparator()
+        self.menuFile.addAction(self.actionChecked)
+        self.menuFile.addAction(self.actionUnchecked)
+        self.menuFile.addSeparator()
+        self.menuFile.addAction(self.actionChecked_disabled)
+        self.menuFile.addAction(self.actionUnchecked_disabled)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionExit)
         self.menuEdit.addAction(self.actionMore)
@@ -778,7 +798,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuEdit.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -993,12 +1013,15 @@ class Ui_MainWindow(object):
         self.pushButton_7.setText(QtGui.QApplication.translate("MainWindow", "Button", None, QtGui.QApplication.UnicodeUTF8))
         self.menuFile.setTitle(QtGui.QApplication.translate("MainWindow", "File", None, QtGui.QApplication.UnicodeUTF8))
         self.menuEdit.setTitle(QtGui.QApplication.translate("MainWindow", "Edit", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionTest.setText(QtGui.QApplication.translate("MainWindow", "Test", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionMenu.setText(QtGui.QApplication.translate("MainWindow", "Menu", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionItems.setText(QtGui.QApplication.translate("MainWindow", "Items", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionMenu.setText(QtGui.QApplication.translate("MainWindow", "Menu Item", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionMenu_disabled.setText(QtGui.QApplication.translate("MainWindow", "Menu Item (disabled)", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionChecked.setText(QtGui.QApplication.translate("MainWindow", "Checked", None, QtGui.QApplication.UnicodeUTF8))
         self.actionExit.setText(QtGui.QApplication.translate("MainWindow", "Exit", None, QtGui.QApplication.UnicodeUTF8))
         self.actionMore.setText(QtGui.QApplication.translate("MainWindow", "More", None, QtGui.QApplication.UnicodeUTF8))
         self.actionTest_2.setText(QtGui.QApplication.translate("MainWindow", "Test", None, QtGui.QApplication.UnicodeUTF8))
         self.actionMenu_2.setText(QtGui.QApplication.translate("MainWindow", "Menu", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionUnchecked.setText(QtGui.QApplication.translate("MainWindow", "Unchecked", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionChecked_disabled.setText(QtGui.QApplication.translate("MainWindow", "Checked (disabled)", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionUnchecked_disabled.setText(QtGui.QApplication.translate("MainWindow", "Unchecked (disabled)", None, QtGui.QApplication.UnicodeUTF8))
 
 import rsc_rc

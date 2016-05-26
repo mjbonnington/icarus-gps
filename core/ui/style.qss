@@ -132,27 +132,49 @@ QHeaderView::up-arrow:disabled {
 
 
 
+/* Menu Bar
+ *
+ */
+
+QMenuBar {
+	background-color: #333;
+}
+
+QMenuBar::item {
+	padding: 4px 8px;
+	background: transparent;
+}
+
+QMenuBar::item:selected, QMenuBar::item:pressed {
+	background: #709e32;
+	color: #fff;
+}
+
+/* End Menu Bar */
+
+
+
 /* Menu
  *
  */
 
 QMenu {
-	/*padding: 8px;*/
+	padding: 4px 0px;
 	background: #333;
-	/*border: 1px solid #222;
-	border-radius: 0px;*/
+	border: 1px solid #555;
+	border-radius: 0px;
 }
 
 QMenu::item {
+	padding: 4px 16px 4px 24px;
+	background: transparent;
 	/*background: #333;*/
-	/*padding: 2px 25px 2px 20px;
-	border: 1px solid transparent;*/
+	/*border: 1px solid transparent;*/
 }
 
 QMenu::item:selected {
-	/*border-color: #709e32;
 	background: #709e32;
-	color: #fff*/
+	color: #fff
 }
 
 QMenu::item:selected:disabled {
@@ -160,14 +182,8 @@ QMenu::item:selected:disabled {
 	color: #333;
 }
 
-QMenu::icon:checked { /* appearance of a 'checked' icon */
-	border-color: #709e32;
-	background: #709e32;
-	position: absolute;
-	top: 1px;
-	right: 1px;
-	bottom: 1px;
-	left: 1px;
+QMenu::icon {
+	margin: 4px 6px;
 }
 
 QMenu::separator {
@@ -176,43 +192,60 @@ QMenu::separator {
 	border-bottom: 2px groove #2a2a2a;
 }
 
-QMenu::indicator {
+/* non-exclusive indicator = check box style indicator (see QActionGroup::setExclusive) */
+QMenu::indicator:non-exclusive {
+	margin: 4px 6px;
 	width: 11px;
 	height: 11px;
+	background: #222;
+	border: 1px solid #222;
+	border-radius: 2px;
 }
 
-/* non-exclusive indicator = check box style indicator (see QActionGroup::setExclusive) */
-QMenu::indicator:non-exclusive:unchecked {
-	image: url(:/images/checkbox_unchecked.png);
+QMenu::indicator:non-exclusive:selected {
+	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #333, stop: 1 #3c4b27);
+	/*background-image: url(:/images/checkbox_hover.png);*/
 }
 
-QMenu::indicator:non-exclusive:unchecked:selected {
-	image: url(:/images/checkbox_unchecked_hover.png);
+QMenu::indicator:non-exclusive:selected:disabled {
+	background: #222;
+	/*background-image: none;*/
 }
 
 QMenu::indicator:non-exclusive:checked {
 	image: url(:/images/checkbox_checked.png);
 }
 
-QMenu::indicator:non-exclusive:checked:selected {
-	image: url(:/images/checkbox_checked_hover.png);
+QMenu::indicator:non-exclusive:checked:disabled {
+	image: url(:/images/checkbox_checked_disabled.png);
 }
 
 /* exclusive indicator = radio button style indicator (see QActionGroup::setExclusive) */
-QMenu::indicator:exclusive:unchecked {
-	image: url(:/images/radiobutton_unchecked.png);
+QMenu::indicator:exclusive {
+	margin: 4px 6px;
+	width: 11px;
+	height: 11px;
+	background: #222;
+	border: 1px solid #555;
+	border-radius: 6px;
 }
 
-QMenu::indicator:exclusive:unchecked:selected {
-	image: url(:/images/radiobutton_unchecked_hover.png);
+QMenu::indicator:exclusive:selected {
+	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #333, stop: 1 #3c4b27);
+	/*background-image: url(:/images/radiobutton_hover.png);*/
+}
+
+QMenu::indicator:exclusive:selected:disabled {
+	background: #222;
+	/*background-image: none;*/
 }
 
 QMenu::indicator:exclusive:checked {
 	image: url(:/images/radiobutton_checked.png);
 }
 
-QMenu::indicator:exclusive:checked:selected {
-	image: url(:/images/radiobutton_checked_hover.png);
+QMenu::indicator:exclusive:checked:disabled {
+	image: url(:/images/radiobutton_checked_disabled.png);
 }
 
 /* End Menu */

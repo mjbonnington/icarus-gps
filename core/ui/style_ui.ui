@@ -30,7 +30,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <property name="usesScrollButtons">
        <bool>true</bool>
@@ -194,16 +194,7 @@
                  <enum>QFrame::Raised</enum>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_6">
-                 <property name="leftMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="bottomMargin">
+                 <property name="margin">
                   <number>0</number>
                  </property>
                  <item>
@@ -325,16 +316,7 @@
                  <enum>QFrame::Raised</enum>
                 </property>
                 <layout class="QGridLayout" name="gridLayout">
-                 <property name="leftMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="bottomMargin">
+                 <property name="margin">
                   <number>0</number>
                  </property>
                  <item row="0" column="0">
@@ -859,16 +841,7 @@
               <enum>QFrame::Raised</enum>
              </property>
              <layout class="QGridLayout" name="gridLayout_5">
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
+              <property name="margin">
                <number>0</number>
               </property>
               <item row="0" column="1">
@@ -995,16 +968,7 @@
               <enum>QFrame::Raised</enum>
              </property>
              <layout class="QGridLayout" name="gridLayout_4">
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
+              <property name="margin">
                <number>0</number>
               </property>
               <item row="0" column="1">
@@ -2021,9 +1985,14 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionTest"/>
     <addaction name="actionMenu"/>
-    <addaction name="actionItems"/>
+    <addaction name="actionMenu_disabled"/>
+    <addaction name="separator"/>
+    <addaction name="actionChecked"/>
+    <addaction name="actionUnchecked"/>
+    <addaction name="separator"/>
+    <addaction name="actionChecked_disabled"/>
+    <addaction name="actionUnchecked_disabled"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -2039,19 +2008,28 @@ p, li { white-space: pre-wrap; }
    <addaction name="menuEdit"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionTest">
-   <property name="text">
-    <string>Test</string>
-   </property>
-  </action>
   <action name="actionMenu">
    <property name="text">
-    <string>Menu</string>
+    <string>Menu Item</string>
    </property>
   </action>
-  <action name="actionItems">
+  <action name="actionMenu_disabled">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
-    <string>Items</string>
+    <string>Menu Item (disabled)</string>
+   </property>
+  </action>
+  <action name="actionChecked">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Checked</string>
    </property>
   </action>
   <action name="actionExit">
@@ -2072,6 +2050,39 @@ p, li { white-space: pre-wrap; }
   <action name="actionMenu_2">
    <property name="text">
     <string>Menu</string>
+   </property>
+  </action>
+  <action name="actionUnchecked">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Unchecked</string>
+   </property>
+  </action>
+  <action name="actionChecked_disabled">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Checked (disabled)</string>
+   </property>
+  </action>
+  <action name="actionUnchecked_disabled">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Unchecked (disabled)</string>
    </property>
   </action>
  </widget>
