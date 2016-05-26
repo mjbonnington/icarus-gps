@@ -3,7 +3,7 @@
 # [Icarus] xmlData.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2106 Gramercy Park Studios
+# (c) 2015-2016 Gramercy Park Studios
 #
 # Class for handling generic XML data files via ElementTree.
 # Classes written to handle specific data files should inherit this class.
@@ -26,6 +26,8 @@ class xmlData():
 		"""
 		if datafile is not None:
 			self.datafile = datafile
+
+		verbose.print_("XML read: %s" %self.datafile, 4)
 
 		try:
 			self.tree = ET.parse(self.datafile)
@@ -61,6 +63,8 @@ class xmlData():
 	def saveXML(self):
 		""" Save XML data.
 		"""
+		verbose.print_("XML write: %s" %self.datafile, 4)
+
 		try:
 			self.indent(self.root)
 			self.tree.write(self.datafile, xml_declaration=True, encoding='utf-8')
