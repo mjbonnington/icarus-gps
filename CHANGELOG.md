@@ -1,6 +1,9 @@
-v0.9.4 (TBC)
+v0.9.4 (2016-05-27)
+-	[Icarus] Added distributed render queue system. This UI is intended to replace the command-line submitter and provide a simple queuing system for Maya renders.
 -	[Icarus] Status bar messages are displayed for a variable duration dependent on message length.
 -	[Icarus] Implemented check for Python version at startup - Icarus requires at least version 2.7.
+-	[Maya] Improved V-Ray rendering tools shelf and icons.
+-	[Maya] Added support for Maya 2016 Extension 2.
 
 v0.9.3 (2016-05-10)
 -	[Icarus] Added status bar to main Icarus window to display errors, warnings and info messages.
