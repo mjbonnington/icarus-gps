@@ -1,3 +1,6 @@
+v0.9.5 (--)
+-	[Icarus] 
+
 v0.9.4 (2016-05-27)
 -	[Icarus] Added distributed render queue system. This UI is intended to replace the command-line submitter and provide a simple queuing system for Maya renders.
 -	[Icarus] Status bar messages are displayed for a variable duration dependent on message length.

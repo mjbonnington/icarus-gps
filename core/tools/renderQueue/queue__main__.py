@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 # [Icarus] Batch Render Queue Manager queue__main__.py
-# v0.5
+# v0.6
 #
 # Mike Bonnington <mike.Bonnington@gps-ldn.com>
 # (c) 2016 Gramercy Park Studios
@@ -36,17 +36,6 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 		self.rq.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'renderQueue.xml'))
 
 
-		# Create timers to refresh the view, dequeue tasks, and update elapsed time readouts every n milliseconds
-		timer1 = QtCore.QTimer(self)
-		self.connect(timer1, QtCore.SIGNAL("timeout()"), self.updateRenderQueueView)
-		self.connect(timer1, QtCore.SIGNAL("timeout()"), self.dequeue)
-		timer1.start(5000)
-
-		timer2 = QtCore.QTimer(self)
-		self.connect(timer2, QtCore.SIGNAL("timeout()"), self.updateTimers)
-		timer2.start(1000)
-
-
 		# Create a QProcess object to handle the rendering process asynchronously
 		self.renderProcess = QtCore.QProcess(self)
 		self.renderProcess.finished.connect(self.renderComplete)
@@ -55,9 +44,10 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 
 		# Connect signals & slots
 		self.ui.renderQueue_treeWidget.itemSelectionChanged.connect(self.updateToolbarUI)
+		#self.ui.renderQueue_treeWidget.header().sectionResized.connect(self.rebuildRenderQueueView) # resize progress indicator
 
 		self.ui.jobSubmit_toolButton.clicked.connect(self.launchRenderSubmit)
-		self.ui.refresh_toolButton.clicked.connect(self.updateRenderQueueView)
+		self.ui.refresh_toolButton.clicked.connect(self.rebuildRenderQueueView)
 
 		self.ui.jobPause_toolButton.clicked.connect(lambda *args: self.changePriority(0, absolute=True)) # this lambda function is what's causing the multiple windows issue, no idea why though
 		#self.ui.jobKill_toolButton.clicked.connect(self.killJob) # not yet implemented
@@ -123,7 +113,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 		# Set local slave as disabled initially
 		self.setSlaveStatus("disabled") # store this as a preference or something
 
-		self.updateRenderQueueView()
+		self.rebuildRenderQueueView()
 		self.updateSlaveView()
 		self.updateToolbarUI()
 
@@ -143,30 +133,167 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 		# 	self.renderSubmitApp.show()
 
 
-	def updateRenderQueueView(self):
+	def rebuildRenderQueueView(self):
 		""" Populates the render queue tree view widget with entries for render jobs and tasks.
 			TODO: we probably shouldn't be writing to the XML file here, this function should be read only.
 			We also should find a way to refresh the view without completely rebuilding it every time.
+		"""
+		#self.rq.loadXML(quiet=True) # reload XML data
+
+		# Stop the widget from emitting signals
+		#self.ui.renderQueue_treeWidget.blockSignals(True)
+
+		# # Store expanded items
+		# expandedJobs = []
+		# root = self.ui.renderQueue_treeWidget.invisibleRootItem()
+		# child_count = root.childCount()
+		# for i in range(child_count):
+		# 	item = root.child(i)
+		# 	if item.isExpanded():
+		# 		expandedJobs.append( int(item.text(1)) )
+
+		# Clear tree widget
+		self.ui.renderQueue_treeWidget.clear()
+
+		# Populate tree widget with render jobs
+		self.updateRenderQueueView()
+
+		# for jobElement in self.rq.getJobs():
+		# 	# Get values from XML
+		# 	jobID = jobElement.get('id')
+		# 	jobName = self.rq.getValue(jobElement, 'name')
+		# 	jobType = self.rq.getValue(jobElement, 'type')
+		# 	jobFrames = self.rq.getValue(jobElement, 'frames')
+		# 	jobPriority = self.rq.getValue(jobElement, 'priority')
+		# 	jobStatus = self.rq.getValue(jobElement, 'status')
+		# 	jobUser = self.rq.getValue(jobElement, 'user')
+		# 	jobSubmitTime = self.rq.getValue(jobElement, 'submitTime')
+
+		# 	renderJobItem = QtGui.QTreeWidgetItem(self.ui.renderQueue_treeWidget.invisibleRootItem())
+
+		# 	renderJobItem.setText(0, jobName)
+		# 	renderJobItem.setText(1, jobID)
+		# 	renderJobItem.setText(2, jobType)
+		# 	renderJobItem.setText(3, jobFrames)
+		# 	renderJobItem.setText(4, jobStatus)
+		# 	renderJobItem.setText(5, jobPriority)
+		# 	renderJobItem.setText(6, jobUser)
+		# 	renderJobItem.setText(7, jobSubmitTime)
+
+		# 	jobTotalTimeSeconds = 0
+		# 	inProgressTaskFrameCount = 0
+		# 	completedTaskFrameCount = 0
+		# 	if jobFrames == 'Unknown':
+		# 		totalFrameCount = -1
+		# 	else:
+		# 		totalFrameCount = len(sequence.numList(jobFrames))
+
+		# 	# Populate render tasks
+		# 	taskElements = jobElement.findall('task')
+		# 	for taskElement in taskElements:
+		# 		# Get values from XML
+		# 		taskID = taskElement.get('id')
+		# 		taskFrames = self.rq.getValue(taskElement, 'frames')
+		# 		taskStatus = self.rq.getValue(taskElement, 'status')
+		# 		taskTotalTime = self.rq.getValue(taskElement, 'totalTime')
+		# 		taskSlave = self.rq.getValue(taskElement, 'slave')
+
+		# 		renderTaskItem = QtGui.QTreeWidgetItem(renderJobItem)
+
+		# 		renderTaskItem.setText(0, "Task %s" %taskID)
+		# 		renderTaskItem.setText(1, taskID)
+		# 		renderTaskItem.setText(3, taskFrames)
+		# 		renderTaskItem.setText(4, taskStatus)
+
+		# 		if taskFrames == 'Unknown':
+		# 			if taskStatus == "In Progress":
+		# 				inProgressTaskFrameCount = -1
+		# 			if taskStatus == "Done":
+		# 				completedTaskFrameCount = -1
+		# 		else:
+		# 			taskFrameCount = len(sequence.numList(taskFrames))
+		# 			if taskStatus == "In Progress":
+		# 				inProgressTaskFrameCount += taskFrameCount
+		# 			if taskStatus == "Done":
+		# 				completedTaskFrameCount += taskFrameCount
+
+		# 		# Colour the status text
+		# 		if taskStatus == "In Progress": # and taskSlave == self.localhost:
+		# 			renderTaskItem.setForeground(4, QtGui.QBrush(QtGui.QColor("#00b2ee")))
+		# 		elif taskStatus == "Done": # and taskSlave == self.localhost:
+		# 			renderTaskItem.setForeground(4, QtGui.QBrush(QtGui.QColor("#709e32")))
+
+		# 		try:
+		# 			totalTimeSeconds = float(taskTotalTime) # use float and round for millisecs
+		# 			jobTotalTimeSeconds += totalTimeSeconds
+		# 			totalTime = str(datetime.timedelta(seconds=int(totalTimeSeconds)))
+		# 		except (TypeError, ValueError):
+		# 			totalTime = None
+
+		# 		renderTaskItem.setText(8, totalTime)
+		# 		renderTaskItem.setText(9, taskSlave)
+
+		# 	# Calculate job progress and update status
+		# 	if completedTaskFrameCount == 0:
+		# 		if inProgressTaskFrameCount == 0:
+		# 			jobStatus = "Queued"
+		# 		else:
+		# 			jobStatus = "In Progress (0%)"
+		# 	elif completedTaskFrameCount == totalFrameCount:
+		# 		jobStatus = "Done"
+		# 	else:
+		# 		percentComplete = (float(completedTaskFrameCount) / float(totalFrameCount)) * 100
+		# 		if inProgressTaskFrameCount == 0:
+		# 			jobStatus = "On Hold (%d%%)" %percentComplete
+		# 		else:
+		# 			jobStatus = "In Progress (%d%%)" %percentComplete
+
+		# 	self.rq.setStatus(jobID, jobStatus) # write to xml
+		# 	renderJobItem.setText(4, jobStatus)
+
+		# 	# Calculate time taken
+		# 	try:
+		# 		jobTotalTime = str(datetime.timedelta(seconds=int(jobTotalTimeSeconds)))
+		# 	except (TypeError, ValueError):
+		# 		jobTotalTime = None
+
+		# 	renderJobItem.setText(8, str(jobTotalTime))
+
+		# 	# Re-expand items
+		# 	if int(jobID) in expandedJobs:
+		# 		renderJobItem.setExpanded(True)
+
+		# Resize columns
+		for i in range(0, self.ui.renderQueue_treeWidget.columnCount()):
+			self.ui.renderQueue_treeWidget.resizeColumnToContents(i)
+
+		# Hide ID column
+		self.ui.renderQueue_treeWidget.setColumnHidden(1, True)
+
+		# Sort by submit time column - move this somewhere else?
+		self.ui.renderQueue_treeWidget.sortByColumn(7, QtCore.Qt.DescendingOrder)
+
+		# Retain selection
+		#self.restoreSelection()
+
+		# Re-enable signals
+		#self.ui.renderQueue_treeWidget.blockSignals(False)
+
+		#self.updateSlaveView()
+
+
+	def updateRenderQueueView(self):
+		""" Update the render queue tree view widget with entries for render jobs and tasks.
+			This function will refresh the view by updating the existing items, without completely rebuilding it.
 		"""
 		self.rq.loadXML(quiet=True) # reload XML data
 
 		# Stop the widget from emitting signals
 		self.ui.renderQueue_treeWidget.blockSignals(True)
 
-		# Store expanded items
-		expandedJobs = []
-		root = self.ui.renderQueue_treeWidget.invisibleRootItem()
-		child_count = root.childCount()
-		for i in range(child_count):
-			item = root.child(i)
-			if item.isExpanded():
-				expandedJobs.append( int(item.text(1)) )
-
-		# Clear tree widget
-		self.ui.renderQueue_treeWidget.clear()
-
 		# Populate tree widget with render jobs
 		for jobElement in self.rq.getJobs():
+
 			# Get values from XML
 			jobID = jobElement.get('id')
 			jobName = self.rq.getValue(jobElement, 'name')
@@ -177,8 +304,10 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 			jobUser = self.rq.getValue(jobElement, 'user')
 			jobSubmitTime = self.rq.getValue(jobElement, 'submitTime')
 
-			renderJobItem = QtGui.QTreeWidgetItem(self.ui.renderQueue_treeWidget)
+			# Get the render job item or create it if it doesn't exist
+			renderJobItem = self.getQueueItem(jobID, self.ui.renderQueue_treeWidget.invisibleRootItem())
 
+			# Fill columns with data
 			renderJobItem.setText(0, jobName)
 			renderJobItem.setText(1, jobID)
 			renderJobItem.setText(2, jobType)
@@ -188,7 +317,10 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 			renderJobItem.setText(6, jobUser)
 			renderJobItem.setText(7, jobSubmitTime)
 
+			# Initialise counters and timers
 			jobTotalTimeSeconds = 0
+			inProgressTaskCount = 0
+			completedTaskCount = 0
 			inProgressTaskFrameCount = 0
 			completedTaskFrameCount = 0
 			if jobFrames == 'Unknown':
@@ -199,6 +331,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 			# Populate render tasks
 			taskElements = jobElement.findall('task')
 			for taskElement in taskElements:
+
 				# Get values from XML
 				taskID = taskElement.get('id')
 				taskFrames = self.rq.getValue(taskElement, 'frames')
@@ -206,31 +339,39 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 				taskTotalTime = self.rq.getValue(taskElement, 'totalTime')
 				taskSlave = self.rq.getValue(taskElement, 'slave')
 
-				renderTaskItem = QtGui.QTreeWidgetItem(renderJobItem)
+				# Get the render task item or create it if it doesn't exist
+				renderTaskItem = self.getQueueItem(taskID, renderJobItem)
 
+				# Fill columns with data
 				renderTaskItem.setText(0, "Task %s" %taskID)
 				renderTaskItem.setText(1, taskID)
 				renderTaskItem.setText(3, taskFrames)
 				renderTaskItem.setText(4, taskStatus)
 
+				# Calculate progress
 				if taskFrames == 'Unknown':
 					if taskStatus == "In Progress":
+						inProgressTaskCount += 1
 						inProgressTaskFrameCount = -1
 					if taskStatus == "Done":
+						completedTaskCount += 1
 						completedTaskFrameCount = -1
 				else:
 					taskFrameCount = len(sequence.numList(taskFrames))
 					if taskStatus == "In Progress":
+						inProgressTaskCount += 1
 						inProgressTaskFrameCount += taskFrameCount
 					if taskStatus == "Done":
+						completedTaskCount += 1
 						completedTaskFrameCount += taskFrameCount
 
-				# Colour the status text
-				if taskStatus == "In Progress": # and taskSlave == self.localhost:
-					renderTaskItem.setForeground(4, QtGui.QBrush(QtGui.QColor("#00b2ee")))
-				elif taskStatus == "Done": # and taskSlave == self.localhost:
-					renderTaskItem.setForeground(4, QtGui.QBrush(QtGui.QColor("#709e32")))
+				# # Colour the status text
+				# if taskStatus == "In Progress": # and taskSlave == self.localhost:
+				# 	renderTaskItem.setForeground(4, QtGui.QBrush(QtGui.QColor("#00b2ee")))
+				# elif taskStatus == "Done": # and taskSlave == self.localhost:
+				# 	renderTaskItem.setForeground(4, QtGui.QBrush(QtGui.QColor("#709e32")))
 
+				# Update timers
 				try:
 					totalTimeSeconds = float(taskTotalTime) # use float and round for millisecs
 					jobTotalTimeSeconds += totalTimeSeconds
@@ -256,7 +397,9 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 				else:
 					jobStatus = "In Progress (%d%%)" %percentComplete
 
-			self.rq.setStatus(jobID, jobStatus) # write to xml
+			self.drawJobProgressIndicator(renderJobItem, completedTaskFrameCount, inProgressTaskFrameCount, totalFrameCount)
+
+			self.rq.setStatus(jobID, jobStatus) # write to XML if status has changed
 			renderJobItem.setText(4, jobStatus)
 
 			# Calculate time taken
@@ -266,28 +409,62 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 				jobTotalTime = None
 
 			renderJobItem.setText(8, str(jobTotalTime))
-
-			# Re-expand items
-			if int(jobID) in expandedJobs:
-				renderJobItem.setExpanded(True)
-
-			# Resize columns
-			for i in range(0, self.ui.renderQueue_treeWidget.columnCount()):
-				self.ui.renderQueue_treeWidget.resizeColumnToContents(i)
-
-			# Hide ID column
-			self.ui.renderQueue_treeWidget.setColumnHidden(1, True)
-
-			# Sort by submit time column - move this somewhere else?
-			self.ui.renderQueue_treeWidget.sortByColumn(7, QtCore.Qt.DescendingOrder)
-
-			# Retain selection
-			self.restoreSelection()
+			renderJobItem.setText(9, "%d %s rendering" %(inProgressTaskCount, verbose.pluralise("slave", inProgressTaskCount)))
 
 		# Re-enable signals
 		self.ui.renderQueue_treeWidget.blockSignals(False)
 
-		#self.updateSlaveView()
+
+	def getQueueItem(self, itemID, parent):
+		""" Return the render queue item identified by 'itemID' belonging to 'parent'.
+			If it doesn't exist, return a new item.
+		"""
+		child_count = parent.childCount()
+		for i in range(child_count):
+			item = parent.child(i)
+			if item.text(1) == itemID:
+				return item
+
+		return QtGui.QTreeWidgetItem(parent)
+
+
+	def drawJobProgressIndicator(self, renderJobItem, completedTaskFrameCount, inProgressTaskFrameCount, totalFrameCount):
+		""" 
+		"""
+		import math
+
+		width = self.ui.renderQueue_treeWidget.columnWidth(4)
+		height = self.ui.renderQueue_treeWidget.rowHeight(self.ui.renderQueue_treeWidget.indexFromItem(renderJobItem))
+		doneLevel = math.ceil((float(completedTaskFrameCount) / float(totalFrameCount)) * width)
+		inProgressLevel = doneLevel + math.ceil((float(inProgressTaskFrameCount) / float(totalFrameCount)) * width)
+		#print doneLevel, inProgressLevel
+
+		image = QtGui.QPixmap(width, height)
+
+		qp = QtGui.QPainter()
+		qp.begin(image)
+		pen = QtGui.QPen()
+		pen.setStyle(QtCore.Qt.NoPen)
+		qp.setPen(pen)
+		qp.setBrush(QtGui.QColor("#000000"))
+		qp.drawRect(0, 0, width, height)
+		qp.setBrush(QtGui.QColor("#00779e")) #00b2ee
+		qp.drawRect(0, 0, inProgressLevel, height)
+		qp.setBrush(QtGui.QColor("#486627")) #709e32
+		qp.drawRect(0, 0, doneLevel, height)
+		qp.end()
+
+		# jobProgressBar = QtGui.QLinearGradient(0, 0, self.ui.renderQueue_treeWidget.columnWidth(4), 0)
+		# #jobProgressBar.setColorAt(0, QtGui.QColor("#709e32"))
+		# jobProgressBar.setColorAt(doneLevel-0.01, QtGui.QColor("#709e32"))
+		# jobProgressBar.setColorAt(doneLevel, QtGui.QColor("#00b2ee"))
+		# jobProgressBar.setColorAt(inProgressLevel-0.01, QtGui.QColor("#00b2ee"))
+		# jobProgressBar.setColorAt(inProgressLevel, QtGui.QColor("#000000"))
+		#jobProgressBar.setColorAt(1, QtGui.QColor("#000000"))
+		#return QtGui.QBrush(jobProgressBar)
+		#return QtGui.QBrush(image)
+
+		renderJobItem.setBackground(4, image)
 
 
 	def updateToolbarUI(self):
@@ -352,6 +529,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 
 	def restoreSelection(self):
 		""" Reselect items in the render queue view.
+			This function is now redundant.
 		"""
 		expandedJobs = []
 		root = self.ui.renderQueue_treeWidget.invisibleRootItem()
@@ -378,6 +556,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 
 		try:
 			for item in self.ui.renderQueue_treeWidget.selectedItems():
+				self.ui.renderQueue_treeWidget.takeTopLevelItem( self.ui.renderQueue_treeWidget.indexOfTopLevelItem(item) )
 				if not item.parent(): # if item has no parent then it must be a top level item, and therefore also a job
 					jobIDs.append( int(item.text(1)) )
 
@@ -385,7 +564,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 				self.rq.deleteJob(jobID)
 				verbose.print_("Job ID: %s Deleted." %jobID, 3)
 
-			self.updateRenderQueueView()
+			#self.updateRenderQueueView()
 
 		except ValueError:
 			pass
@@ -393,7 +572,11 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 
 	def changePriority(self, amount=0, absolute=False):
 		""" Changes priority of the selected render.
+			This function is called with 'absolute=False' when the 'Reprioritise' slider is dragged.
+			And 'absolute=True' when we want to set the priority directly, e.g. when a job is paused.
 		"""
+		self.timerUpdateView.stop() # don't update the view when dragging the slider
+
 		try:
 			for item in self.ui.renderQueue_treeWidget.selectedItems():
 				if not item.parent(): # if item has no parent then it must be a top level item, and therefore also a job
@@ -422,7 +605,8 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 
 
 	def updatePriority(self):
-		""" Store the changed priority value(s).
+		""" Read the the changed priority value(s) from the UI and store in the XML database.
+			This function is called when the 'Reprioritise' slider is released, or when we want to set the priority directly.
 		"""
 		try:
 			for item in self.ui.renderQueue_treeWidget.selectedItems():
@@ -437,6 +621,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 			pass
 
 		self.ui.jobPriority_slider.setValue(0) # reset priority slider to zero when released
+		self.timerUpdateView.start() # restart the timer to periodically update the view
 
 
 	# def resubmitJob(self):
@@ -561,7 +746,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 			self.actionSlaveContinueAfterTask.setVisible(True)
 			self.actionSlaveStopAfterTask.setVisible(True)
 
-			# self.ui.taskInfo_label.setText("Rendering %s %s from '%s'" %(verbose.pluralise("frame", frameList), frames, self.rq.getValue(jobElement, 'name')))
+			# self.ui.taskInfo_label.setText("Rendering %s %s from '%s'" %(verbose.pluralise("frame", len(frameList)), frames, self.rq.getValue(jobElement, 'name')))
 			# self.ui.runningTime_label.setText(startTime) # change this to display the task running time
 
 		verbose.print_("[%s] Local slave %s." %(self.localhost, self.slaveStatus), 3)
@@ -642,7 +827,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 #		verbose.print_(cmdStr, 4)
 
 		# Fill info fields
-		self.ui.taskInfo_label.setText("Rendering %s %s from '%s'" %(verbose.pluralise("frame", frameList), frames, self.rq.getValue(jobElement, 'name')))
+		self.ui.taskInfo_label.setText("Rendering %s %s from '%s'" %(verbose.pluralise("frame", len(frameList)), frames, self.rq.getValue(jobElement, 'name')))
 		#self.ui.runningTime_label.setText(startTime) # change this to display the task running time
 		self.ui.runningTime_label.setText( str(datetime.timedelta(seconds=0)) )
 
@@ -705,6 +890,52 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 		#self.setSlaveStatus("disabled")
 
 		#self.updateRenderQueueView()
+
+
+	def showEvent(self, event):
+		""" Event handler for when window is shown.
+		"""
+
+		# Create timers to refresh the view, dequeue tasks, and update elapsed time readouts every n milliseconds
+		self.timerUpdateView = QtCore.QTimer(self)
+		self.timerUpdateView.timeout.connect(self.updateRenderQueueView)
+		self.timerUpdateView.start(5000)
+
+		self.timerDequeue = QtCore.QTimer(self)
+		self.timerDequeue.timeout.connect(self.dequeue)
+		self.timerDequeue.start(5000) # should only happen when slave is enabled
+
+		self.timerUpdateTimer = QtCore.QTimer(self)
+		self.timerUpdateTimer.timeout.connect(self.updateTimers)
+		self.timerUpdateTimer.start(1000)
+
+
+	def closeEvent(self, event):
+		""" Event handler for when window is closed.
+		"""
+
+		# Confirmation dialog
+		if self.slaveStatus == "rendering":
+			import pDialog
+
+			dialogTitle = 'Render in progress'
+			dialogMsg = ''
+			dialogMsg += 'There is currently a render in progress on the local slave. Closing the Render Queue window will also kill the render.\n'
+			dialogMsg += 'Are you sure you want to quit?'
+
+			dialog = pDialog.dialog()
+			if dialog.dialogWindow(dialogMsg, dialogTitle):
+				event.accept()
+			else:
+				event.ignore()
+				return
+
+		self.killRenderProcess()
+
+		# Stop timers
+		self.timerUpdateView.stop()
+		self.timerDequeue.stop()
+		self.timerUpdateTimer.stop()
 
 
 

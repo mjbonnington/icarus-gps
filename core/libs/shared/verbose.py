@@ -283,13 +283,13 @@ def xmlData_readError(datafile):
 	print_( "Warning: XML data file is invalid or doesn't exist: %s" % datafile, 2 )
 
 
-def pluralise(noun, ls=None):
+def pluralise(noun, count=None):
 	""" Pluralise nouns.
-		if 'list' is given, return singular if list length is 1, otherwise return plural form.
+		if 'count' variable is given, return singular if count is 1, otherwise return plural form.
 		In the name of simplicity, this function is far from exhaustive.
 	"""
-	if ls is not None:
-		if len(ls) == 1:
+	if count is not None:
+		if count == 1:
 			return noun
 
 	import re

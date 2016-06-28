@@ -173,7 +173,7 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 		if self.ui.overrideFrameRange_groupBox.isChecked():
 			frames = self.ui.frameRange_lineEdit.text()
 			taskSize = self.ui.taskSize_spinBox.value()
-			framesMsg = '%d frames to be rendered; %d task(s) to be submitted.\n' %(len(self.numList), len(self.taskList))
+			framesMsg = '%d %s to be rendered; %d %s to be submitted.\n' %(len(self.numList), verbose.pluralise("frame", len(self.numList)), len(self.taskList), verbose.pluralise("task", len(self.taskList)))
 		else:
 			frames = 'Unknown'
 			taskSize = 'Unknown'
