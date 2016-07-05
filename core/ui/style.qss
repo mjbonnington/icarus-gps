@@ -563,20 +563,21 @@ QListWidget {
  *
  */
 
-QTreeView {
-	/*border: 1px solid #222;
-	background: #222;*/
-}
+/*QTreeView {
+	border: 1px solid #222;
+	background: #222;
+}*/
 
 /*QTreeView::item {
 	padding: 16px;
+	background-repeat: no-repeat;
 }
 
 QTreeView::icon {
 	height: 18px;
-}*/
+}
 
-/*QTreeView::branch {
+QTreeView::branch {
 	border-image: none;
 }
 
