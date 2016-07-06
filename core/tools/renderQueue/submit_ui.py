@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'submit_ui.ui'
 #
-# Created: Wed May 18 17:02:32 2016
+# Created: Wed Jul 06 15:09:38 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -24,11 +24,16 @@ class Ui_Dialog(object):
         self.verticalLayout = QtGui.QVBoxLayout(self.main_frame)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.scene_horizontalLayout = QtGui.QHBoxLayout()
-        self.scene_horizontalLayout.setObjectName("scene_horizontalLayout")
+        self.basic_formLayout = QtGui.QFormLayout()
+        self.basic_formLayout.setObjectName("basic_formLayout")
         self.scene_label = QtGui.QLabel(self.main_frame)
         self.scene_label.setObjectName("scene_label")
-        self.scene_horizontalLayout.addWidget(self.scene_label)
+        self.basic_formLayout.setWidget(1, QtGui.QFormLayout.LabelRole, self.scene_label)
+        self.type_label = QtGui.QLabel(self.main_frame)
+        self.type_label.setObjectName("type_label")
+        self.basic_formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.type_label)
+        self.scene_horizontalLayout = QtGui.QHBoxLayout()
+        self.scene_horizontalLayout.setObjectName("scene_horizontalLayout")
         self.scene_comboBox = QtGui.QComboBox(self.main_frame)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -43,7 +48,21 @@ class Ui_Dialog(object):
         self.sceneBrowse_toolButton = QtGui.QToolButton(self.main_frame)
         self.sceneBrowse_toolButton.setObjectName("sceneBrowse_toolButton")
         self.scene_horizontalLayout.addWidget(self.sceneBrowse_toolButton)
-        self.verticalLayout.addLayout(self.scene_horizontalLayout)
+        self.basic_formLayout.setLayout(1, QtGui.QFormLayout.FieldRole, self.scene_horizontalLayout)
+        self.type_horizontalLayout = QtGui.QHBoxLayout()
+        self.type_horizontalLayout.setObjectName("type_horizontalLayout")
+        self.type_comboBox = QtGui.QComboBox(self.main_frame)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.type_comboBox.sizePolicy().hasHeightForWidth())
+        self.type_comboBox.setSizePolicy(sizePolicy)
+        self.type_comboBox.setObjectName("type_comboBox")
+        self.type_comboBox.addItem("")
+        self.type_comboBox.addItem("")
+        self.type_horizontalLayout.addWidget(self.type_comboBox)
+        self.basic_formLayout.setLayout(0, QtGui.QFormLayout.FieldRole, self.type_horizontalLayout)
+        self.verticalLayout.addLayout(self.basic_formLayout)
         self.line = QtGui.QFrame(self.main_frame)
         self.line.setFrameShape(QtGui.QFrame.HLine)
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
@@ -142,9 +161,7 @@ class Ui_Dialog(object):
         QtCore.QObject.connect(self.taskSize_slider, QtCore.SIGNAL("valueChanged(int)"), self.taskSize_spinBox.setValue)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
         Dialog.setTabOrder(self.submit_pushButton, self.close_pushButton)
-        Dialog.setTabOrder(self.close_pushButton, self.scene_comboBox)
-        Dialog.setTabOrder(self.scene_comboBox, self.sceneBrowse_toolButton)
-        Dialog.setTabOrder(self.sceneBrowse_toolButton, self.overrideFrameRange_groupBox)
+        Dialog.setTabOrder(self.close_pushButton, self.overrideFrameRange_groupBox)
         Dialog.setTabOrder(self.overrideFrameRange_groupBox, self.frameRange_lineEdit)
         Dialog.setTabOrder(self.frameRange_lineEdit, self.taskSize_spinBox)
         Dialog.setTabOrder(self.taskSize_spinBox, self.taskSize_slider)
@@ -154,9 +171,12 @@ class Ui_Dialog(object):
         Dialog.setTabOrder(self.priority_spinBox, self.priority_slider)
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Submit Maya Render", None, QtGui.QApplication.UnicodeUTF8))
+        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Submit Render", None, QtGui.QApplication.UnicodeUTF8))
         self.scene_label.setText(QtGui.QApplication.translate("Dialog", "Scene:", None, QtGui.QApplication.UnicodeUTF8))
+        self.type_label.setText(QtGui.QApplication.translate("Dialog", "Type:", None, QtGui.QApplication.UnicodeUTF8))
         self.sceneBrowse_toolButton.setText(QtGui.QApplication.translate("Dialog", "...", None, QtGui.QApplication.UnicodeUTF8))
+        self.type_comboBox.setItemText(0, QtGui.QApplication.translate("Dialog", "Maya", None, QtGui.QApplication.UnicodeUTF8))
+        self.type_comboBox.setItemText(1, QtGui.QApplication.translate("Dialog", "Nuke", None, QtGui.QApplication.UnicodeUTF8))
         self.overrideFrameRange_groupBox.setToolTip(QtGui.QApplication.translate("Dialog", "Allows the frame range(s) to be explicitly stated. If unchecked, the start and end frames will be read from the scene.", None, QtGui.QApplication.UnicodeUTF8))
         self.overrideFrameRange_groupBox.setTitle(QtGui.QApplication.translate("Dialog", "Override frame range", None, QtGui.QApplication.UnicodeUTF8))
         self.taskSize_label.setText(QtGui.QApplication.translate("Dialog", "Task size:", None, QtGui.QApplication.UnicodeUTF8))

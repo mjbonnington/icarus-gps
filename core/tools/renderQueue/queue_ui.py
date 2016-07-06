@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'queue_ui.ui'
 #
-# Created: Tue May 24 19:50:49 2016
+# Created: Wed Jul 06 15:56:52 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -32,8 +32,8 @@ class Ui_MainWindow(object):
         self.jobSubmit_toolButton = QtGui.QToolButton(self.view_groupBox)
         self.jobSubmit_toolButton.setMinimumSize(QtCore.QSize(64, 0))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_maya.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_maya_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_render.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_render_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
         self.jobSubmit_toolButton.setIcon(icon)
         self.jobSubmit_toolButton.setIconSize(QtCore.QSize(32, 32))
         self.jobSubmit_toolButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
@@ -230,7 +230,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Render Queue", None, QtGui.QApplication.UnicodeUTF8))
         self.view_groupBox.setTitle(QtGui.QApplication.translate("MainWindow", "Queue", None, QtGui.QApplication.UnicodeUTF8))
-        self.jobSubmit_toolButton.setToolTip(QtGui.QApplication.translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Submit a new render job</span></p><p>Currently only Maya render jobs are supported.</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.jobSubmit_toolButton.setToolTip(QtGui.QApplication.translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Submit a new render job</span></p><p>Maya and Nuke render jobs are supported.</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.jobSubmit_toolButton.setText(QtGui.QApplication.translate("MainWindow", "Submit", None, QtGui.QApplication.UnicodeUTF8))
         self.refresh_toolButton.setToolTip(QtGui.QApplication.translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Refresh the render queue view</span></p><p>Force reload the render queue database and update the view. Note the view is automatically updated every 5 seconds.</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.refresh_toolButton.setText(QtGui.QApplication.translate("MainWindow", "Refresh", None, QtGui.QApplication.UnicodeUTF8))

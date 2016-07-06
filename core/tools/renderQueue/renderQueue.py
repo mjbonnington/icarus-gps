@@ -17,14 +17,20 @@ class renderQueue(xmlData.xmlData):
 		Inherits xmlData class
 	"""
 
-	def newJob(self, genericOpts, mayaOpts, tasks, user, submitTime):
+	def newJob(self, genericOpts, renderOpts, tasks, user, submitTime):
 		""" Create a new render job on submission.
 		"""
 		self.loadXML(quiet=True) # reload XML data
 		jobID = self.getNextID()
 
 		jobName, jobType, priority, frames, taskSize = genericOpts
-		mayaScene, mayaProject, mayaFlags, mayaRenderCmd = mayaOpts
+		#print jobType
+		if jobType == 'Maya':
+			#print "a"
+			mayaScene, mayaProject, mayaFlags, mayaRenderCmd = renderOpts
+		elif jobType == 'Nuke':
+			#print "b"
+			nukeScript, nukeFlags, nukeRenderCmd = renderOpts
 
 		jobElement = self.root.find("job[@id='%s']" %jobID)
 		if jobElement is None:
@@ -58,17 +64,28 @@ class renderQueue(xmlData.xmlData):
 			# totalTimeElement = ET.SubElement(jobElement, 'totalTime')
 			# totalTimeElement.text = "0"
 
-			mayaSceneElement = ET.SubElement(jobElement, 'mayaScene')
-			mayaSceneElement.text = str(mayaScene)
+			if jobType == 'Maya':
+				mayaSceneElement = ET.SubElement(jobElement, 'mayaScene')
+				mayaSceneElement.text = str(mayaScene)
 
-			mayaProjectElement = ET.SubElement(jobElement, 'mayaProject')
-			mayaProjectElement.text = str(mayaProject)
+				mayaProjectElement = ET.SubElement(jobElement, 'mayaProject')
+				mayaProjectElement.text = str(mayaProject)
 
-			mayaFlagsElement = ET.SubElement(jobElement, 'mayaFlags')
-			mayaFlagsElement.text = str(mayaFlags)
+				mayaFlagsElement = ET.SubElement(jobElement, 'mayaFlags')
+				mayaFlagsElement.text = str(mayaFlags)
 
-			mayaRenderCmdElement = ET.SubElement(jobElement, 'mayaRenderCmd')
-			mayaRenderCmdElement.text = str(mayaRenderCmd)
+				mayaRenderCmdElement = ET.SubElement(jobElement, 'mayaRenderCmd')
+				mayaRenderCmdElement.text = str(mayaRenderCmd)
+
+			elif jobType == 'Nuke':
+				nukeScriptElement = ET.SubElement(jobElement, 'nukeScript')
+				nukeScriptElement.text = str(nukeScript)
+
+				nukeFlagsElement = ET.SubElement(jobElement, 'nukeFlags')
+				nukeFlagsElement.text = str(nukeFlags)
+
+				nukeRenderCmdElement = ET.SubElement(jobElement, 'nukeRenderCmd')
+				nukeRenderCmdElement.text = str(nukeRenderCmd)
 
 			for i in range(len(tasks)):
 				taskElement = ET.SubElement(jobElement, 'task')

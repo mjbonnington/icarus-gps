@@ -81,15 +81,16 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 		# self.actionSubmitMaya.setIcon(mayaIcon)
 		# self.actionSubmitMaya.triggered.connect(self.launchRenderSubmit)
 		# self.ui.jobSubmit_toolButton.addAction(self.actionSubmitMaya)
+		# #self.actionSubmitMaya.setEnabled(False)
 
 		# self.actionSubmitNuke = QtGui.QAction("Nuke...", None)
 		# nukeIcon = QtGui.QIcon()
 		# nukeIcon.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_nuke.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 		# nukeIcon.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_nuke_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
 		# self.actionSubmitNuke.setIcon(nukeIcon)
-		# #self.actionSubmitNuke.triggered.connect(self.launchRenderSubmit)
+		# self.actionSubmitNuke.triggered.connect(self.launchRenderSubmit)
 		# self.ui.jobSubmit_toolButton.addAction(self.actionSubmitNuke)
-		# self.actionSubmitNuke.setEnabled(False)
+		# #self.actionSubmitNuke.setEnabled(False)
 
 
 		# Add context menu items to slave control tool button
@@ -701,35 +702,55 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 			endFrame = max(frameList)
 
 
-		# try:
-		# 	renderCmd = '"%s"' %os.environ['MAYARENDERVERSION'] # store this in XML as maya version may vary with project
-		# except KeyError:
-		# 	print "ERROR: Path to Maya Render command executable not found. This can be set with the environment variable 'MAYARENDERVERSION'."
-		#renderCmd = '"%s"' %os.path.normpath(self.rq.getValue(jobElement, 'mayaRenderCmd'))
-		renderCmd = self.rq.getValue(jobElement, 'mayaRenderCmd')
-		# if not os.path.isfile(renderCmd): # disabled this check 
-		# 	print "ERROR: Maya render command not found: %s" %renderCmd
-		# 	return False
+		jobType = self.rq.getValue(jobElement, 'type')
+		if jobType == 'Maya':
+			# try:
+			# 	renderCmd = '"%s"' %os.environ['MAYARENDERVERSION'] # store this in XML as maya version may vary with project
+			# except KeyError:
+			# 	print "ERROR: Path to Maya Render command executable not found. This can be set with the environment variable 'MAYARENDERVERSION'."
+			#renderCmd = '"%s"' %os.path.normpath(self.rq.getValue(jobElement, 'mayaRenderCmd'))
+			renderCmd = self.rq.getValue(jobElement, 'mayaRenderCmd')
+			# if not os.path.isfile(renderCmd): # disabled this check 
+			# 	print "ERROR: Maya render command not found: %s" %renderCmd
+			# 	return False
 
-		sceneName = self.rq.getValue(jobElement, 'mayaScene')
-		# if not os.path.isfile(sceneName): # check scene exists - disabled for now as could cause slave to get stuck in a loop
-		# 	print "ERROR: Scene not found: %s" %sceneName
-		# 	self.rq.requeueTask(self.renderJobID, self.renderTaskID)
-		# 	#self.rq.setStatus(self.renderJobID, "Failed")
-		# 	return False
+			sceneName = self.rq.getValue(jobElement, 'mayaScene')
+			# if not os.path.isfile(sceneName): # check scene exists - disabled for now as could cause slave to get stuck in a loop
+			# 	print "ERROR: Scene not found: %s" %sceneName
+			# 	self.rq.requeueTask(self.renderJobID, self.renderTaskID)
+			# 	#self.rq.setStatus(self.renderJobID, "Failed")
+			# 	return False
 
-		cmdStr = ''
-		args = '-proj "%s"' %self.rq.getValue(jobElement, 'mayaProject')
+			cmdStr = ''
+			args = '-proj "%s"' %self.rq.getValue(jobElement, 'mayaProject')
 
-		mayaFlags = self.rq.getValue(jobElement, 'mayaFlags')
-		if mayaFlags is not None:
-			args += ' %s' %self.rq.getValue(jobElement, 'mayaFlags')
+			mayaFlags = self.rq.getValue(jobElement, 'mayaFlags')
+			if mayaFlags is not None:
+				args += ' %s' %mayaFlags
 
-		# Construct command(s)
-		if frames == 'Unknown':
-			cmdStr = '"%s" %s "%s"' %(renderCmd, args, sceneName)
-		else:
-			cmdStr += '"%s" %s -s %d -e %d "%s"' %(renderCmd, args, int(startFrame), int(endFrame), sceneName)
+			# Construct command(s)
+			if frames == 'Unknown':
+				cmdStr = '"%s" %s "%s"' %(renderCmd, args, sceneName)
+			else:
+				cmdStr += '"%s" %s -s %d -e %d "%s"' %(renderCmd, args, int(startFrame), int(endFrame), sceneName)
+
+		elif jobType == 'Nuke':
+			renderCmd = self.rq.getValue(jobElement, 'nukeRenderCmd')
+			scriptName = self.rq.getValue(jobElement, 'nukeScript')
+
+			cmdStr = ''
+			args = ''
+
+			nukeFlags = self.rq.getValue(jobElement, 'nukeFlags')
+			if nukeFlags is not None:
+				args += ' %s' %nukeFlags
+
+			# Construct command(s)
+			if frames == 'Unknown':
+				cmdStr = '"%s" %s -x "%s"' %(renderCmd, args, scriptName)
+			else:
+				cmdStr += '"%s" %s -F %s -x "%s"' %(renderCmd, args, frames, scriptName)
+
 
 		# Set rendering status
 #		verbose.print_(cmdStr, 4)

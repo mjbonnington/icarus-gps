@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Submit Maya Render</string>
+   <string>Submit Render</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <property name="margin">
@@ -33,39 +33,74 @@
        <number>0</number>
       </property>
       <item>
-       <layout class="QHBoxLayout" name="scene_horizontalLayout">
-        <item>
+       <layout class="QFormLayout" name="basic_formLayout">
+        <item row="1" column="0">
          <widget class="QLabel" name="scene_label">
           <property name="text">
            <string>Scene:</string>
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QComboBox" name="scene_comboBox">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="editable">
-           <bool>false</bool>
-          </property>
-          <property name="maxCount">
-           <number>10</number>
-          </property>
-          <property name="insertPolicy">
-           <enum>QComboBox::InsertAtTop</enum>
+        <item row="0" column="0">
+         <widget class="QLabel" name="type_label">
+          <property name="text">
+           <string>Type:</string>
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QToolButton" name="sceneBrowse_toolButton">
-          <property name="text">
-           <string>...</string>
-          </property>
-         </widget>
+        <item row="1" column="1">
+         <layout class="QHBoxLayout" name="scene_horizontalLayout">
+          <item>
+           <widget class="QComboBox" name="scene_comboBox">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="editable">
+             <bool>false</bool>
+            </property>
+            <property name="maxCount">
+             <number>10</number>
+            </property>
+            <property name="insertPolicy">
+             <enum>QComboBox::InsertAtTop</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="sceneBrowse_toolButton">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="0" column="1">
+         <layout class="QHBoxLayout" name="type_horizontalLayout">
+          <item>
+           <widget class="QComboBox" name="type_comboBox">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <item>
+             <property name="text">
+              <string>Maya</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Nuke</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
@@ -288,8 +323,6 @@
  <tabstops>
   <tabstop>submit_pushButton</tabstop>
   <tabstop>close_pushButton</tabstop>
-  <tabstop>scene_comboBox</tabstop>
-  <tabstop>sceneBrowse_toolButton</tabstop>
   <tabstop>overrideFrameRange_groupBox</tabstop>
   <tabstop>frameRange_lineEdit</tabstop>
   <tabstop>taskSize_spinBox</tabstop>
