@@ -24,7 +24,7 @@ class dialog(QtGui.QDialog):
 		# Apply UI style sheet
 		qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
 		with open(qss, "r") as fh:
-			self.ui.main_frame.setStyleSheet(fh.read())
+			self.setStyleSheet(fh.read())
 
 
 	def dialogWindow(self, dialogMsg, dialogTitle, conf=False, modal=True):

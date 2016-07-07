@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'submit_ui.ui'
 #
-# Created: Wed Jul 06 15:09:38 2016
+# Created: Thu Jul 07 12:06:34 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(512, 320)
+        Dialog.resize(512, 331)
         self.verticalLayout_2 = QtGui.QVBoxLayout(Dialog)
         self.verticalLayout_2.setContentsMargins(8, 8, 8, 8)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
@@ -86,6 +86,7 @@ class Ui_Dialog(object):
         self.taskSize_horizontalLayout = QtGui.QHBoxLayout()
         self.taskSize_horizontalLayout.setObjectName("taskSize_horizontalLayout")
         self.taskSize_spinBox = QtGui.QSpinBox(self.overrideFrameRange_groupBox)
+        self.taskSize_spinBox.setButtonSymbols(QtGui.QAbstractSpinBox.NoButtons)
         self.taskSize_spinBox.setMinimum(1)
         self.taskSize_spinBox.setMaximum(9999)
         self.taskSize_spinBox.setObjectName("taskSize_spinBox")
@@ -123,6 +124,7 @@ class Ui_Dialog(object):
         self.priority_horizontalLayout = QtGui.QHBoxLayout()
         self.priority_horizontalLayout.setObjectName("priority_horizontalLayout")
         self.priority_spinBox = QtGui.QSpinBox(self.submit_groupBox)
+        self.priority_spinBox.setButtonSymbols(QtGui.QAbstractSpinBox.NoButtons)
         self.priority_spinBox.setMinimum(0)
         self.priority_spinBox.setMaximum(100)
         self.priority_spinBox.setProperty("value", 50)

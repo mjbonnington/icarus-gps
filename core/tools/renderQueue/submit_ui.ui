@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>512</width>
-    <height>320</height>
+    <height>331</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -154,6 +154,9 @@
              <property name="toolTip">
               <string>How many frames to submit for each task.</string>
              </property>
+             <property name="buttonSymbols">
+              <enum>QAbstractSpinBox::NoButtons</enum>
+             </property>
              <property name="suffix">
               <string> frame(s)</string>
              </property>
@@ -239,6 +242,9 @@
             <widget class="QSpinBox" name="priority_spinBox">
              <property name="toolTip">
               <string>Set the priority for this render job. Setting the priority to zero will pause the job.</string>
+             </property>
+             <property name="buttonSymbols">
+              <enum>QAbstractSpinBox::NoButtons</enum>
              </property>
              <property name="minimum">
               <number>0</number>

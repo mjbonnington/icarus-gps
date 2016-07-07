@@ -24,6 +24,11 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 		self.ui = Ui_Dialog()
 		self.ui.setupUi(self)
 
+		# # Apply UI style sheet
+		# qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
+		# with open(qss, "r") as fh:
+		# 	self.setStyleSheet(fh.read())
+
 		# Read user prefs config file file - if it doesn't exist it will be created
 		userPrefs.read()
 
@@ -33,19 +38,40 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 				self.jobType = userPrefs.config.get('main', 'lastrenderjobtype')
 			except:
 				self.jobType = self.ui.type_comboBox.currentText()
+
+			self.ui.type_comboBox.setCurrentIndex(self.ui.type_comboBox.findText(self.jobType))
+			self.setJobType()
+			self.setSceneList()
+
 		elif os.environ['ICARUSENVAWARE'] == 'MAYA':
-			self.setScene()
 			self.jobType = 'Maya'
+			self.ui.type_comboBox.setCurrentIndex(self.ui.type_comboBox.findText(self.jobType))
+			self.setJobType()
+
+			import maya.cmds as mc
+			sceneName = mc.file(query=True, sceneName=True)
+			print sceneName
+			if sceneName: # check we're not working in an unsaved scene
+				relPath = self.relativePath(os.path.normpath(sceneName))
+				if relPath:
+					self.ui.scene_comboBox.addItem(relPath)
+			else:
+				mc.warning("Scene must be saved before submitting render.")
+				self.ui.submit_pushButton.setEnabled(False)
+
 			self.ui.type_comboBox.setEnabled(False)
 			self.ui.scene_comboBox.setEnabled(False)
-			self.ui.sceneBrowse_toolButton.setEnabled(False)
+			self.ui.sceneBrowse_toolButton.hide()
+
+
 		elif os.environ['ICARUSENVAWARE'] == 'NUKE':
 			self.jobType = 'Nuke'
+			self.ui.type_comboBox.setCurrentIndex(self.ui.type_comboBox.findText(self.jobType))
+			self.setJobType()
+			# TODO - populate script file
 			self.ui.type_comboBox.setEnabled(False)
-
-		self.ui.type_comboBox.setCurrentIndex(self.ui.type_comboBox.findText(self.jobType))
-		self.setJobType()
-		self.setSceneList() # tidy this up
+			self.ui.scene_comboBox.setEnabled(False)
+			self.ui.sceneBrowse_toolButton.hide()
 
 		self.numList = []
 		self.resetFrameList()
@@ -67,21 +93,6 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 		# Set input validators
 		frame_list_validator = QtGui.QRegExpValidator( QtCore.QRegExp(r'[\d\-, ]+'), self.ui.frameRange_lineEdit)
 		self.ui.frameRange_lineEdit.setValidator(frame_list_validator)
-
-
-	def relativePath(self, absPath):
-		if absPath.startswith(self.relativeScenesDir):
-			return absPath.replace(self.relativeScenesDir, self.relativeScenesToken)
-		else:
-			return False
-
-
-	def absolutePath(self, relPath):
-		return relPath.replace(self.relativeScenesToken, self.relativeScenesDir)
-
-
-	def tglSubmit(self, option):
-		self.ui.submit_pushButton.setEnabled(option)
 
 
 	def setJobTypeFromComboBox(self):
@@ -120,24 +131,19 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 			pass
 
 
-	def setScene(self):
-		""" Clear scene menu and auto polpulate with the current scene when in Maya or Nuke environment.
+	def relativePath(self, absPath):
+		""" Convert an absolute path to a relative path.
 		"""
-		self.ui.scene_comboBox.clear()
-
-#		try:
-		import maya.cmds as mc
-		sceneName = mc.file(query=True, sceneName=True)
-		# Check we're not working in an unsaved scene
-		if sceneName:
-			# relPath = self.relativePath(sceneName)
-			# if relPath:
-			# 	self.ui.scene_comboBox.addItem(relPath)
-			self.ui.scene_comboBox.addItem(sceneName)
+		if absPath.startswith(self.relativeScenesDir):
+			return absPath.replace(self.relativeScenesDir, self.relativeScenesToken)
 		else:
-			mc.warning("Scene must be saved before submitting render.")
-#		except:
-#			pass
+			return False
+
+
+	def absolutePath(self, relPath):
+		""" Convert a relative path to an absolute path.
+		"""
+		return relPath.replace(self.relativeScenesToken, self.relativeScenesDir)
 
 
 	def sceneBrowse(self):
@@ -182,27 +188,16 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 		self.calcFrameList()
 
 
-	def validateFrameList(self):
-		""" Validate the frame range list in realtime as the text field is edited.
-		"""
-		self.numList = sequence.numList(self.ui.frameRange_lineEdit.text(), quiet=True)
-		if self.numList == False:
-			self.tglSubmit(False)
-		else:
-			self.tglSubmit(True)
-
-
 	def calcFrameList(self, quiet=True):
 		""" Calculate list of frames to be rendered.
 		"""
-		self.numList = sequence.numList(self.ui.frameRange_lineEdit.text())
+		self.numList = sequence.numList(self.ui.frameRange_lineEdit.text(), quiet=True)
 		taskSize = self.ui.taskSize_spinBox.value()
 		if self.numList == False:
 			if not quiet:
 				verbose.print_("Warning: Invalid entry for frame range.", 2)
-			self.tglSubmit(False)
+			return False
 		else:
-			self.tglSubmit(True)
 			self.ui.frameRange_lineEdit.setText(sequence.numRange(self.numList))
 			nFrames = len(self.numList)
 			if taskSize < nFrames:
@@ -222,18 +217,17 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 				for chunk in chunks:
 					#self.taskList.append(list(sequence.seqRange(chunk))[0])
 					self.taskList.append(sequence.numRange(chunk))
-					
-			if not quiet:
-				verbos.print_("%d frames to be rendered; %d task(s) to be submitted:" %(len(self.numList), len(self.taskList)), 3)
 
+		return True
+					
 
 	def submit(self):
-		""" Submit render to queue.
-			TODO: Add Nuke support
+		""" Submit job to render queue.
 		"""
 		timeFormatStr = "%Y/%m/%d %H:%M:%S" # "%a, %d %b %Y %H:%M:%S"
 
-		self.calcFrameList(quiet=True)
+		if not self.calcFrameList(quiet=False):
+			return
 
 		###################
 		# Generic options #
