@@ -17,13 +17,13 @@ class renderQueue(xmlData.xmlData):
 		Inherits xmlData class
 	"""
 
-	def newJob(self, genericOpts, renderOpts, tasks, user, submitTime):
+	def newJob(self, genericOpts, renderOpts, tasks, user, submitTime, comment):
 		""" Create a new render job on submission.
 		"""
 		self.loadXML(quiet=True) # reload XML data
 		jobID = self.getNextID()
 
-		jobName, jobType, priority, frames, taskSize = genericOpts
+		jobName, jobType, frames, taskSize, priority = genericOpts
 		#print jobType
 		if jobType == 'Maya':
 			#print "a"
@@ -60,6 +60,9 @@ class renderQueue(xmlData.xmlData):
 
 			submitTimeElement = ET.SubElement(jobElement, 'submitTime')
 			submitTimeElement.text = str(submitTime)
+
+			commentElement = ET.SubElement(jobElement, 'comment')
+			commentElement.text = str(comment)
 
 			# totalTimeElement = ET.SubElement(jobElement, 'totalTime')
 			# totalTimeElement.text = "0"

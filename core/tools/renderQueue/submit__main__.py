@@ -19,15 +19,15 @@ import renderQueue, sequence, userPrefs, verbose
 
 class gpsRenderSubmitApp(QtGui.QDialog):
 
-	def __init__(self, parent = None):
+	def __init__(self, parent=None, frameRange=None, flags=None):
 		super(gpsRenderSubmitApp, self).__init__()
 		self.ui = Ui_Dialog()
 		self.ui.setupUi(self)
 
-		# # Apply UI style sheet
-		# qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
-		# with open(qss, "r") as fh:
-		# 	self.setStyleSheet(fh.read())
+		# Apply UI style sheet
+		qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
+		with open(qss, "r") as fh:
+			self.setStyleSheet(fh.read())
 
 		# Read user prefs config file file - if it doesn't exist it will be created
 		userPrefs.read()
@@ -50,31 +50,56 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 
 			import maya.cmds as mc
 			sceneName = mc.file(query=True, sceneName=True)
-			print sceneName
+			#print sceneName
 			if sceneName: # check we're not working in an unsaved scene
 				relPath = self.relativePath(os.path.normpath(sceneName))
 				if relPath:
 					self.ui.scene_comboBox.addItem(relPath)
 			else:
-				mc.warning("Scene must be saved before submitting render.")
+				msg = "Scene must be saved before submitting render."
+				mc.warning(msg)
+				#mc.confirmDialog(title="Scene not saved", message=msg, icon="warning", button="Close")
+				self.ui.scene_comboBox.addItem(msg)
+				self.ui.submit_pushButton.setToolTip(msg)
 				self.ui.submit_pushButton.setEnabled(False)
 
-			self.ui.type_comboBox.setEnabled(False)
-			self.ui.scene_comboBox.setEnabled(False)
+			self.ui.render_groupBox.setEnabled(False)
 			self.ui.sceneBrowse_toolButton.hide()
-
 
 		elif os.environ['ICARUSENVAWARE'] == 'NUKE':
 			self.jobType = 'Nuke'
 			self.ui.type_comboBox.setCurrentIndex(self.ui.type_comboBox.findText(self.jobType))
 			self.setJobType()
-			# TODO - populate script file
-			self.ui.type_comboBox.setEnabled(False)
-			self.ui.scene_comboBox.setEnabled(False)
+
+			import nuke
+			scriptName = nuke.value("root.name")
+			print scriptName
+			if scriptName: # check we're not working in an unsaved script
+				relPath = self.relativePath(os.path.normpath(scriptName))
+				if relPath:
+					self.ui.scene_comboBox.addItem(relPath)
+			else:
+				msg = "Script must be saved before submitting render."
+				nuke.warning(msg)
+				#nuke.message(msg)
+				self.ui.scene_comboBox.addItem(msg)
+				self.ui.submit_pushButton.setToolTip(msg)
+				self.ui.submit_pushButton.setEnabled(False)
+
+			self.ui.render_groupBox.setEnabled(False)
 			self.ui.sceneBrowse_toolButton.hide()
 
 		self.numList = []
-		self.resetFrameList()
+		#self.resetFrameList()
+		if frameRange:
+			self.ui.frameRange_lineEdit.setText(frameRange)
+		else:
+			self.ui.frameRange_lineEdit.setText("%d-%d" %(int(os.environ['STARTFRAME']), int(os.environ['ENDFRAME'])))
+		self.calcFrameList()
+
+		if flags:
+			self.ui.flags_groupBox.setChecked(True)
+			self.ui.flags_lineEdit.setText(flags)
 
 		# Instantiate render queue class and load data
 		self.rq = renderQueue.renderQueue()
@@ -96,6 +121,8 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 
 
 	def setJobTypeFromComboBox(self):
+		""" Set job type - called when the job type combo box value is changed.
+		"""
 		self.jobType = self.ui.type_comboBox.currentText()
 		userPrefs.edit('main', 'lastrenderjobtype', self.jobType)
 		self.setJobType()
@@ -147,7 +174,7 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 
 
 	def sceneBrowse(self):
-		""" Browse for a scene file.
+		""" Browse for a scene/script file.
 		"""
 		if self.jobType == 'Maya':
 			fileDir = os.environ['MAYASCENESDIR']
@@ -175,17 +202,17 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 				verbose.print_("Warning: Only %s belonging to the current shot can be submitted." %fileTerminology, 2)
 
 
-	def resetFrameList(self):
-		""" Get frame range from shot settings.
-		"""
-		rgStartFrame = int(os.environ['STARTFRAME'])
-		rgEndFrame = int(os.environ['ENDFRAME'])
-		nFrames = rgEndFrame - rgStartFrame + 1
-		self.ui.frameRange_lineEdit.setText("%d-%d" %(rgStartFrame, rgEndFrame))
-		self.ui.taskSize_slider.setMaximum(nFrames)
-		self.ui.taskSize_spinBox.setMaximum(nFrames)
-		self.ui.taskSize_spinBox.setValue(nFrames) # store this value in userPrefs or something?
-		self.calcFrameList()
+	# def resetFrameList(self):
+	# 	""" Get frame range from shot settings.
+	# 	"""
+	# 	rgStartFrame = int(os.environ['STARTFRAME'])
+	# 	rgEndFrame = int(os.environ['ENDFRAME'])
+	# 	nFrames = rgEndFrame - rgStartFrame + 1
+	# 	self.ui.frameRange_lineEdit.setText("%d-%d" %(rgStartFrame, rgEndFrame))
+	# 	self.ui.taskSize_slider.setMaximum(nFrames)
+	# 	self.ui.taskSize_spinBox.setMaximum(nFrames)
+	# 	self.ui.taskSize_spinBox.setValue(nFrames) # store this value in userPrefs or something?
+	# 	self.calcFrameList()
 
 
 	def calcFrameList(self, quiet=True):
@@ -250,6 +277,7 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 			flags = ""
 
 		priority = self.ui.priority_spinBox.value()
+		comment = self.ui.comment_lineEdit.text()
 
 		#############################
 		# Renderer-specific options #
@@ -271,7 +299,7 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 			verbose.print_("ERROR: Path to %s render command executable not found. This can be set with the environment variable '%s'." %(self.jobType, renderCmdEnvVar), 2)
 
 		# Package option variables into tuples
-		genericOpts = jobName, self.jobType, priority, frames, taskSize
+		genericOpts = jobName, self.jobType, frames, taskSize, priority
 		if self.jobType == 'Maya':
 			renderOpts = mayaScene, mayaProject, flags, renderCmd
 		elif self.jobType == 'Nuke':
@@ -282,17 +310,17 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 
 		dialogTitle = 'Submit Render'
 		dialogMsg = ''
-		dialogMsg += 'Name:\t%s\nType:\t%s\nPriority:\t%s\nFrames:\t%s\nTask size:\t%s\n\n' %genericOpts
+		dialogMsg += 'Name:\t%s\nType:\t%s\nFrames:\t%s\nTask size:\t%s\nPriority:\t%s\n\n' %genericOpts
 		# if self.jobType == 'Maya':
 		# 	dialogMsg += 'Scene:\t%s\nProject:\t%s\nFlags:\t%s\nCommand:\t%s\n\n' %renderOpts
 		# elif self.jobType == 'Nuke':
 		# 	dialogMsg += 'Script:\t%s\nFlags:\t%s\nCommand:\t%s\n\n' %renderOpts
 		dialogMsg += framesMsg
-		dialogMsg += 'Do you wish to continue?'
+		dialogMsg += 'Do you want to continue?'
 
 		dialog = pDialog.dialog()
 		if dialog.dialogWindow(dialogMsg, dialogTitle):
-			self.rq.newJob(genericOpts, renderOpts, self.taskList, os.environ['USERNAME'], time.strftime(timeFormatStr))
+			self.rq.newJob(genericOpts, renderOpts, self.taskList, os.environ['USERNAME'], time.strftime(timeFormatStr), comment)
 		else:
 			return
 
@@ -317,16 +345,27 @@ if __name__ == "__main__":
 	#app.setStyle('fusion') # Set UI style - you can also use a flag e.g. '-style plastique'
 
 	# Apply UI style sheet
-	qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
-	with open(qss, "r") as fh:
-		app.setStyleSheet(fh.read())
+	# qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
+	# with open(qss, "r") as fh:
+	# 	app.setStyleSheet(fh.read())
 
 	renderSubmitApp = gpsRenderSubmitApp()
 	renderSubmitApp.show()
 	sys.exit(app.exec_())
 
-else:
-	renderSubmitApp = gpsRenderSubmitApp()
-	#print renderSubmitApp
-	renderSubmitApp.show()
+# else:
+# 	renderSubmitApp = gpsRenderSubmitApp()
+# 	#print renderSubmitApp
+# 	renderSubmitApp.show()
+
+
+# def run_(**kwargs):
+# 	# for key, value in kwargs.iteritems():
+# 	# 	print "%s = %s" % (key, value)
+# 	renderSubmitApp = gpsRenderSubmitApp(**kwargs)
+# 	#renderSubmitApp.setAttribute( QtCore.Qt.WA_DeleteOnClose )
+# 	print renderSubmitApp
+# 	renderSubmitApp.show()
+# 	#renderSubmitApp.raise_()
+# 	#renderSubmitApp.exec_()
 

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'queue_ui.ui'
 #
-# Created: Wed Jul 06 15:56:52 2016
+# Created: Fri Jul 08 11:45:03 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -261,6 +261,7 @@ class Ui_MainWindow(object):
         self.renderQueue_treeWidget.headerItem().setText(7, QtGui.QApplication.translate("MainWindow", "Submitted", None, QtGui.QApplication.UnicodeUTF8))
         self.renderQueue_treeWidget.headerItem().setText(8, QtGui.QApplication.translate("MainWindow", "Running time", None, QtGui.QApplication.UnicodeUTF8))
         self.renderQueue_treeWidget.headerItem().setText(9, QtGui.QApplication.translate("MainWindow", "Slave", None, QtGui.QApplication.UnicodeUTF8))
+        self.renderQueue_treeWidget.headerItem().setText(10, QtGui.QApplication.translate("MainWindow", "Comment", None, QtGui.QApplication.UnicodeUTF8))
         self.slaveControl_toolButton.setToolTip(QtGui.QApplication.translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Control the local render slave</span></p><p>Start and stop the local slave, and control task completion options.</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.slaveControl_toolButton.setText(QtGui.QApplication.translate("MainWindow", "hostname", None, QtGui.QApplication.UnicodeUTF8))
         self.taskInfo_label.setText(QtGui.QApplication.translate("MainWindow", "Task info", None, QtGui.QApplication.UnicodeUTF8))

@@ -920,13 +920,14 @@ Environment: %s
 		"""
 		import submit__main__
 		reload(submit__main__)
-		# try:
-		# 	self.renderSubmitApp.show()
-		# 	self.renderSubmitApp.raise_()
-		# except AttributeError:
-		# 	self.renderSubmitApp = submit__main__.gpsRenderSubmitApp()
-		# 	#print self.renderSubmitApp
-		# 	self.renderSubmitApp.show()
+		#submit__main__.run_(frameRange='1-10', flags='-rl CurrentLayer')
+		try:
+			self.renderSubmitApp.show()
+			self.renderSubmitApp.raise_()
+		except AttributeError:
+			self.renderSubmitApp = submit__main__.gpsRenderSubmitApp()
+			#print self.renderSubmitApp
+			self.renderSubmitApp.show()
 
 
 	def launchRenderQueue(self):

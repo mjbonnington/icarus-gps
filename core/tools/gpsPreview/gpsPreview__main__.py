@@ -26,7 +26,7 @@ class previewUI(QtGui.QDialog):
 		# Apply UI style sheet
 		qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
 		with open(qss, "r") as fh:
-			self.ui.main_frame.setStyleSheet(fh.read())
+			self.setStyleSheet(fh.read())
 
 		# Connect signals & slots
 		QtCore.QObject.connect(self.ui.preview_pushButton, QtCore.SIGNAL("clicked()"), self.preview)

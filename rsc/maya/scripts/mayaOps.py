@@ -841,6 +841,28 @@ def snapShot(output_folder, isolate=True, fit=False):
 		mc.select(sel, add=True)
 
 
+def submitRender():
+	""" Launches GPS Render Submitter window.
+	"""
+	import submit__main__
+	reload(submit__main__)
+	#frameRange = "%s-%s" %(mc.playbackOptions(q=True, min=True), mc.playbackOptions(q=True, max=True))
+	frameRange = "%s-%s" %(int(mc.getAttr('defaultRenderGlobals.startFrame')), int(mc.getAttr('defaultRenderGlobals.endFrame')))
+	renderSubmitApp=submit__main__.gpsRenderSubmitApp(frameRange=frameRange)
+	renderSubmitApp.exec_()
+
+
+def submitRenderLayer():
+	""" Launches GPS Render Submitter window for the current render layer.
+	"""
+	import submit__main__
+	reload(submit__main__)
+	frameRange = "%s-%s" %(int(mc.getAttr('defaultRenderGlobals.startFrame')), int(mc.getAttr('defaultRenderGlobals.endFrame')))
+	currentLayer = mc.editRenderLayerGlobals(query=True, currentRenderLayer=True)
+	renderSubmitApp=submit__main__.gpsRenderSubmitApp(frameRange=frameRange, flags='-rl %s' %currentLayer)
+	renderSubmitApp.exec_()
+
+
 def update():
 	""" Automatically set some defaults from the shot settings.
 	"""

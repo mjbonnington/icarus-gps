@@ -131,18 +131,17 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 
 
 	def launchRenderSubmit(self):
-		""" Launches Render Submit dialog.
-			TODO: Add support for Nuke jobs
+		""" Launches GPS Render Submitter window.
 		"""
 		import submit__main__
 		reload(submit__main__)
-		# try:
-		# 	self.renderSubmitApp.show()
-		# 	self.renderSubmitApp.raise_()
-		# except AttributeError:
-		# 	self.renderSubmitApp = submit__main__.gpsRenderSubmitApp()
-		# 	#print self.renderSubmitApp
-		# 	self.renderSubmitApp.show()
+		try:
+			self.renderSubmitApp.show()
+			self.renderSubmitApp.raise_()
+		except AttributeError:
+			self.renderSubmitApp = submit__main__.gpsRenderSubmitApp()
+			#print self.renderSubmitApp
+			self.renderSubmitApp.show()
 
 
 	def rebuildRenderQueueView(self):
@@ -190,6 +189,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 			jobStatus = self.rq.getValue(jobElement, 'status')
 			jobUser = self.rq.getValue(jobElement, 'user')
 			jobSubmitTime = self.rq.getValue(jobElement, 'submitTime')
+			jobComment = self.rq.getValue(jobElement, 'comment')
 
 			# Get the render job item or create it if it doesn't exist
 			renderJobItem = self.getQueueItem(self.ui.renderQueue_treeWidget.invisibleRootItem(), jobID)
@@ -300,6 +300,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 
 			renderJobItem.setText(8, str(jobTotalTime))
 			renderJobItem.setText(9, "%d %s rendering" %(inProgressTaskCount, verbose.pluralise("slave", inProgressTaskCount)))
+			renderJobItem.setText(10, jobComment)
 
 		# Re-enable signals
 		self.ui.renderQueue_treeWidget.blockSignals(False)
@@ -895,6 +896,6 @@ if __name__ == "__main__":
 
 # else:
 # 	renderQueueApp = gpsRenderQueueApp()
-# 	print renderQueueApp
+# 	#print renderQueueApp
 # 	renderQueueApp.show()
 

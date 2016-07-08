@@ -506,6 +506,11 @@
          <string>Slave</string>
         </property>
        </column>
+       <column>
+        <property name="text">
+         <string>Comment</string>
+        </property>
+       </column>
       </widget>
       <widget class="QTabWidget" name="slave_tabWidget">
        <property name="currentIndex">

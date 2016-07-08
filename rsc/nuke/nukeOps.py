@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2015 Gramercy Park Studios
+# (c) 2013-2016 Gramercy Park Studios
 #
 # Nuke operations module.
 
@@ -60,7 +60,39 @@ def resolveNameConflict(name):
 #saves script
 def saveAs(pathToPblAsset):
 	return nuke.scriptSaveAs(pathToPblAsset)
-	
+
+
+def submitRender():
+	""" Launches GPS Render Submitter window.
+	"""
+	import submit__main__
+	reload(submit__main__)
+	#frameRange = "%s-%s" %(int(mc.getAttr('defaultRenderGlobals.startFrame')), int(mc.getAttr('defaultRenderGlobals.endFrame')))
+	renderSubmitApp=submit__main__.gpsRenderSubmitApp(flags='-i') # the -i flag tells Nuke to use an interactive license rather than a render license
+	renderSubmitApp.exec_()
+
+
+def submitRenderSelected():
+	""" Launches GPS Render Submitter window, for rendering the currently selected write nodes only.
+	"""
+	import submit__main__
+	reload(submit__main__)
+	#frameRange = "%s-%s" %(int(mc.getAttr('defaultRenderGlobals.startFrame')), int(mc.getAttr('defaultRenderGlobals.endFrame')))
+
+	writeNodes = ''
+	selectedNodes = nuke.selectedNodes()
+	for selectedNode in selectedNodes:
+		if selectedNode.Class() == 'Write':
+			writeNodes = '-X %s ' %selectedNode.name()
+
+	# selectedNode = nuke.selectedNode()
+	# if selectedNode.Class() == 'Write':
+	# 	writeNodes = '-X %s ' %selectedNode.name()
+
+	renderSubmitApp=submit__main__.gpsRenderSubmitApp(flags='-i %s' %writeNodes)
+	renderSubmitApp.exec_()
+
+
 #takes a snapshot from the active viewer	
 def viewerSnapshot(pblPath):
 	try:
