@@ -47,7 +47,29 @@ def createGroup(grpName, show=False):
 #exports selection
 def exportSelection(pathToPblAsset):
 	return nuke.nodeCopy(pathToPblAsset)
-	
+
+
+def launchDjv():
+	""" Launches djv_view, if a read or write node is selected the appropriate sequence will be loaded.
+		TODO: Evaluate [getenv VARIABLE] inside string to get the correct path.
+	"""
+	import djvOps
+
+	filePath = ''
+	selectedNodes = nuke.selectedNodes()
+	for selectedNode in selectedNodes:
+		if (selectedNode.Class() == 'Read') or (selectedNode.Class() == 'Write'):
+			#filePath = selectedNode.knob('file').getValue()
+			try:
+				import nukescripts
+				filePath = nukescripts.replaceHashes( selectedNode['file'].value() ) % nuke.frame()
+			except TypeError:
+				filePath = selectedNode.knob('file').getValue()
+
+	#nuke.message(filePath)
+	djvOps.viewer(filePath)
+
+
 #bypasses nuke name conflict behaviour by appending '_' the original node name
 def resolveNameConflict(name):
 	if nuke.exists(name):

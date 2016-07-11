@@ -290,3 +290,15 @@ if os.environ['ICARUSENVAWARE'] == 'MAYA':
 	gpsPreviewApp.move(QtGui.QDesktopWidget().availableGeometry(1).center() - gpsPreviewApp.frameGeometry().center())
 
 	gpsPreviewApp.show()
+
+elif os.environ['ICARUSENVAWARE'] == 'NUKE':
+	gpsPreviewApp = previewUI()
+	#Qt window flags
+	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+		gpsPreviewApp.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+	else:
+		gpsPreviewApp.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WindowCloseButtonHint)
+	#centering window
+	gpsPreviewApp.move(QtGui.QDesktopWidget().availableGeometry(1).center() - gpsPreviewApp.frameGeometry().center())
+
+	gpsPreviewApp.show()

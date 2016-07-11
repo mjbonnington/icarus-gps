@@ -1,5 +1,8 @@
 v0.9.5 (--)
--	[Icarus] 
+-	[Render Queue] Render Queue now has the ability to render Nuke scripts.
+-	[Render Queue] General UI improvements and optimisations.
+-	[Render Queue] Render jobs can be submitted directly from the Maya and Nuke applications.
+-	[Nuke] Read and Write nodes can be previewed in djv_view by clicking on the toolbar icon.
 
 v0.9.4 (2016-05-27)
 -	[Icarus] Added distributed render queue system. This UI is intended to replace the command-line submitter and provide a simple queuing system for Maya renders.
