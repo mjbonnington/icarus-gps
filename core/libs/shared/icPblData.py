@@ -10,7 +10,7 @@
 
 
 import os, time
-import jobSettings, verbose
+import jobSettings, osOps, verbose
 
 
 def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, notes, assetSrc=None, requires=None, compatible=None):
@@ -27,16 +27,16 @@ def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, not
 	assetData = jobSettings.jobSettings()
 	assetData.loadXML(os.path.join(pblDir, 'assetData.xml'), quiet=True)
 
-	# Parse asset file path
-	assetRootDir = os.path.split(pblDir)[0]
+	# Parse asset file path, make relative
+	assetRootDir = osOps.normPath(os.path.split(pblDir)[0])
 	assetRootDir = assetRootDir.replace(os.environ['JOBPATH'], '$JOBPATH')
-	assetRootDir = assetRootDir.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
+	#assetRootDir = assetRootDir.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
 
-	# Parse source scene file path
+	# Parse source scene file path, make relative
 	if assetSrc:
-		assetSource = os.path.normpath(assetSrc)
+		assetSource = osOps.normPath(assetSrc)
 		assetSource = assetSource.replace(os.environ['JOBPATH'], '$JOBPATH')
-		assetSource = assetSource.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
+		#assetSource = assetSource.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
 	else:
 		assetSource = None
 
@@ -61,8 +61,8 @@ def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, not
 
 
 	# Legacy code to write out icData.py - remove when XML data is fully working
-	notes += '\n\n%s %s' % (userName, pblTime)
-	icDataFile = open('%s/icData.py' % pblDir, 'w')
-	icDataFile.write("assetRootDir = '%s'\nassetPblName = '%s'\nasset = '%s'\nassetType = '%s'\nassetExt = '%s'\nversion = '%s'\nrequires = '%s'\ncompatible = '%s'\nnotes = '''%s''' " % (assetRootDir, assetPblName, assetName, assetType, assetExt, version, requires, compatible, notes))
-	icDataFile.close()
+	# notes += '\n\n%s %s' % (userName, pblTime)
+	# icDataFile = open('%s/icData.py' % pblDir, 'w')
+	# icDataFile.write("assetRootDir = '%s'\nassetPblName = '%s'\nasset = '%s'\nassetType = '%s'\nassetExt = '%s'\nversion = '%s'\nrequires = '%s'\ncompatible = '%s'\nnotes = '''%s''' " % (assetRootDir, assetPblName, assetName, assetType, assetExt, version, requires, compatible, notes))
+	# icDataFile.close()
 

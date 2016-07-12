@@ -1,11 +1,18 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:assetGather
-#copyright	:Gramercy Park Studios
+
+# [Icarus] ma_animGather.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2016 Gramercy Park Studios
+#
+# Description.
+
 
 import os, sys, traceback
-import verbose, pDialog, mayaOps
+import mayaOps, pDialog, verbose
 import maya.cmds as mc
+
 
 def gather(gatherPath):
 

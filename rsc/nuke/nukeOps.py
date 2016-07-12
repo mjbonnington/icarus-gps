@@ -12,22 +12,24 @@
 import os
 import nuke
 
-#creates a custom backdrop for selection
+
 def createBackdrop(bckdName, nodeLs):
+	""" Creates a custom backdrop for selection.
+	"""
 	#getting bounds of selected nodes
-	bdX = min([node.xpos() for node in nodeLs]) 
-	bdY = min([node.ypos() for node in nodeLs]) 
-	bdW = max([node.xpos() + node.screenWidth() for node in nodeLs]) - bdX 
-	bdH = max([node.ypos() + node.screenHeight() for node in nodeLs]) - bdY 
+	bdX = min([node.xpos() for node in nodeLs])
+	bdY = min([node.ypos() for node in nodeLs])
+	bdW = max([node.xpos() + node.screenWidth() for node in nodeLs]) - bdX
+	bdH = max([node.ypos() + node.screenHeight() for node in nodeLs]) - bdY
 	#expanding borders
-	left, top, right, bottom = (-80, -90, 80, 20) 
-	bdX += left 
-	bdY += top 
-	bdW += (right - left) 
+	left, top, right, bottom = (-80, -90, 80, 20)
+	bdX += left
+	bdY += top
+	bdW += (right - left)
 	bdH += (bottom - top)
 	resolveNameConflict(bckdName)
 	icBackdrop = nuke.nodes.BackdropNode(
-	name = bckdName,
+	name = bckdName, 
 	xpos = bdX, 
 	bdwidth = bdW, 
 	ypos = bdY, 
@@ -35,8 +37,9 @@ def createBackdrop(bckdName, nodeLs):
 	return icBackdrop
 
 
-#creates a custom group from selection
 def createGroup(grpName, show=False):
+	""" Creates a custom group from selection.
+	"""
 	#creating group and adding custom attributes
 	resolveNameConflict(grpName)
 	icGroup = nuke.makeGroup(show)
@@ -44,8 +47,9 @@ def createGroup(grpName, show=False):
 	return icGroup
 
 
-#exports selection
 def exportSelection(pathToPblAsset):
+	""" Exports selection.
+	"""
 	return nuke.nodeCopy(pathToPblAsset)
 
 
@@ -59,28 +63,31 @@ def launchDjv():
 	selectedNodes = nuke.selectedNodes()
 	for selectedNode in selectedNodes:
 		if (selectedNode.Class() == 'Read') or (selectedNode.Class() == 'Write'):
-			#filePath = selectedNode.knob('file').getValue()
-			try:
-				import nukescripts
-				filePath = nukescripts.replaceHashes( selectedNode['file'].value() ) % nuke.frame()
-			except TypeError:
-				filePath = selectedNode.knob('file').getValue()
+			# try:
+			# 	import nukescripts
+			# 	filePath = nukescripts.replaceHashes( selectedNode['file'].value() ) % nuke.frame()
+			# except TypeError:
+			# 	filePath = selectedNode.knob('file').getValue()
+			filePath = selectedNode.knob('file').evaluate()
 
 	#nuke.message(filePath)
 	djvOps.viewer(filePath)
 
 
-#bypasses nuke name conflict behaviour by appending '_' the original node name
 def resolveNameConflict(name):
+	""" Bypasses Nuke name conflict behaviour by appending '_' to the original node name.
+	"""
 	if nuke.exists(name):
 		node = nuke.toNode(name)
 		solvedName = '%s_' % node['name'].value()
 		while nuke.exists(solvedName):
 			solvedName += '_'
 		node['name'].setValue(solvedName)
-	
-#saves script
+
+
 def saveAs(pathToPblAsset):
+	""" Saves script.
+	"""
 	return nuke.scriptSaveAs(pathToPblAsset)
 
 
@@ -115,8 +122,9 @@ def submitRenderSelected():
 	renderSubmitApp.exec_()
 
 
-#takes a snapshot from the active viewer	
 def viewerSnapshot(pblPath):
+	""" Takes a snapshot from the active viewer.
+	"""
 	try:
 		writeNode = ''
 		pblPath = os.path.join(pblPath, 'preview.%04d.jpg')
@@ -143,4 +151,3 @@ def viewerSnapshot(pblPath):
 			nuke.delete(writeNode)
 		return
 
-	

@@ -437,70 +437,81 @@ def groupManualLods(objLs, lodA, lodB, lodC):
 	deleteHist(objLs)
 	return lodsMasterGrp
 
-#######################creates icarus data set#############
-def icDataSet(obj, icData, update=None, drawOverrides=True, addElements=True):
+
+def icDataSet(obj, assetData, update=None, drawOverrides=True, addElements=True):
+	""" Create Icarus data set node.
+	"""
 	mc.loadPlugin('gps_ICSet', qt=True)
-	#stores current selection
+
+	# Store current selection
 	currentSlLs = mc.ls(sl=True)
+
 	if update:
 		dataSet = update
+
 	else:
-		#clears current selection and selects all nodes gathered in objLs
+		# Clear current selection and select all nodes gathered in objLs
 		mc.select(cl=True)
 		if mc.objExists(obj):
 			mc.select(obj)
-		#creates set with selection
-		dataSet = mc.createNode('ICSet', n='ICSet_%s' % icData.assetPblName)
+
+		# Create set with selection
+		dataSet = mc.createNode('ICSet', n='ICSet_%s' % assetData.getValue('asset', 'assetPblName'))
 		if addElements:
 			mc.sets(obj, forceElement=dataSet, edit=True)
-		if drawOverrides:
-			#Setting default component display
-			mc.setAttr('%s.overrideComponentDisplay' % dataSet, 1)
-			mc.setAttr('%s.icAssetDisplay' % dataSet, 2)
-			#Creating condition nodes for component display overrides
-			condition1 = mc.createNode('condition', n='%sCondition1' % dataSet)
-			mc.setAttr('%s.colorIfTrueR' % condition1, 1)
-			mc.setAttr('%s.colorIfTrueG' % condition1, 0)
-			mc.setAttr('%s.colorIfTrueB' % condition1, 0)
-			mc.setAttr('%s.colorIfFalseR' % condition1, 0)
-			mc.setAttr('%s.colorIfFalseG' % condition1, 0)
-			mc.setAttr('%s.colorIfFalseB' % condition1, 0)
-			condition2 = mc.createNode('condition', n='%sCondition2' % dataSet)
-			mc.setAttr('%s.secondTerm' % condition2, 1)
-			mc.setAttr('%s.colorIfTrueR' % condition2, 0)
-			mc.setAttr('%s.colorIfTrueG' % condition2, 0)
-			mc.setAttr('%s.colorIfTrueB' % condition2, 0)
-			mc.setAttr('%s.colorIfFalseR' % condition2, 1)
-			mc.setAttr('%s.colorIfFalseG' % condition2, 0)
-			mc.setAttr('%s.colorIfFalseB' % condition2, 0)
-			#connecting conditions to the dataSet
-			mc.connectAttr('%s.overrideComponentDisplay' % dataSet, '%s.drawOverride.overrideEnabled' % obj, f=True)
-			mc.connectAttr('%s.icAssetDisplay' % dataSet, '%s.firstTerm' % condition1, f=True)
-			mc.connectAttr('%s.outColorR' % condition1, '%s.overrideLevelOfDetail' % obj, f=True)
-			mc.connectAttr('%s.icAssetDisplay' % dataSet, '%s.firstTerm' % condition2, f=True)
-			mc.connectAttr('%s.outColorR' % condition2, '%s.overrideShading' % obj, f=True)
-			mc.connectAttr('%s.overrideComponentColor' % dataSet, '%s.drawOverride.overrideColor' % obj, f=True)
-	#adds ic data to set
-	assetTag(dataSet, icData.asset)
-	referenceTag(dataSet, icData.assetPblName)
-	assetTypeTag(dataSet, icData.assetType)
-	versionTag(dataSet, icData.version)
-	assetExtTag(dataSet, icData.assetExt)
-	notesTag(dataSet, icData.notes)
+		# if drawOverrides:
+		# 	# Set default component display
+		# 	mc.setAttr('%s.overrideComponentDisplay' % dataSet, 1)
+		# 	mc.setAttr('%s.icAssetDisplay' % dataSet, 2)
+		# 	# Create condition nodes for component display overrides
+		# 	condition1 = mc.createNode('condition', n='%sCondition1' % dataSet)
+		# 	mc.setAttr('%s.colorIfTrueR' % condition1, 1)
+		# 	mc.setAttr('%s.colorIfTrueG' % condition1, 0)
+		# 	mc.setAttr('%s.colorIfTrueB' % condition1, 0)
+		# 	mc.setAttr('%s.colorIfFalseR' % condition1, 0)
+		# 	mc.setAttr('%s.colorIfFalseG' % condition1, 0)
+		# 	mc.setAttr('%s.colorIfFalseB' % condition1, 0)
+		# 	condition2 = mc.createNode('condition', n='%sCondition2' % dataSet)
+		# 	mc.setAttr('%s.secondTerm' % condition2, 1)
+		# 	mc.setAttr('%s.colorIfTrueR' % condition2, 0)
+		# 	mc.setAttr('%s.colorIfTrueG' % condition2, 0)
+		# 	mc.setAttr('%s.colorIfTrueB' % condition2, 0)
+		# 	mc.setAttr('%s.colorIfFalseR' % condition2, 1)
+		# 	mc.setAttr('%s.colorIfFalseG' % condition2, 0)
+		# 	mc.setAttr('%s.colorIfFalseB' % condition2, 0)
+		# 	# Connect conditions to the dataSet
+		# 	mc.connectAttr('%s.overrideComponentDisplay' % dataSet, '%s.drawOverride.overrideEnabled' % obj, f=True)
+		# 	mc.connectAttr('%s.icAssetDisplay' % dataSet, '%s.firstTerm' % condition1, f=True)
+		# 	mc.connectAttr('%s.outColorR' % condition1, '%s.overrideLevelOfDetail' % obj, f=True)
+		# 	mc.connectAttr('%s.icAssetDisplay' % dataSet, '%s.firstTerm' % condition2, f=True)
+		# 	mc.connectAttr('%s.outColorR' % condition2, '%s.overrideShading' % obj, f=True)
+		# 	mc.connectAttr('%s.overrideComponentColor' % dataSet, '%s.drawOverride.overrideColor' % obj, f=True)
+
+	# Add asset metadata to set
+	assetTag(dataSet, assetData.getValue('asset', 'asset'))
+	referenceTag(dataSet, assetData.getValue('asset', 'assetPblName'))
+	assetTypeTag(dataSet, assetData.getValue('asset', 'assetType'))
+	versionTag(dataSet, assetData.getValue('asset', 'version'))
+	assetExtTag(dataSet, assetData.getValue('asset', 'assetExt'))
+	notesTag(dataSet, assetData.getValue('asset', 'notes'))
+
 	try:
-		assetRootDir(dataSet, icData.assetRootDir)
+		assetRootDir(dataSet, assetData.getValue('asset', 'assetRootDir'))
 	except AttributeError:
 		pass
 	try:
-		compatibleTag(dataSet, icData.compatible)
+		compatibleTag(dataSet, assetData.getValue('asset', 'compatible'))
 	except AttributeError:
 		pass
-	#clears gather selection and restores original selection
+
+	# Clear gather selection and restore original selection
 	mc.select(cl=True)
 	if currentSlLs:
 		for currentSl in currentSlLs:
 			mc.select(currentSl, add=True)
+
 	return dataSet
+
 
 ########################imports referenced nodes#################
 def importRefs(objLs):

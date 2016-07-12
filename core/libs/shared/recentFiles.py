@@ -1,10 +1,9 @@
 #!/usr/bin/python
 
-# Recent Files
-# v0.2
+# [Icarus] recentFiles.py
 #
-# Michael Bonnington 2015
-# Gramercy Park Studios
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2015-2016 Gramercy Park Studios
 #
 # Manage recent file lists for various applications within the pipeline.
 # updateLs() and getLs() are the publicly accessible functions.
@@ -63,10 +62,10 @@ def updateLs(newEntry, env=os.environ['ICARUSENVAWARE']):
 
 	fileLs = [] # clear recent file list
 
-	#newEntry = os.path.normpath(newEntry) # normalise path for host os
+	#newEntry = osOps.normPath(newEntry) # normalise path for host os
 	newEntry = newEntry.replace('\\', '/')
 	shotpath = os.environ['SHOTPATH'].replace('\\', '/')
-	
+
 	if newEntry.startswith(shotpath): # only add files in the current shot
 		newEntry = newEntry.replace(shotpath, '')
 

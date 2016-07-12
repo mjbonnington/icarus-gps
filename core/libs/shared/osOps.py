@@ -16,6 +16,8 @@ import verbose
 def createDir(path, umask='000'):
 	""" Creates directory for the specified path with the specified umask - could probably be rewritten to use Python's own functions
 	"""
+	path = os.path.normpath(path)
+
 	if not os.path.isdir(path):
 		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
 			os.makedirs(path)
@@ -31,6 +33,8 @@ def createDir(path, umask='000'):
 def setPermissions(path, mode='a+w'):
 	""" Sets permissions to provided path - could probably be rewritten to use Python's own functions
 	"""
+	path = os.path.normpath(path)
+
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
 		# Removed permissions setting on Windows as it causes problems
 		pass
@@ -45,28 +49,33 @@ def setPermissions(path, mode='a+w'):
 def hardLink(source, destination, umask='000'):
 	""" Creates hard links.
 	"""
+	src = os.path.normpath(source)
+	dst = os.path.normpath(destination)
+
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		if os.path.isdir(destination): # if destination is a folder, append the filename from the source
-			filename = os.path.basename(source)
-			destination = os.path.join(destination, filename)
+		if os.path.isdir(dst): # if destination is a folder, append the filename from the source
+			filename = os.path.basename(src)
+			dst = os.path.join(dst, filename)
 
-		if os.path.isfile(destination): # delete the destination file if it already exists - this is to mimic the Unix behaviour and force creation of the hard link
-			os.system('del %s /f /q' % destination)
+		if os.path.isfile(dst): # delete the destination file if it already exists - this is to mimic the Unix behaviour and force creation of the hard link
+			os.system('del %s /f /q' % dst)
 
-		#cmdStr = 'mklink /H %s %s' % (destination, source) # this only works with local NTFS volumes
-		cmdStr = 'fsutil hardlink create %s %s >nul' % (destination, source) # works over SMB network shares; suppressing output to null
+		#cmdStr = 'mklink /H %s %s' % (dst, src) # this only works with local NTFS volumes
+		cmdStr = 'fsutil hardlink create %s %s >nul' % (dst, src) # works over SMB network shares; suppressing output to null
 	else:
-		cmdStr = '%s; ln -f %s %s' % (setUmask(umask), source, destination)
+		cmdStr = '%s; ln -f %s %s' % (setUmask(umask), src, dst)
 
 	verbose.print_(cmdStr, 4)
 	os.system(cmdStr)
 
-	return destination
+	return dst
 
 
 def recurseRemove(path):
 	""" Removes files or folders recursively - could be rewritten to use shutil.rmtree
 	"""
+	path = os.path.normpath(path)
+
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
 		if os.path.isdir(path):
 			cmdStr = 'rmdir %s /s /q' % path
@@ -86,25 +95,29 @@ def rename(source, destination):
 	"""
 	src = os.path.normpath(source)
 	dst = os.path.normpath(destination)
-	#print 'rename "%s" "%s"' %(src, dst)
+
+	#verbose.print_('rename "%s" "%s"' % (src, dst), 4)
 	os.rename(src, dst)
 
-#	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-#		cmdStr = 'ren "%s" "%s"' % (src, dst)
-#	else:
-#		cmdStr = 'mv "%s" "%s"' % (src, dst)
-#
-#	verbose.print_(cmdStr, 4)
-#	os.system(cmdStr)
+	# if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	# 	cmdStr = 'ren "%s" "%s"' % (src, dst)
+	# else:
+	# 	cmdStr = 'mv "%s" "%s"' % (src, dst)
+
+	# verbose.print_(cmdStr, 4)
+	# os.system(cmdStr)
 
 
 def copy(source, destination):
 	""" Copy a file or folder.
 	"""
+	src = os.path.normpath(source)
+	dst = os.path.normpath(destination)
+
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		cmdStr = 'copy /Y %s %s' % (source, destination)
+		cmdStr = 'copy /Y %s %s' % (src, dst)
 	else:
-		cmdStr = 'cp -rf %s %s' % (source, destination)
+		cmdStr = 'cp -rf %s %s' % (src, dst)
 
 	verbose.print_(cmdStr, 4)
 	os.system(cmdStr)
@@ -141,6 +154,12 @@ def setUmask(umask='000'):
 		return ""
 	else:
 		return 'umask %s' % umask
+
+
+def normPath(path):
+	""" Normalises supplied path, expands environment variables and replaces backslashes with forward slashes for compatibility.
+	"""
+	return os.path.normpath( os.path.expandvars(path) ).replace("\\", "/")
 
 
 def sanitize(instr, pattern='\W', replace=''):

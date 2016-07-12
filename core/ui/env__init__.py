@@ -28,15 +28,15 @@ def setEnv():
 	except KeyError:
 		os.environ['ICARUSENVAWARE'] = 'STANDALONE'
 
-	os.environ['ICARUSVERSION'] = 'v0.9.5-20160628'
+	os.environ['ICARUSVERSION'] = 'v0.9.5-20160712'
 
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
-	os.environ['ICWORKINGDIR'] = icarusWorkingDir
 	icarusUIDir = os.path.join('core', 'ui')
-	os.environ['PIPELINE'] = icarusWorkingDir.replace(icarusUIDir, '')
-	os.environ['ICCONFIGDIR'] = os.path.join(os.environ['PIPELINE'], 'core', 'config')
-	os.environ['ICUSERPREFS'] = os.path.join(os.environ['ICCONFIGDIR'], 'users', os.environ['USERNAME']) # User prefs stored on server
-	#os.environ['ICUSERPREFS'] = os.path.join(os.environ['HOME'], '.icarus') # User prefs stored in user home folder
+	os.environ['ICWORKINGDIR'] = icarusWorkingDir
+	os.environ['PIPELINE']     = icarusWorkingDir.replace(icarusUIDir, '')
+	os.environ['ICCONFIGDIR']  = os.path.join(os.environ['PIPELINE'], 'core', 'config')
+	os.environ['ICUSERPREFS']  = os.path.join(os.environ['ICCONFIGDIR'], 'users', os.environ['USERNAME']) # user prefs stored on server
+#	os.environ['ICUSERPREFS']  = os.path.join(os.environ['HOME'], '.icarus') # user prefs stored in user home folder
 
 	# Hard-coded relative data directories required by Icarus
 	os.environ['SHOTSROOTRELATIVEDIR'] = 'Vfx'

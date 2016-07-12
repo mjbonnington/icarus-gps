@@ -1,109 +1,105 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:assetGather
-#copyright	:Gramercy Park Studios
+
+# [Icarus] ma_assetGather.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2016 Gramercy Park Studios
+#
+# Gather a published asset.
+
 
 import os, sys, traceback
-import verbose, pDialog, mayaOps
+import jobSettings, mayaOps, osOps, pDialog, verbose
 import maya.cmds as mc
 import maya.mel as mel
 
+
 def gather(gatherPath):
 
-	#retrieves icData from gatherPath
-	#removes specific icData attributes that do not consistently exist in all icData modules and
-	#are kept in memory even after a reload() or a del. Feels quite hacky and horrible but I've not found a way around this
-	#This is only needed temporarily though as older assets do not have this icData attr
-	### THIS CAN BE REWRITTEN TO LOAD THE ASSET METADATA FROM THE XML FILE ###
 	gatherPath = os.path.expandvars(gatherPath)
-	sys.path.append(gatherPath)
-	import icData
+
+	# Instantiate XML data classes
+	assetData = jobSettings.jobSettings()
+	assetData.loadXML(os.path.join(gatherPath, 'assetData.xml'), quiet=True)
+
 	try:
-		del icData.assetRootDir
-	except AttributeError:
-		pass
-	reload(icData)
-	sys.path.remove(gatherPath)
+		assetExt = assetData.getValue('asset', 'assetExt')
+		assetPblName = assetData.getValue('asset', 'assetPblName')
+		assetType = assetData.getValue('asset', 'assetType')
+		asset = assetData.getValue('asset', 'asset')
 
-
-	try:	
-		#checks for prefered .ma or .mb extension
-		assetExt = icData.assetExt
+		# Check for preferred .ma or .mb extension
 		for item_ in os.listdir(gatherPath):
 			if item_.endswith('.ma'):
 				assetExt = 'ma'
 			elif item_.endswith('.mb'):
 				assetExt = 'mb'
-				
-		#gets published asset from the gatherPath
-		assetPath = os.path.join(gatherPath, '%s.%s' % (icData.assetPblName, assetExt))
+
+		# Get published asset from the gatherPath
+		assetPath = os.path.join(gatherPath, '%s.%s' % (assetPblName, assetExt))
 		if not os.path.isfile(assetPath):
 			verbose.noAsset()
 			return
 
-		#loads the appropriate plugin if needed
-		mayaAppPath = os.path.split(os.environ['MAYAVERSION'])[0]
+		# Load the appropriate plugin if needed
 		if assetExt == 'abc':
-			#mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins', 'AbcImport.bundle'), qt=True)
 			mc.loadPlugin('AbcImport', qt=True)
 		elif assetExt == 'fbx':
-			#mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins', 'fbxmaya.bundle'), qt=True)
 			mc.loadPlugin('fbxmaya', qt=True)
 		elif assetExt == 'obj':
-			#mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins', 'objExport.bundle'), qt=True)
 			mc.loadPlugin('objExport', qt=True)
 
-
-		#gathering
+		# Gathering...
 		drawOverrides = True
-		if icData.assetType == 'ma_shot':
+		if assetType == 'ma_shot':
 			mayaOps.openScene(assetPath, dialog=False, updateRecentFiles=False)
 			mayaOps.redirectScene(os.path.join(os.environ['MAYASCENESDIR'], 'untitled'))
 			return
 		elif assetExt == 'vrmesh':
-			chkNameConflict(icData.asset)
-			mel.eval('vrayCreateProxy -node "%s" -dir "%s" -existing -createProxyNode;' % (icData.asset, assetPath))
-			vrmeshSG = mc.listSets(ets=True, t=1, object=icData.asset)[0]
+			chkNameConflict(asset)
+			mel.eval('vrayCreateProxy -node "%s" -dir "%s" -existing -createProxyNode;' % (asset, assetPath))
+			vrmeshSG = mc.listSets(ets=True, t=1, object=asset)[0]
 			vrmeshShd = mc.listConnections('%s.surfaceShader' % vrmeshSG, s=True, d=False)[0]
 			mc.delete(vrmeshSG)
 			mc.delete(vrmeshShd)
-			newNodeLs=[icData.asset]
+			newNodeLs=[asset]
 		elif assetExt == 'abc':
-			chkNameConflict(icData.asset)
+			chkNameConflict(asset)
 			newNodeLs = mc.file(assetPath, i=True, iv=True, rnn=True)
 		else:
-			chkNameConflict(icData.asset)
+			chkNameConflict(asset)
 			newNodeLs = mc.file(assetPath, i=True, iv=True, rnn=True)
-	
-		#Bypasses maya not displaying shading groups in sets. Adds the material node to icSet instead. Sets draw overrides to False
-		if icData.assetType == 'ma_shader':
+
+		# Bypasses maya not displaying shading groups in sets. Adds the material node to icSet instead. Sets draw overrides to False.
+		if assetType == 'ma_shader':
 			drawOverrides = False
-			connLs = mc.listConnections(icData.asset, p=True)
+			connLs = mc.listConnections(asset, p=True)
 			for conn in connLs:
-			    if '.outColor' in conn:
-				   icSetAsset = conn.split('.')[0]
+				if '.outColor' in conn:
+					icSetAsset = conn.split('.')[0]
 		else:
-			icSetAsset = icData.asset
-			
-		#Sets draw overrides to false if asset is node
-		if icData.assetType == 'ma_node' or icData.assetType == 'ic_node':
+			icSetAsset = asset
+
+		# Sets draw overrides to false if asset is node
+		if assetType == 'ma_node' or assetType == 'ic_node':
 			drawOverrides = False
-			
-		#generating icSet
-		chkNameConflict('ICSet_%s' % icData.assetPblName)
-		
-		#connects original to icSet
-		if icData.assetType != 'ma_scene':
-			dataSet = mayaOps.icDataSet(icSetAsset, icData, update=None, drawOverrides=drawOverrides, addElements=True)
-			mc.select(icData.asset, r=True, ne=True)
+
+		# Generate icSet
+		chkNameConflict('ICSet_%s' % assetPblName)
+
+		# Connect original to icSet
+		if assetType != 'ma_scene':
+			dataSet = mayaOps.icDataSet(icSetAsset, assetData, update=None, drawOverrides=drawOverrides, addElements=True)
+			mc.select(asset, r=True, ne=True)
 			mc.addAttr(ln = 'icARefTag', dt='string')
-			mc.connectAttr('%s.icRefTag' % dataSet,  '%s.icARefTag' % icData.asset, f=True)
-			mayaOps.lockAttr([icData.asset], ['.icARefTag'], children=False)
+			mc.connectAttr('%s.icRefTag' % dataSet,  '%s.icARefTag' % asset, f=True)
+			mayaOps.lockAttr([asset], ['.icARefTag'], children=False)
 		else:
 			drawOverrides = False
-			mayaOps.icDataSet(icSetAsset, icData, update=None, drawOverrides=drawOverrides, addElements=False)
-			
-			
+			mayaOps.icDataSet(icSetAsset, assetData, update=None, drawOverrides=drawOverrides, addElements=False)
+
+
 	except:
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
@@ -112,8 +108,10 @@ def gather(gatherPath):
 		dialog = pDialog.dialog()
 		dialog.dialogWindow(dialogMsg, dialogTitle, conf=True)
 
-#check if objects with same name exist in scene. Checks for ICSets on those objects and renames it accordingly
+
 def chkNameConflict(obj):
+	""" Check if object(s) with same name exist in scene. Checks for ICSets on those objects and renames them accordingly.
+	"""
 	if mc.objExists(obj):
 		verbose.nameConflict(obj)
 		objSetLs = mc.listSets(o=obj)

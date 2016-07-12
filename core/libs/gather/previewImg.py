@@ -1,7 +1,13 @@
 #!/usr/bin/python
-#support    :Nuno Pereira - nuno.pereira@gps-ldn.com
-#title      :previewImg
-#copyright  :Gramercy Park Studios
+
+# [Icarus] previewImg.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2016 Gramercy Park Studios
+#
+# Loads asset preview image.
+
 
 import os
 

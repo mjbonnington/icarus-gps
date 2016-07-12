@@ -10,6 +10,7 @@
 
 
 import xml.etree.ElementTree as ET
+import os
 import verbose
 
 
@@ -25,7 +26,7 @@ class xmlData():
 			The 'quiet' argument suppresses the warning message if the file doesn't exist.
 		"""
 		if datafile is not None:
-			self.datafile = datafile
+			self.datafile = os.path.normpath(datafile)
 
 		verbose.print_("XML read: %s" %self.datafile, 4)
 
@@ -35,8 +36,8 @@ class xmlData():
 			return True
 		except (IOError, ET.ParseError):
 			if not quiet:
-				verbose.xmlData_readError(datafile)
-				#print "Warning: XML data file is invalid or doesn't exist: %s" %datafile
+				verbose.xmlData_readError(self.datafile)
+				#print "Warning: XML data file is invalid or doesn't exist: %s" %self.datafile
 			self.root = ET.Element('root')
 			self.tree = ET.ElementTree(self.root)
 			return False

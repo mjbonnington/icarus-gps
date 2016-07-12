@@ -1,16 +1,16 @@
 #!/usr/bin/python
 
-# Jobs
-# v0.2
+# [Icarus] jobs.py
 #
-# Michael Bonnington 2015
-# Gramercy Park Studios
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2015-2016 Gramercy Park Studios
 #
 # Manipulates the database of jobs running in the CG department
 
 
 import os, sys
 import xml.etree.ElementTree as ET
+import osOps
 
 
 # Legacy code to work with current icarus implementation...
@@ -31,19 +31,19 @@ try:
 			# Temporary (?) fix for cross-platform paths
 			if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
 				if jobpath.startswith(osx_root):
-					jobpath = os.path.normpath( jobpath.replace(osx_root, win_root) )
+					jobpath = osOps.normPath( jobpath.replace(osx_root, win_root) )
 				elif jobpath.startswith(linux_root):
-					jobpath = os.path.normpath( jobpath.replace(linux_root, win_root) )
+					jobpath = osOps.normPath( jobpath.replace(linux_root, win_root) )
 			elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
 				if jobpath.startswith(win_root):
-					jobpath = os.path.normpath( jobpath.replace(win_root, osx_root) )
+					jobpath = osOps.normPath( jobpath.replace(win_root, osx_root) )
 				elif jobpath.startswith(linux_root):
-					jobpath = os.path.normpath( jobpath.replace(linux_root, osx_root) )
+					jobpath = osOps.normPath( jobpath.replace(linux_root, osx_root) )
 			else:
 				if jobpath.startswith(win_root):
-					jobpath = os.path.normpath( jobpath.replace(win_root, linux_root) )
+					jobpath = osOps.normPath( jobpath.replace(win_root, linux_root) )
 				elif jobpath.startswith(osx_root):
-					jobpath = os.path.normpath( jobpath.replace(osx_root, linux_root) )
+					jobpath = osOps.normPath( jobpath.replace(osx_root, linux_root) )
 
 			if os.path.exists(jobpath): # Only add jobs which exist on disk
 				dic[job.find('name').text] = jobpath

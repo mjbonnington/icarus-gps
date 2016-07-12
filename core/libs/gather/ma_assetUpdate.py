@@ -1,11 +1,18 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:assetUpdate
-#copyright	:Gramercy Park Studios
+
+# [Icarus] ma_assetUpdate.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2016 Gramercy Park Studios
+#
+# Updates asset.
+
 
 import os
 import ma_assetGather
 import maya.cmds as mc
+
 
 def update(ICSet, updatePath):
 	updatePath = os.path.expandvars(updatePath)
@@ -13,8 +20,11 @@ def update(ICSet, updatePath):
 	assetObj = mc.sets(ICSet, q=True)
 	if assetObj:
 		assetObj = assetObj[0]
-	#removing old asset from scene
+
+	# Remove old asset from scene
 	mc.delete(ICSet)
 	mc.delete(assetObj)
-	#gathering new asset
+
+	# Gather new asset
 	ma_assetGather.gather(updatePath)
+

@@ -10,7 +10,7 @@
 
 
 import os, sys
-import jobs, jobSettings, osOps, appPaths, verbose
+import appPaths, jobs, jobSettings, osOps, verbose
 
 
 def setEnv(envVars):
@@ -43,10 +43,10 @@ def setEnv(envVars):
 	# Set basic environment variables
 	os.environ['JOB'] = job
 	os.environ['SHOT'] = shot
-	os.environ['JOBPATH'] = os.path.normpath(jobPath)
-	os.environ['SHOTPATH'] = os.path.normpath(shotPath)
-	os.environ['JOBDATA'] = os.path.normpath(jobDataPath)
-	os.environ['SHOTDATA'] = os.path.normpath(shotDataPath)
+	os.environ['JOBPATH'] = osOps.normPath(jobPath)
+	os.environ['SHOTPATH'] = osOps.normPath(shotPath)
+	os.environ['JOBDATA'] = osOps.normPath(jobDataPath)
+	os.environ['SHOTDATA'] = osOps.normPath(shotDataPath)
 
 	osOps.createDir(os.environ['JOBDATA'])
 
@@ -56,10 +56,10 @@ def setEnv(envVars):
 #	defaultData = jobSettings.jobSettings()
 	ap = appPaths.appPaths()
 
-	jobDataLoaded = jobData.loadXML(os.path.join(jobDataPath, 'jobData.xml'))
-	shotDataLoaded = shotData.loadXML(os.path.join(shotDataPath, 'shotData.xml'))
-#	defaultData.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'defaultData.xml'))
-	ap.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'appPaths.xml'))
+	jobDataLoaded = jobData.loadXML( os.path.join(jobDataPath, 'jobData.xml') )
+	shotDataLoaded = shotData.loadXML( os.path.join(shotDataPath, 'shotData.xml') )
+#	defaultData.loadXML( os.path.join(os.environ['ICCONFIGDIR'], 'defaultData.xml') )
+	ap.loadXML( os.path.join(os.environ['ICCONFIGDIR'], 'appPaths.xml') )
 
 	# If XML files don't exist, create defaults, and attempt to convert data from Python data files
 	if not jobDataLoaded:
@@ -90,7 +90,7 @@ def setEnv(envVars):
 		if legacySettings.checkAssetPath():
 			assetDir = '.publish'
 		else:
-			assetDir = 'Assets' # Perhaps this shouldn't be hard-coded?
+			assetDir = 'Assets' # perhaps this shouldn't be hard-coded?
 
 		jobData.setValue('meta', 'assetDir', assetDir)
 		jobData.saveXML()
@@ -98,78 +98,72 @@ def setEnv(envVars):
 
 
 	# Set OS identifier strings to get correct app executable paths
-	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-		currentOS = 'osx'
-	elif os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
 		currentOS = 'win'
+	elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+		currentOS = 'osx'
 	elif os.environ['ICARUS_RUNNING_OS'] == 'Linux':
 		currentOS = 'linux'
 
 
 	# Terminal / Command Prompt
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		os.environ['GPS_RC'] = os.path.join(os.environ['PIPELINE'], 'core', 'ui', 'gps_cmd.bat')
+		os.environ['GPS_RC'] = osOps.normPath('$PIPELINE/core/ui/gps_cmd.bat')
 	else:
-		os.environ['GPS_RC'] = os.path.join(os.environ['PIPELINE'], 'core', 'ui', '.gps_rc')
+		os.environ['GPS_RC'] = osOps.normPath('$PIPELINE/core/ui/.gps_rc')
+
 
 	# Jobs root paths for cross-platform support
 	os.environ['JOBSROOTWIN'] = jobs.win_root
 	os.environ['JOBSROOTOSX'] = jobs.osx_root
-	#os.environ['JOBSROOTLINUX'] = jobs.linux_root # Not currently required as Linux & OSX mount points should be the same
+	#os.environ['JOBSROOTLINUX'] = jobs.linux_root # not currently required as Linux & OSX mount points should be the same
+
 
 	# Job / shot env
-	#os.environ['GLOBALPUBLISHDIR'] = os.path.normpath( getInheritedValue('other', 'assetlib') ) # Path needs to be translated for OS portability
-	os.environ['JOBPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['JOBPATH'], os.environ['PUBLISHRELATIVEDIR']) )
-	os.environ['SHOTPUBLISHDIR'] = os.path.normpath( os.path.join(os.environ['SHOTPATH'], os.environ['PUBLISHRELATIVEDIR']) )
-	os.environ['WIPSDIR'] = os.path.normpath( os.path.join(os.path.split(os.environ['JOBPATH'])[0], 'Deliverables', 'WIPS') ) # Perhaps this shouldn't be hard-coded?
-	os.environ['RECENTFILESDIR'] = os.path.normpath( os.path.join(os.environ['ICUSERPREFS'], 'recentFiles') )
-	os.environ['ELEMENTSLIBRARY'] = os.path.normpath( getInheritedValue('other', 'elementslib') ) # Path needs to be translated for OS portability
-	os.environ['PRODBOARD'] = getInheritedValue('other', 'prodboard')
-	#os.environ['PROJECTTOOLS'] = getInheritedValue('other', 'projtools') # Is this necessary?
-	os.environ['UNIT'] = getInheritedValue('units', 'linear')
-	os.environ['ANGLE'] = getInheritedValue('units', 'angle')
-	os.environ['TIMEFORMAT'] = getInheritedValue('units', 'time')
-	os.environ['FPS'] = getInheritedValue('units', 'fps')
-	os.environ['HANDLES'] = getInheritedValue('time', 'handles')
-	os.environ['STARTFRAME'] = getInheritedValue('time', 'rangeStart')
-	os.environ['ENDFRAME'] = getInheritedValue('time', 'rangeEnd')
-	os.environ['FRAMERANGE'] = '%s-%s' % (os.environ['STARTFRAME'], os.environ['ENDFRAME']) # Is this necessary?
-	os.environ['POSTERFRAME'] = getInheritedValue('time', 'posterFrame')
-	os.environ['RESOLUTIONX'] = getInheritedValue('resolution', 'fullWidth')
-	os.environ['RESOLUTIONY'] = getInheritedValue('resolution', 'fullHeight')
-	os.environ['RESOLUTION'] = '%sx%s' % (os.environ['RESOLUTIONX'], os.environ['RESOLUTIONY']) # Is this necessary?
+#	os.environ['GLOBALPUBLISHDIR']  = osOps.normPath(getInheritedValue('other', 'assetlib')) # path needs to be translated for OS portability
+	os.environ['JOBPUBLISHDIR']     = osOps.normPath('$JOBPATH/$PUBLISHRELATIVEDIR')
+	os.environ['SHOTPUBLISHDIR']    = osOps.normPath('$SHOTPATH/$PUBLISHRELATIVEDIR')
+	os.environ['WIPSDIR']           = osOps.normPath('$JOBPATH/../Deliverables/WIPS') # perhaps this shouldn't be hard-coded?
+	os.environ['RECENTFILESDIR']    = osOps.normPath('$ICUSERPREFS/recentFiles')
+	os.environ['ELEMENTSLIBRARY']   = osOps.normPath(getInheritedValue('other', 'elementslib')) # path needs to be translated for OS portability
+	os.environ['PRODBOARD']         = getInheritedValue('other', 'prodboard')
+	os.environ['UNIT']              = getInheritedValue('units', 'linear')
+	os.environ['ANGLE']             = getInheritedValue('units', 'angle')
+	os.environ['TIMEFORMAT']        = getInheritedValue('units', 'time')
+	os.environ['FPS']               = getInheritedValue('units', 'fps')
+	os.environ['HANDLES']           = getInheritedValue('time', 'handles') # need to split this into in and out points
+	os.environ['STARTFRAME']        = getInheritedValue('time', 'rangeStart')
+	os.environ['ENDFRAME']          = getInheritedValue('time', 'rangeEnd')
+	os.environ['FRAMERANGE']        = '%s-%s' % (os.environ['STARTFRAME'], os.environ['ENDFRAME']) # is this necessary?
+	os.environ['POSTERFRAME']       = getInheritedValue('time', 'posterFrame')
+	os.environ['RESOLUTIONX']       = getInheritedValue('resolution', 'fullWidth')
+	os.environ['RESOLUTIONY']       = getInheritedValue('resolution', 'fullHeight')
+	os.environ['RESOLUTION']        = '%sx%s' % (os.environ['RESOLUTIONX'], os.environ['RESOLUTIONY']) # is this necessary?
 	os.environ['PROXY_RESOLUTIONX'] = getInheritedValue('resolution', 'proxyWidth')
 	os.environ['PROXY_RESOLUTIONY'] = getInheritedValue('resolution', 'proxyHeight')
-	os.environ['PROXY_RESOLUTION'] = '%sx%s' % (os.environ['PROXY_RESOLUTIONX'], os.environ['PROXY_RESOLUTIONY']) # Is this necessary?
-	os.environ['ASPECTRATIO'] = str( float(os.environ['RESOLUTIONX']) / float(os.environ['RESOLUTIONY']) )
+	os.environ['PROXY_RESOLUTION']  = '%sx%s' % (os.environ['PROXY_RESOLUTIONX'], os.environ['PROXY_RESOLUTIONY']) # is this necessary?
+	os.environ['ASPECTRATIO']       = str( float(os.environ['RESOLUTIONX']) / float(os.environ['RESOLUTIONY']) )
 
-	# Mari
-	os.environ['MARIDIR'] = os.path.join(os.environ['SHOTPATH'] , '3D', 'mari')
-	os.environ['MARISCENESDIR'] = os.path.join(os.environ['MARIDIR'], 'scenes', os.environ['USERNAME'])
-	os.environ['MARIGEODIR'] = os.path.join(os.environ['MARIDIR'], 'geo', os.environ['USERNAME'])
-	os.environ['MARITEXTURESDIR'] = os.path.join(os.environ['MARIDIR'], 'textures', os.environ['USERNAME'])
-	os.environ['MARIRENDERSDIR'] = os.path.join(os.environ['MARIDIR'], 'renders', os.environ['USERNAME'])
-	os.environ['MARI_CACHE'] = os.environ['MARISCENESDIR']
-	os.environ['MARI_DEFAULT_IMAGEPATH'] = os.path.join(os.environ['MARIDIR'], 'sourceimages', os.environ['USERNAME'])
-	os.environ['MARI_WORKING_DIR'] = os.environ['MARISCENESDIR']
-	os.environ['MARI_DEFAULT_GEOMETRY_PATH'] = os.environ['SHOTPUBLISHDIR']
-	os.environ['MARI_DEFAULT_ARCHIVE_PATH'] = os.environ['MARISCENESDIR']
-	os.environ['MARI_DEFAULT_EXPORT_PATH'] = os.environ['MARITEXTURESDIR']
-	os.environ['MARI_DEFAULT_IMPORT_PATH'] = os.environ['MARITEXTURESDIR']
-	os.environ['MARI_DEFAULT_RENDER_PATH'] = os.environ['MARIRENDERSDIR']
-	os.environ['MARI_DEFAULT_CAMERA_PATH'] = os.environ['SHOTPUBLISHDIR']
-	os.environ['MARI_SCRIPT_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'mari', 'scripts')
-	os.environ['MARI_NUKEWORKFLOW_PATH'] = getAppExecPath('Nuke') #jobData.nukeVersion
-	os.environ['MARIVERSION'] = getAppExecPath('Mari') #jobData.mariVersion
+
+	# Application specific environment variables...
 
 	# Maya
+	os.environ['MAYAVERSION']         = getAppExecPath('Maya')
+	os.environ['MAYARENDERVERSION']   = osOps.normPath('%s/Render' % os.path.dirname( os.environ['MAYAVERSION'] ))
+	os.environ['MAYADIR']             = osOps.normPath('$SHOTPATH/3D/maya')
+	os.environ['MAYASCENESDIR']       = osOps.normPath('$MAYADIR/scenes/$USERNAME')
+	os.environ['MAYAPLAYBLASTSDIR']   = osOps.normPath('$MAYADIR/playblasts/$USERNAME')
+	os.environ['MAYACACHEDIR']        = osOps.normPath('$MAYADIR/cache/$USERNAME')
+	os.environ['MAYASOURCEIMAGESDIR'] = osOps.normPath('$MAYADIR/sourceimages/$USERNAME')
+	os.environ['MAYARENDERSDIR']      = osOps.normPath('$MAYADIR/renders/$USERNAME')
+
 	#os.environ['PATH'] = os.path.join('%s;%s' % (os.environ['PATH'], os.environ['PIPELINE']), 'rsc', 'maya', 'dlls')
 	#os.environ['PATH'] += os.pathsep + os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'dlls') # - this DLLs folder doesn't actually exist?
 	#os.environ['PYTHONPATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'maya__env__;%s' % os.environ['PIPELINE'], 'rsc', 'maya', 'scripts')
 	os.environ['PYTHONPATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'maya__env__') + os.pathsep + os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'scripts')
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		os.environ['PYTHONPATH'] = "C:\ProgramData\Redshift\Plugins\Maya\Common\scripts" + os.pathsep + os.environ['PYTHONPATH'] # Hack for Redshift/XGen
-		os.environ['redshift_LICENSE'] = "62843@10.105.11.11" # Temporary fix for Redshift license - this should be set via a system environment variable
+		os.environ['PYTHONPATH'] = "C:\ProgramData\Redshift\Plugins\Maya\Common\scripts" + os.pathsep + os.environ['PYTHONPATH'] # hack for Redshift/XGen
+		os.environ['redshift_LICENSE'] = "62843@10.105.11.11" # temporary fix for Redshift license - this should be set via a system environment variable
 	os.environ['MAYA_DEBUG_ENABLE_CRASH_REPORTING'] = '0'
 	os.environ['MAYA_PLUG_IN_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'plugins')
 	#os.environ['MAYA_SHELF_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shelves')
@@ -186,70 +180,89 @@ def setEnv(envVars):
 	else:
 		os.environ['XBMLANGPATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'icons')
 	os.environ['MAYA_PRESET_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'presets')
-	os.environ['MAYADIR'] = os.path.join(os.environ['SHOTPATH'], '3D', 'maya')
-	os.environ['MAYASCENESDIR'] = os.path.join(os.environ['MAYADIR'], 'scenes', os.environ['USERNAME'])
-	os.environ['MAYAPLAYBLASTSDIR'] = os.path.join(os.environ['MAYADIR'], 'playblasts', os.environ['USERNAME'])
-	os.environ['MAYACACHEDIR'] = os.path.join(os.environ['MAYADIR'], 'cache', os.environ['USERNAME'])
-	os.environ['MAYASOURCEIMAGESDIR'] = os.path.join(os.environ['MAYADIR'], 'sourceimages', os.environ['USERNAME'])
-	os.environ['MAYARENDERSDIR'] = os.path.join(os.environ['MAYADIR'], 'renders', os.environ['USERNAME'])
-	os.environ['MAYAVERSION'] = getAppExecPath('Maya') #os.path.normpath(jobData.mayaVersion)
-	os.environ['MAYARENDERVERSION'] = os.path.join( os.path.dirname( os.environ['MAYAVERSION'] ), 'Render' )
 
-	# Mudbox
-	os.environ['MUDBOXDIR'] = os.path.join(os.environ['SHOTPATH'], '3D', 'mudbox')
-	os.environ['MUDBOXSCENESDIR'] = os.path.join(os.environ['MUDBOXDIR'], 'scenes', os.environ['USERNAME'])
-	os.environ['MUDBOX_IDLE_LICENSE_TIME'] = '60'
-	os.environ['MUDBOX_PLUG_IN_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'mudbox', 'plugins') 
-	os.environ['MUDBOXVERSION'] = getAppExecPath('Mudbox') #jobData.mudboxVersion
 
 	# Nuke
-	os.environ['NUKE_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'nuke')
-	os.environ['NUKEDIR'] = os.path.join(os.environ['SHOTPATH'], '2D', 'nuke')
-	os.environ['NUKEELEMENTSDIR'] = os.path.join(os.environ['NUKEDIR'], 'elements', os.environ['USERNAME'])
-	os.environ['NUKESCRIPTSDIR'] = os.path.join(os.environ['NUKEDIR'], 'scripts', os.environ['USERNAME'])
-	os.environ['NUKERENDERSDIR'] = os.path.join(os.environ['NUKEDIR'], 'renders', os.environ['USERNAME'])
-	os.environ['NUKEVERSION'] = getAppExecPath('Nuke') #jobData.nukeVersion
-	#os.environ['NUKEXVERSION'] = '%s --nukex' % jobData.nukeVersion # now being set in launchApps.py
+	os.environ['NUKEVERSION']     = getAppExecPath('Nuke')
+	os.environ['NUKEDIR']         = osOps.normPath('$SHOTPATH/2D/nuke')
+	os.environ['NUKEELEMENTSDIR'] = osOps.normPath('$NUKEDIR/elements/$USERNAME')
+	os.environ['NUKESCRIPTSDIR']  = osOps.normPath('$NUKEDIR/scripts/$USERNAME')
+	os.environ['NUKERENDERSDIR']  = osOps.normPath('$NUKEDIR/renders/$USERNAME')
+	os.environ['NUKE_PATH']       = osOps.normPath('$PIPELINE/rsc/nuke')
+
+
+	# Mudbox
+	os.environ['MUDBOXVERSION']            = getAppExecPath('Mudbox')
+	os.environ['MUDBOXDIR']                = osOps.normPath('$SHOTPATH/3D/mudbox')
+	os.environ['MUDBOXSCENESDIR']          = osOps.normPath('$MUDBOXDIR/scenes/$USERNAME')
+	os.environ['MUDBOX_PLUG_IN_PATH']      = osOps.normPath('$PIPELINE/rsc/mudbox/plugins') 
+	os.environ['MUDBOX_IDLE_LICENSE_TIME'] = '60'
+
+
+	# Mari
+	os.environ['MARIVERSION']                = getAppExecPath('Mari')
+	os.environ['MARI_NUKEWORKFLOW_PATH']     = getAppExecPath('Nuke')
+	os.environ['MARIDIR']                    = osOps.normPath('$SHOTPATH/3D/mari')
+	os.environ['MARISCENESDIR']              = osOps.normPath('$MARIDIR/scenes/$USERNAME')
+	os.environ['MARIGEODIR']                 = osOps.normPath('$MARIDIR/geo/$USERNAME')
+	os.environ['MARITEXTURESDIR']            = osOps.normPath('$MARIDIR/textures/$USERNAME')
+	os.environ['MARIRENDERSDIR']             = osOps.normPath('$MARIDIR/renders/$USERNAME')
+	os.environ['MARI_DEFAULT_IMAGEPATH']     = osOps.normPath('$MARIDIR/sourceimages/$USERNAME')
+	os.environ['MARI_SCRIPT_PATH']           = osOps.normPath('$PIPELINE/rsc/mari/scripts')
+	os.environ['MARI_CACHE']                 = os.environ['MARISCENESDIR']
+	os.environ['MARI_WORKING_DIR']           = os.environ['MARISCENESDIR']
+	os.environ['MARI_DEFAULT_GEOMETRY_PATH'] = os.environ['SHOTPUBLISHDIR']
+	os.environ['MARI_DEFAULT_ARCHIVE_PATH']  = os.environ['MARISCENESDIR']
+	os.environ['MARI_DEFAULT_EXPORT_PATH']   = os.environ['MARITEXTURESDIR']
+	os.environ['MARI_DEFAULT_IMPORT_PATH']   = os.environ['MARITEXTURESDIR']
+	os.environ['MARI_DEFAULT_RENDER_PATH']   = os.environ['MARIRENDERSDIR']
+	os.environ['MARI_DEFAULT_CAMERA_PATH']   = os.environ['SHOTPUBLISHDIR']
+
 
 	# Hiero
-	os.environ['HIEROEDITORIALPATH'] = os.path.join(os.path.split(os.environ['JOBPATH'])[0], 'Editorial', 'Hiero') 
-	os.environ['HIEROPLAYERVERSION'] = getAppExecPath('HieroPlayer') #jobData.hieroPlayerVersion
-	os.environ['HIERO_PLUGIN_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'hiero')
+	os.environ['HIEROPLAYERVERSION'] = getAppExecPath('HieroPlayer')
+	os.environ['HIEROEDITORIALPATH'] = osOps.normPath('$JOBPATH/../Editorial/Hiero')
+	os.environ['HIERO_PLUGIN_PATH']  = osOps.normPath('$PIPELINE/rsc/hiero')
+
+
+	# RealFlow (2013)
+	os.environ['REALFLOWVERSION']                    = getAppExecPath('RealFlow')
+	os.environ['REALFLOWDIR']                        = osOps.normPath('$SHOTPATH/3D/realflow')
+	os.environ['REALFLOWSCENESDIR']                  = osOps.normPath('$REALFLOWDIR/$USERNAME')
+	os.environ['RFDEFAULTPROJECT']                   = osOps.normPath('$REALFLOWSCENESDIR/$JOB_$SHOT')
+	os.environ['RF_COMMANDS_ORGANIZER_FILE_PATH']    = osOps.normPath('$REALFLOWSCENESDIR/.cmdsOrg/commandsOrganizer.dat')
+	os.environ['RF_RSC']                             = osOps.normPath('$PIPELINE/rsc/realflow')
+	os.environ['RF_STARTUP_PYTHON_SCRIPT_FILE_PATH'] = osOps.normPath('$PIPELINE/rsc/realflow/scripts/startup.rfs')
+	os.environ['RFOBJECTSPATH']                      = osOps.normPath('$SHOTPUBLISHDIR/ma_geoCache/realflow')
+
 
 	# Clarisse
 	#sys.path.append(os.path.join(os.environ['PIPELINE'], 'rsc', 'clarisse'))
 
-	# RealFlow
-	os.environ['REALFLOWDIR'] = os.path.join(os.environ['SHOTPATH'], '3D', 'realflow')
-	os.environ['REALFLOWVERSION'] = getAppExecPath('RealFlow') #jobData.realflowVersion
-	os.environ['REALFLOWSCENESDIR'] = os.path.join(os.environ['REALFLOWDIR'], os.environ['USERNAME'])
-	os.environ['RF_STARTUP_PYTHON_SCRIPT_FILE_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'realflow', 'scripts', 'startup.rfs')
-	os.environ['RFDEFAULTPROJECT'] = os.path.join(os.environ['REALFLOWSCENESDIR'], '%s_%s' % (os.environ['JOB'], os.environ['SHOT']))
-	os.environ['RFOBJECTSPATH'] = os.path.join(os.environ['SHOTPUBLISHDIR'], 'ma_geoCache', 'realflow')
-	os.environ['RF_RSC'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'realflow')
-	os.environ['RF_COMMANDS_ORGANIZER_FILE_PATH'] = os.path.join(os.environ['REALFLOWSCENESDIR'] , '.cmdsOrg', 'commandsOrganizer.dat')
 
 	# djv_view
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
 		# Note: using 32-bit version of djv_view for QuickTime compatibility on Windows
-		os.environ['DJV_LIB'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-Windows-32/lib' % os.environ['PIPELINE'])
-		os.environ['DJV_CONVERT'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-Windows-32/bin/djv_convert.exe' % os.environ['PIPELINE'])
-		os.environ['DJV_PLAY'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-Windows-32/bin/djv_view.exe' % os.environ['PIPELINE'])
+		os.environ['DJV_LIB']     = osOps.normPath('$PIPELINE/external_apps/djv/djv-1.0.5-Windows-32/lib')
+		os.environ['DJV_CONVERT'] = osOps.normPath('$PIPELINE/external_apps/djv/djv-1.0.5-Windows-32/bin/djv_convert.exe')
+		os.environ['DJV_PLAY']    = osOps.normPath('$PIPELINE/external_apps/djv/djv-1.0.5-Windows-32/bin/djv_view.exe')
 
 	elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-		os.environ['DJV_LIB'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/Resources/lib' % os.environ['PIPELINE'])
-		os.environ['DJV_CONVERT'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/Resources/bin/djv_convert' % os.environ['PIPELINE'])
-		os.environ['DJV_PLAY'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/Resources/bin/djv_view.sh' % os.environ['PIPELINE'])
-		#os.environ['DJV_PLAY'] = os.path.normpath('%s/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/MacOS/djv-1.0.5-OSX-64' % os.environ['PIPELINE'])
+		os.environ['DJV_LIB']     = osOps.normPath('$PIPELINE/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/Resources/lib')
+		os.environ['DJV_CONVERT'] = osOps.normPath('$PIPELINE/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/Resources/bin/djv_convert')
+		os.environ['DJV_PLAY']    = osOps.normPath('$PIPELINE/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/Resources/bin/djv_view.sh')
+	#	os.environ['DJV_PLAY']    = osOps.normPath('$PIPELINE/external_apps/djv/djv-1.0.5-OSX-64.app/Contents/MacOS/djv-1.0.5-OSX-64')
 
 	else:
-		os.environ['DJV_LIB'] = '%s/external_apps/djv/djv-1.0.5-Linux-64/lib' % os.environ['PIPELINE']
-		os.environ['DJV_CONVERT'] = '%s/external_apps/djv/djv-1.0.5-Linux-64/bin/djv_convert' % os.environ['PIPELINE']
-		os.environ['DJV_PLAY'] = '%s/external_apps/djv/djv-1.0.5-Linux-64/bin/djv_view' % os.environ['PIPELINE']
+		os.environ['DJV_LIB']     = osOps.normPath('$PIPELINE/external_apps/djv/djv-1.0.5-Linux-64/lib')
+		os.environ['DJV_CONVERT'] = osOps.normPath('$PIPELINE/external_apps/djv/djv-1.0.5-Linux-64/bin/djv_convert')
+		os.environ['DJV_PLAY']    = osOps.normPath('$PIPELINE/external_apps/djv/djv-1.0.5-Linux-64/bin/djv_view')
+
 
 	# Deadline Monitor / Slave
 	os.environ['DEADLINEMONITORVERSION'] = getAppExecPath('DeadlineMonitor')
-	os.environ['DEADLINESLAVEVERSION'] = getAppExecPath('DeadlineSlave')
+	os.environ['DEADLINESLAVEVERSION']   = getAppExecPath('DeadlineSlave')
+
 
 	return True
 

@@ -165,14 +165,15 @@ global proc menus2Py.saveSceneAs()
 
 global proc menus2Py.launchVersionManager(string $nodeName)
 {
-global string $icSetNodeName;
-$icSetNodeName = $nodeName;
-python "import maya.mel as mel";
-//maya retrives the node name in the format [currentNodeName].[originalNodeName]. 
-//We only need the current nodeName so everything after the'.' needs to be removed
-python "icSetNodeName = mel.eval('$temp=$icSetNodeName'); icSetNodeName=icSetNodeName.split('.')[0]";
-python("import ma_versionUpdate; ma_versionUpdate.update(ICSet=icSetNodeName)");
+	global string $icSetNodeName;
+	$icSetNodeName = $nodeName;
+	python "import maya.mel as mel";
+	// Maya retrieves the node name in the format [currentNodeName].[originalNodeName].
+	// We only need the current nodeName so everything after the '.' needs to be removed.
+	python "icSetNodeName = mel.eval('$temp=$icSetNodeName'); icSetNodeName=icSetNodeName.split('.')[0]";
+	python("import ma_versionUpdate; ma_versionUpdate.update(ICSet=icSetNodeName)");
 }
+
 
 global proc menus2Py.forceOverrideComponentDisplay(string $nodeName)
 {
