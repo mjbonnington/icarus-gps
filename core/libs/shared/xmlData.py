@@ -28,18 +28,31 @@ class xmlData():
 		if datafile is not None:
 			self.datafile = os.path.normpath(datafile)
 
-		verbose.print_("XML read: %s" %self.datafile, 4)
-
 		try:
 			self.tree = ET.parse(self.datafile)
 			self.root = self.tree.getroot()
+			verbose.print_("XML read: %s" %self.datafile, 4)
 			return True
+
 		except (IOError, ET.ParseError):
 			if not quiet:
-				verbose.xmlData_readError(self.datafile)
-				#print "Warning: XML data file is invalid or doesn't exist: %s" %self.datafile
+				verbose.warning("XML data file is invalid or doesn't exist: %s" %self.datafile)
 			self.root = ET.Element('root')
 			self.tree = ET.ElementTree(self.root)
+			return False
+
+
+	def saveXML(self):
+		""" Save XML data.
+		"""
+		try:
+			self.indent(self.root)
+			self.tree.write(self.datafile, xml_declaration=True, encoding='utf-8')
+			verbose.print_("XML write: %s" %self.datafile, 4)
+			return True
+
+		except:
+			verbose.error("XML data file could not be written: %s" %self.datafile)
 			return False
 
 
@@ -59,17 +72,4 @@ class xmlData():
 		else:
 			if level and (not elem.tail or not elem.tail.strip()):
 				elem.tail = i
-
-
-	def saveXML(self):
-		""" Save XML data.
-		"""
-		verbose.print_("XML write: %s" %self.datafile, 4)
-
-		try:
-			self.indent(self.root)
-			self.tree.write(self.datafile, xml_declaration=True, encoding='utf-8')
-			return True
-		except:
-			return False
 

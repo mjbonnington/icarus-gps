@@ -46,7 +46,7 @@ class dialog(QtGui.QDialog):
 			self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WindowCloseButtonHint)
 
 		# Centre window
-		self.move(QtGui.QDesktopWidget().availableGeometry(1).center() - self.frameGeometry().center())
+		#self.move(QtGui.QDesktopWidget().availableGeometry(1).center() - self.frameGeometry().center())
 
 		self.assetRootDir = os.path.expandvars(assetRootDir)
 
@@ -79,7 +79,19 @@ class dialog(QtGui.QDialog):
 		selVersion = self.ui.assetVersion_listWidget.currentItem().text()
 		assetDir = os.path.join(self.assetRootDir, selVersion)
 
-		self.assetData.loadXML(os.path.join(assetDir, 'assetData.xml'), quiet=False)
+		assetDataLoaded = self.assetData.loadXML(os.path.join(assetDir, 'assetData.xml'), quiet=False)
+
+		#--- LEGACY CODE ---#
+		# If XML files don't exist, create defaults, and attempt to convert data from Python data files
+		if not assetDataLoaded:
+			import legacySettings
+
+			# Try to convert from icData.py to XML (legacy assets)
+			if legacySettings.convertAssetData(assetDir, self.assetData):
+				self.assetData.loadXML()
+			else:
+				return False
+		#--- END LEGACY CODE ---#
 
 		# Update image preview and info field
 		self.updateImgPreview(assetDir)

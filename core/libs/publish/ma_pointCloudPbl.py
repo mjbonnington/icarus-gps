@@ -121,7 +121,7 @@ def publish(pblTo, slShot, subtype, textures, pblNotes):
 		if objTrs:
 			objT, objR, objS = objTrs
 		else:
-			raise RunitmeError(verbose.noGetTranforms())
+			raise RuntimeError(verbose.noGetTranforms())
 
 		trsDataFile = open('%s/trsData.py' % (pblDir), 'w')
 		trsDataFile.write('t=%s\nr=%s\ns=%s' % (objT, objR, objS))

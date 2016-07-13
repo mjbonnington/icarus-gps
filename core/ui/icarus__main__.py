@@ -1649,6 +1649,51 @@ Environment: %s
 		self.fillColumn(self.aVersionCol, searchPath)
 
 
+	def updateImgPreview(self):
+		""" Update image preview field with snapshot.
+		"""
+		# Apply context menu to open viewer - DO THIS SOMEWHERE ELSE
+	#	self.ui.gatherImgPreview_label.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+	#	self.actionPreview = QtGui.QAction("Preview...", None)
+	#	self.actionPreview.triggered.connect(self.preview)
+	#	self.ui.gatherImgPreview_label.addAction(self.actionPreview)
+
+		import previewImg
+		imgPath = previewImg.getImg(self.gatherPath, forceExt='jpg')
+	#	self.previewPlayerCtrl(hide=True)
+		# pixmap = QtGui.QPixmap(None)
+		# self.ui.gatherImgPreview_label.setPixmap(pixmap)
+		pixmap = QtGui.QPixmap(imgPath)
+		self.ui.gatherImgPreview_label.setScaledContents(True)
+		self.ui.gatherImgPreview_label.setPixmap(pixmap)
+
+#		if self.previewPlayer:
+#			imgPath = previewImg.getImg(self.gatherPath, forceExt='mov')
+#			if imgPath:
+#				self.previewPlayerCtrl(hide=True)
+#				pixmap = QtGui.QPixmap(None)
+#				self.ui.gatherImgPreview_label.setPixmap(pixmap)
+#				self.previewPlayerCtrl(loadImg=imgPath)
+#				self.previewPlayerCtrl(show=True)
+#				self.previewPlayerCtrl(play=True)
+#
+#				# Add preview context menu
+#				self.ui.gatherImgPreview_label.addAction(self.actionPreview)
+#
+#		if not imgPath or not self.previewPlayer:
+#			imgPath = previewImg.getImg(self.gatherPath, forceExt='jpg')
+#			if imgPath:
+#				self.previewPlayerCtrl(hide=True)
+#				pixmap = QtGui.QPixmap(None)
+#				self.ui.gatherImgPreview_label.setPixmap(pixmap)
+#				pixmap = QtGui.QPixmap(imgPath)
+#				self.ui.gatherImgPreview_label.setScaledContents(True)
+#				self.ui.gatherImgPreview_label.setPixmap(pixmap)
+#
+#				# Remove preview context menu
+#				self.ui.gatherImgPreview_label.removeAction(self.actionPreview)
+
+
 	def updateInfoField(self):
 		""" Update info field with notes and other relevant data.
 		"""
@@ -1687,51 +1732,6 @@ Environment: %s
 			infoText += "\nFrom '%s'" % source #os.path.basename(source)
 
 		self.ui.gatherInfo_textEdit.setText(infoText)
-
-
-	def updateImgPreview(self):
-		""" Update image preview field with snapshot or preview clip.
-		"""
-		# Apply context menu to open viewer - DO THIS SOMEWHERE ELSE
-	#	self.ui.gatherImgPreview_label.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-	#	self.actionPreview = QtGui.QAction("Preview...", None)
-	#	self.actionPreview.triggered.connect(self.preview)
-	#	self.ui.gatherImgPreview_label.addAction(self.actionPreview)
-
-		import previewImg
-		imgPath = previewImg.getImg(self.gatherPath, forceExt='jpg')
-	#	self.previewPlayerCtrl(hide=True)
-		pixmap = QtGui.QPixmap(None)
-		self.ui.gatherImgPreview_label.setPixmap(pixmap)
-		pixmap = QtGui.QPixmap(imgPath)
-		self.ui.gatherImgPreview_label.setScaledContents(True)
-		self.ui.gatherImgPreview_label.setPixmap(pixmap)
-
-#		if self.previewPlayer:
-#			imgPath = previewImg.getImg(self.gatherPath, forceExt='mov')
-#			if imgPath:
-#				self.previewPlayerCtrl(hide=True)
-#				pixmap = QtGui.QPixmap(None)
-#				self.ui.gatherImgPreview_label.setPixmap(pixmap)
-#				self.previewPlayerCtrl(loadImg=imgPath)
-#				self.previewPlayerCtrl(show=True)
-#				self.previewPlayerCtrl(play=True)
-#
-#				# Add preview context menu
-#				self.ui.gatherImgPreview_label.addAction(self.actionPreview)
-#
-#		if not imgPath or not self.previewPlayer:
-#			imgPath = previewImg.getImg(self.gatherPath, forceExt='jpg')
-#			if imgPath:
-#				self.previewPlayerCtrl(hide=True)
-#				pixmap = QtGui.QPixmap(None)
-#				self.ui.gatherImgPreview_label.setPixmap(pixmap)
-#				pixmap = QtGui.QPixmap(imgPath)
-#				self.ui.gatherImgPreview_label.setScaledContents(True)
-#				self.ui.gatherImgPreview_label.setPixmap(pixmap)
-#
-#				# Remove preview context menu
-#				self.ui.gatherImgPreview_label.removeAction(self.actionPreview)
 
 
 	def initGather(self):
@@ -1825,7 +1825,7 @@ else:
 		app.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint)
 
 		# Centre window
-	#	app.move(QtGui.QDesktopWidget().availableGeometry(1).center() - app.frameGeometry().center())
+		#app.move(QtGui.QDesktopWidget().availableGeometry(1).center() - app.frameGeometry().center())
 
 		app.show()
 		sys.exit(app.exec_())

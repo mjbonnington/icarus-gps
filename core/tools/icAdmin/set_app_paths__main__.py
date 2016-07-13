@@ -204,13 +204,12 @@ class setAppPathsDialog(QtGui.QDialog):
 		self.storeAppPathOSX()
 		self.storeAppPathLinux()
 		self.storeAppPathWin()
+
 		if self.ap.saveXML():
-			verbose.settingsData_written('Application path')
-			#print "Application paths data file saved."
+			verbose.message("Application paths data file saved.")
 			return True
 		else:
-			verbose.settingsData_notWritten('Application path')
-			#print "Warning: Application paths data file could not be saved."
+			verbose.error("Application paths data file could not be saved.")
 			return False
 
 

@@ -4,13 +4,13 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2015 Gramercy Park Studios
+# (c) 2013-2016 Gramercy Park Studios
 #
 # Functions for job and shot setup.
 
 
 import os
-import defaultDirs, job__env__, jobs, userPrefs, verbose
+import defaultDirs, job__env__, jobs, verbose, userPrefs
 
 
 def setup(job, shot):
@@ -91,13 +91,11 @@ def checkShot(shotPath):
 	#jobDataDir = os.path.join(jobPath, os.environ['DATAFILESRELATIVEDIR'])
 	shotDataDir = os.path.join(shotPath, os.environ['DATAFILESRELATIVEDIR'])
 
-	#if not os.path.isdir(jobDataDir):
-	#	valid = False
-	#	#verbose.settingsData_notFound('Job', jobDataDir)
+	# if not os.path.isdir(jobDataDir):
+	# 	valid = False
 
 	if not os.path.isdir(shotDataDir):
 		valid = False
-		#verbose.settingsData_notFound('Shot', shotDataDir)
 
 	return valid
 

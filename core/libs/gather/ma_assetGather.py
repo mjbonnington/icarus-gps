@@ -24,10 +24,10 @@ def gather(gatherPath):
 	assetData.loadXML(os.path.join(gatherPath, 'assetData.xml'), quiet=True)
 
 	try:
-		assetExt = assetData.getValue('asset', 'assetExt')
 		assetPblName = assetData.getValue('asset', 'assetPblName')
-		assetType = assetData.getValue('asset', 'assetType')
 		asset = assetData.getValue('asset', 'asset')
+		assetType = assetData.getValue('asset', 'assetType')
+		assetExt = assetData.getValue('asset', 'assetExt')
 
 		# Check for preferred .ma or .mb extension
 		for item_ in os.listdir(gatherPath):

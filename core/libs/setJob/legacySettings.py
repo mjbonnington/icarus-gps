@@ -20,7 +20,7 @@ def convertAppExecPath(app, path, ap):
 		if ver in path:
 			return ver
 
-	print "Warning: could not detect the preferred version of %s.\nPlease set the preferred version in the Job Settings dialog or this app will be unavailable." %app
+	verbose.warning("Could not detect the preferred version of %s.\nPlease set the preferred version in the Job Settings dialog or this app will be unavailable." %app)
 	return ""
 
 
@@ -28,8 +28,6 @@ def convertJobData(dataPath, jd, ap):
 	""" Read job data from python source and save out an XML file.
 	"""
 	if os.path.isfile(os.path.join(dataPath, 'jobData.py')):
-		verbose.settingsData_convert('jobData')
-
 		sys.path.append(dataPath)
 		import jobData
 		reload(jobData)
@@ -62,16 +60,13 @@ def convertJobData(dataPath, jd, ap):
 
 		# Save XML
 		if jd.saveXML():
-			verbose.settingsData_written('Job')
-			#print "Job settings data file saved."
+			verbose.message("Converted job data to XML.")
 			return True
 		else:
-			verbose.settingsData_notWritten('Job')
-			#print "Warning: Job settings data file could not be saved."
 			return False
 
 	else:
-		#print "Cannot convert settings: jobData.py not found."
+		verbose.error("Cannot convert settings: job data not found.")
 		return False
 
 
@@ -79,8 +74,6 @@ def convertShotData(dataPath, sd):
 	""" Read shot data from python source and save out an XML file.
 	"""
 	if os.path.isfile(os.path.join(dataPath, 'shotData.py')):
-		verbose.settingsData_convert('shotData')
-
 		sys.path.append(dataPath)
 		import shotData
 		reload(shotData)
@@ -98,16 +91,13 @@ def convertShotData(dataPath, sd):
 
 		# Save XML
 		if sd.saveXML():
-			verbose.settingsData_written('Shot')
-			#print "Shot settings data file saved."
+			verbose.message("Converted shot data to XML.")
 			return True
 		else:
-			verbose.settingsData_notWritten('Shot')
-			#print "Warning: Shot settings data file could not be saved."
 			return False
 
 	else:
-		#print "Cannot convert settings: shotData.py not found."
+		verbose.error("Cannot convert settings: shot data not found.")
 		return False
 
 
@@ -115,8 +105,6 @@ def convertAssetData(dataPath, ad):
 	""" Read asset data from python source and save out an XML file.
 	"""
 	if os.path.isfile(os.path.join(dataPath, 'icData.py')):
-		verbose.settingsData_convert('icData', 'assetData')
-
 		sys.path.append(dataPath)
 		import icData
 		reload(icData)
@@ -145,16 +133,13 @@ def convertAssetData(dataPath, ad):
 
 		# Save XML
 		if ad.saveXML():
-			verbose.settingsData_written('Asset')
-			#print "Asset settings data file saved."
+			verbose.message("Converted asset data to XML.")
 			return True
 		else:
-			verbose.settingsData_notWritten('Asset')
-			#print "Warning: Asset settings data file could not be saved."
 			return False
 
 	else:
-		#print "Cannot convert settings: icData.py not found."
+		verbose.error("Cannot convert settings: asset data not found.")
 		return False
 
 
@@ -163,7 +148,7 @@ def checkAssetPath():
 		Return True as soon as any assets are found in any of the job or shot(s).
 		This function should only run if the value 'meta/assetDir' is not set in the job settings data.
 	"""
-	#print "Checking for published assets..."
+	verbose.print_("Checking for published assets...", 4)
 
 	import setJob
 

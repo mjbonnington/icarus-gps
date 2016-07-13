@@ -18,6 +18,16 @@ if not userPrefs.config.has_option('main', 'verbosity'):
 statusBar = None
 
 
+def message(message):
+	print_( message, 3 )
+
+def warning(message):
+	print_( "Warning: %s" %message, 2 )
+
+def error(message):
+	print_( "ERROR: %s" %message, 1 )
+
+
 def print_(message, verbosityLevel=3, status=True, log=False):
 	""" Print the message to the console.
 		If 'status' is True, the message will be shown on the main UI status bar.
@@ -256,20 +266,6 @@ def renderElements(layer=None, pass_=None, versionHeader=False):
 	else:
 		print_( '[%s_%s]' % (layer, pass_), 3 )
 
-def settingsData_written(settingsType):
-	print_( "%s settings data file saved." % settingsType, 3 )
-
-def settingsData_notWritten(settingsType):
-	print_( "Error: %s settings data file could not be saved." % settingsType, 1 )
-
-def settingsData_notFound(settingsType, dataFile=""):
-	print_( "Warning: %s settings data file not found: %s" % (settingsType, dataFile), 2 )
-
-def settingsData_convert(settingsInFile, settingsOutFile=None):
-	if settingsOutFile is None:
-		settingsOutFile = settingsInFile
-	print_( "Converting %s.py to %s.xml" % (settingsInFile, settingsOutFile), 3 )
-
 def shaderLinkError(shaderRelinkResult):
 	print_( 'Shader link error: The following objects could not be relinked.\n%s' % shaderRelinkResult, 1 )
 
@@ -278,9 +274,6 @@ def shaderSupport():
 
 def userPrefs_notWritten():
 	print_( 'Warning: unable to write user prefs configuration file.', 2 )
-
-def xmlData_readError(datafile):
-	print_( "Warning: XML data file is invalid or doesn't exist: %s" % datafile, 2 )
 
 
 def pluralise(noun, count=None):
