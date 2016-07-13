@@ -283,6 +283,9 @@
      <property name="enabled">
       <bool>true</bool>
      </property>
+     <property name="suffix">
+      <string> degrees</string>
+     </property>
      <property name="decimals">
       <number>1</number>
      </property>
@@ -386,7 +389,7 @@
     </widget>
    </item>
    <item row="12" column="1">
-    <widget class="QPlainTextEdit" name="plainTextEdit">
+    <widget class="QPlainTextEdit" name="notes_plainTextEdit">
      <property name="xmlTag" stdset="0">
       <string>notes</string>
      </property>
@@ -403,7 +406,6 @@
   <zorder>lensPreset_label</zorder>
   <zorder>lensPreset_comboBox</zorder>
   <zorder>focalLength_doubleSpinBox</zorder>
-  <zorder>focalLength_doubleSpinBox</zorder>
   <zorder>aperture_label</zorder>
   <zorder>aperture_doubleSpinBox</zorder>
   <zorder>shutterAngle_doubleSpinBox</zorder>
@@ -418,7 +420,7 @@
   <zorder>focusDistance_doubleSpinBox</zorder>
   <zorder>subjectDistance_doubleSpinBox</zorder>
   <zorder>filter_lineEdit</zorder>
-  <zorder>plainTextEdit</zorder>
+  <zorder>notes_plainTextEdit</zorder>
   <zorder>camPitch_doubleSpinBox</zorder>
  </widget>
  <tabstops>

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'settings_camera_ui.ui'
 #
-# Created: Tue Jan 12 19:13:14 2016
+# Created: Wed Jul 13 17:54:01 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -156,9 +156,9 @@ class Ui_settings_frame(object):
         self.notes_label = QtGui.QLabel(settings_frame)
         self.notes_label.setObjectName("notes_label")
         self.formLayout.setWidget(12, QtGui.QFormLayout.LabelRole, self.notes_label)
-        self.plainTextEdit = QtGui.QPlainTextEdit(settings_frame)
-        self.plainTextEdit.setObjectName("plainTextEdit")
-        self.formLayout.setWidget(12, QtGui.QFormLayout.FieldRole, self.plainTextEdit)
+        self.notes_plainTextEdit = QtGui.QPlainTextEdit(settings_frame)
+        self.notes_plainTextEdit.setObjectName("notes_plainTextEdit")
+        self.formLayout.setWidget(12, QtGui.QFormLayout.FieldRole, self.notes_plainTextEdit)
 
         self.retranslateUi(settings_frame)
         QtCore.QMetaObject.connectSlotsByName(settings_frame)
@@ -189,6 +189,7 @@ class Ui_settings_frame(object):
         self.camHeight_doubleSpinBox.setSuffix(QtGui.QApplication.translate("settings_frame", "m", None, QtGui.QApplication.UnicodeUTF8))
         self.camHeight_doubleSpinBox.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "camHeight", None, QtGui.QApplication.UnicodeUTF8))
         self.camPitch_label.setText(QtGui.QApplication.translate("settings_frame", "Cam pitch (angle):", None, QtGui.QApplication.UnicodeUTF8))
+        self.camPitch_doubleSpinBox.setSuffix(QtGui.QApplication.translate("settings_frame", " degrees", None, QtGui.QApplication.UnicodeUTF8))
         self.camPitch_doubleSpinBox.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "camPitch", None, QtGui.QApplication.UnicodeUTF8))
         self.focusDistance_label.setText(QtGui.QApplication.translate("settings_frame", "Focus distance:", None, QtGui.QApplication.UnicodeUTF8))
         self.focusDistance_doubleSpinBox.setSuffix(QtGui.QApplication.translate("settings_frame", "m", None, QtGui.QApplication.UnicodeUTF8))
@@ -199,5 +200,5 @@ class Ui_settings_frame(object):
         self.filter_label.setText(QtGui.QApplication.translate("settings_frame", "Filter(s):", None, QtGui.QApplication.UnicodeUTF8))
         self.filter_lineEdit.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "filter", None, QtGui.QApplication.UnicodeUTF8))
         self.notes_label.setText(QtGui.QApplication.translate("settings_frame", "Notes:", None, QtGui.QApplication.UnicodeUTF8))
-        self.plainTextEdit.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "notes", None, QtGui.QApplication.UnicodeUTF8))
+        self.notes_plainTextEdit.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "notes", None, QtGui.QApplication.UnicodeUTF8))
 

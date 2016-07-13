@@ -459,36 +459,52 @@ def icDataSet(obj, assetData, update=None, drawOverrides=True, addElements=True)
 			mc.select(obj)
 
 		# Create set with selection
-		dataSet = mc.createNode('ICSet', n='ICSet_%s' % assetData.getValue('asset', 'assetPblName'))
+		dataSet = mc.createNode('ICSet', n='ICSet_'+assetData.getValue('asset', 'assetPblName'))
 		if addElements:
 			mc.sets(obj, forceElement=dataSet, edit=True)
 		if drawOverrides:
 			# Set default component display
-			mc.setAttr('%s.overrideComponentDisplay' % dataSet, 1)
-			mc.setAttr('%s.icAssetDisplay' % dataSet, 2)
+			mc.setAttr(dataSet+'.overrideComponentDisplay', 1)
+			mc.setAttr(dataSet+'.icAssetDisplay', 2)
 			# Create condition nodes for component display overrides
-			condition1 = mc.createNode('condition', n='%sCondition1' % dataSet)
-			mc.setAttr('%s.colorIfTrueR' % condition1, 1)
-			mc.setAttr('%s.colorIfTrueG' % condition1, 0)
-			mc.setAttr('%s.colorIfTrueB' % condition1, 0)
-			mc.setAttr('%s.colorIfFalseR' % condition1, 0)
-			mc.setAttr('%s.colorIfFalseG' % condition1, 0)
-			mc.setAttr('%s.colorIfFalseB' % condition1, 0)
-			condition2 = mc.createNode('condition', n='%sCondition2' % dataSet)
-			mc.setAttr('%s.secondTerm' % condition2, 1)
-			mc.setAttr('%s.colorIfTrueR' % condition2, 0)
-			mc.setAttr('%s.colorIfTrueG' % condition2, 0)
-			mc.setAttr('%s.colorIfTrueB' % condition2, 0)
-			mc.setAttr('%s.colorIfFalseR' % condition2, 1)
-			mc.setAttr('%s.colorIfFalseG' % condition2, 0)
-			mc.setAttr('%s.colorIfFalseB' % condition2, 0)
+			condition1 = mc.createNode('condition', n=dataSet+'_condition1')
+			mc.setAttr(condition1+'.colorIfTrueR', 1)
+			mc.setAttr(condition1+'.colorIfTrueG', 0)
+			mc.setAttr(condition1+'.colorIfTrueB', 0)
+			mc.setAttr(condition1+'.colorIfFalseR', 0)
+			mc.setAttr(condition1+'.colorIfFalseG', 0)
+			mc.setAttr(condition1+'.colorIfFalseB', 0)
+			condition2 = mc.createNode('condition', n=dataSet+'_condition2')
+			mc.setAttr(condition2+'.secondTerm', 1)
+			mc.setAttr(condition2+'.colorIfTrueR', 0)
+			mc.setAttr(condition2+'.colorIfTrueG', 0)
+			mc.setAttr(condition2+'.colorIfTrueB', 0)
+			mc.setAttr(condition2+'.colorIfFalseR', 1)
+			mc.setAttr(condition2+'.colorIfFalseG', 0)
+			mc.setAttr(condition2+'.colorIfFalseB', 0)
 			# Connect conditions to the dataSet
-			mc.connectAttr('%s.overrideComponentDisplay' % dataSet, '%s.drawOverride.overrideEnabled' % obj, f=True)
-			mc.connectAttr('%s.icAssetDisplay' % dataSet, '%s.firstTerm' % condition1, f=True)
-			mc.connectAttr('%s.outColorR' % condition1, '%s.overrideLevelOfDetail' % obj, f=True)
-			mc.connectAttr('%s.icAssetDisplay' % dataSet, '%s.firstTerm' % condition2, f=True)
-			mc.connectAttr('%s.outColorR' % condition2, '%s.overrideShading' % obj, f=True)
-			mc.connectAttr('%s.overrideComponentColor' % dataSet, '%s.drawOverride.overrideColor' % obj, f=True)
+			mc.connectAttr(dataSet+'.icAssetDisplay', condition1+'.firstTerm', f=True)
+			mc.connectAttr(condition1+'.outColorR', obj+'.overrideLevelOfDetail', f=True)
+			mc.connectAttr(dataSet+'.icAssetDisplay', condition2+'.firstTerm', f=True)
+			mc.connectAttr(condition2+'.outColorR', obj+'.overrideShading', f=True)
+			mc.connectAttr(dataSet+'.overrideComponentDisplay', obj+'.drawOverride.overrideEnabled', f=True)
+			mc.connectAttr(dataSet+'.overrideComponentColor', obj+'.drawOverride.overrideColor', f=True)
+# 			expString = """switch (%s.icAssetDisplay) {
+# 	case 0:
+# 		%s.overrideShading = 0;
+# 		%s.overrideLevelOfDetail = 1;
+# 		break;
+# 	case 1:
+# 		%s.overrideShading = 0;
+# 		%s.overrideLevelOfDetail = 0;
+# 		break;
+# 	case 2:
+# 		%s.overrideShading = 1;
+# 		%s.overrideLevelOfDetail = 0;
+# 		break;
+# }
+# """ % (dataSet, obj, obj, obj, obj, obj, obj)
+# 			exp = mc.expression(alwaysEvaluate=False, string=expString, name=dataSet+'_exp')
 
 	# Add asset metadata to set
 	assetTag(dataSet, assetData.getValue('asset', 'asset'))

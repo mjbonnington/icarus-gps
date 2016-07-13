@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 # [Icarus] job_settings__main__.py
-# v0.4
+# v0.5
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2015-2016 Gramercy Park Studios
@@ -21,6 +21,7 @@ import math, os, sys
 #env__init__.setEnv()
 #env__init__.appendSysPaths()
 
+# Import custom modules
 import appPaths, camPresets, jobSettings, resPresets, units, verbose
 
 
@@ -137,19 +138,19 @@ class settingsDialog(QtGui.QDialog):
 			properties_panel = Ui_settings_frame()
 			properties_panel.setupUi(frame)
 		except ImportError:
-			print "Error: The '%s' properties panel could not be loaded." % ui_file
+			verbose.error("The '%s' properties panel could not be loaded." % ui_file)
 
 
 	def openProperties(self, category, storeProperties=True):
 		""" Open properties panel for selected settings category
 		"""
-		#print "[%s]" %category
 		inherited = False
 
 		# Store the widget values of the currently open page
 		if storeProperties:
 			self.storeProperties(self.currentCategory)
 
+		verbose.print_("\n[%s]" %category, 4)
 		self.currentCategory = category # a bit hacky
 
 		# Create the signal mapper
@@ -183,8 +184,10 @@ class settingsDialog(QtGui.QDialog):
 			if attr:
 				signalMapper.setMapping(widget, attr)
 
-				#text = self.jd.getValue(category, attr)
-				text, inherited = self.inheritFrom(category, attr)
+				if category == 'camera': # nasty hack to avoid camera panel inheriting non-existent values - fix with 'inheritable' attribute to UI file
+					text = self.jd.getValue(category, attr)
+				else:
+					text, inherited = self.inheritFrom(category, attr)
 
 				if inherited:
 					widget.setProperty('xmlTag', None)
@@ -220,7 +223,7 @@ class settingsDialog(QtGui.QDialog):
 						widget.setPlainText(text)
 					#print "%s: %s" %(attr, widget.text())
 					widget.textChanged.connect(signalMapper.map)
-					widget.textChanged.connect( lambda: self.storeValue() ) # This seems to give an TypeError, but still works as expected
+					widget.textChanged.connect( lambda: self.storeValue() ) # This seems to give an TypeError when passing 'current', but still works as expected
 
 				# Spin box(es)...
 				if isinstance(widget, QtGui.QSpinBox):
@@ -272,6 +275,7 @@ class settingsDialog(QtGui.QDialog):
 			jd.loadXML( os.path.join(os.environ['JOBDATA'], 'jobData.xml') )
 			text = jd.getValue(category, attr)
 			inherited = True
+			verbose.print_('%s.%s = %s (inheriting value from job data)' %(category, attr, text), 4)
 
 		#print "%s/%s: got value %s, inherited=%s" %(category, attr, text, inherited)
 		return text, inherited
