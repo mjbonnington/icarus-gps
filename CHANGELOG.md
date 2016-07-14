@@ -4,6 +4,7 @@ v0.9.5 (--)
 -	[Render Queue] Render Queue now has the ability to render Nuke scripts.
 -	[Render Queue] Render jobs can be submitted directly from the Maya and Nuke applications.
 -	[Render Queue] General UI improvements and optimisations.
+-	[Maya] Added Shot Camera preset to GPS Create Camera dialog. The shot camera is automatically given values from the shot data / shoot notes.
 -	[Nuke] Read and Write nodes can be previewed in djv_view by clicking on the toolbar icon.
 -	[Nuke] GPS Write nodes no longer created with backslashes in the file path on Windows.
 

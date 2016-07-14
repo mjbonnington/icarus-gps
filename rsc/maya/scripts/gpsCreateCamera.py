@@ -1,5 +1,5 @@
 # [GPS] Create Camera
-# v0.1
+# v0.2
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
@@ -56,6 +56,7 @@ class gpsCreateCamera():
 
 		mc.optionMenuGrp("cameraPresets", label="Camera Preset: ")
 		mc.menuItem(label="Default")
+		mc.menuItem(label=os.environ['SHOT'])
 		for item in self.cp.getPresets():
 			mc.menuItem(label=item)
 		mc.separator(width=396, height=12, style="in")
@@ -70,7 +71,7 @@ class gpsCreateCamera():
 		mc.setParent(name)
 		mc.rowLayout(numberOfColumns=2, columnAttach2=["left", "left"], columnAlign2=["both", "both"], columnOffset2=[142, 8])
 		mc.checkBox( "physicalCam",
-		             label="Add VRay Physical Camera Attributes",
+		             label="Add V-Ray Physical Camera Attributes",
 		             value=mc.optionVar( q='GPSAddVRayPhysicalCamera' ),
 		             enable=mc.pluginInfo( "vrayformaya", query=True, loaded=True ),
 		             onCommand=lambda *args: mc.optionVar( iv=('GPSAddVRayPhysicalCamera', 1) ),
@@ -103,15 +104,47 @@ class gpsCreateCamera():
 			camSh = mc.listRelatives(cam, s=True)[0]
 		else:
 			camGrp = None
-			cam = mc.camera(n='%s_camera' % camera)
+			cam = mc.camera() #(n='%s_camera' % camera)
 			camSh = cam[1]; cam = cam[0]
 
-		if camera != "Default":
+		if camera == os.environ['SHOT']:
+			import jobSettings
+			sd = jobSettings.jobSettings()
+			shotDataLoaded = sd.loadXML( os.path.join(os.environ['SHOTDATA'], 'shotData.xml') )
+
+			mc.setAttr(camSh+'.horizontalFilmAperture', float(sd.getValue('camera', 'filmbackWidth')) / 25.4)
+			mc.setAttr(camSh+'.verticalFilmAperture', float(sd.getValue('camera', 'filmbackHeight')) / 25.4)
+			mc.setAttr(camSh+'.cameraAperture', lock=True)
+			mc.setAttr(camSh+'.shutterAngle', float(sd.getValue('camera', 'shutterAngle')))
+			#self.setAttr(camSh+'.shutterAngle', '%sdeg' % sd.getValue('camera', 'shutterAngle'))
+			mc.setAttr(camSh+'.focalLength', float(sd.getValue('camera', 'focalLength')))
+			mc.setAttr(camSh+'.fStop', float(sd.getValue('camera', 'aperture')))
+			mc.setAttr(camSh+'.locatorScale', 25)
+
+			self.setAttr(camSh+'.focusDistance', '%sm' % sd.getValue('camera', 'focusDistance'))
+			self.setAttr(camSh+'.centerOfInterest', '%sm' % sd.getValue('camera', 'subjectDistance'))
+
+			if not rig:
+				# self.setAttr(cam+'.ty', '%sm' % sd.getValue('camera', 'camHeight'))
+				# self.setAttr(cam+'.rx', '%sdeg' % sd.getValue('camera', 'camPitch'))
+				mc.move(0, '%sm' % sd.getValue('camera', 'camHeight'), 0, cam)
+				mc.rotate('%sdeg' % sd.getValue('camera', 'camPitch'), 0, 0, cam)
+
+			# Add extra attributes and notes
+			mc.addAttr(camSh, ln='filter', dt='string')
+			mc.setAttr(camSh+'.filter', sd.getValue('camera', 'filter'), typ='string')
+			mc.addAttr(camSh, ln='notes', dt='string')
+			mc.setAttr(camSh+'.notes', sd.getValue('camera', 'notes'), type='string')
+
+			# TODO - attach plate as image plane
+
+		elif camera != "Default":
 			filmback_horiz_in, filmback_vert_in = self.cp.getFilmback(camera, inches=True)
 			mc.setAttr(camSh+'.horizontalFilmAperture', filmback_horiz_in)
 			mc.setAttr(camSh+'.verticalFilmAperture', filmback_vert_in)
 			mc.setAttr(camSh+'.cameraAperture', lock=True)
 			mc.setAttr(camSh+'.shutterAngle', 180)
+			#self.setAttr(camSh+'.shutterAngle', '180deg')
 
 			# Add extra info attributes to camera transform node
 			sensorWidth, sensorHeight = self.cp.getFilmback(camera)
@@ -148,6 +181,8 @@ class gpsCreateCamera():
 		if camGrp:
 			camGrpName = mc.rename(camGrp, '%s_%s' % (camGrp, camera))
 			mc.rename(cam, '%s_camera' % camGrpName)
+		else:
+			mc.rename(cam, '%s_camera' % camera)
 
 		if physical:
 			self.addPhysical()
@@ -173,4 +208,13 @@ class gpsCreateCamera():
 				return
 		else:
 			mc.warning('V-Ray plugin not loaded.')
+
+
+	def setAttr(self, attr, dim):
+		""" Hacky function to set an attribute with a forced linear unit, e.g. '1cm', '2in', etc.
+		"""
+		loc = mc.spaceLocator( p=(dim, '0', '0'), absolute=True )
+		dim = mc.getAttr(loc[0]+".localPositionX")
+		mc.setAttr(attr, dim)
+		mc.delete(loc)
 

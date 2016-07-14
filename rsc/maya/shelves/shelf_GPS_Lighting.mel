@@ -329,7 +329,7 @@ global proc shelf_GPS_Lighting () {
 		-sourceType "python"
 		-commandRepeatable 1
 		-flat 1
-		-mi "Add Physical Camera Settings" ( "import gpsCreateCamera; gpsCreateCamera.gpsCreateCamera().addPhysical()" )
+		-mi "Add V-Ray Physical Camera Settings" ( "import gpsCreateCamera; gpsCreateCamera.gpsCreateCamera().addPhysical()" )
 		-mip 0
 	;
 	shelfButton

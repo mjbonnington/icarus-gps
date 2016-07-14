@@ -75,7 +75,7 @@ global proc menus2Py.updatePresetCameraMenu(string $menu)
 	         -command "menus2Py.toggleCreateCameraRig()"
 	         -parent $menu
 	         GPSCreateCameraRigMenu;
-	menuItem -label "Add VRay Physical Camera Attributes"
+	menuItem -label "Add V-Ray Physical Camera Attributes"
 	         -checkBox `optionVar -q GPSAddVRayPhysicalCamera`
 	         -command "menus2Py.toggleGPSAddVRayPhysicalCamera()"
 	         -parent $menu
