@@ -35,12 +35,12 @@ def openMayaRecentScene(recentFilePath):
 def saveMayaScene():
 	""" Save the scene under its current name.
 	"""
-	sceneName = os.path.split(mayaOps.getScene())[1]
-	if sceneName == 'untitled':
-		saveMayaSceneAs()
-	else:
+	sceneName = mayaOps.getScene()
+	if sceneName:
 		ext = os.path.splitext(sceneName)[1][1:] # get the extension without a leading dot
 		mayaOps.saveFile(ext)
+	else:
+		saveMayaSceneAs()
 
 
 def saveMayaSceneAs():
@@ -49,19 +49,19 @@ def saveMayaSceneAs():
 	mayaOps.saveFileAs(os.environ["MAYASCENESDIR"], "Maya Files (*.ma *.mb)")
 
 
-def mayaUpdate():
-	""" NOTE - this function doesn't appear to be called from anywhere. Could be redundant?
-	"""
-	import sys
-	shotDataPath = os.environ["SHOTDATA"]
-	sys.path.append(shotDataPath)
-	import shotData, mayaOps
-	reload(shotData)
-	os.environ['STARTFRAME'], os.environ['ENDFRAME'] = shotData.frRange
-	os.environ['STARTFRAME'], os.environ['ENDFRAME'] = shotData.frRange
-	os.environ["FRAMERANGE"] = "%s-%s" % (shotData.frRange[0], shotData.frRange[1])
-	os.environ["RESOLUTIONX"] = shotData.res[0]
-	os.environ["RESOLUTIONY"] = shotData.res[1]
-	os.environ["RESOLUTION"] = "%sx%s" % (shotData.res[0], shotData.res[1])
-	mayaOps.update()
+# def mayaUpdate():
+# 	""" NOTE - this function doesn't appear to be called from anywhere. Could be redundant? Compare with mayaOps.update()
+# 	"""
+# 	import sys
+# 	shotDataPath = os.environ["SHOTDATA"]
+# 	sys.path.append(shotDataPath)
+# 	import shotData, mayaOps
+# 	reload(shotData)
+# 	os.environ['STARTFRAME'], os.environ['ENDFRAME'] = shotData.frRange
+# 	os.environ['STARTFRAME'], os.environ['ENDFRAME'] = shotData.frRange
+# 	os.environ["FRAMERANGE"] = "%s-%s" % (shotData.frRange[0], shotData.frRange[1])
+# 	os.environ["RESOLUTIONX"] = shotData.res[0]
+# 	os.environ["RESOLUTIONY"] = shotData.res[1]
+# 	os.environ["RESOLUTION"] = "%sx%s" % (shotData.res[0], shotData.res[1])
+# 	mayaOps.update()
 

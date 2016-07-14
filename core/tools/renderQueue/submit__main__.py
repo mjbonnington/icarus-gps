@@ -50,9 +50,8 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 
 			import maya.cmds as mc
 			sceneName = mc.file(query=True, sceneName=True)
-			#print sceneName
 			if sceneName: # check we're not working in an unsaved scene
-				relPath = self.relativePath(osOps.normPath(sceneName))
+				relPath = self.relativePath(osOps.absolutePath(sceneName))
 				if relPath:
 					self.ui.scene_comboBox.addItem(relPath)
 			else:
@@ -73,9 +72,8 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 
 			import nuke
 			scriptName = nuke.value("root.name")
-			print scriptName
 			if scriptName: # check we're not working in an unsaved script
-				relPath = self.relativePath(osOps.normPath(scriptName))
+				relPath = self.relativePath(osOps.absolutePath(scriptName))
 				if relPath:
 					self.ui.scene_comboBox.addItem(relPath)
 			else:
@@ -133,10 +131,10 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 		""" Setup some global variables and UI elements depending on the job type.
 		"""
 		if self.jobType == 'Maya':
-			self.relativeScenesDir = osOps.normPath( '%s/%s' %(os.environ['MAYADIR'], 'scenes') )
+			self.relativeScenesDir = osOps.absolutePath( '%s/%s' %(os.environ['MAYADIR'], 'scenes') )
 			self.ui.scene_label.setText("Scene:")
 		elif self.jobType == 'Nuke':
-			self.relativeScenesDir = osOps.normPath( '%s/%s' %(os.environ['NUKEDIR'], 'scripts') )
+			self.relativeScenesDir = osOps.absolutePath( '%s/%s' %(os.environ['NUKEDIR'], 'scripts') )
 			self.ui.scene_label.setText("Script:")
 
 		self.relativeScenesToken = '...' # representative string to replace the path specified above
@@ -150,7 +148,7 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 		try:
 			import recentFiles; reload(recentFiles)
 			for filePath in recentFiles.getLs(self.jobType):
-				fullPath = osOps.normPath( os.environ['SHOTPATH'] + filePath )
+				fullPath = osOps.absolutePath( os.environ['SHOTPATH'] + filePath )
 				relPath = self.relativePath(fullPath)
 				if relPath:
 					self.ui.scene_comboBox.addItem(relPath)
@@ -193,7 +191,7 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 
 		filePath = QtGui.QFileDialog.getOpenFileName(self, self.tr('Files'), startingDir, fileFilter)
 		if filePath[0]:
-			newEntry = self.relativePath( osOps.normPath(filePath[0]) )
+			newEntry = self.relativePath( osOps.absolutePath(filePath[0]) )
 			if newEntry:
 				self.ui.scene_comboBox.removeItem(self.ui.scene_comboBox.findText(newEntry)) # if the entry already exists in the list, delete it
 				self.ui.scene_comboBox.insertItem(0, newEntry)

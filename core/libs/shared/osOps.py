@@ -156,10 +156,40 @@ def setUmask(umask='000'):
 		return 'umask %s' % umask
 
 
-def normPath(path):
-	""" Normalises supplied path, expands environment variables and replaces backslashes with forward slashes for compatibility.
+def absolutePath(relPath):
+	""" Convert a relative path to an absolute path.
+		Expands environment variables in supplied path and replaces backslashes with forward slashes for compatibility.
 	"""
-	return os.path.normpath( os.path.expandvars(path) ).replace("\\", "/")
+	return os.path.normpath( os.path.expandvars(relPath) ).replace("\\", "/")
+
+
+def relativePath(absPath, token, tokenFormat='standard'):
+	""" Convert an absolute path to a relative path.
+		'token' is the name of an environment variable to replace.
+		Format specifies the environment variable format:
+			standard:  $NAME
+			bracketed: ${NAME}
+			windows:   %NAME%
+			nuke:  [getenv NAME]
+	"""
+	try:
+		if tokenFormat == 'standard':
+			formattedToken = '$%s' %token
+		elif tokenFormat == 'bracketed':
+			formattedToken = '${%s}' %token
+		elif tokenFormat == 'windows':
+			formattedToken = '%%%s%%' %token
+		elif tokenFormat == 'nuke':
+			formattedToken = '[getenv %s]' %token
+
+		envVar = os.environ[token].replace('\\', '/')
+		relPath = absPath.replace('\\', '/') # ensure backslashes from Windows paths are changed to forward slashes
+		relPath = relPath.replace(envVar, formattedToken) # change to relative path
+
+		return os.path.normpath( relPath ).replace("\\", "/")
+
+	except:
+		return os.path.normpath( absPath ).replace("\\", "/")
 
 
 def sanitize(instr, pattern='\W', replace=''):

@@ -397,8 +397,12 @@ def getICSetAttrs(ICSet):
 def getScene():
 	""" Returns filename and path of currently open scene.
 	"""
-	actFile = mc.file(exn=True, q=True)
-	return actFile
+	sceneName = mc.file(q=True, sceneName=True)
+	return sceneName
+	# if sceneName:
+	# 	return sceneName
+	# else:
+	# 	return 'untitled scene'
 
 
 def getTransforms(obj):
@@ -896,11 +900,17 @@ def submitRenderLayer():
 def update():
 	""" Automatically set some defaults from the shot settings.
 	"""
-	startFrame = os.environ['STARTFRAME']
-	endFrame = os.environ['ENDFRAME']
-	timeFormat = os.environ['TIMEFORMAT']
-	unit = os.environ['UNIT']
-	angle = os.environ['ANGLE']
+	unit         = os.environ['UNIT']
+	angle        = os.environ['ANGLE']
+	timeFormat   = os.environ['TIMEFORMAT']
+	startFrame   = os.environ['STARTFRAME']
+	endFrame     = os.environ['ENDFRAME']
+	try:
+		inFrame  = os.environ['INFRAME']
+		outFrame = os.environ['OUTFRAME']
+	except:
+		inFrame  = startFrame
+		outFrame = endFrame
 
 	# Setting defaults for Maya startup
 	mc.optionVar(sv = ('workingUnitAngular','%s' % angle))
@@ -913,15 +923,16 @@ def update():
 	mc.optionVar(sv = ('workingUnitTimeDefault','%s' % timeFormat))
 	mc.optionVar(sv = ('workingUnitTimeHold','%s' % timeFormat))
 	mc.optionVar(fv = ('playbackMinRangeDefault',int(startFrame)))
-	mc.optionVar(fv = ('playbackMinDefault',int(startFrame)))
+	mc.optionVar(fv = ('playbackMinDefault',int(inFrame)))
 	mc.optionVar(fv = ('playbackMaxRangeDefault',int(endFrame)))
-	mc.optionVar(fv = ('playbackMaxDefault',int(endFrame)))
+	mc.optionVar(fv = ('playbackMaxDefault',int(outFrame)))
 	mc.optionVar(sv = ('upAxisDirection','y'))
 	mc.optionVar(sv = ('workingUnitLinear','%s' % unit))
 	mc.optionVar(sv = ('workingUnitAngular','%s' % angle))
 	mc.optionVar(sv = ('workingUnitTime','%s' % timeFormat))
+
 	mc.currentUnit(l=unit, a=angle, t=timeFormat)
-	mc.playbackOptions(min=startFrame, ast=startFrame, max=endFrame, aet=endFrame, ps=0, mps=1)
+	mc.playbackOptions(animationStartTime=startFrame, minTime=inFrame, maxTime=outFrame, animationEndTime=endFrame, playbackSpeed=0, maxPlaybackSpeed=1)
 
 
 ###################updates ic set version#################
@@ -1028,13 +1039,16 @@ def nkCameraExport(objLs, pblDir, assetPblName, version):
 	nkFile.write(' name %s\n }' % assetPblName)
 	nkFile.close()
 
-##############################.nk node export###########################
+
 def nkFileNodeExport(objLs, nodeType, fileName, pblDir, visiblePblDir, assetPblName, version):
+	""" Export Nuke node from Maya.
+	"""
 	pathtoPblAsset = os.path.join(pblDir, '%s.nk' % assetPblName)
 	filePath = os.path.join(visiblePblDir, 'tx', fileName)
-	#making filePath relative
-	if os.environ['SHOTPUBLISHDIR'] in filePath:
-		filePath = filePath.replace(os.environ['SHOTPUBLISHDIR'], '\[getenv SHOTPUBLISHDIR]')
+
+	# Make file path relative
+	filePath = osOps.relativePath(filePath, 'SHOTPUBLISHDIR', tokenFormat='nuke')
+
 	nkFile = open(pathtoPblAsset, 'w')
 	nkFile.write('''Read {
 	inputs 0
@@ -1045,3 +1059,4 @@ def nkFileNodeExport(objLs, nodeType, fileName, pblDir, visiblePblDir, assetPblN
 	cached true\n}''' % (filePath, assetPblName))
 	nkFile.close()
 	return
+

@@ -17,8 +17,8 @@ import os, sys, env__init__
 # Initialise Icarus environment and add libs to sys path
 env__init__.setEnv()
 
-# Note: publish modules are imported on demand rather than all at once at beginning of file
-import launchApps, setJob, userPrefs, verbose, pblChk, pblOptsPrc, openDirs, jobs #, setTerm, listShots
+# Import custom modules - note: publish modules are imported on demand rather than all at once at beginning of file
+import jobs, launchApps, openDirs, osOps, pblChk, pblOptsPrc, setJob, userPrefs, verbose
 import sequence as seq
 
 
@@ -31,14 +31,6 @@ class icarusApp(QtGui.QDialog):
 
 		# Read user prefs config file file - if it doesn't exist it will be created
 		userPrefs.read()
-
-	#	# Define Phonon as preview player if Icarus is standalone
-	#	# (only enabled on Mac OS X as haven't yet figured out how to get Phonon video player working properly on Windows or Linux)
-	#	if os.environ['ICARUSENVAWARE'] == 'STANDALONE' and os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-	#		from PySide.phonon import Phonon
-	#		self.previewPlayer = Phonon.VideoPlayer(parent = self.ui.gatherImgPreview_label)
-	#	else:
-	#		self.previewPlayer = None
 
 		# Set up keyboard shortcuts
 		self.shortcutShotInfo = QtGui.QShortcut(self)
@@ -175,9 +167,9 @@ class icarusApp(QtGui.QDialog):
 		# Add status bar
 		statusBar = QtGui.QStatusBar(self)
 		self.ui.statusBar_horizontalLayout.addWidget(statusBar)
-		#statusBar.showMessage("ARSE")
-		#self.ui.nuke_pushButton.setStatusTip("FUCK") # status tips not working with this status bar for some reason?
-		verbose.registerStatusBar(statusBar)
+		#statusBar.showMessage("Test message")
+		#self.ui.nuke_pushButton.setStatusTip("Test status tip") # status tips not working with this status bar for some reason?
+		verbose.registerStatusBar(statusBar) # register the status bar with the verbose module
 
 
 		######################################
@@ -721,7 +713,6 @@ class icarusApp(QtGui.QDialog):
      Job/Shot: %s - %s
 
   Frame range: %s
-      Handles: %s
 
    Resolution: %s (full)
                %s (proxy)
@@ -731,12 +722,14 @@ Angular units: %s
    Time units: %s (%s fps)
 """ %(os.environ['JOB'], os.environ['SHOT'],
       os.environ['FRAMERANGE'],
-      os.environ['HANDLES'],
       os.environ['RESOLUTION'],
       os.environ['PROXY_RESOLUTION'],
       os.environ['UNIT'],
       os.environ['ANGLE'],
       os.environ['TIMEFORMAT'], os.environ['FPS'])
+
+			for key in os.environ.keys():
+				print "%30s %s \n" % (key, os.environ[key])
 		except KeyError:
 			print "Environment variable(s) not set."
 
@@ -769,7 +762,7 @@ Environment: %s
 		""" Open settings dialog.
 		"""
 		if settingsType == "Job":
-			categoryLs = ['job', 'time', 'resolution', 'units', 'apps', 'other']
+			categoryLs = ['job', 'resolution', 'units', 'apps', 'other']
 			xmlData = os.path.join(os.environ['JOBDATA'], 'jobData.xml')
 		elif settingsType == "Shot":
 			categoryLs = ['time', 'resolution', 'units', 'camera']
@@ -1071,19 +1064,6 @@ Environment: %s
 	# #	app.show() # This was causing an issue with the UI closing so I've commented it out fot the time being. The widget still seems to auto update.
 
 
-	def relativePath(self, absPath, token):
-		""" Convert a path to a relative path by searching for a given token.
-		"""
-		try:
-			path = absPath.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
-			path = path.replace(os.environ[token].replace('\\', '/'), '$%s' %token) # Change to relative path
-
-			return path
-
-		except:
-			return absPath
-
-
 	def updateRenderPublishUI(self, current, previous):
 		""" Update the render publish UI based on the current selection.
 		"""
@@ -1166,7 +1146,7 @@ Environment: %s
 					# renderLayerItem.setText(0, '%s (%d)' % (renderLayerDir, len(renderPasses)))
 					renderLayerItem.setText(0, renderLayerDir)
 					renderLayerItem.setText(2, 'layer')
-					renderLayerItem.setText(3, self.relativePath(os.path.join(renderPath, renderLayerDir), 'SHOTPATH'))
+					renderLayerItem.setText(3, osOps.relativePath(os.path.join(renderPath, renderLayerDir), 'SHOTPATH'))
 
 					self.ui.renderPbl_treeWidget.addTopLevelItem(renderLayerItem)
 					renderLayerItem.setExpanded(True)
@@ -1181,7 +1161,7 @@ Environment: %s
 						if not fr_range == os.environ['FRAMERANGE']: # set red text for sequence mismatch
 							renderPassItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#c33")))
 						renderPassItem.setText(2, ext.split('.', 1)[1])
-						renderPassItem.setText(3, self.relativePath(os.path.join(renderPath, renderLayerDir, renderPass), 'SHOTPATH'))
+						renderPassItem.setText(3, osOps.relativePath(os.path.join(renderPath, renderLayerDir, renderPass), 'SHOTPATH'))
 
 						self.ui.renderPbl_treeWidget.addTopLevelItem(renderPassItem)
 
@@ -1209,7 +1189,7 @@ Environment: %s
 				if not fr_range == os.environ['FRAMERANGE']: # set red text for sequence mismatch
 					dailyItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#c33")))
 				dailyItem.setText(2, self.dailyType)
-				dailyItem.setText(3, self.relativePath(path, 'SHOTPATH'))
+				dailyItem.setText(3, osOps.relativePath(path, 'SHOTPATH'))
 				self.ui.dailyPbl_treeWidget.addTopLevelItem(dailyItem)
 				#dailyItem.setExpanded(True)
 

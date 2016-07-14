@@ -31,19 +31,19 @@ try:
 			# Temporary (?) fix for cross-platform paths
 			if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
 				if jobpath.startswith(osx_root):
-					jobpath = osOps.normPath( jobpath.replace(osx_root, win_root) )
+					jobpath = osOps.absolutePath( jobpath.replace(osx_root, win_root) )
 				elif jobpath.startswith(linux_root):
-					jobpath = osOps.normPath( jobpath.replace(linux_root, win_root) )
+					jobpath = osOps.absolutePath( jobpath.replace(linux_root, win_root) )
 			elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
 				if jobpath.startswith(win_root):
-					jobpath = osOps.normPath( jobpath.replace(win_root, osx_root) )
+					jobpath = osOps.absolutePath( jobpath.replace(win_root, osx_root) )
 				elif jobpath.startswith(linux_root):
-					jobpath = osOps.normPath( jobpath.replace(linux_root, osx_root) )
+					jobpath = osOps.absolutePath( jobpath.replace(linux_root, osx_root) )
 			else:
 				if jobpath.startswith(win_root):
-					jobpath = osOps.normPath( jobpath.replace(win_root, linux_root) )
+					jobpath = osOps.absolutePath( jobpath.replace(win_root, linux_root) )
 				elif jobpath.startswith(osx_root):
-					jobpath = osOps.normPath( jobpath.replace(osx_root, linux_root) )
+					jobpath = osOps.absolutePath( jobpath.replace(osx_root, linux_root) )
 
 			if os.path.exists(jobpath): # Only add jobs which exist on disk
 				dic[job.find('name').text] = jobpath

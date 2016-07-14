@@ -62,7 +62,7 @@ def updateLs(newEntry, env=os.environ['ICARUSENVAWARE']):
 
 	fileLs = [] # clear recent file list
 
-	#newEntry = osOps.normPath(newEntry) # normalise path for host os
+	#newEntry = osOps.absolutePath(newEntry) # normalise path for host os
 	newEntry = newEntry.replace('\\', '/')
 	shotpath = os.environ['SHOTPATH'].replace('\\', '/')
 

@@ -20,7 +20,7 @@ import gpsSave, osOps, vCtrl
 def read_create():
 	""" Create a custom GPS Read node.
 	"""
-	readDir = osOps.normPath('$SHOTPATH/')
+	readDir = osOps.absolutePath('$SHOTPATH/')
 	dialogPathLs = nuke.getClipname('Read File(s)', default=readDir, multiple=True)
 	if dialogPathLs:
 		for dialogPath in dialogPathLs:
@@ -32,8 +32,7 @@ def read_create():
 				startFrame, endFrame = os.environ['STARTFRAME'], os.environ['ENDFRAME']
 
 			# Make filePath relative
-			if os.environ['JOBPATH'] in filePath:
-				filePath = filePath.replace(os.environ['JOBPATH'], '[getenv JOBPATH]')
+			filePath = osOps.relativePath(filePath, 'JOBPATH', tokenFormat='nuke')
 
 			readNode = nuke.createNode('Read', 'name GPS_Read')
 			readNode.knob('file').setValue(filePath)
@@ -128,7 +127,7 @@ def w_path_preset(writeNode, presetType='Precomp'):
 		fullPath = os.path.join(os.environ['NUKERENDERSDIR'], presetType)
 
 	version = vCtrl.version(fullPath)
-	filePath = osOps.normPath( os.path.join(filePath, version) )
+	filePath = osOps.absolutePath( os.path.join(filePath, version) )
 
 	return filePath
 
@@ -139,11 +138,11 @@ def w_fileName_preset(writeNode, filePath, presetType, ext, proxy=True):
 	fileName = '%s_%s.%s.%s' % (os.environ['SHOT'], presetType, r'%04d', ext)
 #	fullPath = os.path.join(filePath, 'full', fileName)
 #	fileName = '$SHOT_%s.%04d.%s' % (presetType, ext)
-	fullPath = osOps.normPath('%s/full/%s' %(filePath, fileName))
+	fullPath = osOps.absolutePath('%s/full/%s' %(filePath, fileName))
 	writeNode.knob('file').setValue(fullPath)
 	if proxy:
 #		proxyPath = os.path.join(filePath, 'proxy', fileName)
-		proxyPath = osOps.normPath('%s/proxy/%s' %(filePath, fileName))
+		proxyPath = osOps.absolutePath('%s/proxy/%s' %(filePath, fileName))
 		writeNode.knob('proxy').setValue(proxyPath)
 
 

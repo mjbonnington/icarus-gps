@@ -28,15 +28,11 @@ def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, not
 	assetData.loadXML(os.path.join(pblDir, 'assetData.xml'), quiet=True)
 
 	# Parse asset file path, make relative
-	assetRootDir = osOps.normPath(os.path.split(pblDir)[0])
-	assetRootDir = assetRootDir.replace(os.environ['JOBPATH'], '$JOBPATH')
-	#assetRootDir = assetRootDir.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
+	assetRootDir = osOps.relativePath(os.path.split(pblDir)[0], 'JOBPATH')
 
 	# Parse source scene file path, make relative
 	if assetSrc:
-		assetSource = osOps.normPath(assetSrc)
-		assetSource = assetSource.replace(os.environ['JOBPATH'], '$JOBPATH')
-		#assetSource = assetSource.replace('\\', '/') # Ensure backslashes from Windows paths are changed to forward slashes
+		assetSource = osOps.relativePath(assetSrc, 'JOBPATH')
 	else:
 		assetSource = None
 

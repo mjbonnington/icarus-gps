@@ -29,9 +29,6 @@ class renderBrowserApp(QtGui.QMainWindow):
 		self.ui = Ui_MainWindow()
 		self.ui.setupUi(self)
 
-		self.relativeRootDir = os.environ['SHOTPATH']
-		self.relativeRootToken = '$SHOTPATH'
-
 		# Connect signals & slots
 		self.ui.renderPblAdd_pushButton.clicked.connect(self.renderTableAdd)
 		self.ui.renderPblRemove_pushButton.clicked.connect(self.renderTableRemove)
@@ -41,17 +38,6 @@ class renderBrowserApp(QtGui.QMainWindow):
 		# Get current dir for renders and update render layer tree view widget
 		self.renderPath = os.getcwd()
 		self.renderTableUpdate()
-
-
-	def relativePath(self, absPath):
-		if absPath.startswith(self.relativeRootDir):
-			return absPath.replace(self.relativeRootDir, self.relativeRootToken)
-		else:
-			return absPath
-
-
-	def absolutePath(self, relPath):
-		return relPath.replace(self.relativeRootToken, self.relativeRootDir)
 
 
 	def generateThumbnail(self, imagePath, imagePrefix, extension, posterFrame=os.environ['STARTFRAME']):
@@ -71,7 +57,7 @@ class renderBrowserApp(QtGui.QMainWindow):
 		""" Launches sequence viewer when entry is double-clicked.
 		"""
 		#print item.text(column), column
-		path = seq.getFirst( self.absolutePath(item.text(3)) )
+		path = seq.getFirst( osOps.absolutePath(item.text(3)) )
 		#print path
 		djvOps.viewer(path)
 
@@ -122,7 +108,7 @@ class renderBrowserApp(QtGui.QMainWindow):
 					renderLayerItem.setText(0, '%s (%d)' % (renderLayerDir, len(renderPasses)))
 					renderLayerItem.setText(2, 'layer')
 					#renderLayerItem.setText(3, os.path.join(renderPath, renderLayerDir))
-					renderLayerItem.setText(3, self.relativePath(os.path.join(renderPath, renderLayerDir)))
+					renderLayerItem.setText(3, osOps.relativePath(os.path.join(renderPath, renderLayerDir), 'SHOTPATH'))
 					self.ui.renderPbl_treeWidget.addTopLevelItem(renderLayerItem)
 					renderLayerItem.setExpanded(True)
 
@@ -139,7 +125,7 @@ class renderBrowserApp(QtGui.QMainWindow):
 							renderPassItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#c33")))
 						renderPassItem.setText(2, ext.split('.', 1)[1])
 						#renderPassItem.setText(3, path)
-						renderPassItem.setText(3, self.relativePath(os.path.join(renderPath, renderLayerDir, renderPass)))
+						renderPassItem.setText(3, osOps.relativePath(os.path.join(renderPath, renderLayerDir, renderPass), 'SHOTPATH'))
 						self.ui.renderPbl_treeWidget.addTopLevelItem(renderPassItem)
 
 			# Resize columns

@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'settings_other_ui.ui'
 #
-# Created: Tue May 26 14:36:58 2015
-#      by: pyside-uic 0.2.13 running on PySide 1.1.1
+# Created: Thu Jul 14 15:57:06 2016
+#      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -49,5 +49,6 @@ class Ui_settings_frame(object):
         self.projtools_label.setText(QtGui.QApplication.translate("settings_frame", "Project tools:", None, QtGui.QApplication.UnicodeUTF8))
         self.projtools_lineEdit.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "projtools", None, QtGui.QApplication.UnicodeUTF8))
         self.elementslib_label.setText(QtGui.QApplication.translate("settings_frame", "Elements library:", None, QtGui.QApplication.UnicodeUTF8))
+        self.elementslib_lineEdit.setText(QtGui.QApplication.translate("settings_frame", "$FILESYSTEMROOT/_Library/Asset_Library", None, QtGui.QApplication.UnicodeUTF8))
         self.elementslib_lineEdit.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "elementslib", None, QtGui.QApplication.UnicodeUTF8))
 

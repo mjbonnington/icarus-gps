@@ -1,5 +1,6 @@
 v0.9.5 (--)
 -	[Icarus] Publishing and gathering now uses fully XML-based asset metadata.
+-	[Icarus] Fixed a bug where the camera notes field within the shot settings was not being saved.
 -	[Render Queue] Render Queue now has the ability to render Nuke scripts.
 -	[Render Queue] Render jobs can be submitted directly from the Maya and Nuke applications.
 -	[Render Queue] General UI improvements and optimisations.

@@ -74,7 +74,7 @@ class batchRenameApp(QtGui.QMainWindow):
 				 QtGui.QFileDialog.DontResolveSymlinks | QtGui.QFileDialog.ShowDirsOnly)
 
 		self.lastDir = os.path.dirname(dialog)
-		return osOps.normPath(dialog)
+		return osOps.absolutePath(dialog)
 
 
 	def fileDialog(self, dialogHome):
@@ -83,7 +83,7 @@ class batchRenameApp(QtGui.QMainWindow):
 		dialog = QtGui.QFileDialog.getOpenFileName(self, self.tr('Files'), dialogHome, 'All files (*.*)')
 
 		self.lastDir = os.path.dirname(dialog[0])
-		return osOps.normPath(dialog[0])
+		return osOps.absolutePath(dialog[0])
 
 
 	def getBrowseDir(self):

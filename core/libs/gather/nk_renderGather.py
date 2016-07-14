@@ -10,6 +10,7 @@
 
 
 import os
+import osOps
 import nuke
 
 
@@ -29,8 +30,7 @@ def gather(gatherPath):
 				fileName = 'GPS_Render_Read'
 
 			# Make file path relative
-			if os.environ['SHOTPUBLISHDIR'] in filePath:
-				filePath = filePath.replace(os.environ['SHOTPUBLISHDIR'], '[getenv SHOTPUBLISHDIR]')
+			filePath = osOps.relativePath(filePath, 'SHOTPUBLISHDIR', tokenFormat='nuke')
 
 			readNode = nuke.createNode('Read', 'name %s' % fileName)
 			readNode.knob('file').setValue(filePath)
