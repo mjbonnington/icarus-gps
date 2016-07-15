@@ -119,7 +119,7 @@ class gpsCreateCamera():
 			#self.setAttr(camSh+'.shutterAngle', '%sdeg' % sd.getValue('camera', 'shutterAngle'))
 			mc.setAttr(camSh+'.focalLength', float(sd.getValue('camera', 'focalLength')))
 			mc.setAttr(camSh+'.fStop', float(sd.getValue('camera', 'aperture')))
-			mc.setAttr(camSh+'.locatorScale', 25)
+			#mc.setAttr(camSh+'.locatorScale', 25)
 
 			self.setAttr(camSh+'.focusDistance', '%sm' % sd.getValue('camera', 'focusDistance'))
 			self.setAttr(camSh+'.centerOfInterest', '%sm' % sd.getValue('camera', 'subjectDistance'))
@@ -131,7 +131,9 @@ class gpsCreateCamera():
 				mc.rotate('%sdeg' % sd.getValue('camera', 'camPitch'), 0, 0, cam)
 
 			# Add extra attributes and notes
-			mc.addAttr(camSh, ln='filter', dt='string')
+			mc.addAttr(camSh, ln='clipRef', nn='Clip / reel ref', dt='string')
+			mc.setAttr(camSh+'.clipRef', sd.getValue('camera', 'clipRef'), typ='string')
+			mc.addAttr(camSh, ln='filter', nn='Filter(s)', dt='string')
 			mc.setAttr(camSh+'.filter', sd.getValue('camera', 'filter'), typ='string')
 			mc.addAttr(camSh, ln='notes', dt='string')
 			mc.setAttr(camSh+'.notes', sd.getValue('camera', 'notes'), type='string')

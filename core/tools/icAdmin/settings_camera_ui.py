@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'settings_camera_ui.ui'
 #
-# Created: Wed Jul 13 17:54:01 2016
+# Created: Fri Jul 15 10:02:44 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -131,9 +131,10 @@ class Ui_settings_frame(object):
         self.focusDistance_doubleSpinBox = QtGui.QDoubleSpinBox(settings_frame)
         self.focusDistance_doubleSpinBox.setEnabled(True)
         self.focusDistance_doubleSpinBox.setDecimals(2)
-        self.focusDistance_doubleSpinBox.setMinimum(0.0)
+        self.focusDistance_doubleSpinBox.setMinimum(0.01)
         self.focusDistance_doubleSpinBox.setMaximum(1000.0)
         self.focusDistance_doubleSpinBox.setSingleStep(0.1)
+        self.focusDistance_doubleSpinBox.setProperty("value", 1.0)
         self.focusDistance_doubleSpinBox.setObjectName("focusDistance_doubleSpinBox")
         self.formLayout.setWidget(9, QtGui.QFormLayout.FieldRole, self.focusDistance_doubleSpinBox)
         self.subjectDistance_label = QtGui.QLabel(settings_frame)
@@ -142,9 +143,10 @@ class Ui_settings_frame(object):
         self.subjectDistance_doubleSpinBox = QtGui.QDoubleSpinBox(settings_frame)
         self.subjectDistance_doubleSpinBox.setEnabled(True)
         self.subjectDistance_doubleSpinBox.setDecimals(2)
-        self.subjectDistance_doubleSpinBox.setMinimum(0.0)
+        self.subjectDistance_doubleSpinBox.setMinimum(0.01)
         self.subjectDistance_doubleSpinBox.setMaximum(1000.0)
         self.subjectDistance_doubleSpinBox.setSingleStep(0.1)
+        self.subjectDistance_doubleSpinBox.setProperty("value", 1.0)
         self.subjectDistance_doubleSpinBox.setObjectName("subjectDistance_doubleSpinBox")
         self.formLayout.setWidget(10, QtGui.QFormLayout.FieldRole, self.subjectDistance_doubleSpinBox)
         self.filter_label = QtGui.QLabel(settings_frame)
