@@ -836,10 +836,10 @@ class settingsDialog(QtGui.QDialog):
 			#self.storeProperties(cat)
 
 		if self.jd.saveXML():
-			verbose.message("%s settings data file saved." %self.settingsType)
+			verbose.message("%s settings saved." %self.settingsType)
 			return True
 		else:
-			verbose.error("%s settings data file could not be saved." %self.settingsType)
+			verbose.error("%s settings could not be saved." %self.settingsType)
 			return False
 
 

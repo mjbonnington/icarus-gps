@@ -1,4 +1,4 @@
-v0.9.5 (--)
+v0.9.5 (2016-07-20)
 -	[Icarus] Publishing and gathering now uses fully XML-based asset metadata.
 -	[Icarus] Fixed a bug where the camera notes field within the shot settings was not being saved.
 -	[Render Queue] Render Queue now has the ability to render Nuke scripts.
