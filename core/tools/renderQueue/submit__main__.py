@@ -35,6 +35,7 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 		# Set job type from Icarus environment if possible
 		if os.environ['ICARUSENVAWARE'] == 'STANDALONE':
 			try:
+				#self.jobType = userPrefs.config.get('renderqueue', 'lastrenderjobtype')
 				self.jobType = userPrefs.config.get('main', 'lastrenderjobtype')
 			except:
 				self.jobType = self.ui.type_comboBox.currentText()
@@ -122,6 +123,7 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 		""" Set job type - called when the job type combo box value is changed.
 		"""
 		self.jobType = self.ui.type_comboBox.currentText()
+		#userPrefs.edit('renderqueue', 'lastrenderjobtype', self.jobType)
 		userPrefs.edit('main', 'lastrenderjobtype', self.jobType)
 		self.setJobType()
 		self.setSceneList()

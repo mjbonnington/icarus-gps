@@ -191,14 +191,14 @@ class renderQueue(xmlData.xmlData):
 		self.loadXML(quiet=True) # reload XML data
 
 		for priority in range(100, 0, -1): # iterate over range starting at 100 and ending at 1 (zero is omitted)
-			#print priority,
 			elements = self.root.findall("./job/[priority='%s']" %priority) # get all <job> elements with the highest priority
 			if elements is not None:
 				for element in elements:
-					#print "Job ID %s: %s (%s)" %(element.get('id'), element.find('name').text, element.find('status').text),
+					#print "[Priority %d] Job ID %s: %s (%s)" %(priority, element.get('id'), element.find('name').text, element.find('status').text),
 					if element.find('status').text != "Done":
-						#print "This will do, let's render it!"
-						return element
+						if element.find("task/[status='Queued']") is not None: # does this job have any queued tasks?
+							#print "This will do, let's render it!"
+							return element
 					#print "Not yet, keep searching..."
 
 		return None

@@ -1,3 +1,6 @@
+v0.9.6 (--)
+-	[Render Queue] Fixed a bug with jobs not being dequeued correctly.
+
 v0.9.5 (2016-07-20)
 -	[Icarus] Publishing and gathering now uses fully XML-based asset metadata.
 -	[Icarus] Fixed a bug where the camera notes field within the shot settings was not being saved.

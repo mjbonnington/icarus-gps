@@ -576,7 +576,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 
 			for jobTaskID in jobTaskIDs:
 				self.rq.completeTask(jobTaskID[0], jobTaskID[1], 0)
-				verbose.print_("Job ID %d, Task ID %d: Tasked marked as Done." %jobTaskID, 3)
+				verbose.print_("Job ID %d, Task ID %d: Task marked as Done." %jobTaskID, 3)
 
 			self.updateRenderQueueView()
 

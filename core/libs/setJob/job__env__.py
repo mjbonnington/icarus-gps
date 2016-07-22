@@ -23,8 +23,8 @@ def setEnv(envVars):
 		value = shotData.getValue(category, setting)
 		if value == "":
 			value = jobData.getValue(category, setting)
-#			if value == "":
-#				value = defaultData.getValue(category, setting)
+			# if value == "":
+			# 	value = defaultData.getValue(category, setting)
 
 		return value
 
@@ -78,8 +78,8 @@ def setEnv(envVars):
 		if legacySettings.convertShotData(shotDataPath, shotData):
 			shotData.loadXML()
 
+
 	# Check if the job is using the old hidden asset publish directory
-	#assetDir = getInheritedValue('meta', 'assetDir')
 	assetDir = jobData.getValue('meta', 'assetDir')
 	if assetDir:
 		os.environ['PUBLISHRELATIVEDIR'] = assetDir

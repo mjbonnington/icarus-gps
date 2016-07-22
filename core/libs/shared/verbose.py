@@ -178,7 +178,7 @@ def noICSetsPbl():
 	print_( 'ICSets cannot be selected for publishing', 1 )
 
 def noJob(job):
-	print_( 'ERROR: The job path "%s" does not exist. The job may have been archived, moved or deleted.' % job, 1 )
+	error( 'The job path "%s" does not exist. The job may have been archived, moved or deleted.' % job)
 
 def noJobs():
 	print_( 'ERROR: No active jobs found.', 2 )
@@ -214,7 +214,7 @@ def noSetsPbl():
 	print_( 'Sets cannot be selected for publishing', 1 )
 
 def noShot(shot):
-	print_( 'Warning: No valid shots found in job path "%s".' % shot, 2 )
+	warning( 'No valid shots found in job path "%s".' % shot)
 
 def notCamera():
 	print_( 'The current selection is not a camera', 2 )

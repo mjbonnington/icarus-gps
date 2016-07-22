@@ -28,7 +28,7 @@ def setEnv():
 	except KeyError:
 		os.environ['ICARUSENVAWARE'] = 'STANDALONE'
 
-	os.environ['ICARUSVERSION'] = 'v0.9.5-20160720'
+	os.environ['ICARUSVERSION'] = 'v0.9.6-20160722'
 
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
 	icarusUIDir = os.path.join('core', 'ui')
