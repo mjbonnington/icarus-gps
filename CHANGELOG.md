@@ -1,4 +1,5 @@
 v0.9.6 (--)
+-	[Icarus] Fixed a bug with user prefs not being created properly on first run.
 -	[Render Queue] Fixed a bug with jobs not being dequeued correctly.
 
 v0.9.5 (2016-07-20)

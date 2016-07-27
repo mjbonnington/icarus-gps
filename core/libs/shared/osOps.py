@@ -14,24 +14,32 @@ import verbose
 
 
 def createDir(path, umask='000'):
-	""" Creates directory for the specified path with the specified umask - could probably be rewritten to use Python's own functions
+	""" Creates directory for the specified path with the specified umask.
+		Could probably be rewritten to use Python's own functions? Also remove redundant umask functionality.
 	"""
 	path = os.path.normpath(path)
 
+	# if not os.path.isdir(path):
+	# 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	# 		os.makedirs(path)
+	# 		if os.path.basename(path).startswith('.'): # hide the folder if the name starts with a dot, as these files are not automatically hidden on Windows
+	# 			setHidden(path)
+	# 	else:
+	# 		os.system('%s; mkdir -p %s' % (setUmask(umask), path))
+
 	if not os.path.isdir(path):
+		os.makedirs(path)
 		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-			os.makedirs(path)
 			if os.path.basename(path).startswith('.'): # hide the folder if the name starts with a dot, as these files are not automatically hidden on Windows
 				setHidden(path)
-		else:
-			os.system('%s; mkdir -p %s' % (setUmask(umask), path))
 
-		#verbose.print_("mkdir %s" %path, 4) # commenting this line out as it causes an error if user config dir doesn't exist
+		verbose.print_('mkdir "%s"' %path, 4) # commenting this line out as it causes an error if user config dir doesn't exist
 		return path
 
 
 def setPermissions(path, mode='a+w'):
-	""" Sets permissions to provided path - could probably be rewritten to use Python's own functions
+	""" Sets permissions to provided path.
+		Could probably be rewritten to use Python's own functions?
 	"""
 	path = os.path.normpath(path)
 
@@ -72,7 +80,8 @@ def hardLink(source, destination, umask='000'):
 
 
 def recurseRemove(path):
-	""" Removes files or folders recursively - could be rewritten to use shutil.rmtree
+	""" Removes files or folders recursively.
+		Could be rewritten to use shutil.rmtree?
 	"""
 	path = os.path.normpath(path)
 
@@ -96,7 +105,7 @@ def rename(source, destination):
 	src = os.path.normpath(source)
 	dst = os.path.normpath(destination)
 
-	#verbose.print_('rename "%s" "%s"' % (src, dst), 4)
+	verbose.print_('rename "%s" "%s"' % (src, dst), 4)
 	os.rename(src, dst)
 
 	# if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
@@ -124,7 +133,8 @@ def copy(source, destination):
 
 
 def copyDirContents(source, destination, umask='000'):
-	""" Copy the contents of a folder recursively - rewrite using shutil.copy / copytree
+	""" Copy the contents of a folder recursively.
+		Could rewrite using shutil.copy / copytree?
 	"""
 	src = os.path.normpath( os.path.join(source, '*') )
 	dst = os.path.normpath( destination )

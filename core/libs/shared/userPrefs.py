@@ -10,7 +10,7 @@
 
 from ConfigParser import SafeConfigParser
 import os
-import osOps#, verbose
+import osOps, verbose
 
 
 config = SafeConfigParser()
@@ -18,7 +18,7 @@ configFile = os.path.join(os.environ['ICUSERPREFS'], 'userPrefs.ini')
 
 
 def read():
-	""" Read config file - create it if it doesn't exist
+	""" Read config file - create it if it doesn't exist.
 	"""
 	if os.path.exists(configFile):
 		config.read(configFile)
@@ -28,19 +28,19 @@ def read():
 
 
 def write():
-	""" Write config file to disk
+	""" Write config file to disk.
 	"""
 	try:
 		with open(configFile, 'w') as f:
 			config.write(f)
 
 	except IOError:
-		#verbose.userPrefs_notWritten()
-		print 'Warning: unable to write user prefs configuration file.'
+		verbose.warning('Unable to write user prefs configuration file.')
+		#print 'Warning: unable to write user prefs configuration file.'
 
 
 def create():
-	""" Create config file if it doesn't exist and populate with with defaults
+	""" Create config file if it doesn't exist and populate with with defaults.
 	"""
 	userPrefsDir = os.environ['ICUSERPREFS']
 
@@ -65,8 +65,13 @@ def create():
 
 
 def edit(section, key, value):
-	""" Set a value and save config file to disk
+	""" Set a value and save config file to disk.
+		If the section doesn't exist it will be created.
 	"""
+	if not config.has_section(section):
+		config.add_section(section)
+
 	config.set(section, key, value)
 
 	write()
+

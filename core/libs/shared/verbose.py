@@ -9,10 +9,7 @@
 # This module processes verbosity printing.
 
 
-import userPrefs
-userPrefs.read()
-if not userPrefs.config.has_option('main', 'verbosity'):
-	userPrefs.config.set('main', 'verbosity', '3')
+import os
 
 
 statusBar = None
@@ -42,10 +39,13 @@ def print_(message, verbosityLevel=3, status=True, log=False):
 	"""
 	global statusBar
 
-	userPrefs.read()
+	try:
+		verbositySetting = int(os.environ['IC_VERBOSITY'])
+	except KeyError:
+		verbositySetting = 3
 
 	# Print message to the console
-	if verbosityLevel <= userPrefs.config.getint('main', 'verbosity'):
+	if verbosityLevel <= verbositySetting:
 		print message
 
 	# Print message to the status bar
@@ -271,9 +271,6 @@ def shaderLinkError(shaderRelinkResult):
 
 def shaderSupport():
 	print_( 'The specified node is not a shading group', 2 )
-
-def userPrefs_notWritten():
-	print_( 'Warning: unable to write user prefs configuration file.', 2 )
 
 
 def pluralise(noun, count=None):

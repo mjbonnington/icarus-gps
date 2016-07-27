@@ -29,9 +29,6 @@ class icarusApp(QtGui.QDialog):
 		self.ui = Ui_Dialog()
 		self.ui.setupUi(self)
 
-		# Read user prefs config file file - if it doesn't exist it will be created
-		userPrefs.read()
-
 		# Set up keyboard shortcuts
 		self.shortcutShotInfo = QtGui.QShortcut(self)
 		self.shortcutShotInfo.setKey('Ctrl+I')
@@ -1743,7 +1740,17 @@ Environment: %s
 # RUN ICARUS WITH ENVIRONMENT AWARENESS #
 #########################################
 
-# Version verbosity
+# Read user prefs config file - if it doesn't exist it will be created
+userPrefs.read()
+
+# Set verbosity
+try:
+	os.environ['IC_VERBOSITY'] = userPrefs.config.get('main', 'verbosity')
+except:
+	userPrefs.edit('main', 'verbosity', '2')
+	os.environ['IC_VERBOSITY'] = userPrefs.config.get('main', 'verbosity')
+
+# Version message
 verbose.icarusLaunch(os.environ['ICARUSVERSION'], os.environ['PIPELINE'])
 
 # Python version check
