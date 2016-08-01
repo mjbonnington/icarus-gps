@@ -166,18 +166,16 @@ def setEnv(envVars):
 	os.environ['MAYACACHEDIR']        = osOps.absolutePath('$MAYADIR/cache/$USERNAME')
 	os.environ['MAYASOURCEIMAGESDIR'] = osOps.absolutePath('$MAYADIR/sourceimages/$USERNAME')
 	os.environ['MAYARENDERSDIR']      = osOps.absolutePath('$MAYADIR/renders/$USERNAME')
+	os.environ['MAYASHAREDRESOURCES'] = osOps.absolutePath('$FILESYSTEMROOT/_Library/3D/Maya') # store this in ic global prefs?
 
-	#os.environ['PATH'] = os.path.join('%s;%s' % (os.environ['PATH'], os.environ['PIPELINE']), 'rsc', 'maya', 'dlls')
-	#os.environ['PATH'] += os.pathsep + os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'dlls') # - this DLLs folder doesn't actually exist?
-	#os.environ['PYTHONPATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'maya__env__;%s' % os.environ['PIPELINE'], 'rsc', 'maya', 'scripts')
-	os.environ['PYTHONPATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'maya__env__') + os.pathsep + os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'scripts')
-	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		os.environ['PYTHONPATH'] = "C:\ProgramData\Redshift\Plugins\Maya\Common\scripts" + os.pathsep + os.environ['PYTHONPATH'] # hack for Redshift/XGen
-		os.environ['redshift_LICENSE'] = "62843@10.105.11.11" # temporary fix for Redshift license - this should be set via a system environment variable
+	#os.environ['PATH'] = 
 	os.environ['MAYA_DEBUG_ENABLE_CRASH_REPORTING'] = '0'
-	os.environ['MAYA_PLUG_IN_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'plugins')
-	#os.environ['MAYA_SHELF_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shelves')
-	os.environ['MAYA_SCRIPT_PATH'] = os.path.join(os.environ['PIPELINE'],'rsc', 'maya', 'maya__env__') + os.pathsep + os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'scripts')
+	os.environ['MAYA_PLUG_IN_PATH'] = osOps.absolutePath('$PIPELINE/rsc/maya/plugins') + os.pathsep + osOps.absolutePath('$MAYASHAREDRESOURCES/%s/plug-ins' %jobData.getAppVersion('Maya'))
+	os.environ['MAYA_SCRIPT_PATH'] = osOps.absolutePath('$PIPELINE/rsc/maya/maya__env__') + os.pathsep + osOps.absolutePath('$PIPELINE/rsc/maya/scripts') + os.pathsep + osOps.absolutePath('$MAYASHAREDRESOURCES/scripts') + os.pathsep + osOps.absolutePath('$MAYASHAREDRESOURCES/%s/scripts' %jobData.getAppVersion('Maya'))
+	os.environ['PYTHONPATH'] = os.environ['MAYA_SCRIPT_PATH']
+	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+		os.environ['PYTHONPATH'] += os.pathsep + "C:\ProgramData\Redshift\Plugins\Maya\Common\scripts"
+		os.environ['redshift_LICENSE'] = "62843@10.105.11.11" # temporary fix for Redshift license - this should be set via a system environment variable
 	#os.environ['MI_CUSTOM_SHADER_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shaders', 'include')
 	#os.environ['MI_LIBRARY_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shaders')
 	os.environ['VRAY_FOR_MAYA_SHADERS'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shaders')
@@ -188,8 +186,8 @@ def setEnv(envVars):
 	if os.environ['ICARUS_RUNNING_OS'] == 'Linux':
 		os.environ['XBMLANGPATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'icons', '%B')
 	else:
-		os.environ['XBMLANGPATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'icons')
-	os.environ['MAYA_PRESET_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'presets')
+		os.environ['XBMLANGPATH'] = osOps.absolutePath('$PIPELINE/rsc/maya/icons') + os.pathsep + osOps.absolutePath('$MAYASHAREDRESOURCES/%s/icons' %jobData.getAppVersion('Maya'))
+	#os.environ['MAYA_PRESET_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'presets')
 
 
 	# Nuke

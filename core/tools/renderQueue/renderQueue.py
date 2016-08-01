@@ -226,14 +226,15 @@ class renderQueue(xmlData.xmlData):
 		"""
 		self.loadXML(quiet=True) # reload XML data
 		element = self.root.find("./job[@id='%s']/task[@id='%s']" %(jobID, taskID)) # get the <task> element
-		if element.find('status').text == "Done": # do nothing if status is 'Done'
-			return
-		# elif element.find('status').text == "In Progress": # do nothing if status is 'In Progress'
-		# 	return
-		else:
-			element.find('status').text = "Done"
-			element.find('totalTime').text = str(taskTime)
-			self.saveXML()
+		if element is not None:
+			if element.find('status').text == "Done": # do nothing if status is 'Done'
+				return
+			# elif element.find('status').text == "In Progress": # do nothing if status is 'In Progress'
+			# 	return
+			else:
+				element.find('status').text = "Done"
+				element.find('totalTime').text = str(taskTime)
+				self.saveXML()
 
 
 	def requeueTask(self, jobID, taskID):
