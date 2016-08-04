@@ -119,8 +119,12 @@ class renderQueue(xmlData.xmlData):
 		self.loadXML(quiet=True) # reload XML data
 		for element in self.root.findall('./job'):
 			if int(element.get('id')) == jobID:
-				self.root.remove(element)
-		self.saveXML()
+				if "In Progress" in element.find('status').text:
+					return False # ignore in-progress jobs
+				else:
+					self.root.remove(element)
+					self.saveXML()
+					return True
 
 
 	def getJobs(self):
@@ -221,7 +225,7 @@ class renderQueue(xmlData.xmlData):
 			return False, False
 
 
-	def completeTask(self, jobID, taskID, taskTime=0):
+	def completeTask(self, jobID, taskID, hostID=None, taskTime=0):
 		""" Mark the specified task as 'Done'.
 		"""
 		self.loadXML(quiet=True) # reload XML data
@@ -233,6 +237,7 @@ class renderQueue(xmlData.xmlData):
 			# 	return
 			else:
 				element.find('status').text = "Done"
+				element.find('slave').text = str(hostID)
 				element.find('totalTime').text = str(taskTime)
 				self.saveXML()
 

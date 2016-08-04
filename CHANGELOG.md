@@ -1,7 +1,9 @@
 v0.9.6 (--)
 -	[Icarus] Fixed a bug with user prefs not being created properly on first run.
 -	[Maya] Added shared resources location for adding third-party plug-ins, scripts, etc.
+-	[Maya] Fixed a bug where Icarus window would lose focus when user started typing in a text input field.
 -	[Render Queue] Fixed a bug with jobs not being dequeued correctly.
+-	[Render Queue] Prevented render jobs from being deleted while their status is in progress.
 
 v0.9.5 (2016-07-20)
 -	[Icarus] Publishing and gathering now uses fully XML-based asset metadata.

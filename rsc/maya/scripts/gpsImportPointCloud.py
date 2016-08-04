@@ -123,6 +123,8 @@ class gpsImportPointCloud():
 
 	def importPointCloud(self, filePath):
 		""" Read data from file and generate point cloud.
+			This function uses numPy to process the data for a huge speedup.
+			The old function should be used as a fallback when numPy is not available.
 		"""
 		if os.path.isfile(filePath): # Check file exists
 
@@ -145,7 +147,7 @@ class gpsImportPointCloud():
 			posStr2 = re.sub(r'[\n\[\],]', '', posStr)
 			posExec = 'setAttr ".pos0" -type "vectorArray" %s %s ;' %(count, posStr2)
 			#print posExec
-			mel.eval(posExec)
+			mel.eval(posExec) # this fails silently sometimes, seemingly when the string is too long - needs investigation
 
 			rgb = data[:,3:6]/255
 			rgb1D = rgb.reshape(rgb.size)
@@ -153,7 +155,7 @@ class gpsImportPointCloud():
 			rgbStr2 = re.sub(r'[\n\[\],]', '', rgbStr)
 			rgbExec = 'setAttr ".rgbPP0" -type "vectorArray" %s %s ;' %(count, rgbStr2)
 			#print rgbExec
-			mel.eval(rgbExec)
+			mel.eval(rgbExec) # this fails silently sometimes, seemingly when the string is too long - needs investigation
 
 			#mc.saveInitialState(pCloudParticle[0])
 			mc.currentTime(1)
@@ -208,34 +210,34 @@ class gpsImportPointCloud():
 			return False
 
 
-def createImagePlanes(self, arg):
-	""" NOT YET IMPLEMENTED
-    	The idea is to find a way to store camera names in the .chan file from
-    	Photoscan, based on the photo filename, then use that to automatically
-    	create image planes with the appropriate images.
-    """
+	def createImagePlanes(self, arg):
+		""" NOT YET IMPLEMENTED
+	    	The idea is to find a way to store camera names in the .chan file from
+	    	Photoscan, based on the photo filename, then use that to automatically
+	    	create image planes with the appropriate images.
+	    """
 
-	path = "/Volumes/hggl_SAN_1/Project_Media/110053_The_Louvre/2009753_The_Louvre/Vfx/PC010/3D/photoscan/sourceImages/charles/atrium_Undistorted/atrium_undistorted/proxy"
-	portrait = True
+		path = "/Volumes/hggl_SAN_1/Project_Media/110053_The_Louvre/2009753_The_Louvre/Vfx/PC010/3D/photoscan/sourceImages/charles/atrium_Undistorted/atrium_undistorted/proxy"
+		portrait = True
 
-	camLs = mc.ls(sl=True)
+		camLs = mc.ls(sl=True)
 
-	for cam in camLs:
-		if portrait:
-			hfa = mc.getAttr("%sShape.horizontalFilmAperture" %cam)
-			vfa = mc.getAttr("%sShape.verticalFilmAperture" %cam)
-			mc.setAttr("%sShape.horizontalFilmAperture" %cam, vfa)
-			mc.setAttr("%sShape.verticalFilmAperture" %cam, hfa)
-			mc.setAttr("%sShape.filmFit" %cam, 2)
+		for cam in camLs:
+			if portrait:
+				hfa = mc.getAttr("%sShape.horizontalFilmAperture" %cam)
+				vfa = mc.getAttr("%sShape.verticalFilmAperture" %cam)
+				mc.setAttr("%sShape.horizontalFilmAperture" %cam, vfa)
+				mc.setAttr("%sShape.verticalFilmAperture" %cam, hfa)
+				mc.setAttr("%sShape.filmFit" %cam, 2)
 
-		imagePlane = mc.imagePlane(c="%sShape" %cam,
-		                           lt=cam,
-		                           n="%s_imagePlane" %cam,
-		                           fn="%s/%s.jpg" %(path, cam),
-		                           sia=False)
-		mc.setAttr("%s.displayOnlyIfCurrent" %imagePlane[1], True)
-		mc.setAttr("%s.alphaGain" %imagePlane[1], 0.8)
-		mc.setAttr("%s.depth" %imagePlane[1], 256)
+			imagePlane = mc.imagePlane(c="%sShape" %cam,
+			                           lt=cam,
+			                           n="%s_imagePlane" %cam,
+			                           fn="%s/%s.jpg" %(path, cam),
+			                           sia=False)
+			mc.setAttr("%s.displayOnlyIfCurrent" %imagePlane[1], True)
+			mc.setAttr("%s.alphaGain" %imagePlane[1], 0.8)
+			mc.setAttr("%s.depth" %imagePlane[1], 256)
 
 
 	def importPointCloudX(self, filePath):

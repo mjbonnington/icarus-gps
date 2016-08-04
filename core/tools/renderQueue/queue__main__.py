@@ -54,7 +54,6 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 
 		# Connect signals & slots
 		self.ui.renderQueue_treeWidget.itemSelectionChanged.connect(self.updateToolbarUI)
-		#self.ui.renderQueue_treeWidget.header().sectionResized.connect(lambda logicalIndex, oldSize, newSize: verbose.print_("Column %s resized from %s to %s" %(logicalIndex, oldSize, newSize))) # resize progress indicator
 		self.ui.renderQueue_treeWidget.header().sectionResized.connect(lambda logicalIndex, oldSize, newSize: self.updateColumn(logicalIndex, oldSize, newSize)) # resize progress indicator
 
 		self.ui.jobSubmit_toolButton.clicked.connect(self.launchRenderSubmit)
@@ -460,19 +459,18 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 
 
 	def deleteJob(self):
-		""" Removes selected render job from the database and updates the view.
+		""" Removes selected render job(s) from the database and updates the view.
 		"""
-		jobIDs = []
-
 		try:
 			for item in self.ui.renderQueue_treeWidget.selectedItems():
-				self.ui.renderQueue_treeWidget.takeTopLevelItem( self.ui.renderQueue_treeWidget.indexOfTopLevelItem(item) )
 				if not item.parent(): # if item has no parent then it must be a top level item, and therefore also a job
-					jobIDs.append( int(item.text(1)) )
+					jobID = int(item.text(1))
 
-			for jobID in jobIDs:
-				self.rq.deleteJob(jobID)
-				verbose.print_("Job ID: %s Deleted." %jobID, 3)
+					if self.rq.deleteJob(jobID):
+						self.ui.renderQueue_treeWidget.takeTopLevelItem( self.ui.renderQueue_treeWidget.indexOfTopLevelItem(item) ) # remove item from view
+						verbose.message("Job ID %s deleted." %jobID)
+					else:
+						verbose.warning("Job ID %s cannot be deleted while in progress." %jobID)
 
 			#self.updateRenderQueueView()
 
@@ -575,8 +573,8 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 					jobTaskIDs.append(jobTaskID)
 
 			for jobTaskID in jobTaskIDs:
-				self.rq.completeTask(jobTaskID[0], jobTaskID[1], 0)
-				verbose.print_("Job ID %d, Task ID %d: Task marked as Done." %jobTaskID, 3)
+				self.rq.completeTask(jobTaskID[0], jobTaskID[1], taskTime=0)
+				verbose.message("Job ID %d: task ID %d marked as Done." %jobTaskID)
 
 			self.updateRenderQueueView()
 
@@ -597,7 +595,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 
 			for jobTaskID in jobTaskIDs:
 				self.rq.requeueTask(jobTaskID[0], jobTaskID[1])
-				verbose.print_("Job ID %d, Task ID %d: Task requeued." %jobTaskID, 3)
+				verbose.message("Job ID %d: task ID %d requeued." %jobTaskID)
 
 			self.updateRenderQueueView()
 
@@ -659,7 +657,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 			# self.ui.taskInfo_label.setText("Rendering %s %s from '%s'" %(verbose.pluralise("frame", len(frameList)), frames, self.rq.getValue(jobElement, 'name')))
 			# self.ui.runningTime_label.setText(startTime) # change this to display the task running time
 
-		verbose.print_("[%s] Local slave %s." %(self.localhost, self.slaveStatus), 3)
+		verbose.message("[%s] Local slave %s." %(self.localhost, self.slaveStatus))
 		self.ui.slaveControl_toolButton.setText("%s (%s)" %(self.localhost, self.slaveStatus))
 		self.ui.slaveControl_toolButton.setIcon(statusIcon)
 
@@ -684,17 +682,17 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 		# Look for a suitable job to render - perhaps check here for a few easy-to-detect errors, i.e. existence of scene, render command, etc.
 		jobElement = self.rq.dequeueJob()
 		if jobElement is None:
-			verbose.print_("[%s] No jobs to render." %self.localhost, 3)
+			verbose.message("[%s] No jobs to render." %self.localhost)
 			return False
 		self.renderJobID = jobElement.get('id')
 
 		# Look for tasks to start rendering
 		self.renderTaskID, frames = self.rq.dequeueTask(self.renderJobID, self.localhost)
 		if not self.renderTaskID:
-			verbose.print_("[%s] Job ID %s: no tasks to render." %(self.localhost, self.renderJobID), 3)
+			verbose.message("[%s] Job ID %s: No tasks to render." %(self.localhost, self.renderJobID))
 			return False
 
-		verbose.print_("[%s] Job ID %s, Task ID %s: Starting render..." %(self.localhost, self.renderJobID, self.renderTaskID), 3)
+		verbose.message("[%s] Job ID %s, Task ID %s: Starting render..." %(self.localhost, self.renderJobID, self.renderTaskID))
 		if frames == 'Unknown':
 			frameList = frames
 		else:
@@ -785,8 +783,9 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 		if self.renderTaskInterrupted:
 			self.rq.requeueTask(self.renderJobID, self.renderTaskID) # perhaps set a special status to indicate render was killed, allowing the user to requeue manually?
 		else:
-			self.rq.completeTask(self.renderJobID, self.renderTaskID, totalTimeSec)
+			self.rq.completeTask(self.renderJobID, self.renderTaskID, self.localhost, taskTime=totalTimeSec)
 
+		# Set slave status based on user option
 		if self.actionSlaveStopAfterTask.isChecked():
 			self.setSlaveStatus("disabled")
 		else:
@@ -799,7 +798,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 	def killRenderProcess(self):
 		""" Kill the rendering process. This will also stop the local slave.
 		"""
-		verbose.print_("Attempting to kill process %s" %self.renderProcess, 3)
+		verbose.message("Attempting to kill process %s" %self.renderProcess)
 
 		self.actionSlaveStopAfterTask.setChecked(True) # this is a fudge to prevent the renderComplete function from re-enabling the slave after rendering task was killed by user
 		self.renderTaskInterrupted = True
@@ -808,7 +807,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 			#self.renderProcess.terminate()
 			self.renderProcess.kill()
 		else:
-			verbose.print_("No render in progress.", 2)
+			verbose.message("No render in progress.")
 
 		#totalTimeSec = time.time() - self.startTimeSec # calculate time spent rendering task
 
