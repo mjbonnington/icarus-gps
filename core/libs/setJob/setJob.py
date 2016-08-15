@@ -10,7 +10,7 @@
 
 
 import os
-import defaultDirs, job__env__, jobs, verbose, userPrefs
+import defaultDirs, job__env__, verbose, userPrefs
 
 
 def setup(job, shot):
@@ -38,15 +38,23 @@ def setup(job, shot):
 def getPath(job, shot=False):
 	""" Process job and shot names.
 
-		'job' is mandatory
+		'job' is mandatory.
 		'shot' is optional, if given return the path to the shot, if not return the path to the job.
 	"""
-	if shot:
-		_path = os.path.join(jobs.dic[job], os.environ['SHOTSROOTRELATIVEDIR'], shot)
-	else:
-		_path = os.path.join(jobs.dic[job], os.environ['SHOTSROOTRELATIVEDIR'])
+	import jobs
 
-	return _path
+	j = jobs.jobs()
+	j.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'jobs.xml'))
+	jobDict = j.getDict()
+	#print job, jobDict
+	jobpath = jobDict[job]
+
+	if shot:
+		path = os.path.join(jobpath, os.environ['SHOTSROOTRELATIVEDIR'], shot)
+	else:
+		path = os.path.join(jobpath, os.environ['SHOTSROOTRELATIVEDIR'])
+
+	return path
 
 
 def listShots(job):

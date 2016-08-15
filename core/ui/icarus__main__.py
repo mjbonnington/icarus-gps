@@ -42,6 +42,7 @@ class icarusApp(QtGui.QDialog):
 		self.ui.tabWidget.currentChanged.connect(self.adjustMainUI)
 
 		# Set shot UI
+		self.ui.refreshJobs_toolButton.clicked.connect(self.populateJobs)
 		self.ui.job_comboBox.currentIndexChanged.connect(self.populateShots)
 		self.ui.setShot_pushButton.clicked.connect(self.setupJob)
 		self.ui.setNewShot_pushButton.clicked.connect(self.unlockJobUI)
@@ -74,7 +75,7 @@ class icarusApp(QtGui.QDialog):
 
 		# Header toolbar
 		self.ui.about_toolButton.clicked.connect(self.about)
-		self.ui.batchRename_toolButton.clicked.connect(self.launchBatchRename)
+		#self.ui.toolMenu_toolButton.clicked.connect(self.launchBatchRename)
 
 		# Options
 		self.ui.minimise_checkBox.stateChanged.connect(self.setMinimiseOnAppLaunch)
@@ -149,16 +150,32 @@ class icarusApp(QtGui.QDialog):
 		self.actionDeadlineSlave.triggered.connect(self.launchDeadlineSlave)
 		self.ui.render_pushButton.addAction(self.actionDeadlineSlave)
 
-		# About menu
-	#	self.ui.about_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+		# Tools menu
+		self.ui.toolMenu_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
-	#	self.actionAbout = QtGui.QAction("About", None)
-	#	self.actionAbout.triggered.connect(self.about)
-	#	self.ui.about_toolButton.addAction(self.actionAbout)
+		self.actionUserSettings = QtGui.QAction("User Settings...", None)
+		self.actionUserSettings.triggered.connect(self.userSettings)
+		self.ui.toolMenu_toolButton.addAction(self.actionUserSettings)
 
-	#	self.actionPrefs = QtGui.QAction("User Preferences", None)
-	#	self.actionPrefs.triggered.connect(self.userSettings)
-	#	self.ui.about_toolButton.addAction(self.actionPrefs)
+		self.actionIcarusSettings = QtGui.QAction("Icarus Global Settings...", None)
+		self.actionIcarusSettings.triggered.connect(self.globalSettings)
+		self.ui.toolMenu_toolButton.addAction(self.actionIcarusSettings)
+
+		self.actionJobManagement = QtGui.QAction("Job Management...", None)
+		self.actionJobManagement.triggered.connect(self.launchJobManagement)
+		self.ui.toolMenu_toolButton.addAction(self.actionJobManagement)
+
+		self.actionBatchRename = QtGui.QAction("Batch Rename", None)
+		self.actionBatchRename.triggered.connect(self.launchBatchRename)
+		self.ui.toolMenu_toolButton.addAction(self.actionBatchRename)
+
+#		self.actionRenderQueue = QtGui.QAction("Render Queue...", None)
+#		self.actionRenderQueue.triggered.connect(self.launchRenderQueue)
+		self.ui.toolMenu_toolButton.addAction(self.actionRenderQueue)
+
+		# self.actionAbout = QtGui.QAction("About Icarus", None)
+		# self.actionAbout.triggered.connect(self.about)
+		# self.ui.about_toolButton.addAction(self.actionAbout)
 
 
 		# Add status bar
@@ -193,44 +210,7 @@ class icarusApp(QtGui.QDialog):
 				eval(hideProc)
 
 			# Populate 'Job' and 'Shot' drop down menus
-			jobLs = jobs.dic.keys()
-			jobLs = sorted(jobLs, reverse=True)
-
-			if jobLs:
-				for job in jobLs:
-
-					# Populate 'Shot' combo box. Block signals while doing it to prevent call to populateShots() each time a new item is added
-					self.ui.job_comboBox.blockSignals(True)
-					self.ui.job_comboBox.insertItem(0, job)
-					self.ui.job_comboBox.blockSignals(False)
-
-					# Set the combo box to the first item
-					if len(jobLs) == 1:
-						self.populateShots()
-					else:
-						self.ui.job_comboBox.setCurrentIndex(0)
-
-				# Attempt to set the combo box selections to remember the last shot
-				lastJob = None
-				try:
-					lastJob, lastShot = userPrefs.config.get('main', 'lastjob').split(',')
-					#print lastJob, lastShot
-					if lastJob in jobLs:
-						shotLs = setJob.listShots(lastJob)
-						if shotLs:
-							if lastShot in shotLs:
-								self.ui.job_comboBox.setCurrentIndex(self.ui.job_comboBox.findText(lastJob))
-								self.ui.shot_comboBox.setCurrentIndex(self.ui.shot_comboBox.findText(lastShot))
-				except:
-					pass
-
-			# If no jobs found, disable all job management UI controls
-			else:
-				verbose.noJobs()
-				self.ui.job_comboBox.blockSignals(True)
-				self.ui.job_comboBox.insertItem(0, '[No active jobs found]')
-				self.ui.shot_comboBox.insertItem(0, '[None]')
-				self.ui.shotSetupParent_groupBox.setEnabled(False)
+			self.populateJobs()
 
 			# Delete all tabs except 'Job Management'
 			for i in range(0, self.ui.tabWidget.count()-1):
@@ -263,7 +243,7 @@ class icarusApp(QtGui.QDialog):
 			self.ui.appIcon_label.setPixmap(pixmap)
 
 			# Hide certain UI items
-			uiHideLs = ['assetSubType_listWidget', 'batchRename_toolButton'] # Removed 'icarusBanner', 'ma_assetTypes_frame'
+			uiHideLs = ['assetSubType_listWidget', 'toolMenu_toolButton'] # Removed 'icarusBanner', 'ma_assetTypes_frame'
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
@@ -295,7 +275,7 @@ class icarusApp(QtGui.QDialog):
 			self.ui.appIcon_label.setPixmap(pixmap)
 
 			# Hide certain UI items
-			uiHideLs = ['assetSubType_listWidget', 'batchRename_toolButton'] # Removed 'icarusBanner', 'nk_assetTypes_frame'
+			uiHideLs = ['assetSubType_listWidget', 'toolMenu_toolButton'] # Removed 'icarusBanner', 'nk_assetTypes_frame'
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
@@ -550,12 +530,77 @@ class icarusApp(QtGui.QDialog):
 	# Job management tab #
 	######################
 
+	def populateJobs(self):
+		""" Populates job drop down menu.
+		"""
+		# Block signals to prevent call to populateShots() each time a new item is added
+		self.ui.job_comboBox.blockSignals(True)
+
+		# Remove all items
+		self.ui.job_comboBox.clear()
+
+		# Populate 'Job' and 'Shot' drop down menus
+		j = jobs.jobs()
+		j.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'jobs.xml'))
+
+		jobDict = j.getDict()
+		if jobDict:
+			jobLs = jobDict.keys()
+			jobLs = sorted(jobLs, reverse=True)
+
+			# Add jobs...
+			for job in jobLs:
+				self.ui.job_comboBox.insertItem(0, job)
+
+			# Attempt to set the combo box selections to remember the last shot
+			lastJob = None
+			try:
+				lastJob, lastShot = userPrefs.config.get('main', 'lastjob').split(',')
+				#print lastJob, lastShot
+				if lastJob in jobLs:
+					shotLs = setJob.listShots(lastJob)
+					if shotLs:
+						if lastShot in shotLs:
+							self.ui.job_comboBox.setCurrentIndex(self.ui.job_comboBox.findText(lastJob))
+							self.ui.shot_comboBox.setCurrentIndex(self.ui.shot_comboBox.findText(lastShot))
+
+			# Set the combo box to the first item
+			except:
+				self.ui.job_comboBox.setCurrentIndex(0)
+
+			self.ui.shotSetup_groupBox.setEnabled(True)
+			self.ui.shotSetupButtons_groupBox.setEnabled(True)
+			self.populateShots()
+			self.ui.job_comboBox.blockSignals(False)
+
+		# If no jobs found, disable all job management UI controls
+		else:
+			#verbose.noJobs()
+			msg = "No active jobs found"
+			verbose.warning(msg)
+			self.ui.job_comboBox.insertItem(0, '[%s]' %msg)
+			self.ui.shot_comboBox.clear()
+			self.ui.shot_comboBox.insertItem(0, '[None]')
+			self.ui.shotSetup_groupBox.setEnabled(False)
+			self.ui.shotSetupButtons_groupBox.setEnabled(False)
+
+			# Confirmation dialog
+			# import pDialog
+			# dialogTitle = 'No Jobs Found'
+			# dialogMsg = 'No active jobs were found. Would you like to set up some jobs now?'
+			# dialog = pDialog.dialog()
+			# if dialog.dialogWindow(dialogMsg, dialogTitle):
+			# 	pass
+			# 	# run job management ui
+			# else:
+			# 	pass
+
+
 	def populateShots(self):
 		""" Populates shot drop down menu.
 		"""
 		# Remove all items
-		for shot in range(0, self.ui.shot_comboBox.count(), 1):
-			self.ui.shot_comboBox.removeItem(0)
+		self.ui.shot_comboBox.clear()
 
 		selJob = self.ui.job_comboBox.currentText()
 		shotLs = setJob.listShots(selJob)
@@ -614,8 +659,10 @@ class icarusApp(QtGui.QDialog):
 	def updateJobUI(self):
 		self.ui.setShot_pushButton.setEnabled(True)
 
-	#sets up shot environment, creates user directories and updates user job log
+
 	def setupJob(self):
+		""" Sets up shot environment, creates user directories and updates user job log.
+		"""
 		self.job = self.ui.job_comboBox.currentText()
 		self.shot = self.ui.shot_comboBox.currentText()
 		if setJob.setup(self.job, self.shot):
@@ -625,8 +672,15 @@ class icarusApp(QtGui.QDialog):
 			self.connectNewSignalsSlots()
 			self.lockJobUI()
 		else:
-			verbose.defaultJobSettings()
-			#print "Unable to load job settings. Default values have been applied.\nPlease review the settings in the editor and click Save when done."
+			dialogMsg = 'Unable to load job settings. Default values have been applied.\nPlease review the values in the job settings dialog and click Save when done.\n'
+			verbose.print_(dialogMsg, 1)
+
+			# Confirmation dialog
+			import pDialog
+			dialogTitle = 'Job settings not found'
+			dialog = pDialog.dialog()
+			dialog.dialogWindow(dialogMsg, dialogTitle, conf=True)
+
 			if self.openSettings("Job", autoFill=True):
 				self.setupJob()
 
@@ -636,6 +690,7 @@ class icarusApp(QtGui.QDialog):
 		"""
 		self.updateJobLabel()
 		self.ui.shotSetup_groupBox.setEnabled(False)
+		self.ui.refreshJobs_toolButton.setEnabled(False)
 		self.ui.launchApp_groupBox.setEnabled(True)
 		self.ui.launchOptions_groupBox.setEnabled(True)
 		self.ui.tabWidget.insertTab(1, self.publishTab, 'Publish')
@@ -651,9 +706,11 @@ class icarusApp(QtGui.QDialog):
 		""" Unlocks UI if 'Set New Shot' is clicked.
 		"""
 		# Re-scan for shots
+		#self.populateJobs()
 		self.populateShots()
 
 		self.ui.shotSetup_groupBox.setEnabled(True)
+		self.ui.refreshJobs_toolButton.setEnabled(True)
 		self.ui.launchApp_groupBox.setEnabled(False)
 		self.ui.launchOptions_groupBox.setEnabled(False)
 
@@ -759,7 +816,7 @@ Environment: %s
 		""" Open settings dialog.
 		"""
 		if settingsType == "Job":
-			categoryLs = ['job', 'resolution', 'units', 'apps', 'other']
+			categoryLs = ['job', 'time', 'resolution', 'units', 'apps', 'other']
 			xmlData = os.path.join(os.environ['JOBDATA'], 'jobData.xml')
 		elif settingsType == "Shot":
 			categoryLs = ['time', 'resolution', 'units', 'camera']
@@ -767,6 +824,9 @@ Environment: %s
 		elif settingsType == "User":
 			categoryLs = ['user', ]
 			xmlData = os.path.join(os.environ['ICUSERPREFS'], 'userPrefs.xml')
+		elif settingsType == "Global":
+			categoryLs = ['global', ]
+			#xmlData = os.path.join(os.environ['ICUSERPREFS'], 'userPrefs.xml')
 		import job_settings__main__ # Change this to generic class when it's ready
 		reload(job_settings__main__)
 		settingsEditor = job_settings__main__.settingsDialog(settingsType=settingsType, categoryLs=categoryLs, xmlData=xmlData, autoFill=autoFill)
@@ -796,6 +856,13 @@ Environment: %s
 		""" Open user settings dialog wrapper function.
 		"""
 		if self.openSettings("User"):
+			pass
+
+
+	def globalSettings(self):
+		""" Open Icarus global settings dialog wrapper function.
+		"""
+		if self.openSettings("Global"):
 			pass
 
 
@@ -953,6 +1020,13 @@ Environment: %s
 		"""
 		import rename__main__
 		reload(rename__main__)
+
+
+	def launchJobManagement(self):
+		""" Launches GPS sequence rename tool.
+		"""
+		import icadmin__main__
+		reload(icadmin__main__)
 
 
 	###############

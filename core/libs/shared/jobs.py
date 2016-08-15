@@ -8,114 +8,97 @@
 # Manipulates the database of jobs running in the CG department
 
 
-import os, sys
+import os
 import xml.etree.ElementTree as ET
+import xmlData, verbose
 import osOps
 
 
-# Legacy code to work with current icarus implementation...
-dic = {}
-try:
-	tree = ET.parse(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'jobs.xml'))
-	root = tree.getroot()
-
-	# Get OS-specific root paths defined in jobs.xml. Always replace any backslashes with forward-slashes...
-	win_root = root.find('jobs-root/win').text.replace("\\", "/")
-	osx_root = root.find('jobs-root/osx').text.replace("\\", "/")
-	linux_root = root.find('jobs-root/linux').text.replace("\\", "/")
-
-	for job in root.findall('job'):
-		if job.get('active') == 'True': # Only add jobs tagged as 'active'
-			jobpath = job.find('path').text.replace("\\", "/")
-
-			# Temporary (?) fix for cross-platform paths
-			if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-				if jobpath.startswith(osx_root):
-					jobpath = osOps.absolutePath( jobpath.replace(osx_root, win_root) )
-				elif jobpath.startswith(linux_root):
-					jobpath = osOps.absolutePath( jobpath.replace(linux_root, win_root) )
-			elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-				if jobpath.startswith(win_root):
-					jobpath = osOps.absolutePath( jobpath.replace(win_root, osx_root) )
-				elif jobpath.startswith(linux_root):
-					jobpath = osOps.absolutePath( jobpath.replace(linux_root, osx_root) )
-			else:
-				if jobpath.startswith(win_root):
-					jobpath = osOps.absolutePath( jobpath.replace(win_root, linux_root) )
-				elif jobpath.startswith(osx_root):
-					jobpath = osOps.absolutePath( jobpath.replace(osx_root, linux_root) )
-
-			if os.path.exists(jobpath): # Only add jobs which exist on disk
-				dic[job.find('name').text] = jobpath
-
-except:
-	sys.exit("ERROR: Jobs file not found, or contents are invalid.")
-
-#if not dic:
-#	sys.exit("ERROR: No active jobs found.")
-
-
-class jobs():
-	"""Deals with the current jobs database.
-	   Add and remove jobs, make jobs active or inactive, modify job properties.
+class jobs(xmlData.xmlData):
+	""" Manipulates XML database for storing jobs.
+		Add and remove jobs, make jobs active or inactive, modify job properties.
+		Inherits xmlData class.
 	"""
-	def __init__(self, datafile):
-		self.joblist = {}
-		self.datafile = datafile
+	def getDict(self):
+		""" Read job database from XML file and return dictionary of active jobs.
+		"""
+		dic = {}
+
+		# for job in root.findall('job'):
+		# 	self.joblist[job.find('name').text] = job.find('path').text, job.get('active')
 
 		try:
-			self.tree = ET.parse(self.datafile)
-			self.root = self.tree.getroot()
-		except (IOError, ET.ParseError):
-			print "Warning: XML data file is invalid or doesn't exist."
-			self.root = ET.Element('root')
-			self.tree = ET.ElementTree(self.root)
+			# Get OS-specific root paths defined in jobs.xml. Always replace any backslashes with forward-slashes...
+			self.win_root = self.root.find('jobs-root/win').text.replace("\\", "/")
+			self.osx_root = self.root.find('jobs-root/osx').text.replace("\\", "/")
+			self.linux_root = self.root.find('jobs-root/linux').text.replace("\\", "/")
+
+			for job in self.root.findall('job'):
+				if job.get('active') == 'True': # Only add jobs tagged as 'active'
+					jobpath = job.find('path').text.replace("\\", "/")
+
+					# Temporary (?) fix for cross-platform paths
+					if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+						if jobpath.startswith(self.osx_root):
+							jobpath = osOps.absolutePath( jobpath.replace(self.osx_root, self.win_root) )
+						elif jobpath.startswith(self.linux_root):
+							jobpath = osOps.absolutePath( jobpath.replace(self.linux_root, self.win_root) )
+					elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+						if jobpath.startswith(self.win_root):
+							jobpath = osOps.absolutePath( jobpath.replace(self.win_root, self.osx_root) )
+						elif jobpath.startswith(self.linux_root):
+							jobpath = osOps.absolutePath( jobpath.replace(self.linux_root, self.osx_root) )
+					else:
+						if jobpath.startswith(self.win_root):
+							jobpath = osOps.absolutePath( jobpath.replace(self.win_root, self.linux_root) )
+						elif jobpath.startswith(self.osx_root):
+							jobpath = osOps.absolutePath( jobpath.replace(self.osx_root, self.linux_root) )
+
+					if os.path.exists(jobpath): # Only add jobs which exist on disk
+						dic[job.find('name').text] = jobpath
+
+			return dic
+
+		except:
+			return False
+			#sys.exit("ERROR: Jobs file not found, or contents are invalid.")
 
 
-	def ls(self):
-		"""Print job database in a human-readable pretty format. - NOT YET IMPLEMENTED
-		"""
+	# def ls(self):
+	# 	"""Print job database in a human-readable pretty format. - NOT YET IMPLEMENTED
+	# 	"""
 
 
-#	def getPath(self, jobName):
-#		"""Get path
-#		"""
-#		path = self.root.find('job')
-#		return path.find('path').text
+	# def getPath(self, jobName):
+	# 	""" Get path of the specified job.
+	# 	"""
+	# 	self.loadXML(quiet=True) # reload XML data
+	# 	#element = self.root.find("./job[@id='%s']" %jobID)
+	# 	element = self.root.find('./job')
+	# 	if element.find('name').text == jobName:
+	# 		return element.find('path').text
 
 
-	def readjobs(self):
-		"""Read job database from XML file and store active jobs in dictionary.
-		"""
-		for job in root.findall('job'):
-			self.joblist[job.find('name').text] = job.find('path').text, job.get('active')
+	# def refresh(self):
+	# 	"""Reload job database. - REDUNDANT?
+	# 	"""
+	# 	self.readjobs()
 
 
-	def writejobs(self):
-		"""Write job database to XML file. - NOT YET IMPLEMENTED
-		"""
+	# def add(self, jobName, jobPath):
+	# 	"""Add a new job to the database.
+	# 	"""
+	# 	self.joblistactive[jobName] = jobPath
 
 
-	def refresh(self):
-		"""Reload job database. - REDUNDANT?
-		"""
-		self.readjobs()
+	# def rm(self, jobName):
+	# 	"""Remove a job from the database.
+	# 	"""
+	# 	#del self.joblist[jobName]
+	# 	print 'deleting %s' %jobName
 
 
-	def add(self, jobName, jobPath):
-		"""Add a new job to the database.
-		"""
-		self.joblistactive[jobName] = jobPath
-
-
-	def rm(self, jobName):
-		"""Remove a job from the database.
-		"""
-		#del self.joblist[jobName]
-		print 'deleting %s' %jobName
-
-
-	def modify(self, jobName, jobPath, active):
-		"""Modify job properties, currently name, path, and active status.
-		"""
+	# def modify(self, jobName, jobPath, active):
+	# 	"""Modify job properties, currently name, path, and active status.
+	# 	"""
 

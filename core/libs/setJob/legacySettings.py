@@ -66,7 +66,8 @@ def convertJobData(dataPath, jd, ap):
 			return False
 
 	else:
-		verbose.error("Cannot convert settings: job data not found.")
+		#verbose.error("Cannot convert settings: job data not found.")
+		verbose.print_("Cannot convert settings: job data not found.", 4)
 		return False
 
 
@@ -97,7 +98,8 @@ def convertShotData(dataPath, sd):
 			return False
 
 	else:
-		verbose.error("Cannot convert settings: shot data not found.")
+		#verbose.error("Cannot convert settings: shot data not found.")
+		verbose.print_("Cannot convert settings: shot data not found.", 4)
 		return False
 
 
@@ -139,7 +141,8 @@ def convertAssetData(dataPath, ad):
 			return False
 
 	else:
-		verbose.error("Cannot convert settings: asset data not found.")
+		#verbose.error("Cannot convert settings: asset data not found.")
+		verbose.print_("Cannot convert settings: asset data not found.", 4)
 		return False
 
 

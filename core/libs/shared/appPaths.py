@@ -1,12 +1,11 @@
 #!/usr/bin/python
 
-# App Paths
-# v0.2
+# [Icarus] appPaths.py
 #
-# Michael Bonnington 2015
-# Gramercy Park Studios
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2015-2016 Gramercy Park Studios
 #
-# Stores an XML database of application version paths
+# Manipulate an XML database of application version paths.
 
 
 import xml.etree.ElementTree as ET

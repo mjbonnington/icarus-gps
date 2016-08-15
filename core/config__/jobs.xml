@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+	<jobs-root>
+		<osx>/Volumes/hggl_SAN_1/</osx>
+		<linux>/Volumes/hggl_SAN_1/</linux>
+		<win>Z:/</win>
+	</jobs-root>
+
+	<job active="False">
+		<name>Test</name>
+		<path>D:\Jobs\test001</path>
+	</job>
+	<job active="False">
+		<name>Test_Arse</name>
+		<path>D:\Jobs\test001</path>
+	</job>
+</root>

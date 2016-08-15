@@ -54,8 +54,10 @@ class icadminApp(QtGui.QMainWindow):
 
 	def init(self):
 		# Load data from xml file
-		self.jd = jobs.jobs(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'jobs.xml'))
-		self.ap = appPaths.appPaths(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'appPaths.xml'))
+		self.jd = jobs.jobs()
+		self.jd.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'jobs.xml'))
+		self.ap = appPaths.appPaths()
+		self.ap.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'appPaths.xml'))
 
 		# Initialisation
 		#jobLs = j.joblist.keys()

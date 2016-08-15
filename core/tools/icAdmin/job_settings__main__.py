@@ -184,7 +184,7 @@ class settingsDialog(QtGui.QDialog):
 			if attr:
 				signalMapper.setMapping(widget, attr)
 
-				if category == 'camera' or category == 'time': # nasty hack to avoid camera panel inheriting non-existent values - fix with 'inheritable' attribute to UI file
+				if category == 'camera': # or category == 'time': # nasty hack to avoid camera panel inheriting non-existent values - fix with 'inheritable' attribute to UI file
 					text = self.jd.getValue(category, attr)
 				else:
 					text, inherited = self.inheritFrom(category, attr)
@@ -333,8 +333,6 @@ class settingsDialog(QtGui.QDialog):
 		# Connect signals and slots
 		frame.findChildren(QtGui.QSpinBox, 'rangeStart_spinBox')[0].valueChanged.connect(self.calcTimeValues)
 		frame.findChildren(QtGui.QSpinBox, 'rangeEnd_spinBox')[0].valueChanged.connect(self.calcTimeValues)
-		frame.findChildren(QtGui.QSpinBox, 'in_spinBox')[0].valueChanged.connect(self.calcTimeValues)
-		frame.findChildren(QtGui.QSpinBox, 'out_spinBox')[0].valueChanged.connect(self.calcTimeValues)
 
 
 	def calcTimeValues(self):
@@ -344,39 +342,24 @@ class settingsDialog(QtGui.QDialog):
 
 		rangeStart = frame.findChildren(QtGui.QSpinBox, 'rangeStart_spinBox')[0].value()
 		rangeEnd = frame.findChildren(QtGui.QSpinBox, 'rangeEnd_spinBox')[0].value()
-		inFrame = frame.findChildren(QtGui.QSpinBox, 'in_spinBox')[0].value()
-		outFrame = frame.findChildren(QtGui.QSpinBox, 'out_spinBox')[0].value()
-		durationFull = (rangeEnd - rangeStart) + 1
-		durationEdit = (outFrame - inFrame) + 1
-		handlesStart = inFrame - rangeStart
-		handlesEnd = rangeEnd - outFrame
+
+		durationFull = rangeEnd - rangeStart + 1
 
 		# Stop the other widgets from emitting signals
 		frame.findChildren(QtGui.QSpinBox, 'rangeStart_spinBox')[0].blockSignals(True)
 		frame.findChildren(QtGui.QSpinBox, 'rangeEnd_spinBox')[0].blockSignals(True)
-		frame.findChildren(QtGui.QSpinBox, 'in_spinBox')[0].blockSignals(True)
-		frame.findChildren(QtGui.QSpinBox, 'out_spinBox')[0].blockSignals(True)
 
 		# Update widgets
-		frame.findChildren(QtGui.QLabel, 'rangeInfo_label')[0].setText("(%d frames)" %durationFull)
-		frame.findChildren(QtGui.QLabel, 'inOutInfo_label')[0].setText("(%d frames)" %durationEdit)
-		frame.findChildren(QtGui.QSpinBox, 'handlesStart_spinBox')[0].setValue(handlesStart)
-		frame.findChildren(QtGui.QSpinBox, 'handlesEnd_spinBox')[0].setValue(handlesEnd)
+		frame.findChildren(QtGui.QLabel, 'rangeInfo_label')[0].setText("(duration: %d frames)" %durationFull)
 
 		frame.findChildren(QtGui.QSpinBox, 'rangeStart_spinBox')[0].setMaximum(rangeEnd)
 		frame.findChildren(QtGui.QSpinBox, 'rangeEnd_spinBox')[0].setMinimum(rangeStart)
-		frame.findChildren(QtGui.QSpinBox, 'in_spinBox')[0].setMinimum(rangeStart)
-		frame.findChildren(QtGui.QSpinBox, 'in_spinBox')[0].setMaximum(outFrame)
-		frame.findChildren(QtGui.QSpinBox, 'out_spinBox')[0].setMinimum(inFrame)
-		frame.findChildren(QtGui.QSpinBox, 'out_spinBox')[0].setMaximum(rangeEnd)
 		frame.findChildren(QtGui.QSpinBox, 'posterFrame_spinBox')[0].setMinimum(rangeStart)
 		frame.findChildren(QtGui.QSpinBox, 'posterFrame_spinBox')[0].setMaximum(rangeEnd)
 
 		# Re-enable signals
 		frame.findChildren(QtGui.QSpinBox, 'rangeStart_spinBox')[0].blockSignals(False)
 		frame.findChildren(QtGui.QSpinBox, 'rangeEnd_spinBox')[0].blockSignals(False)
-		frame.findChildren(QtGui.QSpinBox, 'in_spinBox')[0].blockSignals(False)
-		frame.findChildren(QtGui.QSpinBox, 'out_spinBox')[0].blockSignals(False)
 
 
 	def setupRes(self):

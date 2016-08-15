@@ -201,12 +201,23 @@ QToolButton:disabled {
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="batchRename_toolButton">
-           <property name="toolTip">
-            <string>Batch Rename Tool</string>
+          <widget class="QToolButton" name="toolMenu_toolButton">
+           <property name="styleSheet">
+            <string notr="true">QToolButton {
+	padding: 1px 12px 2px 1px;
+}
+
+QToolButton:pressed, QToolButton:checked:pressed {
+	padding: 2px 11px 1px 2px;
+}
+
+QToolButton:disabled {
+	color: #ccc;
+}
+</string>
            </property>
            <property name="text">
-            <string>...</string>
+            <string>Tools</string>
            </property>
            <property name="icon">
             <iconset resource="rsc.qrc">
@@ -218,6 +229,12 @@ QToolButton:disabled {
              <width>15</width>
              <height>15</height>
             </size>
+           </property>
+           <property name="popupMode">
+            <enum>QToolButton::InstantPopup</enum>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
            </property>
           </widget>
          </item>
@@ -298,6 +315,30 @@ QToolButton:disabled {
              <string>Shot Setup</string>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_16">
+             <item>
+              <widget class="QToolButton" name="refreshJobs_toolButton">
+               <property name="toolTip">
+                <string>Refresh jobs</string>
+               </property>
+               <property name="text">
+                <string>Refresh</string>
+               </property>
+               <property name="icon">
+                <iconset resource="rsc.qrc">
+                 <normaloff>:/rsc/rsc/icon_refresh.png</normaloff>
+                 <disabledoff>:/rsc/rsc/icon_refresh_disabled.png</disabledoff>:/rsc/rsc/icon_refresh.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>15</width>
+                 <height>15</height>
+                </size>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonIconOnly</enum>
+               </property>
+              </widget>
+             </item>
              <item>
               <widget class="QFrame" name="shotSetup_groupBox">
                <property name="enabled">

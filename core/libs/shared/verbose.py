@@ -103,9 +103,6 @@ def concurrentPublish():
 def dailyFail():
 	return 'Could not verify daily files.'
 
-def defaultJobSettings():
-	print_( "Unable to load job settings. Default values have been applied.\nPlease review the settings in the editor and click Save when done.", 1 )
-
 def gpsPreview_uiValues():
 	print_( 'Not all GPS Preview UI values could be read', 2 )
 
@@ -180,8 +177,8 @@ def noICSetsPbl():
 def noJob(job):
 	error( 'The job path "%s" does not exist. The job may have been archived, moved or deleted.' % job)
 
-def noJobs():
-	print_( 'ERROR: No active jobs found.', 2 )
+# def noJobs():
+# 	print_( 'ERROR: No active jobs found.', 2 )
 
 def noMainLayer():
 	print_( 'Please set a main layer', 1 )

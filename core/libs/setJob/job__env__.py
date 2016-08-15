@@ -16,6 +16,9 @@ import appPaths, jobs, jobSettings, osOps, verbose
 def setEnv(envVars):
 	""" Set job and shot environment variables.
 	"""
+	j = jobs.jobs()
+	j.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'jobs.xml'))
+	jobDict = j.getDict()
 
 	def getInheritedValue(category, setting):
 		""" First try to get the value from the shot data, if it returns nothing then look in job data instead.
@@ -115,15 +118,15 @@ def setEnv(envVars):
 
 	# Root paths for cross-platform support
 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		os.environ['FILESYSTEMROOT'] = jobs.win_root
+		os.environ['FILESYSTEMROOT'] = j.win_root
 	elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-		os.environ['FILESYSTEMROOT'] = jobs.osx_root
+		os.environ['FILESYSTEMROOT'] = j.osx_root
 	else:
-		os.environ['FILESYSTEMROOT'] = jobs.linux_root
+		os.environ['FILESYSTEMROOT'] = j.linux_root
 
-	os.environ['JOBSROOTWIN'] = jobs.win_root
-	os.environ['JOBSROOTOSX'] = jobs.osx_root
-#	os.environ['JOBSROOTLINUX'] = jobs.linux_root # not currently required as Linux & OSX mount points should be the same
+	os.environ['JOBSROOTWIN'] = j.win_root
+	os.environ['JOBSROOTOSX'] = j.osx_root
+#	os.environ['JOBSROOTLINUX'] = j.linux_root # not currently required as Linux & OSX mount points should be the same
 
 
 	# Job / shot env
@@ -168,27 +171,28 @@ def setEnv(envVars):
 	os.environ['MAYARENDERSDIR']      = osOps.absolutePath('$MAYADIR/renders/$USERNAME')
 	os.environ['MAYASHAREDRESOURCES'] = osOps.absolutePath('$FILESYSTEMROOT/_Library/3D/Maya') # store this in ic global prefs?
 
-	#os.environ['MAYA_MODULE_PATH'] = 
-	os.environ['MAYA_DEBUG_ENABLE_CRASH_REPORTING'] = '0'
-	os.environ['MAYA_FORCE_PANEL_FOCUS'] = '0' # this should prevent panel stealing focus from Qt window on keypress.
-	os.environ['MAYA_PLUG_IN_PATH'] = osOps.absolutePath('$PIPELINE/rsc/maya/plugins') + os.pathsep + osOps.absolutePath('$MAYASHAREDRESOURCES/%s/plug-ins' %jobData.getAppVersion('Maya'))
-	os.environ['MAYA_SCRIPT_PATH'] = osOps.absolutePath('$PIPELINE/rsc/maya/maya__env__') + os.pathsep + osOps.absolutePath('$PIPELINE/rsc/maya/scripts') + os.pathsep + osOps.absolutePath('$MAYASHAREDRESOURCES/scripts') + os.pathsep + osOps.absolutePath('$MAYASHAREDRESOURCES/%s/scripts' %jobData.getAppVersion('Maya'))
-	os.environ['PYTHONPATH'] = os.environ['MAYA_SCRIPT_PATH']
-	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		os.environ['PYTHONPATH'] += os.pathsep + "C:\ProgramData\Redshift\Plugins\Maya\Common\scripts"
-		os.environ['redshift_LICENSE'] = "62843@10.105.11.11" # temporary fix for Redshift license - this should be set via a system environment variable
-	#os.environ['MI_CUSTOM_SHADER_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shaders', 'include')
-	#os.environ['MI_LIBRARY_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shaders')
-	os.environ['VRAY_FOR_MAYA_SHADERS'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shaders')
 	try:
-		os.environ['VRAY_FOR_MAYA2014_PLUGINS_x64'] += os.pathsep + os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'plugins')
+		#os.environ['MAYA_MODULE_PATH'] = 
+		os.environ['MAYA_DEBUG_ENABLE_CRASH_REPORTING'] = '0'
+		os.environ['MAYA_FORCE_PANEL_FOCUS'] = '0' # this should prevent panel stealing focus from Qt window on keypress.
+		os.environ['MAYA_PLUG_IN_PATH'] = osOps.absolutePath('$PIPELINE/rsc/maya/plugins') + os.pathsep + osOps.absolutePath('$MAYASHAREDRESOURCES/%s/plug-ins' %jobData.getAppVersion('Maya'))
+		os.environ['MAYA_SCRIPT_PATH'] = osOps.absolutePath('$PIPELINE/rsc/maya/maya__env__') + os.pathsep + osOps.absolutePath('$PIPELINE/rsc/maya/scripts') + os.pathsep + osOps.absolutePath('$MAYASHAREDRESOURCES/scripts') + os.pathsep + osOps.absolutePath('$MAYASHAREDRESOURCES/%s/scripts' %jobData.getAppVersion('Maya'))
+		os.environ['PYTHONPATH'] = os.environ['MAYA_SCRIPT_PATH']
+		#os.environ['MI_CUSTOM_SHADER_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shaders', 'include')
+		#os.environ['MI_LIBRARY_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shaders')
+		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+			os.environ['PYTHONPATH'] += os.pathsep + "C:\ProgramData\Redshift\Plugins\Maya\Common\scripts"
+			os.environ['redshift_LICENSE'] = "62843@10.105.11.11" # temporary fix for Redshift license - this should be set via a system environment variable
+		os.environ['VRAY_FOR_MAYA_SHADERS'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shaders')
+		#os.environ['VRAY_FOR_MAYA2014_PLUGINS_x64'] += os.pathsep + os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'plugins')
+		if os.environ['ICARUS_RUNNING_OS'] == 'Linux': # append the '%B' bitmap placeholder token required for Linux
+			os.environ['XBMLANGPATH'] = osOps.absolutePath('$PIPELINE/rsc/maya/icons/%B') + os.pathsep + osOps.absolutePath('$MAYASHAREDRESOURCES/%s/icons/%B' %jobData.getAppVersion('Maya'))
+		else:
+			os.environ['XBMLANGPATH'] = osOps.absolutePath('$PIPELINE/rsc/maya/icons') + os.pathsep + osOps.absolutePath('$MAYASHAREDRESOURCES/%s/icons' %jobData.getAppVersion('Maya'))
+		#os.environ['MAYA_PRESET_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'presets')
 	except (AttributeError, KeyError):
-		pass
-	if os.environ['ICARUS_RUNNING_OS'] == 'Linux': # append the '%B' bitmap placeholder token required for Linux
-		os.environ['XBMLANGPATH'] = osOps.absolutePath('$PIPELINE/rsc/maya/icons/%B') + os.pathsep + osOps.absolutePath('$MAYASHAREDRESOURCES/%s/icons/%B' %jobData.getAppVersion('Maya'))
-	else:
-		os.environ['XBMLANGPATH'] = osOps.absolutePath('$PIPELINE/rsc/maya/icons') + os.pathsep + osOps.absolutePath('$MAYASHAREDRESOURCES/%s/icons' %jobData.getAppVersion('Maya'))
-	#os.environ['MAYA_PRESET_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'presets')
+		verbose.warning("Unable to set Maya environment variables - please check job settings to ensure Maya version is set.")
+		#pass
 
 
 	# Nuke
