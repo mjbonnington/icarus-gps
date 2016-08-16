@@ -541,7 +541,7 @@ class icarusApp(QtGui.QDialog):
 
 		# Populate 'Job' and 'Shot' drop down menus
 		j = jobs.jobs()
-		j.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'jobs.xml'))
+		j.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'jobs.xml'))
 
 		jobDict = j.getDict()
 		if jobDict:
@@ -585,15 +585,14 @@ class icarusApp(QtGui.QDialog):
 			self.ui.shotSetupButtons_groupBox.setEnabled(False)
 
 			# Confirmation dialog
-			# import pDialog
-			# dialogTitle = 'No Jobs Found'
-			# dialogMsg = 'No active jobs were found. Would you like to set up some jobs now?'
-			# dialog = pDialog.dialog()
-			# if dialog.dialogWindow(dialogMsg, dialogTitle):
-			# 	pass
-			# 	# run job management ui
-			# else:
-			# 	pass
+			import pDialog
+			dialogTitle = 'No Jobs Found'
+			dialogMsg = 'No active jobs were found. Would you like to set up some jobs now?'
+			dialog = pDialog.dialog()
+			if dialog.dialogWindow(dialogMsg, dialogTitle):
+				self.launchJobManagement()
+			else:
+				pass
 
 
 	def populateShots(self):
@@ -699,6 +698,7 @@ class icarusApp(QtGui.QDialog):
 		self.ui.setShot_pushButton.hide()
 		self.ui.shotEnv_toolButton.show()
 		self.ui.setNewShot_pushButton.show()
+		self.actionJobManagement.setEnabled(False)
 		verbose.jobSet(self.job, self.shot)
 
 
@@ -721,6 +721,8 @@ class icarusApp(QtGui.QDialog):
 		self.ui.shotEnv_toolButton.hide()
 		self.ui.setNewShot_pushButton.hide()
 		self.ui.setShot_pushButton.show()
+
+		self.actionJobManagement.setEnabled(True)
 
 
 #	#controls phonon preview player
@@ -826,7 +828,7 @@ Environment: %s
 			xmlData = os.path.join(os.environ['ICUSERPREFS'], 'userPrefs.xml')
 		elif settingsType == "Global":
 			categoryLs = ['global', ]
-			#xmlData = os.path.join(os.environ['ICUSERPREFS'], 'userPrefs.xml')
+			xmlData = os.path.join(os.path.join(os.environ['ICCONFIGDIR'], 'globalPrefs.xml'))
 		import job_settings__main__ # Change this to generic class when it's ready
 		reload(job_settings__main__)
 		settingsEditor = job_settings__main__.settingsDialog(settingsType=settingsType, categoryLs=categoryLs, xmlData=xmlData, autoFill=autoFill)
@@ -1025,8 +1027,24 @@ Environment: %s
 	def launchJobManagement(self):
 		""" Launches GPS sequence rename tool.
 		"""
-		import icadmin__main__
-		reload(icadmin__main__)
+		import job_management__main__
+		reload(job_management__main__)
+		jobManagementEditor = job_management__main__.jobManagementApp()
+#		jobManagementEditor.show()
+		jobManagementEditor.exec_()
+		if jobManagementEditor.returnValue == True: # return True if user clicked Save, False for Cancel
+			self.populateJobs()
+
+		# try:
+		# 	self.jobManagementEditor.show()
+		# 	self.jobManagementEditor.raise_()
+		# except AttributeError:
+		# 	self.jobManagementEditor = job_management__main__.jobManagementApp()
+		# 	#print self.jobManagementEditor
+		# 	self.jobManagementEditor.show()
+		# 	#self.jobManagementEditor.exec_()
+		# print self.jobManagementEditor.returnValue
+
 
 
 	###############

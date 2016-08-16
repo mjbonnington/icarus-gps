@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>settings_frame</class>
+ <widget class="QFrame" name="settings_frame">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>160</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <property name="frameShape">
+   <enum>QFrame::NoFrame</enum>
+  </property>
+  <layout class="QFormLayout" name="formLayout">
+   <property name="fieldGrowthPolicy">
+    <enum>QFormLayout::ExpandingFieldsGrow</enum>
+   </property>
+   <item row="0" column="0">
+    <widget class="QLabel" name="userPrefs_label">
+     <property name="text">
+      <string>User preferences location:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <layout class="QHBoxLayout" name="userPrefs_horizontalLayout">
+     <item>
+      <widget class="QRadioButton" name="userPrefsServer_radioButton">
+       <property name="text">
+        <string>Server</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+       <property name="xmlTag" stdset="0">
+        <string>userPrefsRemote</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="userPrefsHome_radioButton">
+       <property name="text">
+        <string>Home folder</string>
+       </property>
+       <property name="xmlTag" stdset="0">
+        <string>userPrefsLocal</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="elementslib_label">
+     <property name="text">
+      <string>Global asset library:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLineEdit" name="elementslib_lineEdit">
+     <property name="text">
+      <string>$FILESYSTEMROOT/_Library</string>
+     </property>
+     <property name="xmlTag" stdset="0">
+      <string>globalAssetLib</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>userPrefsServer_radioButton</tabstop>
+  <tabstop>userPrefsHome_radioButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

@@ -318,7 +318,7 @@ QToolButton:disabled {
              <item>
               <widget class="QToolButton" name="refreshJobs_toolButton">
                <property name="toolTip">
-                <string>Refresh jobs</string>
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Refresh&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Reload the job database and update the job and shot list combo boxes.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="text">
                 <string>Refresh</string>

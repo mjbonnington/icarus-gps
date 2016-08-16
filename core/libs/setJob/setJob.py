@@ -44,7 +44,7 @@ def getPath(job, shot=False):
 	import jobs
 
 	j = jobs.jobs()
-	j.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'jobs.xml'))
+	j.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'jobs.xml'))
 	jobDict = j.getDict()
 	#print job, jobDict
 	jobpath = jobDict[job]

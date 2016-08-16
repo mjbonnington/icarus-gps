@@ -43,7 +43,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 
 		# Instantiate render queue class and load data
 		self.rq = renderQueue.renderQueue()
-		self.rq.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'renderQueue.xml'))
+		self.rq.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'renderQueue.xml'))
 
 
 		# Create a QProcess object to handle the rendering process asynchronously

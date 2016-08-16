@@ -3,7 +3,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015 Gramercy Park Studios
+# (c) 2015-2016 Gramercy Park Studios
 #
 # Create Maya cameras based on presets stored in XML data file. Can also create a camera rig.
 
@@ -22,7 +22,7 @@ class gpsCreateCamera():
 		#self.gMainProgressBar = mel.eval('$tmp = $gMainProgressBar')
 
 		self.cp = camPresets.camPresets()
-		self.cp.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'camPresets.xml'))
+		self.cp.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'camPresets.xml'))
 
 
 	def UI(self):

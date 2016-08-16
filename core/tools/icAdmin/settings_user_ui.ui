@@ -20,62 +20,14 @@
    <property name="fieldGrowthPolicy">
     <enum>QFormLayout::ExpandingFieldsGrow</enum>
    </property>
-   <item row="0" column="0">
-    <widget class="QLabel" name="userPrefs_label">
-     <property name="text">
-      <string>User preferences location:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <layout class="QHBoxLayout" name="userPrefs_horizontalLayout">
-     <item>
-      <widget class="QRadioButton" name="userPrefsServer_radioButton">
-       <property name="text">
-        <string>Server</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="userPrefsHome_radioButton">
-       <property name="text">
-        <string>Home folder</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="1" column="1">
-    <widget class="QCheckBox" name="minimiseOnLaunch_checkBox">
-     <property name="text">
-      <string>Minimise Icarus UI on application launch</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-     <property name="xmlTag" stdset="0">
-      <string>minimiseOnLaunch</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
+   <item row="1" column="0">
     <widget class="QLabel" name="numRecentFiles_label">
      <property name="text">
       <string>Number of recent files:</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="verbosity_label">
-     <property name="text">
-      <string>Output message verbosity:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
+   <item row="1" column="1">
     <layout class="QHBoxLayout" name="numRecentFiles_horizontalLayout">
      <item>
       <widget class="QSpinBox" name="numRecentFiles_spinBox">
@@ -95,7 +47,14 @@
      </item>
     </layout>
    </item>
-   <item row="3" column="1">
+   <item row="2" column="0">
+    <widget class="QLabel" name="verbosity_label">
+     <property name="text">
+      <string>Output message verbosity:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
     <layout class="QHBoxLayout" name="verbosity_horizontalLayout">
      <item>
       <widget class="QSpinBox" name="verbosity_spinBox">
@@ -122,12 +81,23 @@
      </item>
     </layout>
    </item>
+   <item row="3" column="1">
+    <widget class="QCheckBox" name="minimiseOnLaunch_checkBox">
+     <property name="text">
+      <string>Minimise UI on application launch</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <property name="xmlTag" stdset="0">
+      <string>minimiseOnLaunch</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <tabstops>
   <tabstop>numRecentFiles_spinBox</tabstop>
-  <tabstop>userPrefsServer_radioButton</tabstop>
-  <tabstop>userPrefsHome_radioButton</tabstop>
   <tabstop>verbosity_spinBox</tabstop>
  </tabstops>
  <resources/>

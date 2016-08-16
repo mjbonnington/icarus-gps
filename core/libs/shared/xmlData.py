@@ -73,3 +73,13 @@ class xmlData():
 			if level and (not elem.tail or not elem.tail.strip()):
 				elem.tail = i
 
+
+	def getValue(self, element, tag):
+		""" Return the value of 'tag' belonging to 'element'.
+		"""
+		elem = element.find(tag)
+		if elem is not None:
+			text = elem.text
+			if text is not None:
+				return text
+

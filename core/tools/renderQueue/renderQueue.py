@@ -133,16 +133,16 @@ class renderQueue(xmlData.xmlData):
 		return self.root.findall("./job")
 
 
-	def getValue(self, element, tag):
-		""" Return the value of 'tag' belonging to 'element'.
-		"""
-		elem = element.find(tag)
-		if elem is not None:
-			text = elem.text
-			if text is not None:
-				return text
+	# def getValue(self, element, tag):
+	# 	""" Return the value of 'tag' belonging to 'element'. - this is now in xmlData.py
+	# 	"""
+	# 	elem = element.find(tag)
+	# 	if elem is not None:
+	# 		text = elem.text
+	# 		if text is not None:
+	# 			return text
 
-		#return "" # return an empty string, not None, so value can be stored in an environment variable without raising an error
+	# 	#return "" # return an empty string, not None, so value can be stored in an environment variable without raising an error
 
 
 	def getNextID(self):

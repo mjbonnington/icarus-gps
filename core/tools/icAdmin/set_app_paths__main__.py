@@ -60,7 +60,7 @@ class setAppPathsDialog(QtGui.QDialog):
 		"""
 		# Load data from xml file
 		self.ap = appPaths.appPaths()
-		ap_load = self.ap.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'appPaths.xml'))
+		ap_load = self.ap.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'appPaths.xml'))
 
 		# Populate fields
 		self.populateApps()

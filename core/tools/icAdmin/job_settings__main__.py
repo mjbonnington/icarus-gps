@@ -85,9 +85,9 @@ class settingsDialog(QtGui.QDialog):
 		"""
 		# Load data from xml file(s)
 		jd_load = self.jd.loadXML(self.xmlData)
-		ap_load = self.ap.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'appPaths.xml'))
-		rp_load = self.rp.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'resPresets.xml'))
-		cp_load = self.cp.loadXML(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'camPresets.xml'))
+		ap_load = self.ap.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'appPaths.xml'))
+		rp_load = self.rp.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'resPresets.xml'))
+		cp_load = self.cp.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'camPresets.xml'))
 
 		#if jd_load and ap_load and rp_load:
 		#	pass

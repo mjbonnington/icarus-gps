@@ -9,9 +9,9 @@
 # Launches and controls a generic prompt dialog.
 
 
-import os, sys
 from PySide import QtCore, QtGui
 from pDialogUI import *
+import os, sys
 
 
 class dialog(QtGui.QDialog):
@@ -35,6 +35,7 @@ class dialog(QtGui.QDialog):
 		if conf:
 			self.ui.cancel_pushButton.hide()
 
+		# Connect signals & slots
 		QtCore.QObject.connect(self.ui.ok_pushButton, QtCore.SIGNAL("clicked()"), self.ok)
 		QtCore.QObject.connect(self.ui.cancel_pushButton, QtCore.SIGNAL("clicked()"), self.cancel)
 

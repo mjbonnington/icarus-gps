@@ -19,8 +19,54 @@ class jobs(xmlData.xmlData):
 		Add and remove jobs, make jobs active or inactive, modify job properties.
 		Inherits xmlData class.
 	"""
+	def getRootPaths(self):
+		""" Get root paths.
+		"""
+		try:
+			self.win_root = self.root.find('jobs-root/win').text
+			self.osx_root = self.root.find('jobs-root/osx').text
+			self.linux_root = self.root.find('jobs-root/linux').text
+		except AttributeError:
+			self.win_root = None
+			self.osx_root = None
+			self.linux_root = None
+
+
+	def setRootPaths(self, winPath=None, osxPath=None, linuxPath=None):
+		""" Set root paths. Create elements if they don't exist.
+		"""
+		jobsRootElement = self.root.find("./jobs-root")
+		if jobsRootElement is None:
+			jobsRootElement = ET.SubElement(self.root, 'jobs-root')
+
+		if winPath is not None:
+			pathElement = jobsRootElement.find('win')
+			if pathElement is None:
+				pathElement = ET.SubElement(jobsRootElement, 'win')
+			pathElement.text = str(winPath)
+
+		if osxPath is not None:
+			pathElement = jobsRootElement.find('osx')
+			if pathElement is None:
+				pathElement = ET.SubElement(jobsRootElement, 'osx')
+			pathElement.text = str(osxPath)
+
+		if linuxPath is not None:
+			pathElement = jobsRootElement.find('linux')
+			if pathElement is None:
+				pathElement = ET.SubElement(jobsRootElement, 'linux')
+			pathElement.text = str(linuxPath)
+
+
+
+	def getJobs(self):
+		""" Return all jobs as elements.
+		"""
+		return self.root.findall("./job")
+
+
 	def getDict(self):
-		""" Read job database from XML file and return dictionary of active jobs.
+		""" Read job database from XML file and return dictionary of active jobs. Bit untidy atm
 		"""
 		dic = {}
 
@@ -57,6 +103,18 @@ class jobs(xmlData.xmlData):
 					if os.path.exists(jobpath): # Only add jobs which exist on disk
 						dic[job.find('name').text] = jobpath
 
+			# Root paths for cross-platform support
+			if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+				os.environ['FILESYSTEMROOT'] = self.win_root
+			elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+				os.environ['FILESYSTEMROOT'] = self.osx_root
+			else:
+				os.environ['FILESYSTEMROOT'] = self.linux_root
+
+			os.environ['JOBSROOTWIN'] = self.win_root
+			os.environ['JOBSROOTOSX'] = self.osx_root
+		#	os.environ['JOBSROOTLINUX'] = self.linux_root # not currently required as Linux & OSX mount points should be the same
+
 			return dic
 
 		except:
@@ -64,41 +122,96 @@ class jobs(xmlData.xmlData):
 			#sys.exit("ERROR: Jobs file not found, or contents are invalid.")
 
 
-	# def ls(self):
-	# 	"""Print job database in a human-readable pretty format. - NOT YET IMPLEMENTED
-	# 	"""
+	def addJob(self, jobName="New_Job", jobPath="", active=True):
+		""" Add a new job to the database.
+		"""
+		jobElement = self.root.find("./job[name='%s']" %jobName)
+		if jobElement is None:
+			jobElement = ET.SubElement(self.root, 'job')
+			jobElement.set('active', str(active))
+
+			nameElement = ET.SubElement(jobElement, 'name')
+			nameElement.text = str(jobName)
+
+			pathElement = ET.SubElement(jobElement, 'path')
+			pathElement.text = str(jobPath)
+			return True
+
+		else:
+			verbose.error("Could not create job as a job with the name '%s' already exists." %jobName)
+			return False
 
 
-	# def getPath(self, jobName):
-	# 	""" Get path of the specified job.
-	# 	"""
-	# 	self.loadXML(quiet=True) # reload XML data
-	# 	#element = self.root.find("./job[@id='%s']" %jobID)
-	# 	element = self.root.find('./job')
-	# 	if element.find('name').text == jobName:
-	# 		return element.find('path').text
+	def renameJob(self, jobName, newJobName):
+		""" Rename job.
+		"""
+		if newJobName == jobName: # do nothing
+			return True
+
+		jobElement = self.root.find("./job/[name='%s']" %newJobName)
+		if jobElement is None:
+			element = self.root.find("./job/[name='%s']" %jobName)
+			if element is not None:
+				element.find('name').text = newJobName
+				return True
+
+		else:
+			verbose.error("Could not rename job as a job with the name '%s' already exists." %newJobName)
+			return False
 
 
-	# def refresh(self):
-	# 	"""Reload job database. - REDUNDANT?
-	# 	"""
-	# 	self.readjobs()
+	def deleteJob(self, jobName):
+		""" Delete job by name.
+		"""
+		element = self.root.find("./job/[name='%s']" %jobName)
+		if element is not None:
+			#print "Deleted job %s" %jobName
+			self.root.remove(element)
+			return True
+		else:
+			#print "Could not delete job %s" %jobName
+			return False
 
 
-	# def add(self, jobName, jobPath):
-	# 	"""Add a new job to the database.
-	# 	"""
-	# 	self.joblistactive[jobName] = jobPath
+	def getEnabled(self, jobName):
+		""" Get enable/disable status of the specified job.
+		"""
+		#element = self.root.find("./job[@id='%s']" %jobID)
+		element = self.root.find("./job[name='%s']" %jobName)
+		if element is not None:
+			if element.get('active') == 'True':
+				return True
+			else:
+				return False
 
 
-	# def rm(self, jobName):
-	# 	"""Remove a job from the database.
-	# 	"""
-	# 	#del self.joblist[jobName]
-	# 	print 'deleting %s' %jobName
+	def enableJob(self, jobName, active):
+		""" Enable/disable job by name.
+		"""
+		element = self.root.find("./job/[name='%s']" %jobName)
+		if element is not None:
+			#print "Set job %s active status to %s" %(jobName, active)
+			element.set('active', '%s' %active)
+			return True
+		else:
+			#print "Could not set job %s active status to %s" %(jobName, active)
+			return False
 
 
-	# def modify(self, jobName, jobPath, active):
-	# 	"""Modify job properties, currently name, path, and active status.
-	# 	"""
+	def getPath(self, jobName):
+		""" Get path of the specified job.
+		"""
+		#element = self.root.find("./job[@id='%s']" %jobID)
+		element = self.root.find("./job[name='%s']" %jobName)
+		if element is not None:
+			return element.find('path').text
+
+
+	def setPath(self, jobName, path):
+		""" Set path of the specified job.
+		"""
+		#element = self.root.find("./job[@id='%s']" %jobID)
+		element = self.root.find("./job[name='%s']" %jobName)
+		if element is not None:
+			element.find('path').text = path
 

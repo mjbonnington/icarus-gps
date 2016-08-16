@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'icarusUI.ui'
 #
-# Created: Mon Aug 15 18:52:13 2016
+# Created: Tue Aug 16 10:25:17 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -1317,7 +1317,7 @@ class Ui_Dialog(object):
         self.about_toolButton.setToolTip(QtGui.QApplication.translate("Dialog", "About Icarus", None, QtGui.QApplication.UnicodeUTF8))
         self.about_toolButton.setText(QtGui.QApplication.translate("Dialog", "...", None, QtGui.QApplication.UnicodeUTF8))
         self.shotSetupParent_groupBox.setTitle(QtGui.QApplication.translate("Dialog", "Shot Setup", None, QtGui.QApplication.UnicodeUTF8))
-        self.refreshJobs_toolButton.setToolTip(QtGui.QApplication.translate("Dialog", "Refresh jobs", None, QtGui.QApplication.UnicodeUTF8))
+        self.refreshJobs_toolButton.setToolTip(QtGui.QApplication.translate("Dialog", "<html><head/><body><p><span style=\" font-weight:600;\">Refresh</span></p><p>Reload the job database and update the job and shot list combo boxes.</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.refreshJobs_toolButton.setText(QtGui.QApplication.translate("Dialog", "Refresh", None, QtGui.QApplication.UnicodeUTF8))
         self.setJob_label.setText(QtGui.QApplication.translate("Dialog", "Job:", None, QtGui.QApplication.UnicodeUTF8))
         self.setShot_label.setText(QtGui.QApplication.translate("Dialog", "Shot:", None, QtGui.QApplication.UnicodeUTF8))
