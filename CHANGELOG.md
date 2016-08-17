@@ -1,6 +1,6 @@
 v0.9.6 (--)
--	[Icarus] Added refresh button to enable job database to be reloaded without restarting Icarus.
 -	[Icarus] Added job management UI to handle jobs database without the need to hand edit the XML file.
+-	[Icarus] Added refresh button to enable job database to be reloaded without restarting Icarus.
 -	[Icarus] Fixed a bug with user prefs not being created properly on first run.
 -	[Icarus] Removed handles, in/out frame attributes from shot settings.
 -	[Maya] Added shared resources location for adding third-party plug-ins, scripts, etc.

@@ -16,10 +16,6 @@ import appPaths, jobs, jobSettings, osOps, verbose
 def setEnv(envVars):
 	""" Set job and shot environment variables.
 	"""
-	j = jobs.jobs()
-	j.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'jobs.xml'))
-	jobDict = j.getDict()
-
 	def getInheritedValue(category, setting):
 		""" First try to get the value from the shot data, if it returns nothing then look in job data instead.
 		"""
@@ -114,19 +110,6 @@ def setEnv(envVars):
 		os.environ['GPS_RC'] = osOps.absolutePath('$PIPELINE/core/ui/gps_cmd.bat')
 	else:
 		os.environ['GPS_RC'] = osOps.absolutePath('$PIPELINE/core/ui/.gps_rc')
-
-
-# 	# Root paths for cross-platform support
-# 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-# 		os.environ['FILESYSTEMROOT'] = j.win_root
-# 	elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-# 		os.environ['FILESYSTEMROOT'] = j.osx_root
-# 	else:
-# 		os.environ['FILESYSTEMROOT'] = j.linux_root
-
-# 	os.environ['JOBSROOTWIN'] = j.win_root
-# 	os.environ['JOBSROOTOSX'] = j.osx_root
-# #	os.environ['JOBSROOTLINUX'] = j.linux_root # not currently required as Linux & OSX mount points should be the same
 
 
 	# Job / shot env

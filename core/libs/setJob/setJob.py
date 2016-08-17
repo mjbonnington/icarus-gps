@@ -10,7 +10,7 @@
 
 
 import os
-import defaultDirs, job__env__, verbose, userPrefs
+import defaultDirs, job__env__, osOps, userPrefs, verbose
 
 
 def setup(job, shot):
@@ -43,16 +43,15 @@ def getPath(job, shot=False):
 	"""
 	import jobs
 
+	#print 'setJobs.getPath()'
+
 	j = jobs.jobs()
-	j.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'jobs.xml'))
-	jobDict = j.getDict()
-	#print job, jobDict
-	jobpath = jobDict[job]
+	jobpath = j.getPath(job, translate=True)
 
 	if shot:
-		path = os.path.join(jobpath, os.environ['SHOTSROOTRELATIVEDIR'], shot)
+		path = osOps.absolutePath("%s/$SHOTSROOTRELATIVEDIR/%s" %(jobpath, shot))
 	else:
-		path = os.path.join(jobpath, os.environ['SHOTSROOTRELATIVEDIR'])
+		path = osOps.absolutePath("%s/$SHOTSROOTRELATIVEDIR" %jobpath)
 
 	return path
 

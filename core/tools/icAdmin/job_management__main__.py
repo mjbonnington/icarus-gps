@@ -27,9 +27,7 @@ class jobManagementApp(QtGui.QDialog):
 		self.returnValue = False
 
 		# Instantiate render queue class and load data
-		self.jd = jobs.jobs()
-		self.jd.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'jobs.xml'))
-		jobDict = self.jd.getDict() # this is a temporary hack in order to setup environment variables
+		self.j = jobs.jobs()
 
 		# Connect signals & slots
 		self.ui.jobAdd_toolButton.clicked.connect(self.addJob)
@@ -41,6 +39,7 @@ class jobManagementApp(QtGui.QDialog):
 		self.ui.editPaths_toolButton.clicked.connect(self.editPaths)
 
 		self.ui.jobs_listWidget.itemSelectionChanged.connect(self.updateToolbarUI)
+		self.ui.jobs_listWidget.itemDoubleClicked.connect(self.editJob)
 		self.ui.jobs_listWidget.itemChanged.connect(lambda item: self.itemChecked(item))
 
 		self.ui.main_buttonBox.button(QtGui.QDialogButtonBox.Save).clicked.connect(self.saveAndExit)
@@ -71,7 +70,7 @@ class jobManagementApp(QtGui.QDialog):
 
 	def reloadJobs(self, reloadDatabase=True):
 		if reloadDatabase:
-			self.jd.loadXML(quiet=True) # reload XML data
+			self.j.loadXML(quiet=True) # reload XML data
 
 		# Stop the widget from emitting signals
 		self.ui.jobs_listWidget.blockSignals(True)
@@ -79,16 +78,14 @@ class jobManagementApp(QtGui.QDialog):
 		# Clear tree widget
 		self.ui.jobs_listWidget.clear()
 
-		for jobElement in self.jd.getJobs():
-#			jobID = jobElement.get('id')
+		for jobElement in self.j.getJobs():
+			#jobID = jobElement.get('id')
 			jobActive = jobElement.get('active')
-			jobName = self.jd.getValue(jobElement, 'name')
-			jobPath = self.jd.getValue(jobElement, 'path')
+			jobName = self.j.getValue(jobElement, 'name')
+			jobPath = self.j.getValue(jobElement, 'path')
 
 			item = QtGui.QListWidgetItem(self.ui.jobs_listWidget)
 			item.setText(jobName)
-
-			#item.setFlags(QtCore.Qt.ItemIsSelectable|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled|QtCore.Qt.ItemIsUserCheckable|QtCore.Qt.ItemIsEnabled)
 
 			if jobActive == 'True':
 				item.setCheckState(QtCore.Qt.Checked)
@@ -103,17 +100,11 @@ class jobManagementApp(QtGui.QDialog):
 
 
 	def addJob(self):
-		#self.ui.jobs_listWidget.addItem('000000_New_Job')
-		# item = QtGui.QListWidgetItem(self.ui.jobs_listWidget)
-		# item.setText('000000_New_Job')
-		# item.setCheckState(QtCore.Qt.Checked)
-		# item.setSelected(True)
-
 		import edit_job
 		editJobDialog = edit_job.dialog()
 		editJobDialog.dialogWindow("New_Job", '$FILESYSTEMROOT', True)
 		if editJobDialog.dialogReturn:
-			if self.jd.addJob(editJobDialog.jobName, editJobDialog.jobPath, editJobDialog.jobActive):
+			if self.j.addJob(editJobDialog.jobName, editJobDialog.jobPath, editJobDialog.jobActive):
 				self.reloadJobs(reloadDatabase=False)
 			else:
 				self.addJob()
@@ -123,7 +114,7 @@ class jobManagementApp(QtGui.QDialog):
 		""" Delete the selected job(s).
 		"""
 		for item in self.ui.jobs_listWidget.selectedItems():
-			self.jd.deleteJob(item.text())
+			self.j.deleteJob(item.text())
 			self.ui.jobs_listWidget.takeItem(self.ui.jobs_listWidget.row(item))
 
 
@@ -131,7 +122,7 @@ class jobManagementApp(QtGui.QDialog):
 		""" Enable the selected job(s).
 		"""
 		for item in self.ui.jobs_listWidget.selectedItems():
-			self.jd.enableJob(item.text(), True)
+			self.j.enableJob(item.text(), True)
 			item.setCheckState(QtCore.Qt.Checked)
 
 
@@ -139,7 +130,7 @@ class jobManagementApp(QtGui.QDialog):
 		""" Disable the selected job(s).
 		"""
 		for item in self.ui.jobs_listWidget.selectedItems():
-			self.jd.enableJob(item.text(), False)
+			self.j.enableJob(item.text(), False)
 			item.setCheckState(QtCore.Qt.Unchecked)
 
 
@@ -147,9 +138,9 @@ class jobManagementApp(QtGui.QDialog):
 		""" Set the active status of the job correctly when the checkbox state changes.
 		"""
 		if item.checkState() == QtCore.Qt.Checked:
-			self.jd.enableJob(item.text(), True)
+			self.j.enableJob(item.text(), True)
 		else:
-			self.jd.enableJob(item.text(), False)
+			self.j.enableJob(item.text(), False)
 
 
 	def editJob(self):
@@ -160,11 +151,11 @@ class jobManagementApp(QtGui.QDialog):
 
 		import edit_job
 		editJobDialog = edit_job.dialog()
-		editJobDialog.dialogWindow(jobName, self.jd.getPath(jobName), self.jd.getEnabled(jobName))
+		editJobDialog.dialogWindow(jobName, self.j.getPath(jobName), self.j.getEnabled(jobName))
 		if editJobDialog.dialogReturn:
-			self.jd.enableJob(jobName, editJobDialog.jobActive)
-			self.jd.setPath(jobName, editJobDialog.jobPath)
-			if self.jd.renameJob(jobName, editJobDialog.jobName): # do this last as jobs are referenced by name
+			self.j.enableJob(jobName, editJobDialog.jobActive)
+			self.j.setPath(jobName, editJobDialog.jobPath)
+			if self.j.renameJob(jobName, editJobDialog.jobName): # do this last as jobs are referenced by name
 				self.reloadJobs(reloadDatabase=False)
 			else:
 				self.editJob()
@@ -173,28 +164,22 @@ class jobManagementApp(QtGui.QDialog):
 	def editPaths(self):
 		""" Open edit job dialog.
 		"""
-		self.jd.getRootPaths()
+		#self.j.loadXML()
+		self.j.getRootPaths()
 
 		import edit_root_paths
 		editPathsDialog = edit_root_paths.dialog()
-		editPathsDialog.dialogWindow(self.jd.win_root, self.jd.osx_root, self.jd.linux_root)
+		editPathsDialog.dialogWindow(self.j.win_root, self.j.osx_root, self.j.linux_root)
 		if editPathsDialog.dialogReturn:
-			self.jd.setRootPaths(editPathsDialog.winPath, editPathsDialog.osxPath, editPathsDialog.linuxPath)
-
-			jobDict = self.jd.getDict() # this is a temporary hack in order to setup environment variables
-			self.jd.saveXML()
-
-		# 	self.jd.setPath(jobName, editPathsDialog.jobPath)
-		# 	if self.jd.renameJob(jobName, editPathsDialog.jobName): # do this last as jobs are referenced by name
-		# 		self.reloadJobs(reloadDatabase=False)
-		# 	else:
-		# 		self.editJob()
+			self.j.setRootPaths(editPathsDialog.winPath, editPathsDialog.osxPath, editPathsDialog.linuxPath)
+			self.j.getRootPaths()
+			#self.j.saveXML()
 
 
 	def save(self):
 		""" Save data.
 		"""
-		if self.jd.saveXML():
+		if self.j.saveXML():
 			verbose.message("Job database saved.")
 			return True
 		else:

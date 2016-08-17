@@ -60,7 +60,7 @@ class dialog(QtGui.QDialog):
 	def browse(self):
 		""" Opens a dialog from which to select a folder.
 		"""
-		try:
+		try: # detect if FILESYSTEMROOT env var has been set
 			fsroot = os.environ['FILESYSTEMROOT']
 		except KeyError:
 			fsroot = None

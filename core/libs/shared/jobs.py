@@ -19,17 +19,37 @@ class jobs(xmlData.xmlData):
 		Add and remove jobs, make jobs active or inactive, modify job properties.
 		Inherits xmlData class.
 	"""
+	def __init__(self):
+		""" Automatically load datafile on initialisation.
+		"""
+		self.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'jobs.xml'))
+		self.getRootPaths()
+
+
 	def getRootPaths(self):
-		""" Get root paths.
+		""" Get root paths and set environment variables.
 		"""
 		try:
 			self.win_root = self.root.find('jobs-root/win').text
 			self.osx_root = self.root.find('jobs-root/osx').text
 			self.linux_root = self.root.find('jobs-root/linux').text
+
 		except AttributeError:
 			self.win_root = None
 			self.osx_root = None
 			self.linux_root = None
+
+		# Set environment variables
+		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+			os.environ['FILESYSTEMROOT'] = str(self.win_root)
+		elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+			os.environ['FILESYSTEMROOT'] = str(self.osx_root)
+		else:
+			os.environ['FILESYSTEMROOT'] = str(self.linux_root)
+
+		os.environ['JOBSROOTWIN'] = str(self.win_root)
+		os.environ['JOBSROOTOSX'] = str(self.osx_root)
+		#os.environ['JOBSROOTLINUX'] = str(self.linux_root) # not currently required as Linux & OSX mount points should be the same
 
 
 	def setRootPaths(self, winPath=None, osxPath=None, linuxPath=None):
@@ -58,68 +78,56 @@ class jobs(xmlData.xmlData):
 			pathElement.text = str(linuxPath)
 
 
+	def translatePath(self, jobPath):
+		""" Translate paths for cross-platform support.
+		"""
+		self.getRootPaths()
+
+		try:
+			jobPathTr = jobPath
+			if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+				if jobPath.startswith(self.osx_root):
+					jobPathTr = jobPath.replace(self.osx_root, self.win_root)
+				elif jobPath.startswith(self.linux_root):
+					jobPathTr = jobPath.replace(self.linux_root, self.win_root)
+			elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+				if jobPath.startswith(self.win_root):
+					jobPathTr = jobPath.replace(self.win_root, self.osx_root)
+				elif jobPath.startswith(self.linux_root):
+					jobPathTr = jobPath.replace(self.linux_root, self.osx_root)
+			else: # linux
+				if jobPath.startswith(self.win_root):
+					jobPathTr = jobPath.replace(self.win_root, self.linux_root)
+				elif jobPath.startswith(self.osx_root):
+					jobPathTr = jobPath.replace(self.osx_root, self.linux_root)
+
+			#print "Performing path translation:\n%s\n%s\n" %(jobPath, osOps.absolutePath(jobPathTr))
+			return osOps.absolutePath(jobPathTr)
+
+		except TypeError:
+			return jobPath
+
+
+	def getActiveJobs(self):
+		""" Return all active jobs as a list. Only jobs that exist on disk will be added.
+		"""
+		jobLs = []
+		activeJobElements = self.root.findall("./job[@active='True']")
+		for jobElement in activeJobElements:
+			jobName = jobElement.find('name').text
+			jobPath = jobElement.find('path').text
+
+			jobPath = self.translatePath(jobPath)
+
+			if os.path.exists(jobPath): # Only add jobs which exist on disk
+				jobLs.append(jobName)
+		return jobLs
+
 
 	def getJobs(self):
 		""" Return all jobs as elements.
 		"""
 		return self.root.findall("./job")
-
-
-	def getDict(self):
-		""" Read job database from XML file and return dictionary of active jobs. Bit untidy atm
-		"""
-		dic = {}
-
-		# for job in root.findall('job'):
-		# 	self.joblist[job.find('name').text] = job.find('path').text, job.get('active')
-
-		try:
-			# Get OS-specific root paths defined in jobs.xml. Always replace any backslashes with forward-slashes...
-			self.win_root = self.root.find('jobs-root/win').text.replace("\\", "/")
-			self.osx_root = self.root.find('jobs-root/osx').text.replace("\\", "/")
-			self.linux_root = self.root.find('jobs-root/linux').text.replace("\\", "/")
-
-			for job in self.root.findall('job'):
-				if job.get('active') == 'True': # Only add jobs tagged as 'active'
-					jobpath = job.find('path').text.replace("\\", "/")
-
-					# Temporary (?) fix for cross-platform paths
-					if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-						if jobpath.startswith(self.osx_root):
-							jobpath = osOps.absolutePath( jobpath.replace(self.osx_root, self.win_root) )
-						elif jobpath.startswith(self.linux_root):
-							jobpath = osOps.absolutePath( jobpath.replace(self.linux_root, self.win_root) )
-					elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-						if jobpath.startswith(self.win_root):
-							jobpath = osOps.absolutePath( jobpath.replace(self.win_root, self.osx_root) )
-						elif jobpath.startswith(self.linux_root):
-							jobpath = osOps.absolutePath( jobpath.replace(self.linux_root, self.osx_root) )
-					else:
-						if jobpath.startswith(self.win_root):
-							jobpath = osOps.absolutePath( jobpath.replace(self.win_root, self.linux_root) )
-						elif jobpath.startswith(self.osx_root):
-							jobpath = osOps.absolutePath( jobpath.replace(self.osx_root, self.linux_root) )
-
-					if os.path.exists(jobpath): # Only add jobs which exist on disk
-						dic[job.find('name').text] = jobpath
-
-			# Root paths for cross-platform support
-			if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-				os.environ['FILESYSTEMROOT'] = self.win_root
-			elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-				os.environ['FILESYSTEMROOT'] = self.osx_root
-			else:
-				os.environ['FILESYSTEMROOT'] = self.linux_root
-
-			os.environ['JOBSROOTWIN'] = self.win_root
-			os.environ['JOBSROOTOSX'] = self.osx_root
-		#	os.environ['JOBSROOTLINUX'] = self.linux_root # not currently required as Linux & OSX mount points should be the same
-
-			return dic
-
-		except:
-			return False
-			#sys.exit("ERROR: Jobs file not found, or contents are invalid.")
 
 
 	def addJob(self, jobName="New_Job", jobPath="", active=True):
@@ -198,13 +206,18 @@ class jobs(xmlData.xmlData):
 			return False
 
 
-	def getPath(self, jobName):
+	def getPath(self, jobName, translate=False):
 		""" Get path of the specified job.
+			If 'translate' is True, attempt to translate the path for the current OS.
 		"""
 		#element = self.root.find("./job[@id='%s']" %jobID)
 		element = self.root.find("./job[name='%s']" %jobName)
 		if element is not None:
-			return element.find('path').text
+			jobPath = element.find('path').text
+			if translate:
+				return self.translatePath(jobPath)
+			else:
+				return jobPath
 
 
 	def setPath(self, jobName, path):

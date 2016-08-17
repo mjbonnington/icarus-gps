@@ -170,7 +170,10 @@ def absolutePath(relPath):
 	""" Convert a relative path to an absolute path.
 		Expands environment variables in supplied path and replaces backslashes with forward slashes for compatibility.
 	"""
-	return os.path.normpath( os.path.expandvars(relPath) ).replace("\\", "/")
+	if relPath:
+		return os.path.normpath( os.path.expandvars(relPath) ).replace("\\", "/")
+	else:
+		return ""
 
 
 def relativePath(absPath, token, tokenFormat='standard'):

@@ -541,11 +541,9 @@ class icarusApp(QtGui.QDialog):
 
 		# Populate 'Job' and 'Shot' drop down menus
 		j = jobs.jobs()
-		j.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'jobs.xml'))
 
-		jobDict = j.getDict()
-		if jobDict:
-			jobLs = jobDict.keys()
+		jobLs = j.getActiveJobs()
+		if jobLs:
 			jobLs = sorted(jobLs, reverse=True)
 
 			# Add jobs...
