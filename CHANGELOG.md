@@ -1,5 +1,6 @@
 v0.9.6 (--)
 -	[Icarus] Added job management UI to handle jobs database without the need to hand edit the XML file.
+-	[Icarus] Integrated shot creator UI to automatically generate shot folders.
 -	[Icarus] Added refresh button to enable job database to be reloaded without restarting Icarus.
 -	[Icarus] Fixed a bug with user prefs not being created properly on first run.
 -	[Icarus] Removed handles, in/out frame attributes from shot settings.

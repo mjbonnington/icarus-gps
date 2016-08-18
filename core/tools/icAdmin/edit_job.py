@@ -70,9 +70,10 @@ class dialog(QtGui.QDialog):
 
 		if dialog:
 			jobPath = osOps.relativePath(dialog, 'JOBSROOT')
-			jobName = jobPath.split('/')[1]
 			self.ui.jobPath_lineEdit.setText(jobPath)
-			self.ui.jobName_lineEdit.setText(jobName)
+			if not self.ui.jobName_lineEdit.text(): # only autofill job name field it it's empty
+				jobName = jobPath.split('/')[1]
+				self.ui.jobName_lineEdit.setText(jobName)
 		#return dialog
 
 

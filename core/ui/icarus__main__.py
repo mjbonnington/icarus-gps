@@ -165,6 +165,10 @@ class icarusApp(QtGui.QDialog):
 		self.actionJobManagement.triggered.connect(self.launchJobManagement)
 		self.ui.toolMenu_toolButton.addAction(self.actionJobManagement)
 
+		self.actionShotCreator = QtGui.QAction("Shot Creator...", None)
+		self.actionShotCreator.triggered.connect(self.launchShotCreator)
+		self.ui.toolMenu_toolButton.addAction(self.actionShotCreator)
+
 		self.actionBatchRename = QtGui.QAction("Batch Rename", None)
 		self.actionBatchRename.triggered.connect(self.launchBatchRename)
 		self.ui.toolMenu_toolButton.addAction(self.actionBatchRename)
@@ -631,6 +635,16 @@ class icarusApp(QtGui.QDialog):
 			self.ui.setShot_label.setEnabled(False)
 			self.ui.setShot_pushButton.setEnabled(False)
 
+			# Confirmation dialog
+			import pDialog
+			dialogTitle = 'No Shots Found'
+			dialogMsg = 'No shots were found for this job. Would you like to create some shots now?'
+			dialog = pDialog.dialog()
+			if dialog.dialogWindow(dialogMsg, dialogTitle):
+				self.launchShotCreator()
+			else:
+				pass
+
 			return False
 
 
@@ -697,6 +711,7 @@ class icarusApp(QtGui.QDialog):
 		self.ui.shotEnv_toolButton.show()
 		self.ui.setNewShot_pushButton.show()
 		self.actionJobManagement.setEnabled(False)
+		self.actionShotCreator.setEnabled(False)
 		verbose.jobSet(self.job, self.shot)
 
 
@@ -721,6 +736,7 @@ class icarusApp(QtGui.QDialog):
 		self.ui.setShot_pushButton.show()
 
 		self.actionJobManagement.setEnabled(True)
+		self.actionShotCreator.setEnabled(True)
 
 
 #	#controls phonon preview player
@@ -1023,7 +1039,7 @@ Environment: %s
 
 
 	def launchJobManagement(self):
-		""" Launches GPS sequence rename tool.
+		""" Launches job management dialog.
 		"""
 		import job_management__main__
 		reload(job_management__main__)
@@ -1042,6 +1058,18 @@ Environment: %s
 		# 	self.jobManagementEditor.show()
 		# 	#self.jobManagementEditor.exec_()
 		# print self.jobManagementEditor.returnValue
+
+
+	def launchShotCreator(self):
+		""" Launches shot creator dialog.
+		"""
+		import shot_creator__main__
+		reload(shot_creator__main__)
+		print self.ui.job_comboBox.currentText()
+		shotCreatorEditor = shot_creator__main__.shotCreatorApp( self.ui.job_comboBox.currentText() )
+#		shotCreatorEditor.show()
+		shotCreatorEditor.exec_()
+		self.populateJobs()
 
 
 
