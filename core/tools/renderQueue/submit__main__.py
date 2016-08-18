@@ -19,7 +19,7 @@ import osOps, renderQueue, sequence, userPrefs, verbose
 
 class gpsRenderSubmitApp(QtGui.QDialog):
 
-	def __init__(self, parent=None, frameRange=None, flags=None):
+	def __init__(self, frameRange=None, flags=None, parent=None):
 		super(gpsRenderSubmitApp, self).__init__()
 		self.ui = Ui_Dialog()
 		self.ui.setupUi(self)
@@ -89,11 +89,10 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 			self.ui.sceneBrowse_toolButton.hide()
 
 		self.numList = []
-		#self.resetFrameList()
 		if frameRange:
 			self.ui.frameRange_lineEdit.setText(frameRange)
 		else:
-			self.ui.frameRange_lineEdit.setText("%d-%d" %(int(os.environ['STARTFRAME']), int(os.environ['ENDFRAME'])))
+			self.getFrameList()
 		self.calcFrameList()
 
 		if flags:
@@ -133,10 +132,16 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 		""" Setup some global variables and UI elements depending on the job type.
 		"""
 		if self.jobType == 'Maya':
-			self.relativeScenesDir = osOps.absolutePath( '%s/%s' %(os.environ['MAYADIR'], 'scenes') )
+			try:
+				self.relativeScenesDir = osOps.absolutePath( '%s/%s' %(os.environ['MAYADIR'], 'scenes') )
+			except KeyError:
+				self.relativeScenesDir = ""
 			self.ui.scene_label.setText("Scene:")
 		elif self.jobType == 'Nuke':
-			self.relativeScenesDir = osOps.absolutePath( '%s/%s' %(os.environ['NUKEDIR'], 'scripts') )
+			try:
+				self.relativeScenesDir = osOps.absolutePath( '%s/%s' %(os.environ['NUKEDIR'], 'scripts') )
+			except KeyError:
+				self.relativeScenesDir = ""
 			self.ui.scene_label.setText("Script:")
 
 		self.relativeScenesToken = '...' # representative string to replace the path specified above
@@ -177,11 +182,11 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 		""" Browse for a scene/script file.
 		"""
 		if self.jobType == 'Maya':
-			fileDir = os.environ['MAYASCENESDIR']
+			fileDir = os.environ.get('MAYASCENESDIR', '.') # go to current dir if env var is not set
 			fileFilter = 'Maya files (*.ma *.mb)'
 			fileTerminology = 'scenes'
 		elif self.jobType == 'Nuke':
-			fileDir = os.environ['NUKESCRIPTSDIR']
+			fileDir = os.environ.get('NUKESCRIPTSDIR', '.') # go to current dir if env var is not set
 			fileFilter = 'Nuke files (*.nk)'
 			fileTerminology = 'scripts'
 
@@ -194,6 +199,7 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 		filePath = QtGui.QFileDialog.getOpenFileName(self, self.tr('Files'), startingDir, fileFilter)
 		if filePath[0]:
 			newEntry = self.relativePath( osOps.absolutePath(filePath[0]) )
+			#newEntry = osOps.absolutePath(filePath[0])
 			if newEntry:
 				self.ui.scene_comboBox.removeItem(self.ui.scene_comboBox.findText(newEntry)) # if the entry already exists in the list, delete it
 				self.ui.scene_comboBox.insertItem(0, newEntry)
@@ -202,17 +208,16 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 				verbose.print_("Warning: Only %s belonging to the current shot can be submitted." %fileTerminology, 2)
 
 
-	# def resetFrameList(self):
-	# 	""" Get frame range from shot settings.
-	# 	"""
-	# 	rgStartFrame = int(os.environ['STARTFRAME'])
-	# 	rgEndFrame = int(os.environ['ENDFRAME'])
-	# 	nFrames = rgEndFrame - rgStartFrame + 1
-	# 	self.ui.frameRange_lineEdit.setText("%d-%d" %(rgStartFrame, rgEndFrame))
-	# 	self.ui.taskSize_slider.setMaximum(nFrames)
-	# 	self.ui.taskSize_spinBox.setMaximum(nFrames)
-	# 	self.ui.taskSize_spinBox.setValue(nFrames) # store this value in userPrefs or something?
-	# 	self.calcFrameList()
+	def getFrameList(self):
+		""" Get frame range from shot settings.
+		"""
+		try:
+			self.ui.frameRange_lineEdit.setText("%d-%d" %(int(os.environ['STARTFRAME']), int(os.environ['ENDFRAME'])))
+			self.ui.overrideFrameRange_groupBox.setChecked(True)
+		except KeyError:
+			self.ui.frameRange_lineEdit.setText("")
+			self.ui.overrideFrameRange_groupBox.setChecked(False)
+
 
 
 	def calcFrameList(self, quiet=True):
@@ -247,6 +252,17 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 
 		return True
 					
+
+	def guessMayaProject(self, scene):
+		""" Try to guess the Maya project directory based on the scene name.
+		"""
+		try:
+			mayaProject = os.environ['MAYADIR'].replace("\\", "/") # project is implicit if job is set
+		except KeyError:
+			mayaProject = scene.split('/scenes')[0]
+					
+		return mayaProject
+
 
 	def submit(self):
 		""" Submit job to render queue.
@@ -286,7 +302,7 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 		if self.jobType == 'Maya':
 			renderCmdEnvVar = 'MAYARENDERVERSION'
 			mayaScene = self.absolutePath(self.ui.scene_comboBox.currentText()).replace("\\", "/") # implicit if submitting from Maya UI
-			mayaProject = os.environ['MAYADIR'].replace("\\", "/") # implicit if job is set
+			mayaProject = self.guessMayaProject(mayaScene)
 			jobName = os.path.basename(mayaScene)
 		elif self.jobType == 'Nuke':
 			renderCmdEnvVar = 'NUKEVERSION'
@@ -323,6 +339,13 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 			self.rq.newJob(genericOpts, renderOpts, self.taskList, os.environ['USERNAME'], time.strftime(timeFormatStr), comment)
 		else:
 			return
+
+
+	def showEvent(self, event):
+		""" Event handler for when window is shown.
+		"""
+		self.setJobTypeFromComboBox()
+		self.getFrameList()
 
 
 	def exit(self):

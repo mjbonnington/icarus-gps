@@ -10,6 +10,7 @@ v0.9.6 (--)
 -	[Maya] Fixed a bug where custom GPS toolbar would not be loaded properly on some occasions.
 -	[Render Queue] Prevented render jobs from being deleted while their status is in progress.
 -	[Render Queue] Fixed a bug with jobs not being dequeued correctly.
+-	[Render Queue] Fixed a bug where the job submitter was not updating based on the current shot.
 
 v0.9.5 (2016-07-20)
 -	[Icarus] Publishing and gathering now uses fully XML-based asset metadata.

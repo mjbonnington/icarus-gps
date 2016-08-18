@@ -1049,23 +1049,12 @@ Environment: %s
 		if jobManagementEditor.returnValue == True: # return True if user clicked Save, False for Cancel
 			self.populateJobs()
 
-		# try:
-		# 	self.jobManagementEditor.show()
-		# 	self.jobManagementEditor.raise_()
-		# except AttributeError:
-		# 	self.jobManagementEditor = job_management__main__.jobManagementApp()
-		# 	#print self.jobManagementEditor
-		# 	self.jobManagementEditor.show()
-		# 	#self.jobManagementEditor.exec_()
-		# print self.jobManagementEditor.returnValue
-
 
 	def launchShotCreator(self):
 		""" Launches shot creator dialog.
 		"""
 		import shot_creator__main__
 		reload(shot_creator__main__)
-		print self.ui.job_comboBox.currentText()
 		shotCreatorEditor = shot_creator__main__.shotCreatorApp( self.ui.job_comboBox.currentText() )
 #		shotCreatorEditor.show()
 		shotCreatorEditor.exec_()

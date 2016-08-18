@@ -25,7 +25,6 @@ class shotCreatorApp(QtGui.QDialog):
 		self.ui.setupUi(self)
 
 		self.job = job
-		print self.job
 
 		# Instantiate render queue class and load data
 		self.j = jobs.jobs()

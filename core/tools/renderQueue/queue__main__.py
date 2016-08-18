@@ -421,6 +421,13 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 			self.ui.job_groupBox.setEnabled(False)
 			self.ui.task_groupBox.setEnabled(False)
 
+		# Disable submit button if shot is not set (temporary)
+		try:
+			os.environ['SHOT']
+			self.ui.jobSubmit_toolButton.setEnabled(True)
+		except KeyError:
+			self.ui.jobSubmit_toolButton.setEnabled(False)
+
 		#print self.selection
 
 
@@ -840,6 +847,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 
 		self.updateRenderQueueView()
 		#self.rebuildRenderQueueView()
+		self.updateToolbarUI()
 
 
 	def closeEvent(self, event):
