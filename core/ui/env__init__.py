@@ -28,7 +28,7 @@ def setEnv():
 	except KeyError:
 		os.environ['ICARUSENVAWARE'] = 'STANDALONE'
 
-	os.environ['ICARUSVERSION'] = 'v0.9.6-20160816'
+	os.environ['ICARUSVERSION'] = 'v0.9.6-20160818'
 
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
 	icarusUIDir = os.path.join('core', 'ui')
@@ -39,7 +39,8 @@ def setEnv():
 #	os.environ['ICUSERPREFS']  = os.path.join(os.environ['HOME'], '.icarus') # user prefs stored in user home folder
 
 	# Hard-coded relative data directories required by Icarus
-	os.environ['SHOTSROOTRELATIVEDIR'] = 'Vfx'
+	os.environ['JOBSROOTRELATIVEDIR'] = 'Project_Media' # store in glogal settings?
+	os.environ['SHOTSROOTRELATIVEDIR'] = 'Vfx' # store in glogal settings?
 	os.environ['DATAFILESRELATIVEDIR'] = '.icarus'
 
 	appendSysPaths()

@@ -14,9 +14,12 @@ python ("import mayaOps; mayaOps.update()");
 // Set up path remapping for cross-platform support
 string $win_root = `getenv JOBSROOTWIN`;
 string $osx_root = `getenv JOBSROOTOSX`;
-dirmap -en true;
-dirmap -m $osx_root $win_root;
-dirmap -m $win_root $osx_root;
+if ($win_root != "None" && $osx_root != "None")
+{
+	dirmap -en true;
+	dirmap -m $osx_root $win_root;
+	dirmap -m $win_root $osx_root;
+}
 
 // Build GPS menus
 source gpsBuildMenus;

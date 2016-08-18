@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# [Icarus] job_management__main.py
+# [Icarus] job_management__main__.py
 # v0.1
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
@@ -68,6 +68,24 @@ class jobManagementApp(QtGui.QDialog):
 			self.ui.jobDisable_toolButton.setEnabled(True)
 
 
+	def checkRootPaths(self):
+		""" Check if root paths have been set, and if not prompt the user to set them up.
+		"""
+		self.j.getRootPaths()
+
+		if (self.j.win_root is None) or (self.j.osx_root is None) or (self.j.linux_root is None):
+			dialogMsg = 'Paths to the root of the shared filesystem must be set for each OS to enable cross-platform portability. Please set the values in the next dialog.\n'
+			verbose.print_(dialogMsg, 1)
+
+			# Confirmation dialog
+			import pDialog
+			dialogTitle = 'Root paths not set'
+			dialog = pDialog.dialog()
+			dialog.dialogWindow(dialogMsg, dialogTitle, conf=True)
+
+			self.editPaths()
+
+
 	def reloadJobs(self, reloadDatabase=True):
 		if reloadDatabase:
 			self.j.loadXML(quiet=True) # reload XML data
@@ -94,6 +112,7 @@ class jobManagementApp(QtGui.QDialog):
 				#item.setForeground(0, QtGui.QColor(102,102,102))
 
 		self.updateToolbarUI()
+		self.checkRootPaths()
 
 		# Re-enable signals
 		self.ui.jobs_listWidget.blockSignals(False)
@@ -102,12 +121,21 @@ class jobManagementApp(QtGui.QDialog):
 	def addJob(self):
 		import edit_job
 		editJobDialog = edit_job.dialog()
-		editJobDialog.dialogWindow("New_Job", '$FILESYSTEMROOT', True)
+		editJobDialog.dialogWindow('', '$JOBSROOT', True)
 		if editJobDialog.dialogReturn:
 			if self.j.addJob(editJobDialog.jobName, editJobDialog.jobPath, editJobDialog.jobActive):
 				self.reloadJobs(reloadDatabase=False)
 			else:
-				self.addJob()
+				errorMsg = "Could not create job as a job with the name '%s' already exists." %editJobDialog.jobName
+				dialogMsg = errorMsg + "\nWould you like to create a job with a different name?"
+				verbose.error(errorMsg)
+
+				# Confirmation dialog
+				import pDialog
+				dialogTitle = 'Job Not Created'
+				dialog = pDialog.dialog()
+				if dialog.dialogWindow(dialogMsg, dialogTitle):
+					self.addJob()
 
 
 	def deleteJobs(self):
@@ -158,7 +186,16 @@ class jobManagementApp(QtGui.QDialog):
 			if self.j.renameJob(jobName, editJobDialog.jobName): # do this last as jobs are referenced by name
 				self.reloadJobs(reloadDatabase=False)
 			else:
-				self.editJob()
+				errorMsg = "Could not rename job as a job with the name '%s' already exists." %editJobDialog.jobName
+				dialogMsg = errorMsg + "\nWould you still like to edit the job '%s'?" %jobName
+				verbose.error(errorMsg)
+
+				# Confirmation dialog
+				import pDialog
+				dialogTitle = 'Job Not Created'
+				dialog = pDialog.dialog()
+				if dialog.dialogWindow(dialogMsg, dialogTitle):
+					self.editJob()
 
 
 	def editPaths(self):

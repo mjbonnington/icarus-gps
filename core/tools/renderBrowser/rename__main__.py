@@ -74,7 +74,10 @@ class batchRenameApp(QtGui.QMainWindow):
 				 QtGui.QFileDialog.DontResolveSymlinks | QtGui.QFileDialog.ShowDirsOnly)
 
 		self.lastDir = os.path.dirname(dialog)
-		return osOps.absolutePath(dialog)
+		if dialog:
+			return osOps.absolutePath(dialog)
+		else:
+			return '.'
 
 
 	def fileDialog(self, dialogHome):

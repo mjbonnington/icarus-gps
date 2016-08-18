@@ -153,13 +153,13 @@ class icarusApp(QtGui.QDialog):
 		# Tools menu
 		self.ui.toolMenu_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
-		self.actionUserSettings = QtGui.QAction("User Settings...", None)
-		self.actionUserSettings.triggered.connect(self.userSettings)
-		self.ui.toolMenu_toolButton.addAction(self.actionUserSettings)
+		# self.actionUserSettings = QtGui.QAction("User Settings...", None)
+		# self.actionUserSettings.triggered.connect(self.userSettings)
+		# self.ui.toolMenu_toolButton.addAction(self.actionUserSettings)
 
-		self.actionIcarusSettings = QtGui.QAction("Icarus Global Settings...", None)
-		self.actionIcarusSettings.triggered.connect(self.globalSettings)
-		self.ui.toolMenu_toolButton.addAction(self.actionIcarusSettings)
+		# self.actionIcarusSettings = QtGui.QAction("Icarus Global Settings...", None)
+		# self.actionIcarusSettings.triggered.connect(self.globalSettings)
+		# self.ui.toolMenu_toolButton.addAction(self.actionIcarusSettings)
 
 		self.actionJobManagement = QtGui.QAction("Job Management...", None)
 		self.actionJobManagement.triggered.connect(self.launchJobManagement)

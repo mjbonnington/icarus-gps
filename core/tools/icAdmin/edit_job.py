@@ -23,8 +23,8 @@ class dialog(QtGui.QDialog):
 		self.ui.setupUi(self)
 
 		# Connect signals & slots
-		self.ui.jobName_lineEdit.textEdited.connect(self.updateUI)
-		self.ui.jobPath_lineEdit.textEdited.connect(self.updateUI)
+		self.ui.jobName_lineEdit.textChanged.connect(self.updateUI)
+		self.ui.jobPath_lineEdit.textChanged.connect(self.updateUI)
 		self.ui.jobPathBrowse_toolButton.clicked.connect(self.browse)
 		self.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.ok)
 		self.ui.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.cancel)
@@ -60,11 +60,6 @@ class dialog(QtGui.QDialog):
 	def browse(self):
 		""" Opens a dialog from which to select a folder.
 		"""
-		try: # detect if FILESYSTEMROOT env var has been set
-			fsroot = os.environ['FILESYSTEMROOT']
-		except KeyError:
-			fsroot = None
-
 		startingDir = osOps.absolutePath(self.ui.jobPath_lineEdit.text())
 		if os.path.isdir(startingDir):
 			dialogHome = startingDir
@@ -74,10 +69,10 @@ class dialog(QtGui.QDialog):
 		dialog = QtGui.QFileDialog.getExistingDirectory(self, self.tr('Directory'), dialogHome, QtGui.QFileDialog.DontResolveSymlinks | QtGui.QFileDialog.ShowDirsOnly)
 
 		if dialog:
-			if fsroot:
-				self.ui.jobPath_lineEdit.setText(osOps.relativePath(dialog, 'FILESYSTEMROOT'))
-			else:
-				self.ui.jobPath_lineEdit.setText(dialog)
+			jobPath = osOps.relativePath(dialog, 'JOBSROOT')
+			jobName = jobPath.split('/')[1]
+			self.ui.jobPath_lineEdit.setText(jobPath)
+			self.ui.jobName_lineEdit.setText(jobName)
 		#return dialog
 
 

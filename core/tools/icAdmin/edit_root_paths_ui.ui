@@ -26,7 +26,7 @@
       </sizepolicy>
      </property>
      <property name="title">
-      <string>Jobs root paths</string>
+      <string>Root paths</string>
      </property>
      <layout class="QFormLayout" name="formLayout_15">
       <property name="fieldGrowthPolicy">
@@ -114,7 +114,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../ui/rsc.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>

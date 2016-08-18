@@ -1,15 +1,16 @@
 #!/usr/bin/python
 
-# Icarus Admin Tools
-# Set App Paths dialog
-# v0.2
+# [Icarus] edit_app_paths.py
+# v0.3
 #
-# Michael Bonnington 2015
-# Gramercy Park Studios
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2015-2016 Gramercy Park Studios
+#
+# A UI for managing application versions and paths to executables for all OSes.
 
 
 from PySide import QtCore, QtGui
-from set_app_paths_ui import *
+from edit_app_paths_ui import *
 import os, sys
 
 # Initialise Icarus environment - only required when standalone
@@ -18,14 +19,15 @@ import os, sys
 #env__init__.setEnv()
 #env__init__.appendSysPaths()
 
+# Import custom modules
 import appPaths, verbose
 
 
-class setAppPathsDialog(QtGui.QDialog):
+class editAppPathsDialog(QtGui.QDialog):
 
 	def __init__(self, parent = None):
 		#QtGui.QDialog.__init__(self, parent)
-		super(setAppPathsDialog, self).__init__()
+		super(editAppPathsDialog, self).__init__()
 		self.ui = Ui_Dialog()
 		self.ui.setupUi(self)
 
@@ -39,7 +41,7 @@ class setAppPathsDialog(QtGui.QDialog):
 		self.shortcut.setKey('Ctrl+S')
 		self.shortcut.activated.connect(self.saveAppPaths)
 
-		# Connect signals and slots (new style)
+		# Connect signals & slots
 		self.ui.appName_comboBox.currentIndexChanged.connect(self.populateAppVersions)
 		self.ui.appVer_comboBox.currentIndexChanged.connect(self.populateAppExecPaths)
 		self.ui.appNameDel_toolButton.clicked.connect(self.deleteApp)
@@ -56,7 +58,7 @@ class setAppPathsDialog(QtGui.QDialog):
 
 
 	def init(self):
-		""" Initialise or reset by reloading data
+		""" Initialise or reset by reloading data.
 		"""
 		# Load data from xml file
 		self.ap = appPaths.appPaths()
@@ -69,7 +71,7 @@ class setAppPathsDialog(QtGui.QDialog):
 
 
 	def keyPressEvent(self, event):
-		""" Override function to prevent Enter / Esc keypresses triggering OK / Cancel buttons
+		""" Override function to prevent Enter / Esc keypresses triggering OK / Cancel buttons.
 		"""
 		pass
 		#if event.key() == QtCore.Qt.Key_Return or event.key() == QtCore.Qt.Key_Enter:
@@ -77,7 +79,7 @@ class setAppPathsDialog(QtGui.QDialog):
 
 
 	def toggleAppVerDelButton(self):
-		""" Enable or disable the application version delete button as required
+		""" Enable or disable the application version delete button as required.
 		"""
 		if (self.ui.appVer_comboBox.count() == 0) or (self.ui.appVer_comboBox.currentText() == '[template]'):
 			self.ui.appVerDel_toolButton.setEnabled(False)
@@ -86,7 +88,7 @@ class setAppPathsDialog(QtGui.QDialog):
 
 
 	def populateApps(self):
-		""" Populate application name combo box
+		""" Populate application name combo box.
 		"""
 		# Clear menu
 		self.ui.appName_comboBox.clear()
@@ -97,7 +99,7 @@ class setAppPathsDialog(QtGui.QDialog):
 
 
 	def populateAppVersions(self):
-		""" Populate application version combo box
+		""" Populate application version combo box.
 		"""
 		# Clear menu
 		self.ui.appVer_comboBox.clear()
@@ -120,7 +122,7 @@ class setAppPathsDialog(QtGui.QDialog):
 
 
 	def populateAppExecPaths(self):
-		""" Populate application executable paths for each OS
+		""" Populate application executable paths for each OS.
 		"""
 		# Enable/disable delete button
 		if self.ui.appVer_comboBox.count():
@@ -143,7 +145,7 @@ class setAppPathsDialog(QtGui.QDialog):
 
 
 	def deleteApp(self):
-		""" Delete an entry for an application
+		""" Delete an entry for an application.
 		"""
 		self.ap.deleteApp( self.ui.appName_comboBox.currentText() )
 		self.populateApps()
@@ -151,7 +153,7 @@ class setAppPathsDialog(QtGui.QDialog):
 
 
 	def deleteAppVersion(self):
-		""" Delete an entry for a version of an application
+		""" Delete an entry for a version of an application.
 		"""
 		self.ap.deleteVersion( self.ui.appName_comboBox.currentText(), self.ui.appVer_comboBox.currentText() )
 		self.populateAppVersions()
@@ -159,28 +161,28 @@ class setAppPathsDialog(QtGui.QDialog):
 
 
 	def storeAppPathOSX(self):
-		""" Store Mac OS X executable path when relevant field is updated
+		""" Store Mac OS X executable path when relevant field is updated.
 		"""
 		self.ap.setPath( self.ui.appName_comboBox.currentText(), self.ui.appVer_comboBox.currentText(), 'osx', self.ui.osxPath_lineEdit.text() )
 		#print "%s %s - Mac OS X executable path set to %s" %( self.ui.appName_comboBox.currentText(), self.ui.appVer_comboBox.currentText(), self.ui.osxPath_lineEdit.text() )
 
 
 	def storeAppPathLinux(self):
-		""" Store Linux executable path when relevant field is updated
+		""" Store Linux executable path when relevant field is updated.
 		"""
 		self.ap.setPath( self.ui.appName_comboBox.currentText(), self.ui.appVer_comboBox.currentText(), 'linux', self.ui.linuxPath_lineEdit.text() )
 		#print "%s %s - Linux executable path set to %s" %( self.ui.appName_comboBox.currentText(), self.ui.appVer_comboBox.currentText(), self.ui.linuxPath_lineEdit.text() )
 
 
 	def storeAppPathWin(self):
-		""" Store Windows executable path when relevant field is updated
+		""" Store Windows executable path when relevant field is updated.
 		"""
 		self.ap.setPath( self.ui.appName_comboBox.currentText(), self.ui.appVer_comboBox.currentText(), 'win', self.ui.winPath_lineEdit.text().replace("\\", "/") )
 		#print "%s %s - Windows executable path set to %s" %( self.ui.appName_comboBox.currentText(), self.ui.appVer_comboBox.currentText(), self.ui.winPath_lineEdit.text() )
 
 
 	def guessAppPaths(self):
-		""" Guess the executable paths for each OS based on the [template] entry (if it exists)
+		""" Guess the executable paths for each OS based on the [template] entry (if it exists).
 		"""
 		osxGuess = self.ap.guessPath( self.ui.appName_comboBox.currentText(), self.ui.appVer_comboBox.currentText(), 'osx' )
 		if osxGuess:
@@ -199,7 +201,7 @@ class setAppPathsDialog(QtGui.QDialog):
 
 
 	def saveAppPaths(self):
-		""" Save the application paths to the data file
+		""" Save the application paths to the data file.
 		"""
 		self.storeAppPathOSX()
 		self.storeAppPathLinux()
@@ -214,14 +216,14 @@ class setAppPathsDialog(QtGui.QDialog):
 
 
 	def saveAndExit(self):
-		""" Save data and exit
+		""" Save data and exit.
 		"""
 		if self.saveAppPaths():
 			self.hide()
 
 
 	def exit(self):
-		""" Exit the dialog
+		""" Exit the dialog.
 		"""
 		self.hide()
 
@@ -229,18 +231,17 @@ class setAppPathsDialog(QtGui.QDialog):
 if __name__ == "__main__":
 	app = QtGui.QApplication(sys.argv)
 
-	import rsc_rc # TODO: Check why this isn't working from within the UI file
-
 	#app.setStyle('plastique') # Set UI style - you can also use a flag e.g. '-style plastique'
 
 	qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
 	with open(qss, "r") as fh:
 		app.setStyleSheet(fh.read())
 
-	setAppPaths = setAppPathsDialog()
-	setAppPaths.show()
-	sys.exit(setAppPaths.exec_())
+	editAppPaths = editAppPathsDialog()
+	editAppPaths.show()
+	sys.exit(editAppPaths.exec_())
 
 #else:
-#	setAppPaths = setAppPathsDialog()
-#	setAppPaths.show()
+#	editAppPaths = editAppPathsDialog()
+#	editAppPaths.show()
+

@@ -1,12 +1,11 @@
 #!/usr/bin/python
 
-# Camera Presets
-# v0.1
+# [Icarus] camPresets.py
 #
-# Michael Bonnington 2015
-# Gramercy Park Studios
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2015-2016 Gramercy Park Studios
 #
-# Manipulates camera presets data stored in an XML database
+# Manipulates camera presets stored in an XML database.
 
 
 import xml.etree.ElementTree as ET
@@ -15,11 +14,12 @@ import xmlData
 
 class camPresets(xmlData.xmlData):
 	""" Manipulates XML database to store camera presets.
-		Inherits xmlData class
+		Inherits xmlData class.
 	"""
 
 	def getPresets(self, activeOnly=False):
-		""" Return a list of camera presets
+		""" Return a list of camera presets.
+			If 'activeOnly' is True, only cameras marked as active will be returned.
 		"""
 		elements = self.root.findall("./camera")
 		presets = []
@@ -34,7 +34,7 @@ class camPresets(xmlData.xmlData):
 
 	def getFilmback(self, camera, inches=False):
 		""" Get the filmback (as a tuple) for the specified camera.
-			Units in millimetres unless 'inches' is true
+			Units in millimetres unless 'inches' is True.
 		"""
 		sensor_w = float( self.root.find("./camera[@name='%s']/sensor_w_mm" %camera).text )
 		sensor_h = float( self.root.find("./camera[@name='%s']/sensor_h_mm" %camera).text )

@@ -51,6 +51,8 @@ class jobs(xmlData.xmlData):
 		os.environ['JOBSROOTOSX'] = str(self.osx_root)
 		#os.environ['JOBSROOTLINUX'] = str(self.linux_root) # not currently required as Linux & OSX mount points should be the same
 
+		os.environ['JOBSROOT'] = osOps.absolutePath('$FILESYSTEMROOT/$JOBSROOTRELATIVEDIR')
+
 
 	def setRootPaths(self, winPath=None, osxPath=None, linuxPath=None):
 		""" Set root paths. Create elements if they don't exist.
@@ -146,7 +148,6 @@ class jobs(xmlData.xmlData):
 			return True
 
 		else:
-			verbose.error("Could not create job as a job with the name '%s' already exists." %jobName)
 			return False
 
 
@@ -164,7 +165,6 @@ class jobs(xmlData.xmlData):
 				return True
 
 		else:
-			verbose.error("Could not rename job as a job with the name '%s' already exists." %newJobName)
 			return False
 
 

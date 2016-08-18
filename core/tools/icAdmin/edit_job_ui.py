@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'edit_job_ui.ui'
 #
-# Created: Tue Aug 16 15:53:07 2016
+# Created: Thu Aug 18 10:06:41 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!

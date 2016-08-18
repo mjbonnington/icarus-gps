@@ -24,6 +24,9 @@ class dialog(QtGui.QDialog):
 		self.ui.setupUi(self)
 
 		# Connect signals & slots
+		self.ui.jobRootPathWin_lineEdit.textChanged.connect(self.updateUI)
+		self.ui.jobRootPathOSX_lineEdit.textChanged.connect(self.updateUI)
+		self.ui.jobRootPathLinux_lineEdit.textChanged.connect(self.updateUI)
 		self.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.ok)
 		self.ui.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.cancel)
 
@@ -38,6 +41,15 @@ class dialog(QtGui.QDialog):
 			self.ui.jobRootPathLinux_lineEdit.setText(linuxPath)
 
 		self.exec_()
+
+
+	def updateUI(self):
+		""" Disables the OK button if any of the text fields are empty.
+		"""
+		if self.ui.jobRootPathWin_lineEdit.text() == "" or self.ui.jobRootPathOSX_lineEdit.text() == "" or self.ui.jobRootPathLinux_lineEdit.text() == "":
+			self.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).setEnabled(False)
+		else:
+			self.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).setEnabled(True)
 
 
 	def ok(self):

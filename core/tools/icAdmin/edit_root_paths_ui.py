@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'edit_root_paths_ui.ui'
 #
-# Created: Tue Aug 16 19:16:21 2016
+# Created: Thu Aug 18 12:55:38 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -69,7 +69,7 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Edit Root Paths", None, QtGui.QApplication.UnicodeUTF8))
-        self.jobRootPaths_groupBox.setTitle(QtGui.QApplication.translate("Dialog", "Jobs root paths", None, QtGui.QApplication.UnicodeUTF8))
+        self.jobRootPaths_groupBox.setTitle(QtGui.QApplication.translate("Dialog", "Root paths", None, QtGui.QApplication.UnicodeUTF8))
         self.jobRootPathOSX_label.setText(QtGui.QApplication.translate("Dialog", "Mac:", None, QtGui.QApplication.UnicodeUTF8))
         self.jobRootPathOSX_lineEdit.setText(QtGui.QApplication.translate("Dialog", "/Volumes/hggl_SAN_1", None, QtGui.QApplication.UnicodeUTF8))
         self.jobRootPathLinux_label.setText(QtGui.QApplication.translate("Dialog", "Linux:", None, QtGui.QApplication.UnicodeUTF8))
@@ -77,3 +77,4 @@ class Ui_Dialog(object):
         self.jobRootPathWin_label.setText(QtGui.QApplication.translate("Dialog", "Windows:", None, QtGui.QApplication.UnicodeUTF8))
         self.jobRootPathWin_lineEdit.setText(QtGui.QApplication.translate("Dialog", "Z:", None, QtGui.QApplication.UnicodeUTF8))
 
+import rsc_rc

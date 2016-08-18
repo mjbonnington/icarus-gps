@@ -717,28 +717,28 @@ class settingsDialog(QtGui.QDialog):
 			formLayout[0].setWidget(i, QtGui.QFormLayout.FieldRole, comboBox)
 
 
-	def resPresetsEditor(self):
-		""" Open the resolution presets editor dialog. TODO: Prevent multiple windows from opening
-		"""
-		import set_res_presets__main__
-		reload(set_res_presets__main__)
-		self.setAppPaths = set_res_presets__main__.setResPresetsDialog()
-		self.setAppPaths.show()
-		self.setAppPaths.exec_()
+	# def resPresetsEditor(self):
+	# 	""" Open the resolution presets editor dialog. Not yet implemented.
+	# 	"""
+	# 	import set_res_presets
+	# 	reload(set_res_presets)
+	# 	self.editResPresets = set_res_presets__main__.editResPresetsDialog()
+	# 	self.editResPresets.show()
+	# 	self.editResPresets.exec_()
 
-		# Reload resPresets XML and update comboBox contents after closing dialog
-		self.rp.loadXML()
-		self.openProperties('resolution')
+	# 	# Reload resPresets XML and update comboBox contents after closing dialog
+	# 	self.rp.loadXML()
+	# 	self.openProperties('resolution')
 
 
 	def appPathsEditor(self):
-		""" Open the application paths editor dialog. TODO: Prevent multiple windows from opening
+		""" Open the application paths editor dialog.
 		"""
-		import set_app_paths__main__
-		reload(set_app_paths__main__)
-		self.setResPresets = set_app_paths__main__.setAppPathsDialog()
-		self.setResPresets.show()
-		self.setResPresets.exec_()
+		import edit_app_paths
+		reload(edit_app_paths)
+		self.editAppPaths = edit_app_paths.editAppPathsDialog()
+		self.editAppPaths.show()
+		self.editAppPaths.exec_()
 
 		# Reload appPaths XML and update comboBox contents after closing dialog
 		self.ap.loadXML()

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Set Application Paths</string>
+   <string>Edit Application Paths</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -82,7 +82,7 @@
            <string>...</string>
           </property>
           <property name="icon">
-           <iconset>
+           <iconset resource="../../ui/rsc.qrc">
             <normaloff>:/rsc/rsc/icon_delete.png</normaloff>
             <disabledoff>:/rsc/rsc/icon_delete_disabled.png</disabledoff>:/rsc/rsc/icon_delete.png</iconset>
           </property>
@@ -133,7 +133,7 @@
            <string>...</string>
           </property>
           <property name="icon">
-           <iconset>
+           <iconset resource="../../ui/rsc.qrc">
             <normaloff>:/rsc/rsc/icon_delete.png</normaloff>
             <disabledoff>:/rsc/rsc/icon_delete_disabled.png</disabledoff>:/rsc/rsc/icon_delete.png</iconset>
           </property>
@@ -178,49 +178,35 @@
       <property name="fieldGrowthPolicy">
        <enum>QFormLayout::ExpandingFieldsGrow</enum>
       </property>
-      <item row="0" column="0">
+      <item row="1" column="0">
        <widget class="QLabel" name="osxPath_label">
         <property name="text">
-         <string>Mac OS X:</string>
+         <string>Mac:</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
+      <item row="1" column="1">
        <layout class="QHBoxLayout" name="osxPath_horizontalLayout">
         <item>
          <widget class="QLineEdit" name="osxPath_lineEdit"/>
         </item>
        </layout>
       </item>
-      <item row="1" column="0">
+      <item row="2" column="0">
        <widget class="QLabel" name="linuxPath_label">
         <property name="text">
          <string>Linux:</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="2" column="1">
        <layout class="QHBoxLayout" name="linuxPath_horizontalLayout">
         <item>
          <widget class="QLineEdit" name="linuxPath_lineEdit"/>
         </item>
        </layout>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="winPath_label">
-        <property name="text">
-         <string>Windows:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <layout class="QHBoxLayout" name="winPath_horizontalLayout">
-        <item>
-         <widget class="QLineEdit" name="winPath_lineEdit"/>
-        </item>
-       </layout>
-      </item>
-      <item row="3" column="1">
+      <item row="4" column="1">
        <layout class="QHBoxLayout" name="appPaths_horizontalLayout">
         <item>
          <widget class="QPushButton" name="guess_pushButton">
@@ -231,6 +217,20 @@
            <string>Guess</string>
           </property>
          </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="winPath_label">
+        <property name="text">
+         <string>Windows:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <layout class="QHBoxLayout" name="winPath_horizontalLayout">
+        <item>
+         <widget class="QLineEdit" name="winPath_lineEdit"/>
         </item>
        </layout>
       </item>
@@ -259,6 +259,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../ui/rsc.qrc"/>
+ </resources>
  <connections/>
 </ui>
