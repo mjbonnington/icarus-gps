@@ -1,4 +1,4 @@
-v0.9.6 (--)
+v0.9.6 (2016-08-18)
 -	[Icarus] Added job management UI to handle jobs database without the need to hand edit the XML file.
 -	[Icarus] Integrated shot creator UI to automatically generate shot folders.
 -	[Icarus] Added refresh button to enable job database to be reloaded without restarting Icarus.

@@ -86,7 +86,11 @@ class jobManagementApp(QtGui.QDialog):
 			self.editPaths()
 
 
-	def reloadJobs(self, reloadDatabase=True):
+	def reloadJobs(self, reloadDatabase=True, selectItem=None):
+		""" Refresh the jobs list view.
+			'reloadDatabase' will reload the XML data first.
+			'selectItem' specifies an item by name that will be selected automatically.
+		"""
 		if reloadDatabase:
 			self.j.loadXML(quiet=True) # reload XML data
 
@@ -111,20 +115,29 @@ class jobManagementApp(QtGui.QDialog):
 				item.setCheckState(QtCore.Qt.Unchecked)
 				#item.setForeground(0, QtGui.QColor(102,102,102))
 
+			if selectItem == jobName:
+				selectedItem = item
+
 		self.updateToolbarUI()
 		self.checkRootPaths()
 
 		# Re-enable signals
 		self.ui.jobs_listWidget.blockSignals(False)
 
+		# Set selection - view will also scroll to show selection
+		if selectItem is not None:
+			self.ui.jobs_listWidget.setCurrentItem(selectedItem)
+
 
 	def addJob(self):
+		""" Open the edit job dialog to add a new job.
+		"""
 		import edit_job
 		editJobDialog = edit_job.dialog()
 		editJobDialog.dialogWindow('', '$JOBSROOT', True)
 		if editJobDialog.dialogReturn:
 			if self.j.addJob(editJobDialog.jobName, editJobDialog.jobPath, editJobDialog.jobActive):
-				self.reloadJobs(reloadDatabase=False)
+				self.reloadJobs(reloadDatabase=False, selectItem=editJobDialog.jobName)
 			else:
 				errorMsg = "Could not create job as a job with the name '%s' already exists." %editJobDialog.jobName
 				dialogMsg = errorMsg + "\nWould you like to create a job with a different name?"
@@ -184,7 +197,7 @@ class jobManagementApp(QtGui.QDialog):
 			self.j.enableJob(jobName, editJobDialog.jobActive)
 			self.j.setPath(jobName, editJobDialog.jobPath)
 			if self.j.renameJob(jobName, editJobDialog.jobName): # do this last as jobs are referenced by name
-				self.reloadJobs(reloadDatabase=False)
+				self.reloadJobs(reloadDatabase=False, selectItem=editJobDialog.jobName)
 			else:
 				errorMsg = "Could not rename job as a job with the name '%s' already exists." %editJobDialog.jobName
 				dialogMsg = errorMsg + "\nWould you still like to edit the job '%s'?" %jobName
