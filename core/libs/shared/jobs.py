@@ -40,16 +40,16 @@ class jobs(xmlData.xmlData):
 			self.linux_root = None
 
 		# Set environment variables
+		os.environ['FILESYSTEMROOTWIN'] = str(self.win_root)
+		os.environ['FILESYSTEMROOTOSX'] = str(self.osx_root)
+		os.environ['FILESYSTEMROOTLINUX'] = str(self.linux_root)
+
 		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
 			os.environ['FILESYSTEMROOT'] = str(self.win_root)
 		elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
 			os.environ['FILESYSTEMROOT'] = str(self.osx_root)
 		else:
 			os.environ['FILESYSTEMROOT'] = str(self.linux_root)
-
-		os.environ['JOBSROOTWIN'] = str(self.win_root)
-		os.environ['JOBSROOTOSX'] = str(self.osx_root)
-		#os.environ['JOBSROOTLINUX'] = str(self.linux_root) # not currently required as Linux & OSX mount points should be the same
 
 		os.environ['JOBSROOT'] = osOps.absolutePath('$FILESYSTEMROOT/$JOBSROOTRELATIVEDIR')
 

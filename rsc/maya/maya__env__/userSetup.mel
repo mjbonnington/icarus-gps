@@ -3,7 +3,7 @@
 //
 // Nuno Pereira <nuno.pereira@gps-ldn.com>
 // Mike Bonnington <mike.bonnington@gps-ldn.com>
-// (c) 2013-2015 Gramercy Park Studios
+// (c) 2013-2016 Gramercy Park Studios
 //
 // Commands to execute at Maya startup.
 
@@ -12,13 +12,25 @@
 python ("import mayaOps; mayaOps.update()");
 
 // Set up path remapping for cross-platform support
-string $win_root = `getenv JOBSROOTWIN`;
-string $osx_root = `getenv JOBSROOTOSX`;
-if ($win_root != "None" && $osx_root != "None")
+string $root = `getenv FILESYSTEMROOT`;
+string $win_root = `getenv FILESYSTEMROOTWIN`;
+string $osx_root = `getenv FILESYSTEMROOTOSX`;
+string $linux_root = `getenv FILESYSTEMROOTLINUX`;
+if ($root != "None")
 {
 	dirmap -en true;
-	dirmap -m $osx_root $win_root;
-	dirmap -m $win_root $osx_root;
+	if ($win_root != "None")
+	{
+		dirmap -m $win_root $root;
+	}
+	if ($osx_root != "None")
+	{
+		dirmap -m $osx_root $root;
+	}
+	if ($linux_root != "None")
+	{
+		dirmap -m $linux_root $root;
+	}
 }
 
 // Build GPS menus
@@ -45,3 +57,4 @@ hotkey -ctl -k "S" -n "GPSSaveAs";
 nameCommand "GPSSaveIncremental" -ann "[GPS] Save Scene Incrementally" -c "source menus2Py; menus2Py.incrementalSave()";
 hotkey -cmd -alt -k "s" -n "GPSSaveIncremental";
 hotkey -ctl -alt -k "s" -n "GPSSaveIncremental";
+

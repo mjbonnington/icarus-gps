@@ -13,10 +13,14 @@ import os, sys
 
 # Set up path remapping for cross-platform support
 def filenameFix(filename):
-	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		return filename.replace( os.environ['JOBSROOTOSX'], os.environ['JOBSROOTWIN'] )
-	else: # Linux or OS X
-		return filename.replace( os.environ['JOBSROOTWIN'], os.environ['JOBSROOTOSX'] )
+	# if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	# 	return filename.replace( os.environ['JOBSROOTOSX'], os.environ['JOBSROOTWIN'] )
+	# else: # Linux or OS X
+	# 	return filename.replace( os.environ['JOBSROOTWIN'], os.environ['JOBSROOTOSX'] )
+	filename=filename.replace( os.environ['FILESYSTEMROOTWIN'], os.environ['FILESYSTEMROOT'] )
+	filename=filename.replace( os.environ['FILESYSTEMROOTOSX'], os.environ['FILESYSTEMROOT'] )
+	filename=filename.replace( os.environ['FILESYSTEMROOTLINUX'], os.environ['FILESYSTEMROOT'] )
+	return filename
 
 # Adding to Nuke path
 nuke.pluginAddPath('./gizmos')

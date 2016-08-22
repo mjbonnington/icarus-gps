@@ -1,3 +1,6 @@
+v0.9.7 (--)
+-	[Icarus] Improved path translation system for 3-way translation between Windows, Mac and Linux.
+
 v0.9.6 (2016-08-18)
 -	[Icarus] Added job management UI to handle jobs database without the need to hand edit the XML file.
 -	[Icarus] Integrated shot creator UI to automatically generate shot folders.
