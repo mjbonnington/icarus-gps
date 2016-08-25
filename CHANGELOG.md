@@ -1,5 +1,6 @@
 v0.9.7 (--)
 -	[Icarus] Improved path translation system for 3-way translation between Windows, Mac and Linux.
+-	[Maya] Fixed issue with Maya not being able to execute Python scripts from the project's 'scripts' folder.
 
 v0.9.6 (2016-08-18)
 -	[Icarus] Added job management UI to handle jobs database without the need to hand edit the XML file.

@@ -185,8 +185,8 @@ global proc shelf_GPS_Animation () {
         -flat 1
 	   -mi "iCollide" ( "loadPlugin -qt iDeform; iCollide new" )
 	   -mi "iDisplace" ( "loadPlugin -qt iDeform; iDisplace()" )
-	   -mi "iSkinDefrom Attract" ( "loadPlugin -qt iDeform; iSkinDeform new 0" )
-	   -mi "iSkinDefrom Slide" ( "loadPlugin -qt iDeform; iSkinDeform new 1" )
+	   -mi "iSkinDeform Attract" ( "loadPlugin -qt iDeform; iSkinDeform new 0" )
+	   -mi "iSkinDeform Slide" ( "loadPlugin -qt iDeform; iSkinDeform new 1" )
     ;
     shelfButton
         -enableCommandRepeat 1

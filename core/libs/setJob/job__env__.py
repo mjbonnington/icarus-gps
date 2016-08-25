@@ -159,8 +159,9 @@ def setEnv(envVars):
 		os.environ['MAYA_DEBUG_ENABLE_CRASH_REPORTING'] = '0'
 		os.environ['MAYA_FORCE_PANEL_FOCUS'] = '0' # this should prevent panel stealing focus from Qt window on keypress.
 		os.environ['MAYA_PLUG_IN_PATH'] = osOps.absolutePath('$PIPELINE/rsc/maya/plugins') + os.pathsep + osOps.absolutePath('$MAYASHAREDRESOURCES/%s/plug-ins' %jobData.getAppVersion('Maya'))
-		os.environ['MAYA_SCRIPT_PATH'] = osOps.absolutePath('$PIPELINE/rsc/maya/maya__env__') + os.pathsep + osOps.absolutePath('$PIPELINE/rsc/maya/scripts') + os.pathsep + osOps.absolutePath('$MAYASHAREDRESOURCES/scripts') + os.pathsep + osOps.absolutePath('$MAYASHAREDRESOURCES/%s/scripts' %jobData.getAppVersion('Maya'))
-		os.environ['PYTHONPATH'] = os.environ['MAYA_SCRIPT_PATH']
+		scriptsPath = osOps.absolutePath('$PIPELINE/rsc/maya/maya__env__') + os.pathsep + osOps.absolutePath('$PIPELINE/rsc/maya/scripts') + os.pathsep + osOps.absolutePath('$MAYASHAREDRESOURCES/scripts') + os.pathsep + osOps.absolutePath('$MAYASHAREDRESOURCES/%s/scripts' %jobData.getAppVersion('Maya'))
+		os.environ['MAYA_SCRIPT_PATH'] = scriptsPath
+		os.environ['PYTHONPATH'] = scriptsPath + os.pathsep + osOps.absolutePath('$MAYADIR/scripts')
 		#os.environ['MI_CUSTOM_SHADER_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shaders', 'include')
 		#os.environ['MI_LIBRARY_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shaders')
 		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
