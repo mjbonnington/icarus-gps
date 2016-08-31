@@ -44,11 +44,14 @@ os.environ['ICARUSENVAWARE'] = 'NUKE'
 
 
 # Shot directories
-nuke.addFavoriteDir('Scripts', os.environ['NUKESCRIPTSDIR'])
-nuke.addFavoriteDir('Renders', os.environ['NUKERENDERSDIR'])
-nuke.addFavoriteDir('Elements', os.environ['NUKEELEMENTSDIR'])
-nuke.addFavoriteDir('Plate', os.path.join('[getenv SHOTPATH]', 'Plate'))
-nuke.addFavoriteDir('Elements Library', os.environ['ELEMENTSLIBRARY'])
+try:
+	nuke.addFavoriteDir('Scripts', os.environ['NUKESCRIPTSDIR'])
+	nuke.addFavoriteDir('Renders', os.environ['NUKERENDERSDIR'])
+	nuke.addFavoriteDir('Elements', os.environ['NUKEELEMENTSDIR'])
+	nuke.addFavoriteDir('Plate', os.path.join('[getenv SHOTPATH]', 'Plate'))
+	nuke.addFavoriteDir('Elements Library', os.environ['ELEMENTSLIBRARY'])
+except KeyError:
+	pass
 
 # Plate format
 plateFormat = '%s %s %s' % (int(os.environ['RESOLUTIONX']), int(os.environ['RESOLUTIONY']), os.environ['SHOT'])
