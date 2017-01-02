@@ -166,12 +166,16 @@ def setUmask(umask='000'):
 		return 'umask %s' % umask
 
 
-def absolutePath(relPath):
+def absolutePath(relPath, stripTrailingSlash=False):
 	""" Convert a relative path to an absolute path.
 		Expands environment variables in supplied path and replaces backslashes with forward slashes for compatibility.
+		If 'stripTrailingSlash' is True, remove trailing slash(es) from returned path.
 	"""
 	if relPath:
-		return os.path.normpath( os.path.expandvars(relPath) ).replace("\\", "/")
+		if stripTrailingSlash:
+			return os.path.normpath( os.path.expandvars(relPath) ).replace("\\", "/").rstrip('/')
+		else:
+			return os.path.normpath( os.path.expandvars(relPath) ).replace("\\", "/")
 	else:
 		return ""
 
@@ -183,7 +187,7 @@ def relativePath(absPath, token, tokenFormat='standard'):
 			standard:  $NAME
 			bracketed: ${NAME}
 			windows:   %NAME%
-			nuke:  [getenv NAME]
+			nuke:      [getenv NAME]
 	"""
 	try:
 		if tokenFormat == 'standard':

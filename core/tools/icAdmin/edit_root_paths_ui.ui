@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>192</height>
+    <height>225</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,8 +25,11 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;File system root paths&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Specify the path to the root of the shared file system for each operating system. This enables projects to be worked on seamlessly across different operating systems.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="title">
-      <string>Root paths</string>
+      <string>File system root paths</string>
      </property>
      <layout class="QFormLayout" name="formLayout_15">
       <property name="fieldGrowthPolicy">
@@ -62,7 +65,7 @@
         <item>
          <widget class="QLineEdit" name="jobRootPathLinux_lineEdit">
           <property name="text">
-           <string>/Volumes/hggl_SAN_1</string>
+           <string>/mnt/hggl_SAN_1</string>
           </property>
          </widget>
         </item>
@@ -81,6 +84,45 @@
          <widget class="QLineEdit" name="jobRootPathWin_lineEdit">
           <property name="text">
            <string>Z:</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="jobsRelPath_groupBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Jobs directory&lt;/span&gt;&lt;/p&gt;&lt;p&gt;If your jobs are stored in a subdirectory of the root file system, specify the relative path here. Otherwise, set the path to '.'&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="title">
+      <string>Jobs directory</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_16">
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::ExpandingFieldsGrow</enum>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="jobsRelPath_label">
+        <property name="text">
+         <string>Path:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <layout class="QHBoxLayout" name="jobsRelPath_horizontalLayout">
+        <item>
+         <widget class="QLineEdit" name="jobsRelPath_lineEdit">
+          <property name="text">
+           <string>Project_Media</string>
           </property>
          </widget>
         </item>

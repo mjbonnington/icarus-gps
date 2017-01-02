@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'edit_root_paths_ui.ui'
 #
-# Created: Thu Aug 18 12:55:38 2016
+# Created: Tue Sep 27 23:05:57 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(640, 192)
+        Dialog.resize(640, 225)
         Dialog.setModal(True)
         self.verticalLayout = QtGui.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -54,6 +54,26 @@ class Ui_Dialog(object):
         self.jobRootPathWin_horizontalLayout.addWidget(self.jobRootPathWin_lineEdit)
         self.formLayout_15.setLayout(0, QtGui.QFormLayout.FieldRole, self.jobRootPathWin_horizontalLayout)
         self.verticalLayout.addWidget(self.jobRootPaths_groupBox)
+        self.jobsRelPath_groupBox = QtGui.QGroupBox(Dialog)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Maximum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.jobsRelPath_groupBox.sizePolicy().hasHeightForWidth())
+        self.jobsRelPath_groupBox.setSizePolicy(sizePolicy)
+        self.jobsRelPath_groupBox.setObjectName("jobsRelPath_groupBox")
+        self.formLayout_16 = QtGui.QFormLayout(self.jobsRelPath_groupBox)
+        self.formLayout_16.setFieldGrowthPolicy(QtGui.QFormLayout.ExpandingFieldsGrow)
+        self.formLayout_16.setObjectName("formLayout_16")
+        self.jobsRelPath_label = QtGui.QLabel(self.jobsRelPath_groupBox)
+        self.jobsRelPath_label.setObjectName("jobsRelPath_label")
+        self.formLayout_16.setWidget(0, QtGui.QFormLayout.LabelRole, self.jobsRelPath_label)
+        self.jobsRelPath_horizontalLayout = QtGui.QHBoxLayout()
+        self.jobsRelPath_horizontalLayout.setObjectName("jobsRelPath_horizontalLayout")
+        self.jobsRelPath_lineEdit = QtGui.QLineEdit(self.jobsRelPath_groupBox)
+        self.jobsRelPath_lineEdit.setObjectName("jobsRelPath_lineEdit")
+        self.jobsRelPath_horizontalLayout.addWidget(self.jobsRelPath_lineEdit)
+        self.formLayout_16.setLayout(0, QtGui.QFormLayout.FieldRole, self.jobsRelPath_horizontalLayout)
+        self.verticalLayout.addWidget(self.jobsRelPath_groupBox)
         spacerItem = QtGui.QSpacerItem(20, 156, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem)
         self.buttonBox = QtGui.QDialogButtonBox(Dialog)
@@ -69,12 +89,17 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Edit Root Paths", None, QtGui.QApplication.UnicodeUTF8))
-        self.jobRootPaths_groupBox.setTitle(QtGui.QApplication.translate("Dialog", "Root paths", None, QtGui.QApplication.UnicodeUTF8))
+        self.jobRootPaths_groupBox.setToolTip(QtGui.QApplication.translate("Dialog", "<html><head/><body><p><span style=\" font-weight:600;\">File system root paths</span></p><p>Specify the path to the root of the shared file system for each operating system. This enables projects to be worked on seamlessly across different operating systems.</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.jobRootPaths_groupBox.setTitle(QtGui.QApplication.translate("Dialog", "File system root paths", None, QtGui.QApplication.UnicodeUTF8))
         self.jobRootPathOSX_label.setText(QtGui.QApplication.translate("Dialog", "Mac:", None, QtGui.QApplication.UnicodeUTF8))
         self.jobRootPathOSX_lineEdit.setText(QtGui.QApplication.translate("Dialog", "/Volumes/hggl_SAN_1", None, QtGui.QApplication.UnicodeUTF8))
         self.jobRootPathLinux_label.setText(QtGui.QApplication.translate("Dialog", "Linux:", None, QtGui.QApplication.UnicodeUTF8))
-        self.jobRootPathLinux_lineEdit.setText(QtGui.QApplication.translate("Dialog", "/Volumes/hggl_SAN_1", None, QtGui.QApplication.UnicodeUTF8))
+        self.jobRootPathLinux_lineEdit.setText(QtGui.QApplication.translate("Dialog", "/mnt/hggl_SAN_1", None, QtGui.QApplication.UnicodeUTF8))
         self.jobRootPathWin_label.setText(QtGui.QApplication.translate("Dialog", "Windows:", None, QtGui.QApplication.UnicodeUTF8))
         self.jobRootPathWin_lineEdit.setText(QtGui.QApplication.translate("Dialog", "Z:", None, QtGui.QApplication.UnicodeUTF8))
+        self.jobsRelPath_groupBox.setToolTip(QtGui.QApplication.translate("Dialog", "<html><head/><body><p><span style=\" font-weight:600;\">Jobs directory</span></p><p>If your jobs are stored in a subdirectory of the root file system, specify the relative path here. Otherwise, set the path to \'.\'</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.jobsRelPath_groupBox.setTitle(QtGui.QApplication.translate("Dialog", "Jobs directory", None, QtGui.QApplication.UnicodeUTF8))
+        self.jobsRelPath_label.setText(QtGui.QApplication.translate("Dialog", "Path:", None, QtGui.QApplication.UnicodeUTF8))
+        self.jobsRelPath_lineEdit.setText(QtGui.QApplication.translate("Dialog", "Project_Media", None, QtGui.QApplication.UnicodeUTF8))
 
 import rsc_rc

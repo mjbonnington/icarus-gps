@@ -219,9 +219,9 @@ class jobManagementApp(QtGui.QDialog):
 
 		import edit_root_paths
 		editPathsDialog = edit_root_paths.dialog()
-		editPathsDialog.dialogWindow(self.j.win_root, self.j.osx_root, self.j.linux_root)
+		editPathsDialog.dialogWindow(self.j.win_root, self.j.osx_root, self.j.linux_root, self.j.jobs_path)
 		if editPathsDialog.dialogReturn:
-			self.j.setRootPaths(editPathsDialog.winPath, editPathsDialog.osxPath, editPathsDialog.linuxPath)
+			self.j.setRootPaths(editPathsDialog.winPath, editPathsDialog.osxPath, editPathsDialog.linuxPath, editPathsDialog.jobsRelPath)
 			self.j.getRootPaths()
 			#self.j.saveXML()
 

@@ -153,14 +153,6 @@ class icarusApp(QtGui.QDialog):
 		# Tools menu
 		self.ui.toolMenu_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
-		# self.actionUserSettings = QtGui.QAction("User Settings...", None)
-		# self.actionUserSettings.triggered.connect(self.userSettings)
-		# self.ui.toolMenu_toolButton.addAction(self.actionUserSettings)
-
-		# self.actionIcarusSettings = QtGui.QAction("Icarus Global Settings...", None)
-		# self.actionIcarusSettings.triggered.connect(self.globalSettings)
-		# self.ui.toolMenu_toolButton.addAction(self.actionIcarusSettings)
-
 		self.actionJobManagement = QtGui.QAction("Job Management...", None)
 		self.actionJobManagement.triggered.connect(self.launchJobManagement)
 		self.ui.toolMenu_toolButton.addAction(self.actionJobManagement)
@@ -173,13 +165,21 @@ class icarusApp(QtGui.QDialog):
 		self.actionBatchRename.triggered.connect(self.launchBatchRename)
 		self.ui.toolMenu_toolButton.addAction(self.actionBatchRename)
 
-#		self.actionRenderQueue = QtGui.QAction("Render Queue...", None)
-#		self.actionRenderQueue.triggered.connect(self.launchRenderQueue)
+		# self.actionRenderQueue = QtGui.QAction("Render Queue...", None)
+		# self.actionRenderQueue.triggered.connect(self.launchRenderQueue)
 		self.ui.toolMenu_toolButton.addAction(self.actionRenderQueue)
 
-		# self.actionAbout = QtGui.QAction("About Icarus", None)
-		# self.actionAbout.triggered.connect(self.about)
-		# self.ui.about_toolButton.addAction(self.actionAbout)
+		# self.separator = QtGui.QAction(None)
+		# self.separator.setSeparator(True)
+		# self.ui.toolMenu_toolButton.addAction(self.separator)
+
+		# self.actionIcarusSettings = QtGui.QAction("Global Settings...", None)
+		# self.actionIcarusSettings.triggered.connect(self.globalSettings)
+		# self.ui.toolMenu_toolButton.addAction(self.actionIcarusSettings)
+
+		# self.actionUserSettings = QtGui.QAction("User Settings...", None)
+		# self.actionUserSettings.triggered.connect(self.userSettings)
+		# self.ui.toolMenu_toolButton.addAction(self.actionUserSettings)
 
 
 		# Add status bar

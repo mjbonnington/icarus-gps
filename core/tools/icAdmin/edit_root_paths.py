@@ -31,7 +31,7 @@ class dialog(QtGui.QDialog):
 		self.ui.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.cancel)
 
 
-	def dialogWindow(self, winPath, osxPath, linuxPath):
+	def dialogWindow(self, winPath, osxPath, linuxPath, jobsRelPath):
 		self.dialogReturn = False
 		if winPath is not None:
 			self.ui.jobRootPathWin_lineEdit.setText(winPath)
@@ -39,6 +39,8 @@ class dialog(QtGui.QDialog):
 			self.ui.jobRootPathOSX_lineEdit.setText(osxPath)
 		if linuxPath is not None:
 			self.ui.jobRootPathLinux_lineEdit.setText(linuxPath)
+		if jobsRelPath is not None:
+			self.ui.jobsRelPath_lineEdit.setText(jobsRelPath)
 
 		self.exec_()
 
@@ -55,9 +57,10 @@ class dialog(QtGui.QDialog):
 	def ok(self):
 		self.dialogReturn = True
 		# Normalise paths and strip trailing slash
-		self.winPath = osOps.absolutePath(self.ui.jobRootPathWin_lineEdit.text()).rstrip('/')
-		self.osxPath = osOps.absolutePath(self.ui.jobRootPathOSX_lineEdit.text()).rstrip('/')
-		self.linuxPath = osOps.absolutePath(self.ui.jobRootPathLinux_lineEdit.text()).rstrip('/')
+		self.winPath = osOps.absolutePath(self.ui.jobRootPathWin_lineEdit.text(), stripTrailingSlash=True)
+		self.osxPath = osOps.absolutePath(self.ui.jobRootPathOSX_lineEdit.text(), stripTrailingSlash=True)
+		self.linuxPath = osOps.absolutePath(self.ui.jobRootPathLinux_lineEdit.text(), stripTrailingSlash=True)
+		self.jobsRelPath = self.ui.jobsRelPath_lineEdit.text()
 		self.accept()
 		return #True
 

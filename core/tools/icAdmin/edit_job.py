@@ -64,7 +64,11 @@ class dialog(QtGui.QDialog):
 		if os.path.isdir(startingDir):
 			dialogHome = startingDir
 		else:
-			dialogHome = fsroot
+			dialogHome = os.environ['JOBSROOT']
+
+		# Append slash to path if it's a Windows drive letter, otherwise file dialog won't open the correct location
+		if dialogHome.endswith(':'):
+			dialogHome += '/'
 
 		dialog = QtGui.QFileDialog.getExistingDirectory(self, self.tr('Directory'), dialogHome, QtGui.QFileDialog.DontResolveSymlinks | QtGui.QFileDialog.ShowDirsOnly)
 

@@ -33,11 +33,13 @@ class jobs(xmlData.xmlData):
 			self.win_root = self.root.find('jobs-root/win').text
 			self.osx_root = self.root.find('jobs-root/osx').text
 			self.linux_root = self.root.find('jobs-root/linux').text
+			self.jobs_path = self.root.find('jobs-root/path').text
 
 		except AttributeError:
 			self.win_root = None
 			self.osx_root = None
 			self.linux_root = None
+			self.jobs_path = None
 
 		# Set environment variables
 		os.environ['FILESYSTEMROOTWIN'] = str(self.win_root)
@@ -51,10 +53,11 @@ class jobs(xmlData.xmlData):
 		else:
 			os.environ['FILESYSTEMROOT'] = str(self.linux_root)
 
-		os.environ['JOBSROOT'] = osOps.absolutePath('$FILESYSTEMROOT/$JOBSROOTRELATIVEDIR')
+		#os.environ['JOBSROOT'] = osOps.absolutePath('$FILESYSTEMROOT/$JOBSROOTRELATIVEDIR', stripTrailingSlash=True)
+		os.environ['JOBSROOT'] = osOps.absolutePath('$FILESYSTEMROOT/%s' %self.jobs_path, stripTrailingSlash=True)
 
 
-	def setRootPaths(self, winPath=None, osxPath=None, linuxPath=None):
+	def setRootPaths(self, winPath=None, osxPath=None, linuxPath=None, jobsRelPath=None):
 		""" Set root paths. Create elements if they don't exist.
 		"""
 		jobsRootElement = self.root.find("./jobs-root")
@@ -78,6 +81,12 @@ class jobs(xmlData.xmlData):
 			if pathElement is None:
 				pathElement = ET.SubElement(jobsRootElement, 'linux')
 			pathElement.text = str(linuxPath)
+
+		if jobsRelPath is not None:
+			pathElement = jobsRootElement.find('path')
+			if pathElement is None:
+				pathElement = ET.SubElement(jobsRootElement, 'path')
+			pathElement.text = str(jobsRelPath)
 
 
 	def translatePath(self, jobPath):
