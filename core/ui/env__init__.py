@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2017 Gramercy Park Studios
 #
 # Initialises main pipeline environment.
 
@@ -28,7 +28,7 @@ def setEnv():
 	except KeyError:
 		os.environ['ICARUSENVAWARE'] = 'STANDALONE'
 
-	os.environ['ICARUSVERSION'] = 'v0.9.8-20160927'
+	os.environ['ICARUSVERSION'] = 'v0.9.8-20170103'
 
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
 	icarusUIDir = os.path.join('core', 'ui')
@@ -39,7 +39,7 @@ def setEnv():
 #	os.environ['ICUSERPREFS']  = os.path.join(os.environ['HOME'], '.icarus') # user prefs stored in user home folder
 
 	# Hard-coded relative data directories required by Icarus
-	os.environ['JOBSROOTRELATIVEDIR'] = '.' #'Project_Media' # store in global settings?
+	os.environ['JOBSROOTRELATIVEDIR'] = 'Project_Media' # store in global settings?
 	os.environ['SHOTSROOTRELATIVEDIR'] = 'Vfx' # store in global / job settings?
 	os.environ['DATAFILESRELATIVEDIR'] = '.icarus'
 
