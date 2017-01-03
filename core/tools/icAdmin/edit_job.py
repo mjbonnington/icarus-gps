@@ -60,7 +60,7 @@ class dialog(QtGui.QDialog):
 	def browse(self):
 		""" Opens a dialog from which to select a folder.
 		"""
-		startingDir = osOps.absolutePath(self.ui.jobPath_lineEdit.text())
+		startingDir = osOps.translatePath(self.ui.jobPath_lineEdit.text())
 		if os.path.isdir(startingDir):
 			dialogHome = startingDir
 		else:

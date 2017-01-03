@@ -39,7 +39,7 @@ def setEnv():
 #	os.environ['ICUSERPREFS']  = os.path.join(os.environ['HOME'], '.icarus') # user prefs stored in user home folder
 
 	# Hard-coded relative data directories required by Icarus
-	os.environ['JOBSROOTRELATIVEDIR'] = 'Project_Media' # store in global settings?
+	#os.environ['JOBSROOTRELATIVEDIR'] = 'Project_Media' # store in global settings? UPDATE: now stored in jobs.xml
 	os.environ['SHOTSROOTRELATIVEDIR'] = 'Vfx' # store in global / job settings?
 	os.environ['DATAFILESRELATIVEDIR'] = '.icarus'
 

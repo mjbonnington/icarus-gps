@@ -209,6 +209,34 @@ def relativePath(absPath, token, tokenFormat='standard'):
 		return os.path.normpath( absPath ).replace("\\", "/")
 
 
+def translatePath(jobPath):
+	""" Translate paths for cross-platform support.
+	"""
+	try:
+		jobPathTr = jobPath
+		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+			if jobPath.startswith(os.environ['FILESYSTEMROOTOSX']):
+				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTOSX'], os.environ['FILESYSTEMROOTWIN'])
+			elif jobPath.startswith(os.environ['FILESYSTEMROOTLINUX']):
+				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTLINUX'], os.environ['FILESYSTEMROOTWIN'])
+		elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+			if jobPath.startswith(os.environ['FILESYSTEMROOTWIN']):
+				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTWIN'], os.environ['FILESYSTEMROOTOSX'])
+			elif jobPath.startswith(os.environ['FILESYSTEMROOTLINUX']):
+				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTLINUX'], os.environ['FILESYSTEMROOTOSX'])
+		else: # linux
+			if jobPath.startswith(os.environ['FILESYSTEMROOTWIN']):
+				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTWIN'], os.environ['FILESYSTEMROOTLINUX'])
+			elif jobPath.startswith(os.environ['FILESYSTEMROOTOSX']):
+				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTOSX'], os.environ['FILESYSTEMROOTLINUX'])
+
+		#print "Performing path translation:\n%s\n%s\n" %(jobPath, absolutePath(jobPathTr))
+		return absolutePath(jobPathTr)
+
+	except TypeError:
+		return jobPath
+
+
 def sanitize(instr, pattern='\W', replace=''):
 	""" Sanitizes characters in string. Default removes all non-alphanumeric characters.
 	"""

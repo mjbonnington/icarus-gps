@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2017 Gramercy Park Studios
 #
 # Launches and controls the Icarus main UI.
 
@@ -554,6 +554,9 @@ class icarusApp(QtGui.QDialog):
 			for job in jobLs:
 				self.ui.job_comboBox.insertItem(0, job)
 
+			# Re-enable signals so that shot list gets repopulated
+			self.ui.job_comboBox.blockSignals(False)
+
 			# Attempt to set the combo box selections to remember the last shot
 			lastJob = None
 			try:
@@ -572,12 +575,11 @@ class icarusApp(QtGui.QDialog):
 
 			self.ui.shotSetup_groupBox.setEnabled(True)
 			self.ui.shotSetupButtons_groupBox.setEnabled(True)
-			self.populateShots()
-			self.ui.job_comboBox.blockSignals(False)
+			#self.populateShots()
+			#self.ui.job_comboBox.blockSignals(False)
 
 		# If no jobs found, disable all job management UI controls
 		else:
-			#verbose.noJobs()
 			msg = "No active jobs found"
 			verbose.warning(msg)
 			self.ui.job_comboBox.insertItem(0, '[%s]' %msg)
@@ -586,7 +588,7 @@ class icarusApp(QtGui.QDialog):
 			self.ui.shotSetup_groupBox.setEnabled(False)
 			self.ui.shotSetupButtons_groupBox.setEnabled(False)
 
-			# Confirmation dialog
+			# Warning dialog
 			import pDialog
 			dialogTitle = 'No Jobs Found'
 			dialogMsg = 'No active jobs were found. Would you like to set up some jobs now?'
@@ -635,7 +637,7 @@ class icarusApp(QtGui.QDialog):
 			self.ui.setShot_label.setEnabled(False)
 			self.ui.setShot_pushButton.setEnabled(False)
 
-			# Confirmation dialog
+			# Warning dialog
 			import pDialog
 			dialogTitle = 'No Shots Found'
 			dialogMsg = 'No shots were found for this job. Would you like to create some shots now?'
@@ -820,7 +822,7 @@ I   C   A   R   U   S
 Python %s / PySide %s / Qt %s / %s
 Environment: %s
 
-(c) 2013-2016 Gramercy Park Studios
+(c) 2013-2017 Gramercy Park Studios
 """ %(os.environ['ICARUSVERSION'], python_ver_str, pyside_ver_str, qt_ver_str, os.environ['ICARUS_RUNNING_OS'], os.environ['ICARUSENVAWARE'])
 
 		import about

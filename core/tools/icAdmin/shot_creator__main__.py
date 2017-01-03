@@ -114,7 +114,7 @@ class shotCreatorApp(QtGui.QDialog):
 		existingShots = ""
 		dialogMsg = ""
 
-		jobPath = self.j.getPath(self.ui.job_comboBox.currentText() , translate=True)
+		jobPath = self.j.getPath(self.ui.job_comboBox.currentText(), translate=True)
 		for shot in self.shotLs:
 			path = osOps.absolutePath("%s/$SHOTSROOTRELATIVEDIR/%s/$DATAFILESRELATIVEDIR" %(jobPath, shot))
 			if osOps.createDir(path):

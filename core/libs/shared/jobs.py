@@ -89,34 +89,34 @@ class jobs(xmlData.xmlData):
 			pathElement.text = str(jobsRelPath)
 
 
-	def translatePath(self, jobPath):
-		""" Translate paths for cross-platform support.
-		"""
-		self.getRootPaths()
+	# def translatePath(self, jobPath):
+	# 	""" Translate paths for cross-platform support.
+	# 	"""
+	# 	self.getRootPaths()
 
-		try:
-			jobPathTr = jobPath
-			if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-				if jobPath.startswith(self.osx_root):
-					jobPathTr = jobPath.replace(self.osx_root, self.win_root)
-				elif jobPath.startswith(self.linux_root):
-					jobPathTr = jobPath.replace(self.linux_root, self.win_root)
-			elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-				if jobPath.startswith(self.win_root):
-					jobPathTr = jobPath.replace(self.win_root, self.osx_root)
-				elif jobPath.startswith(self.linux_root):
-					jobPathTr = jobPath.replace(self.linux_root, self.osx_root)
-			else: # linux
-				if jobPath.startswith(self.win_root):
-					jobPathTr = jobPath.replace(self.win_root, self.linux_root)
-				elif jobPath.startswith(self.osx_root):
-					jobPathTr = jobPath.replace(self.osx_root, self.linux_root)
+	# 	try:
+	# 		jobPathTr = jobPath
+	# 		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	# 			if jobPath.startswith(self.osx_root):
+	# 				jobPathTr = jobPath.replace(self.osx_root, self.win_root)
+	# 			elif jobPath.startswith(self.linux_root):
+	# 				jobPathTr = jobPath.replace(self.linux_root, self.win_root)
+	# 		elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+	# 			if jobPath.startswith(self.win_root):
+	# 				jobPathTr = jobPath.replace(self.win_root, self.osx_root)
+	# 			elif jobPath.startswith(self.linux_root):
+	# 				jobPathTr = jobPath.replace(self.linux_root, self.osx_root)
+	# 		else: # linux
+	# 			if jobPath.startswith(self.win_root):
+	# 				jobPathTr = jobPath.replace(self.win_root, self.linux_root)
+	# 			elif jobPath.startswith(self.osx_root):
+	# 				jobPathTr = jobPath.replace(self.osx_root, self.linux_root)
 
-			#print "Performing path translation:\n%s\n%s\n" %(jobPath, osOps.absolutePath(jobPathTr))
-			return osOps.absolutePath(jobPathTr)
+	# 		#print "Performing path translation:\n%s\n%s\n" %(jobPath, osOps.absolutePath(jobPathTr))
+	# 		return osOps.absolutePath(jobPathTr)
 
-		except TypeError:
-			return jobPath
+	# 	except TypeError:
+	# 		return jobPath
 
 
 	def getActiveJobs(self):
@@ -128,7 +128,8 @@ class jobs(xmlData.xmlData):
 			jobName = jobElement.find('name').text
 			jobPath = jobElement.find('path').text
 
-			jobPath = self.translatePath(jobPath)
+			#jobPath = self.translatePath(jobPath)
+			jobPath = osOps.translatePath(jobPath)
 
 			if os.path.exists(jobPath): # Only add jobs which exist on disk
 				jobLs.append(jobName)
@@ -224,7 +225,8 @@ class jobs(xmlData.xmlData):
 		if element is not None:
 			jobPath = element.find('path').text
 			if translate:
-				return self.translatePath(jobPath)
+				#return self.translatePath(jobPath)
+				return osOps.translatePath(jobPath)
 			else:
 				return jobPath
 
