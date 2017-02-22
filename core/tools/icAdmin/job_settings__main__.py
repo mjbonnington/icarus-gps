@@ -177,9 +177,13 @@ class settingsDialog(QtGui.QDialog):
 		if category == 'units':
 			self.setupUnits()
 
+		# Run special function to deal with camera panel - must happen before we set the widget values for defaults to work correctly
+		if category == 'camera':
+			self.setupCam()
+
 		for widget in widgets:
 			#attr = widget.objectName().split('_')[0] # use first part of widget object's name
-			attr = widget.property('xmlTag') # use widget's dynamic 'xmlTag' 
+			attr = widget.property('xmlTag') # use widget's dynamic 'xmlTag'
 
 			if attr:
 				signalMapper.setMapping(widget, attr)
@@ -248,10 +252,6 @@ class settingsDialog(QtGui.QDialog):
 		# Run special function to deal with resolution panel
 		if category == 'resolution':
 			self.setupRes()
-
-		# Run special function to deal with camera panel
-		if category == 'camera':
-			self.setupCam()
 
 		# Run special function to deal with apps panel
 		if category == 'apps':
@@ -622,24 +622,19 @@ class settingsDialog(QtGui.QDialog):
 
 		# Populate combo box with presets
 		camPresets = self.cp.getPresets()
-		camPreset_comboBox = frame.findChildren(QtGui.QComboBox, 'camPreset_comboBox')[0]
+		camera_comboBox = frame.findChildren(QtGui.QComboBox, 'camera_comboBox')[0]
 
 		for item in camPresets:
-			camPreset_comboBox.addItem(item)
-		#camPreset_comboBox.setCurrentIndex(0)
+			camera_comboBox.addItem(item)
+		#camera_comboBox.setCurrentIndex(0)
 		width = frame.findChildren(QtGui.QDoubleSpinBox, 'filmbackWidth_doubleSpinBox')[0].value()
 		height = frame.findChildren(QtGui.QDoubleSpinBox, 'filmbackHeight_doubleSpinBox')[0].value()
-	#	camPreset_comboBox.setCurrentIndex( camPreset_comboBox.findText( self.rp.getPresetFromRes(width, height) ) )
+	#	camera_comboBox.setCurrentIndex( camera_comboBox.findText( self.rp.getPresetFromRes(width, height) ) )
 
 		# Connect signals and slots
-		camPreset_comboBox.currentIndexChanged.connect(self.updateFilmbackFromPreset)
-	#	frame.findChildren(QtGui.QCheckBox, 'preserveAR_checkBox')[0].stateChanged.connect(self.calcAspectRatio)
-	#	frame.findChildren(QtGui.QSpinBox, 'fullWidth_spinBox')[0].valueChanged.connect(self.updateResFullWidth)
-	#	frame.findChildren(QtGui.QSpinBox, 'fullHeight_spinBox')[0].valueChanged.connect(self.updateResFullHeight)
-	#	frame.findChildren(QtGui.QRadioButton, 'proxyModeScale_radioButton')[0].toggled.connect(self.calcProxyRes)
-	#	frame.findChildren(QtGui.QDoubleSpinBox, 'proxyScale_doubleSpinBox')[0].valueChanged.connect(self.calcProxyRes)
-	#	frame.findChildren(QtGui.QSpinBox, 'proxyWidth_spinBox')[0].valueChanged.connect(self.updateResProxyWidth)
-	#	frame.findChildren(QtGui.QSpinBox, 'proxyHeight_spinBox')[0].valueChanged.connect(self.updateResProxyHeight)
+		camera_comboBox.currentIndexChanged.connect(self.updateFilmbackFromPreset)
+		frame.findChildren(QtGui.QDoubleSpinBox, 'filmbackWidth_doubleSpinBox')[0].valueChanged.connect( lambda: self.resetPresetToCustom('camera_comboBox') )
+		frame.findChildren(QtGui.QDoubleSpinBox, 'filmbackHeight_doubleSpinBox')[0].valueChanged.connect( lambda: self.resetPresetToCustom('camera_comboBox') )
 
 
 	def updateFilmbackFromPreset(self, index = -1):
@@ -647,20 +642,29 @@ class settingsDialog(QtGui.QDialog):
 		"""
 		frame = self.ui.settings_frame
 
-		camera = frame.findChildren(QtGui.QComboBox, 'camPreset_comboBox')[0].currentText()
-		sensorWidth, sensorHeight = self.cp.getFilmback(camera)
+		camera = frame.findChildren(QtGui.QComboBox, 'camera_comboBox')[0].currentText()
+		if camera != 'Custom':
+			sensorWidth, sensorHeight = self.cp.getFilmback(camera)
 
-	#	# Stop the other widgets from emitting signals
-	#	frame.findChildren(QtGui.QDoubleSpinBox, 'filmbackWidth_doubleSpinBox')[0].blockSignals(True)
-	#	frame.findChildren(QtGui.QDoubleSpinBox, 'filmbackHeight_doubleSpinBox')[0].blockSignals(True)
+			# Stop the other widgets from emitting signals
+			frame.findChildren(QtGui.QDoubleSpinBox, 'filmbackWidth_doubleSpinBox')[0].blockSignals(True)
+			frame.findChildren(QtGui.QDoubleSpinBox, 'filmbackHeight_doubleSpinBox')[0].blockSignals(True)
 
-		# Update widgets
-		frame.findChildren(QtGui.QDoubleSpinBox, 'filmbackWidth_doubleSpinBox')[0].setValue(sensorWidth)
-		frame.findChildren(QtGui.QDoubleSpinBox, 'filmbackHeight_doubleSpinBox')[0].setValue(sensorHeight)
+			# Update widgets
+			frame.findChildren(QtGui.QDoubleSpinBox, 'filmbackWidth_doubleSpinBox')[0].setValue(sensorWidth)
+			frame.findChildren(QtGui.QDoubleSpinBox, 'filmbackHeight_doubleSpinBox')[0].setValue(sensorHeight)
 
-	#	# Re-enable signals
-	#	frame.findChildren(QtGui.QDoubleSpinBox, 'filmbackWidth_doubleSpinBox')[0].blockSignals(False)
-	#	frame.findChildren(QtGui.QDoubleSpinBox, 'filmbackHeight_doubleSpinBox')[0].blockSignals(False)
+			# Re-enable signals
+			frame.findChildren(QtGui.QDoubleSpinBox, 'filmbackWidth_doubleSpinBox')[0].blockSignals(False)
+			frame.findChildren(QtGui.QDoubleSpinBox, 'filmbackHeight_doubleSpinBox')[0].blockSignals(False)
+
+
+	def resetPresetToCustom(self, comboBoxName):
+		""" Reset filmback settings preset combo box to 'Custom' when values are changed manually
+		"""
+		frame = self.ui.settings_frame
+		comboBox = frame.findChildren(QtGui.QComboBox, comboBoxName)[0]
+		comboBox.setCurrentIndex( comboBox.findText('Custom') )
 
 
 	def setupAppVersions(self, selectCurrent=True):

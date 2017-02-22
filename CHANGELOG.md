@@ -1,6 +1,7 @@
 v0.9.8 (--)
 -	[Icarus] Fixed a small bug in job management UI where create job file dialog would not open.
 -	[Icarus] Fixed a bug where the last set shot was not being remembered.
+-	[Maya] Updated Deadline submitter script for Deadline 8.0.
 
 v0.9.7 (2016-08-31)
 -	[Icarus] Improved path translation system for 3-way translation between Windows, Mac and Linux.

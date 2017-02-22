@@ -14,15 +14,28 @@ import os
 
 statusBar = None
 
+# Define some ANSI colour codes
+# class bcolors:
+# 	HEADER = '\033[95m'
+# 	OKBLUE = '\033[94m'
+# 	OKGREEN = '\033[92m'
+# 	WARNING = '\033[93m'
+# 	FAIL = '\033[91m'
+# 	ENDC = '\033[0m'
+# 	BOLD = '\033[1m'
+# 	UNDERLINE = '\033[4m'
+
 
 def message(message):
 	print_( message, 3 )
 
 def warning(message):
-	print_( "Warning: %s" %message, 2 )
+	#print_( bcolors.WARNING + "Warning: " + message + bcolors.ENDC, 2 )
+	print_( "Warning: " + message, 2 )
 
 def error(message):
-	print_( "ERROR: %s" %message, 1 )
+	#print_( bcolors.FAIL + "ERROR: " + message + bcolors.ENDC, 1 )
+	print_( "ERROR: " + message, 1 )
 
 
 def print_(message, verbosityLevel=3, status=True, log=False):

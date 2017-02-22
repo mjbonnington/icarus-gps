@@ -21,14 +21,17 @@
     <enum>QFormLayout::ExpandingFieldsGrow</enum>
    </property>
    <item row="0" column="0">
-    <widget class="QLabel" name="camPreset_label">
+    <widget class="QLabel" name="camera_label">
      <property name="text">
       <string>Camera:</string>
      </property>
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QComboBox" name="camPreset_comboBox">
+    <widget class="QComboBox" name="camera_comboBox">
+     <property name="xmlTag" stdset="0">
+      <string>camera</string>
+     </property>
      <item>
       <property name="text">
        <string>Custom</string>
@@ -51,7 +54,7 @@
         <string>mm</string>
        </property>
        <property name="decimals">
-        <number>1</number>
+        <number>2</number>
        </property>
        <property name="minimum">
         <double>0.100000000000000</double>
@@ -89,7 +92,7 @@
         <string>mm</string>
        </property>
        <property name="decimals">
-        <number>1</number>
+        <number>2</number>
        </property>
        <property name="minimum">
         <double>0.100000000000000</double>
@@ -402,8 +405,8 @@
     </widget>
    </item>
   </layout>
-  <zorder>camPreset_label</zorder>
-  <zorder>camPreset_comboBox</zorder>
+  <zorder>camera_label</zorder>
+  <zorder>camera_comboBox</zorder>
   <zorder>clipRef_label</zorder>
   <zorder>focalLength_label</zorder>
   <zorder>camHeight_label</zorder>

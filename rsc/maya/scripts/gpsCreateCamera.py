@@ -107,6 +107,7 @@ class gpsCreateCamera():
 			cam = mc.camera() #(n='%s_camera' % camera)
 			camSh = cam[1]; cam = cam[0]
 
+		# If the camera to be created is the shot camera, read shot data and apply values
 		if camera == os.environ['SHOT']:
 			import jobSettings
 			sd = jobSettings.jobSettings()
@@ -163,7 +164,7 @@ class gpsCreateCamera():
 
 		# Apply display settings
 		mc.setAttr(camSh+'.displayGateMask', 1)
-		mc.setAttr(camSh+'.displayFilmGate', 0)
+		mc.setAttr(camSh+'.displayFilmGate', 1)
 		mc.setAttr(camSh+'.displayResolution', 1)
 		mc.setAttr(camSh+'.displayGateMaskColor', 0.028824, 0.10465, 0.14728, type='double3')
 		mc.setAttr(camSh+'.displayGateMaskOpacity', 0.4)
@@ -173,7 +174,7 @@ class gpsCreateCamera():
 		mc.setAttr(camSh+'.displayFilmOrigin', 1)
 		mc.setAttr(camSh+'.overscan', 1)
 		mc.setAttr(camSh+'.panZoomEnabled', 0)
-		mc.setAttr(camSh+'.zoom', 1.2)
+		mc.setAttr(camSh+'.zoom', 1.25)
 
 		# Add frustum
 		mc.select(cam, r=True)

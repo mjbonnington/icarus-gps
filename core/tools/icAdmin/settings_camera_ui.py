@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'settings_camera_ui.ui'
 #
-# Created: Fri Jul 15 10:02:44 2016
+# Created: Tue Jan 31 13:42:53 2017
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,20 +17,20 @@ class Ui_settings_frame(object):
         self.formLayout = QtGui.QFormLayout(settings_frame)
         self.formLayout.setFieldGrowthPolicy(QtGui.QFormLayout.ExpandingFieldsGrow)
         self.formLayout.setObjectName("formLayout")
-        self.camPreset_label = QtGui.QLabel(settings_frame)
-        self.camPreset_label.setObjectName("camPreset_label")
-        self.formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.camPreset_label)
-        self.camPreset_comboBox = QtGui.QComboBox(settings_frame)
-        self.camPreset_comboBox.setObjectName("camPreset_comboBox")
-        self.camPreset_comboBox.addItem("")
-        self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.camPreset_comboBox)
+        self.camera_label = QtGui.QLabel(settings_frame)
+        self.camera_label.setObjectName("camera_label")
+        self.formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.camera_label)
+        self.camera_comboBox = QtGui.QComboBox(settings_frame)
+        self.camera_comboBox.setObjectName("camera_comboBox")
+        self.camera_comboBox.addItem("")
+        self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.camera_comboBox)
         self.filmback_label = QtGui.QLabel(settings_frame)
         self.filmback_label.setObjectName("filmback_label")
         self.formLayout.setWidget(1, QtGui.QFormLayout.LabelRole, self.filmback_label)
         self.filmback_horizontalLayout = QtGui.QHBoxLayout()
         self.filmback_horizontalLayout.setObjectName("filmback_horizontalLayout")
         self.filmbackWidth_doubleSpinBox = QtGui.QDoubleSpinBox(settings_frame)
-        self.filmbackWidth_doubleSpinBox.setDecimals(1)
+        self.filmbackWidth_doubleSpinBox.setDecimals(2)
         self.filmbackWidth_doubleSpinBox.setMinimum(0.1)
         self.filmbackWidth_doubleSpinBox.setMaximum(1000.0)
         self.filmbackWidth_doubleSpinBox.setSingleStep(0.1)
@@ -46,7 +46,7 @@ class Ui_settings_frame(object):
         self.filmbackSep_label.setObjectName("filmbackSep_label")
         self.filmback_horizontalLayout.addWidget(self.filmbackSep_label)
         self.filmbackHeight_doubleSpinBox = QtGui.QDoubleSpinBox(settings_frame)
-        self.filmbackHeight_doubleSpinBox.setDecimals(1)
+        self.filmbackHeight_doubleSpinBox.setDecimals(2)
         self.filmbackHeight_doubleSpinBox.setMinimum(0.1)
         self.filmbackHeight_doubleSpinBox.setMaximum(1000.0)
         self.filmbackHeight_doubleSpinBox.setSingleStep(0.1)
@@ -168,8 +168,9 @@ class Ui_settings_frame(object):
 
     def retranslateUi(self, settings_frame):
         settings_frame.setWindowTitle(QtGui.QApplication.translate("settings_frame", "Frame", None, QtGui.QApplication.UnicodeUTF8))
-        self.camPreset_label.setText(QtGui.QApplication.translate("settings_frame", "Camera:", None, QtGui.QApplication.UnicodeUTF8))
-        self.camPreset_comboBox.setItemText(0, QtGui.QApplication.translate("settings_frame", "Custom", None, QtGui.QApplication.UnicodeUTF8))
+        self.camera_label.setText(QtGui.QApplication.translate("settings_frame", "Camera:", None, QtGui.QApplication.UnicodeUTF8))
+        self.camera_comboBox.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "camera", None, QtGui.QApplication.UnicodeUTF8))
+        self.camera_comboBox.setItemText(0, QtGui.QApplication.translate("settings_frame", "Custom", None, QtGui.QApplication.UnicodeUTF8))
         self.filmback_label.setText(QtGui.QApplication.translate("settings_frame", "Film back / sensor size:", None, QtGui.QApplication.UnicodeUTF8))
         self.filmbackWidth_doubleSpinBox.setSuffix(QtGui.QApplication.translate("settings_frame", "mm", None, QtGui.QApplication.UnicodeUTF8))
         self.filmbackWidth_doubleSpinBox.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "filmbackWidth", None, QtGui.QApplication.UnicodeUTF8))
