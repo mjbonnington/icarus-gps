@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2014-2016 Gramercy Park Studios
+# (c) 2014-2017 Gramercy Park Studios
 #
 # Generate playblasts for GPS Preview.
 
@@ -227,20 +227,6 @@ class preview():
 				if mc.headsUpDisplay(hud, exists=True):
 					mc.headsUpDisplay(hud, remove=True)
 
-		# if mc.headsUpDisplay('GPS_slate_header', exists=True):
-		# 	mc.headsUpDisplay('GPS_slate_header', remove=True)
-		# if mc.headsUpDisplay('GPS_slate_job', exists=True):
-		# 	mc.headsUpDisplay('GPS_slate_job', remove=True)
-		# if mc.headsUpDisplay('GPS_slate_scene', exists=True):
-		# 	mc.headsUpDisplay('GPS_slate_scene', remove=True)
-		# if mc.headsUpDisplay('GPS_slate_camera', exists=True):
-		# 	mc.headsUpDisplay('GPS_slate_camera', remove=True)
-		# if mc.headsUpDisplay('GPS_slate_time', exists=True):
-		# 	mc.headsUpDisplay('GPS_slate_time', remove=True)
-		# if mc.headsUpDisplay('GPS_slate_artist', exists=True):
-		# 	mc.headsUpDisplay('GPS_slate_artist', remove=True)
-		# if mc.headsUpDisplay('GPS_slate_frame', exists=True):
-		# 	mc.headsUpDisplay('GPS_slate_frame', remove=True)
 
 	# end slate
 
@@ -268,7 +254,7 @@ class preview():
 			cameraShape = mc.listRelatives(activeCamera, shapes=True)
 
 		# Store current options
-		displayOptions = self.storeAttributes(cameraShape[0], ['displayResolution', 'displayFieldChart', 'displaySafeAction', 'displaySafeTitle', 'displayFilmPivot', 'displayFilmOrigin', 'overscan'])
+		displayOptions = self.storeAttributes(cameraShape[0], ['displayResolution', 'displayFieldChart', 'displaySafeAction', 'displaySafeTitle', 'displayFilmPivot', 'displayFilmOrigin', 'overscan', 'panZoomEnabled'])
 		displayHUD = self.displayHUD(query=True)
 		hudState = self.storeHUD()
 
@@ -286,19 +272,20 @@ class preview():
 
 		# Display guides
 		if self.guides:
-			mc.setAttr("%s.displayResolution" % cameraShape[0], True)
-			mc.setAttr("%s.displaySafeAction" % cameraShape[0], True)
-			mc.setAttr("%s.displaySafeTitle" % cameraShape[0], True)
+			mc.setAttr(cameraShape[0]+".displayResolution", True)
+			mc.setAttr(cameraShape[0]+".displaySafeAction", True)
+			mc.setAttr(cameraShape[0]+".displaySafeTitle", True)
 		else:
-			mc.setAttr("%s.displayResolution" % cameraShape[0], False)
-			mc.setAttr("%s.displayFieldChart" % cameraShape[0], False)
-			mc.setAttr("%s.displaySafeAction" % cameraShape[0], False)
-			mc.setAttr("%s.displaySafeTitle" % cameraShape[0], False)
-			mc.setAttr("%s.displayFilmPivot" % cameraShape[0], False)
-			mc.setAttr("%s.displayFilmOrigin" % cameraShape[0], False)
+			mc.setAttr(cameraShape[0]+".displayResolution", False)
+			mc.setAttr(cameraShape[0]+".displayFieldChart", False)
+			mc.setAttr(cameraShape[0]+".displaySafeAction", False)
+			mc.setAttr(cameraShape[0]+".displaySafeTitle", False)
+			mc.setAttr(cameraShape[0]+".displayFilmPivot", False)
+			mc.setAttr(cameraShape[0]+".displayFilmOrigin", False)
 
-		# Set overscan value to 1.0
-		mc.setAttr("%s.overscan" % cameraShape[0], 1.0)
+		# Set overscan value to 1.0 & disable 2D pan/zoom
+		mc.setAttr(cameraShape[0]+".overscan", 1.0)
+		mc.setAttr(cameraShape[0]+".panZoomEnabled", 0)
 
 		# Generate playblast
 		self.run_playblast()

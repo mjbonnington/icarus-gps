@@ -114,7 +114,7 @@ def concurrentPublish():
 	return 'Another publish for the same asset is currently under progress. Please check your settings or try again later.'
 
 def dailyFail():
-	return 'Could not verify daily files.'
+	return 'Could not verify dailies files.'
 
 def gpsPreview_uiValues():
 	print_( 'Not all GPS Preview UI values could be read', 2 )

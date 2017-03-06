@@ -16,8 +16,9 @@ import pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, djvOps, in
 def publish(dailyPblOpts, pblTo, pblNotes):
 
 	dailySeq, dailyRange, dailyType, dailyPath = dailyPblOpts
-	nameBody, extension = os.path.splitext(dailySeq)
-	extension = extension[1:] # remove leading dot from file extension
+	#nameBody, extension = os.path.splitext(dailySeq)
+	#extension = extension[1:] # remove leading dot from file extension
+	nameBody, _, extension = dailySeq.rsplit('.', 2)
 
 	job = os.environ['JOB']
 	assetType = 'dailies'
@@ -57,15 +58,16 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 
 		# File operations
 		dailyPath = os.path.expandvars(dailyPath)
-		paddingLs = sequence.numList(dailyRange) # need to add ability to detect sequences with inconsistent padding
-		startFrame = min(paddingLs)
-		endFrame = max(paddingLs)
+		# paddingLs = sequence.numList(dailyRange) # need to add ability to detect sequences with inconsistent padding
+		# startFrame = min(paddingLs)
+		# endFrame = max(paddingLs)
+		startFrame, endFrame = dailyRange.split('-')
 		try:
 			posterFrame = int(os.environ['POSTERFRAME'])
 		except ValueError:
 			posterFrame = -1
-		if not (startFrame <= posterFrame <= endFrame): # if poster frame is not within frame range, use mid frame
-			posterFrame = int((startFrame+endFrame) / 2)
+		if not (int(startFrame) <= posterFrame <= int(endFrame)): # if poster frame is not within frame range, use mid frame
+			posterFrame = (int(startFrame)+int(endFrame)) / 2
 
 		# Pass arguments to djv to process the files in djvOps
 		dailyFileBody = '%s_dailies_%s' % (os.environ['SHOT'], subsetName)

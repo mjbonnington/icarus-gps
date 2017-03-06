@@ -9,6 +9,7 @@
 
 
 import glob, os, re
+import verbose
 
 
 def numList(num_range_str, quiet=False):
@@ -181,7 +182,7 @@ def getSequence(path, pattern):
 	return detectSeq( filter_ls[0] )
 
 
-def detectSeq(filepath):
+def detectSeq(filepath, contiguous=False, ignorePadding=False):
 	""" Detect file sequences based on the provided file path.
 		Returns a tuple containing 5 elements:
 		1. path - the directory path containing the file
@@ -189,6 +190,8 @@ def detectSeq(filepath):
 		3. frame - the sequence of frame numbers computed from the numeric part of the filename, represented as a string
 		4. ext - the filename extension
 		5. num_frames - the number of frames in the sequence
+		If 'contiguous' flag is True, only return a contiguous sequence (no gaps).
+		If 'ignorePadding' flag is True, return sequence even if the number of padding digits differ.
 	"""
 	lsFrames = [] # Clear frame list
 
@@ -205,8 +208,10 @@ def detectSeq(filepath):
 		return
 
 	# Construct regular expression for matching files in the sequence
-	re_seq_str = r"^%s\.\d{%d}%s$" %( re.escape(prefix), padding, re.escape(ext) )
-	#print re_seq_str
+	if ignorePadding:
+		re_seq_str = r"^%s\.\d+%s$" %( re.escape(prefix), re.escape(ext) )
+	else:
+		re_seq_str = r"^%s\.\d{%d}%s$" %( re.escape(prefix), padding, re.escape(ext) )
 	re_seq_pattern = re.compile(re_seq_str)
 
 	# Find other files in the sequence in the same directory
@@ -214,10 +219,24 @@ def detectSeq(filepath):
 		if re_seq_pattern.match(item) is not None:
 			#lsFrames.append(item) # whole filename
 			lsFrames.append( int(os.path.splitext(item)[0].rsplit('.', 1)[1]) ) # just the frame number
+			numFrames = len(lsFrames)
 
-	#print "Found %d frames." %len(lsFrames)
+	if ignorePadding:
+		numRangeStr = numRange(lsFrames)
+	else:
+		numRangeStr = numRange(lsFrames, padding=padding)
+
+	if contiguous:
+		chunks = numRangeStr.split(', ')
+		if len(chunks) > 1:
+			for chunk in chunks:
+				contiguiousChunkLs = numList(chunk, quiet=True)
+				if framenumber in contiguiousChunkLs:
+					numRangeStr = chunk
+					numFrames = len(contiguiousChunkLs)
+
+	verbose.print_("Sequence detected (%d frames): %s" % (numFrames, numRangeStr)), 4
 
 	#return lsFrames
-	return (path, prefix, numRange(lsFrames, padding=padding), ext, len(lsFrames))
-	#return (path, prefix, numRange(lsFrames), ext, len(lsFrames))
+	return (path, prefix, numRangeStr, ext, numFrames)
 

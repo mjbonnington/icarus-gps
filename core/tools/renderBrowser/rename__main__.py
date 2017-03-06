@@ -159,7 +159,7 @@ class batchRenameApp(QtGui.QMainWindow):
 			Pre-existing tasks will not be added, to avoid duplication.
 		"""
 		if os.path.isfile(filepath):
-			path, prefix, fr_range, ext, num_frames = sequence.detectSeq(filepath)
+			path, prefix, fr_range, ext, num_frames = sequence.detectSeq(filepath) #, ignorePadding=True)
 			data = (path, prefix+'.', fr_range, ext, num_frames)
 			if data not in self.renameTaskLs:
 				self.renameTaskLs.append(data)

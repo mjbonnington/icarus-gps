@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2014-2015 Gramercy Park Studios
+# (c) 2014-2017 Gramercy Park Studios
 #
 # GPS Preview: a generic UI for previewing animations, replaces Maya's playblast interface.
 
@@ -273,10 +273,14 @@ class previewUI(QtGui.QDialog):
 		inExt = self.ext
 		djvOps.prcQt(input, output, startFrame, endFrame, inExt, name=self.outputFile, fps=os.environ['FPS'], resize=None)
 
-	#launches viewer
+
 	def launchViewer(self):
-		input = os.path.join(self.outputDir, '%s.%s.%s' % (self.outputFile, self.frRange[0], self.ext))
-		djvOps.viewer(input)
+		""" Launch viewer.
+		"""
+		import sequence
+		inPath = os.path.join(self.outputDir, '%s.#.%s' % (self.outputFile, self.ext))
+		djvOps.viewer(sequence.getFirst(inPath))
+
 
 #launching UI window
 if os.environ['ICARUSENVAWARE'] == 'MAYA':
@@ -302,3 +306,4 @@ elif os.environ['ICARUSENVAWARE'] == 'NUKE':
 	gpsPreviewApp.move(QtGui.QDesktopWidget().availableGeometry(1).center() - gpsPreviewApp.frameGeometry().center())
 
 	gpsPreviewApp.show()
+

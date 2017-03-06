@@ -1286,11 +1286,17 @@ Environment: %s
 		if dailyPath:
 			self.ui.dailyPbl_treeWidget.clear()
 
-			path, prefix, fr_range, ext, num_frames = seq.detectSeq(dailyPath)
+			path, prefix, fr_range, ext, num_frames = seq.detectSeq(dailyPath, contiguous=True, ignorePadding=False)
+			padding = '.'
+			if num_frames == 1:
+				paddingInt = len(fr_range)
+			else:
+				paddingInt = (len(fr_range)-1)/2
+			padding += '#' * paddingInt
 
 			if prefix:
 				dailyItem = QtGui.QTreeWidgetItem(self.ui.dailyPbl_treeWidget)
-				dailyItem.setText(0, '%s%s' % (prefix, ext))
+				dailyItem.setText(0, '%s%s%s' % (prefix, padding, ext)) # dailyItem.setText(0, '%s.[%s]%s' % (prefix, fr_range, ext))
 				dailyItem.setText(1, fr_range)
 				if not fr_range == os.environ['FRAMERANGE']: # set red text for sequence mismatch
 					dailyItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#c33")))
