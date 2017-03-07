@@ -10,7 +10,7 @@
 
 
 import os, sys, time, traceback
-import pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, djvOps, inProgress, sequence
+import pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, djvOps, inProgress
 
 
 def publish(dailyPblOpts, pblTo, pblNotes):
@@ -58,10 +58,12 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 
 		# File operations
 		dailyPath = os.path.expandvars(dailyPath)
-		# paddingLs = sequence.numList(dailyRange) # need to add ability to detect sequences with inconsistent padding
-		# startFrame = min(paddingLs)
-		# endFrame = max(paddingLs)
-		startFrame, endFrame = dailyRange.split('-')
+
+		try:
+			startFrame, endFrame = dailyRange.split('-')
+		except ValueError:
+			startFrame = endFrame = dailyRange # if frame range is a single frame
+
 		try:
 			posterFrame = int(os.environ['POSTERFRAME'])
 		except ValueError:
