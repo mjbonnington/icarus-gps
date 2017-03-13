@@ -196,16 +196,16 @@ def detectSeq(filepath, contiguous=False, ignorePadding=False):
 	lsFrames = [] # Clear frame list
 
 	# Parse file path
+	filename = os.path.basename(filepath)
+	path = os.path.dirname(filepath)
+	base, ext = os.path.splitext(filename)
 	try:
-		filename = os.path.basename(filepath)
-		path = os.path.dirname(filepath)
-		base, ext = os.path.splitext(filename)
 		prefix, framenumber = base.rsplit('.', 1)
 		padding = len(framenumber)
 		framenumber = int(framenumber)
 	except ValueError:
-		print "Error: could not parse sequence."
-		return
+		verbose.error("Could not parse sequence.")
+		return# (path, base, '0', ext, 1)
 
 	# Construct regular expression for matching files in the sequence
 	if ignorePadding:
@@ -235,7 +235,7 @@ def detectSeq(filepath, contiguous=False, ignorePadding=False):
 					numRangeStr = chunk
 					numFrames = len(contiguiousChunkLs)
 
-	verbose.print_("Sequence detected (%d frames): %s" % (numFrames, numRangeStr)), 4
+	verbose.message("%d frame sequence detected: %s" % (numFrames, numRangeStr))
 
 	#return lsFrames
 	return (path, prefix, numRangeStr, ext, numFrames)
