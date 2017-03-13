@@ -900,36 +900,42 @@ def submitRenderLayer():
 def update():
 	""" Automatically set some defaults from the shot settings.
 	"""
-	unit         = os.environ['UNIT']
-	angle        = os.environ['ANGLE']
-	timeFormat   = os.environ['TIMEFORMAT']
-	startFrame   = os.environ['STARTFRAME']
-	endFrame     = os.environ['ENDFRAME']
+	unit          = os.environ['UNIT']
+	angle         = os.environ['ANGLE']
+	timeFormat    = os.environ['TIMEFORMAT']
+	startFrame    = os.environ['STARTFRAME']
+	endFrame      = os.environ['ENDFRAME']
+	startFrameInt = int(startFrame)
+	endFrameInt   = int(endFrame)
 	try:
-		inFrame  = os.environ['INFRAME']
-		outFrame = os.environ['OUTFRAME']
+		inFrame     = os.environ['INFRAME']
+		outFrame    = os.environ['OUTFRAME']
+		inFrameInt  = int(inFrame)
+		outFrameInt = int(outFrame)
 	except:
-		inFrame  = startFrame
-		outFrame = endFrame
+		inFrame     = startFrame
+		outFrame    = endFrame
+		inFrameInt  = startFrameInt
+		outFrameInt = endFrameInt
 
 	# Setting defaults for Maya startup
-	mc.optionVar(sv = ('workingUnitAngular','%s' % angle))
-	mc.optionVar(sv = ('workingUnitAngularDefault','%s' % angle))
-	mc.optionVar(sv = ('workingUnitAngularHold','%s' % angle))
-	mc.optionVar(sv = ('workingUnitLinear','%s' % unit))
-	mc.optionVar(sv = ('workingUnitLinearDefault','%s' % unit))
-	mc.optionVar(sv = ('workingUnitLinearHold','%s' % unit))
-	mc.optionVar(sv = ('workingUnitTime','%s' % timeFormat))
-	mc.optionVar(sv = ('workingUnitTimeDefault','%s' % timeFormat))
-	mc.optionVar(sv = ('workingUnitTimeHold','%s' % timeFormat))
-	mc.optionVar(fv = ('playbackMinRangeDefault',int(startFrame)))
-	mc.optionVar(fv = ('playbackMinDefault',int(inFrame)))
-	mc.optionVar(fv = ('playbackMaxRangeDefault',int(endFrame)))
-	mc.optionVar(fv = ('playbackMaxDefault',int(outFrame)))
-	mc.optionVar(sv = ('upAxisDirection','y'))
-	mc.optionVar(sv = ('workingUnitLinear','%s' % unit))
-	mc.optionVar(sv = ('workingUnitAngular','%s' % angle))
-	mc.optionVar(sv = ('workingUnitTime','%s' % timeFormat))
+	mc.optionVar(sv = ('workingUnitAngular', '%s' % angle))
+	mc.optionVar(sv = ('workingUnitAngularDefault', '%s' % angle))
+	mc.optionVar(sv = ('workingUnitAngularHold', '%s' % angle))
+	mc.optionVar(sv = ('workingUnitLinear', '%s' % unit))
+	mc.optionVar(sv = ('workingUnitLinearDefault', '%s' % unit))
+	mc.optionVar(sv = ('workingUnitLinearHold', '%s' % unit))
+	mc.optionVar(sv = ('workingUnitTime', '%s' % timeFormat))
+	mc.optionVar(sv = ('workingUnitTimeDefault', '%s' % timeFormat))
+	mc.optionVar(sv = ('workingUnitTimeHold', '%s' % timeFormat))
+	mc.optionVar(fv = ('playbackMinRangeDefault', startFrameInt))
+	mc.optionVar(fv = ('playbackMinDefault', inFrameInt))
+	mc.optionVar(fv = ('playbackMaxRangeDefault', endFrameInt))
+	mc.optionVar(fv = ('playbackMaxDefault', outFrameInt))
+	mc.optionVar(sv = ('upAxisDirection', 'y'))
+	mc.optionVar(sv = ('workingUnitLinear', '%s' % unit))
+	mc.optionVar(sv = ('workingUnitAngular', '%s' % angle))
+	mc.optionVar(sv = ('workingUnitTime', '%s' % timeFormat))
 
 	mc.currentUnit(l=unit, a=angle, t=timeFormat)
 	mc.playbackOptions(animationStartTime=startFrame, minTime=inFrame, maxTime=outFrame, animationEndTime=endFrame, playbackSpeed=0, maxPlaybackSpeed=1)
