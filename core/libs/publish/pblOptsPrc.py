@@ -5,7 +5,8 @@
 
 
 import os
-import pblChk, verbose
+import pblChk
+import verbose
 
 
 #Processes publish options arriving from the different publish modules
@@ -43,7 +44,7 @@ def render_split(filename):
 		framenumber_int = int(framenumber)
 		return prefix, framenumber, ext
 	except ValueError:
-		print "Error: could not parse sequence."
+		verbose.error("Could not parse sequence.")
 		return # False, False, False # need to return tuple to match successful return type
 
 

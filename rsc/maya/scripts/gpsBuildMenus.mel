@@ -157,6 +157,7 @@ setParent -menu $windowMenu;
 
 // Time Slider Menu
 
+/*
 string $timelineMenu = "MayaWindow|toolBar6|MainTimeSliderLayout|formLayout9|TimeSliderMenu";
 updateTimeSliderMenu $timelineMenu;
 //menu -exists $timelineMenu;
@@ -174,7 +175,7 @@ setParent -menu $timelineMenu;
 			 -command ("source menus2Py; menus2Py.gpsPreview()")
 			 -annotation ("Launches GPS Preview")
 			 GPSPlayblastItem;
-
+*/
 
 // Status Line Buttons
 
@@ -210,7 +211,7 @@ iconTextButton -edit -image1 "saveScene.png"
                saveSceneButton;
 
 // GPS - Create a popup menu on the Save button for Save As and Incremental Save
-string $menu = `popupMenu -parent saveSceneButton`;
+string $save_menu = `popupMenu -parent saveSceneButton`;
 	menuItem -label "Incremental Save" -command "source menus2Py; menus2Py.incrementalSave()";
 	menuItem -label "Save As..." -command "source menus2Py; menus2Py.saveSceneAs()";
 
@@ -230,7 +231,7 @@ iconTextButton -image1 "editor.png"
                editorsButton;
 
 // GPS - Add popup menu for common editors
-string $menu = `popupMenu -b 1 -p editorsButton`;
+string $editor_menu = `popupMenu -b 1 -p editorsButton`;
 	//menuItem -label "Outliner" -c "OutlinerWindow";
 	menuItem -label "Outliner" -c "source dev_dockOutliner;dev_dockOutliner()"; // Dockable Outliner
 	menuItem -label "Node Editor" -c "NodeEditorWindow";
@@ -248,7 +249,7 @@ iconTextButton -image1 "browse.png"
                browseDirsButton;
 
 // GPS - Create a menu on the browse dir button for different directories
-string $menu = `popupMenu -b 1 -p browseDirsButton`;
+string $browser_menu = `popupMenu -b 1 -p browseDirsButton`;
 	menuItem -label "Browse scenes" -c "source menus2Py;menus2Py.browseScenes()";
 	menuItem -label "Browse playblasts" -c "source menus2Py;menus2Py.browsePlayblasts()";
 	menuItem -label "Browse renders" -c "source menus2Py;menus2Py.browseRenders()";
@@ -264,7 +265,7 @@ iconTextButton -image1 "review.png"
                reviewButton;
 
 // GPS - Create a menu on the review button for different review software
-string $menu = `popupMenu -b 1 -p reviewButton`;
+string $review_menu = `popupMenu -b 1 -p reviewButton`;
 	menuItem -label "HieroPlayer" -c "source menus2Py;menus2Py.launchHieroPlayer";
 	menuItem -label "djv_view" -c "source menus2Py;menus2Py.launchDjv";
 

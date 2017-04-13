@@ -37,7 +37,6 @@ def setup(job, shot):
 
 def getPath(job, shot=False):
 	""" Process job and shot names.
-
 		'job' is mandatory.
 		'shot' is optional, if given return the path to the shot, if not return the path to the job.
 	"""

@@ -28,7 +28,7 @@ def setEnv():
 	except KeyError:
 		os.environ['ICARUSENVAWARE'] = 'STANDALONE'
 
-	os.environ['ICARUSVERSION'] = 'v0.9.8-20170313'
+	os.environ['ICARUSVERSION'] = 'v0.9.8-20170413'
 
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
 	icarusUIDir = os.path.join('core', 'ui')
@@ -47,6 +47,7 @@ def setEnv():
 
 
 def appendSysPaths():
+	vendor = os.path.join('core', 'vendor')
 	icarusLibs = os.path.join('core', 'libs')
 	icarusTools = os.path.join('core', 'tools')
 	sys.path.append(os.environ['PIPELINE'])
@@ -60,5 +61,5 @@ def appendSysPaths():
 #	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'scnMng'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'setJob'))
 	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'shared'))
-#	sys.path.append(os.path.join(os.environ['PIPELINE'], icarusLibs, 'py_modules'))
+	sys.path.append(os.path.join(os.environ['PIPELINE'], vendor)) # Add 3rd-party vendor module path
 

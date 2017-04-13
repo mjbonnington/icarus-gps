@@ -1,7 +1,9 @@
 v0.9.8 (--)
+-	[Icarus] Ported all UI code to use Qt.py (https://fredrikaverpil.github.io/2016/07/25/developing-with-qt-py/) enabling support for all Qt Python bindings (e.g PySide2, PyQt5).
 -	[Icarus] Fixed a small bug in job management UI where create job file dialog would not open.
 -	[Icarus] Fixed a bug where the last set shot was not being remembered.
 -	[Icarus] Fixed underlying bugs where a sequence with frame number less than 1000 could not be published to dailies, or launched correctly in djv_view from GPS Preview.
+-	[Maya] Added support for Maya 2017.
 -	[Maya] Updated Deadline submitter script for Deadline 8.0.
 
 v0.9.7 (2016-08-31)
