@@ -68,6 +68,28 @@ color: #FFF;
     <string>I   C   A   R   U   S</string>
    </property>
   </widget>
+  <widget class="QToolButton" name="close_toolButton">
+   <property name="geometry">
+    <rect>
+     <x>612</x>
+     <y>4</y>
+     <width>24</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">margin: 0px;
+background: transparent;
+color: #FFF;
+</string>
+   </property>
+   <property name="text">
+    <string>X</string>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextOnly</enum>
+   </property>
+  </widget>
  </widget>
  <resources>
   <include location="about.qrc"/>

@@ -234,7 +234,7 @@ class icarusApp(QtWidgets.QDialog): # Should be QMainWindow really?
 				eval(hideProc)
 
 			# Populate 'Job' and 'Shot' drop down menus
-			self.populateJobs()
+			self.populateJobs(setLast=True)
 
 			# Delete all tabs except 'Job Management'
 			for i in range(0, self.ui.tabWidget.count()-1):
@@ -554,7 +554,7 @@ class icarusApp(QtWidgets.QDialog): # Should be QMainWindow really?
 	# Job management tab #
 	######################
 
-	def populateJobs(self):
+	def populateJobs(self, setLast=False):
 		""" Populates job drop down menu.
 		"""
 		verbose.print_("Populating jobs combo box...", 4)
@@ -562,39 +562,32 @@ class icarusApp(QtWidgets.QDialog): # Should be QMainWindow really?
 		# Block signals to prevent call to populateShots() each time a new item is added
 		self.ui.job_comboBox.blockSignals(True)
 
+		# Store last set or current item
+		if setLast:
+			try:
+				last_item, _ = userPrefs.config.get('main', 'lastjob').split(',')
+			except:
+				last_item = None
+		else:
+			last_item = self.ui.job_comboBox.currentText()
+		# print(last_item)
+
 		# Remove all items
 		self.ui.job_comboBox.clear()
 
-		# Populate 'Job' and 'Shot' drop down menus
+		# Populate combo box with list of shots
 		j = jobs.jobs()
-
-		jobLs = j.getActiveJobs()
+		jobLs = sorted(j.getActiveJobs())
 		if jobLs:
-			jobLs = sorted(jobLs, reverse=True)
+			self.ui.job_comboBox.insertItems(0, jobLs)
 
-			# Add jobs...
-			for job in jobLs:
-				self.ui.job_comboBox.insertItem(0, job)
+			# Attempt to set the combo box selections to remember the last item.
+			index = self.ui.job_comboBox.findText(last_item)
+			# print(index)
 
-			# Attempt to set the combo box selections to remember the last set job and shot.
-			lastJob = None
-			lastShot = None
-			lastJob, lastShot = userPrefs.config.get('main', 'lastjob').split(',')
-
-			job_index = self.ui.job_comboBox.findText(lastJob)
-			if job_index is not -1:
-				verbose.print_("Last job: %s" %lastJob, 4)
-				self.ui.job_comboBox.setCurrentIndex(job_index)
-				self.populateShots()
-
-				shot_index = self.ui.shot_comboBox.findText(lastShot)
-				if shot_index is not -1:
-					verbose.print_("Last shot: %s" %lastShot, 4)
-					self.ui.shot_comboBox.setCurrentIndex(shot_index)
-				else:
-					verbose.print_("Unable to set last shot.", 4)
-					self.ui.shot_comboBox.setCurrentIndex(0)
-
+			if index is not -1:
+				self.ui.job_comboBox.setCurrentIndex(index)
+				self.populateShots(setLast=setLast)
 			else:
 				verbose.print_("Unable to set last job.", 4)
 				self.ui.job_comboBox.setCurrentIndex(0)
@@ -627,31 +620,38 @@ class icarusApp(QtWidgets.QDialog): # Should be QMainWindow really?
 				pass
 
 
-	def populateShots(self):
+	def populateShots(self, setLast=False):
 		""" Populates shot drop down menu.
 		"""
 		verbose.print_("Populating shots combo box...", 4)
 
+		# Store last set or current item
+		if setLast:
+			try:
+				_, last_item = userPrefs.config.get('main', 'lastjob').split(',')
+			except:
+				last_item = None
+		else:
+			last_item = self.ui.shot_comboBox.currentText()
+		# print(last_item)
+
 		# Remove all items
 		self.ui.shot_comboBox.clear()
 
+		# Populate combo box with list of shots
 		selJob = self.ui.job_comboBox.currentText()
-		shotLs = setJob.listShots(selJob)
-
-		# Add shots...
+		shotLs = sorted(setJob.listShots(selJob))
 		if shotLs:
-			for shot in shotLs:
-				self.ui.shot_comboBox.insertItem(0, shot)
+			self.ui.shot_comboBox.insertItems(0, shotLs)
 
-			# Try to set current item in combo box to the current shot 
-			try:
-				index = self.ui.shot_comboBox.findText(self.shot)
-			except AttributeError:
-				index = 0
+			# Attempt to set the combo box selections to remember the last item.
+			index = self.ui.shot_comboBox.findText(last_item)
+			# print(index)
 
-			if 0 <= index < len(shotLs):
+			if index is not -1:
 				self.ui.shot_comboBox.setCurrentIndex(index)
 			else:
+				verbose.print_("Unable to set last shot.", 4)
 				self.ui.shot_comboBox.setCurrentIndex(0)
 
 			self.ui.shot_comboBox.setEnabled(True)

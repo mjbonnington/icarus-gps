@@ -29,6 +29,7 @@ class aboutDialog(QtWidgets.QDialog):
 
 		# Connect signals & slots
 		#self.ui.icBG_label.clicked.connect(self.ui.hide)
+		self.ui.close_toolButton.clicked.connect(self.ui.hide)
 
 
 	def msg(self, msg):

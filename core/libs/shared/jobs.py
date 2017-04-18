@@ -3,14 +3,16 @@
 # [Icarus] jobs.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2016 Gramercy Park Studios
+# (c) 2015-2017 Gramercy Park Studios
 #
 # Manipulates the database of jobs running in the CG department
 
 
 import os
 import xml.etree.ElementTree as ET
-import xmlData, verbose
+
+import xmlData
+import verbose
 import osOps
 
 
@@ -238,4 +240,38 @@ class jobs(xmlData.xmlData):
 		element = self.root.find("./job[name='%s']" %jobName)
 		if element is not None:
 			element.find('path').text = path
+
+
+	def listShots(self, jobName):
+		""" List all available shots belonging to the specified job.
+			Not currently in use, but will eventually replace setJob.listShots()
+		"""
+		shotsPath = getPath(jobName)
+
+		# Check shot path exists before proceeding...
+		if os.path.exists(shotsPath):
+			dirContents = os.listdir(shotsPath)
+			shotLs = []
+
+			for item in dirContents:
+				# Check for shot naming convention to disregard everything else in directory
+				if item.startswith('SH') or item.startswith('PC'):
+					shotPath = os.path.join(shotsPath, item)
+
+					# Check that the directory is a valid shot
+					if checkShot(shotPath):
+						shotLs.append(item)
+
+			if len(shotLs):
+				shotLs.sort()
+				shotLs.reverse()
+				return shotLs
+
+			else:
+				verbose.noShot(shotsPath)
+				return False
+
+		else:
+			verbose.noJob(shotsPath)
+			return False
 
