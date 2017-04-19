@@ -3,12 +3,16 @@
 # [Icarus] legacySettings.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2016 Gramercy Park Studios
+# (c) 2015-2017 Gramercy Park Studios
 #
-# Fallback functions to convert job/shot/asset metadata from python files (legacy) to XML, if XML files don't exist.
+# This module contains functions to retain backwards-compatibility with older
+# types of Icarus metadata. Converts job/shot/asset metadata from python files
+# (legacy) to XML, if XML files don't exist.
 
 
-import os, sys
+import os
+import sys
+
 import verbose
 
 

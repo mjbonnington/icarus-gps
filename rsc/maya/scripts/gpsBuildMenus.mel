@@ -2,10 +2,13 @@
 //
 // Nuno Pereira <nuno.pereira@gps-ldn.com>
 // Mike Bonnington <mike.bonnington@gps-ldn.com>
-// (c) 2015-2016 Gramercy Park Studios
+// (c) 2015-2017 Gramercy Park Studios
 //
 // Dynamically modifies Maya's menus without the need to edit Maya's UI MEL scripts directly.
 
+
+// Get Maya version
+float $maya_ver = getApplicationVersionAsFloat();
 
 // This function suppresses recent menus...
 global proc checkGPSFileMenu()
@@ -28,7 +31,9 @@ global proc checkGPSFileMenu()
 }
 
 
-// File Menu
+///////////////
+// File Menu //
+///////////////
 
 string $fileMenu = "MayaWindow|mainFileMenu";
 buildFileMenu();
@@ -113,7 +118,9 @@ setParent -menu $fileMenu;
 checkGPSFileMenu();
 
 
-// Create Menu
+/////////////////
+// Create Menu //
+/////////////////
 
 string $createMenu = "MayaWindow|mainCreateMenu";
 ModCreateMenu $createMenu;
@@ -132,7 +139,9 @@ setParent -menu $createMenu;
 	setParent -menu ..;
 
 
-// Window Menu
+/////////////////
+// Window Menu //
+/////////////////
 
 string $windowMenu = "MayaWindow|mainWindowMenu";
 buildViewMenu($windowMenu);
@@ -155,10 +164,19 @@ setParent -menu $windowMenu;
 			 playblastDialogItem;
 
 
-// Time Slider Menu
+//////////////////////
+// Time Slider Menu //
+//////////////////////
 
-/*
-string $timelineMenu = "MayaWindow|toolBar6|MainTimeSliderLayout|formLayout9|TimeSliderMenu";
+string $timelineMenu = "";
+if ($maya_ver >= 2017) {
+	//print ("Running version 2017 or higher\n");
+	$timelineMenu = "TimeSlider|MainTimeSliderLayout|formLayout8|TimeSliderMenu"; // Maya 2017 and later
+} else {
+	//print ("Running version 2016 or earlier\n");
+	$timelineMenu = "MayaWindow|toolBar6|MainTimeSliderLayout|formLayout9|TimeSliderMenu"; // Maya 2016 and earlier
+};
+
 updateTimeSliderMenu $timelineMenu;
 //menu -exists $timelineMenu;
 //string $timeline_menuItems[] = `menu -ia -q $timelineMenu`;
@@ -175,9 +193,11 @@ setParent -menu $timelineMenu;
 			 -command ("source menus2Py; menus2Py.gpsPreview()")
 			 -annotation ("Launches GPS Preview")
 			 GPSPlayblastItem;
-*/
 
-// Status Line Buttons
+
+/////////////////////////
+// Status Line Buttons //
+/////////////////////////
 
 setParent $gStatusLine;
 
@@ -290,10 +310,10 @@ text -label $jobInfo -h 27;
 setParent -menu ..;
 
 // Swap Object Mode / Component Mode buttons (fix for Maya 2014 only)
-//if (getApplicationVersionAsFloat == 2014) {
+if ($maya_ver == 2014) {
 	formLayout -edit
 	           -af selectBtnComponent right 0
 	           -ac selectBtnObject right 0 selectBtnComponent
 	           -ac selectBtnHierComb right 0 selectBtnObject
 	           masksForm;
-//}
+}

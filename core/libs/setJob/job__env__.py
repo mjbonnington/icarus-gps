@@ -9,8 +9,14 @@
 # Sets up job- and shot-related environment variables.
 
 
-import os, sys
-import appPaths, jobs, jobSettings, osOps, verbose
+import os
+import sys
+
+import appPaths
+import jobs
+import jobSettings
+import osOps
+import verbose
 
 
 def setEnv(envVars):

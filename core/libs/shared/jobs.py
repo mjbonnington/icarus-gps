@@ -11,9 +11,9 @@
 import os
 import xml.etree.ElementTree as ET
 
-import xmlData
-import verbose
 import osOps
+import verbose
+import xmlData
 
 
 class jobs(xmlData.xmlData):
@@ -246,7 +246,7 @@ class jobs(xmlData.xmlData):
 		""" List all available shots belonging to the specified job.
 			Not currently in use, but will eventually replace setJob.listShots()
 		"""
-		shotsPath = getPath(jobName)
+		shotsPath = self.getPath(jobName, translate=True)
 
 		# Check shot path exists before proceeding...
 		if os.path.exists(shotsPath):
