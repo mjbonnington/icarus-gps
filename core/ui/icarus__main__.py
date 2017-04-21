@@ -233,6 +233,9 @@ class icarusApp(QtWidgets.QDialog): # Should be QMainWindow really?
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
 
+			# Instantiate jobs class
+			self.j = jobs.jobs()
+
 			# Populate 'Job' and 'Shot' drop down menus
 			self.populateJobs(setLast=True)
 
@@ -576,8 +579,8 @@ class icarusApp(QtWidgets.QDialog): # Should be QMainWindow really?
 		self.ui.job_comboBox.clear()
 
 		# Populate combo box with list of shots
-		j = jobs.jobs()
-		jobLs = sorted(j.getActiveJobs())
+		self.j.loadXML() # Reload jobs database
+		jobLs = sorted(self.j.getActiveJobs())
 		if jobLs:
 			self.ui.job_comboBox.insertItems(0, jobLs)
 
@@ -640,7 +643,7 @@ class icarusApp(QtWidgets.QDialog): # Should be QMainWindow really?
 
 		# Populate combo box with list of shots
 		selJob = self.ui.job_comboBox.currentText()
-		shotLs = sorted(setJob.listShots(selJob))
+		shotLs = self.j.listShots(selJob)
 		if shotLs:
 			self.ui.shot_comboBox.insertItems(0, shotLs)
 
@@ -680,26 +683,31 @@ class icarusApp(QtWidgets.QDialog): # Should be QMainWindow really?
 			return False
 
 
-	#populates publish shot drop down menu
 	def populatePblShotLs(self):
+		""" Populate publish shot drop down menu.
+		"""
 		self.ui.publishToShot_comboBox.clear()
-		shotLs = setJob.listShots(os.environ['JOB'])
+		shotLs = self.j.listShots(os.environ['JOB'])
 		if shotLs:
 			for shot in shotLs:
 				self.ui.publishToShot_comboBox.insertItem(0, shot)
 			self.ui.publishToShot_comboBox.setCurrentIndex(self.ui.publishToShot_comboBox.findText(os.environ['SHOT']))
 
-	#populates gather shot drop down menu
+
 	def populateGatherShotLs(self):
+		""" Populate gather shot drop down menu.
+		"""
 		self.ui.gatherFromShot_comboBox.clear()
-		shotLs = setJob.listShots(os.environ['JOB'])
+		shotLs = self.j.listShots(os.environ['JOB'])
 		if shotLs:
 			for shot in shotLs:
 				self.ui.gatherFromShot_comboBox.insertItem(0, shot)
 			self.ui.gatherFromShot_comboBox.setCurrentIndex(self.ui.gatherFromShot_comboBox.findText(os.environ['SHOT']))
 
-	#updates job tab ui with shot selection
+
 	def updateJobUI(self):
+		""" Update job tab UI with shot selection.
+		"""
 		self.ui.setShot_pushButton.setEnabled(True)
 
 
@@ -708,7 +716,8 @@ class icarusApp(QtWidgets.QDialog): # Should be QMainWindow really?
 		"""
 		self.job = self.ui.job_comboBox.currentText()
 		self.shot = self.ui.shot_comboBox.currentText()
-		if setJob.setup(self.job, self.shot):
+		# if setJob.setup(self.job, self.shot):
+		if self.j.setup(self.job, self.shot):
 			self.adjustPblTypeUI()
 			self.populatePblShotLs()
 			self.populateGatherShotLs()
@@ -893,14 +902,16 @@ Developers: Nuno Pereira, Mike Bonnington
 		""" Open job settings dialog wrapper function.
 		"""
 		if self.openSettings("Job"):
-			setJob.setup(self.job, self.shot) # Set up environment variables
+			# setJob.setup(self.job, self.shot) # Set up environment variables
+			self.j.setup(self.job, self.shot) # Set up environment variables
 
 
 	def shotSettings(self):
 		""" Open shot settings dialog wrapper function.
 		"""
 		if self.openSettings("Shot"):
-			setJob.setup(self.job, self.shot) # Set up environment variables
+			# setJob.setup(self.job, self.shot) # Set up environment variables
+			self.j.setup(self.job, self.shot) # Set up environment variables
 
 
 	def userSettings(self):

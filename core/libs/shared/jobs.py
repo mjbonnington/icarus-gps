@@ -5,13 +5,16 @@
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2015-2017 Gramercy Park Studios
 #
-# Manipulates the database of jobs running in the CG department
+# Manipulates the database of jobs running in the CG department.
 
 
 import os
 import xml.etree.ElementTree as ET
 
+import defaultDirs
+import job__env__
 import osOps
+import userPrefs
 import verbose
 import xmlData
 
@@ -26,6 +29,29 @@ class jobs(xmlData.xmlData):
 		"""
 		self.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'jobs.xml'))
 		self.getRootPaths()
+
+
+	def setup(self, jobName, shotName):
+		""" Set job.
+		"""
+		jobPath = self.getPath(jobName, translate=True)
+		shotPath = osOps.absolutePath("%s/$SHOTSROOTRELATIVEDIR/%s" %(jobPath, shotName))
+		envVars = jobName, shotName, shotPath
+
+		# Create environment variables
+		if job__env__.setEnv(envVars):
+
+			# Create folder structure
+			defaultDirs.create()
+
+			# Remember for next time
+			newEntry = '%s,%s' % (jobName, shotName)
+			userPrefs.edit('main', 'lastjob', newEntry)
+
+			return True
+
+		else:
+			return False
 
 
 	def getRootPaths(self):
@@ -91,50 +117,19 @@ class jobs(xmlData.xmlData):
 			pathElement.text = str(jobsRelPath)
 
 
-	# def translatePath(self, jobPath):
-	# 	""" Translate paths for cross-platform support.
-	# 	"""
-	# 	self.getRootPaths()
-
-	# 	try:
-	# 		jobPathTr = jobPath
-	# 		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-	# 			if jobPath.startswith(self.osx_root):
-	# 				jobPathTr = jobPath.replace(self.osx_root, self.win_root)
-	# 			elif jobPath.startswith(self.linux_root):
-	# 				jobPathTr = jobPath.replace(self.linux_root, self.win_root)
-	# 		elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-	# 			if jobPath.startswith(self.win_root):
-	# 				jobPathTr = jobPath.replace(self.win_root, self.osx_root)
-	# 			elif jobPath.startswith(self.linux_root):
-	# 				jobPathTr = jobPath.replace(self.linux_root, self.osx_root)
-	# 		else: # linux
-	# 			if jobPath.startswith(self.win_root):
-	# 				jobPathTr = jobPath.replace(self.win_root, self.linux_root)
-	# 			elif jobPath.startswith(self.osx_root):
-	# 				jobPathTr = jobPath.replace(self.osx_root, self.linux_root)
-
-	# 		#print "Performing path translation:\n%s\n%s\n" %(jobPath, osOps.absolutePath(jobPathTr))
-	# 		return osOps.absolutePath(jobPathTr)
-
-	# 	except TypeError:
-	# 		return jobPath
-
-
 	def getActiveJobs(self):
 		""" Return all active jobs as a list. Only jobs that exist on disk will be added.
 		"""
 		jobLs = []
-		activeJobElements = self.root.findall("./job[@active='True']")
-		for jobElement in activeJobElements:
+		for jobElement in self.root.findall("./job[@active='True']"):
 			jobName = jobElement.find('name').text
 			jobPath = jobElement.find('path').text
 
-			#jobPath = self.translatePath(jobPath)
 			jobPath = osOps.translatePath(jobPath)
 
 			if os.path.exists(jobPath): # Only add jobs which exist on disk
 				jobLs.append(jobName)
+
 		return jobLs
 
 
@@ -244,9 +239,9 @@ class jobs(xmlData.xmlData):
 
 	def listShots(self, jobName):
 		""" List all available shots belonging to the specified job.
-			Not currently in use, but will eventually replace setJob.listShots()
 		"""
-		shotsPath = self.getPath(jobName, translate=True)
+		jobPath = self.getPath(jobName, translate=True)
+		shotsPath = osOps.absolutePath("%s/$SHOTSROOTRELATIVEDIR" %jobPath)
 
 		# Check shot path exists before proceeding...
 		if os.path.exists(shotsPath):
@@ -256,15 +251,14 @@ class jobs(xmlData.xmlData):
 			for item in dirContents:
 				# Check for shot naming convention to disregard everything else in directory
 				if item.startswith('SH') or item.startswith('PC'):
-					shotPath = os.path.join(shotsPath, item)
-
-					# Check that the directory is a valid shot
-					if checkShot(shotPath):
+					# Check that the directory is a valid shot by checking for the existence of the '.icarus' subdirectory
+					shotDataDir = osOps.absolutePath("%s/%s/$DATAFILESRELATIVEDIR" %(shotsPath, item))
+					if os.path.isdir(shotDataDir):
 						shotLs.append(item)
 
 			if len(shotLs):
 				shotLs.sort()
-				shotLs.reverse()
+				# shotLs.reverse()
 				return shotLs
 
 			else:

@@ -154,17 +154,17 @@ def checkAssetPath():
 	""" Check for existence of published assets within job's '.publish' directory.
 		Return True as soon as any assets are found in any of the job or shot(s).
 		This function should only run if the value 'meta/assetDir' is not set in the job settings data.
+		***NEED TO UPDATE THIS FUNCTION DUE TO setJob REWRITE***
 	"""
 	verbose.print_("Checking for published assets...", 4)
 
-	import setJob
+	import setJob # UPDATE
 
 	# Get the paths of the job and all shots within the job
 	paths = [os.environ['JOBPATH'], ]
-	shots = setJob.listShots(os.environ['JOB'])
+	shots = setJob.listShots(os.environ['JOB']) # UPDATE
 	for shot in shots:
-		paths.append( setJob.getPath(os.environ['JOB'], shot) )
-
+		paths.append( setJob.getPath(os.environ['JOB'], shot) ) # UPDATE
 
 	for path in paths:
 		assetDir = os.path.join(path, '.publish')

@@ -7,6 +7,9 @@
 # (c) 2013-2016 Gramercy Park Studios
 #
 # Functions for job and shot setup.
+# THIS MODULE IS NOW DEPRECATED.
+# Only used by legacySettings
+# Functions moved to jobs.py
 
 
 import os

@@ -137,9 +137,9 @@ def gpsToolDeploy(status):
 	print_( 'Deploying GPS tools... %s' % status, 3 )
 
 def icarusLaunch(icarusVersion, icarusLocation=""):
-	print_( 'GRAMERCY PARK STUDIOS - ICARUS %s' % icarusVersion, 0 )
-	print_( '[Running from "%s"]' % icarusLocation, 4 )
-	print_( '\n', 0 )
+	print_('GRAMERCY PARK STUDIOS - ICARUS %s' %icarusVersion, 0)
+	print_('[Running from "%s"]' %icarusLocation, 4)
+	print_('', 0)
 
 def ignored(asset):
 	print_( '%s ignored' % asset, 2 )

@@ -13,7 +13,7 @@ import os
 import sys
 
 import appPaths
-import jobs
+# import jobs
 import jobSettings
 import osOps
 import verbose
