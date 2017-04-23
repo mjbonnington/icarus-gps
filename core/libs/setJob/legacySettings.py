@@ -151,9 +151,12 @@ def convertAssetData(dataPath, ad):
 
 
 def checkAssetPath():
-	""" Check for existence of published assets within job's '.publish' directory.
-		Return True as soon as any assets are found in any of the job or shot(s).
-		This function should only run if the value 'meta/assetDir' is not set in the job settings data.
+	""" Check for existence of published assets within job's '.publish'
+		directory.
+		Return True as soon as any assets are found in any of the job or
+		shot(s).
+		This function should only run if the value 'meta/assetDir' is not set
+		in the job settings data.
 		***NEED TO UPDATE THIS FUNCTION DUE TO setJob REWRITE***
 	"""
 	verbose.print_("Checking for published assets...", 4)

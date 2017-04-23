@@ -4,28 +4,23 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2017 Gramercy Park Studios
 #
 # This module acts as a wrapper for low-level OS operations.
 
 
-import os, re
+import os
+import re
+
 import verbose
 
 
 def createDir(path, umask='000'):
 	""" Creates directory for the specified path with the specified umask.
-		Could probably be rewritten to use Python's own functions? Also remove redundant umask functionality.
+		Could probably be rewritten to use Python's own functions? Also remove
+		redundant umask functionality.
 	"""
 	path = os.path.normpath(path)
-
-	# if not os.path.isdir(path):
-	# 	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-	# 		os.makedirs(path)
-	# 		if os.path.basename(path).startswith('.'): # hide the folder if the name starts with a dot, as these files are not automatically hidden on Windows
-	# 			setHidden(path)
-	# 	else:
-	# 		os.system('%s; mkdir -p %s' % (setUmask(umask), path))
 
 	if not os.path.isdir(path):
 		os.makedirs(path)
@@ -40,6 +35,7 @@ def createDir(path, umask='000'):
 def setPermissions(path, mode='a+w'):
 	""" Sets permissions to provided path.
 		Could probably be rewritten to use Python's own functions?
+		And we probably shouldn't be doing this anyway.
 	"""
 	path = os.path.normpath(path)
 
@@ -150,7 +146,8 @@ def copyDirContents(source, destination, umask='000'):
 
 def setHidden(path):
 	""" Hide a file or folder (Windows only).
-		Useful if the filename name starts with a dot, as these files are not automatically hidden on Windows.
+		Useful if the filename name starts with a dot, as these files are not
+		automatically hidden on Windows.
 	"""
 	import ctypes
 	FILE_ATTRIBUTE_HIDDEN = 0x02
@@ -168,8 +165,10 @@ def setUmask(umask='000'):
 
 def absolutePath(relPath, stripTrailingSlash=False):
 	""" Convert a relative path to an absolute path.
-		Expands environment variables in supplied path and replaces backslashes with forward slashes for compatibility.
-		If 'stripTrailingSlash' is True, remove trailing slash(es) from returned path.
+		Expands environment variables in supplied path and replaces
+		backslashes with forward slashes for compatibility.
+		If 'stripTrailingSlash' is True, remove trailing slash(es) from
+		returned path.
 	"""
 	if relPath:
 		if stripTrailingSlash:
@@ -238,7 +237,8 @@ def translatePath(jobPath):
 
 
 def sanitize(instr, pattern='\W', replace=''):
-	""" Sanitizes characters in string. Default removes all non-alphanumeric characters.
+	""" Sanitizes characters in string. Default removes all non-alphanumeric
+		characters.
 	"""
 	return re.sub(pattern, replace, instr)
 

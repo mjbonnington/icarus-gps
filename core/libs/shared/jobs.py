@@ -180,11 +180,11 @@ class jobs(xmlData.xmlData):
 		"""
 		element = self.root.find("./job/[name='%s']" %jobName)
 		if element is not None:
-			#print "Deleted job %s" %jobName
+			verbose.message("Deleted job %s" %jobName)
 			self.root.remove(element)
 			return True
 		else:
-			#print "Could not delete job %s" %jobName
+			verbose.error("Could not delete job %s" %jobName)
 			return False
 
 
@@ -205,11 +205,11 @@ class jobs(xmlData.xmlData):
 		"""
 		element = self.root.find("./job/[name='%s']" %jobName)
 		if element is not None:
-			#print "Set job %s active status to %s" %(jobName, active)
+			verbose.message("Set job %s active status to %s" %(jobName, active))
 			element.set('active', '%s' %active)
 			return True
 		else:
-			#print "Could not set job %s active status to %s" %(jobName, active)
+			verbose.error("Could not set job %s active status to %s" %(jobName, active))
 			return False
 
 
@@ -238,7 +238,7 @@ class jobs(xmlData.xmlData):
 
 
 	def listShots(self, jobName):
-		""" List all available shots belonging to the specified job.
+		""" Return a list of all available shots belonging to the specified job.
 		"""
 		jobPath = self.getPath(jobName, translate=True)
 		shotsPath = osOps.absolutePath("%s/$SHOTSROOTRELATIVEDIR" %jobPath)
@@ -252,8 +252,7 @@ class jobs(xmlData.xmlData):
 				# Check for shot naming convention to disregard everything else in directory
 				if item.startswith('SH') or item.startswith('PC'):
 					# Check that the directory is a valid shot by checking for the existence of the '.icarus' subdirectory
-					shotDataDir = osOps.absolutePath("%s/%s/$DATAFILESRELATIVEDIR" %(shotsPath, item))
-					if os.path.isdir(shotDataDir):
+					if os.path.isdir(osOps.absolutePath("%s/%s/$DATAFILESRELATIVEDIR" %(shotsPath, item))):
 						shotLs.append(item)
 
 			if len(shotLs):
@@ -262,10 +261,10 @@ class jobs(xmlData.xmlData):
 				return shotLs
 
 			else:
-				verbose.noShot(shotsPath)
+				verbose.warning('No valid shots found in job path "%s".' %shotsPath)
 				return False
 
 		else:
-			verbose.noJob(shotsPath)
+			verbose.error('The job path "%s" does not exist. The job may have been archived, moved or deleted.' %shotsPath)
 			return False
 

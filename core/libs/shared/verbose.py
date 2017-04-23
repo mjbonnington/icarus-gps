@@ -6,13 +6,11 @@
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2013-2017 Gramercy Park Studios
 #
-# This module processes verbosity printing.
+# This module handles the output of messages, warnings and errors.
 
 
 import os
 
-
-statusBar = None
 
 # Define some ANSI colour codes
 # class bcolors:
@@ -25,23 +23,33 @@ statusBar = None
 # 	BOLD = '\033[1m'
 # 	UNDERLINE = '\033[4m'
 
+statusBar = None
+
 
 def message(message):
+	""" Print a message.
+	"""
 	print_(message, 3)
 
 def warning(message):
+	""" Print a warning message.
+	"""
 	#print_(bcolors.WARNING + "Warning: " + message + bcolors.ENDC, 2)
 	print_("Warning: " + message, 2)
 
 def error(message):
+	""" Print an error message.
+	"""
 	#print_(bcolors.FAIL + "ERROR: " + message + bcolors.ENDC, 1)
 	print_("ERROR: " + message, 1)
 
 
 def print_(message, verbosityLevel=3, status=True, log=False):
 	""" Print the message to the console.
-		If 'status' is True, the message will be shown on the main UI status bar.
-		If 'log' is True, the message will be written to a logfile (not yet implemented).
+		If 'status' is True, the message will be shown on the main UI status
+		bar.
+		If 'log' is True, the message will be written to a logfile (not yet
+		implemented).
 
 		Verbosity Levels:
 		0 - Nothing is output
@@ -68,7 +76,8 @@ def print_(message, verbosityLevel=3, status=True, log=False):
 
 
 def registerStatusBar(statusBarObj):
-	""" Register a QStatusBar object with this module so that messages can be printed to the appropriate UI status bar.
+	""" Register a QStatusBar object with this module so that messages can be
+		printed to the appropriate UI status bar.
 	"""
 	global statusBar
 	statusBar = statusBarObj
@@ -76,7 +85,8 @@ def registerStatusBar(statusBarObj):
 
 def pluralise(noun, count=None):
 	""" Pluralise nouns.
-		if 'count' variable is given, return singular if count is 1, otherwise return plural form.
+		if 'count' variable is given, return singular if count is 1, otherwise
+		return plural form.
 		In the name of simplicity, this function is far from exhaustive.
 	"""
 	if count is not None:
@@ -113,28 +123,28 @@ def appPaths_guessPathFailed(os):
 	warning("Failed to guess %s path." %os)
 
 def animRequires(asset):
-	print_( 'Requires %s' % asset, 1 )
+	print_("Requires %s" %asset, 1)
 
 def assetConflict():
-	print_( 'Asset already exists in scene.', 2 )
+	error("Asset already exists in scene.")
 
 def assetUpdateMatch():
-	print_( 'Assets do not match. Update cancelled.', 2 )
+	warning("Assets do not match. Update cancelled.")
 
 def chkDirSize():
-	print_( 'Comparing directory sizes...', 3 )
+	message("Comparing directory sizes...")
 
 def concurrentPublish():
-	return 'Another publish for the same asset is currently under progress. Please check your settings or try again later.'
+	return "Another publish for the same asset is currently under progress. Please check your settings or try again later."
 
 def dailyFail():
-	return 'Could not verify dailies files.'
+	return "Could not verify dailies files."
 
 def gpsPreview_uiValues():
-	print_( 'Not all GPS Preview UI values could be read.', 2 )
+	warning("Not all GPS Preview UI values could be read.")
 
 def gpsToolDeploy(status):
-	print_( 'Deploying GPS tools... %s' % status, 3 )
+	message("Deploying GPS tools... %s" %status)
 
 def icarusLaunch(icarusVersion, icarusLocation=""):
 	print_('GRAMERCY PARK STUDIOS - ICARUS %s' %icarusVersion, 0)
@@ -142,154 +152,148 @@ def icarusLaunch(icarusVersion, icarusLocation=""):
 	print_('', 0)
 
 def ignored(asset):
-	print_( '%s ignored' % asset, 2 )
+	warning("%s ignored" %asset)
 
 def illegalCharacters(string=''):
-	print_( '"%s" contains illegal characters.' % string, 1 )
+	error('"%s" contains illegal characters.' %string)
 
-def integersInput(input):
-	print_( '%s input must be integers.' % input, 1 )
+def integersInput(input_):
+	error("%s input must be integers." %input_)
 
 def itemSel():
-	print_( 'Please select one item.', 1 )
+	print_("Please select one item.", 1)
 
 def launchApp(application):
-	print_( 'Launching %s...' % application, 3 )
+	message("Launching %s..." %application)
 
 def launchAppNotFound(application):
-	print_( 'ERROR: Unable to launch %s - the executable could not be found.' % application, 2 )
+	error("Unable to launch %s - the executable could not be found." %application)
 
 def launchAppNotSet(application):
-	print_( 'ERROR: Unable to launch %s - executable path not set. Please set the correct location from the job settings window.' % application, 2 )
+	error("Unable to launch %s - executable path not set. Please set the correct location from the job settings window." %application)
 
 def jobSet(job, shot):
-	print_( 'Shot set: Now working on %s - %s' % (job, shot), 3 )
+	message("Shot set: Now working on %s - %s" %(job, shot))
 
 def lightLinkError(lightRelinkResult):
-	print_( 'Light link error: The following objects could not be relinked.\n%s' % lightRelinkResult, 1 )
+	print_('Light link error: The following objects could not be relinked.\n%s' %lightRelinkResult, 1)
 
 def locatorsOnly():
-	print_( 'Only locators can be published as nulls.', 2 )
+	warning("Only locators can be published as nulls.")
 
 def lodARequired():
-	raise('lodA level required.')
+	raise("lodA level required.")
 
 def nameConflict(assetName):
-	print_( 'Asset with name "%s" already exists in scene. Existing asset has been renamed.' % assetName, 2 )
+	warning('Asset with name "%s" already exists in scene. Existing asset has been renamed.' %assetName)
 
 def noAsset():
-	print_( 'Could not find any compatible assets.', 1 )
+	error("Could not find any compatible assets.")
 
 def noDir():
-	print_( 'Could not find the specified directory.', 1 )
+	error("Could not find the specified directory.")
 
 def noDirContents():
-	print_( 'The specified directory is empty.', 2 )
+	warning("The specified directory is empty.")
 
 def noEnv():
-	print_( 'Could not launch Icarus - No environment could be found.', 1 )
+	error("Could not launch Icarus - no environment could be found.")
 
 def noFile():
-	print_( 'Could not find the specified file.', 1 )
+	error("Could not find the specified file.")
 
 def noGetTranforms():
-	print_( 'Could not get object transforms.', 1 )
+	error("Could not get object transforms.")
 
 def noHrox(hroxFile):
-	print_( '%s - File could not be found.' % hroxFile, 1 )
+	error("File not found: %s" %hroxFile)
 
 def noICSetsPbl():
-	print_( 'ICSets cannot be selected for publishing', 1 )
-
-def noJob(job):
-	error('The job path "%s" does not exist. The job may have been archived, moved or deleted.' %job)
+	error("ICSets cannot be selected for publishing")
 
 def noMainLayer():
-	print_( 'Please set a main layer.', 1 )
+	print_("Please set a main layer.", 1)
 
 def noNotes():
-	print_( 'No notes found.', 2 )
+	warning("No notes found.")
 
 def noPermissionsSet():
-	print_( 'Warning: Permissions could not be set.', 2 )
+	warning("Permissions could not be set.")
 
 def noReference():
-	print_( 'The specified node is not a reference.', 1 )
+	error("The specified node is not a reference.")
 
 def noRefPbl():
-	print_( 'Cannot publish referenced assets.', 1 )
+	error("Cannot publish referenced assets.")
 
 def noRefTag():
-	print_( 'No reference tag found.', 1 )
+	error("No reference tag found.")
 
 def noRendersPbl():
-	print_( 'No renders have been published.', 1 )
+	error("No renders have been published.")
 
 def noSel():
-	print_( 'Nothing selected.', 2 )
+	warning("Nothing selected.")
 
 def noSeq(dir):
-	print_( "'%s': No sequence or bad sequence format.\nSequences must be in the format [<filename>.<padding>.<extension>]" % dir, 2 )
+	print_('"%s": No sequence or bad sequence format.\nSequences must be in the format [<filename>.<padding>.<extension>]' %dir, 2)
 
 def noSetsPbl():
-	print_( 'Sets cannot be selected for publishing.', 1 )
-
-def noShot(shot):
-	warning('No valid shots found in job path "%s".' %shot)
+	error("Sets cannot be selected for publishing.")
 
 def notCamera():
-	print_( 'The current selection is not a camera.', 2 )
+	warning("The current selection is not a camera.")
 
 def noVersion():
-	print_( 'No versioning detected.', 1 )
+	error("No versioning detected.")
 
 def notVersionManagerCompatible(icSet):
-	print_( 'The selected ICSet is not compatible with Version Manager.', 1 )
+	error("The selected ICSet is not compatible with Version Manager.")
 
 def pblFeed(msg=None, begin=None, end=None):
 	if msg:
-		print_( msg, 3 )
+		print_(msg, 3)
 		return
 	if begin:
-		print_( 'Publishing...', 3 )
+		print_("Publishing...", 3)
 		return
 	if end:
-		print_( 'Done.', 3 )
+		print_("Done.", 3)
 		return
 
 def pblRollback():
-	msg = 'Current publish has been rolled back. No changes made.\nCheck console output for details.'
-	print_( msg, 1 )
+	msg = "Current publish has been rolled back. No changes made.\nCheck console output for details."
+	print_(msg, 1)
 	return msg
 
 def pblAssetReq():
-	print_( 'Animation can only be published from published assets.', 1 )
+	error("Animation can only be published from published assets.")
 
 def pblSaveSnapshot():
-	print_( 'Saving snapshot...', 3 )
+	message("Saving snapshot...")
 
 def pointCloudParticle():
-	print_( 'pointCloud publishing requires a particle or nParticle object.', 1 )
+	error("pointCloud publishing requires a particle or nParticle object.")
 
 def processing(asset=None):
-	print_( 'processing: %s...' % asset, 3 )
+	message("Processing: %s..." %asset)
 
 def recentFiles_notWritten():
-	print_( 'Warning: unable to write recent files configuration file.', 2 )
+	warning("Unable to write recent files configuration file.")
 
 def redFields():
-	print_( 'All fields in red are mandatory', 1 )
+	print_("All fields in red are mandatory", 1)
 
 def renderElements(layer=None, pass_=None, versionHeader=False):
 	if versionHeader:
-		print_( '\n\nRENDER PUBLISH INFO: %s\n--\n[<layer>_<pass>]\n--' % versionHeader, 3 )
+		print_('\n\nRENDER PUBLISH INFO: %s\n--\n[<layer>_<pass>]\n--' %versionHeader, 3)
 		return
 	else:
-		print_( '[%s_%s]' % (layer, pass_), 3 )
+		print_('[%s_%s]' %(layer, pass_), 3)
 
 def shaderLinkError(shaderRelinkResult):
-	print_( 'Shader link error: The following objects could not be relinked.\n%s' % shaderRelinkResult, 1 )
+	print_("Shader link error: The following objects could not be relinked.\n%s" %shaderRelinkResult, 1)
 
 def shaderSupport():
-	print_( 'The specified node is not a shading group.', 2 )
+	warning("The specified node is not a shading group.")
 
