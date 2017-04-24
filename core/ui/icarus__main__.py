@@ -51,6 +51,9 @@ class icarusApp(QtWidgets.QDialog): # Should be QMainWindow really?
 				self.ui.setStyleSheet(fh.read())
 		self.ui.show()
 
+		# Instantiate jobs class
+		self.j = jobs.jobs()
+
 		# Set up keyboard shortcuts - ***CURRENTLY BROKEN DUE TO QT5 PORTING***
 		self.shortcutShotInfo = QtWidgets.QShortcut(self)
 		self.shortcutShotInfo.setKey('Ctrl+I')
@@ -234,9 +237,6 @@ class icarusApp(QtWidgets.QDialog): # Should be QMainWindow really?
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
-
-			# Instantiate jobs class
-			self.j = jobs.jobs()
 
 			# Populate 'Job' and 'Shot' drop down menus
 			self.populateJobs(setLast=True)

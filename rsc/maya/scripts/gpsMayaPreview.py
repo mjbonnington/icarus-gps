@@ -10,7 +10,8 @@
 
 
 import maya.cmds as mc
-import os, time
+import os
+import time
 import verbose
 
 
@@ -20,16 +21,7 @@ class preview():
 		self.playblastDir = outputDir
 		self.outputFile = outputFile
 		self.res = res
-
-		if frRange == 'timeline':
-			self.frRange = (int(mc.playbackOptions(min=True, q=True)), int(mc.playbackOptions(max=True, q=True)))
-			self.rangeType = frRange
-		elif frRange == 'current frame':
-			self.frRange = (int(mc.currentTime(q=True)), int(mc.currentTime(q=True)))
-			self.rangeType = frRange
-		else:
-			self.frRange = (int(frRange[0]), int(frRange[1]))
-			self.rangeType = self.frRange
+		self.frRange = (int(frRange[0]), int(frRange[1]))
 
 		self.offscreen = offscreen
 		self.noSelect = noSelect

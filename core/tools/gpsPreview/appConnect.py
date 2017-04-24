@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2014-2015 Gramercy Park Studios
+# (c) 2014-2017 Gramercy Park Studios
 #
 # App-specific funcions for GPS Preview.
 
@@ -13,7 +13,8 @@ import os
 
 
 class connect(object):
-	""" Connects gpsPreview to the relevant application and passes args to its internal preview API.
+	""" Connects gpsPreview to the relevant application and passes args to its
+		internal preview API.
 	"""
 	def __init__(self, fileInput, res, frRange, offscreen, noSelect, guides, slate):
 		self.fileInput = fileInput
@@ -58,4 +59,30 @@ def getScene():
 	if os.environ['ICARUSENVAWARE'] == 'MAYA':
 		import mayaOps
 		return os.path.splitext(os.path.basename(mayaOps.getScene()))[0]
+
+
+def getResolution():
+	""" Returns the current resolution of scene/script/project file as a
+		tuple (integer, integer).
+	"""
+	if os.environ['ICARUSENVAWARE'] == 'MAYA':
+		import maya.cmds as mc
+		return mc.getAttr("defaultResolution.w"), mc.getAttr("defaultResolution.h")
+
+
+def getFrameRange():
+	""" Returns the frame range of scene/script/project file as a tuple
+		(integer, integer).
+	"""
+	if os.environ['ICARUSENVAWARE'] == 'MAYA':
+		import maya.cmds as mc
+		return int(mc.playbackOptions(min=True, q=True)), int(mc.playbackOptions(max=True, q=True))
+
+
+def getCurrentFrame():
+	""" Returns the current frame of scene/script/project file as an integer.
+	"""
+	if os.environ['ICARUSENVAWARE'] == 'MAYA':
+		import maya.cmds as mc
+		return int(mc.currentTime(q=True))
 

@@ -54,6 +54,8 @@ def create():
 	config.set('main', 'verbosity', '2')
 
 	config.add_section('gpspreview')
+	config.set('gpspreview', 'resolutionmode', '0')
+	config.set('gpspreview', 'framerangemode', '0')
 	config.set('gpspreview', 'offscreen', 'True')
 	config.set('gpspreview', 'noselection', 'True')
 	config.set('gpspreview', 'guides', 'True')

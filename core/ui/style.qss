@@ -987,6 +987,10 @@ QAbstractSpinBox {
 	background: #222;
 }
 
+QAbstractSpinBox:disabled, QAbstractSpinBox:read-only {
+	background: transparent;
+}
+
 QAbstractSpinBox::up-button {
 	subcontrol-origin: padding; /*border*/
 	subcontrol-position: top right;
