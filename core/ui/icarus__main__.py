@@ -49,6 +49,7 @@ class icarusApp(QtWidgets.QDialog): # Should be QMainWindow really?
 		if stylesheet is not None:
 			with open(stylesheet, "r") as fh:
 				self.ui.setStyleSheet(fh.read())
+		self.ui.setWindowIcon(QtGui.QIcon("rsc/icarus.png"))
 		self.ui.show()
 
 		# Instantiate jobs class

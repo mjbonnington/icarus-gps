@@ -1016,7 +1016,7 @@ QAbstractSpinBox::up-button:off {
 	background: #444;
 }
 
-QAbstractSpinBox::up-button:disabled {
+QAbstractSpinBox::up-button:disabled, QAbstractSpinBox::up-button:read-only {
 	border-color: transparent;
 	background: transparent;
 }
@@ -1059,7 +1059,7 @@ QAbstractSpinBox::down-button:off {
 	background: #444;
 }
 
-QAbstractSpinBox::down-button:disabled {
+QAbstractSpinBox::down-button:disabled, QAbstractSpinBox::down-button:read-only {
 	border-color: transparent;
 	background: transparent;
 }
