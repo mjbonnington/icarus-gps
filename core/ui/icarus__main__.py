@@ -46,10 +46,10 @@ class icarusApp(QtWidgets.QMainWindow):
 
 		# Load UI
 		self.ui = QtCompat.load_ui(fname=ui_file)
-		if stylesheet is not None:
-			with open(stylesheet, "r") as fh:
-				self.ui.setStyleSheet(fh.read())
-		self.ui.setWindowIcon(QtGui.QIcon("rsc/icarus.png"))
+		# if stylesheet is not None:
+		# 	with open(stylesheet, "r") as fh:
+		# 		self.ui.setStyleSheet(fh.read())
+		# self.ui.setWindowIcon(QtGui.QIcon("rsc/icarus.png"))
 		self.ui.show()
 
 		# Instantiate jobs class
@@ -1944,8 +1944,10 @@ elif __name__ == '__main__':
 	mainApp.setApplicationName('Icarus')
 
 	# Apply UI style sheet
-	# with open(stylesheet, "r") as fh:
-	# 	mainApp.setStyleSheet(fh.read())
+	if stylesheet is not None:
+		with open(stylesheet, "r") as fh:
+			mainApp.setStyleSheet(fh.read())
+	mainApp.setWindowIcon(QtGui.QIcon("rsc/icarus.png"))
 
 	app = icarusApp()
 

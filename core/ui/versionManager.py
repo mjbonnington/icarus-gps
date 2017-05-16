@@ -88,7 +88,8 @@ class dialog(QtWidgets.QDialog):
 		assetDataLoaded = self.assetData.loadXML(os.path.join(assetDir, 'assetData.xml'), quiet=False)
 
 		#--- LEGACY CODE ---#
-		# If XML files don't exist, create defaults, and attempt to convert data from Python data files
+		# If XML files don't exist, create defaults, and attempt to convert
+		# data from Python data files
 		if not assetDataLoaded:
 			import legacySettings
 

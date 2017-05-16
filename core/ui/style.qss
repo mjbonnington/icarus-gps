@@ -1012,13 +1012,13 @@ QAbstractSpinBox::up-button:pressed {
 	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #4c4c4c, stop: 1 #555);
 }
 
-QAbstractSpinBox::up-button:off {
-	background: #444;
-}
-
-QAbstractSpinBox::up-button:disabled, QAbstractSpinBox::up-button:read-only {
+QAbstractSpinBox::up-button:disabled {
 	border-color: transparent;
 	background: transparent;
+}
+
+QAbstractSpinBox::up-button:off {
+	background: #444;
 }
 
 QAbstractSpinBox::up-arrow {
@@ -1055,13 +1055,13 @@ QAbstractSpinBox::down-button:pressed {
 	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #4c4c4c, stop: 1 #555);
 }
 
-QAbstractSpinBox::down-button:off {
-	background: #444;
-}
-
-QAbstractSpinBox::down-button:disabled, QAbstractSpinBox::down-button:read-only {
+QAbstractSpinBox::down-button:disabled {
 	border-color: transparent;
 	background: transparent;
+}
+
+QAbstractSpinBox::down-button:off {
+	background: #444;
 }
 
 QAbstractSpinBox::down-arrow {
@@ -1073,7 +1073,7 @@ QAbstractSpinBox::down-arrow:pressed {
 	left: 1px;
 }
 
-QAbstractSpinBox::down-arrow:disabled, QAbstractSpinBox::down-arrow:off { /* off state when value in min */
+QAbstractSpinBox::down-arrow:disabled, QAbstractSpinBox::down-arrow:off { /* off state when value is min */
 	image: url(:/images/arrow_down_disabled.png);
 }
 

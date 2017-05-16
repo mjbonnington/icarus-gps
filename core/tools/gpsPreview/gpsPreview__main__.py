@@ -161,8 +161,8 @@ class previewUI(QtWidgets.QDialog):
 
 		# Set resolution appropriately
 		if resMode == "Custom":
-			self.ui.x_spinBox.setReadOnly(False)
-			self.ui.y_spinBox.setReadOnly(False)
+			self.ui.x_spinBox.setEnabled(True) #setReadOnly(False)
+			self.ui.y_spinBox.setEnabled(True) #setReadOnly(False)
 			# Read values from user settings
 			try:
 				res = userPrefs.config.get('gpspreview', 'customresolution').split('x')
@@ -171,8 +171,8 @@ class previewUI(QtWidgets.QDialog):
 			except:
 				pass
 		else:
-			self.ui.x_spinBox.setReadOnly(True)
-			self.ui.y_spinBox.setReadOnly(True)
+			self.ui.x_spinBox.setEnabled(False) #setReadOnly(True)
+			self.ui.y_spinBox.setEnabled(False) #setReadOnly(True)
 			if resMode == "Shot default":
 				res = int(os.environ['RESOLUTIONX']), int(os.environ['RESOLUTIONY'])
 			elif resMode == "Render settings":
@@ -207,8 +207,8 @@ class previewUI(QtWidgets.QDialog):
 
 		# Set frame range appropriately
 		if rangeMode == "Custom":
-			self.ui.start_spinBox.setReadOnly(False)
-			self.ui.end_spinBox.setReadOnly(False)
+			self.ui.start_spinBox.setEnabled(True) #setReadOnly(False)
+			self.ui.end_spinBox.setEnabled(True) #setReadOnly(False)
 			# Read values from user settings
 			try:
 				frRange = userPrefs.config.get('gpspreview', 'customframerange').split('-')
@@ -217,8 +217,8 @@ class previewUI(QtWidgets.QDialog):
 			except:
 				pass
 		else:
-			self.ui.start_spinBox.setReadOnly(True)
-			self.ui.end_spinBox.setReadOnly(True)
+			self.ui.start_spinBox.setEnabled(False) #setReadOnly(True)
+			self.ui.end_spinBox.setEnabled(False) #setReadOnly(True)
 			self.ui.start_spinBox.setMaximum(9999)
 			self.ui.end_spinBox.setMinimum(0)
 			if rangeMode == "Shot default":
@@ -349,6 +349,7 @@ class previewUI(QtWidgets.QDialog):
 		""" Get options, pass information to appConnect and save options once
 			appConnect is done.
 		"""
+		self.updateRangeGrp()
 		if self.getOpts():
 			previewSetup = appConnect.connect(self.fileInput, self.res, self.frRange, self.offscreen, self.noSelect, self.guides, self.slate)
 			previewOutput = previewSetup.appPreview()
@@ -386,6 +387,7 @@ class previewUI(QtWidgets.QDialog):
 # Launch UI window
 if os.environ['ICARUSENVAWARE'] == 'MAYA':
 	gpsPreviewApp = previewUI()
+	gpsPreviewApp.setProperty("saveWindowPref", True)
 	# Qt window flags
 	# if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
 	# 	gpsPreviewApp.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
