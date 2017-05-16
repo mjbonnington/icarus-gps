@@ -170,9 +170,12 @@ def setEnv(envVars):
 		os.environ['PYTHONPATH'] = scriptsPath + os.pathsep + osOps.absolutePath('$MAYADIR/scripts')
 		#os.environ['MI_CUSTOM_SHADER_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shaders', 'include')
 		#os.environ['MI_LIBRARY_PATH'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shaders')
-		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-			os.environ['PYTHONPATH'] += os.pathsep + "C:\ProgramData\Redshift\Plugins\Maya\Common\scripts"
-			os.environ['redshift_LICENSE'] = "62843@10.105.11.11" # temporary fix for Redshift license - this should be set via a system environment variable
+		if os.environ['ICARUS_RUNNING_OS'] == 'Windows': # Set up Redshift plugin for Maya
+			os.environ['REDSHIFT_COREDATAPATH'] = getAppExecPath('Redshift')
+			os.environ['REDSHIFT_COMMON_ROOT'] = osOps.absolutePath('$REDSHIFT_COREDATAPATH/Plugins/Maya/Common')
+			os.environ['REDSHIFT_PLUG_IN_PATH'] = osOps.absolutePath('$REDSHIFT_COREDATAPATH/Plugins/Maya/%s/nt-x86-64' %jobData.getAppVersion('Maya'))
+			os.environ['redshift_LICENSE'] = "62843@10.105.11.11"
+			os.environ['PYTHONPATH'] += os.pathsep + osOps.absolutePath('$REDSHIFT_COMMON_ROOT/scripts')
 		os.environ['VRAY_FOR_MAYA_SHADERS'] = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shaders')
 		#os.environ['VRAY_FOR_MAYA2014_PLUGINS_x64'] += os.pathsep + os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'plugins')
 		if os.environ['ICARUS_RUNNING_OS'] == 'Linux': # append the '%B' bitmap placeholder token required for Linux

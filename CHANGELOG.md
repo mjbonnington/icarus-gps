@@ -6,6 +6,7 @@ v0.9.8 (--)
 -	[Icarus] Fixed underlying bugs where a sequence with frame number less than 1000 could not be published to dailies, or launched correctly in djv_view from GPS Preview.
 -	[Maya] Added support for Maya 2017.
 -	[Maya] Updated Deadline submitter script for Deadline 8.0.
+-	[Maya] Added support for centralised deployment of Redshift plugin rendererer, with multiple version support.
 
 v0.9.7 (2016-08-31)
 -	[Icarus] Improved path translation system for 3-way translation between Windows, Mac and Linux.

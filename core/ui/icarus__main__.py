@@ -38,7 +38,7 @@ ui_file = "icarus_ui.ui"
 stylesheet = "style.qss"  # Set to None to use the parent app's stylesheet
 
 
-class icarusApp(QtWidgets.QDialog): # Should be QMainWindow really?
+class icarusApp(QtWidgets.QMainWindow):
 	""" Main application class.
 	"""
 	def __init__(self, parent=None):
@@ -208,12 +208,8 @@ class icarusApp(QtWidgets.QDialog): # Should be QMainWindow really?
 		# self.ui.toolMenu_toolButton.addAction(self.actionUserSettings)
 
 
-		# Add status bar - possibly might work better if app was a QMainWindow?
-		statusBar = QtWidgets.QStatusBar(self)
-		self.ui.statusBar_horizontalLayout.addWidget(statusBar)
-		#statusBar.showMessage("Test message")
-		#self.ui.nuke_pushButton.setStatusTip("Test status tip") # status tips not working with this status bar for some reason?
-		verbose.registerStatusBar(statusBar) # register the status bar with the verbose module
+		# Add status bar & register it with the verbose module
+		verbose.registerStatusBar(self.ui.statusbar)
 
 
 		######################################
@@ -1948,8 +1944,8 @@ elif __name__ == '__main__':
 	mainApp.setApplicationName('Icarus')
 
 	# Apply UI style sheet
-	with open(stylesheet, "r") as fh:
-		mainApp.setStyleSheet(fh.read())
+	# with open(stylesheet, "r") as fh:
+	# 	mainApp.setStyleSheet(fh.read())
 
 	app = icarusApp()
 
