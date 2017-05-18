@@ -1,45 +1,51 @@
-//This module makes mel menus in maya communicate with custom python scripts
+// [GPS] menus2py.mel
+//
+// Nuno Pereira <nuno.pereira@gps-ldn.com>
+// Mike Bonnington <mike.bonnington@gps-ldn.com>
+// (c) 2013-2017 Gramercy Park Studios
+//
+// This module makes mel menus in maya communicate with custom python scripts.
 
 
 global proc menus2Py.launchIcarus()
 {
-python("import icarus__main__; reload(icarus__main__)");
+	python("import icarus__main__; reload(icarus__main__)");
 }
 
 
 global proc menus2Py.launchProdBoard()
 {
-python("import launchApps; launchApps.prodBoard()");
+	python("import launchApps; launchApps.prodBoard()");
 }
 
 
 global proc menus2Py.projectTools()
 {
-python("import os, subprocess; subprocess.call('open %s' % os.environ['PROJECTTOOLS'], shell=True)");
+	python("import os, subprocess; subprocess.call('open %s' % os.environ['PROJECTTOOLS'], shell=True)");
 }
 
 
 global proc menus2Py.browseScenes()
 {
-python("import openDirs; openDirs.openMayaScenes()");
+	python("import openDirs; openDirs.openMayaScenes()");
 }
 
 
 global proc menus2Py.browsePlayblasts()
 {
-python("import openDirs; openDirs.openMayaPlayblasts()");
+	python("import openDirs; openDirs.openMayaPlayblasts()");
 }
 
 
 global proc menus2Py.browseRenders()
 {
-python("import openDirs; openDirs.openMayaRenders()");
+	python("import openDirs; openDirs.openMayaRenders()");
 }
 
 
 global proc menus2Py.browseSourceimages()
 {
-python("import openDirs; openDirs.openMayaSourceimages()");
+	python("import openDirs; openDirs.openMayaSourceimages()");
 }
 
 
@@ -83,10 +89,12 @@ global proc menus2Py.updatePresetCameraMenu(string $menu)
 	         GPSAddVRayPhysicalCameraMenu;
 }
 
+
 global proc menus2Py.toggleCreateCameraRig()
 {
 	optionVar -iv GPSCreateCameraRig `menuItem -q -checkBox GPSCreateCameraRigMenu`;
 }
+
 
 global proc menus2Py.toggleGPSAddVRayPhysicalCamera()
 {
@@ -178,29 +186,32 @@ global proc menus2Py.launchVersionManager(string $nodeName)
 
 global proc menus2Py.forceOverrideComponentDisplay(string $nodeName)
 {
-global string $icSetNodeName;
-$icSetNodeName = $nodeName;
-python "import maya.mel as mel";
-//maya retrives the node name in the format [currentNodeName].[originalNodeName]. 
-//We only need the current nodeName so everything after the'.' needs to be removed
-python "icSetNodeName = mel.eval('$temp=$icSetNodeName'); icSetNodeName=icSetNodeName.split('.')[0]";
-python "import mayaOps; mayaOps.removeDrawOverride(objLs=[icSetNodeName], icSet=True, hierarchy=True, shapes=True, overrideLayers=False)";
+	global string $icSetNodeName;
+	$icSetNodeName = $nodeName;
+	python "import maya.mel as mel";
+	//maya retrives the node name in the format [currentNodeName].[originalNodeName]. 
+	//We only need the current nodeName so everything after the'.' needs to be removed
+	python "icSetNodeName = mel.eval('$temp=$icSetNodeName'); icSetNodeName=icSetNodeName.split('.')[0]";
+	python "import mayaOps; mayaOps.removeDrawOverride(objLs=[icSetNodeName], icSet=True, hierarchy=True, shapes=True, overrideLayers=False)";
 }
+
 
 global proc menus2Py.bulkRename()
 {
-python("import gpsRenameTools; gpsRenameTools.gpsRenameTools().UI()");
+	python("import gpsRenameTools; gpsRenameTools.gpsRenameTools().UI()");
 }
 
 
 global proc menus2Py.gpsPreview()
 {
-python("import gpsPreviewLauncher; gpsPreviewLauncher.launch(env='MAYA')");
+	//python("import gpsPreviewLauncher; gpsPreviewLauncher.launch(env='MAYA')");
+	python("import gpsPreview__main__; reload(gpsPreview__main__)");
 }
+
 
 global proc menus2Py.launchDjv()
 {
-python("import launchApps; launchApps.djv()");
+	python("import launchApps; launchApps.djv()");
 }
 
 
@@ -208,3 +219,4 @@ global proc menus2Py.launchHieroPlayer()
 {
 	python("import launchApps; launchApps.launch('HieroPlayer')");
 }
+

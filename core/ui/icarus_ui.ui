@@ -300,7 +300,7 @@ QToolButton:disabled {
            </sizepolicy>
           </property>
           <property name="statusTip">
-           <string>Set up the job and shot environment</string>
+           <string/>
           </property>
           <property name="title">
            <string>Shot Setup</string>
@@ -1032,9 +1032,6 @@ QToolButton:disabled {
                      <verstretch>0</verstretch>
                     </sizepolicy>
                    </property>
-                   <property name="toolTip">
-                    <string>Export the selected object as a model in Maya format.</string>
-                   </property>
                    <property name="text">
                     <string>model</string>
                    </property>
@@ -1100,9 +1097,6 @@ QToolButton:disabled {
                      <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
-                   </property>
-                   <property name="toolTip">
-                    <string>Export the selected camera. The camera's transforms will be baked out in world space. The published camera will be exported in Maya (.ma), FBX and Nuke formats.</string>
                    </property>
                    <property name="text">
                     <string>camera</string>
@@ -1488,7 +1482,7 @@ QToolButton:disabled {
                     <x>0</x>
                     <y>0</y>
                     <width>354</width>
-                    <height>319</height>
+                    <height>315</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -1916,8 +1910,8 @@ QToolButton:disabled {
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>136</width>
-                    <height>70</height>
+                    <width>354</width>
+                    <height>316</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_8">

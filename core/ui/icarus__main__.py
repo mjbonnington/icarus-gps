@@ -33,10 +33,27 @@ import userPrefs
 import verbose
 import sequence as seq
 
-# Set the UI and the stylesheet
-ui_file = "icarus_ui.ui"
-stylesheet = "style.qss"  # Set to None to use the parent app's stylesheet
 
+# ----------------------------------------------------------------------------
+# Configuration
+# ----------------------------------------------------------------------------
+
+# Set window title and object names
+WINDOW_TITLE = "Icarus"
+WINDOW_OBJECT = "icarusMainUI"
+
+# Set the UI and the stylesheet
+UI_FILE = "icarus_ui.ui"
+STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
+
+# Other options
+DOCK_WITH_MAYA_UI = False
+DOCK_WITH_NUKE_UI = False
+
+
+# ----------------------------------------------------------------------------
+# Main application class
+# ----------------------------------------------------------------------------
 
 class icarusApp(QtWidgets.QMainWindow):
 	""" Main application class.
@@ -44,18 +61,31 @@ class icarusApp(QtWidgets.QMainWindow):
 	def __init__(self, parent=None):
 		super(icarusApp, self).__init__(parent)
 
+		# Set object name and window title
+		self.setObjectName(WINDOW_OBJECT)
+		self.setWindowTitle(WINDOW_TITLE)
+
+		# Window type
+		self.setWindowFlags(QtCore.Qt.Window)
+
 		# Load UI
-		self.ui = QtCompat.load_ui(fname=ui_file)
-		# if stylesheet is not None:
-		# 	with open(stylesheet, "r") as fh:
-		# 		self.ui.setStyleSheet(fh.read())
-		# self.ui.setWindowIcon(QtGui.QIcon("rsc/icarus.png"))
-		self.ui.show()
+		self.ui = QtCompat.load_ui(fname=UI_FILE)
+		if STYLESHEET is not None:
+			with open(STYLESHEET, "r") as fh:
+				self.ui.setStyleSheet(fh.read())
+
+		# Set the main widget
+		self.setCentralWidget(self.ui)
+
+		# Restore window geometry and state
+		self.settings = QtCore.QSettings("Gramercy Park Studios", "Icarus")
+		self.restoreGeometry(self.settings.value("geometry", ""))
+		self.restoreState(self.settings.value("windowState", ""))
 
 		# Instantiate jobs class
 		self.j = jobs.jobs()
 
-		# Set up keyboard shortcuts - ***CURRENTLY BROKEN DUE TO QT5 PORTING***
+		# Set up keyboard shortcuts
 		self.shortcutShotInfo = QtWidgets.QShortcut(self)
 		self.shortcutShotInfo.setKey('Ctrl+I')
 		self.shortcutShotInfo.activated.connect(self.printShotInfo)
@@ -86,12 +116,12 @@ class icarusApp(QtWidgets.QMainWindow):
 		self.ui.render_pushButton.clicked.connect(self.launchRenderQueue) # was self.launchRenderSubmit
 
 		# Publishing UI
-	#	self.ui.renderPblAdd_pushButton.clicked.connect(self.renderTableAdd)
-	#	self.ui.renderPblRemove_pushButton.clicked.connect(self.renderTableRm)
+		# self.ui.renderPblAdd_pushButton.clicked.connect(self.renderTableAdd)
+		# self.ui.renderPblRemove_pushButton.clicked.connect(self.renderTableRm)
 		self.ui.renderPblSetMain_pushButton.clicked.connect(self.setLayerAsMain) # remove when render publishing works properly
 		self.ui.renderPblAdd_pushButton.clicked.connect(self.renderTableAdd)
 		self.ui.renderPblRemove_pushButton.clicked.connect(self.renderTableRemove)
-		#self.ui.renderPblRevert_pushButton.clicked.connect(self.renderTableClear)
+		# self.ui.renderPblRevert_pushButton.clicked.connect(self.renderTableClear)
 		self.ui.renderPbl_treeWidget.currentItemChanged.connect(self.updateRenderPublishUI)
 		self.ui.renderPbl_treeWidget.itemDoubleClicked.connect(self.renderPreview)
 		# self.ui.dailyPbl_treeWidget.itemDoubleClicked.connect(self.renderPreview) # remove when preview is working correctly
@@ -101,7 +131,7 @@ class icarusApp(QtWidgets.QMainWindow):
 
 		# Header toolbar
 		self.ui.about_toolButton.clicked.connect(self.about)
-		#self.ui.toolMenu_toolButton.clicked.connect(self.launchBatchRename)
+		# self.ui.toolMenu_toolButton.clicked.connect(self.launchBatchRename)
 
 		# Options
 		self.ui.minimise_checkBox.stateChanged.connect(self.setMinimiseOnAppLaunch)
@@ -126,10 +156,10 @@ class icarusApp(QtWidgets.QMainWindow):
 		self.actionNukeX.triggered.connect(self.launchNukeX)
 		self.ui.nuke_pushButton.addAction(self.actionNukeX)
 
-		# [removed NukeStudio Launcher until properly supported in Icarus]
-	#	self.actionNukeStudio = QtWidgets.QAction("NukeStudio", None)
-	#	self.actionNukeStudio.triggered.connect(self.launchNukeStudio)
-	#	self.ui.nuke_pushButton.addAction(self.actionNukeStudio)
+		# ***Removed NukeStudio Launcher until properly supported in Icarus***
+		# self.actionNukeStudio = QtWidgets.QAction("NukeStudio", None)
+		# self.actionNukeStudio.triggered.connect(self.launchNukeStudio)
+		# self.ui.nuke_pushButton.addAction(self.actionNukeStudio)
 
 		# Review
 		self.ui.openReview_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
@@ -208,7 +238,8 @@ class icarusApp(QtWidgets.QMainWindow):
 		# self.ui.toolMenu_toolButton.addAction(self.actionUserSettings)
 
 
-		# Add status bar & register it with the verbose module
+		# Register status bar with the verbose module in order to print
+		# messages to it...
 		verbose.registerStatusBar(self.ui.statusbar)
 
 
@@ -321,7 +352,7 @@ class icarusApp(QtWidgets.QMainWindow):
 			except:
 				pass
 
-	# end of function __init__
+	# End of function __init__
 
 
 	#########################
@@ -517,20 +548,20 @@ class icarusApp(QtWidgets.QMainWindow):
 		""" Opens a dialog from which to select a single file.
 			The env check puts the main window in the background so dialog pop
 			up can return properly when running inside certain applications.
-			The window flags bypass a mac bug that made the dialog always
+			The window flags bypass a Mac bug that made the dialog always
 			appear under the Icarus window. This is ignored in a Linux env.
 		"""
 		envOverride = ['MAYA', 'NUKE']
 		if os.environ['ICARUSENVAWARE'] in envOverride:
 			if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-				app.setWindowFlags(QtCore.Qt.WindowStaysOnBottomHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
-				app.show()
-			dialog = QtWidgets.QFileDialog.getOpenFileName(app, self.tr('Files'), dialogHome, 'All files (*.*)')
+				self.setWindowFlags(QtCore.Qt.WindowStaysOnBottomHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+				self.show()
+			dialog = QtWidgets.QFileDialog.getOpenFileName(self, self.tr('Files'), dialogHome, 'All files (*.*)')
 			if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-				app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
-				app.show()
+				self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+				self.show()
 		else:
-			dialog = QtWidgets.QFileDialog.getOpenFileName(app, self.tr('Files'), dialogHome, 'All files (*.*)')
+			dialog = QtWidgets.QFileDialog.getOpenFileName(self, self.tr('Files'), dialogHome, 'All files (*.*)')
 
 		return dialog[0]
 
@@ -539,18 +570,18 @@ class icarusApp(QtWidgets.QMainWindow):
 		""" Opens a dialog from which to select a folder.
 			The env check puts the main window in the background so dialog pop
 			up can return properly when running inside certain applications.
-			The window flags bypass a mac bug that made the dialog always
+			The window flags bypass a Mac bug that made the dialog always
 			appear under the Icarus window. This is ignored in a Linux env.
 		"""
 		envOverride = ['MAYA', 'NUKE']
 		if os.environ['ICARUSENVAWARE'] in envOverride:
 			if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-				app.setWindowFlags(QtCore.Qt.WindowStaysOnBottomHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
-				app.show()
+				self.setWindowFlags(QtCore.Qt.WindowStaysOnBottomHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+				self.show()
 			dialog = QtWidgets.QFileDialog.getExistingDirectory(self, self.tr('Directory'), dialogHome, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
 			if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-				app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
-				app.show()
+				self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+				self.show()
 		else:
 			dialog = QtWidgets.QFileDialog.getExistingDirectory(self, self.tr('Directory'), dialogHome, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
 
@@ -784,7 +815,8 @@ class icarusApp(QtWidgets.QMainWindow):
 
 	def setMinimiseOnAppLaunch(self, state):
 		""" Sets state of minimise on app launch variable.
-			Ultimately, this option should form part of a 'User Prefs' dialog, and be removed from the main UI.
+			Ultimately, this option should form part of a 'User Prefs' dialog,
+			and be removed from the main UI.
 		"""
 		if state == QtCore.Qt.Checked:
 			self.boolMinimiseOnAppLaunch = True
@@ -797,7 +829,8 @@ class icarusApp(QtWidgets.QMainWindow):
 
 
 	def printShotInfo(self):
-		""" Print job / shot information stored in enviroment variables - used for debugging.
+		""" Print job / shot information stored in enviroment variables - used
+			for debugging.
 		"""
 		try:
 			print("""
@@ -847,7 +880,7 @@ Developers: Nuno Pereira, Mike Bonnington
 """ %(os.environ['ICARUSVERSION'], python_ver_str, pyside_ver_str, qt_ver_str, os.environ['ICARUS_RUNNING_OS'], os.environ['ICARUSENVAWARE'])
 
 		import about
-		about = about.aboutDialog()
+		about = about.aboutDialog() #parent=self
 		about.msg(about_msg)
 		# verbose.print_(about_msg, 4)
 
@@ -1004,8 +1037,9 @@ Developers: Nuno Pereira, Mike Bonnington
 			self.showMinimized()
 
 
-	# Preview - opens djv_view to preview movie or image sequence
 	def preview(self, path=None):
+		""" Preview - opens djv_view to preview movie or image sequence
+		"""
 		import djvOps
 		verbose.launchApp('djv_view')
 		if path is None:
@@ -1339,7 +1373,8 @@ Developers: Nuno Pereira, Mike Bonnington
 
 
 	def setDailyType(self):
-		""" Sets the dailies type and locks/unlocks the add and remove button accordingly.
+		""" Sets the dailies type and locks/unlocks the add and remove button
+			accordingly.
 		"""
 		self.dailyType = self.ui.dailyPblType_comboBox.currentText()
 
@@ -1776,38 +1811,9 @@ Developers: Nuno Pereira, Mike Bonnington
 
 		import previewImg
 		imgPath = previewImg.getImg(self.gatherPath, forceExt='jpg')
-	#	self.previewPlayerCtrl(hide=True)
-		# pixmap = QtGui.QPixmap(None)
-		# self.ui.gatherImgPreview_label.setPixmap(pixmap)
 		pixmap = QtGui.QPixmap(imgPath)
 		self.ui.gatherImgPreview_label.setScaledContents(True)
 		self.ui.gatherImgPreview_label.setPixmap(pixmap)
-
-#		if self.previewPlayer:
-#			imgPath = previewImg.getImg(self.gatherPath, forceExt='mov')
-#			if imgPath:
-#				self.previewPlayerCtrl(hide=True)
-#				pixmap = QtGui.QPixmap(None)
-#				self.ui.gatherImgPreview_label.setPixmap(pixmap)
-#				self.previewPlayerCtrl(loadImg=imgPath)
-#				self.previewPlayerCtrl(show=True)
-#				self.previewPlayerCtrl(play=True)
-#
-#				# Add preview context menu
-#				self.ui.gatherImgPreview_label.addAction(self.actionPreview)
-#
-#		if not imgPath or not self.previewPlayer:
-#			imgPath = previewImg.getImg(self.gatherPath, forceExt='jpg')
-#			if imgPath:
-#				self.previewPlayerCtrl(hide=True)
-#				pixmap = QtGui.QPixmap(None)
-#				self.ui.gatherImgPreview_label.setPixmap(pixmap)
-#				pixmap = QtGui.QPixmap(imgPath)
-#				self.ui.gatherImgPreview_label.setScaledContents(True)
-#				self.ui.gatherImgPreview_label.setPixmap(pixmap)
-#
-#				# Remove preview context menu
-#				self.ui.gatherImgPreview_label.removeAction(self.actionPreview)
 
 
 	def updateInfoField(self):
@@ -1867,16 +1873,178 @@ Developers: Nuno Pereira, Mike Bonnington
 				nk_geoGather.gather(self.gatherPath)
 			elif self.assetType == 'render':
 				import nk_renderGather
-				app.hide()
+				self.hide()
 				nk_renderGather.gather(self.gatherPath)
-				app.show()
+				self.show()
 			else:
 				import nk_assetGather
 				nk_assetGather.gather(self.gatherPath)
 
 
-	# End main application class
-	# ==========================
+	def closeEvent(self, event):
+		""" Store window geometry and state when closing the app.
+		"""
+		self.settings.setValue("geometry", self.saveGeometry())
+		# self.settings.setValue("windowState", self.saveState())
+		QtWidgets.QMainWindow.closeEvent(self, event)
+
+
+# ----------------------------------------------------------------------------
+# End of main application class
+# ----------------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------------
+# DCC application helper functions
+# ----------------------------------------------------------------------------
+
+def _maya_delete_ui():
+	""" Delete existing UI in Maya.
+	"""
+	if mc.window(WINDOW_OBJECT, q=True, exists=True):
+		mc.deleteUI(WINDOW_OBJECT)  # Delete window
+	if mc.dockControl('MayaWindow|' + WINDOW_TITLE, q=True, exists=True):
+		mc.deleteUI('MayaWindow|' + WINDOW_TITLE)  # Delete docked window
+
+
+def _nuke_delete_ui():
+	""" Delete existing UI in Nuke.
+	"""
+	for obj in QtWidgets.QApplication.allWidgets():
+		if obj.objectName() == WINDOW_OBJECT:
+			obj.deleteLater()
+
+
+def _maya_main_window():
+	""" Return Maya's main window.
+	"""
+#	for obj in QtWidgets.qApp.topLevelWidgets():
+	for obj in QtWidgets.QApplication.topLevelWidgets():
+		if obj.objectName() == 'MayaWindow':
+			return obj
+	raise RuntimeError("Could not find MayaWindow instance")
+
+
+def _nuke_main_window():
+	""" Returns Nuke's main window.
+	"""
+#	for obj in QtWidgets.qApp.topLevelWidgets():
+	for obj in QtWidgets.QApplication.topLevelWidgets():
+		if (obj.inherits('QMainWindow') and obj.metaObject().className() == 'Foundry::UI::DockMainWindow'):
+			return obj
+	raise RuntimeError("Could not find DockMainWindow instance")
+
+
+def _nuke_set_zero_margins(widget_object):
+	""" Remove Nuke margins when docked UI.
+		More info:
+		https://gist.github.com/maty974/4739917
+	"""
+	parentApp = QtWidgets.QApplication.allWidgets()
+	parentWidgetList = []
+	for parent in parentApp:
+		for child in parent.children():
+			if widget_object.__class__.__name__ == child.__class__.__name__:
+				parentWidgetList.append(parent.parentWidget())
+				parentWidgetList.append(parent.parentWidget().parentWidget())
+				parentWidgetList.append(parent.parentWidget().parentWidget().parentWidget())
+
+				for sub in parentWidgetList:
+					for tinychild in sub.children():
+						try:
+							tinychild.setContentsMargins(0, 0, 0, 0)
+						except:
+							pass
+
+
+# ----------------------------------------------------------------------------
+# Run functions
+# ----------------------------------------------------------------------------
+
+def run_maya():
+	""" Run in Maya.
+	"""
+	_maya_delete_ui()  # Delete any already existing UI
+	icApp = icarusApp(parent=_maya_main_window())
+
+	# Makes Maya perform magic which makes the window stay on top in OS X and
+	# Linux. As an added bonus, it'll make Maya remember the window position.
+	icApp.setProperty("saveWindowPref", True)
+
+	if not DOCK_WITH_MAYA_UI:
+		icApp.show()  # Show the UI
+	elif DOCK_WITH_MAYA_UI:
+		allowed_areas = ['right', 'left']
+		mc.dockControl(WINDOW_TITLE, label=WINDOW_TITLE, area='left', content=WINDOW_OBJECT, allowedArea=allowed_areas)
+
+
+def run_nuke():
+	""" Run in Nuke.
+
+		Note:
+			If you want the UI to always stay on top, replace:
+			`icApp.ui.setWindowFlags(QtCore.Qt.Tool)`
+			with:
+			`icApp.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)`
+
+			If you want the UI to be modal:
+			`icApp.ui.setWindowModality(QtCore.Qt.WindowModal)`
+	"""
+	_nuke_delete_ui()  # Delete any already existing UI
+	if not DOCK_WITH_NUKE_UI:
+		icApp = icarusApp(parent=_nuke_main_window())
+		icApp.setWindowFlags(QtCore.Qt.Tool)
+		icApp.show()  # Show the UI
+	elif DOCK_WITH_NUKE_UI:
+		prefix = ''
+		basename = os.path.basename(__file__)
+		module_name = basename[: basename.rfind('.')]
+		if __name__ == module_name:
+			prefix = module_name + '.'
+		panel = nukescripts.panels.registerWidgetAsPanel(
+			widget=prefix + 'Icarus',  # module_name.Class_name
+			name=WINDOW_TITLE,
+			id='uk.co.thefoundry.' + WINDOW_TITLE,
+			create=True)
+		pane = nuke.getPaneFor('Properties.1')
+		panel.addToPane(pane)
+		icApp = panel.customKnob.getObject().widget
+		_nuke_set_zero_margins(icApp)
+
+
+# def run_clarisse():
+# 	""" Run in Clarisse.
+# 		Waiting until Clarisse purchase,
+# 	"""
+# 	import clarisse_icarusEventLoop
+# 	try:
+# 		mainApp = QtGui.QApplication(WINDOW_TITLE)
+# 	except RuntimeError:
+# 		mainApp = QtCore.QCoreApplication.instance()
+# 	app = icarusApp()
+# 	app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint)
+# 	app.show()
+# 	icarus_clarisseWrap.exec_(mainApp)
+
+
+def run_standalone():
+	""" Run standalone.
+	"""
+	app = QtWidgets.QApplication(sys.argv)
+
+	# Apply UI style sheet
+	if STYLESHEET is not None:
+		with open(STYLESHEET, "r") as fh:
+			app.setStyleSheet(fh.read())
+	app.setWindowIcon(QtGui.QIcon("rsc/icarus.png"))
+
+	icApp = icarusApp()
+
+ 	# Window flags
+ 	icApp.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint)
+
+	icApp.show()  # Show the UI
+	sys.exit(app.exec_())
 
 
 #########################################
@@ -1903,60 +2071,13 @@ except AssertionError:
 	sys.exit("ERROR: Icarus requires Python version 2.7 or above.")
 
 # Detect environment and run application
-if os.environ['ICARUSENVAWARE'] == 'MAYA' or os.environ['ICARUSENVAWARE'] == 'NUKE':
-	app = icarusApp()
-
-	# # Apply UI style sheet
-	# qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
-	# with open(qss, "r") as fh:
-	# 	app.setStyleSheet(fh.read())
-
-	# Set Qt window flags based on running OS
-	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-		app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint)
-	else:
-		app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WindowCloseButtonHint)
-		#app.setWindowFlags(QtCore.Qt.WindowCloseButtonHint)
-
-	# Centre window
-	# app.move(QtWidgets.QDesktopWidget().availableGeometry(1).center() - app.frameGeometry().center())
-	# app.show()
-
-#CLARISSE ENV - Waiting until clarisse purchase
-#elif os.environ['ICARUSENVAWARE'] == 'CLARISSE':
-#	import clarisse_icarusEventLoop
-#	try:
-#		mainApp = QtGui.QApplication('Icarus')
-#	except RuntimeError:
-#		mainApp = QtCore.QCoreApplication.instance()
-#	app = icarusApp()
-#	app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint)
-#	app.show()
-#	icarus_clarisseWrap.exec_(mainApp)
-
-
-#################################
-# RUN ICARUS IN STANDALONE MODE #
-#################################
-
+if os.environ['ICARUSENVAWARE'] == 'MAYA':
+	import maya.cmds as mc
+	run_maya()
+elif os.environ['ICARUSENVAWARE'] == 'NUKE':
+	import nuke
+	import nukescripts
+	run_nuke()
 elif __name__ == '__main__':
-	mainApp = QtWidgets.QApplication(sys.argv)
-	mainApp.setApplicationName('Icarus')
-
-	# Apply UI style sheet
-	if stylesheet is not None:
-		with open(stylesheet, "r") as fh:
-			mainApp.setStyleSheet(fh.read())
-	mainApp.setWindowIcon(QtGui.QIcon("rsc/icarus.png"))
-
-	app = icarusApp()
-
-	# Window flags
-	app.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint)
-
-	# Centre window
-	# app.move(QtWidgets.QDesktopWidget().availableGeometry(1).center() - app.frameGeometry().center())
-
-	# app.show()
-	sys.exit(mainApp.exec_())
+	run_standalone()
 
