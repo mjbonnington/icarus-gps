@@ -1,5 +1,5 @@
-v0.9.8 (--)
--	[Icarus] Ported all UI code to use Qt.py (https://fredrikaverpil.github.io/2016/07/25/developing-with-qt-py/) enabling support for all Qt Python bindings (e.g PySide2, PyQt5).
+v0.9.8 (2017-05-19)
+-	[Icarus] Ported UI code to use Qt.py (https://fredrikaverpil.github.io/2016/07/25/developing-with-qt-py/) enabling support for all Qt Python bindings (e.g PySide2, PyQt5).
 -	[Icarus] Added application icon to main window.
 -	[Icarus] Window geometry is now remembered and child windows behave correctly.
 -	[Icarus] Fixed a small bug in job management UI where create job file dialog would not open.
