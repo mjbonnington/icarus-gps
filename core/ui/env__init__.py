@@ -18,7 +18,7 @@ def setEnv():
 	""" Set some environment variables for basic operation.
 	"""
 	# Set version string
-	os.environ['ICARUSVERSION'] = 'v0.9.8-20170519'
+	os.environ['ICARUSVERSION'] = 'v0.9.9-20170521'
 
 	# Standardise some environment variables across systems
 	if platform.system() == 'Windows':

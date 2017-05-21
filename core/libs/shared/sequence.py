@@ -3,17 +3,21 @@
 # [Icarus] sequence.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2016 Gramercy Park Studios
+# (c) 2015-2017 Gramercy Park Studios
 #
 # These functions convert formatted sequences to lists and vice-versa.
 
 
-import glob, os, re
+import glob
+import os
+import re
+
 import verbose
 
 
 def numList(num_range_str, quiet=False):
-	""" Takes a formatted string describing a range of numbers and returns a sorted integer list.
+	""" Takes a formatted string describing a range of numbers and returns a
+		sorted integer list.
 		e.g. '1-5, 20, 24, 1001-1002'
 		returns [1, 2, 3, 4, 5, 20, 24, 1001, 1002]
 	"""
@@ -36,7 +40,7 @@ def numList(num_range_str, quiet=False):
 			last = int(seq[1])
 			if first > last:
 				if not quiet:
-					print "ERROR: The last number (%d) in the sequence cannot be smaller than the first (%d)." %(last, first)
+					verbose.error("The last number (%d) in the sequence cannot be smaller than the first (%d)." %(last, first))
 				return False
 			else:
 				int_list = list(range(first, last+1))
@@ -45,7 +49,7 @@ def numList(num_range_str, quiet=False):
 
 		else:
 			if not quiet:
-				print "ERROR: Sequence format is invalid."
+				verbose.error("Sequence format is invalid.")
 			return False
 
 	# Remove duplicates & sort list
@@ -53,7 +57,8 @@ def numList(num_range_str, quiet=False):
 
 
 def numRange(num_int_list, padding=0, quiet=False):
-	""" Takes a list of integer values and returns a formatted string describing the range of numbers.
+	""" Takes a list of integer values and returns a formatted string
+		describing the range of numbers.
 		e.g. [1, 2, 3, 4, 5, 20, 24, 1001, 1002]
 		returns '1-5, 20, 24, 1001-1002'
 	"""
@@ -64,7 +69,7 @@ def numRange(num_int_list, padding=0, quiet=False):
 		sorted_list = sorted(list(set(num_int_list)), key=int)
 	except (ValueError, TypeError):
 		if not quiet:
-			print "ERROR: Number list only works with integer values."
+			verbose.error("Number list only works with integer values.")
 		return False
 		
 
@@ -121,14 +126,15 @@ def chunks(l, n):
 
 def getBases(path):
 	""" Find file sequence bases in path.
-		Returns a list of bases (the first part of the filename, stripped of frame number padding and extension).
+		Returns a list of bases (the first part of the filename, stripped of
+		frame number padding and extension).
 	"""
 	# Get directory contents
 	try:
 		ls = os.listdir(path)
 		ls.sort()
 	except OSError:
-		print "No such file or directory: '%s'" %path
+		verbose.error("No such file or directory: '%s'" %path)
 		return False
 
 	# Create list to hold all basenames of sequences
@@ -159,7 +165,7 @@ def getBases(path):
 
 
 def getFirst(path):
-	""" TEMPORARY BODGE
+	""" TEMPORARY BODGE - get the first item in a sequence.
 	"""
 	#filter_ls = glob.glob("%s*" %os.path.join(path, base))
 	path = path.replace('#', '*')
@@ -171,7 +177,8 @@ def getFirst(path):
 
 def getSequence(path, pattern):
 	""" Looks for other frames in a sequence that fit a particular pattern.
-		Pass the first (lowest-numbered) frame in the sequence to the detectSeq function and return its results.
+		Pass the first (lowest-numbered) frame in the sequence to the
+		detectSeq function and return its results.
 	"""
 	#filter_ls = glob.glob("%s*" %os.path.join(path, base))
 	pattern = pattern.replace('#', '*')
@@ -187,11 +194,14 @@ def detectSeq(filepath, contiguous=False, ignorePadding=False):
 		Returns a tuple containing 5 elements:
 		1. path - the directory path containing the file
 		2. prefix - the first part of the filename
-		3. frame - the sequence of frame numbers computed from the numeric part of the filename, represented as a string
+		3. frame - the sequence of frame numbers computed from the numeric
+		   part of the filename, represented as a string
 		4. ext - the filename extension
 		5. num_frames - the number of frames in the sequence
-		If 'contiguous' flag is True, only return a contiguous sequence (no gaps).
-		If 'ignorePadding' flag is True, return sequence even if the number of padding digits differ.
+		If 'contiguous' flag is True, only return a contiguous sequence
+		(no gaps).
+		If 'ignorePadding' flag is True, return sequence even if the number
+		of padding digits differ.
 	"""
 	lsFrames = [] # Clear frame list
 
@@ -205,7 +215,7 @@ def detectSeq(filepath, contiguous=False, ignorePadding=False):
 		framenumber = int(framenumber)
 	except ValueError:
 		verbose.error("Could not parse sequence.")
-		return# (path, base, '0', ext, 1)
+		return # (path, base, '0', ext, 1)
 
 	# Construct regular expression for matching files in the sequence
 	if ignorePadding:

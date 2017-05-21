@@ -3,14 +3,21 @@
 # [Icarus] userPrefs.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2015 Gramercy Park Studios
+# (c) 2013-2017 Gramercy Park Studios
 #
-# Manages user preferences stored in .ini files via Python's ConfigParser module.
+# Manages user preferences stored in .ini files via Python's ConfigParser
+# module.
 
 
-from ConfigParser import SafeConfigParser
+try:
+	from ConfigParser import SafeConfigParser
+except ModuleNotFoundError:  # Python 3 compatibility
+	from configparser import SafeConfigParser
+
 import os
-import osOps, verbose
+
+import osOps
+import verbose
 
 
 config = SafeConfigParser()
@@ -36,11 +43,11 @@ def write():
 
 	except IOError:
 		verbose.warning('Unable to write user prefs configuration file.')
-		#print 'Warning: unable to write user prefs configuration file.'
 
 
 def create():
-	""" Create config file if it doesn't exist and populate with with defaults.
+	""" Create config file if it doesn't exist and populate with with
+		defaults.
 	"""
 	userPrefsDir = os.environ['ICUSERPREFS']
 

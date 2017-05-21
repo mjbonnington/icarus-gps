@@ -77,10 +77,10 @@ class icarusApp(QtWidgets.QMainWindow):
 		# Set the main widget
 		self.setCentralWidget(self.ui)
 
-		# Restore window geometry and state
+		# Restore window geometry and state (restoreState incompatible with PyQt5)
 		self.settings = QtCore.QSettings("Gramercy Park Studios", "Icarus")
 		self.restoreGeometry(self.settings.value("geometry", ""))
-		self.restoreState(self.settings.value("windowState", ""))
+		# self.restoreState(self.settings.value("windowState", ""))
 
 		# Instantiate jobs class
 		self.j = jobs.jobs()
@@ -880,7 +880,8 @@ Developers: Nuno Pereira, Mike Bonnington
 """ %(os.environ['ICARUSVERSION'], python_ver_str, pyside_ver_str, qt_ver_str, os.environ['ICARUS_RUNNING_OS'], os.environ['ICARUSENVAWARE'])
 
 		import about
-		about = about.aboutDialog() #parent=self
+		# reload(about)
+		about = about.aboutDialog(parent=self) #
 		about.msg(about_msg)
 		# verbose.print_(about_msg, 4)
 
@@ -1883,6 +1884,7 @@ Developers: Nuno Pereira, Mike Bonnington
 
 	def closeEvent(self, event):
 		""" Store window geometry and state when closing the app.
+			(incompatible with PyQt5)
 		"""
 		self.settings.setValue("geometry", self.saveGeometry())
 		# self.settings.setValue("windowState", self.saveState())
@@ -2040,8 +2042,8 @@ def run_standalone():
 
 	icApp = icarusApp()
 
- 	# Window flags
- 	icApp.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint)
+	# Window flags
+	icApp.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint)
 
 	icApp.show()  # Show the UI
 	sys.exit(app.exec_())
