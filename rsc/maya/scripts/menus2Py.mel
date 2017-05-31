@@ -9,7 +9,7 @@
 
 global proc menus2Py.launchIcarus()
 {
-	python("import icarus__main__; reload(icarus__main__)");
+	python("import icarus__main__; icarus__main__.run_maya()");
 }
 
 

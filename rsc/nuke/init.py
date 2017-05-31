@@ -28,18 +28,19 @@ nuke.pluginAddPath('./plugins')
 # Third-party locations
 nuke.pluginAddPath('./gizmos/pxf')
 
-# Nuke seems to ditch the main root environent where it has been called from
+# Nuke seems to ditch the main root environment where it has been called from
 # so the path needs to be appended again.
 sys.path.append(os.path.join(os.environ['IC_BASEDIR'], 'core', 'ui'))
 import env__init__
 env__init__.appendSysPaths()
 # Nuke opens a entire new Nuke process with 'File>New Script' and doesn't
-# simply create and empty script in the current env.
+# simply create an empty script in the current env.
 # The Icarus env has to be set temporarily as NUKE_TMP to avoid Icarus
 # detecting an existing Nuke env and opening its UI automatically.
-os.environ['IC_ENV'] = 'NUKE_TMP'
-import icarus__main__, gpsNodes
-os.environ['IC_ENV'] = 'NUKE'
+# os.environ['IC_ENV'] = 'NUKE_TMP'
+# import icarus__main__
+import gpsNodes
+# os.environ['IC_ENV'] = 'NUKE'
 
 # Third-party initializations go here
 
