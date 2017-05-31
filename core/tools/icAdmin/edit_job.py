@@ -3,31 +3,62 @@
 # [Icarus] edit_job.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2016 Gramercy Park Studios
+# (c) 2016-2017 Gramercy Park Studios
 #
 # A dialog for editing job settings.
 
 
-from PySide import QtCore, QtGui
-from edit_job_ui import *
-import os, sys
+import os
+import sys
+
+from Qt import QtCore, QtGui, QtWidgets, QtCompat
 
 # Import custom modules
 import osOps
 
-class dialog(QtGui.QDialog):
 
-	def __init__(self, parent = None):
-		QtGui.QDialog.__init__(self, parent)
-		self.ui = Ui_Dialog()
-		self.ui.setupUi(self)
+# ----------------------------------------------------------------------------
+# Configuration
+# ----------------------------------------------------------------------------
+
+# Set window title and object names
+WINDOW_TITLE = "Edit Job"
+WINDOW_OBJECT = "editJobUI"
+
+# Set the UI and the stylesheet
+UI_FILE = "edit_job_ui.ui"
+STYLESHEET = None  # Set to None to use the parent app's stylesheet
+
+
+# ----------------------------------------------------------------------------
+# Main dialog class
+# ----------------------------------------------------------------------------
+
+class dialog(QtWidgets.QDialog):
+	""" Main dialog class.
+	"""
+	def __init__(self, parent=None):
+		super(dialog, self).__init__(parent)
+
+		# Set object name and window title
+		self.setObjectName(WINDOW_OBJECT)
+		self.setWindowTitle(WINDOW_TITLE)
+
+		# Set window flags
+		self.setWindowFlags(QtCore.Qt.Dialog)
+
+		# Load UI
+		self.ui = QtCompat.load_ui(fname=os.path.join(os.path.dirname(os.path.realpath(__file__)), UI_FILE))
+		if STYLESHEET is not None:
+			with open(STYLESHEET, "r") as fh:
+				self.ui.setStyleSheet(fh.read())
 
 		# Connect signals & slots
 		self.ui.jobName_lineEdit.textChanged.connect(self.updateUI)
 		self.ui.jobPath_lineEdit.textChanged.connect(self.updateUI)
 		self.ui.jobPathBrowse_toolButton.clicked.connect(self.browse)
-		self.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.ok)
-		self.ui.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.cancel)
+		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).clicked.connect(self.ok)
+		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.cancel)
 
 		# Set input validators
 		alphanumeric_validator = QtGui.QRegExpValidator( QtCore.QRegExp(r'[\w\.-]+'), self.ui.jobName_lineEdit)
@@ -35,26 +66,28 @@ class dialog(QtGui.QDialog):
 
 
 	def dialogWindow(self, jobName, jobPath, jobActive):
+		""" Show the dialog.
+		"""
 		self.dialogReturn = False
-		# self.jobName = jobName
-		# self.jobPath = jobPath
-		# self.jobActive = jobActive
 
-		self.setWindowTitle("Edit Job: %s" %jobName)
+		if jobName:
+			self.ui.setWindowTitle("%s: %s" %(WINDOW_TITLE, jobName))
+		else:
+			self.ui.setWindowTitle("Add New Job")
 		self.ui.jobName_lineEdit.setText(jobName)
 		self.ui.jobPath_lineEdit.setText(jobPath)
 		self.ui.jobEnabled_checkBox.setChecked(jobActive)
 
-		self.exec_()
+		self.ui.exec_()
 
 
 	def updateUI(self):
 		""" Disables the OK button if either of the text fields are empty.
 		"""
 		if self.ui.jobName_lineEdit.text() == "" or self.ui.jobPath_lineEdit.text() == "":
-			self.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).setEnabled(False)
+			self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(False)
 		else:
-			self.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).setEnabled(True)
+			self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(True)
 
 
 	def browse(self):
@@ -70,7 +103,7 @@ class dialog(QtGui.QDialog):
 		if dialogHome.endswith(':'):
 			dialogHome += '/'
 
-		dialog = QtGui.QFileDialog.getExistingDirectory(self, self.tr('Directory'), dialogHome, QtGui.QFileDialog.DontResolveSymlinks | QtGui.QFileDialog.ShowDirsOnly)
+		dialog = QtWidgets.QFileDialog.getExistingDirectory(self, self.tr('Directory'), dialogHome, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
 
 		if dialog:
 			jobPath = osOps.relativePath(dialog, 'JOBSROOT')

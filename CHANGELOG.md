@@ -1,3 +1,6 @@
+v0.9.9 (--)
+-	[Icarus] Updated code for compatibility with Python 3 and Qt 5.
+
 v0.9.8 (2017-05-19)
 -	[Icarus] Ported UI code to use Qt.py (https://fredrikaverpil.github.io/2016/07/25/developing-with-qt-py/) enabling support for all Qt Python bindings (e.g PySide2, PyQt5).
 -	[Icarus] Added application icon to main window.
