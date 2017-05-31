@@ -4,19 +4,20 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2017 Gramercy Park Studios
 #
 # Creates user specific directories for shot work.
 
 
 import os
+
 import osOps
 
 
 def create():
 	""" Creates user specific directories for shot work.
 	"""
-	username = os.environ['USERNAME']
+	username = os.environ['IC_USERNAME']
 
 	# ____
 	# Maya
@@ -33,7 +34,7 @@ def create():
 	# Copy workspace.mel definition file into Maya project dir
 	workspace_def = os.path.join(os.environ['MAYADIR'], 'workspace.mel')
 	if not os.path.isfile(workspace_def):
-		src = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'templates', 'workspace.mel')
+		src = os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'maya', 'templates', 'workspace.mel')
 		osOps.copy(src, workspace_def)
 
 	# ______

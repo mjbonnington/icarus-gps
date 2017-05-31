@@ -12,6 +12,7 @@
 import maya.cmds as mc
 import os
 import time
+
 import verbose
 
 
@@ -40,7 +41,8 @@ class preview():
 
 
 	def retrieveAttributes(self, obj, storedAttrDic):
-		""" Retrieve the stored attribute values in order to re-apply the settings.
+		""" Retrieve the stored attribute values in order to re-apply the
+			settings.
 		"""
 		for key, value in storedAttrDic.iteritems():
 			mc.setAttr( '%s.%s' %(obj, key), value )
@@ -128,7 +130,7 @@ class preview():
 
 	# Artist
 	def hudArtist(self):
-		return os.environ['USERNAME']
+		return os.environ['IC_USERNAME']
 
 	# Current frame
 	def hudFrame(self):

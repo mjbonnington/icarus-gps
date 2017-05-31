@@ -4,22 +4,27 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2015 Gramercy Park Studios
+# (c) 2013-2017 Gramercy Park Studios
 #
 # Commands to execute at Maya startup.
 
 
-import os, sys
-sys.path.append(os.path.join(os.environ['PIPELINE'], 'core', 'ui'))
+import os
+import sys
+
+sys.path.append(os.path.join(os.environ['IC_BASEDIR'], 'core', 'ui'))
 import env__init__
 env__init__.appendSysPaths()
+
 import maya.cmds as mc
-os.environ['ICARUSENVAWARE'] = 'MAYA'
-import mayaOps, osOps, verbose
+os.environ['IC_ENV'] = 'MAYA'
+import mayaOps
+import osOps
+import verbose
 
 
 # Deploy custom tool shelves
-shelfResources = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'shelves')
+shelfResources = os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'maya', 'shelves')
 mayaShelvesDir = os.path.join(mc.about(preferences=True), 'prefs', 'shelves')
 
 try:
@@ -39,3 +44,4 @@ ma_pluginLs = ['AbcExport',
 
 for ma_plugin in ma_pluginLs:
 	mc.loadPlugin(ma_plugin, qt=True)
+

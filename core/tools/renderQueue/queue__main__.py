@@ -1,11 +1,11 @@
 #!/usr/bin/python
 
-# [Icarus] Batch Render Queue Manager queue__main__.py
-# v0.6
+# [Icarus] queue__main__.py
 #
 # Mike Bonnington <mike.Bonnington@gps-ldn.com>
-# (c) 2016 Gramercy Park Studios
+# (c) 2016-2017 Gramercy Park Studios
 #
+# Batch Render Queue Manager
 # A UI for managing the render queue, as well as executing render jobs.
 
 
@@ -43,7 +43,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 
 		# Instantiate render queue class and load data
 		self.rq = renderQueue.renderQueue()
-		self.rq.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'renderQueue.xml'))
+		self.rq.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'renderQueue.xml'))
 
 
 		# Create a QProcess object to handle the rendering process asynchronously
@@ -562,7 +562,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 	# 				genericOpts = jobName, jobType, priority, frames, taskSize
 	# 				mayaOpts = mayaScene, mayaProject, mayaFlags, mayaRenderCmd
 
-	# 				self.rq.newJob(genericOpts, mayaOpts, taskList, os.environ['USERNAME'], time.strftime(self.timeFormatStr))
+	# 				self.rq.newJob(genericOpts, mayaOpts, taskList, os.environ['IC_USERNAME'], time.strftime(self.timeFormatStr))
 
 	# 	except ValueError:
 	# 		pass
@@ -883,7 +883,7 @@ if __name__ == "__main__":
 	app = QtGui.QApplication(sys.argv)
 
 	# Initialise Icarus environment
-	sys.path.append(os.environ['ICWORKINGDIR'])
+	sys.path.append(os.environ['IC_WORKINGDIR'])
 	import env__init__
 	env__init__.setEnv()
 	#env__init__.appendSysPaths()
@@ -893,7 +893,7 @@ if __name__ == "__main__":
 	#app.setStyle('fusion') # Set UI style - you can also use a flag e.g. '-style plastique'
 
 	# Apply UI style sheet
-	qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
+	qss=os.path.join(os.environ['IC_WORKINGDIR'], "style.qss")
 	with open(qss, "r") as fh:
 		app.setStyleSheet(fh.read())
 

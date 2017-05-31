@@ -4,18 +4,19 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2017 Gramercy Park Studios
 #
-# Contains functions to open certain directories in the system's file explorer application.
+# Contains functions to open certain directories in the system's file explorer
+# application.
 
 
 import os
 
 
 # Set correct command for operating system's file explorer
-if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+if os.environ['IC_RUNNING_OS'] == 'Windows':
 	sysCommand = 'explorer'
-elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+elif os.environ['IC_RUNNING_OS'] == 'Darwin':
 	sysCommand = 'open'
 else:
 	sysCommand = 'nautilus'
@@ -26,10 +27,10 @@ def open_(path_):
 	"""
 	path_ = os.path.normpath(path_)
 	if os.path.isdir(path_):
-		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+		if os.environ['IC_RUNNING_OS'] == 'Windows':
 			os.startfile(path_)
 		else:
-			os.system( '%s %s' % (sysCommand, path_) )
+			os.system( '%s %s' %(sysCommand, path_) )
 	return
 
 

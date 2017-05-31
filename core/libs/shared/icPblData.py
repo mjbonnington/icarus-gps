@@ -4,13 +4,17 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2017 Gramercy Park Studios
 #
 # Saves metadata for a published asset.
 
 
-import os, time
-import jobSettings, osOps, verbose
+import os
+import time
+
+import jobSettings
+import osOps
+import verbose
 
 
 def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, notes, assetSrc=None, requires=None, compatible=None):
@@ -21,7 +25,7 @@ def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, not
 	timeFormatStr = "%a, %d %b %Y %H:%M:%S"
 	#timeFormatStr = "%a, %d %b %Y %H:%M:%S +0000" # Format to RFC 2833 standard
 	pblTime = time.strftime(timeFormatStr) # Can be parsed with time.strptime(pblTime, timeFormatStr)
-	userName = os.environ['USERNAME']
+	username = os.environ['IC_USERNAME']
 
 	# Instantiate XML data classes
 	assetData = jobSettings.jobSettings()
@@ -49,7 +53,7 @@ def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, not
 	assetData.setValue('asset', 'requires', requires)
 	assetData.setValue('asset', 'compatible', compatible)
 	assetData.setValue('asset', 'notes', notes)
-	assetData.setValue('asset', 'user', userName)
+	assetData.setValue('asset', 'user', username)
 	assetData.setValue('asset', 'timestamp', pblTime)
 
 	# Save to file
@@ -57,7 +61,7 @@ def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, not
 
 
 	# Legacy code to write out icData.py - remove when XML data is fully working
-	# notes += '\n\n%s %s' % (userName, pblTime)
+	# notes += '\n\n%s %s' % (username, pblTime)
 	# icDataFile = open('%s/icData.py' % pblDir, 'w')
 	# icDataFile.write("assetRootDir = '%s'\nassetPblName = '%s'\nasset = '%s'\nassetType = '%s'\nassetExt = '%s'\nversion = '%s'\nrequires = '%s'\ncompatible = '%s'\nnotes = '''%s''' " % (assetRootDir, assetPblName, assetName, assetType, assetExt, version, requires, compatible, notes))
 	# icDataFile.close()

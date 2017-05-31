@@ -21,13 +21,14 @@ import xmlData
 
 class jobs(xmlData.xmlData):
 	""" Manipulates XML database for storing jobs.
-		Add and remove jobs, make jobs active or inactive, modify job properties.
+		Add and remove jobs, make jobs active or inactive, modify job
+		properties.
 		Inherits xmlData class.
 	"""
 	def __init__(self):
 		""" Automatically load datafile on initialisation.
 		"""
-		self.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'jobs.xml'))
+		self.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'jobs.xml'))
 		self.getRootPaths()
 
 
@@ -74,9 +75,9 @@ class jobs(xmlData.xmlData):
 		os.environ['FILESYSTEMROOTOSX'] = str(self.osx_root)
 		os.environ['FILESYSTEMROOTLINUX'] = str(self.linux_root)
 
-		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+		if os.environ['IC_RUNNING_OS'] == 'Windows':
 			os.environ['FILESYSTEMROOT'] = str(self.win_root)
-		elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+		elif os.environ['IC_RUNNING_OS'] == 'Darwin':
 			os.environ['FILESYSTEMROOT'] = str(self.osx_root)
 		else:
 			os.environ['FILESYSTEMROOT'] = str(self.linux_root)
@@ -118,7 +119,8 @@ class jobs(xmlData.xmlData):
 
 
 	def getActiveJobs(self):
-		""" Return all active jobs as a list. Only jobs that exist on disk will be added.
+		""" Return all active jobs as a list. Only jobs that exist on disk
+			will be added.
 		"""
 		jobLs = []
 		for jobElement in self.root.findall("./job[@active='True']"):
@@ -215,7 +217,8 @@ class jobs(xmlData.xmlData):
 
 	def getPath(self, jobName, translate=False):
 		""" Get path of the specified job.
-			If 'translate' is True, attempt to translate the path for the current OS.
+			If 'translate' is True, attempt to translate the path for the
+			current OS.
 		"""
 		#element = self.root.find("./job[@id='%s']" %jobID)
 		element = self.root.find("./job[name='%s']" %jobName)
@@ -238,7 +241,8 @@ class jobs(xmlData.xmlData):
 
 
 	def listShots(self, jobName):
-		""" Return a list of all available shots belonging to the specified job.
+		""" Return a list of all available shots belonging to the specified
+			job.
 		"""
 		jobPath = self.getPath(jobName, translate=True)
 		shotsPath = osOps.absolutePath("%s/$SHOTSROOTRELATIVEDIR" %jobPath)
@@ -249,15 +253,16 @@ class jobs(xmlData.xmlData):
 			shotLs = []
 
 			for item in dirContents:
-				# Check for shot naming convention to disregard everything else in directory
+				# Check for shot naming convention to disregard everything
+				# else in directory
 				if item.startswith('SH') or item.startswith('PC'):
-					# Check that the directory is a valid shot by checking for the existence of the '.icarus' subdirectory
+					# Check that the directory is a valid shot by checking for
+					# the existence of the '.icarus' subdirectory
 					if os.path.isdir(osOps.absolutePath("%s/%s/$DATAFILESRELATIVEDIR" %(shotsPath, item))):
 						shotLs.append(item)
 
 			if len(shotLs):
 				shotLs.sort()
-				# shotLs.reverse()
 				return shotLs
 
 			else:

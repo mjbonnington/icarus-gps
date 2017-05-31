@@ -49,7 +49,7 @@ global proc gpsRenderSetupVRay.loadSettings()
 	vray vfbControl -stamp true;
 	//string $job=`getenv JOB`;
 	//string $shot=`getenv SHOT`;
-	//string $user=`getenv USER`;
+	//string $user=`getenv IC_USERNAME`;
 	//string $stamp="Frame: %frame Render time: %rendertime Camera: %camera Job: " + $job + " - " + $shot;
 	//string $stamp="(V-Ray for Maya %vrayversion)     size: %wx%h     frame: %frame     render time: %rendertime     camera: %camera     layer: %renderlayer     job: " + $job + "     shot: " + $shot + "     user: " + $user;
 	string $stamp="size: %wx%h     frame: %frame     render time: %rendertime     camera: %camera     layer: %renderlayer";
@@ -122,7 +122,7 @@ global proc gpsRenderSetupVRay.loadSettings()
 // Set up render file name prefix format.
 global proc gpsRenderSetupVRay.setOutputPath()
 {
-	string $user = `getenv "USER"`;
+	string $user = `getenv "IC_USERNAME"`;
 	string $shot = `getenv "SHOT"`;
 	// Maya render globals Common tab...
 //	setAttr -type "string" "defaultRenderGlobals.ifp" ($user + "/<Scene>/<RenderLayer>/" + $shot + "_<RenderLayer>");

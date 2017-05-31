@@ -1,11 +1,11 @@
 #!/usr/bin/python
 
-# [Icarus] Batch Render Submitter submit__main__.py
-# v0.6
+# [Icarus] submit__main__.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2016 Gramercy Park Studios
+# (c) 2015-2017 Gramercy Park Studios
 #
+# Batch Render Submitter
 # A UI for creating render jobs to send to the render queue.
 
 
@@ -25,7 +25,7 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 		self.ui.setupUi(self)
 
 		# Apply UI style sheet
-		qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
+		qss=os.path.join(os.environ['IC_WORKINGDIR'], "style.qss")
 		with open(qss, "r") as fh:
 			self.setStyleSheet(fh.read())
 
@@ -33,7 +33,7 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 		userPrefs.read()
 
 		# Set job type from Icarus environment if possible
-		if os.environ['ICARUSENVAWARE'] == 'STANDALONE':
+		if os.environ['IC_ENV'] == 'STANDALONE':
 			try:
 				self.jobType = userPrefs.config.get('renderqueue', 'lastrenderjobtype')
 				#self.jobType = userPrefs.config.get('main', 'lastrenderjobtype')
@@ -44,7 +44,7 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 			self.setJobType()
 			self.setSceneList()
 
-		elif os.environ['ICARUSENVAWARE'] == 'MAYA':
+		elif os.environ['IC_ENV'] == 'MAYA':
 			self.jobType = 'Maya'
 			self.ui.type_comboBox.setCurrentIndex(self.ui.type_comboBox.findText(self.jobType))
 			self.setJobType()
@@ -66,7 +66,7 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 			self.ui.render_groupBox.setEnabled(False)
 			self.ui.sceneBrowse_toolButton.hide()
 
-		elif os.environ['ICARUSENVAWARE'] == 'NUKE':
+		elif os.environ['IC_ENV'] == 'NUKE':
 			self.jobType = 'Nuke'
 			self.ui.type_comboBox.setCurrentIndex(self.ui.type_comboBox.findText(self.jobType))
 			self.setJobType()
@@ -101,7 +101,7 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 
 		# Instantiate render queue class and load data
 		self.rq = renderQueue.renderQueue()
-		self.rq.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'renderQueue.xml'))
+		self.rq.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'renderQueue.xml'))
 
 		# Connect signals & slots
 		self.ui.type_comboBox.currentIndexChanged.connect(self.setJobTypeFromComboBox)
@@ -336,7 +336,7 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 
 		dialog = pDialog.dialog()
 		if dialog.dialogWindow(dialogMsg, dialogTitle):
-			self.rq.newJob(genericOpts, renderOpts, self.taskList, os.environ['USERNAME'], time.strftime(timeFormatStr), comment)
+			self.rq.newJob(genericOpts, renderOpts, self.taskList, os.environ['IC_USERNAME'], time.strftime(timeFormatStr), comment)
 		else:
 			return
 
@@ -358,8 +358,8 @@ if __name__ == "__main__":
 	app = QtGui.QApplication(sys.argv)
 
 	# Initialise Icarus environment
-	#os.environ['ICWORKINGDIR'] = "N:\Dev\icarus\core\ui" # temp assignment
-	sys.path.append(os.environ['ICWORKINGDIR'])
+	#os.environ['IC_WORKINGDIR'] = "N:\Dev\icarus\core\ui" # temp assignment
+	sys.path.append(os.environ['IC_WORKINGDIR'])
 	import env__init__
 	env__init__.setEnv()
 
@@ -368,7 +368,7 @@ if __name__ == "__main__":
 	#app.setStyle('fusion') # Set UI style - you can also use a flag e.g. '-style plastique'
 
 	# Apply UI style sheet
-	# qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
+	# qss=os.path.join(os.environ['IC_WORKINGDIR'], "style.qss")
 	# with open(qss, "r") as fh:
 	# 	app.setStyleSheet(fh.read())
 

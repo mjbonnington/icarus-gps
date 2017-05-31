@@ -35,7 +35,7 @@ class connect(object):
 	def appPreview(self):
 		""" Detect environment.
 		"""
-		if os.environ['ICARUSENVAWARE'] == 'MAYA':
+		if os.environ['IC_ENV'] == 'MAYA':
 			self.outputDir = os.path.join(os.environ['MAYAPLAYBLASTSDIR'], self.fileInput)
 			mayaPreviewOutput = self.mayaPreview()
 			if mayaPreviewOutput:
@@ -56,7 +56,7 @@ class connect(object):
 def getScene():
 	""" Returns name of scene/script/project file.
 	"""
-	if os.environ['ICARUSENVAWARE'] == 'MAYA':
+	if os.environ['IC_ENV'] == 'MAYA':
 		import mayaOps
 		return os.path.splitext(os.path.basename(mayaOps.getScene()))[0]
 
@@ -65,7 +65,7 @@ def getResolution():
 	""" Returns the current resolution of scene/script/project file as a
 		tuple (integer, integer).
 	"""
-	if os.environ['ICARUSENVAWARE'] == 'MAYA':
+	if os.environ['IC_ENV'] == 'MAYA':
 		import maya.cmds as mc
 		return mc.getAttr("defaultResolution.w"), mc.getAttr("defaultResolution.h")
 
@@ -74,7 +74,7 @@ def getFrameRange():
 	""" Returns the frame range of scene/script/project file as a tuple
 		(integer, integer).
 	"""
-	if os.environ['ICARUSENVAWARE'] == 'MAYA':
+	if os.environ['IC_ENV'] == 'MAYA':
 		import maya.cmds as mc
 		return int(mc.playbackOptions(min=True, q=True)), int(mc.playbackOptions(max=True, q=True))
 
@@ -82,7 +82,7 @@ def getFrameRange():
 def getCurrentFrame():
 	""" Returns the current frame of scene/script/project file as an integer.
 	"""
-	if os.environ['ICARUSENVAWARE'] == 'MAYA':
+	if os.environ['IC_ENV'] == 'MAYA':
 		import maya.cmds as mc
 		return int(mc.currentTime(q=True))
 

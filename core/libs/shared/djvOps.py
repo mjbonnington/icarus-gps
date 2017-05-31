@@ -4,21 +4,23 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2017 Gramercy Park Studios
 #
 # djv_view operations module.
 
 
-import os, subprocess
+import os
+import subprocess
+
 import verbose
 
 
 def exportDjvLibs():
 	""" Export path to djv codec libraries according to OS.
 	"""
-	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+	if os.environ['IC_RUNNING_OS'] == 'Darwin':
 		libsExport = 'export DYLD_FALLBACK_LIBRARY_PATH=%s; ' % os.environ['DJV_LIB']
-	elif os.environ['ICARUS_RUNNING_OS'] == 'Linux':
+	elif os.environ['IC_RUNNING_OS'] == 'Linux':
 		libsExport = 'export LD_LIBRARY_PATH=%s; export LIBQUICKTIME_PLUGIN_DIR=%s; ' % (os.environ['DJV_LIB'], os.path.join(os.environ['DJV_LIB'],'libquicktime'))
 	else:
 		libsExport = ''
@@ -86,9 +88,9 @@ def viewer(path=None):
 			startupDir = path
 
 	# Export path to djv codec libraries according to OS
-	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	if os.environ['IC_RUNNING_OS'] == 'Windows':
 		cmdStr += "cd /d %s & " % startupDir
-	elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+	elif os.environ['IC_RUNNING_OS'] == 'Darwin':
 		cmdStr += "export DYLD_FALLBACK_LIBRARY_PATH=%s; " %os.environ['DJV_LIB']
 		cmdStr += "cd %s; " % startupDir
 	else:
@@ -101,7 +103,8 @@ def viewer(path=None):
 	else:
 		cmdStr += os.environ['DJV_PLAY']
 
-	# Call command with subprocess in order to not lock the system while djv is running
+	# Call command with subprocess in order to not lock the system while djv
+	# is running
 	verbose.print_(cmdStr, 4)
 	subprocess.Popen(cmdStr, shell=True)
 

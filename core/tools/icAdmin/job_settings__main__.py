@@ -6,7 +6,8 @@
 # (c) 2015-2017 Gramercy Park Studios
 #
 # Generic settings editor dialog
-# TODO: inherit the generic settings class, containing the non job-specific methods from this class
+# TODO: inherit the generic settings class, containing the non job-specific
+# methods from this class
 
 
 import math
@@ -111,9 +112,9 @@ class settingsDialog(QtWidgets.QDialog):
 		"""
 		# Load data from xml file(s)
 		jd_load = self.jd.loadXML(self.xmlData)
-		ap_load = self.ap.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'appPaths.xml'))
-		rp_load = self.rp.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'resPresets.xml'))
-		cp_load = self.cp.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'camPresets.xml'))
+		ap_load = self.ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'))
+		rp_load = self.rp.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'resPresets.xml'))
+		cp_load = self.cp.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'camPresets.xml'))
 
 		#if jd_load and ap_load and rp_load:
 		#	pass
@@ -894,7 +895,7 @@ class settingsDialog(QtWidgets.QDialog):
 
 # 	#app.setStyle('plastique') # Set UI style - you can also use a flag e.g. '-style plastique'
 
-# 	qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
+# 	qss=os.path.join(os.environ['IC_WORKINGDIR'], "style.qss")
 # 	with open(qss, "r") as fh:
 # 		app.setStyleSheet(fh.read())
 

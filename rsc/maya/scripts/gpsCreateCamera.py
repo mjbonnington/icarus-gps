@@ -1,16 +1,17 @@
 # [GPS] Create Camera
-# v0.2
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2016 Gramercy Park Studios
+# (c) 2015-2017 Gramercy Park Studios
 #
-# Create Maya cameras based on presets stored in XML data file. Can also create a camera rig.
+# Create Maya cameras based on presets stored in XML data file. Can also
+# create a camera rig.
 
 
 import os
 import maya.cmds as mc
 import maya.mel as mel
+
 import camPresets
 
 
@@ -22,7 +23,7 @@ class gpsCreateCamera():
 		#self.gMainProgressBar = mel.eval('$tmp = $gMainProgressBar')
 
 		self.cp = camPresets.camPresets()
-		self.cp.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'camPresets.xml'))
+		self.cp.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'camPresets.xml'))
 
 
 	def UI(self):
@@ -98,7 +99,7 @@ class gpsCreateCamera():
 		""" Create camera.
 		"""
 		if rig:
-			mc.file(os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'scripts', 'GPS_cam_rig.ma'), i=True, iv=True, rnn=True)
+			mc.file(os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'maya', 'scripts', 'GPS_cam_rig.ma'), i=True, iv=True, rnn=True)
 			camGrp = 'GPS_cameraRig'
 			cam = 'GPS_camera'
 			camSh = mc.listRelatives(cam, s=True)[0]
@@ -193,7 +194,8 @@ class gpsCreateCamera():
 
 
 	def addPhysical(self):
-		""" Apply VRay physical camera without shifting film gate or focal length.
+		""" Apply VRay physical camera without shifting film gate or focal
+			length.
 		"""
 		if mc.pluginInfo("vrayformaya", query=True, loaded=True):
 			try:
@@ -214,7 +216,8 @@ class gpsCreateCamera():
 
 
 	def setAttr(self, attr, dim):
-		""" Hacky function to set an attribute with a forced linear unit, e.g. '1cm', '2in', etc.
+		""" Hacky function to set an attribute with a forced linear unit,
+			e.g. '1cm', '2in', etc.
 		"""
 		loc = mc.spaceLocator( p=(dim, '0', '0'), absolute=True )
 		dim = mc.getAttr(loc[0]+".localPositionX")

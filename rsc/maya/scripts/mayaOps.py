@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2017 Gramercy Park Studios
 #
 # Maya operations module.
 
@@ -313,7 +313,7 @@ def exportGeo(objLs, geoType, pathToPblAsset):
 		-velocityOn -velocityIntervalStart -0.5 -velocityIntervalEnd 0.5;''' % (pathToPblAsset, objLs[0])) # Changed velocity values to default, was 0 & 0.05
 		return
 	if geoType == 'sd':
-		plugin = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'plugins', 'realflow.bundle')
+		plugin = os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'maya', 'plugins', 'realflow.bundle')
 		mc.loadPlugin(plugin, qt=True)
 		mc.realflow(exportSD=True, selected=True, usePlaybackRange=True, deformation=True, file=pathToPblAsset)
 		return

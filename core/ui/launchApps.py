@@ -4,12 +4,15 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2017 Gramercy Park Studios
 #
 # Launches software applications.
 
 
-import os, sys, subprocess
+import os
+import subprocess
+import sys
+
 import verbose
 
 
@@ -54,7 +57,7 @@ def launch(app=None):
 
 	elif app is 'RealFlow':
 		execPath = os.environ['REALFLOWVERSION']
-		sys.path.append(os.path.join(os.environ['PIPELINE'], 'rsc', 'realflow', 'scripts'))
+		sys.path.append(os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'realflow', 'scripts'))
 		import startup
 		startup.autoDeploy()
 		cmdStr = '"%s"' % execPath
@@ -96,7 +99,7 @@ def djv():
 
 
 def terminal():
-	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	if os.environ['IC_RUNNING_OS'] == 'Windows':
 		#subprocess.Popen("cmd /k %s" % os.environ['GPS_RC'], shell=True)
 		subprocess.Popen("start cmd /k %s" % os.environ['GPS_RC'], shell=True)
 	else:
@@ -105,9 +108,9 @@ def terminal():
 
 def prodBoard():
 	#webbrowser.open(os.environ['PRODBOARD'], new=2, autoraise=True)
-	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	if os.environ['IC_RUNNING_OS'] == 'Windows':
 		subprocess.Popen('explorer "%s"' % os.environ['PRODBOARD'], shell=True)
-	elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+	elif os.environ['IC_RUNNING_OS'] == 'Darwin':
 		subprocess.Popen('open "%s"' % os.environ['PRODBOARD'], shell=True)
 	else:
 		subprocess.Popen('xdg-open "%s"' % os.environ['PRODBOARD'], shell=True)

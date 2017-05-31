@@ -24,7 +24,7 @@ def createDir(path, umask='000'):
 
 	if not os.path.isdir(path):
 		os.makedirs(path)
-		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+		if os.environ['IC_RUNNING_OS'] == 'Windows':
 			if os.path.basename(path).startswith('.'): # hide the folder if the name starts with a dot, as these files are not automatically hidden on Windows
 				setHidden(path)
 
@@ -39,7 +39,7 @@ def setPermissions(path, mode='a+w'):
 	"""
 	path = os.path.normpath(path)
 
-	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	if os.environ['IC_RUNNING_OS'] == 'Windows':
 		# Removed permissions setting on Windows as it causes problems
 		pass
 		#os.chmod(path, 0777) # Python 2 octal syntax
@@ -56,7 +56,7 @@ def hardLink(source, destination, umask='000'):
 	src = os.path.normpath(source)
 	dst = os.path.normpath(destination)
 
-	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	if os.environ['IC_RUNNING_OS'] == 'Windows':
 		if os.path.isdir(dst): # if destination is a folder, append the filename from the source
 			filename = os.path.basename(src)
 			dst = os.path.join(dst, filename)
@@ -81,7 +81,7 @@ def recurseRemove(path):
 	"""
 	path = os.path.normpath(path)
 
-	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	if os.environ['IC_RUNNING_OS'] == 'Windows':
 		if os.path.isdir(path):
 			cmdStr = 'rmdir %s /s /q' % path
 		else:
@@ -104,7 +104,7 @@ def rename(source, destination):
 	verbose.print_('rename "%s" "%s"' % (src, dst), 4)
 	os.rename(src, dst)
 
-	# if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	# if os.environ['IC_RUNNING_OS'] == 'Windows':
 	# 	cmdStr = 'ren "%s" "%s"' % (src, dst)
 	# else:
 	# 	cmdStr = 'mv "%s" "%s"' % (src, dst)
@@ -119,7 +119,7 @@ def copy(source, destination):
 	src = os.path.normpath(source)
 	dst = os.path.normpath(destination)
 
-	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	if os.environ['IC_RUNNING_OS'] == 'Windows':
 		cmdStr = 'copy /Y %s %s' % (src, dst)
 	else:
 		cmdStr = 'cp -rf %s %s' % (src, dst)
@@ -135,7 +135,7 @@ def copyDirContents(source, destination, umask='000'):
 	src = os.path.normpath( os.path.join(source, '*') )
 	dst = os.path.normpath( destination )
 
-	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	if os.environ['IC_RUNNING_OS'] == 'Windows':
 		cmdStr = 'copy /Y %s %s' % (src, dst)
 	else:
 		cmdStr = '%s; cp -rf %s %s' % (setUmask(umask), src, dst)
@@ -157,7 +157,7 @@ def setHidden(path):
 def setUmask(umask='000'):
 	""" Set the umask for permissions on created files and folders (Unix only).
 	"""
-	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	if os.environ['IC_RUNNING_OS'] == 'Windows':
 		return ""
 	else:
 		return 'umask %s' % umask
@@ -213,12 +213,12 @@ def translatePath(jobPath):
 	"""
 	try:
 		jobPathTr = jobPath
-		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+		if os.environ['IC_RUNNING_OS'] == 'Windows':
 			if jobPath.startswith(os.environ['FILESYSTEMROOTOSX']):
 				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTOSX'], os.environ['FILESYSTEMROOTWIN'])
 			elif jobPath.startswith(os.environ['FILESYSTEMROOTLINUX']):
 				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTLINUX'], os.environ['FILESYSTEMROOTWIN'])
-		elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+		elif os.environ['IC_RUNNING_OS'] == 'Darwin':
 			if jobPath.startswith(os.environ['FILESYSTEMROOTWIN']):
 				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTWIN'], os.environ['FILESYSTEMROOTOSX'])
 			elif jobPath.startswith(os.environ['FILESYSTEMROOTLINUX']):

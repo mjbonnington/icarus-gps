@@ -1,5 +1,6 @@
 v0.9.9 (--)
 -	[Icarus] Updated code for compatibility with Python 3 and Qt 5.
+-	[Icarus] Added the ability to override the user via a command-line argument: i.e. --user USERNAME.
 -	[Nuke] Added Deadline integrated submitter script.
 
 v0.9.8 (2017-05-19)

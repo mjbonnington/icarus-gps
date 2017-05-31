@@ -1,12 +1,12 @@
 #!/usr/bin/python
 
 # [Icarus] edit_app_paths.py
-# v0.3
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2016 Gramercy Park Studios
+# (c) 2015-2017 Gramercy Park Studios
 #
-# A UI for managing application versions and paths to executables for all OSes.
+# A UI for managing application versions and paths to executables for all
+# operating systems.
 
 
 from PySide import QtCore, QtGui
@@ -14,7 +14,7 @@ from edit_app_paths_ui import *
 import os, sys
 
 # Initialise Icarus environment - only required when standalone
-#sys.path.append(os.environ['ICWORKINGDIR'])
+#sys.path.append(os.environ['IC_WORKINGDIR'])
 #import env__init__
 #env__init__.setEnv()
 #env__init__.appendSysPaths()
@@ -62,7 +62,7 @@ class editAppPathsDialog(QtGui.QDialog):
 		"""
 		# Load data from xml file
 		self.ap = appPaths.appPaths()
-		ap_load = self.ap.loadXML(os.path.join(os.environ['ICCONFIGDIR'], 'appPaths.xml'))
+		ap_load = self.ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'))
 
 		# Populate fields
 		self.populateApps()
@@ -233,7 +233,7 @@ if __name__ == "__main__":
 
 	#app.setStyle('plastique') # Set UI style - you can also use a flag e.g. '-style plastique'
 
-	qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
+	qss=os.path.join(os.environ['IC_WORKINGDIR'], "style.qss")
 	with open(qss, "r") as fh:
 		app.setStyleSheet(fh.read())
 

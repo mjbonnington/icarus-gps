@@ -18,37 +18,45 @@ def setEnv():
 	""" Set some environment variables for basic operation.
 	"""
 	# Set version string
-	os.environ['ICARUSVERSION'] = 'v0.9.9-20170531'
+	os.environ['IC_VERSION'] = 'v0.9.9-20170531'
 
-	# Standardise some environment variables across systems
-	if platform.system() == 'Windows':
-		os.environ['ICARUS_RUNNING_OS'] = 'Windows'
-		os.environ['HOME'] = os.path.join(os.environ['HOMEDRIVE'], os.environ['HOMEPATH'])
-	elif platform.system() == 'Darwin':
-		os.environ['ICARUS_RUNNING_OS'] = 'Darwin'
-		os.environ['USERNAME'] = os.environ['USER']
-	else:
-		os.environ['ICARUS_RUNNING_OS'] = 'Linux'
+	# Standardise some environment variables across systems.
+	# Usernames will always be stored as lowercase for compatibility.
+	if platform.system() == 'Windows':  # Windows
+		os.environ['IC_RUNNING_OS'] = 'Windows'
+		if not 'IC_USERNAME' in os.environ:
+			os.environ['IC_USERNAME'] = os.environ['USERNAME'].lower()
+		os.environ['IC_USERHOME'] = os.path.join(os.environ['HOMEDRIVE'], os.environ['HOMEPATH'])
+	elif platform.system() == 'Darwin':  # Mac OS
+		os.environ['IC_RUNNING_OS'] = 'Darwin'
+		if not 'IC_USERNAME' in os.environ:
+			os.environ['IC_USERNAME'] = os.environ['USER'].lower()
+		os.environ['IC_USERHOME'] = os.environ['HOME']
+	else:  # Linux
+		os.environ['IC_RUNNING_OS'] = 'Linux'
+		if not 'IC_USERNAME' in os.environ:
+			os.environ['IC_USERNAME'] = os.environ['USERNAME'].lower()
+		os.environ['IC_USERHOME'] = os.environ['HOME']
 
 	# Check for environment awareness
 	try:
-		os.environ['ICARUSENVAWARE']
+		os.environ['IC_ENV']
 	except KeyError:
-		os.environ['ICARUSENVAWARE'] = 'STANDALONE'
+		os.environ['IC_ENV'] = 'STANDALONE'
+
+	# Hard-coded relative data directories required by Icarus
+	#os.environ['JOBSROOTRELATIVEDIR'] = 'Project_Media'  # Store in global settings? UPDATE: now stored in jobs.xml
+	os.environ['SHOTSROOTRELATIVEDIR'] = 'Vfx'  # Store in global / job settings?
+	os.environ['DATAFILESRELATIVEDIR'] = '.icarus'
 
 	# Set up basic paths
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
 	icarusUIDir = os.path.join('core', 'ui')
-	os.environ['ICWORKINGDIR'] = icarusWorkingDir
-	os.environ['PIPELINE'] = icarusWorkingDir.replace(icarusUIDir, '')
-	os.environ['ICCONFIGDIR'] = os.path.join(os.environ['PIPELINE'], 'core', 'config')
-	os.environ['ICUSERPREFS'] = os.path.join(os.environ['ICCONFIGDIR'], 'users', os.environ['USERNAME']) # User prefs stored on server
-	#os.environ['ICUSERPREFS'] = os.path.join(os.environ['HOME'], '.icarus') # User prefs stored in user home folder
-
-	# Hard-coded relative data directories required by Icarus
-	#os.environ['JOBSROOTRELATIVEDIR'] = 'Project_Media' # Store in global settings? UPDATE: now stored in jobs.xml
-	os.environ['SHOTSROOTRELATIVEDIR'] = 'Vfx' # Store in global / job settings?
-	os.environ['DATAFILESRELATIVEDIR'] = '.icarus'
+	os.environ['IC_WORKINGDIR'] = icarusWorkingDir
+	os.environ['IC_BASEDIR'] = icarusWorkingDir.replace(icarusUIDir, '')
+	os.environ['IC_CONFIGDIR'] = os.path.join(os.environ['IC_BASEDIR'], 'core', 'config')
+	os.environ['IC_USERPREFS'] = os.path.join(os.environ['IC_CONFIGDIR'], 'users', os.environ['IC_USERNAME'])  # User prefs stored on server
+	#os.environ['IC_USERPREFS'] = os.path.join(os.environ['IC_USERHOME'], os.environ['DATAFILESRELATIVEDIR'])  # User prefs stored in user home folder
 
 	appendSysPaths()
 
@@ -56,22 +64,21 @@ def setEnv():
 def appendSysPaths():
 	""" Add paths for custom modules.
 	"""
-	libs = os.path.join(os.environ['PIPELINE'], 'core', 'libs')
-	tools = os.path.join(os.environ['PIPELINE'], 'core', 'tools')
-	vendor = os.path.join(os.environ['PIPELINE'], 'core', 'vendor')
+	libs = os.path.join(os.environ['IC_BASEDIR'], 'core', 'libs')
+	tools = os.path.join(os.environ['IC_BASEDIR'], 'core', 'tools')
+	vendor = os.path.join(os.environ['IC_BASEDIR'], 'core', 'vendor')
 
-	pathsToAppend = [vendor] # Was [os.environ['PIPELINE'], vendor]
+	pathsToAppend = [vendor]  # Was [os.environ['IC_BASEDIR'], vendor]
 
 	# Add subdirectories in libs and tools directories
 	for path in [libs, tools]:
 		subdirs = next(os.walk(path))[1]
 		if subdirs:
 			for subdir in subdirs:
-				if not subdir.startswith('.'): # Ignore directories that start with a dot
+				if not subdir.startswith('.'):  # Ignore directories that start with a dot
 					pathsToAppend.append(os.path.join(path, subdir))
 
 	# Append paths
 	for path in pathsToAppend:
-		# print(path)
 		sys.path.append(path)
 

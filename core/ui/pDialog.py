@@ -44,7 +44,7 @@ class dialog(QtWidgets.QDialog):
 
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Dialog)
-		# if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+		# if os.environ['IC_RUNNING_OS'] == 'Darwin':
 		# 	self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
 		# else:
 		# 	self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WindowCloseButtonHint)

@@ -35,7 +35,7 @@ global proc gpsRenderSetup.setCommonOptions()
 // Set render file name prefix format.
 global proc gpsRenderSetup.setOutputPath()
 {
-	string $user = `getenv "USER"`;
+	string $user = `getenv "IC_USERNAME"`;
 	string $shot = `getenv "SHOT"`;
 
 	setAttr -type "string" "defaultRenderGlobals.ifp" ($user + "/<Scene>/<RenderLayer>/" + $shot + "_<RenderLayer>");

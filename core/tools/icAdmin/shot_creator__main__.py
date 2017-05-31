@@ -191,7 +191,7 @@ class shotCreatorDialog(QtWidgets.QDialog):
 # 	app = QtWidgets.QApplication(sys.argv)
 
 # 	# Initialise Icarus environment
-# 	sys.path.append(os.environ['ICWORKINGDIR'])
+# 	sys.path.append(os.environ['IC_WORKINGDIR'])
 # 	import env__init__
 # 	env__init__.setEnv()
 # 	#env__init__.appendSysPaths()
@@ -203,7 +203,7 @@ class shotCreatorDialog(QtWidgets.QDialog):
 
 # 	# Apply UI style sheet
 # 	if STYLESHEET is not None:
-# 		qss=os.path.join(os.environ['ICWORKINGDIR'], STYLESHEET)
+# 		qss=os.path.join(os.environ['IC_WORKINGDIR'], STYLESHEET)
 # 		with open(qss, "r") as fh:
 # 			app.setStyleSheet(fh.read())
 

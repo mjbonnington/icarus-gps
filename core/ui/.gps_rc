@@ -41,7 +41,7 @@ alias nukex="$NUKEVERSION --nukex &"
 alias mudbox="$MUDBOXVERSION &"
 alias mari="$MARIVERSION &"
 alias realflow="'$REALFLOWVERSION' &"
-if [[ $ICARUS_RUNNING_OS == 'Linux' ]]; then
+if [[ $IC_RUNNING_OS == 'Linux' ]]; then
 	alias djv="export LD_LIBRARY_PATH=$DJV_LIB; $DJV_PLAY &"
 else
 	alias djv="$DJV_PLAY"
@@ -53,10 +53,10 @@ alias shot="cd $SHOTPATH"
 alias cls="clear"
 alias dir="ls -l"
 alias ll="ls -ltr"
-alias lseq="$PIPELINE/core/libs/shared/sequenceLs.py"
-alias rb="$PIPELINE/core/tools/renderBrowser/rb__main__.py -style fusion"
-alias br="$PIPELINE/core/tools/renderBrowser/rename__main__.py -style fusion"
-alias submit="$PIPELINE/core/tools/gpsSubmit/submit__main__.py -style fusion"
+alias lseq="$IC_BASEDIR/core/libs/shared/sequenceLs.py"
+alias rb="$IC_BASEDIR/core/tools/renderBrowser/rb__main__.py -style fusion"
+alias br="$IC_BASEDIR/core/tools/renderBrowser/rename__main__.py -style fusion"
+alias submit="$IC_BASEDIR/core/tools/gpsSubmit/submit__main__.py -style fusion"
 
 #############################
 # Sourcing user own aliases

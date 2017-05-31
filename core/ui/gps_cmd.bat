@@ -1,6 +1,6 @@
 @echo off
 
-set prompt=$p$_[%USERNAME%$s%JOB%-%SHOT%]$s$g
+set prompt=$p$_[%IC_USERNAME%$s%JOB%-%SHOT%]$s$g
 color 08
 
 
@@ -25,7 +25,7 @@ doskey pwd=cd
 doskey clear=cls
 doskey ls=dir /w
 doskey ll=dir
-doskey lseq=%PIPELINE%\core\libs\shared\sequenceLs.py
-doskey rb=%PIPELINE%\core\tools\renderBrowser\rb__main__.py -style fusion
-doskey br=%PIPELINE%\core\tools\renderBrowser\rename__main__.py -style fusion
-doskey submit=$PIPELINE%\core\tools\gpsSubmit\submit__main__.py -style fusion
+doskey lseq=%IC_BASEDIR%\core\libs\shared\sequenceLs.py
+doskey rb=%IC_BASEDIR%\core\tools\renderBrowser\rb__main__.py -style fusion
+doskey br=%IC_BASEDIR%\core\tools\renderBrowser\rename__main__.py -style fusion
+doskey submit=$IC_BASEDIR%\core\tools\gpsSubmit\submit__main__.py -style fusion

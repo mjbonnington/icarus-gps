@@ -23,7 +23,7 @@ def createPackRig():
 	objGrp = mc.group(obj, n='bbox_GRP')
 	
 	#importing pack rig. Getting bbox, shake and condition nodes
-	packRigNodes = mc.file(os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'scripts', 'GPS_pack_rig.ma'), i=True, iv=True, rnn=True)
+	packRigNodes = mc.file(os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'maya', 'scripts', 'GPS_pack_rig.ma'), i=True, iv=True, rnn=True)
 	packRigGrp = 'GPS_packRig'
 	bboxNode = packRigNodes.index('|bbox'); bboxNode = packRigNodes[bboxNode]
 	shakeNode = packRigNodes.index('%s|shake' % rigHierarchy); shakeNode = packRigNodes[shakeNode]

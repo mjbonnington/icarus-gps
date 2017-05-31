@@ -1,11 +1,11 @@
 #!/usr/bin/python
 
-# [Icarus] Batch Rename Tool rename__main__.py
-# v0.1
+# [Icarus] rename__main__.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2016 Gramercy Park Studios
+# (c) 2016-2017 Gramercy Park Studios
 #
+# Batch Rename Tool
 # A UI for batch renaming / renumbering of files and folders.
 
 
@@ -348,7 +348,7 @@ if __name__ == "__main__":
 	app = QtGui.QApplication(sys.argv)
 
 	# Initialise Icarus environment
-	sys.path.append(os.environ['ICWORKINGDIR'])
+	sys.path.append(os.environ['IC_WORKINGDIR'])
 	import env__init__
 	env__init__.setEnv()
 	#env__init__.appendSysPaths()
@@ -358,7 +358,7 @@ if __name__ == "__main__":
 	#app.setStyle('fusion') # Set UI style - you can also use a flag e.g. '-style plastique'
 
 	# Apply UI style sheet
-	qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
+	qss=os.path.join(os.environ['IC_WORKINGDIR'], "style.qss")
 	with open(qss, "r") as fh:
 		app.setStyleSheet(fh.read())
 

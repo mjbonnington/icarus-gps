@@ -560,10 +560,10 @@ def run_nuke():
 
 
 # Detect environment and run application
-if os.environ['ICARUSENVAWARE'] == 'MAYA':
+if os.environ['IC_ENV'] == 'MAYA':
 	import maya.cmds as mc
 	run_maya()
-elif os.environ['ICARUSENVAWARE'] == 'NUKE':
+elif os.environ['IC_ENV'] == 'NUKE':
 	import nuke
 	import nukescripts
 	run_nuke()

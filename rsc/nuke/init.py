@@ -4,19 +4,17 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2015 Gramercy Park Studios
+# (c) 2013-2017 Gramercy Park Studios
 #
 # This file contains Nuke's initialisation procedures.
 
 
-import os, sys
+import os
+import sys
+
 
 # Set up path remapping for cross-platform support
 def filenameFix(filename):
-	# if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-	# 	return filename.replace( os.environ['JOBSROOTOSX'], os.environ['JOBSROOTWIN'] )
-	# else: # Linux or OS X
-	# 	return filename.replace( os.environ['JOBSROOTWIN'], os.environ['JOBSROOTOSX'] )
 	filename=filename.replace( os.environ['FILESYSTEMROOTWIN'], os.environ['FILESYSTEMROOT'] )
 	filename=filename.replace( os.environ['FILESYSTEMROOTOSX'], os.environ['FILESYSTEMROOT'] )
 	filename=filename.replace( os.environ['FILESYSTEMROOTLINUX'], os.environ['FILESYSTEMROOT'] )
@@ -30,15 +28,18 @@ nuke.pluginAddPath('./plugins')
 # Third-party locations
 nuke.pluginAddPath('./gizmos/pxf')
 
-# Nuke seems to ditch the main root environent where it has been called from so the path needs to be appended again.
-sys.path.append(os.path.join(os.environ['PIPELINE'], 'core', 'ui'))
+# Nuke seems to ditch the main root environent where it has been called from
+# so the path needs to be appended again.
+sys.path.append(os.path.join(os.environ['IC_BASEDIR'], 'core', 'ui'))
 import env__init__
 env__init__.appendSysPaths()
-# Nuke opens a entire new Nuke process with 'File>New Script' and doesn't simply create and empty script in the current env.
-# The Icarus env has to be set temporarily as NUKE_TMP to avoid Icarus detecting an existing Nuke env and opening its UI automatically.
-os.environ['ICARUSENVAWARE'] = 'NUKE_TMP'
+# Nuke opens a entire new Nuke process with 'File>New Script' and doesn't
+# simply create and empty script in the current env.
+# The Icarus env has to be set temporarily as NUKE_TMP to avoid Icarus
+# detecting an existing Nuke env and opening its UI automatically.
+os.environ['IC_ENV'] = 'NUKE_TMP'
 import icarus__main__, gpsNodes
-os.environ['ICARUSENVAWARE'] = 'NUKE'
+os.environ['IC_ENV'] = 'NUKE'
 
 # Third-party initializations go here
 
@@ -64,3 +65,4 @@ nuke.knobDefault('Root.proxy_format', '%s_proxy' % os.environ['SHOT'])
 nuke.knobDefault('Root.fps', os.environ['FPS'])
 nuke.knobDefault('Root.first_frame', os.environ['STARTFRAME'])
 nuke.knobDefault('Root.last_frame', os.environ['ENDFRAME'])
+

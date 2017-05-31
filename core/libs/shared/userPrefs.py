@@ -21,7 +21,7 @@ import verbose
 
 
 config = SafeConfigParser()
-configFile = os.path.join(os.environ['ICUSERPREFS'], 'userPrefs.ini')
+configFile = os.path.join(os.environ['IC_USERPREFS'], 'userPrefs.ini')
 
 
 def read():
@@ -49,7 +49,7 @@ def create():
 	""" Create config file if it doesn't exist and populate with with
 		defaults.
 	"""
-	userPrefsDir = os.environ['ICUSERPREFS']
+	userPrefsDir = os.environ['IC_USERPREFS']
 
 	if not os.path.exists(userPrefsDir):
 		osOps.createDir(userPrefsDir)
