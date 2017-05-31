@@ -89,6 +89,8 @@ class dialog(QtWidgets.QDialog):
 
 
 	def ok(self):
+		""" Dialog accept function.
+		"""
 		self.dialogReturn = True
 		# Normalise paths and strip trailing slash
 		self.winPath = osOps.absolutePath(self.ui.jobRootPathWin_lineEdit.text(), stripTrailingSlash=True)
@@ -100,6 +102,8 @@ class dialog(QtWidgets.QDialog):
 
 
 	def cancel(self):
+		""" Dialog cancel function.
+		"""
 		self.dialogReturn = False
 		self.ui.accept()
 		return #False
