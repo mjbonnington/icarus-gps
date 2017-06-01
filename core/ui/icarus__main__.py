@@ -229,9 +229,9 @@ class icarusApp(QtWidgets.QMainWindow):
 		self.actionRenderSubmit.triggered.connect(self.launchRenderSubmit)
 		self.ui.render_pushButton.addAction(self.actionRenderSubmit)
 
-		self.actionBrowseRenders = QtWidgets.QAction("Browse Renders", None)
-		self.actionBrowseRenders.triggered.connect(self.launchRenderBrowser)
-		self.ui.render_pushButton.addAction(self.actionBrowseRenders)
+		# self.actionBrowseRenders = QtWidgets.QAction("Browse Renders", None)
+		# self.actionBrowseRenders.triggered.connect(self.launchRenderBrowser)
+		# self.ui.render_pushButton.addAction(self.actionBrowseRenders)
 
 		self.actionDeadlineMonitor = QtWidgets.QAction("Deadline Monitor", None)
 		self.actionDeadlineMonitor.triggered.connect(lambda: self.launchApp('DeadlineMonitor'))
@@ -1017,7 +1017,7 @@ Developers: Nuno Pereira, Mike Bonnington
 
 
 	def launchRenderSubmit(self):
-		""" Launches GPS Render Submitter window.
+		""" Launch Render Submitter window.
 		"""
 		import submit__main__
 		# reload(submit__main__)  # Python 3 doesn't like this
@@ -1032,7 +1032,7 @@ Developers: Nuno Pereira, Mike Bonnington
 
 
 	def launchRenderQueue(self):
-		""" Launches GPS Render Queue Manager window.
+		""" Launch Render Queue Manager window.
 		"""
 		import queue__main__
 		# reload(queue__main__)  # Python 3 doesn't like this
@@ -1045,22 +1045,29 @@ Developers: Nuno Pereira, Mike Bonnington
 			self.renderQueueApp.show()
 
 
-	def launchRenderBrowser(self):
-		""" Launches GPS render browser window.
-		"""
-		import rb__main__
-		# reload(rb__main__)  # Python 3 doesn't like this
+	# def launchRenderBrowser(self):
+	# 	""" Launch Render Browser window.
+	# 	"""
+	# 	import rb__main__
+	# 	# reload(rb__main__)  # Python 3 doesn't like this
 
 
 	def launchBatchRename(self):
-		""" Launches GPS sequence rename tool.
+		""" Launch Batch Rename tool.
 		"""
 		import rename__main__
 		# reload(rename__main__)  # Python 3 doesn't like this
 
+		try:
+			self.batchRenameApp.show()
+			self.batchRenameApp.raise_()
+		except AttributeError:
+			self.batchRenameApp = rename__main__.batchRenameApp(parent=self)
+			self.batchRenameApp.show()
+
 
 	def launchJobManagement(self):
-		""" Launches job management dialog.
+		""" Launch Job Management dialog.
 		"""
 		import job_management__main__
 		# reload(job_management__main__)  # Python 3 doesn't like this
@@ -1076,7 +1083,7 @@ Developers: Nuno Pereira, Mike Bonnington
 
 
 	def launchShotCreator(self):
-		""" Launches shot creator dialog.
+		""" Launch Shot Creator dialog.
 		"""
 		import shot_creator__main__
 		# reload(shot_creator__main__)  # Python 3 doesn't like this

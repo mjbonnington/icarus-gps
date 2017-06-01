@@ -56,7 +56,7 @@ class dialog(QtWidgets.QDialog):
 		# Connect signals & slots
 		self.ui.jobName_lineEdit.textChanged.connect(self.updateUI)
 		self.ui.jobPath_lineEdit.textChanged.connect(self.updateUI)
-		self.ui.jobPathBrowse_toolButton.clicked.connect(self.browse)
+		self.ui.jobPathBrowse_toolButton.clicked.connect(self.browseDir)
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).clicked.connect(self.ok)
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.cancel)
 
@@ -90,7 +90,7 @@ class dialog(QtWidgets.QDialog):
 			self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(True)
 
 
-	def browse(self):
+	def browseDir(self):
 		""" Opens a dialog from which to select a folder.
 		"""
 		startingDir = osOps.translatePath(self.ui.jobPath_lineEdit.text())
@@ -99,22 +99,32 @@ class dialog(QtWidgets.QDialog):
 		else:
 			dialogHome = os.environ['JOBSROOT']
 
-		# Append slash to path if it's a Windows drive letter, otherwise file dialog won't open the correct location
+		# Append slash to path if it's a Windows drive letter, otherwise file
+		# dialog won't open the correct location
 		if dialogHome.endswith(':'):
 			dialogHome += '/'
 
-		dialog = QtWidgets.QFileDialog.getExistingDirectory(self, self.tr('Directory'), dialogHome, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
+		dialogPath = QtWidgets.QFileDialog.getExistingDirectory(self, self.tr('Directory'), dialogHome, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
+		# dialog = QtWidgets.QFileDialog(self)
 
-		if dialog:
-			jobPath = osOps.relativePath(dialog, 'JOBSROOT')
+		if dialogPath:
+		# if dialog.exec_():
+		# 	dialogPath = dialog.getExistingDirectory(self, self.tr('Directory'), dialogHome, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
+			jobPath = osOps.relativePath(dialogPath, 'JOBSROOT')
 			self.ui.jobPath_lineEdit.setText(jobPath)
-			if not self.ui.jobName_lineEdit.text(): # only autofill job name field it it's empty
-				jobName = jobPath.split('/')[1]
-				self.ui.jobName_lineEdit.setText(jobName)
-		#return dialog
+			# Only autofill job name field it it's empty
+			if not self.ui.jobName_lineEdit.text():
+				try:
+					jobName = jobPath.split('/')[1]
+					self.ui.jobName_lineEdit.setText(jobName)
+				except IndexError:
+					pass
+		# return dialogPath
 
 
 	def ok(self):
+		""" Dialog accept function.
+		"""
 		self.dialogReturn = True
 		self.jobName = self.ui.jobName_lineEdit.text()
 		self.jobPath = self.ui.jobPath_lineEdit.text()
@@ -122,12 +132,14 @@ class dialog(QtWidgets.QDialog):
 			self.jobActive = True
 		else:
 			self.jobActive = False
-		self.accept()
+		self.ui.accept()
 		return #True
 
 
 	def cancel(self):
+		""" Dialog cancel function.
+		"""
 		self.dialogReturn = False
-		self.accept()
+		self.ui.accept()
 		return #False
 
