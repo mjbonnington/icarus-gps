@@ -146,9 +146,10 @@ def gpsPreview_uiValues():
 def gpsToolDeploy(status):
 	message("Deploying GPS tools... %s" %status)
 
-def icarusLaunch(icarusVersion, icarusLocation=""):
+def icarusLaunch(icarusVersion, icarusLocation="", icarusUser=""):
 	print_('GRAMERCY PARK STUDIOS - ICARUS %s' %icarusVersion, 0)
 	print_('[Running from "%s"]' %icarusLocation, 4)
+	print_('[User: %s]' %icarusUser, 4)
 	print_('', 0)
 
 def ignored(asset):

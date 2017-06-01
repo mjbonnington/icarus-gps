@@ -22,7 +22,7 @@ def launch(app=None):
 	execPath = ""
 	cmdStr = ""
 
-	# Build command string depending on app
+	# Build command string depending on app...
 	if app is None:
 		execPath = ""
 		cmdStr = ""
@@ -70,14 +70,11 @@ def launch(app=None):
 		execPath = os.environ['DEADLINESLAVEVERSION']
 		cmdStr = '"%s"' % execPath
 
-	#elif app is 'djv_view':
-	#	execPath = os.environ['DJVVERSION']
-	#	import djvOps
-	#	#djvOps.viewer(os.environ['SHOTPATH'])
-	#	djvOps.viewer()
-	#	cmdStr = '"%s"' % execPath
+	# elif app is 'djv_view':
+	# 	execPath = os.environ['DJVVERSION']
+	# 	cmdStr = '"%s"' % execPath
 
-	# Check executable path is set and exists, and launch app
+	# Check executable path is set and exists, and launch app.
 	if execPath:
 		if os.path.isfile(execPath):
 			verbose.launchApp(app)
@@ -87,11 +84,16 @@ def launch(app=None):
 	else:
 		verbose.launchAppNotSet(app)
 
-	# Print debug output
+	# Print debug output.
 	verbose.print_(cmdStr, 4)
 
 
 def djv():
+	""" Launch djv_view.
+		Note this is a special case due to djv_view being required by many
+		internal functions and is therefore the app is bundled with Icarus,
+		in the 'external_apps' folder.
+	"""
 	verbose.launchApp('djv_view')
 	import djvOps
 	#djvOps.viewer(os.environ['SHOTPATH'])
@@ -99,15 +101,19 @@ def djv():
 
 
 def terminal():
+	""" Launch the terminal / command prompt.
+	"""
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
-		#subprocess.Popen("cmd /k %s" % os.environ['GPS_RC'], shell=True)
+		# subprocess.Popen("cmd /k %s" % os.environ['GPS_RC'], shell=True)
 		subprocess.Popen("start cmd /k %s" % os.environ['GPS_RC'], shell=True)
 	else:
 		subprocess.Popen("bash --rcfile %s" % os.environ['GPS_RC'], shell=True)
 
 
 def prodBoard():
-	#webbrowser.open(os.environ['PRODBOARD'], new=2, autoraise=True)
+	""" Launch the production board URL in a web browser.
+	"""
+	# webbrowser.open(os.environ['PRODBOARD'], new=2, autoraise=True)
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
 		subprocess.Popen('explorer "%s"' % os.environ['PRODBOARD'], shell=True)
 	elif os.environ['IC_RUNNING_OS'] == 'Darwin':

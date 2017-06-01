@@ -122,6 +122,10 @@ class icarusApp(QtWidgets.QMainWindow):
 		self.shortcutEnvVars.setKey('Ctrl+E')
 		self.shortcutEnvVars.activated.connect(self.printEnvVars)
 
+		self.shortcutEnvVars2 = QtWidgets.QShortcut(self)
+		self.shortcutEnvVars2.setKey('Ctrl+Shift+E')
+		self.shortcutEnvVars2.activated.connect(lambda: self.printEnvVars(allvars=True))
+
 		###########################
 		# Connect signals & slots #
 		###########################
@@ -135,14 +139,14 @@ class icarusApp(QtWidgets.QMainWindow):
 		self.ui.setNewShot_pushButton.clicked.connect(self.unlockJobUI)
 
 		# App launch buttons - should be dynamic?
-		self.ui.maya_pushButton.clicked.connect(self.launchMaya)
-		self.ui.mudbox_pushButton.clicked.connect(self.launchMudbox)
-		self.ui.nuke_pushButton.clicked.connect(self.launchNuke)
-		self.ui.mari_pushButton.clicked.connect(self.launchMari)
-		self.ui.realflow_pushButton.clicked.connect(self.launchRealFlow)
+		self.ui.maya_pushButton.clicked.connect(lambda: self.launchApp('Maya'))
+		self.ui.mudbox_pushButton.clicked.connect(lambda: self.launchApp('Mudbox'))
+		self.ui.nuke_pushButton.clicked.connect(lambda: self.launchApp('Nuke'))
+		self.ui.mari_pushButton.clicked.connect(lambda: self.launchApp('Mari'))
+		self.ui.realflow_pushButton.clicked.connect(lambda: self.launchApp('RealFlow'))
 		self.ui.openProdBoard_pushButton.clicked.connect(launchApps.prodBoard)
-		self.ui.openReview_pushButton.clicked.connect(self.launchHieroPlayer)
-		self.ui.openTerminal_pushButton.clicked.connect(self.launchTerminal)
+		self.ui.openReview_pushButton.clicked.connect(lambda: self.launchApp('HieroPlayer'))
+		self.ui.openTerminal_pushButton.clicked.connect(launchApps.terminal)
 		self.ui.browse_pushButton.clicked.connect(openDirs.openShot)
 		self.ui.render_pushButton.clicked.connect(self.launchRenderQueue) # was self.launchRenderSubmit
 
@@ -180,27 +184,27 @@ class icarusApp(QtWidgets.QMainWindow):
 		self.ui.nuke_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
 		self.actionNuke = QtWidgets.QAction("Nuke", None)
-		self.actionNuke.triggered.connect(self.launchNuke)
+		self.actionNuke.triggered.connect(lambda: self.launchApp('Nuke'))
 		self.ui.nuke_pushButton.addAction(self.actionNuke)
 
 		self.actionNukeX = QtWidgets.QAction("NukeX", None)
-		self.actionNukeX.triggered.connect(self.launchNukeX)
+		self.actionNukeX.triggered.connect(lambda: self.launchApp('NukeX'))
 		self.ui.nuke_pushButton.addAction(self.actionNukeX)
 
 		# ***Removed NukeStudio Launcher until properly supported in Icarus***
 		# self.actionNukeStudio = QtWidgets.QAction("NukeStudio", None)
-		# self.actionNukeStudio.triggered.connect(self.launchNukeStudio)
+		# self.actionNukeStudio.triggered.connect(lambda: self.launchApp('NukeStudio'))
 		# self.ui.nuke_pushButton.addAction(self.actionNukeStudio)
 
 		# Review
 		self.ui.openReview_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
 		self.actionHieroPlayer = QtWidgets.QAction("HieroPlayer", None)
-		self.actionHieroPlayer.triggered.connect(self.launchHieroPlayer)
+		self.actionHieroPlayer.triggered.connect(lambda: self.launchApp('HieroPlayer'))
 		self.ui.openReview_pushButton.addAction(self.actionHieroPlayer)
 
 		self.actionDjv = QtWidgets.QAction("djv_view", None)
-		self.actionDjv.triggered.connect(self.launchDjv)
+		self.actionDjv.triggered.connect(launchApps.djv)
 		self.ui.openReview_pushButton.addAction(self.actionDjv)
 
 		# Browse
@@ -230,11 +234,11 @@ class icarusApp(QtWidgets.QMainWindow):
 		self.ui.render_pushButton.addAction(self.actionBrowseRenders)
 
 		self.actionDeadlineMonitor = QtWidgets.QAction("Deadline Monitor", None)
-		self.actionDeadlineMonitor.triggered.connect(self.launchDeadlineMonitor)
+		self.actionDeadlineMonitor.triggered.connect(lambda: self.launchApp('DeadlineMonitor'))
 		self.ui.render_pushButton.addAction(self.actionDeadlineMonitor)
 
 		self.actionDeadlineSlave = QtWidgets.QAction("Deadline Slave", None)
-		self.actionDeadlineSlave.triggered.connect(self.launchDeadlineSlave)
+		self.actionDeadlineSlave.triggered.connect(lambda: self.launchApp('DeadlineSlave'))
 		self.ui.render_pushButton.addAction(self.actionDeadlineSlave)
 
 		# Tools menu
@@ -852,16 +856,14 @@ class icarusApp(QtWidgets.QMainWindow):
 		if state == QtCore.Qt.Checked:
 			self.boolMinimiseOnAppLaunch = True
 			userPrefs.edit('main', 'minimiseonlaunch', 'True')
-			#print "Minimise on launch enabled"
 		else:
 			self.boolMinimiseOnAppLaunch = False
 			userPrefs.edit('main', 'minimiseonlaunch', 'False')
-			#print "Minimise on launch disabled"
 
 
 	def printShotInfo(self):
-		""" Print job / shot information stored in enviroment variables - used
-			for debugging.
+		""" Print job / shot information stored in environment variables -
+			used for debugging.
 		"""
 		try:
 			print("""
@@ -888,7 +890,7 @@ Angular units: %s
 
 
 	def printEnvVars(self, allvars=False):
-		""" Print Icarus enviroment variables - used for debugging.
+		""" Print Icarus environment variables - used for debugging.
 		"""
 		try:
 			for key in os.environ.keys():
@@ -987,109 +989,29 @@ Developers: Nuno Pereira, Mike Bonnington
 			pass
 
 
-	def launchMaya(self):
-		""" Launches Maya.
+	def launchApp(self, app):
+		""" Launches an application from the Icarus UI.
 		"""
-		launchApps.launch('Maya')
+		launchApps.launch(app)
 		if self.boolMinimiseOnAppLaunch:
 			self.showMinimized()
 
 
-	def launchMudbox(self):
-		""" Launches Mudbox.
-		"""
-		launchApps.launch('Mudbox')
-		if self.boolMinimiseOnAppLaunch:
-			self.showMinimized()
-
-
-	def launchNuke(self):
-		""" Launches Nuke.
-		"""
-		launchApps.launch('Nuke')
-		if self.boolMinimiseOnAppLaunch:
-			self.showMinimized()
-
-
-	def launchNukeX(self):
-		""" Launches NukeX.
-		"""
-		launchApps.launch('NukeX')
-		if self.boolMinimiseOnAppLaunch:
-			self.showMinimized()
-
-
-	def launchNukeStudio(self):
-		""" Launches Nuke Studio.
-		"""
-		launchApps.launch('NukeStudio')
-		if self.boolMinimiseOnAppLaunch:
-			self.showMinimized()
-
-
-	def launchMari(self):
-		""" Launches Mari.
-		"""
-		launchApps.launch('Mari')
-		if self.boolMinimiseOnAppLaunch:
-			self.showMinimized()
-
-
-	def launchHieroPlayer(self):
-		""" Launches Hiero Player.
-		"""
-		launchApps.launch('HieroPlayer')
-		if self.boolMinimiseOnAppLaunch:
-			self.showMinimized()
-
-
-	def launchRealFlow(self):
-		""" Launches RealFlow.
-		"""
-		launchApps.launch('RealFlow')
-		if self.boolMinimiseOnAppLaunch:
-			self.showMinimized()
-
-
-	def launchDeadlineMonitor(self):
-		""" Launches Deadline Monitor.
-		"""
-		launchApps.launch('DeadlineMonitor')
-		if self.boolMinimiseOnAppLaunch:
-			self.showMinimized()
-
-
-	def launchDeadlineSlave(self):
-		""" Launches Deadline Slave.
-		"""
-		launchApps.launch('DeadlineSlave')
-		if self.boolMinimiseOnAppLaunch:
-			self.showMinimized()
-
-
-	# Launches djv_view
-	def launchDjv(self):
-		launchApps.djv()
-		if self.boolMinimiseOnAppLaunch:
-			self.showMinimized()
-
-
-	#launches terminal locks button
-	def launchTerminal(self):
-		launchApps.terminal()
-	#	self.ui.openTerminal_pushButton.setEnabled(False)
-	#	self.ui.setNewShot_pushButton.setEnabled(False)
-		if self.boolMinimiseOnAppLaunch:
-			self.showMinimized()
+	# def launchTerminal(self):
+	# 	""" Launches terminal and locks tool button.
+	# 	"""
+	# 	launchApps.terminal()
+	# 	if self.boolMinimiseOnAppLaunch:
+	# 		self.showMinimized()
 
 
 	def preview(self, path=None):
-		""" Preview - opens djv_view to preview movie or image sequence
+		""" Preview - opens djv_view to preview movie or image sequence.
 		"""
 		import djvOps
 		verbose.launchApp('djv_view')
 		if path is None:
-			djvOps.viewer(self.gatherPath) # this is purely a bodge for asset browser - fix at a later date
+			djvOps.viewer(self.gatherPath)  # This is purely a bodge for asset browser - fix at a later date
 		else:
 			djvOps.viewer(path)
 
@@ -1121,13 +1043,6 @@ Developers: Nuno Pereira, Mike Bonnington
 			self.renderQueueApp = queue__main__.gpsRenderQueueApp()
 			#print self.renderQueueApp
 			self.renderQueueApp.show()
-
-
-	# def launchRenderSlave(self):
-	# 	""" Launches GPS Render Slave window.
-	# 	"""
-	# 	import slave__main__
-	# 	reload(slave__main__)  # Python 3 doesn't like this
 
 
 	def launchRenderBrowser(self):
@@ -2127,7 +2042,9 @@ except:
 	os.environ['IC_VERBOSITY'] = userPrefs.config.get('main', 'verbosity')
 
 # Version message
-verbose.icarusLaunch(os.environ['IC_VERSION'], os.environ['IC_BASEDIR'])
+verbose.icarusLaunch(os.environ['IC_VERSION'],
+					 os.environ['IC_BASEDIR'],
+					 os.environ['IC_USERNAME'])
 
 # Python version check
 try:
