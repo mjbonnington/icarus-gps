@@ -104,7 +104,7 @@ def dailyPath_prc(path):
 	if fileSplit:
 		nameBody, padding, extension = render_split(file_)
 		renderDic[nameBody] = filePath
-		#print nameBody, padding, extension
+		#print(nameBody, padding, extension)
 		return renderDic
 	else:
 		return

@@ -171,7 +171,7 @@ def checkAssetPath():
 
 	for path in paths:
 		assetDir = os.path.join(path, '.publish')
-		#print assetDir
+		#print(assetDir)
 
 		if os.path.isdir(assetDir):
 			assetTypeDirs = []

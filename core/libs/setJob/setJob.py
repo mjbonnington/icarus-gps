@@ -45,7 +45,7 @@ def getPath(job, shot=False):
 	"""
 	import jobs
 
-	#print 'setJobs.getPath()'
+	#print('setJobs.getPath()')
 
 	j = jobs.jobs()
 	jobpath = j.getPath(job, translate=True)

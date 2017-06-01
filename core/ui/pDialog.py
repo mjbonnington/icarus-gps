@@ -50,9 +50,10 @@ class dialog(QtWidgets.QDialog):
 		# 	self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WindowCloseButtonHint)
 
 		# Load UI
-		self.ui = QtCompat.load_ui(fname=UI_FILE)
+		self.ui = QtCompat.load_ui(fname=os.path.join(os.path.dirname(os.path.realpath(__file__)), UI_FILE))
 		if STYLESHEET is not None:
-			with open(STYLESHEET, "r") as fh:
+			qss=os.path.join(os.environ['IC_WORKINGDIR'], STYLESHEET)
+			with open(qss, "r") as fh:
 				self.ui.setStyleSheet(fh.read())
 
 		# Connect signals & slots
@@ -79,12 +80,16 @@ class dialog(QtWidgets.QDialog):
 
 
 	def ok(self):
+		""" Dialog accept function.
+		"""
 		self.pDialogReturn = True
 		self.ui.accept()
 		return #True
 
 
 	def cancel(self):
+		""" Dialog cancel function.
+		"""
 		self.pDialogReturn = False
 		self.ui.accept()
 		return #False

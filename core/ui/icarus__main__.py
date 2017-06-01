@@ -1070,15 +1070,9 @@ Developers: Nuno Pereira, Mike Bonnington
 		""" Launch Job Management dialog.
 		"""
 		import job_management__main__
-		# reload(job_management__main__)  # Python 3 doesn't like this
-
-		try:
-			self.jobManagementDialog.ui.exec_()
-		except AttributeError:
-			self.jobManagementDialog = job_management__main__.jobManagementDialog(parent=self)
-			self.jobManagementDialog.ui.exec_()
-
-		if self.jobManagementDialog.returnValue == True:  # Return True if user clicked Save, False for Cancel
+		jobManagementDialog = job_management__main__.jobManagementDialog(parent=self)
+		jobManagementDialog.show()
+		if jobManagementDialog.returnValue == True:  # Return True if user clicked Save, False for Cancel
 			self.populateJobs()
 
 
@@ -1086,14 +1080,8 @@ Developers: Nuno Pereira, Mike Bonnington
 		""" Launch Shot Creator dialog.
 		"""
 		import shot_creator__main__
-		# reload(shot_creator__main__)  # Python 3 doesn't like this
-
-		try:
-			self.shotCreatorDialog.ui.exec_()
-		except AttributeError:
-			self.shotCreatorDialog = shot_creator__main__.shotCreatorDialog(parent=self, job=self.ui.job_comboBox.currentText())
-			self.shotCreatorDialog.ui.exec_()
-
+		shotCreatorDialog = shot_creator__main__.shotCreatorDialog(parent=self)
+		shotCreatorDialog.show(job=self.ui.job_comboBox.currentText())
 		self.populateJobs()
 
 
@@ -1340,9 +1328,9 @@ Developers: Nuno Pereira, Mike Bonnington
 			path, prefix, fr_range, ext, num_frames = sequence.detectSeq(dailyPath, contiguous=True, ignorePadding=False)
 			padding = '.'
 			if num_frames == 1:
-				paddingInt = len(fr_range)
+				paddingInt = int(len(fr_range))
 			else:
-				paddingInt = (len(fr_range)-1)/2
+				paddingInt = int((len(fr_range)-1)/2)
 			padding += '#' * paddingInt
 
 			if prefix:
@@ -1500,7 +1488,7 @@ Developers: Nuno Pereira, Mike Bonnington
 			Ultimately this whole system should be rewritten.
 		"""
 		self.getMainPblOpts()
-		# print self.pblTo, self.pblNotes, self.pblType, self.slShot
+		# print(self.pblTo, self.pblNotes, self.pblType, self.slShot)
 
 		###############
 		# MAYA ASSETS #
@@ -1508,7 +1496,7 @@ Developers: Nuno Pereira, Mike Bonnington
 		if self.pblType == 'ma Asset':
 
 			self.get_maya_assetPblOpts()
-			#print self.chkLs
+			#print(self.chkLs)
 			if not pblChk.chkOpts(self.chkLs):
 				return
 
@@ -2020,6 +2008,7 @@ def run_standalone():
 	app = QtWidgets.QApplication(sys.argv)
 
 	# Apply UI style sheet
+	# app.setStyle('fusion')
 	if STYLESHEET is not None:
 		with open(STYLESHEET, "r") as fh:
 			app.setStyleSheet(fh.read())

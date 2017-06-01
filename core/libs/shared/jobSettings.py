@@ -60,7 +60,7 @@ class jobSettings(xmlData.xmlData):
 		if cat is not None:
 			elem = cat.find(setting)
 			if elem is not None:
-				#print "Removing element: %s" %elem.setting
+				#print("Removing element: %s" %elem.setting)
 				cat.remove(elem)
 				return True
 

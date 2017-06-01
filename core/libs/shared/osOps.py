@@ -229,7 +229,7 @@ def translatePath(jobPath):
 			elif jobPath.startswith(os.environ['FILESYSTEMROOTOSX']):
 				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTOSX'], os.environ['FILESYSTEMROOTLINUX'])
 
-		#print "Performing path translation:\n%s\n%s\n" %(jobPath, absolutePath(jobPathTr))
+		#print("Performing path translation:\n%s\n%s\n" %(jobPath, absolutePath(jobPathTr)))
 		return absolutePath(jobPathTr)
 
 	except TypeError:

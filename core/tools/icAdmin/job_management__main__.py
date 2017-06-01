@@ -16,6 +16,7 @@ from Qt import QtCore, QtGui, QtWidgets, QtCompat
 
 # Import custom modules
 import jobs
+import osOps
 import verbose
 
 
@@ -33,11 +34,11 @@ STYLESHEET = None  # Set to None to use the parent app's stylesheet
 
 
 # ----------------------------------------------------------------------------
-# Main application class
+# Main dialog class
 # ----------------------------------------------------------------------------
 
 class jobManagementDialog(QtWidgets.QDialog):
-	""" Main application class.
+	""" Main dialog class.
 	"""
 	def __init__(self, parent=None):
 		super(jobManagementDialog, self).__init__(parent)
@@ -52,13 +53,14 @@ class jobManagementDialog(QtWidgets.QDialog):
 		# Load UI
 		self.ui = QtCompat.load_ui(fname=os.path.join(os.path.dirname(os.path.realpath(__file__)), UI_FILE))
 		if STYLESHEET is not None:
-			with open(STYLESHEET, "r") as fh:
+			qss=os.path.join(os.environ['IC_WORKINGDIR'], STYLESHEET)
+			with open(qss, "r") as fh:
 				self.ui.setStyleSheet(fh.read())
 
 		# Connect signals & slots
 		self.ui.jobAdd_toolButton.clicked.connect(self.addJob)
 		self.ui.jobDelete_toolButton.clicked.connect(self.deleteJobs)
-		self.ui.refresh_toolButton.clicked.connect(self.reloadJobs)
+		self.ui.refresh_toolButton.clicked.connect(lambda: self.reloadJobs(reloadDatabase=True))  # PyQt5 compatibility
 		self.ui.jobEdit_toolButton.clicked.connect(self.editJob)
 		self.ui.jobEnable_toolButton.clicked.connect(self.enableJobs)
 		self.ui.jobDisable_toolButton.clicked.connect(self.disableJobs)
@@ -74,24 +76,33 @@ class jobManagementDialog(QtWidgets.QDialog):
 		# Instantiate jobs class and load data
 		self.j = jobs.jobs()
 
+
+	def show(self):
+		""" Show the dialog.
+		"""
 		self.returnValue = False
 		self.reloadJobs(reloadDatabase=False)
+
+		self.ui.exec_()
 
 
 	def updateToolbarUI(self):
 		""" Update the toolbar UI based on the current selection.
 		"""
+		# No items selected...
 		if len(self.ui.jobs_listWidget.selectedItems()) == 0:
 			self.ui.jobDelete_toolButton.setEnabled(False)
 			self.ui.jobEdit_toolButton.setEnabled(False)
 			self.ui.jobEnable_toolButton.setEnabled(False)
 			self.ui.jobDisable_toolButton.setEnabled(False)
+		# One item selected...
 		elif len(self.ui.jobs_listWidget.selectedItems()) == 1:
 			self.ui.jobDelete_toolButton.setEnabled(True)
 			self.ui.jobEdit_toolButton.setEnabled(True)
 			self.ui.jobEnable_toolButton.setEnabled(True)
 			self.ui.jobDisable_toolButton.setEnabled(True)
-		else: # more than one item selected
+		# More than one item selected...
+		else:
 			self.ui.jobDelete_toolButton.setEnabled(True)
 			self.ui.jobEdit_toolButton.setEnabled(False)
 			self.ui.jobEnable_toolButton.setEnabled(True)
@@ -124,7 +135,7 @@ class jobManagementDialog(QtWidgets.QDialog):
 			automatically.
 		"""
 		if reloadDatabase:
-			self.j.loadXML(quiet=True) # reload XML data
+			self.j.loadXML(quiet=True)  # Reload XML data
 
 		# Stop the widget from emitting signals
 		self.ui.jobs_listWidget.blockSignals(True)
@@ -141,11 +152,16 @@ class jobManagementDialog(QtWidgets.QDialog):
 			item = QtWidgets.QListWidgetItem(self.ui.jobs_listWidget)
 			item.setText(jobName)
 
+			# Check active entries
 			if jobActive == 'True':
 				item.setCheckState(QtCore.Qt.Checked)
 			else:
 				item.setCheckState(QtCore.Qt.Unchecked)
-				#item.setForeground(0, QtGui.QColor(102,102,102))
+
+			# Grey out entries that don't exist on disk
+			if not os.path.isdir(osOps.translatePath(jobPath)):
+				item.setForeground(QtGui.QColor(102,102,102))
+				item.setToolTip("Job path not found")
 
 			if selectItem == jobName:
 				selectedItem = item
@@ -229,7 +245,7 @@ class jobManagementDialog(QtWidgets.QDialog):
 		if editJobDialog.dialogReturn:
 			self.j.enableJob(jobName, editJobDialog.jobActive)
 			self.j.setPath(jobName, editJobDialog.jobPath)
-			if self.j.renameJob(jobName, editJobDialog.jobName): # do this last as jobs are referenced by name
+			if self.j.renameJob(jobName, editJobDialog.jobName):  # Do this last as jobs are referenced by name
 				self.reloadJobs(reloadDatabase=False, selectItem=editJobDialog.jobName)
 			else:
 				errorMsg = "Could not rename job as a job with the name '%s' already exists." %editJobDialog.jobName
@@ -274,20 +290,27 @@ class jobManagementDialog(QtWidgets.QDialog):
 		""" Save data and exit.
 		"""
 		if self.save():
-			self.ui.hide()
+			# self.ui.hide()
 			self.returnValue = True
+			self.ui.accept()
+			return
 		else:
-			self.exit()
+			self.returnValue = False
+			# self.exit()
+			self.ui.accept()
+			return
 
 
 	def exit(self):
 		""" Exit the dialog.
 		"""
-		self.ui.hide()
+		# self.ui.hide()
 		self.returnValue = False
+		self.ui.accept()
+		return
 
 # ----------------------------------------------------------------------------
-# End of main application class
+# End of main dialog class
 # ----------------------------------------------------------------------------
 
 

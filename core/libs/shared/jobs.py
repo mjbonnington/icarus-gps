@@ -207,11 +207,15 @@ class jobs(xmlData.xmlData):
 		"""
 		element = self.root.find("./job/[name='%s']" %jobName)
 		if element is not None:
-			verbose.message("Set job %s active status to %s" %(jobName, active))
+			if active:
+				action = "Enabled"
+			else:
+				action = "Disabled"
+			verbose.message("%s job %s" %(action, jobName))
 			element.set('active', '%s' %active)
 			return True
 		else:
-			verbose.error("Could not set job %s active status to %s" %(jobName, active))
+			verbose.error("Could not %s job %s" %(action, jobName))
 			return False
 
 

@@ -49,7 +49,7 @@ class renderBrowserApp(QtGui.QMainWindow):
 		outPrefix = os.path.join(imagePath, '.icThumbs', imagePrefix)
 		outFile = '%s.%s.jpg' % (outPrefix, posterFrame)
 		if not os.path.isfile(outFile):
-			print "Generating thumbnails..."
+			print("Generating thumbnails...")
 			osOps.createDir( os.path.join(imagePath, '.icThumbs') )
 			djvOps.prcImg(inPrefix, outPrefix, posterFrame, posterFrame, extension.split('.', 1)[1], outExt='jpg', resize=(512,288))
 		return outFile

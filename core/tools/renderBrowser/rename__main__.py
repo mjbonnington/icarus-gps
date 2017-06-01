@@ -164,7 +164,7 @@ class batchRenameApp(QtWidgets.QMainWindow):
 		indices.sort(reverse=True)  # Iterate over the list in reverse order to prevent the indices changing mid-operation
 
 		for index in indices:
-			#print "Deleting item at index %d" %index
+			#print("Deleting item at index %d" %index)
 			del self.renameTaskLs[index]
 
 		self.updateTaskListView()
@@ -294,7 +294,7 @@ class batchRenameApp(QtWidgets.QMainWindow):
 		for i, item1 in enumerate(children, 1):
 			for item2 in children[i:]:
 				if (item1.text(2) == item2.text(2)) and (item1.text(3) == item2.text(3)):
-					print "Warning: Rename conflict found. %s is not unique." %item1.text(2)
+					print("Warning: Rename conflict found. %s is not unique." %item1.text(2))
 					item1.setBackground(2, QtGui.QBrush(QtGui.QColor("#c33")))
 					item1.setForeground(2, QtGui.QBrush(QtGui.QColor("#fff")))
 					item2.setBackground(2, QtGui.QBrush(QtGui.QColor("#c33")))
@@ -347,16 +347,16 @@ class batchRenameApp(QtWidgets.QMainWindow):
 		for i in range(child_count):
 			item = root.child(i)
 			if not item.text(1) == item.text(2): # only rename if the operation will make any changes
-				print "Renaming '%s' to '%s' ..." %(item.text(1), item.text(2)),
+				print("Renaming '%s' to '%s' ..." %(item.text(1), item.text(2)),)
 				src_fileLs = self.expandSeq(item.text(3), item.text(1))
 				dst_fileLs = self.expandSeq(item.text(3), item.text(2))
 				for j in range(len(src_fileLs)):
 					osOps.rename( src_fileLs[j], dst_fileLs[j] )
 
-				print "Done"
+				print("Done")
 				newTaskLs.append(dst_fileLs[j])
 
-		print "Batch rename job completed.\n"
+		print("Batch rename job completed.\n")
 		self.clearTaskList()
 
 		# Update the task list to reflect the renamed files
@@ -374,14 +374,14 @@ class batchRenameApp(QtWidgets.QMainWindow):
 
 		for i in range(child_count):
 			item = root.child(i)
-			print "Deleting '%s' ..." %item.text(1),
+			print("Deleting '%s' ..." %item.text(1),)
 			src_fileLs = self.expandSeq(item.text(3), item.text(1))
 			for j in range(len(src_fileLs)):
 				osOps.recurseRemove( src_fileLs[j] )
 
-			print "Done"
+			print("Done")
 
-		print "Batch deletion job completed.\n"
+		print("Batch deletion job completed.\n")
 		self.clearTaskList()
 
 # ----------------------------------------------------------------------------
@@ -419,6 +419,6 @@ if __name__ == "__main__":
 
 # else:
 # 	myApp = batchRenameApp()
-# 	print myApp
+# 	print(myApp)
 # 	myApp.show()
 

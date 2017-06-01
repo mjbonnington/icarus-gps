@@ -96,7 +96,7 @@ def updateLs(newEntry, env=os.environ['IC_ENV']):
 		_write()
 
 	else:
-		print "Warning: Entry '%s' could not be added to recent files list. (%s)" %(newEntry, shotpath)
+		verbose.warning("Entry '%s' could not be added to recent files list. (%s)" %(newEntry, shotpath))
 
 
 def getLs(env=os.environ['IC_ENV']):

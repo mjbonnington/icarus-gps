@@ -50,7 +50,8 @@ class dialog(QtWidgets.QDialog):
 		# Load UI
 		self.ui = QtCompat.load_ui(fname=os.path.join(os.path.dirname(os.path.realpath(__file__)), UI_FILE))
 		if STYLESHEET is not None:
-			with open(STYLESHEET, "r") as fh:
+			qss=os.path.join(os.environ['IC_WORKINGDIR'], STYLESHEET)
+			with open(qss, "r") as fh:
 				self.ui.setStyleSheet(fh.read())
 
 		# Connect signals & slots
@@ -88,6 +89,9 @@ class dialog(QtWidgets.QDialog):
 			self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(False)
 		else:
 			self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(True)
+
+		# if not os.path.isdir(osOps.translatePath(self.ui.jobPath_lineEdit.text())):
+		# 	print("Path is invalid.")
 
 
 	def browseDir(self):

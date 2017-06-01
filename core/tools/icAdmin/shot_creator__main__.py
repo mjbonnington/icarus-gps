@@ -34,13 +34,13 @@ STYLESHEET = None  # Set to None to use the parent app's stylesheet
 
 
 # ----------------------------------------------------------------------------
-# Main application class
+# Main dialog class
 # ----------------------------------------------------------------------------
 
 class shotCreatorDialog(QtWidgets.QDialog):
-	""" Main application class.
+	""" Main dialog class.
 	"""
-	def __init__(self, parent=None, job=None):
+	def __init__(self, parent=None):
 		super(shotCreatorDialog, self).__init__(parent)
 
 		# Set object name and window title
@@ -53,7 +53,8 @@ class shotCreatorDialog(QtWidgets.QDialog):
 		# Load UI
 		self.ui = QtCompat.load_ui(fname=os.path.join(os.path.dirname(os.path.realpath(__file__)), UI_FILE))
 		if STYLESHEET is not None:
-			with open(STYLESHEET, "r") as fh:
+			qss=os.path.join(os.environ['IC_WORKINGDIR'], STYLESHEET)
+			with open(qss, "r") as fh:
 				self.ui.setStyleSheet(fh.read())
 
 		# Connect signals & slots
@@ -72,10 +73,18 @@ class shotCreatorDialog(QtWidgets.QDialog):
 
 		# Instantiate jobs class and load data
 		self.j = jobs.jobs()
+
+
+	def show(self, job=None):
+		""" Show the dialog.
+		"""
+		# self.returnValue = False
 		self.job = job
 
 		self.populateJobs(reloadDatabase=False)
 		self.updateShotsPreview()
+
+		self.ui.exec_()
 
 
 	def updateShotsPreview(self):
@@ -179,7 +188,7 @@ class shotCreatorDialog(QtWidgets.QDialog):
 	# 	self.returnValue = False
 
 # ----------------------------------------------------------------------------
-# End of main application class
+# End of main dialog class
 # ----------------------------------------------------------------------------
 
 

@@ -3,12 +3,14 @@
 # [Icarus] rename.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2014-2016 Gramercy Park Studios
+# (c) 2014-2017 Gramercy Park Studios
 #
 # Functions for renaming and renumbering.
 
 
 import re
+
+import verbose
 
 
 def replaceTextRE(origName, findStr, replaceStr, ignoreCase=False, regex=True, quiet=True):
@@ -31,12 +33,12 @@ def replaceTextRE(origName, findStr, replaceStr, ignoreCase=False, regex=True, q
 
 		else:
 			if not quiet:
-				print "Warning: No search string specified."
+				verbose.warning("No search string specified.")
 			return origName
 
 	except:
 		if not quiet:
-			print "Warning: Regular expression is invalid."
+			verbose.warning("Regular expression is invalid.")
 
 
 def renumber(numLs, start=1, step=1, padding=4, preserve=True, autopad=True):
@@ -54,7 +56,7 @@ def renumber(numLs, start=1, step=1, padding=4, preserve=True, autopad=True):
 
 		padding = len(str(maxNum))
 
-	#print padding
+	#print(padding)
 
 	# Regenerate lists
 	index = start

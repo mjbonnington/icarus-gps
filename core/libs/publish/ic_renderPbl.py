@@ -106,7 +106,7 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes):
 		mainLayerFileLs = sorted(os.listdir(mainLayerDir))
 		mainLayerPaddingLs = []
 		snapShot = False
-		#print mainLayerFileLs
+		#print(mainLayerFileLs)
 		for mainLayerFile in mainLayerFileLs:
 			#if '_main.' in mainLayerFile:
 			if '_main' in mainLayerFile: # use regex for better matching

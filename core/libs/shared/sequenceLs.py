@@ -9,8 +9,11 @@
 # TODO: Take arguments to list specific directory or sequence
 
 
-import argparse, os, sys
-import sequence as seq
+import argparse
+import os
+import sys
+
+import sequence
 
 
 # Set up arguments
@@ -26,16 +29,16 @@ else:
 	path = os.getcwd()
 
 # Get list of file sequence bases in specified directory
-bases = seq.getBases(path)
+bases = sequence.getBases(path)
 
 if bases:
-	print "%d file sequence(s) found:" %len(bases)
+	print("%d file sequence(s) found:" %len(bases))
 else:
 	sys.exit("No file sequences detected in '%s'" %path)
 
 for base in bases:
-	path, prefix, fr_range, ext, num_frames = seq.getSequence(path, base)
+	path, prefix, fr_range, ext, num_frames = sequence.getSequence(path, base)
 
 	# Print output
-	print "%s.[%s]%s (%d)" %(prefix, fr_range, ext, num_frames)
+	print("%s.[%s]%s (%d)" %(prefix, fr_range, ext, num_frames))
 

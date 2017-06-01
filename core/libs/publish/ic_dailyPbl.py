@@ -75,7 +75,7 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 		dailyFileBody = '%s_dailies_%s' % (os.environ['SHOT'], subsetName)
 		dailyFile = '%s.%s.jpg' % (dailyFileBody, startFrame)
 		inFile = os.path.join(dailyPath, nameBody)
-		#print inFile
+		#print(inFile)
 		outFile = os.path.join(pblDir, dailyFileBody)
 		#djvOps.prcImg(inFile, outFile, startFrame, endFrame, extension, outExt='jpg', fps=os.environ['FPS'])
 		djvOps.prcQt(inFile, pblDir, startFrame, endFrame, extension, name='%s_%s' % (dailyFileBody, version))
