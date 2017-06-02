@@ -1,3 +1,3 @@
 @echo off
 cls
-python ./icarus__main__.py
+python ./icarus__main__.py -b False
