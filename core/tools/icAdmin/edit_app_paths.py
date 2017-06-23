@@ -9,35 +9,55 @@
 # operating systems.
 
 
-from PySide import QtCore, QtGui
-from edit_app_paths_ui import *
-import os, sys
+import os
+import sys
 
-# Initialise Icarus environment - only required when standalone
-#sys.path.append(os.environ['IC_WORKINGDIR'])
-#import env__init__
-#env__init__.setEnv()
-#env__init__.appendSysPaths()
+from Qt import QtCompat, QtCore, QtWidgets
 
 # Import custom modules
-import appPaths, verbose
+import appPaths
+import verbose
 
 
-class editAppPathsDialog(QtGui.QDialog):
+# ----------------------------------------------------------------------------
+# Configuration
+# ----------------------------------------------------------------------------
 
-	def __init__(self, parent = None):
-		#QtGui.QDialog.__init__(self, parent)
-		super(editAppPathsDialog, self).__init__()
-		self.ui = Ui_Dialog()
-		self.ui.setupUi(self)
+# Set window title and object names
+WINDOW_TITLE = "Edit Application Paths"
+WINDOW_OBJECT = "editAppPathsUI"
 
-		self.init()
+# Set the UI and the stylesheet
+UI_FILE = "edit_app_paths_ui.ui"
+STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
 
-		#self.ui.appName_comboBox.setProperty("mandatoryField", True)
-		#self.ui.appVer_comboBox.setProperty("mandatoryField", True)
+
+# ----------------------------------------------------------------------------
+# Main dialog class
+# ----------------------------------------------------------------------------
+
+class dialog(QtWidgets.QDialog):
+	""" Main dialog class.
+	"""
+	def __init__(self, parent=None):
+		super(dialog, self).__init__(parent)
+
+		# Set object name and window title
+		self.setObjectName(WINDOW_OBJECT)
+		self.setWindowTitle(WINDOW_TITLE)
+
+		# Set window flags
+		self.setWindowFlags(QtCore.Qt.Dialog)
+
+		# Load UI & stylesheet
+		self.ui = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], UI_FILE))
+		if STYLESHEET is not None:
+			qss=os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
+			with open(qss, "r") as fh:
+				self.ui.setStyleSheet(fh.read())
 
 		# Set up keyboard shortcuts
-		self.shortcut = QtGui.QShortcut(self)
+		self.shortcut = QtWidgets.QShortcut(self)
 		self.shortcut.setKey('Ctrl+S')
 		self.shortcut.activated.connect(self.saveAppPaths)
 
@@ -51,35 +71,46 @@ class editAppPathsDialog(QtGui.QDialog):
 		self.ui.winPath_lineEdit.editingFinished.connect(self.storeAppPathWin)
 		self.ui.guess_pushButton.clicked.connect(self.guessAppPaths)
 
-		#self.ui.appPaths_buttonBox.button(QtGui.QDialogButtonBox.Reset).clicked.connect(self.init)
-		#self.ui.appPaths_buttonBox.button(QtGui.QDialogButtonBox.Apply).clicked.connect(self.saveAppPaths)
-		self.ui.appPaths_buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.exit)
-		self.ui.appPaths_buttonBox.button(QtGui.QDialogButtonBox.Save).clicked.connect(self.saveAndExit)
+		#self.ui.appPaths_buttonBox.button(QtWidgets.QDialogButtonBox.Reset).clicked.connect(self.reset)
+		#self.ui.appPaths_buttonBox.button(QtWidgets.QDialogButtonBox.Apply).clicked.connect(self.saveAppPaths)
+		self.ui.appPaths_buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.exit)
+		self.ui.appPaths_buttonBox.button(QtWidgets.QDialogButtonBox.Save).clicked.connect(self.saveAndExit)
+
+		# Instantiate jobs class and load data
+		self.ap = appPaths.appPaths()
+
+		# self.show()
 
 
-	def init(self):
+	def display(self):
 		""" Initialise or reset by reloading data.
 		"""
+		self.returnValue = False
+
 		# Load data from xml file
-		self.ap = appPaths.appPaths()
-		ap_load = self.ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'))
+		self.ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'))
 
 		# Populate fields
 		self.populateApps()
 		self.populateAppVersions()
 		self.populateAppExecPaths()
 
+		self.ui.exec_()
+		return self.returnValue
 
-	def keyPressEvent(self, event):
-		""" Override function to prevent Enter / Esc keypresses triggering OK / Cancel buttons.
-		"""
-		pass
-		#if event.key() == QtCore.Qt.Key_Return or event.key() == QtCore.Qt.Key_Enter:
-		#	return
+
+	# def keyPressEvent(self, event):
+	# 	""" Override function to prevent Enter / Esc keypresses triggering
+	# 		OK / Cancel buttons.
+	# 	"""
+	# 	pass
+	# 	# if event.key() == QtCore.Qt.Key_Return or event.key() == QtCore.Qt.Key_Enter:
+	# 	# 	return
 
 
 	def toggleAppVerDelButton(self):
-		""" Enable or disable the application version delete button as required.
+		""" Enable or disable the application version delete button as
+			required.
 		"""
 		if (self.ui.appVer_comboBox.count() == 0) or (self.ui.appVer_comboBox.currentText() == '[template]'):
 			self.ui.appVerDel_toolButton.setEnabled(False)
@@ -107,7 +138,7 @@ class editAppPathsDialog(QtGui.QDialog):
 		# Populate menu with associated app versions
 		for version in self.ap.getVersions( self.ui.appName_comboBox.currentText() ):
 			self.ui.appVer_comboBox.addItem(version)
-			#self.ui.appVer_comboBox.insertItem(0, version) # Add to start
+			#self.ui.appVer_comboBox.insertItem(0, version)  # Add to start
 
 		# Select last item
 		self.ui.appVer_comboBox.setCurrentIndex(self.ui.appVer_comboBox.count()-1)
@@ -133,11 +164,11 @@ class editAppPathsDialog(QtGui.QDialog):
 				self.ui.appVerDel_toolButton.setEnabled(True)
 				self.ui.guess_pushButton.setEnabled(True)
 			self.ui.execPaths_groupBox.setEnabled(True)
-			self.ui.appPaths_buttonBox.button(QtGui.QDialogButtonBox.Save).setEnabled(True)
+			self.ui.appPaths_buttonBox.button(QtWidgets.QDialogButtonBox.Save).setEnabled(True)
 		else:
 			self.ui.appVerDel_toolButton.setEnabled(False)
 			self.ui.execPaths_groupBox.setEnabled(False)
-			self.ui.appPaths_buttonBox.button(QtGui.QDialogButtonBox.Save).setEnabled(False)
+			self.ui.appPaths_buttonBox.button(QtWidgets.QDialogButtonBox.Save).setEnabled(False)
 
 		self.ui.osxPath_lineEdit.setText( self.ap.getPath( self.ui.appName_comboBox.currentText(), self.ui.appVer_comboBox.currentText(), 'osx' ) )
 		self.ui.linuxPath_lineEdit.setText( self.ap.getPath( self.ui.appName_comboBox.currentText(), self.ui.appVer_comboBox.currentText(), 'linux' ) )
@@ -182,7 +213,8 @@ class editAppPathsDialog(QtGui.QDialog):
 
 
 	def guessAppPaths(self):
-		""" Guess the executable paths for each OS based on the [template] entry (if it exists).
+		""" Guess the executable paths for each OS based on the [template]
+			entry (if it exists).
 		"""
 		osxGuess = self.ap.guessPath( self.ui.appName_comboBox.currentText(), self.ui.appVer_comboBox.currentText(), 'osx' )
 		if osxGuess:
@@ -219,29 +251,37 @@ class editAppPathsDialog(QtGui.QDialog):
 		""" Save data and exit.
 		"""
 		if self.saveAppPaths():
-			self.hide()
+			self.returnValue = True
+			self.ui.accept()
 
 
 	def exit(self):
 		""" Exit the dialog.
 		"""
-		self.hide()
+		self.returnValue = False
+		self.ui.reject()
 
 
-if __name__ == "__main__":
-	app = QtGui.QApplication(sys.argv)
+# if __name__ == "__main__":
+# 	# Initialise Icarus environment - only required when standalone
+# 	# sys.path.append(os.environ['IC_WORKINGDIR'])
+# 	# import env__init__
+# 	# env__init__.setEnv()
+# 	# env__init__.appendSysPaths()
 
-	#app.setStyle('plastique') # Set UI style - you can also use a flag e.g. '-style plastique'
+# 	app = QtWidgets.QApplication(sys.argv)
 
-	qss=os.path.join(os.environ['IC_WORKINGDIR'], "style.qss")
-	with open(qss, "r") as fh:
-		app.setStyleSheet(fh.read())
+# 	#app.setStyle('plastique') # Set UI style - you can also use a flag e.g. '-style plastique'
 
-	editAppPaths = editAppPathsDialog()
-	editAppPaths.show()
-	sys.exit(editAppPaths.exec_())
+# 	qss=os.path.join(os.environ['IC_WORKINGDIR'], "style.qss")
+# 	with open(qss, "r") as fh:
+# 		app.setStyleSheet(fh.read())
 
-#else:
-#	editAppPaths = editAppPathsDialog()
-#	editAppPaths.show()
+# 	editAppPaths = dialog()
+# 	editAppPaths.show()
+# 	sys.exit(editAppPaths.exec_())
+
+# else:
+# 	editAppPaths = dialog()
+# 	editAppPaths.show()
 

@@ -864,7 +864,7 @@ class gpsRenderQueueApp(QtGui.QMainWindow):
 			dialogMsg += 'Are you sure you want to quit?'
 
 			dialog = pDialog.dialog()
-			if dialog.dialogWindow(dialogMsg, dialogTitle):
+			if dialog.display(dialogMsg, dialogTitle):
 				event.accept()
 			else:
 				event.ignore()

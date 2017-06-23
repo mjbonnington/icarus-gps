@@ -178,12 +178,13 @@ class settingsDialog(QtWidgets.QDialog):
 		if storeProperties:
 			self.storeProperties(self.currentCategory)
 
-		verbose.print_("\n[%s]" %category, 4)
+		# verbose.print_("\n[%s]" %category, 4)
 		self.currentCategory = category # a bit hacky
 
 		# Create the signal mapper
 		signalMapper = QSignalMapper(self)
-		signalMapper.mapped.connect(self.customSignal)  # TEMP DISABLE
+		signalMapper.mapped.connect(self.customSignal)  # TEMP DISABLE new-style signal connection not working with PyQt5
+		# QtCore.QObject.connect(signalMapper, QtCore.SIGNAL("mapped()"), self.customSignal, SLOT("map()"))
 
 		# Create new frame to hold properties UI
 		# self.ui.settings_frame.close()
@@ -707,7 +708,7 @@ class settingsDialog(QtWidgets.QDialog):
 
 		# Create the signal mapper
 		signalMapper = QSignalMapper(self)
-		signalMapper.mapped.connect(self.customSignal)
+		signalMapper.mapped.connect(self.customSignal)  # TEMP DISABLE new-style signal connection not working with PyQt5
 
 		noSelectText = ""
 		apps = self.ap.getApps() # get apps and versions
@@ -772,13 +773,10 @@ class settingsDialog(QtWidgets.QDialog):
 		""" Open the application paths editor dialog.
 		"""
 		import edit_app_paths
-		reload(edit_app_paths)
-		self.editAppPaths = edit_app_paths.editAppPathsDialog()
-		self.editAppPaths.show()
-		self.editAppPaths.exec_()
+		editAppPathsDialog = edit_app_paths.dialog(parent=self)
+		if editAppPathsDialog.display():
+			self.ap.loadXML()  # Reload XML and update comboBox contents after closing dialog
 
-		# Reload appPaths XML and update comboBox contents after closing dialog
-		self.ap.loadXML()
 		self.openProperties('apps')
 
 

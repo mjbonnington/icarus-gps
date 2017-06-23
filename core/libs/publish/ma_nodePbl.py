@@ -70,7 +70,7 @@ def publish(pblTo, slShot, nodeType, textures, pblNotes):
 	dialogTitle = 'Publishing %s' % convention
 	dialogMsg = 'Asset:\t%s\n\nVersion:\t%s\n\nSubset:\t%s\n\nNotes:\t%s' % (assetPblName, version, subsetName, pblNotes)
 	dialog = pDialog.dialog()
-	if not dialog.dialogWindow(dialogMsg, dialogTitle):
+	if not dialog.display(dialogMsg, dialogTitle):
 		return
 
 	# Publishing
@@ -132,5 +132,5 @@ def publish(pblTo, slShot, nodeType, textures, pblNotes):
 	dialogTitle = 'Publish Report'
 	dialogMsg = 'Asset:\t%s\n\nVersion:\t%s\n\nSubset:\t%s\n\n\n%s' % (assetPblName, version, subsetName, pblResult)
 	dialog = pDialog.dialog()
-	dialog.dialogWindow(dialogMsg, dialogTitle, conf=True)
+	dialog.display(dialogMsg, dialogTitle, conf=True)
 

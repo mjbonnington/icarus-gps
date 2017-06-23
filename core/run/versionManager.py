@@ -37,7 +37,7 @@ class dialog(QtWidgets.QDialog):
 		# self.ui.show()
 
 
-	def dialogWindow(self, assetRootDir, version, modal=True):
+	def display(self, assetRootDir, version, modal=True):
 
 		# Connect signals & slots
 		self.ui.update_pushButton.clicked.connect(self.update)

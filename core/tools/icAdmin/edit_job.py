@@ -11,7 +11,7 @@
 import os
 import sys
 
-from Qt import QtCore, QtGui, QtWidgets, QtCompat
+from Qt import QtCompat, QtCore, QtGui, QtWidgets
 
 # Import custom modules
 import osOps
@@ -27,7 +27,7 @@ WINDOW_OBJECT = "editJobUI"
 
 # Set the UI and the stylesheet
 UI_FILE = "edit_job_ui.ui"
-STYLESHEET = None  # Set to None to use the parent app's stylesheet
+STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
 
 
 # ----------------------------------------------------------------------------
@@ -47,10 +47,10 @@ class dialog(QtWidgets.QDialog):
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Dialog)
 
-		# Load UI
-		self.ui = QtCompat.load_ui(fname=os.path.join(os.path.dirname(os.path.realpath(__file__)), UI_FILE))
+		# Load UI & stylesheet
+		self.ui = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], UI_FILE))
 		if STYLESHEET is not None:
-			qss=os.path.join(os.environ['IC_WORKINGDIR'], STYLESHEET)
+			qss=os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
 			with open(qss, "r") as fh:
 				self.ui.setStyleSheet(fh.read())
 
@@ -66,10 +66,10 @@ class dialog(QtWidgets.QDialog):
 		self.ui.jobName_lineEdit.setValidator(alphanumeric_validator)
 
 
-	def dialogWindow(self, jobName, jobPath, jobActive):
-		""" Show the dialog.
+	def display(self, jobName, jobPath, jobActive):
+		""" Display the dialog.
 		"""
-		self.dialogReturn = False
+		self.returnValue = False
 
 		if jobName:
 			self.ui.setWindowTitle("%s: %s" %(WINDOW_TITLE, jobName))
@@ -80,6 +80,7 @@ class dialog(QtWidgets.QDialog):
 		self.ui.jobEnabled_checkBox.setChecked(jobActive)
 
 		self.ui.exec_()
+		return self.returnValue
 
 
 	def updateUI(self):
@@ -123,13 +124,15 @@ class dialog(QtWidgets.QDialog):
 					self.ui.jobName_lineEdit.setText(jobName)
 				except IndexError:
 					pass
+
 		# return dialogPath
+		self.ui.raise_()  # Keep the dialog in front
 
 
 	def ok(self):
 		""" Dialog accept function.
 		"""
-		self.dialogReturn = True
+		self.returnValue = True
 		self.jobName = self.ui.jobName_lineEdit.text()
 		self.jobPath = self.ui.jobPath_lineEdit.text()
 		if self.ui.jobEnabled_checkBox.checkState() == QtCore.Qt.Checked:
@@ -137,13 +140,11 @@ class dialog(QtWidgets.QDialog):
 		else:
 			self.jobActive = False
 		self.ui.accept()
-		return #True
 
 
 	def cancel(self):
 		""" Dialog cancel function.
 		"""
-		self.dialogReturn = False
-		self.ui.accept()
-		return #False
+		self.returnValue = False
+		self.ui.reject()
 

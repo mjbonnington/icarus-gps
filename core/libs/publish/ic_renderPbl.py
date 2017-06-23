@@ -48,7 +48,7 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes):
 		dialogMsg += 'Warning:\n\nNo main layer was set.\nThe main render layer will be ported from the previous publish.\n\nContinue?\n\n\n'
 	dialogMsg += 'Render:\t%s\n\nVersion:\t%s\n\nNotes:\t%s' % (assetPblName, version, pblNotes)
 	dialog = pDialog.dialog()
-	if not dialog.dialogWindow(dialogMsg, dialogTitle):
+	if not dialog.display(dialogMsg, dialogTitle):
 		return
 
 	try:
@@ -155,5 +155,5 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes):
 	dialogTitle = "Publish Report"
 	dialogMsg = "Render:\t%s\n\nVersion:\t%s\n\n\n%s" % (assetPblName, version, pblResult)
 	dialog = pDialog.dialog()
-	dialog.dialogWindow(dialogMsg, dialogTitle, conf=True)
+	dialog.display(dialogMsg, dialogTitle, conf=True)
 

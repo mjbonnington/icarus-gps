@@ -19,7 +19,7 @@ def update(ICSet):
 
 	ICSetAttrDic = mayaOps.getICSetAttrs(ICSet)
 	vManagerDialog = versionManager.dialog()
-	updateVersion = vManagerDialog.dialogWindow(ICSetAttrDic['icAssetRootDir'], ICSetAttrDic['icVersion'])
+	updateVersion = vManagerDialog.display(ICSetAttrDic['icAssetRootDir'], ICSetAttrDic['icVersion'])
 	if not updateVersion:
 		return
 	else:

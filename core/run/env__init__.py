@@ -18,7 +18,7 @@ def setEnv():
 	""" Set some environment variables for basic operation.
 	"""
 	# Set version string
-	os.environ['IC_VERSION'] = 'v0.9.9-20170602'
+	os.environ['IC_VERSION'] = 'v0.9.9-20170623'
 
 	# Standardise some environment variables across systems.
 	# Usernames will always be stored as lowercase for compatibility.
@@ -51,9 +51,10 @@ def setEnv():
 
 	# Set up basic paths
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
-	icarusUIDir = os.path.join('core', 'ui')
+	icarusRunDir = os.path.join('core', 'run')
 	os.environ['IC_WORKINGDIR'] = icarusWorkingDir
-	os.environ['IC_BASEDIR'] = icarusWorkingDir.replace(icarusUIDir, '')
+	os.environ['IC_BASEDIR'] = icarusWorkingDir.replace(icarusRunDir, '')
+	os.environ['IC_FORMSDIR'] = os.path.join(os.environ['IC_BASEDIR'], 'core', 'ui')
 	os.environ['IC_CONFIGDIR'] = os.path.join(os.environ['IC_BASEDIR'], 'core', 'config')
 	os.environ['IC_USERPREFS'] = os.path.join(os.environ['IC_CONFIGDIR'], 'users', os.environ['IC_USERNAME'])  # User prefs stored on server
 	#os.environ['IC_USERPREFS'] = os.path.join(os.environ['IC_USERHOME'], os.environ['DATAFILESRELATIVEDIR'])  # User prefs stored in user home folder
@@ -66,9 +67,10 @@ def appendSysPaths():
 	"""
 	libs = os.path.join(os.environ['IC_BASEDIR'], 'core', 'libs')
 	tools = os.path.join(os.environ['IC_BASEDIR'], 'core', 'tools')
+	ui = os.path.join(os.environ['IC_BASEDIR'], 'core', 'ui')
 	vendor = os.path.join(os.environ['IC_BASEDIR'], 'core', 'vendor')
 
-	pathsToAppend = [vendor]  # Was [os.environ['IC_BASEDIR'], vendor]
+	pathsToAppend = [ui, vendor]  # Was [os.environ['IC_BASEDIR'], vendor]
 
 	# Add subdirectories in libs and tools directories
 	for path in [libs, tools]:

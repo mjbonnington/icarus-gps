@@ -106,7 +106,7 @@ def gather(gatherPath):
 		dialogTitle = 'Gather Warning'
 		dialogMsg = 'Errors occured during asset update.\nPlease check console for more information.\n\n%s' % traceback.format_exc()
 		dialog = pDialog.dialog()
-		dialog.dialogWindow(dialogMsg, dialogTitle, conf=True)
+		dialog.display(dialogMsg, dialogTitle, conf=True)
 
 
 def chkNameConflict(obj):

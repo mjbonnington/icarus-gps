@@ -12,7 +12,7 @@
 import os
 import sys
 
-from Qt import QtCore, QtGui, QtWidgets, QtCompat
+from Qt import QtCompat, QtCore, QtWidgets
 
 # Import custom modules
 import osOps
@@ -28,7 +28,7 @@ WINDOW_OBJECT = "editRootPathsUI"
 
 # Set the UI and the stylesheet
 UI_FILE = "edit_root_paths_ui.ui"
-STYLESHEET = None  # Set to None to use the parent app's stylesheet
+STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
 
 
 # ----------------------------------------------------------------------------
@@ -48,10 +48,10 @@ class dialog(QtWidgets.QDialog):
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Dialog)
 
-		# Load UI
-		self.ui = QtCompat.load_ui(fname=os.path.join(os.path.dirname(os.path.realpath(__file__)), UI_FILE))
+		# Load UI & stylesheet
+		self.ui = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], UI_FILE))
 		if STYLESHEET is not None:
-			qss=os.path.join(os.environ['IC_WORKINGDIR'], STYLESHEET)
+			qss=os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
 			with open(qss, "r") as fh:
 				self.ui.setStyleSheet(fh.read())
 
@@ -63,10 +63,10 @@ class dialog(QtWidgets.QDialog):
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.cancel)
 
 
-	def dialogWindow(self, winPath, osxPath, linuxPath, jobsRelPath):
-		""" Show the dialog.
+	def display(self, winPath, osxPath, linuxPath, jobsRelPath):
+		""" Display the dialog.
 		"""
-		self.dialogReturn = False
+		self.returnValue = False
 
 		if winPath is not None:
 			self.ui.jobRootPathWin_lineEdit.setText(winPath)
@@ -78,6 +78,7 @@ class dialog(QtWidgets.QDialog):
 			self.ui.jobsRelPath_lineEdit.setText(jobsRelPath)
 
 		self.ui.exec_()
+		return self.returnValue
 
 
 	def updateUI(self):
@@ -92,20 +93,18 @@ class dialog(QtWidgets.QDialog):
 	def ok(self):
 		""" Dialog accept function.
 		"""
-		self.dialogReturn = True
+		self.returnValue = True
 		# Normalise paths and strip trailing slash
 		self.winPath = osOps.absolutePath(self.ui.jobRootPathWin_lineEdit.text(), stripTrailingSlash=True)
 		self.osxPath = osOps.absolutePath(self.ui.jobRootPathOSX_lineEdit.text(), stripTrailingSlash=True)
 		self.linuxPath = osOps.absolutePath(self.ui.jobRootPathLinux_lineEdit.text(), stripTrailingSlash=True)
 		self.jobsRelPath = self.ui.jobsRelPath_lineEdit.text()
 		self.ui.accept()
-		return #True
 
 
 	def cancel(self):
 		""" Dialog cancel function.
 		"""
-		self.dialogReturn = False
-		self.ui.accept()
-		return #False
+		self.returnValue = False
+		self.ui.reject()
 

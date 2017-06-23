@@ -9,7 +9,9 @@
 
 
 import xml.etree.ElementTree as ET
-import xmlData, verbose
+
+import verbose
+import xmlData
 
 
 class appPaths(xmlData.xmlData):

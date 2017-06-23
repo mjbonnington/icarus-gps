@@ -335,7 +335,7 @@ class gpsRenderSubmitApp(QtGui.QDialog):
 		dialogMsg += 'Do you want to continue?'
 
 		dialog = pDialog.dialog()
-		if dialog.dialogWindow(dialogMsg, dialogTitle):
+		if dialog.display(dialogMsg, dialogTitle):
 			self.rq.newJob(genericOpts, renderOpts, self.taskList, os.environ['IC_USERNAME'], time.strftime(timeFormatStr), comment)
 		else:
 			return

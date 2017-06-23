@@ -40,7 +40,7 @@ env__init__.appendSysPaths()
 # os.environ['IC_ENV'] = 'NUKE_TMP'
 # import icarus__main__
 import gpsNodes
-# os.environ['IC_ENV'] = 'NUKE'
+os.environ['IC_ENV'] = 'NUKE'
 
 # Third-party initializations go here
 

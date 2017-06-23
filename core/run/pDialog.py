@@ -12,7 +12,7 @@
 import os
 import sys
 
-from Qt import QtCore, QtGui, QtWidgets, QtCompat
+from Qt import QtCompat, QtCore, QtWidgets
 
 
 # ----------------------------------------------------------------------------
@@ -25,7 +25,7 @@ WINDOW_OBJECT = "promptDialogUI"
 
 # Set the UI and the stylesheet
 UI_FILE = "pDialog_ui.ui"
-STYLESHEET = None  # Set to None to use the parent app's stylesheet
+STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
 
 
 # ----------------------------------------------------------------------------
@@ -45,14 +45,17 @@ class dialog(QtWidgets.QDialog):
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Dialog)
 		# if os.environ['IC_RUNNING_OS'] == 'Darwin':
-		# 	self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+		# 	self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | 
+		# 	                    QtCore.Qt.X11BypassWindowManagerHint | 
+		# 	                    QtCore.Qt.WindowCloseButtonHint)
 		# else:
-		# 	self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.WindowCloseButtonHint)
+		# 	self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | 
+		# 		                QtCore.Qt.WindowCloseButtonHint)
 
-		# Load UI
-		self.ui = QtCompat.load_ui(fname=os.path.join(os.path.dirname(os.path.realpath(__file__)), UI_FILE))
+		# Load UI & stylesheet
+		self.ui = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], UI_FILE))
 		if STYLESHEET is not None:
-			qss=os.path.join(os.environ['IC_WORKINGDIR'], STYLESHEET)
+			qss=os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
 			with open(qss, "r") as fh:
 				self.ui.setStyleSheet(fh.read())
 
@@ -61,20 +64,22 @@ class dialog(QtWidgets.QDialog):
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.cancel)
 
 
-
-	def dialogWindow(self, dialogMsg, dialogTitle, conf=False, modal=True):
-		""" Show the dialog.
+	def display(self, message, title=WINDOW_TITLE, conf=False, modal=True):
+		""" Display the dialog with the specified message.
+			'title' - sets the title of the dialog window.
+			'conf' - a confirmation dialog with only an OK button.
+			'modal' - a modal dialog (default)
 		"""
-		self.ui.message_textEdit.setText(dialogMsg)
-		self.ui.setWindowTitle(dialogTitle)
-		self.pDialogReturn = False
+		self.ui.message_textEdit.setText(message)
+		self.ui.setWindowTitle(title)
+		self.returnValue = False
 
 		if conf:
 			self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).hide()
 
 		if modal:
 			self.ui.exec_()
-			return self.pDialogReturn
+			return self.returnValue
 		else:
 			self.ui.show()
 
@@ -82,15 +87,13 @@ class dialog(QtWidgets.QDialog):
 	def ok(self):
 		""" Dialog accept function.
 		"""
-		self.pDialogReturn = True
+		self.returnValue = True
 		self.ui.accept()
-		return #True
 
 
 	def cancel(self):
 		""" Dialog cancel function.
 		"""
-		self.pDialogReturn = False
-		self.ui.accept()
-		return #False
+		self.returnValue = False
+		self.ui.reject()
 
