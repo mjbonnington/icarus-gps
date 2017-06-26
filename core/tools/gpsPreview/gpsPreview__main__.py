@@ -549,7 +549,7 @@ def run_nuke():
 		if __name__ == module_name:
 			prefix = module_name + '.'
 		panel = nukescripts.panels.registerWidgetAsPanel(
-			widget=prefix + 'Icarus',  # module_name.Class_name
+			widget=prefix + WINDOW_TITLE,  # module_name.Class_name
 			name=WINDOW_TITLE,
 			id='uk.co.thefoundry.' + WINDOW_TITLE,
 			create=True)

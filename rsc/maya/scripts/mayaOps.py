@@ -9,10 +9,14 @@
 # Maya operations module.
 
 
-import os, shutil, recentFiles
+import os
+import shutil
+
 import maya.cmds as mc
 import maya.mel as mel
+
 import osOps
+import recentFiles
 
 
 def applyTransforms(obj, objT, objR, objS):

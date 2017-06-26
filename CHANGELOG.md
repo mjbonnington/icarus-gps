@@ -2,7 +2,7 @@ v0.9.9 (--)
 -	[Icarus] Updated code for compatibility with Python 3 and Qt 5.
 -	[Icarus] Updated the embedded djv_view to version 1.1.0, and 64-bit on Windows. QuickTime support is now provided by ffmpeg.
 -	[Icarus] Added the ability to override the user via a command-line argument: i.e. --user USERNAME.
--	[Nuke] Added Deadline integrated submitter script.
+-	[Nuke] Added Deadline 8 integrated submitter script.
 
 v0.9.8 (2017-05-19)
 -	[Icarus] Ported UI code to use Qt.py (https://fredrikaverpil.github.io/2016/07/25/developing-with-qt-py/) enabling support for all Qt Python bindings (e.g PySide2, PyQt5).

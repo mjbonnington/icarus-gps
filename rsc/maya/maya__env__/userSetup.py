@@ -12,7 +12,7 @@
 import os
 import sys
 
-sys.path.append(os.path.join(os.environ['IC_BASEDIR'], 'core', 'ui'))
+sys.path.append(os.environ['IC_WORKINGDIR'])
 import env__init__
 env__init__.appendSysPaths()
 

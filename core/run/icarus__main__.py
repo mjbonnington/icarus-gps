@@ -71,6 +71,10 @@ import verbose
 # Configuration
 # ----------------------------------------------------------------------------
 
+VENDOR = "Gramercy Park Studios"
+COPYRIGHT = "(c) 2013-2017"
+DEVELOPERS = "Nuno Pereira, Mike Bonnington"
+
 # Set window title and object names
 WINDOW_TITLE = "Icarus"
 WINDOW_OBJECT = "icarusMainUI"
@@ -112,7 +116,7 @@ class icarusApp(QtWidgets.QMainWindow):
 		self.setCentralWidget(self.ui)
 
 		# Restore window geometry and state (restoreState incompatible with PyQt5)
-		self.settings = QtCore.QSettings("Gramercy Park Studios", "Icarus")
+		self.settings = QtCore.QSettings(VENDOR, WINDOW_TITLE)
 		self.restoreGeometry(self.settings.value("geometry", ""))
 		# self.restoreState(self.settings.value("windowState", ""))
 
@@ -918,16 +922,25 @@ Angular units: %s
 		qt_ver_str = QtCore.qVersion()
 
 		about_msg = """
-I   C   A   R   U   S
+%s
 
 %s
 
 Python %s / %s / Qt %s / %s
 Environment: %s
 
-Developers: Nuno Pereira, Mike Bonnington
-(c) 2013-2017 Gramercy Park Studios
-""" %(os.environ['IC_VERSION'], python_ver_str, pyside_ver_str, qt_ver_str, os.environ['IC_RUNNING_OS'], os.environ['IC_ENV'])
+Developers: %s
+%s %s
+""" %("   ".join(WINDOW_TITLE.upper()),
+	  os.environ['IC_VERSION'],
+	  python_ver_str,
+	  pyside_ver_str,
+	  qt_ver_str,
+	  os.environ['IC_RUNNING_OS'],
+	  os.environ['IC_ENV'],
+	  DEVELOPERS,
+	  COPYRIGHT,
+	  VENDOR)
 
 		import about
 		about = about.dialog(parent=self)
@@ -1981,7 +1994,7 @@ def run_nuke():
 		if __name__ == module_name:
 			prefix = module_name + '.'
 		panel = nukescripts.panels.registerWidgetAsPanel(
-			widget=prefix + 'Icarus',  # module_name.Class_name
+			widget=prefix + WINDOW_TITLE,  # module_name.Class_name
 			name=WINDOW_TITLE,
 			id='uk.co.thefoundry.' + WINDOW_TITLE,
 			create=True)
@@ -2025,7 +2038,7 @@ def run_standalone():
 			app.setStyleSheet(fh.read())
 
 	# Set application icon
-	app.setWindowIcon(QtGui.QIcon("rsc/icarus.png"))
+	app.setWindowIcon(QtGui.QIcon(os.path.join(os.environ['IC_FORMSDIR'], "rsc", "icarus.png")))
 
 	# Instantiate main application class
 	icApp = icarusApp()
@@ -2053,7 +2066,9 @@ except:
 	os.environ['IC_VERBOSITY'] = userPrefs.config.get('main', 'verbosity')
 
 # Version message
-verbose.icarusLaunch(os.environ['IC_VERSION'],
+verbose.icarusLaunch(WINDOW_TITLE.upper(),
+					 os.environ['IC_VERSION'],
+					 "%s %s" %(COPYRIGHT, VENDOR),
 					 os.environ['IC_BASEDIR'],
 					 os.environ['IC_USERNAME'])
 

@@ -6,7 +6,7 @@
 # (c) 2015-2017 Gramercy Park Studios
 #
 # This module contains functions to retain backwards-compatibility with older
-# types of Icarus metadata. Converts job/shot/asset metadata from python files
+# types of Icarus metadata. Converts job/shot/asset metadata from Python files
 # (legacy) to XML, if XML files don't exist.
 
 
