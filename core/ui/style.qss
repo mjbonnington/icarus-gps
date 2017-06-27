@@ -137,6 +137,7 @@ QHeaderView::up-arrow:disabled {
  */
 
 QMenuBar {
+	padding: 0;
 	background-color: #333;
 }
 
@@ -192,7 +193,7 @@ QMenu::separator {
 	border-bottom: 2px groove #2a2a2a;
 }
 
-/* non-exclusive indicator = check box style indicator (see QActionGroup::setExclusive) */
+/* Non-exclusive indicator = check box style indicator (see QActionGroup::setExclusive) */
 QMenu::indicator:non-exclusive {
 	margin: 4px 6px;
 	width: 11px;
@@ -220,7 +221,7 @@ QMenu::indicator:non-exclusive:checked:disabled {
 	image: url(:/images/checkbox_checked_disabled.png);
 }
 
-/* exclusive indicator = radio button style indicator (see QActionGroup::setExclusive) */
+/* Exclusive indicator = radio button style indicator (see QActionGroup::setExclusive) */
 QMenu::indicator:exclusive {
 	margin: 4px 6px;
 	width: 11px;
@@ -548,12 +549,12 @@ QAbstractItemView::indicator:indeterminate:disabled {
  *
  */
 
-QListWidget {
-	/*border: 1px solid #222;
-	background: #222;*/
-	/*alternate-background-color: #2a2a2a;*/
-	/*show-decoration-selected: 1;*/
-}
+/*QListWidget {
+	border: 1px solid #222;
+	background: #222;
+	alternate-background-color: #2a2a2a;
+	show-decoration-selected: 1;
+}*/
 
 /* End List View/Widget */
 
@@ -875,13 +876,19 @@ QComboBox::down-arrow:on {
 	left: 1px;
 }
 
-/* Background color of popup-list.*/ 
-QComboBox QListView{
-	/*padding: 1px;*/
-	/*padding-left: 5px;*/
-	/*border: 1px solid #222;*/
+/* Background color of popup-list. */ 
+/*QComboBox QListView{
+	padding: 0px 6px;
 	background: #333;
+	border: 1px solid #555;
 }
+
+QComboBox QAbstractItemView {
+	margin: 0;
+	padding: 0px 6px;
+	background: #333;
+	border: 1px solid #555;
+}*/
 
 QComboBox::item {
 	background: transparent;

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ "$1" = "" ]
+then
+	src="."
+else
+	src=$1
+fi
+
+find $src -name \*.pyc -exec rm {} \;
+find $src -name __pycache__ -exec rm -r {} \;

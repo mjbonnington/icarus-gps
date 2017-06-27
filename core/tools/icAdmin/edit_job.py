@@ -120,6 +120,10 @@ class dialog(QtWidgets.QDialog):
 			# Only autofill job name field it it's empty
 			if not self.ui.jobName_lineEdit.text():
 				try:
+					# if os.environ['JOBSROOT'] in osOps.absolutePath(jobPath):
+					#       jobName = jobPath.split('/')[1]
+					# else:
+					#       jobName = jobPath.split('/')[-1]
 					jobName = jobPath.split('/')[1]
 					self.ui.jobName_lineEdit.setText(jobName)
 				except IndexError:
