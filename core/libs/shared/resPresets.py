@@ -1,12 +1,11 @@
 #!/usr/bin/python
 
-# Resolution Presets
-# v0.2
+# [Icarus] resPresets.py
 #
-# Michael Bonnington 2015
-# Gramercy Park Studios
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2015-2017 Gramercy Park Studios
 #
-# Manipulates resolution presets data stored in an XML database
+# Manipulates resolution presets data stored in an XML database.
 
 
 import xml.etree.ElementTree as ET
@@ -15,11 +14,11 @@ import xmlData
 
 class resPresets(xmlData.xmlData):
 	""" Manipulates XML database to store resolution presets.
-		Inherits xmlData class
+		Inherits xmlData class.
 	"""
 
 	def getPresets(self):
-		""" Return a list of resolution presets
+		""" Return a list of resolution presets.
 		"""
 		elements = self.root.findall("./resolution")
 		presets = []
@@ -29,7 +28,7 @@ class resPresets(xmlData.xmlData):
 
 
 	def getValue(self, preset, setting):
-		""" Get the specified value
+		""" Get the specified value.
 		"""
 		element = self.root.find( "./resolution[@name='%s']/%s" %(preset, setting) )
 		if element is not None:
@@ -41,8 +40,9 @@ class resPresets(xmlData.xmlData):
 
 
 	def getPresetFromRes(self, width, height, par=1.0):
-		""" Return a resolution preset given the pixel dimensions (width and height).
-			PAR (pixel aspect ratio) is optional
+		""" Return a resolution preset given the pixel dimensions (width and
+			height).
+			PAR (pixel aspect ratio) is optional.
 		"""
 		elements = self.root.findall('./resolution')
 		presets = []
@@ -51,7 +51,7 @@ class resPresets(xmlData.xmlData):
 			h = element.find('./height').text
 			p = element.find('./par').text
 			if w==str(width) and h==str(height) and p==str(par):
-				#print w, h, p
+				#print(w, h, p)
 				return element.get('name')
 
 		return "Custom"

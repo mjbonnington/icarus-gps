@@ -1,0 +1,90 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'settings_global_ui.ui'
+#
+# Created: Tue Sep 27 22:07:05 2016
+#      by: pyside-uic 0.2.15 running on PySide 1.2.4
+#
+# WARNING! All changes made in this file will be lost!
+
+from PySide import QtCore, QtGui
+
+class Ui_settings_frame(object):
+    def setupUi(self, settings_frame):
+        settings_frame.setObjectName("settings_frame")
+        settings_frame.resize(400, 219)
+        settings_frame.setFrameShape(QtGui.QFrame.NoFrame)
+        self.formLayout = QtGui.QFormLayout(settings_frame)
+        self.formLayout.setFieldGrowthPolicy(QtGui.QFormLayout.ExpandingFieldsGrow)
+        self.formLayout.setObjectName("formLayout")
+        self.message_plainTextEdit = QtGui.QPlainTextEdit(settings_frame)
+        self.message_plainTextEdit.setFrameShape(QtGui.QFrame.NoFrame)
+        self.message_plainTextEdit.setFrameShadow(QtGui.QFrame.Plain)
+        self.message_plainTextEdit.setLineWidth(0)
+        self.message_plainTextEdit.setReadOnly(True)
+        self.message_plainTextEdit.setBackgroundVisible(False)
+        self.message_plainTextEdit.setObjectName("message_plainTextEdit")
+        self.formLayout.setWidget(0, QtGui.QFormLayout.SpanningRole, self.message_plainTextEdit)
+        self.userPrefs_label = QtGui.QLabel(settings_frame)
+        self.userPrefs_label.setObjectName("userPrefs_label")
+        self.formLayout.setWidget(1, QtGui.QFormLayout.LabelRole, self.userPrefs_label)
+        self.userPrefs_horizontalLayout = QtGui.QHBoxLayout()
+        self.userPrefs_horizontalLayout.setObjectName("userPrefs_horizontalLayout")
+        self.userPrefsServer_radioButton = QtGui.QRadioButton(settings_frame)
+        self.userPrefsServer_radioButton.setChecked(True)
+        self.userPrefsServer_radioButton.setObjectName("userPrefsServer_radioButton")
+        self.userPrefs_horizontalLayout.addWidget(self.userPrefsServer_radioButton)
+        self.userPrefsHome_radioButton = QtGui.QRadioButton(settings_frame)
+        self.userPrefsHome_radioButton.setObjectName("userPrefsHome_radioButton")
+        self.userPrefs_horizontalLayout.addWidget(self.userPrefsHome_radioButton)
+        self.formLayout.setLayout(1, QtGui.QFormLayout.FieldRole, self.userPrefs_horizontalLayout)
+        self.jobsRelDir_label = QtGui.QLabel(settings_frame)
+        self.jobsRelDir_label.setObjectName("jobsRelDir_label")
+        self.formLayout.setWidget(3, QtGui.QFormLayout.LabelRole, self.jobsRelDir_label)
+        self.shotsRelDir_label = QtGui.QLabel(settings_frame)
+        self.shotsRelDir_label.setObjectName("shotsRelDir_label")
+        self.formLayout.setWidget(4, QtGui.QFormLayout.LabelRole, self.shotsRelDir_label)
+        self.jobsRelDir_lineEdit = QtGui.QLineEdit(settings_frame)
+        self.jobsRelDir_lineEdit.setObjectName("jobsRelDir_lineEdit")
+        self.formLayout.setWidget(3, QtGui.QFormLayout.FieldRole, self.jobsRelDir_lineEdit)
+        self.shotsRelDir_lineEdit = QtGui.QLineEdit(settings_frame)
+        self.shotsRelDir_lineEdit.setObjectName("shotsRelDir_lineEdit")
+        self.formLayout.setWidget(4, QtGui.QFormLayout.FieldRole, self.shotsRelDir_lineEdit)
+        self.elementslib_label = QtGui.QLabel(settings_frame)
+        self.elementslib_label.setObjectName("elementslib_label")
+        self.formLayout.setWidget(5, QtGui.QFormLayout.LabelRole, self.elementslib_label)
+        self.elementslib_lineEdit = QtGui.QLineEdit(settings_frame)
+        self.elementslib_lineEdit.setObjectName("elementslib_lineEdit")
+        self.formLayout.setWidget(5, QtGui.QFormLayout.FieldRole, self.elementslib_lineEdit)
+        self.editPaths_pushButton = QtGui.QPushButton(settings_frame)
+        self.editPaths_pushButton.setEnabled(False)
+        self.editPaths_pushButton.setObjectName("editPaths_pushButton")
+        self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.editPaths_pushButton)
+
+        self.retranslateUi(settings_frame)
+        QtCore.QMetaObject.connectSlotsByName(settings_frame)
+        settings_frame.setTabOrder(self.userPrefsServer_radioButton, self.userPrefsHome_radioButton)
+
+    def retranslateUi(self, settings_frame):
+        settings_frame.setWindowTitle(QtGui.QApplication.translate("settings_frame", "Frame", None, QtGui.QApplication.UnicodeUTF8))
+        self.message_plainTextEdit.setPlainText(QtGui.QApplication.translate("settings_frame", "These settings are for advanced users only. Please do not change unless you know what you\'re doing!", None, QtGui.QApplication.UnicodeUTF8))
+        self.userPrefs_label.setToolTip(QtGui.QApplication.translate("settings_frame", "<html><head/><body><p><span style=\" font-weight:600;\">User preferences location</span></p><p>Choose whether to store user preferences in the pipeline config directory on the server, or in the user\'s home folder. If you have roaming profiles enabled, it\'s best to store in the home folder.</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.userPrefs_label.setText(QtGui.QApplication.translate("settings_frame", "User preferences location:", None, QtGui.QApplication.UnicodeUTF8))
+        self.userPrefsServer_radioButton.setText(QtGui.QApplication.translate("settings_frame", "Server", None, QtGui.QApplication.UnicodeUTF8))
+        self.userPrefsServer_radioButton.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "userPrefsRemote", None, QtGui.QApplication.UnicodeUTF8))
+        self.userPrefsHome_radioButton.setText(QtGui.QApplication.translate("settings_frame", "Home folder", None, QtGui.QApplication.UnicodeUTF8))
+        self.userPrefsHome_radioButton.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "userPrefsLocal", None, QtGui.QApplication.UnicodeUTF8))
+        self.jobsRelDir_label.setToolTip(QtGui.QApplication.translate("settings_frame", "<html><head/><body><p><span style=\" font-weight:600;\">Jobs directory</span></p><p>This is the relative directory path where your jobs will be stored. If jobs are stored in the root of a shared network drive, set the path to \'.\'</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.jobsRelDir_label.setText(QtGui.QApplication.translate("settings_frame", "Jobs directory:", None, QtGui.QApplication.UnicodeUTF8))
+        self.shotsRelDir_label.setToolTip(QtGui.QApplication.translate("settings_frame", "<html><head/><body><p><span style=\" font-weight:600;\">Shots directory</span></p><p>This is the name for the subdirectory within the folder structure for each job where individual shots will be stored.</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.shotsRelDir_label.setText(QtGui.QApplication.translate("settings_frame", "Shots directory:", None, QtGui.QApplication.UnicodeUTF8))
+        self.jobsRelDir_lineEdit.setText(QtGui.QApplication.translate("settings_frame", "Project_Media", None, QtGui.QApplication.UnicodeUTF8))
+        self.jobsRelDir_lineEdit.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "jobsRelDir", None, QtGui.QApplication.UnicodeUTF8))
+        self.shotsRelDir_lineEdit.setText(QtGui.QApplication.translate("settings_frame", "Vfx", None, QtGui.QApplication.UnicodeUTF8))
+        self.shotsRelDir_lineEdit.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "shotsRelDir", None, QtGui.QApplication.UnicodeUTF8))
+        self.elementslib_label.setToolTip(QtGui.QApplication.translate("settings_frame", "<html><head/><body><p><span style=\" font-weight:600;\">Global asset library</span></p><p>This is the location where global assets will be published to. Global assets are independent of jobs and are accessible from any job or shot.</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.elementslib_label.setText(QtGui.QApplication.translate("settings_frame", "Global asset library:", None, QtGui.QApplication.UnicodeUTF8))
+        self.elementslib_lineEdit.setText(QtGui.QApplication.translate("settings_frame", "$FILESYSTEMROOT/_Library", None, QtGui.QApplication.UnicodeUTF8))
+        self.elementslib_lineEdit.setProperty("xmlTag", QtGui.QApplication.translate("settings_frame", "globalAssetLib", None, QtGui.QApplication.UnicodeUTF8))
+        self.editPaths_pushButton.setText(QtGui.QApplication.translate("settings_frame", "Edit Root Paths...", None, QtGui.QApplication.UnicodeUTF8))
+

@@ -14,7 +14,7 @@ def createOcean(type):
 		#oceanGeoSh = mc.listRelatives(oceanGeo, s=True)
 		#mel.eval('deformer -type hotOceanDeformer)
 	elif type == 'vray':
-		import vraySubDsMulti
+		import gpsRenderToolsVRay
 		#creating ocean geo
 		oceanGeo = mc.polyPlane(n='vray_oceanDeformer1', w=100, h=100, sx=30, sy=30, ax=(0,1,0), cuv=2, ch=1)
 		oceanGeoSh = mc.listRelatives(oceanGeo, s=True)
@@ -27,7 +27,7 @@ def createOcean(type):
 		mc.select(oceanGeo[0], r=True)
 		mc.sets(forceElement=shadingGrp, e=True)
 		#adding sub division and displacement properties to oceanGeo.
-		vraySubDsMulti.subDivide(subDs = 4)
+		gpsRenderToolsVRay.addSubD(subDs = 4)
 		mc.setAttr("%s.vrayDisplacementType" % oceanGeoSh[0], 2)
 		#Multiplying vrayWater scale by 10
 		mc.setAttr('%s.heightMult' % vRayWater, 10)

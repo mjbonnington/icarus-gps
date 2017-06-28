@@ -1,110 +1,110 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:ma_camPbl
-#copyright	:Gramercy Park Studios
+
+# [Icarus] ma_camPbl.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2016 Gramercy Park Studios
+#
+# Publish an asset of the type ic_camera.
 
 
-#camera publish module
 import os, sys, traceback
 import maya.cmds as mc
-import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, approvePbl, inProgress
+import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, inProgress
 
-def publish(pblTo, slShot, cameraType, pblNotes, mail, approved):
-	
-	#gets selection
+
+def publish(pblTo, slShot, subtype, pblNotes):
+
+	# Get selection
 	objLs = mc.ls(sl=True)
-	
-	#checks item count
+
+	# Check item count
 	if not pblChk.itemCount(objLs):
 		return
-		
-	#defining main variables
+
+	# Define main variables
 	shot_ = os.environ['SHOT']
 	assetType = 'ic_camera'
 	subsetName = ''
 	prefix = ''
-	convention = cameraType
+	convention = subtype
 	suffix = '_camera'
 	fileType='mayaAscii'
 	extension = 'ma'
-		
-	#gets all dependants	
+
+	# Get all dependents
 	allObjLs = mc.listRelatives(objLs[0], ad=True, f=True, typ='transform')
 	if allObjLs:
 		allObjLs.append(objLs[0])
 	else:
 		allObjLs = [objLs[0]]
-		
-	#checks if selection is a camera
+
+	# Check if selection is a camera
 	if not mayaOps.cameraNodeCheck(objLs[0]):
 		verbose.notCamera()
 		return
 
-	#check if asset to publish is referenced
+	# Check if asset to publish is referenced
 	for allObj in allObjLs: 
 		if mc.referenceQuery(allObj, inr=True):
 			verbose.noRefPbl()
 			return
 
-	#processing asset publish options
+	# Process asset publish options
 	assetPblName, assetDir, pblDir = pblOptsPrc.prc(pblTo, subsetName, assetType, prefix, convention, suffix)
 	assetPblName += '_%s' % slShot
-	apvDir = os.environ['SHOTAPPROVEDPUBLISHDIR']
-	
-	#version control	
-	version = '%s' % vCtrl.version(pblDir)
-	if approved:
-		version += '_apv'
 
-	#confirmation dialog
-	dialogTitle = 'Publishing'
-	dialogMsg = 'Asset:  %s\n\nVersion:  %s\n\nSubset:  %s\n\nNotes:  %s' % (assetPblName, version, subsetName, pblNotes)
+	# Version control
+	version = '%s' % vCtrl.version(pblDir)
+#	if approved:
+#		version += '_apv'
+
+	# Confirmation dialog
+	dialogTitle = 'Publishing %s' % assetPblName # convention
+	dialogMsg = 'Asset:\t%s\n\nVersion:\t%s\n\nSubset:\t%s\n\nNotes:\t%s' % (assetPblName, version, subsetName, pblNotes)
 	dialog = pDialog.dialog()
-	if not dialog.dialogWindow(dialogMsg, dialogTitle):
+	if not dialog.display(dialogMsg, dialogTitle):
 		return
 
+	# Publishing
 	try:
 		verbose.pblFeed(begin=True)
-		#creating publish directories
+
+		# Create publish directories
 		pblDir = osOps.createDir(os.path.join(pblDir, version))
 
-		#creating in progress tmp file
+		# Create in-progress tmp file
 		inProgress.start(pblDir)
 
-		#ic publish data file
-		icPblData.writeData(pblDir, assetPblName, assetPblName, assetType, extension, version, pblNotes)
+		# Store asset metadata in file
+		src = mayaOps.getScene()
+		# icPblData.writeData(pblDir, assetPblName, convention, assetType, extension, version, pblNotes, src)
+		icPblData.writeData(pblDir, assetPblName, assetPblName, assetType, extension, version, pblNotes, src)
 
-		#maya operations
+		# Maya operations
 		mayaOps.deleteICDataSet(allObjLs)
 		newcamLs = mayaOps.cameraBake(objLs, assetPblName)
 		objLs = [newcamLs[0]]
 		attrLs = ['.tx', '.ty', '.tz', '.rx', '.ry', '.rz', '.sx', '.sy', '.sz']
 		mayaOps.lockAttr(objLs, attrLs)
 
-		#file operations
+		# File operations
 		pathToPblAsset = os.path.join(pblDir, '%s.%s' % (assetPblName, extension))
 		verbose.pblFeed(msg=assetPblName)
 		mayaOps.exportSelection(pathToPblAsset, fileType)
 		mayaOps.nkCameraExport(objLs, pblDir, assetPblName, version)
 		mayaOps.exportGeo(objLs, 'fbx', pathToPblAsset)
-		osOps.setPermissions(os.path.join(pblDir, '*'))
+	#	osOps.setPermissions(os.path.join(pblDir, '*'))
 
-		#approving publish
-		if approved:
-			approvePbl.publish(apvDir, pblDir, assetDir, assetType, version)
-
-
-		#deleting in progress tmp file
+		# Delete in-progress tmp file
 		inProgress.end(pblDir)
 
-		#published asset check
+		# Published asset check
 		pblResult = pblChk.success(pathToPblAsset)
 
-		#deleting in progress tmp file
-		inProgress.end(pblDir)
-			
 		verbose.pblFeed(end=True)
-	
+
 	except:
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
@@ -113,9 +113,9 @@ def publish(pblTo, slShot, cameraType, pblNotes, mail, approved):
 		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += verbose.pblRollback()
 
-	#publish result dialog
+	# Show publish result dialog
 	dialogTitle = 'Publish Report'
-	dialogMsg = 'Asset:  %s\n\nVersion:  %s\n\nSubset: %s\n\n\n%s' % (assetPblName, version, subsetName, pblResult)
+	dialogMsg = 'Asset:\t%s\n\nVersion:\t%s\n\nSubset:\t%s\n\n\n%s' % (assetPblName, version, subsetName, pblResult)
 	dialog = pDialog.dialog()
-	dialog.dialogWindow(dialogMsg, dialogTitle, conf=True)	
-	
+	dialog.display(dialogMsg, dialogTitle, conf=True)
+

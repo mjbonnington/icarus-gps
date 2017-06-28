@@ -4,13 +4,16 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2015 Gramercy Park Studios
+# (c) 2013-2016 Gramercy Park Studios
 #
 # Functions for job and shot setup.
+# THIS MODULE IS NOW DEPRECATED.
+# Only used by legacySettings
+# Functions moved to jobs.py
 
 
 import os
-import defaultDirs, job__env__, jobs, userPrefs, verbose
+import defaultDirs, job__env__, osOps, userPrefs, verbose
 
 
 def setup(job, shot):
@@ -37,16 +40,22 @@ def setup(job, shot):
 
 def getPath(job, shot=False):
 	""" Process job and shot names.
-
-		'job' is mandatory
+		'job' is mandatory.
 		'shot' is optional, if given return the path to the shot, if not return the path to the job.
 	"""
-	if shot:
-		_path = os.path.join(jobs.dic[job], os.environ['SHOTSROOTRELATIVEDIR'], shot)
-	else:
-		_path = os.path.join(jobs.dic[job], os.environ['SHOTSROOTRELATIVEDIR'])
+	import jobs
 
-	return _path
+	#print('setJobs.getPath()')
+
+	j = jobs.jobs()
+	jobpath = j.getPath(job, translate=True)
+
+	if shot:
+		path = osOps.absolutePath("%s/$SHOTSROOTRELATIVEDIR/%s" %(jobpath, shot))
+	else:
+		path = osOps.absolutePath("%s/$SHOTSROOTRELATIVEDIR" %jobpath)
+
+	return path
 
 
 def listShots(job):
@@ -91,13 +100,11 @@ def checkShot(shotPath):
 	#jobDataDir = os.path.join(jobPath, os.environ['DATAFILESRELATIVEDIR'])
 	shotDataDir = os.path.join(shotPath, os.environ['DATAFILESRELATIVEDIR'])
 
-	#if not os.path.isdir(jobDataDir):
-	#	valid = False
-	#	#verbose.settingsData_notFound('Job', jobDataDir)
+	# if not os.path.isdir(jobDataDir):
+	# 	valid = False
 
 	if not os.path.isdir(shotDataDir):
 		valid = False
-		#verbose.settingsData_notFound('Shot', shotDataDir)
 
 	return valid
 

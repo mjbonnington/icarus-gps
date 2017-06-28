@@ -1,120 +1,279 @@
 #!/usr/bin/python
 
-# Jobs
-# v0.2
+# [Icarus] jobs.py
 #
-# Michael Bonnington 2015
-# Gramercy Park Studios
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2015-2017 Gramercy Park Studios
 #
-# Manipulates the database of jobs running in the CG department
+# Manipulates the database of jobs running in the CG department.
 
 
-import os, sys
+import os
 import xml.etree.ElementTree as ET
 
-
-# Legacy code to work with current icarus implementation...
-dic = {}
-try:
-	tree = ET.parse(os.path.join(os.environ['PIPELINE'], 'core', 'config', 'jobs.xml'))
-	root = tree.getroot()
-
-	win_root = root.find('jobs-root/win').text
-	osx_root = root.find('jobs-root/osx').text
-	linux_root = root.find('jobs-root/linux').text
-
-	for job in root.findall('job'):
-		if job.get('active') == 'True': # Only add jobs tagged as 'active'
-			jobpath = job.find('path').text
-
-			# Temporary (?) fix for cross-platform paths
-			if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-				if jobpath.startswith(osx_root):
-					jobpath = os.path.normpath( jobpath.replace(osx_root, win_root) )
-				elif jobpath.startswith(linux_root):
-					jobpath = os.path.normpath( jobpath.replace(linux_root, win_root) )
-			elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-				if jobpath.startswith(win_root):
-					jobpath = os.path.normpath( jobpath.replace(win_root, osx_root) )
-				elif jobpath.startswith(linux_root):
-					jobpath = os.path.normpath( jobpath.replace(linux_root, osx_root) )
-			else:
-				if jobpath.startswith(win_root):
-					jobpath = os.path.normpath( jobpath.replace(win_root, linux_root) )
-				elif jobpath.startswith(osx_root):
-					jobpath = os.path.normpath( jobpath.replace(osx_root, linux_root) )
-
-			if os.path.exists(jobpath): # Only add jobs which exist on disk
-				dic[job.find('name').text] = jobpath
-
-except:
-	sys.exit("ERROR: Jobs file not found, or contents are invalid.")
-
-if not dic:
-	sys.exit("ERROR: No active jobs found.")
+import defaultDirs
+import job__env__
+import osOps
+import userPrefs
+import verbose
+import xmlData
 
 
-class jobs():
-	"""Deals with the current jobs database.
-	   Add and remove jobs, make jobs active or inactive, modify job properties.
+class jobs(xmlData.xmlData):
+	""" Manipulates XML database for storing jobs.
+		Add and remove jobs, make jobs active or inactive, modify job
+		properties.
+		Inherits xmlData class.
 	"""
-	def __init__(self, datafile):
-		self.joblist = {}
-		self.datafile = datafile
+	def __init__(self):
+		""" Automatically load datafile on initialisation.
+		"""
+		self.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'jobs.xml'))
+		self.getRootPaths()
 
+
+	def setup(self, jobName, shotName):
+		""" Set job.
+		"""
+		jobPath = self.getPath(jobName, translate=True)
+		shotPath = osOps.absolutePath("%s/$SHOTSROOTRELATIVEDIR/%s" %(jobPath, shotName))
+		envVars = jobName, shotName, shotPath
+
+		# Create environment variables
+		if job__env__.setEnv(envVars):
+
+			# Create folder structure
+			defaultDirs.create()
+
+			# Remember for next time
+			newEntry = '%s,%s' % (jobName, shotName)
+			userPrefs.edit('main', 'lastjob', newEntry)
+
+			return True
+
+		else:
+			return False
+
+
+	def getRootPaths(self):
+		""" Get root paths and set environment variables.
+		"""
 		try:
-			self.tree = ET.parse(self.datafile)
-			self.root = self.tree.getroot()
-		except (IOError, ET.ParseError):
-			print "Warning: XML data file is invalid or doesn't exist."
-			self.root = ET.Element('root')
-			self.tree = ET.ElementTree(self.root)
+			self.win_root = self.root.find('jobs-root/win').text
+			self.osx_root = self.root.find('jobs-root/osx').text
+			self.linux_root = self.root.find('jobs-root/linux').text
+			self.jobs_path = self.root.find('jobs-root/path').text
+
+		except AttributeError:
+			self.win_root = None
+			self.osx_root = None
+			self.linux_root = None
+			self.jobs_path = None
+
+		# Set environment variables
+		os.environ['FILESYSTEMROOTWIN'] = str(self.win_root)
+		os.environ['FILESYSTEMROOTOSX'] = str(self.osx_root)
+		os.environ['FILESYSTEMROOTLINUX'] = str(self.linux_root)
+
+		if os.environ['IC_RUNNING_OS'] == 'Windows':
+			os.environ['FILESYSTEMROOT'] = str(self.win_root)
+		elif os.environ['IC_RUNNING_OS'] == 'Darwin':
+			os.environ['FILESYSTEMROOT'] = str(self.osx_root)
+		else:
+			os.environ['FILESYSTEMROOT'] = str(self.linux_root)
+
+		#os.environ['JOBSROOT'] = osOps.absolutePath('$FILESYSTEMROOT/$JOBSROOTRELATIVEDIR', stripTrailingSlash=True)
+		os.environ['JOBSROOT'] = osOps.absolutePath('$FILESYSTEMROOT/%s' %self.jobs_path, stripTrailingSlash=True)
 
 
-	def ls(self):
-		"""Print job database in a human-readable pretty format. - NOT YET IMPLEMENTED
+	def setRootPaths(self, winPath=None, osxPath=None, linuxPath=None, jobsRelPath=None):
+		""" Set root paths. Create elements if they don't exist.
 		"""
+		jobsRootElement = self.root.find("./jobs-root")
+		if jobsRootElement is None:
+			jobsRootElement = ET.SubElement(self.root, 'jobs-root')
+
+		if winPath is not None:
+			pathElement = jobsRootElement.find('win')
+			if pathElement is None:
+				pathElement = ET.SubElement(jobsRootElement, 'win')
+			pathElement.text = str(winPath)
+
+		if osxPath is not None:
+			pathElement = jobsRootElement.find('osx')
+			if pathElement is None:
+				pathElement = ET.SubElement(jobsRootElement, 'osx')
+			pathElement.text = str(osxPath)
+
+		if linuxPath is not None:
+			pathElement = jobsRootElement.find('linux')
+			if pathElement is None:
+				pathElement = ET.SubElement(jobsRootElement, 'linux')
+			pathElement.text = str(linuxPath)
+
+		if jobsRelPath is not None:
+			pathElement = jobsRootElement.find('path')
+			if pathElement is None:
+				pathElement = ET.SubElement(jobsRootElement, 'path')
+			pathElement.text = str(jobsRelPath)
 
 
-#	def getPath(self, jobName):
-#		"""Get path
-#		"""
-#		path = self.root.find('job')
-#		return path.find('path').text
-
-
-	def readjobs(self):
-		"""Read job database from XML file and store active jobs in dictionary.
+	def getActiveJobs(self):
+		""" Return all active jobs as a list. Only jobs that exist on disk
+			will be added.
 		"""
-		for job in root.findall('job'):
-			self.joblist[job.find('name').text] = job.find('path').text, job.get('active')
+		jobLs = []
+		for jobElement in self.root.findall("./job[@active='True']"):
+			jobName = jobElement.find('name').text
+			jobPath = jobElement.find('path').text
+
+			jobPath = osOps.translatePath(jobPath)
+
+			if os.path.exists(jobPath): # Only add jobs which exist on disk
+				jobLs.append(jobName)
+
+		return jobLs
 
 
-	def writejobs(self):
-		"""Write job database to XML file. - NOT YET IMPLEMENTED
+	def getJobs(self):
+		""" Return all jobs as elements.
 		"""
+		return self.root.findall("./job")
 
 
-	def refresh(self):
-		"""Reload job database. - REDUNDANT?
+	def addJob(self, jobName="New_Job", jobPath="", active=True):
+		""" Add a new job to the database.
 		"""
-		self.readjobs()
+		jobElement = self.root.find("./job[name='%s']" %jobName)
+		if jobElement is None:
+			jobElement = ET.SubElement(self.root, 'job')
+			jobElement.set('active', str(active))
+
+			nameElement = ET.SubElement(jobElement, 'name')
+			nameElement.text = str(jobName)
+
+			pathElement = ET.SubElement(jobElement, 'path')
+			pathElement.text = str(jobPath)
+			return True
+
+		else:
+			return False
 
 
-	def add(self, jobName, jobPath):
-		"""Add a new job to the database.
+	def renameJob(self, jobName, newJobName):
+		""" Rename job.
 		"""
-		self.joblistactive[jobName] = jobPath
+		if newJobName == jobName: # do nothing
+			return True
+
+		jobElement = self.root.find("./job/[name='%s']" %newJobName)
+		if jobElement is None:
+			element = self.root.find("./job/[name='%s']" %jobName)
+			if element is not None:
+				element.find('name').text = newJobName
+				return True
+
+		else:
+			return False
 
 
-	def rm(self, jobName):
-		"""Remove a job from the database.
+	def deleteJob(self, jobName):
+		""" Delete job by name.
 		"""
-		#del self.joblist[jobName]
-		print 'deleting %s' %jobName
+		element = self.root.find("./job/[name='%s']" %jobName)
+		if element is not None:
+			verbose.message("Deleted job %s" %jobName)
+			self.root.remove(element)
+			return True
+		else:
+			verbose.error("Could not delete job %s" %jobName)
+			return False
 
 
-	def modify(self, jobName, jobPath, active):
-		"""Modify job properties, currently name, path, and active status.
+	def getEnabled(self, jobName):
+		""" Get enable/disable status of the specified job.
 		"""
+		#element = self.root.find("./job[@id='%s']" %jobID)
+		element = self.root.find("./job[name='%s']" %jobName)
+		if element is not None:
+			if element.get('active') == 'True':
+				return True
+			else:
+				return False
+
+
+	def enableJob(self, jobName, active):
+		""" Enable/disable job by name.
+		"""
+		element = self.root.find("./job/[name='%s']" %jobName)
+		if element is not None:
+			if active:
+				action = "Enabled"
+			else:
+				action = "Disabled"
+			verbose.message("%s job %s" %(action, jobName))
+			element.set('active', '%s' %active)
+			return True
+		else:
+			verbose.error("Could not %s job %s" %(action, jobName))
+			return False
+
+
+	def getPath(self, jobName, translate=False):
+		""" Get path of the specified job.
+			If 'translate' is True, attempt to translate the path for the
+			current OS.
+		"""
+		#element = self.root.find("./job[@id='%s']" %jobID)
+		element = self.root.find("./job[name='%s']" %jobName)
+		if element is not None:
+			jobPath = element.find('path').text
+			if translate:
+				#return self.translatePath(jobPath)
+				return osOps.translatePath(jobPath)
+			else:
+				return jobPath
+
+
+	def setPath(self, jobName, path):
+		""" Set path of the specified job.
+		"""
+		#element = self.root.find("./job[@id='%s']" %jobID)
+		element = self.root.find("./job[name='%s']" %jobName)
+		if element is not None:
+			element.find('path').text = path
+
+
+	def listShots(self, jobName):
+		""" Return a list of all available shots belonging to the specified
+			job.
+		"""
+		jobPath = self.getPath(jobName, translate=True)
+		shotsPath = osOps.absolutePath("%s/$SHOTSROOTRELATIVEDIR" %jobPath)
+
+		# Check shot path exists before proceeding...
+		if os.path.exists(shotsPath):
+			dirContents = os.listdir(shotsPath)
+			shotLs = []
+
+			for item in dirContents:
+				# Check for shot naming convention to disregard everything
+				# else in directory
+				if item.startswith('SH') or item.startswith('PC'):
+					# Check that the directory is a valid shot by checking for
+					# the existence of the '.icarus' subdirectory
+					if os.path.isdir(osOps.absolutePath("%s/%s/$DATAFILESRELATIVEDIR" %(shotsPath, item))):
+						shotLs.append(item)
+
+			if len(shotLs):
+				shotLs.sort()
+				return shotLs
+
+			else:
+				verbose.warning('No valid shots found in job path "%s".' %shotsPath)
+				return False
+
+		else:
+			verbose.error('The job path "%s" does not exist. The job may have been archived, moved or deleted.' %shotsPath)
+			return False
 

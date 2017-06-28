@@ -1,35 +1,45 @@
 #!/usr/bin/python
-#support    :Nuno Pereira - nuno.pereira@gps-ldn.com
-#title      :osOps
-#copyright  :Gramercy Park Studios
 
-# Manages OS operations
+# [Icarus] osOps.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2017 Gramercy Park Studios
+#
+# This module acts as a wrapper for low-level OS operations.
 
-import os, re
+
+import os
+import re
+
 import verbose
 
 
 def createDir(path, umask='000'):
-	""" Creates directory for the specified path with the specified umask - could probably be rewritten to use Python's own functions
+	""" Creates directory for the specified path with the specified umask.
+		Could probably be rewritten to use Python's own functions? Also remove
+		redundant umask functionality.
 	"""
-	if not os.path.isdir(path):
-		if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-			os.makedirs(path)
-			if os.path.basename(path).startswith('.'): # hide the folder if the name starts with a dot, as these files are not automatically hidden on Windows
-				import ctypes
-				FILE_ATTRIBUTE_HIDDEN = 0x02
-				ctypes.windll.kernel32.SetFileAttributesW(path, FILE_ATTRIBUTE_HIDDEN)
-		else:
-			os.system('%s; mkdir -p %s' % (setUmask(umask), path))
+	path = os.path.normpath(path)
 
-		verbose.print_("mkdir %s" %path, 4)
+	if not os.path.isdir(path):
+		os.makedirs(path)
+		if os.environ['IC_RUNNING_OS'] == 'Windows':
+			if os.path.basename(path).startswith('.'): # hide the folder if the name starts with a dot, as these files are not automatically hidden on Windows
+				setHidden(path)
+
+		verbose.print_('mkdir "%s"' %path, 4) # commenting this line out as it causes an error if user config dir doesn't exist
 		return path
 
 
 def setPermissions(path, mode='a+w'):
-	""" Sets permissions to provided path - could probably be rewritten to use Python's own functions
+	""" Sets permissions to provided path.
+		Could probably be rewritten to use Python's own functions?
+		And we probably shouldn't be doing this anyway.
 	"""
-	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	path = os.path.normpath(path)
+
+	if os.environ['IC_RUNNING_OS'] == 'Windows':
 		# Removed permissions setting on Windows as it causes problems
 		pass
 		#os.chmod(path, 0777) # Python 2 octal syntax
@@ -41,31 +51,37 @@ def setPermissions(path, mode='a+w'):
 
 
 def hardLink(source, destination, umask='000'):
-	""" Creates hard links
+	""" Creates hard links.
 	"""
-	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		if os.path.isdir(destination): # if destination is a folder, append the filename from the source
-			filename = os.path.basename(source)
-			destination = os.path.join(destination, filename)
+	src = os.path.normpath(source)
+	dst = os.path.normpath(destination)
 
-		if os.path.isfile(destination): # delete the destination file if it already exists - this is to mimic the Unix behaviour and force creation of the hard link
-			os.system('del %s /f /q' % destination)
+	if os.environ['IC_RUNNING_OS'] == 'Windows':
+		if os.path.isdir(dst): # if destination is a folder, append the filename from the source
+			filename = os.path.basename(src)
+			dst = os.path.join(dst, filename)
 
-		#cmdStr = 'mklink /H %s %s' % (destination, source) # this only works with local NTFS volumes
-		cmdStr = 'fsutil hardlink create %s %s >nul' % (destination, source) # works over SMB network shares; suppressing output to null
+		if os.path.isfile(dst): # delete the destination file if it already exists - this is to mimic the Unix behaviour and force creation of the hard link
+			os.system('del %s /f /q' % dst)
+
+		#cmdStr = 'mklink /H %s %s' % (dst, src) # this only works with local NTFS volumes
+		cmdStr = 'fsutil hardlink create %s %s >nul' % (dst, src) # works over SMB network shares; suppressing output to null
 	else:
-		cmdStr = '%s; ln -f %s %s' % (setUmask(umask), source, destination)
+		cmdStr = '%s; ln -f %s %s' % (setUmask(umask), src, dst)
 
 	verbose.print_(cmdStr, 4)
 	os.system(cmdStr)
 
-	return destination
+	return dst
 
 
 def recurseRemove(path):
-	""" Removes files or folders recursively - could be rewritten to use shutil.rmtree
+	""" Removes files or folders recursively.
+		Could be rewritten to use shutil.rmtree?
 	"""
-	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	path = os.path.normpath(path)
+
+	if os.environ['IC_RUNNING_OS'] == 'Windows':
 		if os.path.isdir(path):
 			cmdStr = 'rmdir %s /s /q' % path
 		else:
@@ -79,25 +95,47 @@ def recurseRemove(path):
 	return path
 
 
-def copy(source, destination):
-	""" Copy a file or folder
+def rename(source, destination):
+	""" Rename a file or folder.
 	"""
-	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		cmdStr = 'copy /Y %s %s' % (source, destination)
+	src = os.path.normpath(source)
+	dst = os.path.normpath(destination)
+
+	verbose.print_('rename "%s" "%s"' % (src, dst), 4)
+	os.rename(src, dst)
+
+	# if os.environ['IC_RUNNING_OS'] == 'Windows':
+	# 	cmdStr = 'ren "%s" "%s"' % (src, dst)
+	# else:
+	# 	cmdStr = 'mv "%s" "%s"' % (src, dst)
+
+	# verbose.print_(cmdStr, 4)
+	# os.system(cmdStr)
+
+
+def copy(source, destination):
+	""" Copy a file or folder.
+	"""
+	src = os.path.normpath(source)
+	dst = os.path.normpath(destination)
+
+	if os.environ['IC_RUNNING_OS'] == 'Windows':
+		cmdStr = 'copy /Y %s %s' % (src, dst)
 	else:
-		cmdStr = 'cp -rf %s %s' % (source, destination)
+		cmdStr = 'cp -rf %s %s' % (src, dst)
 
 	verbose.print_(cmdStr, 4)
 	os.system(cmdStr)
 
 
 def copyDirContents(source, destination, umask='000'):
-	""" Copy the contents of a folder recursively - rewrite using shutil.copy / copytree
+	""" Copy the contents of a folder recursively.
+		Could rewrite using shutil.copy / copytree?
 	"""
 	src = os.path.normpath( os.path.join(source, '*') )
 	dst = os.path.normpath( destination )
 
-	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	if os.environ['IC_RUNNING_OS'] == 'Windows':
 		cmdStr = 'copy /Y %s %s' % (src, dst)
 	else:
 		cmdStr = '%s; cp -rf %s %s' % (setUmask(umask), src, dst)
@@ -106,17 +144,101 @@ def copyDirContents(source, destination, umask='000'):
 	os.system(cmdStr)
 
 
-def setUmask(umask='000'):
-	""" Set the umask for permissions on created files and folders (Unix only)
+def setHidden(path):
+	""" Hide a file or folder (Windows only).
+		Useful if the filename name starts with a dot, as these files are not
+		automatically hidden on Windows.
 	"""
-	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	import ctypes
+	FILE_ATTRIBUTE_HIDDEN = 0x02
+	ctypes.windll.kernel32.SetFileAttributesW(path, FILE_ATTRIBUTE_HIDDEN)
+
+
+def setUmask(umask='000'):
+	""" Set the umask for permissions on created files and folders (Unix only).
+	"""
+	if os.environ['IC_RUNNING_OS'] == 'Windows':
 		return ""
 	else:
 		return 'umask %s' % umask
 
 
+def absolutePath(relPath, stripTrailingSlash=False):
+	""" Convert a relative path to an absolute path.
+		Expands environment variables in supplied path and replaces
+		backslashes with forward slashes for compatibility.
+		If 'stripTrailingSlash' is True, remove trailing slash(es) from
+		returned path.
+	"""
+	if relPath:
+		if stripTrailingSlash:
+			return os.path.normpath( os.path.expandvars(relPath) ).replace("\\", "/").rstrip('/')
+		else:
+			return os.path.normpath( os.path.expandvars(relPath) ).replace("\\", "/")
+	else:
+		return ""
+
+
+def relativePath(absPath, token, tokenFormat='standard'):
+	""" Convert an absolute path to a relative path.
+		'token' is the name of an environment variable to replace.
+		Format specifies the environment variable format:
+			standard:  $NAME
+			bracketed: ${NAME}
+			windows:   %NAME%
+			nuke:      [getenv NAME]
+	"""
+	try:
+		if tokenFormat == 'standard':
+			formattedToken = '$%s' %token
+		elif tokenFormat == 'bracketed':
+			formattedToken = '${%s}' %token
+		elif tokenFormat == 'windows':
+			formattedToken = '%%%s%%' %token
+		elif tokenFormat == 'nuke':
+			formattedToken = '[getenv %s]' %token
+
+		envVar = os.environ[token].replace('\\', '/')
+		relPath = absPath.replace('\\', '/') # ensure backslashes from Windows paths are changed to forward slashes
+		relPath = relPath.replace(envVar, formattedToken) # change to relative path
+
+		return os.path.normpath( relPath ).replace("\\", "/")
+
+	except:
+		return os.path.normpath( absPath ).replace("\\", "/")
+
+
+def translatePath(jobPath):
+	""" Translate paths for cross-platform support.
+	"""
+	try:
+		jobPathTr = jobPath
+		if os.environ['IC_RUNNING_OS'] == 'Windows':
+			if jobPath.startswith(os.environ['FILESYSTEMROOTOSX']):
+				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTOSX'], os.environ['FILESYSTEMROOTWIN'])
+			elif jobPath.startswith(os.environ['FILESYSTEMROOTLINUX']):
+				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTLINUX'], os.environ['FILESYSTEMROOTWIN'])
+		elif os.environ['IC_RUNNING_OS'] == 'Darwin':
+			if jobPath.startswith(os.environ['FILESYSTEMROOTWIN']):
+				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTWIN'], os.environ['FILESYSTEMROOTOSX'])
+			elif jobPath.startswith(os.environ['FILESYSTEMROOTLINUX']):
+				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTLINUX'], os.environ['FILESYSTEMROOTOSX'])
+		else: # linux
+			if jobPath.startswith(os.environ['FILESYSTEMROOTWIN']):
+				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTWIN'], os.environ['FILESYSTEMROOTLINUX'])
+			elif jobPath.startswith(os.environ['FILESYSTEMROOTOSX']):
+				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTOSX'], os.environ['FILESYSTEMROOTLINUX'])
+
+		#print("Performing path translation:\n%s\n%s\n" %(jobPath, absolutePath(jobPathTr)))
+		return absolutePath(jobPathTr)
+
+	except TypeError:
+		return jobPath
+
+
 def sanitize(instr, pattern='\W', replace=''):
-	""" Sanitizes characters in string. Default removes all non-alphanumeric characters.
+	""" Sanitizes characters in string. Default removes all non-alphanumeric
+		characters.
 	"""
 	return re.sub(pattern, replace, instr)
 

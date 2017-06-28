@@ -1,278 +1,321 @@
 #!/usr/bin/python
-#support		:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:gpsMayaPreview
+
+# [GPS Preview] gpsMayaPreview.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2014-2017 Gramercy Park Studios
+#
+# Generate playblasts for GPS Preview.
+
 
 import maya.cmds as mc
-import os, time
+import os
+import time
+
 import verbose
 
 
 class preview():
-	def __init__(self, outputDir, outputFile, res, frRange, offscreen, noSelect, guides, slate):	
+
+	def __init__(self, outputDir, outputFile, res, frRange, offscreen, noSelect, guides, slate):
 		self.playblastDir = outputDir
 		self.outputFile = outputFile
 		self.res = res
-		if frRange == 'timeline':
-			self.frRange = (int(mc.playbackOptions(min=True, q=True)), int(mc.playbackOptions(max=True, q=True)))
-			self.rangeType = frRange
-		elif frRange == 'current frame':
-			self.frRange = (int(mc.currentTime(q=True)), int(mc.currentTime(q=True)))
-			self.rangeType = frRange
-		else:
-			self.frRange = (int(frRange[0]), int(frRange[1]))
-			self.rangeType = self.frRange
+		self.frRange = (int(frRange[0]), int(frRange[1]))
+
 		self.offscreen = offscreen
 		self.noSelect = noSelect
 		self.guides = guides
 		self.slate = slate
-		
-	##slate##
-	#maya scene
+
+
+	def storeAttributes(self, obj, attrLs):
+		""" Store the object's specified attribute values in a dictionary.
+		"""
+		storedAttrDic = {}
+		for attr in attrLs:
+			storedAttrDic[attr] = mc.getAttr( '%s.%s' %(obj, attr) )
+
+		return storedAttrDic
+
+
+	def retrieveAttributes(self, obj, storedAttrDic):
+		""" Retrieve the stored attribute values in order to re-apply the
+			settings.
+		"""
+		for key, value in storedAttrDic.iteritems():
+			mc.setAttr( '%s.%s' %(obj, key), value )
+
+
+	def setAttributes(self, obj, attrLs, value):
+		""" Set several attribues at once.
+		"""
+		for attr in attrLs:
+			mc.setAttr( '%s.%s' %(obj, attr), value )
+
+
+	###############
+	# Slate / HUD #
+	###############
+
+	def displayHUD(self, query=False, setValue=True):
+		""" Show, hide or query the entire HUD.
+		"""
+		currentPanel = mc.getPanel(withFocus=True)
+		panelType = mc.getPanel(typeOf=currentPanel)
+		if panelType == "modelPanel":
+			if query:
+				return mc.modelEditor(currentPanel, query=True, hud=True)
+			else:
+				mc.modelEditor(currentPanel, edit=True, hud=setValue)
+
+
+	def storeHUD(self):
+		""" Store the current state of the HUD in a dictionary.
+		"""
+		hudLS = mc.headsUpDisplay(listHeadsUpDisplays=True)
+
+		hudDic = {}
+		for hud in hudLS:
+			hudDic[hud] = mc.headsUpDisplay(hud, query=True, vis=True)
+
+		return hudDic
+
+
+	def showHUD(self, vis):
+		""" Hide or show all HUD elements at once.
+		"""
+		hudLS = mc.headsUpDisplay(listHeadsUpDisplays=True)
+
+		for hud in hudLS:
+			mc.headsUpDisplay(hud, edit=True, vis=vis)
+
+
+	def restoreHUD(self, hudDic):
+		""" Restore the HUD from the state stored in the dictionary.
+		"""
+		hudLS = mc.headsUpDisplay(listHeadsUpDisplays=True)
+
+		for hud, vis in hudDic.iteritems():
+			mc.headsUpDisplay(hud, edit=True, vis=vis)
+
+
+	# Header
+	def hudHeader(self):
+		return 'GPS'
+
+	# Current project
+	def hudJob(self):
+		return '%s - %s' % (os.environ['JOB'], os.environ['SHOT'])
+
+	# Maya scene name
 	def hudScene(self):
-		sceneFile = os.path.split(mc.file(exn=True, q=True))[1]
-		return sceneFile
-		
-	#camera info	
+		return os.path.split(mc.file(q=True, exn=True))[1]
+
+	# Camera and lens info
 	def hudCamera(self):
 		activeCamera = self.getActiveCamera()
 		cameraShape = [activeCamera]
 		if mc.nodeType(activeCamera) != 'camera':
-		    cameraShape = mc.listRelatives(activeCamera, s=True)
+			cameraShape = mc.listRelatives(activeCamera, shapes=True)
 		cameraLens = mc.getAttr(cameraShape[0] + '.focalLength')
 		cameraLens = round(cameraLens, 2)
-		cameraLens = `cameraLens` + ' mm'
-		camInfo = '%s %s' % (activeCamera, cameraLens)
+		camInfo = '%s %s mm' % (activeCamera, cameraLens)
 		return camInfo
-	
-	#time	
+
+	# Date & time
 	def hudTime(self):
-		currentTime = time.strftime("%d/%b/%Y %H:%M")
-		return currentTime
-	
-	#current project
-	def hudJob(self):
-		job = os.environ['JOB']
-		shot_ = os.environ['SHOT']
-		return '%s - %s\t\t' % (job, shot_)
-	
-	#current frame
-	def hudFrame(self):
-		currentFrame = mc.currentTime(q=True)
-		return currentFrame
-	
-	#artist
+		return time.strftime("%d/%m/%Y %H:%M")
+
+	# Artist
 	def hudArtist(self):
-		artistName = os.environ['USERNAME']
-		return artistName
-	
-	#GPS
-	def hudGPS(self):
-		return 'GPS'
-	
-	#turns slate on
+		return os.environ['IC_USERNAME']
+
+	# Current frame
+	def hudFrame(self):
+		return mc.currentTime(q=True)
+
+
 	def slateOn(self):
-		mc.headsUpDisplay(rp=(0,0))
-		mc.headsUpDisplay(rp=(0,1))
-		mc.headsUpDisplay(rp=(0,2))
-		mc.headsUpDisplay(rp=(2,2))
-		mc.headsUpDisplay(rp=(4,0))
-		mc.headsUpDisplay(rp=(4,1))
-		mc.headsUpDisplay(rp=(4,2))
-		mc.headsUpDisplay(rp=(4,3))
-		mc.headsUpDisplay(rp=(5,2))
-		mc.headsUpDisplay(rp=(5,3))
-		mc.headsUpDisplay(rp=(9,5))
+		""" Create GPS slate elements and add them to the HUD.
+			Names of all custom HUDs must begin with 'GPS_slate'.
+		"""
+		# Hide all current HUD elements
+		self.showHUD(0)
 
-		mc.headsUpDisplay('HUD_GPS',
-		section=2,
-		block=2,
-		blockSize='small',
-		command=lambda *args: self.hudGPS(),
-		ev='playblasting',
-		dataFontSize='large')
+		# Create custom HUD elements
+		section = 2
+		mc.headsUpDisplay('GPS_slate_header', 
+		                  section=section, 
+		                  block=mc.headsUpDisplay(nextFreeBlock=section), 
+		                  blockSize='small', 
+		                  command=lambda *args: self.hudHeader(), 
+		                  ev='playblasting', 
+		                  dataFontSize='large')
 
-		mc.headsUpDisplay('HUD_camera',
-		section=4,
-		block=1,
-		blockSize='small',
-		command=lambda *args: self.hudCamera(),
-		ev='playblasting',
-		dataFontSize='small')
-		
-		mc.headsUpDisplay('HUD_scene',
-		section=4,
-		block=2,
-		blockSize='small',
-		ba='right',
-		command=lambda *args: self.hudScene(),
-		ev='playblasting',
-		dataFontSize='small')
-		
-		mc.headsUpDisplay('HUD_artist',
-		section=5,
-		block=3,
-		blockSize='small',
-		command=lambda *args: self.hudArtist(),
-		ev='playblasting',
-		dataFontSize='small')
-		
-		mc.headsUpDisplay('HUD_time',
-		section=5,
-		block=2,
-		blockSize='small',
-		command=lambda *args: self.hudTime(),
-		ev='playblasting',
-		dataFontSize='small')
-		
-		mc.headsUpDisplay('HUD_job',
-		section=0,
-		block=1,
-		blockSize='small',
-		command=lambda *args: self.hudJob(),
-		ev='playblasting',
-		dataFontSize='small')
-		
-		mc.headsUpDisplay('HUD_frame',
-		section=9,
-		block=5,
-		blockSize='small',
-		command=lambda *args: self.hudFrame(),
-		attachToRefresh = True,
-		dataFontSize='large')
-		
-	#turns slate off
+		section = 0
+		mc.headsUpDisplay('GPS_slate_job', 
+		                  section=section, 
+		                  block=mc.headsUpDisplay(nextFreeBlock=section), 
+		                  blockSize='small', 
+		                  command=lambda *args: self.hudJob(), 
+		                  ev='playblasting', 
+		                  dataFontSize='small')
+
+		section = 4
+		mc.headsUpDisplay('GPS_slate_scene', 
+		                  section=section, 
+		                  block=mc.headsUpDisplay(nextFreeBlock=section), 
+		                  blockSize='small', 
+		                  #blockAlignment='right', 
+		                  command=lambda *args: self.hudScene(), 
+		                  ev='playblasting', 
+		                  dataFontSize='small')
+
+		section = 4
+		mc.headsUpDisplay('GPS_slate_camera', 
+		                  section=section, 
+		                  block=mc.headsUpDisplay(nextFreeBlock=section), 
+		                  blockSize='small', 
+		                  #blockAlignment='right', 
+		                  command=lambda *args: self.hudCamera(), 
+		                  ev='playblasting', 
+		                  dataFontSize='small')
+
+		section = 5
+		mc.headsUpDisplay('GPS_slate_time', 
+		                  section=section, 
+		                  block=mc.headsUpDisplay(nextFreeBlock=section), 
+		                  blockSize='small', 
+		                  command=lambda *args: self.hudTime(), 
+		                  ev='playblasting', 
+		                  dataFontSize='small')
+
+		section = 5
+		mc.headsUpDisplay('GPS_slate_artist', 
+		                  section=section, 
+		                  block=mc.headsUpDisplay(nextFreeBlock=section), 
+		                  blockSize='small', 
+		                  command=lambda *args: self.hudArtist(), 
+		                  ev='playblasting', 
+		                  dataFontSize='small')
+
+		section = 9
+		mc.headsUpDisplay('GPS_slate_frame', 
+		                  section=section, 
+		                  block=mc.headsUpDisplay(nextFreeBlock=section), 
+		                  blockSize='small', 
+		                  command=lambda *args: self.hudFrame(), 
+		                  attachToRefresh = True, 
+		                  dataFontSize='large')
+
+
 	def slateOff(self):
-		if mc.headsUpDisplay('HUD_scene', ex=True) == True:
-			mc.headsUpDisplay('HUD_scene', rem=True)
-		if mc.headsUpDisplay('HUD_camera', ex=True) == True:
-			mc.headsUpDisplay('HUD_camera', rem=True)
-		if mc.headsUpDisplay('HUD_lens', ex=True) == True:
-			mc.headsUpDisplay('HUD_lens', rem=True)
-		if mc.headsUpDisplay('HUD_time', ex=True) == True:
-			mc.headsUpDisplay('HUD_time', rem=True)
-		if mc.headsUpDisplay('HUD_artist', ex=True) == True:
-			mc.headsUpDisplay('HUD_artist', rem=True)
-		if mc.headsUpDisplay('HUD_job', ex=True) == True:
-			mc.headsUpDisplay('HUD_job', rem=True)
-		if mc.headsUpDisplay('HUD_frame', ex=True) == True:
-			mc.headsUpDisplay('HUD_frame', rem=True)
+		""" Remove the GPS slate elements.
+		"""
+		hudLS = mc.headsUpDisplay(listHeadsUpDisplays=True)
 
-		mc.headsUpDisplay(rp=(0,0))
-		mc.headsUpDisplay(rp=(0,1))
-		mc.headsUpDisplay(rp=(0,2))
-		mc.headsUpDisplay(rp=(0,3))
-		mc.headsUpDisplay(rp=(0,4))
-		mc.headsUpDisplay(rp=(0,5))
-		mc.headsUpDisplay(rp=(2,2))
-		mc.headsUpDisplay(rp=(4,1))
-		mc.headsUpDisplay(rp=(4,2))
-		mc.headsUpDisplay(rp=(4,3))
-		mc.headsUpDisplay(rp=(5,3))
-		mc.headsUpDisplay(rp=(5,2))
-		mc.headsUpDisplay(rp=(9,5))
-	
-	##end slate##
+		for hud in hudLS:
+			if hud.startswith('GPS_slate'):
+				if mc.headsUpDisplay(hud, exists=True):
+					mc.headsUpDisplay(hud, remove=True)
 
-	#sets playblast options and runs playblast
+
+	# end slate
+
+
+	def getActiveCamera(self):
+		""" Get the current active camera.
+		"""
+		try:
+			activeCamera = mc.modelPanel(mc.getPanel(withFocus=True), cam=True, q=True)
+			return activeCamera
+		except RuntimeError:
+			mc.warning("No active view selected. Please choose a camera view to preview.")
+			return False
+
+
 	def playblast_(self):
-		#changing image foramt globals to jpg
-		mc.setAttr('defaultRenderGlobals.imageFormat', 8)
-		
-		#stores and then clears selection
+		""" Sets playblast options and runs playblast.
+		"""
+		# Get active camera
+		activeCamera = self.getActiveCamera()
+		if not activeCamera:
+			return
+		cameraShape = [activeCamera]
+		if mc.nodeType(activeCamera) != 'camera':
+			cameraShape = mc.listRelatives(activeCamera, shapes=True)
+
+		# Store current options
+		displayOptions = self.storeAttributes(cameraShape[0], ['displayResolution', 'displayFieldChart', 'displaySafeAction', 'displaySafeTitle', 'displayFilmPivot', 'displayFilmOrigin', 'overscan', 'panZoomEnabled'])
+		displayHUD = self.displayHUD(query=True)
+		hudState = self.storeHUD()
+
+		# Store and then clear selection
 		if self.noSelect:
 			currentSl = mc.ls(sl=True)
 			mc.select(cl=True)
-		
-		#gets active camera
-		if not self.getActiveCamera():
-			return
 
-		#turns slate on
+		# Display slate
 		if self.slate:
+			self.displayHUD(setValue=True)
 			self.slateOn()
 		else:
-			self.slateOff()
+			self.displayHUD(setValue=False)
 
-		#turns guides on
+		# Display guides
 		if self.guides:
-			activeCamera = self.getActiveCamera()
-			cameraShape = [activeCamera]
-			if mc.nodeType(activeCamera) != 'camera':
-				cameraShape = mc.listRelatives(activeCamera, s=True)
-			pre_safeAction = mc.getAttr('%s.displaySafeAction' % cameraShape[0])
-			pre_safeTitle = mc.getAttr('%s.displaySafeTitle' % cameraShape[0])
-			mc.setAttr("%s.displaySafeAction" % cameraShape[0], 1)
-			mc.setAttr("%s.displaySafeTitle" % cameraShape[0], 1)
-			
-		#storing current overscan value and sets it to 1.0
-		overscanValue = self.overscan(get=True)
-		self.overscan(set=True)
+			mc.setAttr(cameraShape[0]+".displayResolution", True)
+			mc.setAttr(cameraShape[0]+".displaySafeAction", True)
+			mc.setAttr(cameraShape[0]+".displaySafeTitle", True)
+		else:
+			mc.setAttr(cameraShape[0]+".displayResolution", False)
+			mc.setAttr(cameraShape[0]+".displayFieldChart", False)
+			mc.setAttr(cameraShape[0]+".displaySafeAction", False)
+			mc.setAttr(cameraShape[0]+".displaySafeTitle", False)
+			mc.setAttr(cameraShape[0]+".displayFilmPivot", False)
+			mc.setAttr(cameraShape[0]+".displayFilmOrigin", False)
 
-		#running playblast
+		# Set overscan value to 1.0 & disable 2D pan/zoom
+		mc.setAttr(cameraShape[0]+".overscan", 1.0)
+		mc.setAttr(cameraShape[0]+".panZoomEnabled", 0)
+
+		# Generate playblast
 		self.run_playblast()
-		
-		#turning off sltate
+
+		# Hide slate
 		if self.slate:
 			self.slateOff()
-			
-		#restoring overscan to original
-		self.overscan(set=True, setValue=overscanValue)
-		
-		#restoring imageFormat globals
-		mc.setAttr('defaultRenderGlobals.imageFormat', 7)
 
-		#restoring selection
+		# Restore selection
 		if self.noSelect:
 			for sl in currentSl:
 				mc.select(sl, add=True)
-		
-		#restoring guides
-		if self.guides:
-			if not pre_safeAction:
-				mc.setAttr("%s.displaySafeAction" % cameraShape[0], 0)
-			if not pre_safeTitle:
-				mc.setAttr("%s.displaySafeTitle" % cameraShape[0], 0)
-			
-			
-		#returns frRange and file extension
+
+		# Restore original settings
+		self.retrieveAttributes(cameraShape[0], displayOptions)
+		self.restoreHUD(hudState)
+		self.displayHUD(setValue=displayHUD)
+
+		# Return frame range and file extension
 		return self.frRange , 'jpg'
-	
-	
-	#stores averscan info and changes to 1.0
-	def overscan(self, set=False, setValue=1.0, get=False):
-		activeCamera = self.getActiveCamera()
-		cameraShape = [activeCamera]
-		if mc.nodeType(activeCamera) != 'camera':
-			cameraShape = mc.listRelatives(activeCamera, s=True)
-		if set:
-			mc.setAttr('%s.overscan' % cameraShape[0], setValue)
-			return
-		if get:
-			setValue = (mc.getAttr('%s.overscan' % cameraShape[0]))
-			return setValue
-			
-	
-	#gets the current active camera
-	def getActiveCamera(self):
-		try:
-			activeCamera = mc.modelPanel(mc.getPanel(wf=True), cam=True, q=True)
-			return activeCamera
-		except RuntimeError:
-			verbose.chooseCameraPreview()
-			
-			
-	#runs playblast
+
+
 	def run_playblast(self):
-		mc.playblast(f='%s/%s' % (self.playblastDir, self.outputFile), 
-		st=self.frRange[0], 
-		et=self.frRange[1],
-		fp=4, 
-		w=self.res[0], 
-		h=self.res[1], 
-		p=100,
-		fmt='image',
-		c='jpg',
-		v=False,
-		os=self.offscreen, 
-		cc=True, 
-		orn=True)
+		""" Maya command to generate playblast.
+		"""
+		mc.playblast(filename='%s/%s' % (self.playblastDir, self.outputFile), 
+		             startTime=self.frRange[0], 
+		             endTime=self.frRange[1], 
+		             framePadding=4, 
+		             width=self.res[0], 
+		             height=self.res[1], 
+		             percent=100, 
+		             format='image', 
+		             compression='jpg', 
+		             viewer=False, 
+		             offScreen=self.offscreen, 
+		             clearCache=True, 
+		             showOrnaments=True)
+

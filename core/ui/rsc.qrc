@@ -1,5 +1,49 @@
 <RCC>
   <qresource prefix="rsc">
+    <file>rsc/status_icon_ready.png</file>
+    <file>rsc/status_icon_stopped.png</file>
+    <file>rsc/status_icon_waiting.png</file>
+    <file>rsc/status_icon_ok.png</file>
+    <file>rsc/icon_resubmit_disabled.png</file>
+    <file>rsc/icon_resubmit.png</file>
+    <file>rsc/icon_cross.png</file>
+    <file>rsc/icon_cross_disabled.png</file>
+    <file>rsc/icon_pause.png</file>
+    <file>rsc/icon_pause_disabled.png</file>
+    <file>rsc/icon_tick.png</file>
+    <file>rsc/icon_tick_disabled.png</file>
+    <file>rsc/icon_refresh.png</file>
+    <file>rsc/icon_refresh_disabled.png</file>
+    <file>rsc/app_icon_maya_tab.png</file>
+    <file>rsc/app_icon_nuke_tab.png</file>
+    <file>rsc/publish_icon_comp.png</file>
+    <file>rsc/publish_icon_comp_disabled.png</file>
+    <file>rsc/publish_icon_setup.png</file>
+    <file>rsc/publish_icon_setup_disabled.png</file>
+    <file>rsc/publish_icon_card.png</file>
+    <file>rsc/publish_icon_card_disabled.png</file>
+    <file>rsc/publish_icon_fx_disabled.png</file>
+    <file>rsc/publish_icon_fx.png</file>
+    <file>rsc/publish_icon_node.png</file>
+    <file>rsc/publish_icon_node_disabled.png</file>
+    <file>rsc/publish_icon_rig.png</file>
+    <file>rsc/publish_icon_rig_disabled.png</file>
+    <file>rsc/publish_icon_pointCloud.png</file>
+    <file>rsc/publish_icon_pointCloud_disabled.png</file>
+    <file>rsc/publish_icon_generic.png</file>
+    <file>rsc/publish_icon_generic_disabled.png</file>
+    <file>rsc/publish_icon_shader.png</file>
+    <file>rsc/publish_icon_shader_disabled.png</file>
+    <file>rsc/publish_icon_scene.png</file>
+    <file>rsc/publish_icon_scene_disabled.png</file>
+    <file>rsc/publish_icon_camera.png</file>
+    <file>rsc/publish_icon_camera_disabled.png</file>
+    <file>rsc/publish_icon_anim.png</file>
+    <file>rsc/publish_icon_anim_disabled.png</file>
+    <file>rsc/publish_icon_geo.png</file>
+    <file>rsc/publish_icon_geo_disabled.png</file>
+    <file>rsc/icon_editor.png</file>
+    <file>rsc/icon_editor_disabled.png</file>
     <file>rsc/icon_info_disabled.png</file>
     <file>rsc/icon_info.png</file>
     <file>rsc/icon_settings_disabled.png</file>

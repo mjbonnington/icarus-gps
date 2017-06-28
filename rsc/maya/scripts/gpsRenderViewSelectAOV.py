@@ -1,13 +1,14 @@
 # [GPS] Render View Select AOV
-# v0.5
+# v0.6
 #
-# Michael Bonnington 2015
-# Gramercy Park Studios
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2015 Gramercy Park Studios
 #
 # This script adds a combo box to the Render View toolbar which enables you to view render passes / AOVs directly in the Render View.
 # To initialise, run the script with 'import gpsRenderViewSelectAOV; gpsRenderViewSelectAOV.selectAOV()'
 # The Render View must be set to 32-bit mode.
-# Currently supports the following renderers: Arnold, Redshift, MentalRay.
+# Compatible with Maya 2016's new Color Management system.
+# Currently supports the following renderers: Arnold, Redshift, MentalRay (currently pre-Maya 2015 only).
 # Removed VRay support as this functionality already exists in the VRay Framebuffer.
 # Multi-channel EXRs are not supported.
 
@@ -25,6 +26,12 @@ class selectAOV():
 
 		# Load OpenEXR plugin
 		mc.loadPlugin( "OpenEXRLoader" )
+
+		# Check for Maya 2016 Color Management
+		try:
+			self.colorManagementEnabled = mc.colorManagementPrefs( query=True, cme=True )
+		except:
+			self.colorManagementEnabled = 0
 
 		# Set up common render settings
 		pass
@@ -70,14 +77,15 @@ class selectAOV():
 				imageFilePrefix = "<Scene>"
 
 			# Append RenderPass token
-			if "<RenderPass>" not in imageFilePrefix:
-				imageFilePrefix += "_<RenderPass>"
+			#if "<RenderPass>" not in imageFilePrefix:
+			#	imageFilePrefix += "_<RenderPass>"
 
 			# Store the updated prefix string
 			mc.setAttr( "defaultRenderGlobals.imageFilePrefix", imageFilePrefix, type="string" )
 
-			# Set correct output gamma
-			mc.setAttr( "redshiftOptions.displayGammaValue", 2.2 )
+			# Set correct output gamma - disable for Maya 2016 and later with Color Management enabled
+			if not self.colorManagementEnabled:
+				mc.setAttr( "redshiftOptions.displayGammaValue", 2.2 )
 
 			# Add pre- and post-render commands
 			mc.setAttr( "redshiftOptions.preRenderMel", 'python("gpsRenderViewSelectAOV.selectAOV().pre_render()")', type="string" )
@@ -112,9 +120,10 @@ class selectAOV():
 		else:
 			mc.error( "The renderer %s is not supported" %self.renderer )
 
-		# Set up Maya Render View for 32-bit float / linear
-		mc.setAttr( "defaultViewColorManager.imageColorProfile", 2 )
-		mc.setAttr( "defaultViewColorManager.displayColorProfile", 3 )
+		# Set up Maya Render View for 32-bit float / linear - disable for Maya 2016 and later with Color Management enabled
+		if not self.colorManagementEnabled:
+			mc.setAttr( "defaultViewColorManager.imageColorProfile", 2 )
+			mc.setAttr( "defaultViewColorManager.displayColorProfile", 3 )
 		# TODO - Check whether 32-bit mode is enabled
 
 		self.create_ui()
@@ -150,7 +159,7 @@ class selectAOV():
 
 		# Store the current frame number
 		self.frame = mc.currentTime( query=True )
-	 
+
 
 	def post_render(self):
 		""" Function to execute when a render finishes.
@@ -217,11 +226,16 @@ class selectAOV():
 		if self.renderer == "arnold":
 			img = img_path[0].replace( "<RenderPass>", aov )
 
-		elif self.renderer == "redshift":
+		elif self.renderer == "redshift": # TODO: update this to respect Redshift's AOV name prefix attribute
 			if aov == self.default_beauty_aov_name:
-				img = img_path[0].replace( "<RenderPass>", "Beauty" )
+				#img = img_path[0].replace( "<RenderPass>", "Beauty" )
+				img = img_path[0]
 			else:
-				img = img_path[0].replace( "<RenderPass>", "Beauty.%s" %aov )
+				#img = img_path[0].replace( "<RenderPass>", "Beauty.%s" %aov )
+				layer = mc.editRenderLayerGlobals( query=True, currentRenderLayer=True )
+				if layer == "defaultRenderLayer":
+					layer = "masterLayer"
+				img = img_path[0].replace( "%s." %layer, "%s.%s." %(layer, aov) )
 
 		elif self.renderer == "mentalRay":
 			if aov == self.default_beauty_aov_name:
@@ -229,7 +243,7 @@ class selectAOV():
 			else:
 				img = img_path[0].replace( "<RenderPass>", aov )
 
-		#print img
+		print img
 
 		# Load the image
 		rview = mc.getPanel( scriptType="renderWindowPanel" )

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>144</height>
+    <height>256</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -74,25 +74,51 @@
        </property>
       </widget>
      </item>
+     <item>
+      <spacer name="range_horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Preferred</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>12</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="rangeInfo_label">
+       <property name="text">
+        <string>(duration: n frames)</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="handles_label">
+   <item row="2" column="0">
+    <widget class="QLabel" name="posterFrame_label">
      <property name="text">
-      <string>Handles:</string>
+      <string>Poster frame:</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="QSpinBox" name="handles_spinBox">
+   <item row="2" column="1">
+    <widget class="QSpinBox" name="posterFrame_spinBox">
+     <property name="minimum">
+      <number>0</number>
+     </property>
      <property name="maximum">
       <number>9999</number>
      </property>
      <property name="value">
-      <number>10</number>
+      <number>1001</number>
      </property>
      <property name="xmlTag" stdset="0">
-      <string>handles</string>
+      <string>posterFrame</string>
      </property>
     </widget>
    </item>
@@ -101,7 +127,6 @@
  <tabstops>
   <tabstop>rangeStart_spinBox</tabstop>
   <tabstop>rangeEnd_spinBox</tabstop>
-  <tabstop>handles_spinBox</tabstop>
  </tabstops>
  <resources/>
  <connections/>

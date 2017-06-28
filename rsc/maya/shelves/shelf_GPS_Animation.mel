@@ -73,12 +73,12 @@ global proc shelf_GPS_Animation () {
         -style "iconOnly" 
         -marginWidth 1
         -marginHeight 1
-        -command "string $sourceSt = \"source \\\"\"+`getenv PIPELINE`+\"/rsc/maya/scripts/AdvancedSkeleton4/AdvancedSkeleton4.mel\\\";AdvancedSkeleton4;\"; \neval $sourceSt;" 
+        -command "string $sourceSt = \"source \\\"\"+`getenv IC_BASEDIR`+\"/rsc/maya/scripts/AdvancedSkeleton4/AdvancedSkeleton4.mel\\\";AdvancedSkeleton4;\"; \neval $sourceSt;" 
         -sourceType "mel" 
         -commandRepeatable 1
         -flat 1
-        -mi "Biped" ("string $sourceSt = \"source \\\"\"+`getenv PIPELINE`+\"/rsc/maya/scripts/AdvancedSkeleton4/AdvancedSkeleton4Files/Selector/biped.mel\\\";asSelectorbiped;\"; \neval $sourceSt;")
-        -mi "Face" ("string $sourceSt = \"source \\\"\"+`getenv PIPELINE`+\"/rsc/maya/scripts/AdvancedSkeleton4/AdvancedSkeleton4Files/Selector/face.mel\\\";asSelectorface;\"; \neval $sourceSt;")
+        -mi "Biped" ("string $sourceSt = \"source \\\"\"+`getenv IC_BASEDIR`+\"/rsc/maya/scripts/AdvancedSkeleton4/AdvancedSkeleton4Files/Selector/biped.mel\\\";asSelectorbiped;\"; \neval $sourceSt;")
+        -mi "Face" ("string $sourceSt = \"source \\\"\"+`getenv IC_BASEDIR`+\"/rsc/maya/scripts/AdvancedSkeleton4/AdvancedSkeleton4Files/Selector/face.mel\\\";asSelectorface;\"; \neval $sourceSt;")
     ;
     shelfButton
         -enableCommandRepeat 1
@@ -185,8 +185,8 @@ global proc shelf_GPS_Animation () {
         -flat 1
 	   -mi "iCollide" ( "loadPlugin -qt iDeform; iCollide new" )
 	   -mi "iDisplace" ( "loadPlugin -qt iDeform; iDisplace()" )
-	   -mi "iSkinDefrom Attract" ( "loadPlugin -qt iDeform; iSkinDeform new 0" )
-	   -mi "iSkinDefrom Slide" ( "loadPlugin -qt iDeform; iSkinDeform new 1" )
+	   -mi "iSkinDeform Attract" ( "loadPlugin -qt iDeform; iSkinDeform new 0" )
+	   -mi "iSkinDeform Slide" ( "loadPlugin -qt iDeform; iSkinDeform new 1" )
     ;
     shelfButton
         -enableCommandRepeat 1

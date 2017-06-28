@@ -24,9 +24,20 @@ class testApp(QtGui.QMainWindow): # <- modify testApp to name of your app
 	def __init__(self, parent = None):
 		super(testApp, self).__init__() # <- modify testApp to name of your app
 		self.ui = Ui_MainWindow()
+		print type(self.ui)
 		self.ui.setupUi(self)
 
+		# Connect signals & slots
+		self.ui.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.exit)
+
 	# [application code goes here]
+
+
+	def exit(self):
+		""" Exit the dialog.
+		"""
+		self.hide()
+		sys.exit()
 
 
 if __name__ == "__main__":

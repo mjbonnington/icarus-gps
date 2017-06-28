@@ -1,60 +1,76 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:assetGather
-#copyright	:Gramercy Park Studios
+
+# [Icarus] ma_animGather.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2016 Gramercy Park Studios
+#
+# Gather an asset of type 'ma_anim'.
+
 
 import os, sys, traceback
-import verbose, pDialog, mayaOps
+import jobSettings, mayaOps, pDialog, verbose
 import maya.cmds as mc
+
 
 def gather(gatherPath):
 
-	#retrieves icData from gatherPath
-	sys.path.append(gatherPath)
-	import icData; reload(icData)
-	sys.path.remove(gatherPath)
-		
-	try:	
-		#check if ICSet for required asset exists in scene
-		if not mc.objExists('ICSet_%s' % icData.requires):
-			verbose.animRequires(icData.requires)
+	gatherPath = os.path.expandvars(gatherPath)
+
+	# Instantiate XML data classes
+	assetData = jobSettings.jobSettings()
+	assetData.loadXML(os.path.join(gatherPath, 'assetData.xml'), quiet=True)
+
+	try:
+		assetPblName = assetData.getValue('asset', 'assetPblName')
+		asset = assetData.getValue('asset', 'asset')
+		assetExt = assetData.getValue('asset', 'assetExt')
+		requires = assetData.getValue('asset', 'requires')
+
+		# Check if ICSet for required asset exists in scene
+		if not mc.objExists('ICSet_%s' % requires):
+			verbose.animRequires(requires)
 			return
-		#check if ICSet with same name exist in scene and deletes it
-		if mc.objExists('ICSet_%s' % icData.assetPblName):
-			mc.delete('ICSet_%s' % icData.assetPblName)
-		
-		#gets published asset from the gatherPath
-		animFile = os.path.join(gatherPath, '%s.%s' (icData.assetPblName, icData.assetExt))
+
+		# Check if ICSet with same name exist in scene and delete it
+		if mc.objExists('ICSet_%s' % assetPblName):
+			mc.delete('ICSet_%s' % assetPblName)
+
+		# Get published asset from the gatherPath
+		animFile = os.path.join(gatherPath, '%s.%s' % (assetPblName, assetExt))
 		if not os.path.isfile(animFile):
 			verbose.noAsset()
 			return
-	
-		#loading ATOM animation plugin if needed
-		mayaAppPath = os.path.split(os.environ['MAYAVERSION'])[0]
-		mc.loadPlugin(os.path.join(mayaAppPath, 'plug-ins', 'atomImportExport.bundle'), qt=True)
-		
-		#gathering
-		allObjLs = mc.listRelatives(icData.asset, ad=True, f=True, typ='transform')
+
+		# Load ATOM animation plugin if needed
+		mc.loadPlugin('atomImportExport', qt=True)
+
+		# Gathering...
+		allObjLs = mc.listRelatives(asset, ad=True, f=True, typ='transform')
 		if allObjLs:
-			allObjLs.append(icData.asset)
+			allObjLs.append(asset)
 		else:
-			allObjLs = [icData.asset]
-		#deleting old animation		
+			allObjLs = [asset]
+
+		# Delete old animation
 		mayaOps.deleteChannels(allObjLs, hierarchy=True)
-		mc.select(icData.asset, r=True)
-		mc.file(
-		animFile,
-		typ='atomImport',
-		op=';;targetTime=3; option=replace; match=hierarchy;;selected=childrenToo;;search=;replace=;prefix=;suffix=;mapFile=',
-		i=True,
-		ra=True)
-	
-		#generating icSet
-		dataSet = mayaOps.icDataSet(icData.asset, icData)
+		mc.select(asset, r=True)
+		mc.file( animFile, 
+				 typ='atomImport', 
+				 op=';;targetTime=3; option=replace; match=hierarchy;;selected=childrenToo;;search=;replace=;prefix=;suffix=;mapFile=', 
+				 i=True, 
+				 ra=True )
+
+		# Generate icSet
+		dataSet = mayaOps.icDataSet(asset, assetData)
+
+
 	except:
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		dialogTitle = 'Gather Warning'
-		dialogMsg = 'Errors occured during asset update.\nPlease check console for details'
+		dialogMsg = 'Errors occured during asset update.\nPlease check console for more information.\n\n%s' % traceback.format_exc()
 		dialog = pDialog.dialog()
-		dialog.dialogWindow(dialogMsg, dialogTitle, conf=True)
+		dialog.display(dialogMsg, dialogTitle, conf=True)
+

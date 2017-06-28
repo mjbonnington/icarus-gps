@@ -1,16 +1,18 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 
-# List Sequences
-# v0.2
+# [Icarus] sequenceLs.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) Gramercy Park Studios 2015
+# (c) 2015-2016 Gramercy Park Studios
 #
 # Command-line tool for listing file sequences in a nicely formatted manner.
 # TODO: Take arguments to list specific directory or sequence
 
 
-import argparse, glob, os, re, sys
+import argparse
+import os
+import sys
+
 import sequence
 
 
@@ -26,69 +28,17 @@ if args.path:
 else:
 	path = os.getcwd()
 
-# Get directory contents
-try:
-	ls = os.listdir(path)
-	ls.sort()
-except OSError:
-	sys.exit("No such file or directory: '%s'" %path)
-
-seqRE = re.compile(r'\d+$')
-
-# Create list to hold all basenames of sequences
-all_bases = []
-
-# Get list of files in current dir
-for filename in ls:
-
-	# Only work on files, not directories
-	if os.path.isfile(os.path.join(path, filename)):
-
-		# Extract file extension
-		root, ext = os.path.splitext(filename)
-
-		# Match file names which have a trailing number
-		match = seqRE.search(root)
-
-		# Store filename prefix
-		if match is not None:
-			prefix = root[:root.rfind(match.group())]
-			all_bases.append(prefix)
-
-# Remove duplicates & sort list
-bases = list(set(all_bases))
-bases.sort()
-
-#print bases
+# Get list of file sequence bases in specified directory
+bases = sequence.getBases(path)
 
 if bases:
-	print "%d file sequence(s) found:" %len(bases)
+	print("%d file sequence(s) found:" %len(bases))
 else:
 	sys.exit("No file sequences detected in '%s'" %path)
 
 for base in bases:
-	try:
-		filter_ls = glob.glob("%s*" %os.path.join(path, base))
-		frame_ls = []
+	path, prefix, fr_range, ext, num_frames = sequence.getSequence(path, base)
 
-		for filename in filter_ls:
-
-			# Extract file extension
-			root, ext = os.path.splitext(filename)
-
-			# Match file names which have a trailing number
-			match = seqRE.search(root)
-
-			if match is not None:
-				num = match.group()
-				frame_ls.append(int(num))
-
-		frame_ls.sort()
-		fr_range = sequence.numRange(frame_ls)
-
-		# Print output
-		print "%s[%s]%s" %(base, fr_range, ext)
-
-	except (ValueError):
-		pass
+	# Print output
+	print("%s.[%s]%s (%d)" %(prefix, fr_range, ext, num_frames))
 

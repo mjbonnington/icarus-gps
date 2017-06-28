@@ -1,12 +1,12 @@
 #!/usr/bin/python
 
-# Job Settings
-# v0.2
+# [Icarus] jobSettings.py
 #
-# Michael Bonnington 2015
-# Gramercy Park Studios
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2015-2016 Gramercy Park Studios
 #
-# Manipulates job settings data stored in an XML database
+# Manipulates job settings data stored in an XML database.
+# This class is also used to manage asset metadata.
 
 
 import re
@@ -16,8 +16,7 @@ import xmlData
 
 class jobSettings(xmlData.xmlData):
 	""" Manipulates XML database to store job settings.
-		Inherits xmlData class
-		TODO: Rewrite to avoid using XPath expressions, as they are not fully supported by the version of the ElementTree module included with Python 2.6
+		Inherits xmlData class.
 	"""
 
 	def getValue(self, category, setting):
@@ -61,7 +60,7 @@ class jobSettings(xmlData.xmlData):
 		if cat is not None:
 			elem = cat.find(setting)
 			if elem is not None:
-				#print "Removing element: %s" %elem.setting
+				#print("Removing element: %s" %elem.setting)
 				cat.remove(elem)
 				return True
 

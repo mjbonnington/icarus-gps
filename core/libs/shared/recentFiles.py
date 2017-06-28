@@ -1,18 +1,23 @@
 #!/usr/bin/python
 
-# Recent Files
-# v0.2
+# [Icarus] recentFiles.py
 #
-# Michael Bonnington 2015
-# Gramercy Park Studios
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2015-2017 Gramercy Park Studios
 #
 # Manage recent file lists for various applications within the pipeline.
 # updateLs() and getLs() are the publicly accessible functions.
 
 
-from ConfigParser import SafeConfigParser
+try:
+	from ConfigParser import SafeConfigParser
+except ModuleNotFoundError:  # Python 3 compatibility
+	from configparser import SafeConfigParser
+
 import os
-import osOps, verbose
+
+import osOps
+import verbose
 
 
 config = SafeConfigParser()
@@ -20,7 +25,7 @@ configFile = os.path.join(os.environ['RECENTFILESDIR'], '%s.ini' % os.environ['J
 
 
 def _read(env):
-	""" Read config file - create it if it doesn't exist
+	""" Read config file - create it if it doesn't exist.
 	"""
 	if os.path.exists(configFile):
 		config.read(configFile)
@@ -30,7 +35,7 @@ def _read(env):
 
 
 def _write():
-	""" Write config file to disk
+	""" Write config file to disk.
 	"""
 	try:
 		with open(configFile, 'w') as f:
@@ -41,7 +46,8 @@ def _write():
 
 
 def _create(env):
-	""" Create config file if it doesn't exist and populate with with defaults
+	""" Create config file if it doesn't exist and populate with with
+		defaults.
 	"""
 	recentFilesDir = os.environ['RECENTFILESDIR']
 
@@ -55,18 +61,18 @@ def _create(env):
 	_write()
 
 
-def updateLs(newEntry, env=os.environ['ICARUSENVAWARE']):
-	""" Update recent files list and save config file to disk
+def updateLs(newEntry, env=os.environ['IC_ENV']):
+	""" Update recent files list and save config file to disk.
 	"""
 	_read(env)
 	_create(env) # create section for the current shot
 
 	fileLs = [] # clear recent file list
 
-	#newEntry = os.path.normpath(newEntry) # normalise path for host os
+	#newEntry = osOps.absolutePath(newEntry) # normalise path for host os
 	newEntry = newEntry.replace('\\', '/')
 	shotpath = os.environ['SHOTPATH'].replace('\\', '/')
-	
+
 	if newEntry.startswith(shotpath): # only add files in the current shot
 		newEntry = newEntry.replace(shotpath, '')
 
@@ -90,11 +96,11 @@ def updateLs(newEntry, env=os.environ['ICARUSENVAWARE']):
 		_write()
 
 	else:
-		print "Warning: Entry '%s' could not be added to recent files list. (%s)" %(newEntry, shotpath)
+		verbose.warning("Entry '%s' could not be added to recent files list. (%s)" %(newEntry, shotpath))
 
 
-def getLs(env=os.environ['ICARUSENVAWARE']):
-	""" Read recent file list and return list/array to be processed by MEL
+def getLs(env=os.environ['IC_ENV']):
+	""" Read recent file list and return list/array to be processed by MEL.
 	"""
 	_read(env)
 	_create(env) # create section for the current shot
@@ -105,3 +111,4 @@ def getLs(env=os.environ['ICARUSENVAWARE']):
 		fileLs = []
 
 	return fileLs
+

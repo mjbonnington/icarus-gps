@@ -1,19 +1,22 @@
 #!/usr/bin/python
 
-# [GPS] Maya Ops
-# v0.1
+# [Icarus] mayaOps.py
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2015 Gramercy Park Studios
+# (c) 2013-2017 Gramercy Park Studios
 #
 # Maya operations module.
 
 
-import os, shutil, recentFiles
+import os
+import shutil
+
 import maya.cmds as mc
 import maya.mel as mel
+
 import osOps
+import recentFiles
 
 
 def applyTransforms(obj, objT, objR, objS):
@@ -282,8 +285,8 @@ def exportAll(pathToPblAsset, fileType):
 ##############exports animation curves via atom###########
 def exportAnimation(pathToPblAsset, pblDir, objLs):
 	mayaAppPath = os.path.split(os.environ['MAYAVERSION'])[0]
-	plugin = os.path.join(mayaAppPath, 'plug-ins/atomImportExport.bundle')
-	mc.loadPlugin(plugin, qt=True)
+	#plugin = os.path.join(mayaAppPath, 'plug-ins/atomImportExport.bundle')
+	mc.loadPlugin('atomImportExport', qt=True)
 	startFr = mc.playbackOptions(min=True, q=True)
 	endFr = mc.playbackOptions(max=True, q=True)
 	mc.select(objLs[0], r=True)
@@ -297,10 +300,12 @@ def exportAnimation(pathToPblAsset, pblDir, objLs):
 def exportGeo(objLs, geoType, pathToPblAsset):
 	mayaAppPath = os.path.split(os.environ['MAYAVERSION'])[0]
 	if geoType == 'abc':
-		plugin = os.path.join(mayaAppPath, 'plug-ins/AbcExport.bundle')
+		plugin = 'AbcExport'
 		mc.loadPlugin(plugin, qt=True)
 		minFrame = int(mc.playbackOptions(min=True, q=True))
 		maxFrame = int(mc.playbackOptions(max=True, q=True))
+		#minFrame = int(os.environ['STARTFRAME'])
+		#maxFrame = int(os.environ['ENDFRAME'])
 		abcJob = '-fr %s %s -s 1 -uv -ws -ef -rt %s -f %s' % (minFrame, maxFrame, objLs[0], pathToPblAsset)
 		mc.AbcExport(j=abcJob)
 		return
@@ -312,19 +317,19 @@ def exportGeo(objLs, geoType, pathToPblAsset):
 		-velocityOn -velocityIntervalStart -0.5 -velocityIntervalEnd 0.5;''' % (pathToPblAsset, objLs[0])) # Changed velocity values to default, was 0 & 0.05
 		return
 	if geoType == 'sd':
-		plugin = os.path.join(os.environ['PIPELINE'], 'rsc', 'maya', 'plugins', 'realflow.bundle')
+		plugin = os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'maya', 'plugins', 'realflow.bundle')
 		mc.loadPlugin(plugin, qt=True)
 		mc.realflow(exportSD=True, selected=True, usePlaybackRange=True, deformation=True, file=pathToPblAsset)
 		return
 	if geoType == 'obj':
 		fileType = 'OBJexport'
 		fileExtension = '.obj'
-		plugin = os.path.join(mayaAppPath, 'plug-ins/objExport.bundle')
+		plugin = 'objExport'
 		fileOptions = 'groups=1;ptgroups=1;materials=0;smoothing=1;normals=1'
 	elif geoType == 'fbx':
 		fileType = 'FBX export'
 		fileExtension = '.fbx'
-		plugin = os.path.join(mayaAppPath, 'plug-ins/fbxmaya.bundle')
+		plugin = 'fbxmaya'
 		fileOptions = 'v=0'
 	mc.loadPlugin(plugin, qt=True)
 	mc.select(objLs[0])
@@ -392,26 +397,35 @@ def getICSetAttrs(ICSet):
 			icSetAttrDic[attr] = (mc.getAttr(attrFullPath))
 	return icSetAttrDic
 
-################gets current maya file####################
-def getScene():
-	actFile = mc.file(exn=True, q=True)
-	return actFile
 
-#########gets selected obj worldspace transforms##########
+def getScene():
+	""" Returns filename and path of currently open scene.
+	"""
+	sceneName = mc.file(q=True, sceneName=True)
+	return sceneName
+	# if sceneName:
+	# 	return sceneName
+	# else:
+	# 	return 'untitled scene'
+
+
 def getTransforms(obj):
+	""" Gets selected obj worldspace transforms.
+	"""
 	try:
 		objSLs = mc.xform(obj, q=True, s=True, ws=True)
 		objRLs = mc.xform(obj, q=True, ro=True, ws=True)
 		objTLs = mc.xform(obj, q=True, t=True, ws=True)
 		for i in range(len(objSLs)):
-		    objSLs[i] = round(objSLs[i], 3)
+			objSLs[i] = round(objSLs[i], 3)
 		for i in range(len(objRLs)):
-		    objRLs[i] = round(objRLs[i], 3)
+			objRLs[i] = round(objRLs[i], 3)
 		for i in range(len(objTLs)):
-		    objTLs[i] = round(objTLs[i], 3)	
+			objTLs[i] = round(objTLs[i], 3)
 		return objTLs, objRLs, objSLs
 	except:
 		return
+
 
 #groups manual lods in model and creates visibility switch#
 def groupManualLods(objLs, lodA, lodB, lodC):
@@ -433,70 +447,98 @@ def groupManualLods(objLs, lodA, lodB, lodC):
 	deleteHist(objLs)
 	return lodsMasterGrp
 
-#######################creates icarus data set#############
-def icDataSet(obj, icData, update=None, drawOverrides=True, addElements=True):
+
+def icDataSet(obj, assetData, update=None, drawOverrides=True, addElements=True):
+	""" Create Icarus data set node.
+		TODO: Clean up draw overrides node creation
+	"""
 	mc.loadPlugin('gps_ICSet', qt=True)
-	#stores current selection
+
+	# Store current selection
 	currentSlLs = mc.ls(sl=True)
+
 	if update:
 		dataSet = update
+
 	else:
-		#clears current selection and selects all nodes gathered in objLs
+		# Clear current selection and select all nodes gathered in objLs
 		mc.select(cl=True)
 		if mc.objExists(obj):
 			mc.select(obj)
-		#creates set with selection
-		dataSet = mc.createNode('ICSet', n='ICSet_%s' % icData.assetPblName)
+
+		# Create set with selection
+		dataSet = mc.createNode('ICSet', n='ICSet_'+assetData.getValue('asset', 'assetPblName'))
 		if addElements:
 			mc.sets(obj, forceElement=dataSet, edit=True)
 		if drawOverrides:
-			#Setting default component display
-			mc.setAttr('%s.overrideComponentDisplay' % dataSet, 1)
-			mc.setAttr('%s.icAssetDisplay' % dataSet, 2)
-			#Creating condition nodes for component display overrides
-			condition1 = mc.createNode('condition', n='%sCondition1' % dataSet)
-			mc.setAttr('%s.colorIfTrueR' % condition1, 1)
-			mc.setAttr('%s.colorIfTrueG' % condition1, 0)
-			mc.setAttr('%s.colorIfTrueB' % condition1, 0)
-			mc.setAttr('%s.colorIfFalseR' % condition1, 0)
-			mc.setAttr('%s.colorIfFalseG' % condition1, 0)
-			mc.setAttr('%s.colorIfFalseB' % condition1, 0)
-			condition2 = mc.createNode('condition', n='%sCondition2' % dataSet)
-			mc.setAttr('%s.secondTerm' % condition2, 1)
-			mc.setAttr('%s.colorIfTrueR' % condition2, 0)
-			mc.setAttr('%s.colorIfTrueG' % condition2, 0)
-			mc.setAttr('%s.colorIfTrueB' % condition2, 0)
-			mc.setAttr('%s.colorIfFalseR' % condition2, 1)
-			mc.setAttr('%s.colorIfFalseG' % condition2, 0)
-			mc.setAttr('%s.colorIfFalseB' % condition2, 0)
-			#connecting conditions to the dataSet
-			mc.connectAttr('%s.overrideComponentDisplay' % dataSet, '%s.drawOverride.overrideEnabled' % obj, f=True)
-			mc.connectAttr('%s.icAssetDisplay' % dataSet, '%s.firstTerm' % condition1, f=True)
-			mc.connectAttr('%s.outColorR' % condition1, '%s.overrideLevelOfDetail' % obj, f=True)
-			mc.connectAttr('%s.icAssetDisplay' % dataSet, '%s.firstTerm' % condition2, f=True)
-			mc.connectAttr('%s.outColorR' % condition2, '%s.overrideShading' % obj, f=True)
-			mc.connectAttr('%s.overrideComponentColor' % dataSet, '%s.drawOverride.overrideColor' % obj, f=True)
-	#adds ic data to set
-	assetTag(dataSet, icData.asset)
-	referenceTag(dataSet, icData.assetPblName)
-	assetTypeTag(dataSet, icData.assetType)
-	versionTag(dataSet, icData.version)
-	assetExtTag(dataSet, icData.assetExt)
-	notesTag(dataSet, icData.notes)
+			# Set default component display
+			mc.setAttr(dataSet+'.overrideComponentDisplay', 1)
+			mc.setAttr(dataSet+'.icAssetDisplay', 2)
+			# Create condition nodes for component display overrides
+			condition1 = mc.createNode('condition', n=dataSet+'_condition1')
+			mc.setAttr(condition1+'.colorIfTrueR', 1)
+			mc.setAttr(condition1+'.colorIfTrueG', 0)
+			mc.setAttr(condition1+'.colorIfTrueB', 0)
+			mc.setAttr(condition1+'.colorIfFalseR', 0)
+			mc.setAttr(condition1+'.colorIfFalseG', 0)
+			mc.setAttr(condition1+'.colorIfFalseB', 0)
+			condition2 = mc.createNode('condition', n=dataSet+'_condition2')
+			mc.setAttr(condition2+'.secondTerm', 1)
+			mc.setAttr(condition2+'.colorIfTrueR', 0)
+			mc.setAttr(condition2+'.colorIfTrueG', 0)
+			mc.setAttr(condition2+'.colorIfTrueB', 0)
+			mc.setAttr(condition2+'.colorIfFalseR', 1)
+			mc.setAttr(condition2+'.colorIfFalseG', 0)
+			mc.setAttr(condition2+'.colorIfFalseB', 0)
+			# Connect conditions to the dataSet
+			mc.connectAttr(dataSet+'.icAssetDisplay', condition1+'.firstTerm', f=True)
+			mc.connectAttr(condition1+'.outColorR', obj+'.overrideLevelOfDetail', f=True)
+			mc.connectAttr(dataSet+'.icAssetDisplay', condition2+'.firstTerm', f=True)
+			mc.connectAttr(condition2+'.outColorR', obj+'.overrideShading', f=True)
+			mc.connectAttr(dataSet+'.overrideComponentDisplay', obj+'.drawOverride.overrideEnabled', f=True)
+			mc.connectAttr(dataSet+'.overrideComponentColor', obj+'.drawOverride.overrideColor', f=True)
+# 			expString = """switch (%s.icAssetDisplay) {
+# 	case 0:
+# 		%s.overrideShading = 0;
+# 		%s.overrideLevelOfDetail = 1;
+# 		break;
+# 	case 1:
+# 		%s.overrideShading = 0;
+# 		%s.overrideLevelOfDetail = 0;
+# 		break;
+# 	case 2:
+# 		%s.overrideShading = 1;
+# 		%s.overrideLevelOfDetail = 0;
+# 		break;
+# }
+# """ % (dataSet, obj, obj, obj, obj, obj, obj)
+# 			exp = mc.expression(alwaysEvaluate=False, string=expString, name=dataSet+'_exp')
+
+	# Add asset metadata to set
+	assetTag(dataSet, assetData.getValue('asset', 'asset'))
+	referenceTag(dataSet, assetData.getValue('asset', 'assetPblName'))
+	assetTypeTag(dataSet, assetData.getValue('asset', 'assetType'))
+	versionTag(dataSet, assetData.getValue('asset', 'version'))
+	assetExtTag(dataSet, assetData.getValue('asset', 'assetExt'))
+	notesTag(dataSet, assetData.getValue('asset', 'notes'))
+
 	try:
-		assetRootDir(dataSet, icData.assetRootDir)
+		assetRootDir(dataSet, assetData.getValue('asset', 'assetRootDir'))
 	except AttributeError:
 		pass
 	try:
-		compatibleTag(dataSet, icData.compatible)
+		compatibleTag(dataSet, assetData.getValue('asset', 'compatible'))
 	except AttributeError:
 		pass
-	#clears gather selection and restores original selection
+
+	# Clear gather selection and restore original selection
 	mc.select(cl=True)
 	if currentSlLs:
 		for currentSl in currentSlLs:
 			mc.select(currentSl, add=True)
+
 	return dataSet
+
 
 ########################imports referenced nodes#################
 def importRefs(objLs):
@@ -545,10 +587,13 @@ def lodSystemCheck(objLs):
 			return
 	return lodA, lodB, lodC
 
-################opens new maya scene######################
+
 def newScene():
+	""" Create a new scene.
+	"""
 	mc.NewScene()
 	update()
+
 
 ###################node type check########################
 def nodetypeCheck(obj):
@@ -563,11 +608,13 @@ def notesTag(obj, pblNotes):
 	mc.setAttr('%s.Notes' % obj, l=False)
 	mc.setAttr('%s.Notes' % obj, pblNotes, typ='string', l=True)
 
-###################opens maya file########################
+
 def openScene(filePath, extension=None, dialog=True, updateRecentFiles=True):
+	""" Open a saved scene.
+	"""
 	if mel.eval('saveChanges("")'):
 		if dialog:
-			openFolder = mc.fileDialog2(ds=2, fm=1, ff=extension, dir=filePath, cap='Gramercy Park Studios - Open', okc='Open')
+			openFolder = mc.fileDialog2(ds=2, fm=1, ff=extension, dir=filePath, cap='[GPS] Open', okc='Open')
 			if openFolder == None:
 				return
 		else:
@@ -576,6 +623,7 @@ def openScene(filePath, extension=None, dialog=True, updateRecentFiles=True):
 		if updateRecentFiles:
 			recentFiles.updateLs(filename)
 
+
 ######parent constraints two identical hierarchies########
 def parentCnstrHrq(obj1, obj2):
 	hrq1 = mc.listRelatives(obj1, ad=True, typ='transform')
@@ -583,9 +631,12 @@ def parentCnstrHrq(obj1, obj2):
 	for i in range(0, len(hrq1)):
 		mc.parentConstraint(hrq1[i], hrq2[i])
 
-##############redirects scene name and path###############
+
 def redirectScene(sceneFile):
-	mc.file(rn=sceneFile)
+	""" Redirect scene name and path.
+	"""
+	mc.file(rename=sceneFile)
+
 
 #####relinks cacheNode path and retrieves controlled geo######
 def relinkCache(cacheLs, cachePath, asset, version):
@@ -750,8 +801,10 @@ def renameObj(objLs, newName, oldName=False):
 		renamedObjLs.append(objRenamed)
 	return renamedObjLs
 
-#####################saves maya file######################
+
 def saveFile(fileType, updateRecentFiles=True):
+	""" Save Maya scene.
+	"""
 	if fileType == 'ma':
 		fileType = 'mayaAscii'
 	elif fileType == 'mb':
@@ -760,89 +813,137 @@ def saveFile(fileType, updateRecentFiles=True):
 	if updateRecentFiles:
 		recentFiles.updateLs(filename)
 	osOps.setPermissions(filename)
+	print "\nScene saved: %s" %filename, # print confirmation - the trailing comma make the message visible in Maya's command line output field
 
-###################saves maya file as#####################
+
 def saveFileAs(filePath, extension, updateRecentFiles=True):
-	saveFolder = mc.fileDialog2(ds=2, fm=0, ff=extension, dir=filePath, cap='Gramercy Park Studios - Save As', okc='Save')
+	""" Save Maya scene as.
+	"""
+	saveFolder = mc.fileDialog2(ds=2, fm=0, ff=extension, dir=filePath, cap='[GPS] Save As', okc='Save')
 	if saveFolder == None:
 		return
 	else:
-		fileType = saveFolder[0].split('.'); fileType = fileType.pop()
-		if fileType == 'ma':
-			fileType = 'mayaAscii'
-		elif fileType == 'mb':
-			fileType = 'mayaBinary'
-			
 		mc.file(rename=saveFolder[0])
-		filename = mc.file(options='v=0', force=True, save=True, type=fileType)
-		if updateRecentFiles:
-			recentFiles.updateLs(filename)
-		osOps.setPermissions(filename)
 
-################creates viewport snapshot##################
-def snapShot(pblDir):
-	pbFrame = mc.currentTime(q=True)
-	imgFmtLck = mc.getAttr('defaultRenderGlobals.outf', l=True)
-	imgFmt = int(mc.getAttr('defaultRenderGlobals.imageFormat'))
-	if imgFmtLck:
-		mc.setAttr('defaultRenderGlobals.outf', l=False)
-	mc.setAttr('defaultRenderGlobals.imageFormat', 8)
-	#mc.viewFit(f=1)
-	actSel=mc.ls(sl=True)
+		fileType = os.path.splitext(saveFolder[0])[1][1:] # get the extension without a leading dot
+		saveFile(fileType, updateRecentFiles)
+
+
+def snapShot(output_folder, isolate=True, fit=False):
+	""" Generate viewport snapshot.
+	"""
+	# Get current selection, frame and panel
+	currentSel = mc.ls(sl=True)
+	currentFrame = mc.currentTime(q=True)
+	currentPanel = mc.playblast(ae=True)
+
+	# Isolate the current object
+	if isolate:
+		mc.isolateSelect(currentPanel, state=1)
+		mc.isolateSelect(currentPanel, addSelected=True)
+
+	# Frame view to selection
+	if fit:
+		mc.viewFit(fitFactor=1)
+
+	# Store current selection and deselect all
 	mc.select(cl=True)
-	mc.playblast(f=os.path.join(pblDir, 'preview'), 
-	fr=(pbFrame), 
-	fp=1, 
-	w=512, 
-	h=288, 
-	p=100, 
-	fmt='image',
-	c='jpg',
-	v=False, 
-	os=True, 
-	cc=True, 
-	orn=False)
-	mc.setAttr('defaultRenderGlobals.imageFormat', imgFmt)
-	##RESELECTING USER ORIGINAL SELECTION##
-	for sel in actSel:
+
+	# Generate playblast
+	mc.playblast(completeFilename=os.path.join(output_folder, 'preview.jpg'), 
+	#mc.playblast(filename=os.path.join(output_folder, 'preview'), 
+				 frame=(currentFrame), 
+				 framePadding=4, 
+				 rawFrameNumbers=True, 
+				 width=512, 
+				 height=288, 
+				 percent=100, 
+				 format='image', 
+				 compression='jpg', 
+				 quality=90, 
+				 viewer=False, 
+				 offScreen=True, 
+				 clearCache=True, 
+				 showOrnaments=False)
+
+	# Turn off isolate selection
+	if isolate:
+		mc.isolateSelect(currentPanel, state=0) 
+
+	# Reset view
+	if fit:
+		mc.viewSet(previousView=True)
+
+	# Reselect original selection
+	for sel in currentSel:
 		mc.select(sel, add=True)
-	##RESETING IMAGE FORMAT LOCK TO ORIGINAL STATE###
-	if imgFmtLck:
-		mc.setAttr('defaultRenderGlobals.outf', l=True)
 
-#################updates maya scene#######################
+
+def submitRender():
+	""" Launches GPS Render Submitter window.
+	"""
+	import submit__main__
+	reload(submit__main__)
+	#frameRange = "%s-%s" %(mc.playbackOptions(q=True, min=True), mc.playbackOptions(q=True, max=True))
+	frameRange = "%s-%s" %(int(mc.getAttr('defaultRenderGlobals.startFrame')), int(mc.getAttr('defaultRenderGlobals.endFrame')))
+	renderSubmitApp=submit__main__.gpsRenderSubmitApp(frameRange=frameRange)
+	renderSubmitApp.exec_()
+
+
+def submitRenderLayer():
+	""" Launches GPS Render Submitter window for the current render layer.
+	"""
+	import submit__main__
+	reload(submit__main__)
+	frameRange = "%s-%s" %(int(mc.getAttr('defaultRenderGlobals.startFrame')), int(mc.getAttr('defaultRenderGlobals.endFrame')))
+	currentLayer = mc.editRenderLayerGlobals(query=True, currentRenderLayer=True)
+	renderSubmitApp=submit__main__.gpsRenderSubmitApp(frameRange=frameRange, flags='-rl %s' %currentLayer)
+	renderSubmitApp.exec_()
+
+
 def update():
-	startFrame = os.environ['STARTFRAME']
-	endFrame = os.environ['ENDFRAME']
-	timeFormat = os.environ['TIMEFORMAT']
-	unit = os.environ['UNIT']
-	angle = os.environ['ANGLE']
+	""" Automatically set some defaults from the shot settings.
+	"""
+	unit          = os.environ['UNIT']
+	angle         = os.environ['ANGLE']
+	timeFormat    = os.environ['TIMEFORMAT']
+	startFrame    = os.environ['STARTFRAME']
+	endFrame      = os.environ['ENDFRAME']
+	startFrameInt = int(startFrame)
+	endFrameInt   = int(endFrame)
+	try:
+		inFrame     = os.environ['INFRAME']
+		outFrame    = os.environ['OUTFRAME']
+		inFrameInt  = int(inFrame)
+		outFrameInt = int(outFrame)
+	except:
+		inFrame     = startFrame
+		outFrame    = endFrame
+		inFrameInt  = startFrameInt
+		outFrameInt = endFrameInt
 
-	#settings default for maya startup
-	mc.optionVar(sv=('workingUnitAngular','%s' % angle))
-	mc.optionVar(sv=('workingUnitAngularDefault','%s' % angle))
-	mc.optionVar(sv=('workingUnitAngularHold','%s' % angle))
-	mc.optionVar(sv=('workingUnitLinear','%s' % unit))
-	mc.optionVar(sv=('workingUnitLinearDefault','%s' % unit))
-	mc.optionVar(sv=('workingUnitLinearHold','%s' % unit))
-	mc.optionVar(sv=('workingUnitTime','%s' % timeFormat))
-	mc.optionVar(sv=('workingUnitTimeDefault','%s' % timeFormat))
-	mc.optionVar(sv=('workingUnitTimeHold','%s' % timeFormat))
-	mc.optionVar(fv = ('playbackMinRangeDefault',int(startFrame)))
-	mc.optionVar(fv = ('playbackMinDefault',int(startFrame)))
-	mc.optionVar(fv = ('playbackMaxRangeDefault',int(endFrame)))
-	mc.optionVar(fv = ('playbackMaxDefault',int(endFrame)))
-	mc.optionVar(sv = ('upAxisDirection','y'))
-	mc.optionVar(sv = ('workingUnitLinear','%s' % unit))
-	mc.optionVar(sv = ('workingUnitAngular','%s' % angle))
-	mc.optionVar(sv = ('workingUnitTime','%s' % timeFormat))
-	mc.currentUnit(l='%s' % unit, a='%s' % angle, t='%s' % timeFormat)	
-	mc.playbackOptions(min=startFrame, 
-	ast=startFrame, 
-	max=endFrame, 
-	aet=endFrame, 
-	ps=0, 
-	mps=1)
+	# Setting defaults for Maya startup
+	mc.optionVar(sv = ('workingUnitAngular', '%s' % angle))
+	mc.optionVar(sv = ('workingUnitAngularDefault', '%s' % angle))
+	mc.optionVar(sv = ('workingUnitAngularHold', '%s' % angle))
+	mc.optionVar(sv = ('workingUnitLinear', '%s' % unit))
+	mc.optionVar(sv = ('workingUnitLinearDefault', '%s' % unit))
+	mc.optionVar(sv = ('workingUnitLinearHold', '%s' % unit))
+	mc.optionVar(sv = ('workingUnitTime', '%s' % timeFormat))
+	mc.optionVar(sv = ('workingUnitTimeDefault', '%s' % timeFormat))
+	mc.optionVar(sv = ('workingUnitTimeHold', '%s' % timeFormat))
+	mc.optionVar(fv = ('playbackMinRangeDefault', startFrameInt))
+	mc.optionVar(fv = ('playbackMinDefault', inFrameInt))
+	mc.optionVar(fv = ('playbackMaxRangeDefault', endFrameInt))
+	mc.optionVar(fv = ('playbackMaxDefault', outFrameInt))
+	mc.optionVar(sv = ('upAxisDirection', 'y'))
+	mc.optionVar(sv = ('workingUnitLinear', '%s' % unit))
+	mc.optionVar(sv = ('workingUnitAngular', '%s' % angle))
+	mc.optionVar(sv = ('workingUnitTime', '%s' % timeFormat))
+
+	mc.currentUnit(l=unit, a=angle, t=timeFormat)
+	mc.playbackOptions(animationStartTime=startFrame, minTime=inFrame, maxTime=outFrame, animationEndTime=endFrame, playbackSpeed=0, maxPlaybackSpeed=1)
+
 
 ###################updates ic set version#################
 def updateIcDataSetVersion(version, ICSet=None):
@@ -948,13 +1049,16 @@ def nkCameraExport(objLs, pblDir, assetPblName, version):
 	nkFile.write(' name %s\n }' % assetPblName)
 	nkFile.close()
 
-##############################.nk node export###########################
+
 def nkFileNodeExport(objLs, nodeType, fileName, pblDir, visiblePblDir, assetPblName, version):
+	""" Export Nuke node from Maya.
+	"""
 	pathtoPblAsset = os.path.join(pblDir, '%s.nk' % assetPblName)
 	filePath = os.path.join(visiblePblDir, 'tx', fileName)
-	#making filePath relative
-	if os.environ['SHOTPUBLISHDIR'] in filePath:
-		filePath = filePath.replace(os.environ['SHOTPUBLISHDIR'], '\[getenv SHOTPUBLISHDIR]')
+
+	# Make file path relative
+	filePath = osOps.relativePath(filePath, 'SHOTPUBLISHDIR', tokenFormat='nuke')
+
 	nkFile = open(pathtoPblAsset, 'w')
 	nkFile.write('''Read {
 	inputs 0
@@ -965,3 +1069,4 @@ def nkFileNodeExport(objLs, nodeType, fileName, pblDir, visiblePblDir, assetPblN
 	cached true\n}''' % (filePath, assetPblName))
 	nkFile.close()
 	return
+

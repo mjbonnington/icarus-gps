@@ -16,7 +16,7 @@ QWidget {
 	selection-color: #fff;
 	alternate-background-color: #262626;
 	/*alternate-background-color: rgba(255, 255, 255, 2%);*/
-	font-family: 'Segoe UI, Lucida Grande, Sans, sans-serif';
+	font-family: 'Segoe UI'; /* .SF NS Text, Lucida Grande, Sans, sans-serif */
 	font-size: 11px;
 	font-weight: normal;
 }
@@ -83,16 +83,17 @@ QAbstractScrollArea:disabled {
  */
 
 QHeaderView {
-	background: #444;
+	/*background: #444;*/
 	border: none;
 }
 
 QHeaderView::section {
-	padding: 1px 4px 2px 4px;
-	background: #555;
+	padding: 4px 4px 5px 4px;
+	background: #333;
 	border: none;
-	border-right: 1px solid #333;
-	border-bottom: 1px solid #333;
+	border-right: 1px solid #222;
+	border-bottom: 1px solid #222;
+	/*text-align: left;*/
 }
 
 QHeaderView::section:checked
@@ -131,27 +132,50 @@ QHeaderView::up-arrow:disabled {
 
 
 
+/* Menu Bar
+ *
+ */
+
+QMenuBar {
+	padding: 0;
+	background-color: #333;
+}
+
+QMenuBar::item {
+	padding: 4px 8px;
+	background: transparent;
+}
+
+QMenuBar::item:selected, QMenuBar::item:pressed {
+	background: #709e32;
+	color: #fff;
+}
+
+/* End Menu Bar */
+
+
+
 /* Menu
  *
  */
 
 QMenu {
-	/*padding: 8px;*/
+	padding: 4px 0px;
 	background: #333;
-	/*border: 1px solid #222;
-	border-radius: 0px;*/
+	border: 1px solid #555;
+	border-radius: 0px;
 }
 
 QMenu::item {
+	padding: 4px 16px 4px 24px;
+	background: transparent;
 	/*background: #333;*/
-	/*padding: 2px 25px 2px 20px;
-	border: 1px solid transparent;*/
+	/*border: 1px solid transparent;*/
 }
 
 QMenu::item:selected {
-	/*border-color: #709e32;
 	background: #709e32;
-	color: #fff*/
+	color: #fff
 }
 
 QMenu::item:selected:disabled {
@@ -159,14 +183,8 @@ QMenu::item:selected:disabled {
 	color: #333;
 }
 
-QMenu::icon:checked { /* appearance of a 'checked' icon */
-	/*border-color: #709e32;
-	background: #709e32;
-	position: absolute;
-	top: 1px;
-	right: 1px;
-	bottom: 1px;
-	left: 1px;*/
+QMenu::icon {
+	margin: 4px 6px;
 }
 
 QMenu::separator {
@@ -175,43 +193,60 @@ QMenu::separator {
 	border-bottom: 2px groove #2a2a2a;
 }
 
-QMenu::indicator {
+/* Non-exclusive indicator = check box style indicator (see QActionGroup::setExclusive) */
+QMenu::indicator:non-exclusive {
+	margin: 4px 6px;
 	width: 11px;
 	height: 11px;
+	background: #222;
+	border: 1px solid #222;
+	border-radius: 2px;
 }
 
-/* non-exclusive indicator = check box style indicator (see QActionGroup::setExclusive) */
-QMenu::indicator:non-exclusive:unchecked {
-	image: url(:/images/checkbox_unchecked.png);
+QMenu::indicator:non-exclusive:selected {
+	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #333, stop: 1 #3c4b27);
+	/*background-image: url(:/images/checkbox_hover.png);*/
 }
 
-QMenu::indicator:non-exclusive:unchecked:selected {
-	image: url(:/images/checkbox_unchecked_hover.png);
+QMenu::indicator:non-exclusive:selected:disabled {
+	background: #222;
+	/*background-image: none;*/
 }
 
 QMenu::indicator:non-exclusive:checked {
 	image: url(:/images/checkbox_checked.png);
 }
 
-QMenu::indicator:non-exclusive:checked:selected {
-	image: url(:/images/checkbox_checked_hover.png);
+QMenu::indicator:non-exclusive:checked:disabled {
+	image: url(:/images/checkbox_checked_disabled.png);
 }
 
-/* exclusive indicator = radio button style indicator (see QActionGroup::setExclusive) */
-QMenu::indicator:exclusive:unchecked {
-	image: url(:/images/radiobutton_unchecked.png);
+/* Exclusive indicator = radio button style indicator (see QActionGroup::setExclusive) */
+QMenu::indicator:exclusive {
+	margin: 4px 6px;
+	width: 11px;
+	height: 11px;
+	background: #222;
+	border: 1px solid #555;
+	border-radius: 6px;
 }
 
-QMenu::indicator:exclusive:unchecked:selected {
-	image: url(:/images/radiobutton_unchecked_hover.png);
+QMenu::indicator:exclusive:selected {
+	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #333, stop: 1 #3c4b27);
+	/*background-image: url(:/images/radiobutton_hover.png);*/
+}
+
+QMenu::indicator:exclusive:selected:disabled {
+	background: #222;
+	/*background-image: none;*/
 }
 
 QMenu::indicator:exclusive:checked {
 	image: url(:/images/radiobutton_checked.png);
 }
 
-QMenu::indicator:exclusive:checked:selected {
-	image: url(:/images/radiobutton_checked_hover.png);
+QMenu::indicator:exclusive:checked:disabled {
+	image: url(:/images/radiobutton_checked_disabled.png);
 }
 
 /* End Menu */
@@ -252,7 +287,7 @@ QPushButton {
 	padding: 1px 2px 2px 1px;
 	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #666, stop: 1 #555);
 	border: 1px solid #222;
-	border-radius: 3px;
+	border-radius: 2px;
 }
 
 QPushButton:default {
@@ -514,12 +549,12 @@ QAbstractItemView::indicator:indeterminate:disabled {
  *
  */
 
-QListWidget {
-	/*border: 1px solid #222;
-	background: #222;*/
-	/*alternate-background-color: #2a2a2a;*/
-	/*show-decoration-selected: 1;*/
-}
+/*QListWidget {
+	border: 1px solid #222;
+	background: #222;
+	alternate-background-color: #2a2a2a;
+	show-decoration-selected: 1;
+}*/
 
 /* End List View/Widget */
 
@@ -529,9 +564,22 @@ QListWidget {
  *
  */
 
-QTreeView {
-	/*border: 1px solid #222;
-	background: #222;*/
+/*QTreeView {
+	border: 1px solid #222;
+	background: #222;
+}*/
+
+/*QTreeView::item {
+	padding: 16px;
+	background-repeat: no-repeat;
+}
+
+QTreeView::icon {
+	height: 18px;
+}
+
+QTreeView::branch {
+	border-image: none;
 }
 
 QTreeView::branch:has-siblings:!adjoins-item {
@@ -544,7 +592,7 @@ QTreeView::branch:has-siblings:adjoins-item {
 
 QTreeView::branch:!has-children:!has-siblings:adjoins-item {
 	image: url(:/images/branch-end.png);
-}
+}*/
 
 QTreeView::branch:has-children:!has-siblings:closed,
 QTreeView::branch:closed:has-children:has-siblings {
@@ -599,7 +647,7 @@ QGroupBox {
 	margin-top: 2.5ex; /* leave space at the top for the title */
 	padding: 6px 3px;
 	border: 2px groove #333;
-	border-radius: 5px;
+	border-radius: 2px; /* was: 5px */
 	background: transparent;
 }
 
@@ -607,7 +655,7 @@ QGroupBox::title {
 	padding: 3px;
 	/*spacing: 5px;*/
 	left: 8px;
-	bottom: 1.5ex;
+	bottom: 3ex; /* was: 1.5ex */;
 	/*subcontrol-origin: margin;
 	subcontrol-position: top center;*/
 	background: #444; /* needed to prevent text 'etching' effect with plastique style */
@@ -663,8 +711,8 @@ QTabBar::tab { /* Style the tab using the tab sub-control. Note that it reads QT
 	margin-right: -1px;
 	padding: 3px 6px;
 	border: 1px solid #222;
-	border-top-left-radius: 2px;
-	border-top-right-radius: 2px;
+	border-top-left-radius: 1px;
+	border-top-right-radius: 1px;
 	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #555, stop: 0.1 #444, stop: 1 #3c3c3c);
 }
 
@@ -675,14 +723,14 @@ QTabBar::tab:hover {
 QTabBar::tab:selected {
 	min-height: 2.5ex; /* need to test this on Windows / OS X and check single tab doesn't change height */
 	min-height: 15px;
-	border-top-left-radius: 3px;
-	border-top-right-radius: 3px;
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
 	border-bottom-color: #444; /* same as pane color */
 	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #666, stop: 0.15 #555, stop: 1 #444);
 }
 
 QTabBar::tab:!selected {
-	margin-top: 3px; /* make non-selected tabs look smaller */
+	margin-top: 2px; /* make non-selected tabs look smaller */
 }
 
 QTabBar::tab:first {
@@ -720,6 +768,34 @@ QFrame:no-frame {
 
 
 
+/* Splitter
+ *
+ */
+
+QSplitter::handle {
+	background: transparent;
+}
+
+/*QSplitter::handle:hover {
+	background: #666;
+}*/
+
+QSplitter::handle:horizontal {
+	width: 5px;
+}
+
+QSplitter::handle:vertical {
+	height: 5px;
+}
+
+QSplitter::handle:pressed {
+	background: #555;
+}
+
+/* End Splitter */
+
+
+
 /* Combo Box
  *
  */
@@ -731,7 +807,7 @@ QComboBox {
 	/*margin: 0px 2px;*/
 	padding: 1px 2px 2px 5px;
 	border: 1px solid #222;
-	border-radius: 3px;
+	border-radius: 2px;
 }
 
 QComboBox:editable {
@@ -764,8 +840,8 @@ QComboBox::drop-down {
 	subcontrol-origin: padding;
 	subcontrol-position: top right;
 	width: 15px;
-	border-top-right-radius: 3px;
-	border-bottom-right-radius: 3px;
+	border-top-right-radius: 2px;
+	border-bottom-right-radius: 2px;
 }
 
 QComboBox::drop-down:!editable {
@@ -800,13 +876,19 @@ QComboBox::down-arrow:on {
 	left: 1px;
 }
 
-/* Background color of popup-list.*/ 
-QComboBox QListView{
-	/*padding: 1px;*/
-	/*padding-left: 5px;*/
-	/*border: 1px solid #222;*/
+/* Background color of popup-list. */ 
+/*QComboBox QListView{
+	padding: 0px 6px;
 	background: #333;
+	border: 1px solid #555;
 }
+
+QComboBox QAbstractItemView {
+	margin: 0;
+	padding: 0px 6px;
+	background: #333;
+	border: 1px solid #555;
+}*/
 
 QComboBox::item {
 	background: transparent;
@@ -855,7 +937,6 @@ QLineEdit {
 	/*margin: 0px 2px;*/
 	padding: 1px 2px 2px 1px;
 	border: 1px solid #555;
-	/*border-radius: 3px;*/
 	background: #222;
 }
 
@@ -880,7 +961,6 @@ QTextEdit, QPlainTextEdit {
 	/*padding: 0 8px;*/
 	/*min-height: 3.5ex;*/
 	border: 1px solid #555;
-	/*border-radius: 3px;*/
 	background: #222;
 	/*selection-background-color: #709e32;*/
 }
@@ -908,10 +988,14 @@ QAbstractSpinBox {
 	/*margin: 0px 2px;*/
 	padding: 1px 2px 2px 1px;
 	border: 1px solid #555;
-	border-radius: 3px;
+	border-radius: 2px;
 	border-top-left-radius: 0px;
 	border-bottom-left-radius: 0px;
 	background: #222;
+}
+
+QAbstractSpinBox:disabled, QAbstractSpinBox:read-only {
+	background: transparent;
 }
 
 QAbstractSpinBox::up-button {
@@ -922,7 +1006,7 @@ QAbstractSpinBox::up-button {
 	border: 1px solid #222;
 	border-bottom-width: 0px;
 	border-radius: 0px;
-	border-top-right-radius: 3px;
+	border-top-right-radius: 2px;
 	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #666, stop: 1 #555);
 }
 
@@ -935,13 +1019,13 @@ QAbstractSpinBox::up-button:pressed {
 	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #4c4c4c, stop: 1 #555);
 }
 
-QAbstractSpinBox::up-button:off {
-	background: #444;
-}
-
 QAbstractSpinBox::up-button:disabled {
 	border-color: transparent;
 	background: transparent;
+}
+
+QAbstractSpinBox::up-button:off {
+	background: #444;
 }
 
 QAbstractSpinBox::up-arrow {
@@ -965,7 +1049,7 @@ QAbstractSpinBox::down-button {
 	border: 1px solid #222;
 	border-top-width: 0px;
 	border-radius: 0px;
-	border-bottom-right-radius: 3px;
+	border-bottom-right-radius: 2px;
 	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #666, stop: 1 #555);
 }
 
@@ -978,13 +1062,13 @@ QAbstractSpinBox::down-button:pressed {
 	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #4c4c4c, stop: 1 #555);
 }
 
-QAbstractSpinBox::down-button:off {
-	background: #444;
-}
-
 QAbstractSpinBox::down-button:disabled {
 	border-color: transparent;
 	background: transparent;
+}
+
+QAbstractSpinBox::down-button:off {
+	background: #444;
 }
 
 QAbstractSpinBox::down-arrow {
@@ -996,7 +1080,7 @@ QAbstractSpinBox::down-arrow:pressed {
 	left: 1px;
 }
 
-QAbstractSpinBox::down-arrow:disabled, QAbstractSpinBox::down-arrow:off { /* off state when value in min */
+QAbstractSpinBox::down-arrow:disabled, QAbstractSpinBox::down-arrow:off { /* off state when value is min */
 	image: url(:/images/arrow_down_disabled.png);
 }
 
@@ -1072,14 +1156,14 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
 
 QScrollBar::add-line:horizontal {
 	subcontrol-position: right;
-	border-top-right-radius: 3px;
-	border-bottom-right-radius: 3px;
+	border-top-right-radius: 2px;
+	border-bottom-right-radius: 2px;
 }
 
 QScrollBar::sub-line:horizontal {
 	subcontrol-position: left;
-	border-top-left-radius: 3px;
-	border-bottom-left-radius: 3px;
+	border-top-left-radius: 2px;
+	border-bottom-left-radius: 2px;
 }
 
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
@@ -1088,14 +1172,14 @@ QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
 
 QScrollBar::add-line:vertical {
 	subcontrol-position: bottom;
-	border-bottom-left-radius: 3px;
-	border-bottom-right-radius: 3px;
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
 }
 
 QScrollBar::sub-line:vertical {
 	subcontrol-position: top;
-	border-top-left-radius: 3px;
-	border-top-right-radius: 3px;
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
 }
 
 QScrollBar::add-line:hover, QScrollBar::sub-line:hover {
@@ -1152,25 +1236,53 @@ QScrollBar::down-arrow:vertical:disabled {
  *
  */
 
-QSlider {
-	background: #444;
+QSlider::groove {
+	background: #222;
+	border: 1px solid #222;
+	border-radius: 2px;
 }
 
-/*QSlider::groove {
-	background: #666;
-	border: 1px solid #999999;*/
-	/*height: 8px;*/ /* the groove expands to the size of the slider by default. by giving it a height, it has a fixed size */
-	/*background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #B1B1B1, stop:1 #c4c4c4);
-	/*margin: 2px 0;*/
-/*}
+QSlider::groove:horizontal {
+	height: 4px;
+}
+
+QSlider::groove:vertical {
+	width: 4px;
+}
+
+/*QSlider::groove:disabled {
+	background: transparent;
+}*/
 
 QSlider::handle {
-    background: #666;
-    border: 1px solid #5c5c5c;
-    width: 18px;*/
-    /*margin: -2px 0;*/ /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
-    /*border-radius: 3px;
-}*/
+	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #666, stop: 1 #555);
+	border: 1px solid #222;
+	border-radius: 2px;
+}
+
+QSlider::handle:horizontal {
+	width: 7px;
+	/*height: 16px;*/
+	margin: -6px 0;
+}
+
+QSlider::handle:vertical {
+	/*width: 16px;*/
+	height: 7px;
+	margin: 0 -6px;
+}
+
+QSlider::handle:hover {
+	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #777, stop: 1 #666);
+}
+
+QSlider::handle:pressed {
+	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #4c4c4c, stop: 1 #555);
+}
+
+QSlider::handle:disabled {
+	background: #444;
+}
 
 /* End Slider */
 
@@ -1193,10 +1305,10 @@ QSlider::handle {
  */
 
 QProgressBar {
-	padding: 2px;
+	/*padding: 2px;*/
 	background: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #333, stop: 1 #3c3c3c);
 	border: 1px solid #222;
-	border-radius: 3px;
+	border-radius: 0px;
 	text-align: center;
 }
 
@@ -1214,4 +1326,22 @@ QProgressBar::chunk:disabled {
 }
 
 /* End Progress Bar */
+
+
+
+/* Status Bar
+ *
+ */
+
+
+QStatusBar {
+    background: #333;
+}
+
+/*QStatusBar::item {
+    border: 1px solid red;
+    border-radius: 3px;
+}*/
+
+/* End Status Bar */
 

@@ -15,7 +15,7 @@ from settings_ui import *
 import os, sys
 
 # Initialise Icarus environment
-sys.path.append(os.environ['ICWORKINGDIR'])
+sys.path.append(os.environ['IC_WORKINGDIR'])
 import env__init__
 env__init__.setEnv()
 env__init__.appendSysPaths()
@@ -168,7 +168,7 @@ if __name__ == "__main__":
 
 	#app.setStyle('plastique') # Set UI style - you can also use a flag e.g. '-style plastique'
 
-	qss=os.path.join(os.environ['ICWORKINGDIR'], "style.qss")
+	qss=os.path.join(os.environ['IC_WORKINGDIR'], "style.qss")
 	with open(qss, "r") as fh:
 		app.setStyleSheet(fh.read())
 

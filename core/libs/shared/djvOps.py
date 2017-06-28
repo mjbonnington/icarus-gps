@@ -4,56 +4,68 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2015 Gramercy Park Studios
+# (c) 2013-2017 Gramercy Park Studios
 #
 # djv_view operations module.
 
 
-import os, subprocess
+import os
+import subprocess
+
 import verbose
 
 
-#processes image sequences
-def prcImg(input, output, startFrame, endFrame, inExt, outExt='jpg', fps=os.environ['FPS']):
-	cmdInput = '%s.%s-%s.%s' % (input, startFrame, endFrame, inExt)
-	cmdOutput = '%s.%s.%s' % (output, startFrame, outExt)
-
-	#exporting path to djv codec libraries according to os
-	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-		libsExport = 'export DYLD_FALLBACK_LIBRARY_PATH=%s' % os.environ['DJV_LIB']
-	elif os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		libsExport = ''
+def exportDjvLibs():
+	""" Export path to djv codec libraries according to OS.
+	"""
+	if os.environ['IC_RUNNING_OS'] == 'Darwin':
+		libsExport = 'export DYLD_FALLBACK_LIBRARY_PATH=%s; ' % os.environ['DJV_LIB']
+	elif os.environ['IC_RUNNING_OS'] == 'Linux':
+		libsExport = 'export LD_LIBRARY_PATH=%s; export LIBQUICKTIME_PLUGIN_DIR=%s; ' % (os.environ['DJV_LIB'], os.path.join(os.environ['DJV_LIB'],'libquicktime'))
 	else:
-		libsExport = 'export LD_LIBRARY_PATH=%s; export LIBQUICKTIME_PLUGIN_DIR=%s' % (os.environ['DJV_LIB'], os.path.join(os.environ['DJV_LIB'],'libquicktime'))
+		libsExport = ''
 
-	#setting djv command
-	djvCmd = '%s; %s %s %s -speed %s' % (libsExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, fps)
+	return libsExport
 
+
+def prcImg(inBasename, outBasename, startFrame, endFrame, inExt, outExt='jpg', fps=os.environ['FPS'], resize=None):
+	""" Processes image sequences.
+	"""
+	cmdInput = '%s.%s-%s.%s' % (inBasename, startFrame, endFrame, inExt)
+	cmdOutput = '%s.%s.%s' % (outBasename, startFrame, outExt)
+
+	# Export path to djv codec libraries according to OS
+	djvCmd = exportDjvLibs()
+
+	# Set up djv command
+	if resize:
+		djvCmd += '%s %s %s -resize %s %s -speed %s' % (os.environ['DJV_CONVERT'], cmdInput, cmdOutput, resize[0], resize[1], fps)
+	else:
+		djvCmd += '%s %s %s -speed %s' % (os.environ['DJV_CONVERT'], cmdInput, cmdOutput, fps)
+
+	verbose.print_(djvCmd, 4)
 	os.system(djvCmd)
 
 
-#processes quicktime movies
-def prcQt(input, output, startFrame, endFrame, inExt, name='preview', fps=os.environ['FPS'], resize=None):
-	cmdInput = '%s.%s-%s.%s' % (input, startFrame, endFrame, inExt)
+def prcQt(inBasename, outBasename, startFrame, endFrame, inExt, name='preview', fps=os.environ['FPS'], resize=None):
+	""" Processes QuickTime movies.
+	"""
+	cmdInput = '%s.%s-%s.%s' % (inBasename, startFrame, endFrame, inExt)
 	if name:
-		cmdOutput = os.path.join(output, '%s.mov' % name)
+		cmdOutput = os.path.join(outBasename, '%s.mov' % name)
 	else:
-		cmdOutput = '%s.mov' % output
+		cmdOutput = '%s.mov' % outBasename
 
-	#exporting path to djv codec libraries according to os
-	if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-		libsExport = 'export DYLD_FALLBACK_LIBRARY_PATH=%s' % os.environ['DJV_LIB']
-	elif os.environ['ICARUS_RUNNING_OS'] == 'Windows':
-		libsExport = ''
-	else:
-		libsExport = 'export LD_LIBRARY_PATH=%s; export LIBQUICKTIME_PLUGIN_DIR=%s' % (os.environ['DJV_LIB'], os.path.join(os.environ['DJV_LIB'],'libquicktime'))
+	# Export path to djv codec libraries according to OS
+	djvCmd = exportDjvLibs()
 
-	#setting djv command
+	# Set djv command
 	if resize:
-		djvCmd = '%s; %s %s %s -resize %s %s -speed %s' % (libsExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, resize[0], resize[1], fps)
+		djvCmd += '%s %s %s -resize %s %s -speed %s' % (os.environ['DJV_CONVERT'], cmdInput, cmdOutput, resize[0], resize[1], fps)
 	else:
-		djvCmd = '%s; %s %s %s -speed %s' % (libsExport, os.environ['DJV_CONVERT'], cmdInput, cmdOutput, fps)
+		djvCmd += '%s %s %s -speed %s' % (os.environ['DJV_CONVERT'], cmdInput, cmdOutput, fps)
 
+	verbose.print_(djvCmd, 4)
 	os.system(djvCmd)
 
 
@@ -65,19 +77,20 @@ def viewer(path=None):
 	"""
 	cmdStr = ""
 
-	if path is None:
-		path=os.environ['SHOTPATH']
-
 	# Get starting directory
-	if os.path.isdir(path):
-		startupDir = path
-	elif os.path.isfile(path):
-		startupDir = os.path.dirname(path)
+	startupDir = os.environ['SHOTPATH']
+	pathIsFile = False
+	if path is not None:
+		if os.path.isfile(path):
+			startupDir = os.path.dirname(path)
+			pathIsFile = True
+		elif os.path.isdir(path):
+			startupDir = path
 
 	# Export path to djv codec libraries according to OS
-	if os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+	if os.environ['IC_RUNNING_OS'] == 'Windows':
 		cmdStr += "cd /d %s & " % startupDir
-	elif os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
+	elif os.environ['IC_RUNNING_OS'] == 'Darwin':
 		cmdStr += "export DYLD_FALLBACK_LIBRARY_PATH=%s; " %os.environ['DJV_LIB']
 		cmdStr += "cd %s; " % startupDir
 	else:
@@ -85,12 +98,13 @@ def viewer(path=None):
 		cmdStr += "cd %s; " % startupDir
 
 	# Build the command based on whether path is a file or a directory
-	if os.path.isdir(path):
-		cmdStr += os.environ['DJV_PLAY']
-	elif os.path.isfile(path):
+	if pathIsFile:
 		cmdStr += "%s %s" %(os.environ['DJV_PLAY'], path)
+	else:
+		cmdStr += os.environ['DJV_PLAY']
 
-	# Call command with subprocess in order to not lock the system while djv is running
+	# Call command with subprocess in order to not lock the system while djv
+	# is running
 	verbose.print_(cmdStr, 4)
 	subprocess.Popen(cmdStr, shell=True)
 

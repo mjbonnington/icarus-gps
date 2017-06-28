@@ -1,0 +1,71 @@
+// [GPS] gpsRenderSetup.mel
+//
+// Mike Bonnington <mike.bonnington@gps-ldn.com>
+// Nuno Pereira <nuno.pereira@gps-ldn.com>
+// (c) 2013-2016 Gramercy Park Studios
+//
+// Generic render setup module.
+
+
+// Set common render options.
+global proc gpsRenderSetup.setCommonOptions()
+{
+	// Set image format to EXR, or TIFF if EXR is not available, i.e. Maya software renderer
+	setAttr "defaultRenderGlobals.imageFormat" 3;
+
+	// Set filename format correctly - name.####.ext
+	setAttr defaultRenderGlobals.outFormatControl 0;
+	setAttr defaultRenderGlobals.animation 1;
+	setAttr defaultRenderGlobals.putFrameBeforeExt 1;
+	setAttr defaultRenderGlobals.extensionPadding 4;
+
+	// Set render file name prefix
+	gpsRenderSetup.setOutputPath();
+
+	// Set frame range
+	gpsRenderSetup.setFrameRange();
+
+	// Set resolution
+	gpsRenderSetup.setResolution();
+
+	print "\nCommon render setting loaded.";
+}
+
+
+// Set render file name prefix format.
+global proc gpsRenderSetup.setOutputPath()
+{
+	string $user = `getenv "IC_USERNAME"`;
+	string $shot = `getenv "SHOT"`;
+
+	setAttr -type "string" "defaultRenderGlobals.ifp" ($user + "/<Scene>/<RenderLayer>/" + $shot + "_<RenderLayer>");
+}
+
+
+// Set frame range.
+global proc gpsRenderSetup.setFrameRange()
+{
+	string $startFrame = `getenv "STARTFRAME"`;
+	string $endFrame = `getenv "ENDFRAME"`;
+
+	setAttr "defaultRenderGlobals.startFrame" $startFrame;
+	setAttr "defaultRenderGlobals.endFrame" $endFrame;
+}
+
+
+// Set resolution.
+global proc gpsRenderSetup.setResolution()
+{
+	int $resX = `getenv "RESOLUTIONX"`;
+	int $resY = `getenv "RESOLUTIONY"`;
+	float $aspectRatio = `getenv "ASPECTRATIO"`;
+
+	setAttr "defaultResolution.w" $resX;
+	setAttr "defaultResolution.h" $resY;
+	setAttr "defaultResolution.deviceAspectRatio" $aspectRatio;
+	setAttr "defaultResolution.pixelAspect" 1;
+
+	// Set render test resolution
+	//setTestResolutionVar(4);
+}
+

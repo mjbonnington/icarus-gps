@@ -1,20 +1,31 @@
 #!/usr/bin/python
-#support	:Mike Bonnington - mike.bonnington@gps-ldn.com
-#title		:userPrefs
-#copyright	:Gramercy Park Studios
+
+# [Icarus] userPrefs.py
+#
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2017 Gramercy Park Studios
+#
+# Manages user preferences stored in .ini files via Python's ConfigParser
+# module.
 
 
-from ConfigParser import SafeConfigParser
+try:
+	from ConfigParser import SafeConfigParser
+except ModuleNotFoundError:  # Python 3 compatibility
+	from configparser import SafeConfigParser
+
 import os
-import osOps#, verbose
+
+import osOps
+import verbose
 
 
 config = SafeConfigParser()
-configFile = os.path.join(os.environ['ICUSERPREFS'], 'userPrefs.ini')
+configFile = os.path.join(os.environ['IC_USERPREFS'], 'userPrefs.ini')
 
 
 def read():
-	""" Read config file - create it if it doesn't exist
+	""" Read config file - create it if it doesn't exist.
 	"""
 	if os.path.exists(configFile):
 		config.read(configFile)
@@ -24,21 +35,21 @@ def read():
 
 
 def write():
-	""" Write config file to disk
+	""" Write config file to disk.
 	"""
 	try:
 		with open(configFile, 'w') as f:
 			config.write(f)
 
 	except IOError:
-		#verbose.userPrefs_notWritten()
-		print 'Warning: unable to write user prefs configuration file.'
+		verbose.warning('Unable to write user prefs configuration file.')
 
 
 def create():
-	""" Create config file if it doesn't exist and populate with with defaults
+	""" Create config file if it doesn't exist and populate with with
+		defaults.
 	"""
-	userPrefsDir = os.environ['ICUSERPREFS']
+	userPrefsDir = os.environ['IC_USERPREFS']
 
 	if not os.path.exists(userPrefsDir):
 		osOps.createDir(userPrefsDir)
@@ -50,6 +61,8 @@ def create():
 	config.set('main', 'verbosity', '2')
 
 	config.add_section('gpspreview')
+	config.set('gpspreview', 'resolutionmode', '0')
+	config.set('gpspreview', 'framerangemode', '0')
 	config.set('gpspreview', 'offscreen', 'True')
 	config.set('gpspreview', 'noselection', 'True')
 	config.set('gpspreview', 'guides', 'True')
@@ -61,8 +74,13 @@ def create():
 
 
 def edit(section, key, value):
-	""" Set a value and save config file to disk
+	""" Set a value and save config file to disk.
+		If the section doesn't exist it will be created.
 	"""
+	if not config.has_section(section):
+		config.add_section(section)
+
 	config.set(section, key, value)
 
 	write()
+

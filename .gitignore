@@ -1,5 +1,6 @@
 #Compiled files
 *.pyc
+__pycache__
 
 #System files
 .DS_Store
@@ -25,4 +26,4 @@ Thumbs.db
 external_apps
 
 #Icarus Config Dir
-core/config
+core/config*

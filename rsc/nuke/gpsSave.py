@@ -1,7 +1,13 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title		:gpsSave
-#copyright	:Gramercy Park Studios
+
+# [GPS] gpsSave.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2015 Gramercy Park Studios
+#
+# Custom file saving procedures.
+
 
 import os
 import nuke
@@ -9,7 +15,7 @@ import recentFiles, osOps
 
 
 def updateRecentFilesMenu(menu):
-	""" Populates the recent files menu, disables it if no recent files in list
+	""" Populates the recent files menu, disables it if no recent files in list.
 	"""
 	enable = True;
 	fileLs = recentFiles.getLs('nuke') # explicitly stating 'nuke' environment to get around 'nuke_tmp' fix
@@ -32,7 +38,7 @@ def updateRecentFilesMenu(menu):
 
 
 def updateRecentFiles(script=None):
-	""" Adds a script to the recent files list config file. If script is not specified use current script name
+	""" Adds a script to the recent files list config file. If script is not specified use current script name.
 	"""
 	if script == None:
 		script = os.path.abspath( nuke.value("root.name") )
@@ -42,13 +48,14 @@ def updateRecentFiles(script=None):
 	# Add entry to recent files config file
 	recentFiles.updateLs(script, 'nuke') # explicitly stating 'nuke' environment to get around 'nuke_tmp' fix
 
-	# Update GPS custom recent files menu(s)
+	# Update GPS custom recent files menu(s) - these are dependent on the menus defined in menu.py so modify with caution
 	updateRecentFilesMenu( nuke.menu('Nuke').menu('File').menu('[GPS] Open Recent') )
 	updateRecentFilesMenu( nuke.menu('Nodes').menu('Open').menu('Open Recent') )
 
 
-#strips all naming conventions and returns script name
 def getWorkingScriptName():
+	""" Strips all naming conventions and returns script name.
+	"""
 	workingScript = nuke.root().name()
 	if not os.path.isfile(workingScript):
 		return
@@ -66,13 +73,14 @@ def getWorkingScriptName():
 		return
 
 
-#prompts for script name
 def getInputName():
+	""" Prompts for script name.
+	"""
 	#gets script name from input and strips white spaces
 	defaultName  = getWorkingScriptName()
 	if not defaultName:
-		defaultName = 'preComp'
-	scriptName = nuke.getInput( 'Script Name', defaultName)
+		defaultName = 'precomp'
+	scriptName = nuke.getInput('Script Name', defaultName)
 	if scriptName:
 		scriptName = scriptName.replace( ' ', '' )
 		return scriptName
@@ -80,8 +88,9 @@ def getInputName():
 		return
 
 
-#saves script, saves As or incremental
 def save(incr=False, saveAs=False):
+	""" Saves script, saves As or incremental.
+	"""
 	#getting script name
 	if saveAs:
 		scriptName = getInputName()
@@ -116,3 +125,4 @@ def save(incr=False, saveAs=False):
 		nuke.scriptSave()
 		nkPath = getWorkingScriptName()
 	return nkPath
+

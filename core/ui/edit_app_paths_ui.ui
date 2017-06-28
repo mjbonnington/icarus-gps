@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>576</width>
+    <height>320</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Edit Application Paths</string>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <spacer name="verticalSpacer_3">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="appVer_groupBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Applications and versions</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_10">
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::ExpandingFieldsGrow</enum>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="appName_label">
+        <property name="text">
+         <string>Application:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <layout class="QHBoxLayout" name="appName_horizontalLayout">
+        <item>
+         <widget class="QComboBox" name="appName_comboBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="toolTip">
+           <string>Select an application, or add a new application by typing a new name and pressing Enter</string>
+          </property>
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <property name="mandatoryField" stdset="0">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="appNameDel_toolButton">
+          <property name="toolTip">
+           <string>Remove this application</string>
+          </property>
+          <property name="text">
+           <string>...</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../../ui/rsc.qrc">
+            <normaloff>:/rsc/rsc/icon_delete.png</normaloff>
+            <disabledoff>:/rsc/rsc/icon_delete_disabled.png</disabledoff>:/rsc/rsc/icon_delete.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>15</width>
+            <height>15</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="appVer_label">
+        <property name="text">
+         <string>Version:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <layout class="QHBoxLayout" name="appVer_horizontalLayout">
+        <item>
+         <widget class="QComboBox" name="appVer_comboBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="toolTip">
+           <string>Select a version for this application, or add a new version by typing a new name and pressing Enter</string>
+          </property>
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <property name="mandatoryField" stdset="0">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="appVerDel_toolButton">
+          <property name="toolTip">
+           <string>Remove this version of the application</string>
+          </property>
+          <property name="text">
+           <string>...</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../../ui/rsc.qrc">
+            <normaloff>:/rsc/rsc/icon_delete.png</normaloff>
+            <disabledoff>:/rsc/rsc/icon_delete_disabled.png</disabledoff>:/rsc/rsc/icon_delete.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>15</width>
+            <height>15</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="execPaths_groupBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Executable paths</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_9">
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::ExpandingFieldsGrow</enum>
+      </property>
+      <item row="1" column="0">
+       <widget class="QLabel" name="osxPath_label">
+        <property name="text">
+         <string>Mac:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <layout class="QHBoxLayout" name="osxPath_horizontalLayout">
+        <item>
+         <widget class="QLineEdit" name="osxPath_lineEdit"/>
+        </item>
+       </layout>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="linuxPath_label">
+        <property name="text">
+         <string>Linux:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <layout class="QHBoxLayout" name="linuxPath_horizontalLayout">
+        <item>
+         <widget class="QLineEdit" name="linuxPath_lineEdit"/>
+        </item>
+       </layout>
+      </item>
+      <item row="4" column="1">
+       <layout class="QHBoxLayout" name="appPaths_horizontalLayout">
+        <item>
+         <widget class="QPushButton" name="guess_pushButton">
+          <property name="toolTip">
+           <string>Try to guess the executable paths based on the template</string>
+          </property>
+          <property name="text">
+           <string>Guess</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="winPath_label">
+        <property name="text">
+         <string>Windows:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <layout class="QHBoxLayout" name="winPath_horizontalLayout">
+        <item>
+         <widget class="QLineEdit" name="winPath_lineEdit"/>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_1">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="appPaths_buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../../ui/rsc.qrc"/>
+ </resources>
+ <connections/>
+</ui>

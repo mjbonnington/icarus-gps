@@ -5,7 +5,8 @@
 
 
 import os
-import pblChk, verbose
+import pblChk
+import verbose
 
 
 #Processes publish options arriving from the different publish modules
@@ -27,13 +28,24 @@ def prc(pblTo, subset, assetType, prefix, convention, suffix):
 ###################RENDER PUBLISHING SPECIFIC OPTIONS PROCESSING####################
 ####################################################################################
 #splits a sequence file and returns the different render components
-def render_split(file_):
-	if file_.startswith('.'):
-		return
-	if not pblChk.paddingChk(file_):
-		return
-	nameBody, padding, extension = file_.split('.')
-	return nameBody, padding, extension
+def render_split(filename):
+#	if filename.startswith('.'):
+#		return
+#	if not pblChk.paddingChk(filename):
+#		return
+#	nameBody, padding, extension = filename.split('.')
+#	return nameBody, padding, extension
+
+	# Parse filename
+	try:
+		base, ext = os.path.splitext(filename)
+		prefix, framenumber = base.rsplit('.', 1)
+		padding = len(framenumber)
+		framenumber_int = int(framenumber)
+		return prefix, framenumber, ext
+	except ValueError:
+		verbose.error("Could not parse sequence.")
+		return # False, False, False # need to return tuple to match successful return type
 
 
 #processes a dictionary contaning the format layer_pass:full/sequence/path. Returns the path with the old file name and with the name convention applied
@@ -80,8 +92,11 @@ def renderPath_prc(renderPath):
 		
 ####################DAILY PUBLISHING SPECIFIC OPTIONS PROCESSING####################
 ####################################################################################
-#processes the provided path and returns a dictionary of layer and respective full sequence path
+
 def dailyPath_prc(path):
+	""" Processes the provided path and returns a dictionary of layer and respective full sequence path.
+		Rewrite or remove this function...
+	"""
 	expPath = os.path.expandvars(path)
 	filePath, file_ = os.path.split(expPath)
 	fileSplit = render_split(file_)
@@ -89,7 +104,8 @@ def dailyPath_prc(path):
 	if fileSplit:
 		nameBody, padding, extension = render_split(file_)
 		renderDic[nameBody] = filePath
+		#print(nameBody, padding, extension)
 		return renderDic
 	else:
 		return
-		
+

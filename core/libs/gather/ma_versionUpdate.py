@@ -1,29 +1,37 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@gps-ldn.com
-#title     	:ma_versionUpdate
-#copyright	:Gramercy Park Studios
+
+# [Icarus] ma_versionUpdate.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2016 Gramercy Park Studios
+#
+# Loads Version Manager and updates asset.
+
 
 import os
-import versionManager
 
-
-#loads version manager and updates asset
 
 def update(ICSet):
 	import mayaOps
+	import versionManager
+	reload(versionManager)
+
 	ICSetAttrDic = mayaOps.getICSetAttrs(ICSet)
 	vManagerDialog = versionManager.dialog()
-	updateVersion = vManagerDialog.dialogWindow(ICSetAttrDic['icAssetRootDir'], ICSetAttrDic['icVersion'])
+	updateVersion = vManagerDialog.display(ICSetAttrDic['icAssetRootDir'], ICSetAttrDic['icVersion'])
 	if not updateVersion:
 		return
 	else:
 		updatePath = os.path.join(ICSetAttrDic['icAssetRootDir'], updateVersion)
-		#updating alembic geocaches
+
+		# Update alembic geo caches
 		if ICSetAttrDic['icAssetExt'] == 'abc':
 			import ma_geoCacheUpdate
 			ma_geoCacheUpdate.alembic(ICSet, updatePath)
-		#all other geo types
+
+		# All other geo types
 		else:
 			import ma_assetUpdate
 			ma_assetUpdate.update(ICSet, updatePath)
-	
+

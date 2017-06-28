@@ -1,19 +1,23 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 
-# Sequences
-# v0.2
+# [Icarus] sequence.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) Gramercy Park Studios 2015
+# (c) 2015-2017 Gramercy Park Studios
 #
 # These functions convert formatted sequences to lists and vice-versa.
 
 
+import glob
+import os
 import re
+
+import verbose
 
 
 def numList(num_range_str, quiet=False):
-	""" Takes a formatted string describing a range of numbers and returns a sorted integer list.
+	""" Takes a formatted string describing a range of numbers and returns a
+		sorted integer list.
 		e.g. '1-5, 20, 24, 1001-1002'
 		returns [1, 2, 3, 4, 5, 20, 24, 1001, 1002]
 	"""
@@ -36,7 +40,7 @@ def numList(num_range_str, quiet=False):
 			last = int(seq[1])
 			if first > last:
 				if not quiet:
-					print "ERROR: The last number (%d) in the sequence cannot be smaller than the first (%d)." %(last, first)
+					verbose.error("The last number (%d) in the sequence cannot be smaller than the first (%d)." %(last, first))
 				return False
 			else:
 				int_list = list(range(first, last+1))
@@ -45,15 +49,16 @@ def numList(num_range_str, quiet=False):
 
 		else:
 			if not quiet:
-				print "ERROR: Sequence format is invalid."
+				verbose.error("Sequence format is invalid.")
 			return False
 
 	# Remove duplicates & sort list
 	return sorted(list(set(num_int_list)), key=int)
 
 
-def numRange(num_int_list, quiet=False):
-	""" Takes a list of integer values and returns a formatted string describing the range of numbers.
+def numRange(num_int_list, padding=0, quiet=False):
+	""" Takes a list of integer values and returns a formatted string
+		describing the range of numbers.
 		e.g. [1, 2, 3, 4, 5, 20, 24, 1001, 1002]
 		returns '1-5, 20, 24, 1001-1002'
 	"""
@@ -64,7 +69,7 @@ def numRange(num_int_list, quiet=False):
 		sorted_list = sorted(list(set(num_int_list)), key=int)
 	except (ValueError, TypeError):
 		if not quiet:
-			print "ERROR: Number list only works with integer values."
+			verbose.error("Number list only works with integer values.")
 		return False
 		
 
@@ -77,15 +82,15 @@ def numRange(num_int_list, quiet=False):
 			last = x
 		else:
 			if first == last:
-				num_range_str = num_range_str + "%d, " %first
+				num_range_str = num_range_str + "%s, " %str(first).zfill(padding)
 			else:
-				num_range_str = num_range_str + "%d-%d, " %(first, last)
+				num_range_str = num_range_str + "%s-%s, " %(str(first).zfill(padding), str(last).zfill(padding))
 			first = last = x
 	if first is not None:
 		if first == last:
-			num_range_str = num_range_str + "%d" %first
+			num_range_str = num_range_str + "%s" %str(first).zfill(padding)
 		else:
-			num_range_str = num_range_str + "%d-%d" %(first, last)
+			num_range_str = num_range_str + "%s-%s" %(str(first).zfill(padding), str(last).zfill(padding))
 
 	return num_range_str
 
@@ -117,3 +122,131 @@ def chunks(l, n):
     """
     for i in xrange(0, len(l), n):
         yield l[i:i+n]
+
+
+def getBases(path):
+	""" Find file sequence bases in path.
+		Returns a list of bases (the first part of the filename, stripped of
+		frame number padding and extension).
+	"""
+	# Get directory contents
+	try:
+		ls = os.listdir(path)
+		ls.sort()
+	except OSError:
+		verbose.error("No such file or directory: '%s'" %path)
+		return False
+
+	# Create list to hold all basenames of sequences
+	all_bases = []
+
+	# Get list of files in current directory
+	for filename in ls:
+
+		# Only work on files, not directories, and ignore files that start with a dot
+		if os.path.isfile(os.path.join(path, filename)) and not filename.startswith('.'):
+
+			# Extract file extension
+			root, ext = os.path.splitext(filename)
+
+			# Match file names which have a trailing number separated by a dot
+			seqRE = re.compile(r'\.\d+$')
+			match = seqRE.search(root)
+
+			# Store filename prefix
+			if match is not None:
+				prefix = root[:root.rfind(match.group())]
+				all_bases.append('%s.#%s' % (prefix, ext))
+
+	# Remove duplicates & sort list
+	bases = list(set(all_bases))
+	bases.sort()
+	return bases
+
+
+def getFirst(path):
+	""" TEMPORARY BODGE - get the first item in a sequence.
+	"""
+	#filter_ls = glob.glob("%s*" %os.path.join(path, base))
+	path = path.replace('#', '*')
+	filter_ls = glob.glob(path)
+	filter_ls.sort()
+
+	return filter_ls[0]
+
+
+def getSequence(path, pattern):
+	""" Looks for other frames in a sequence that fit a particular pattern.
+		Pass the first (lowest-numbered) frame in the sequence to the
+		detectSeq function and return its results.
+	"""
+	#filter_ls = glob.glob("%s*" %os.path.join(path, base))
+	pattern = pattern.replace('#', '*')
+	filter_ls = glob.glob( os.path.join(path, pattern) )
+	filter_ls.sort()
+	#frame_ls = []
+
+	return detectSeq( filter_ls[0] )
+
+
+def detectSeq(filepath, contiguous=False, ignorePadding=False):
+	""" Detect file sequences based on the provided file path.
+		Returns a tuple containing 5 elements:
+		1. path - the directory path containing the file
+		2. prefix - the first part of the filename
+		3. frame - the sequence of frame numbers computed from the numeric
+		   part of the filename, represented as a string
+		4. ext - the filename extension
+		5. num_frames - the number of frames in the sequence
+		If 'contiguous' flag is True, only return a contiguous sequence
+		(no gaps).
+		If 'ignorePadding' flag is True, return sequence even if the number
+		of padding digits differ.
+	"""
+	lsFrames = [] # Clear frame list
+
+	# Parse file path
+	filename = os.path.basename(filepath)
+	path = os.path.dirname(filepath)
+	base, ext = os.path.splitext(filename)
+	try:
+		prefix, framenumber = base.rsplit('.', 1)
+		padding = len(framenumber)
+		framenumber = int(framenumber)
+	except ValueError:
+		verbose.error("Could not parse sequence.")
+		return # (path, base, '0', ext, 1)
+
+	# Construct regular expression for matching files in the sequence
+	if ignorePadding:
+		re_seq_str = r"^%s\.\d+%s$" %( re.escape(prefix), re.escape(ext) )
+	else:
+		re_seq_str = r"^%s\.\d{%d}%s$" %( re.escape(prefix), padding, re.escape(ext) )
+	re_seq_pattern = re.compile(re_seq_str)
+
+	# Find other files in the sequence in the same directory
+	for item in os.listdir(path):
+		if re_seq_pattern.match(item) is not None:
+			#lsFrames.append(item) # whole filename
+			lsFrames.append( int(os.path.splitext(item)[0].rsplit('.', 1)[1]) ) # just the frame number
+			numFrames = len(lsFrames)
+
+	if ignorePadding:
+		numRangeStr = numRange(lsFrames)
+	else:
+		numRangeStr = numRange(lsFrames, padding=padding)
+
+	if contiguous:
+		chunks = numRangeStr.split(', ')
+		if len(chunks) > 1:
+			for chunk in chunks:
+				contiguiousChunkLs = numList(chunk, quiet=True)
+				if framenumber in contiguiousChunkLs:
+					numRangeStr = chunk
+					numFrames = len(contiguiousChunkLs)
+
+	verbose.message("%d frame sequence detected: %s" % (numFrames, numRangeStr))
+
+	#return lsFrames
+	return (path, prefix, numRangeStr, ext, numFrames)
+

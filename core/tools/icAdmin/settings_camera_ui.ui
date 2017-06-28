@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>settings_frame</class>
+ <widget class="QFrame" name="settings_frame">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>420</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <property name="frameShape">
+   <enum>QFrame::NoFrame</enum>
+  </property>
+  <layout class="QFormLayout" name="formLayout">
+   <property name="fieldGrowthPolicy">
+    <enum>QFormLayout::ExpandingFieldsGrow</enum>
+   </property>
+   <item row="0" column="0">
+    <widget class="QLabel" name="camera_label">
+     <property name="text">
+      <string>Camera:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QComboBox" name="camera_comboBox">
+     <property name="xmlTag" stdset="0">
+      <string>camera</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>Custom</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="filmback_label">
+     <property name="text">
+      <string>Film back / sensor size:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <layout class="QHBoxLayout" name="filmback_horizontalLayout">
+     <item>
+      <widget class="QDoubleSpinBox" name="filmbackWidth_doubleSpinBox">
+       <property name="suffix">
+        <string>mm</string>
+       </property>
+       <property name="decimals">
+        <number>2</number>
+       </property>
+       <property name="minimum">
+        <double>0.100000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>1000.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.100000000000000</double>
+       </property>
+       <property name="value">
+        <double>23.800000000000001</double>
+       </property>
+       <property name="xmlTag" stdset="0">
+        <string>filmbackWidth</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="filmbackSep_label">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>x</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="filmbackHeight_doubleSpinBox">
+       <property name="suffix">
+        <string>mm</string>
+       </property>
+       <property name="decimals">
+        <number>2</number>
+       </property>
+       <property name="minimum">
+        <double>0.100000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>1000.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.100000000000000</double>
+       </property>
+       <property name="value">
+        <double>13.400000000000000</double>
+       </property>
+       <property name="xmlTag" stdset="0">
+        <string>filmbackHeight</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="shutterAngle_label">
+     <property name="text">
+      <string>Shutter angle:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QDoubleSpinBox" name="shutterAngle_doubleSpinBox">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="decimals">
+      <number>1</number>
+     </property>
+     <property name="minimum">
+      <double>0.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>180.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>1.000000000000000</double>
+     </property>
+     <property name="value">
+      <double>180.000000000000000</double>
+     </property>
+     <property name="xmlTag" stdset="0">
+      <string>shutterAngle</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="lensPreset_label">
+     <property name="text">
+      <string>Lens:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QComboBox" name="lensPreset_comboBox">
+     <item>
+      <property name="text">
+       <string>Custom</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="focalLength_label">
+     <property name="text">
+      <string>Focal length:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QDoubleSpinBox" name="focalLength_doubleSpinBox">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="suffix">
+      <string>mm</string>
+     </property>
+     <property name="decimals">
+      <number>1</number>
+     </property>
+     <property name="minimum">
+      <double>0.100000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>1000.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.100000000000000</double>
+     </property>
+     <property name="value">
+      <double>35.000000000000000</double>
+     </property>
+     <property name="xmlTag" stdset="0">
+      <string>focalLength</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="aperture_label">
+     <property name="text">
+      <string>F-stop / aperture:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QDoubleSpinBox" name="aperture_doubleSpinBox">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="decimals">
+      <number>1</number>
+     </property>
+     <property name="minimum">
+      <double>0.100000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>100.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.100000000000000</double>
+     </property>
+     <property name="value">
+      <double>5.600000000000000</double>
+     </property>
+     <property name="xmlTag" stdset="0">
+      <string>aperture</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="clipRef_label">
+     <property name="text">
+      <string>Clip / reel ref:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QLineEdit" name="clipRef_lineEdit">
+     <property name="xmlTag" stdset="0">
+      <string>clipRef</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="camHeight_label">
+     <property name="text">
+      <string>Cam height:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <widget class="QDoubleSpinBox" name="camHeight_doubleSpinBox">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="suffix">
+      <string>m</string>
+     </property>
+     <property name="decimals">
+      <number>2</number>
+     </property>
+     <property name="minimum">
+      <double>0.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>1000.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.100000000000000</double>
+     </property>
+     <property name="xmlTag" stdset="0">
+      <string>camHeight</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QLabel" name="camPitch_label">
+     <property name="text">
+      <string>Cam pitch (angle):</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1">
+    <widget class="QDoubleSpinBox" name="camPitch_doubleSpinBox">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="suffix">
+      <string> degrees</string>
+     </property>
+     <property name="decimals">
+      <number>1</number>
+     </property>
+     <property name="minimum">
+      <double>-180.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>180.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>1.000000000000000</double>
+     </property>
+     <property name="xmlTag" stdset="0">
+      <string>camPitch</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0">
+    <widget class="QLabel" name="focusDistance_label">
+     <property name="text">
+      <string>Focus distance:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1">
+    <widget class="QDoubleSpinBox" name="focusDistance_doubleSpinBox">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="suffix">
+      <string>m</string>
+     </property>
+     <property name="decimals">
+      <number>2</number>
+     </property>
+     <property name="minimum">
+      <double>0.010000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>1000.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.100000000000000</double>
+     </property>
+     <property name="value">
+      <double>1.000000000000000</double>
+     </property>
+     <property name="xmlTag" stdset="0">
+      <string>focusDistance</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="0">
+    <widget class="QLabel" name="subjectDistance_label">
+     <property name="text">
+      <string>Subject distance:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="1">
+    <widget class="QDoubleSpinBox" name="subjectDistance_doubleSpinBox">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="suffix">
+      <string>m</string>
+     </property>
+     <property name="decimals">
+      <number>2</number>
+     </property>
+     <property name="minimum">
+      <double>0.010000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>1000.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.100000000000000</double>
+     </property>
+     <property name="value">
+      <double>1.000000000000000</double>
+     </property>
+     <property name="xmlTag" stdset="0">
+      <string>subjectDistance</string>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="0">
+    <widget class="QLabel" name="filter_label">
+     <property name="text">
+      <string>Filter(s):</string>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="1">
+    <widget class="QLineEdit" name="filter_lineEdit">
+     <property name="xmlTag" stdset="0">
+      <string>filter</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="0">
+    <widget class="QLabel" name="notes_label">
+     <property name="text">
+      <string>Notes:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="1">
+    <widget class="QPlainTextEdit" name="notes_plainTextEdit">
+     <property name="xmlTag" stdset="0">
+      <string>notes</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+  <zorder>camera_label</zorder>
+  <zorder>camera_comboBox</zorder>
+  <zorder>clipRef_label</zorder>
+  <zorder>focalLength_label</zorder>
+  <zorder>camHeight_label</zorder>
+  <zorder>filmback_label</zorder>
+  <zorder></zorder>
+  <zorder>lensPreset_label</zorder>
+  <zorder>lensPreset_comboBox</zorder>
+  <zorder>focalLength_doubleSpinBox</zorder>
+  <zorder>aperture_label</zorder>
+  <zorder>aperture_doubleSpinBox</zorder>
+  <zorder>shutterAngle_doubleSpinBox</zorder>
+  <zorder>shutterAngle_label</zorder>
+  <zorder>camPitch_label</zorder>
+  <zorder>focusDistance_label</zorder>
+  <zorder>subjectDistance_label</zorder>
+  <zorder>clipRef_lineEdit</zorder>
+  <zorder>filter_label</zorder>
+  <zorder>notes_label</zorder>
+  <zorder>camHeight_doubleSpinBox</zorder>
+  <zorder>focusDistance_doubleSpinBox</zorder>
+  <zorder>subjectDistance_doubleSpinBox</zorder>
+  <zorder>filter_lineEdit</zorder>
+  <zorder>notes_plainTextEdit</zorder>
+  <zorder>camPitch_doubleSpinBox</zorder>
+ </widget>
+ <tabstops>
+  <tabstop>filmbackWidth_doubleSpinBox</tabstop>
+  <tabstop>filmbackHeight_doubleSpinBox</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

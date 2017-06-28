@@ -1,90 +1,76 @@
 #!/usr/bin/python
-#support    :Nuno Pereira - nuno.pereira@hogarthww.com
-#title      :openDirs
+
+# [Icarus] openDirs.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2017 Gramercy Park Studios
+#
+# Contains functions to open certain directories in the system's file explorer
+# application.
+
 
 import os
 
-if os.environ['ICARUS_RUNNING_OS'] == 'Darwin':
-	sysCommand = 'open'
-elif os.environ['ICARUS_RUNNING_OS'] == 'Windows':
+
+# Set correct command for operating system's file explorer
+if os.environ['IC_RUNNING_OS'] == 'Windows':
 	sysCommand = 'explorer'
+elif os.environ['IC_RUNNING_OS'] == 'Darwin':
+	sysCommand = 'open'
 else:
 	sysCommand = 'nautilus'
 
 
-def openElementsLib():
-	elementsLibDir = os.environ['ELEMENTSLIBRARY']
-	if os.path.isdir(elementsLibDir):
-		os.system('%s %s' % (sysCommand, elementsLibDir))
+def open_(path_):
+	""" Open the OS native file explorer at the specified directory.
+	"""
+	path_ = os.path.normpath(path_)
+	if os.path.isdir(path_):
+		if os.environ['IC_RUNNING_OS'] == 'Windows':
+			os.startfile(path_)
+		else:
+			os.system( '%s %s' %(sysCommand, path_) )
+	return
+
+
+# Preset functions...
+def openShot():
+	open_( os.environ['SHOTPATH'] )
 
 def openJob():
-	jobRoot = os.path.split(os.environ['JOBPATH'])[0]
-	if os.path.isdir(jobRoot):
-		os.system('%s %s' % (sysCommand, jobRoot))
-	return
+	open_( os.path.split(os.environ['JOBPATH'])[0] )
+
+def openElementsLib():
+	open_( os.environ['ELEMENTSLIBRARY'] )
 
 def openMaya():
-	mayaDir = os.environ['MAYADIR']
-	if os.path.isdir(mayaDir):
-		os.system('%s %s' % (sysCommand, mayaDir))
-	return
-
-def openMayaPlayblasts():
-	plbDir =  os.environ["MAYAPLAYBLASTSDIR"]
-	if os.path.isdir(plbDir):
-		os.system('%s %s' % (sysCommand, plbDir))
-	return
-
-def openMayaRenders():
-	rendersDir =  os.environ["MAYARENDERSDIR"]
-	if os.path.isdir(rendersDir):
-		os.system('%s %s' % (sysCommand, rendersDir))
-	return
+	open_( os.environ['MAYADIR'] )
 
 def openMayaScenes():
-	scenesDir =  os.environ["MAYASCENESDIR"]
-	if os.path.isdir(scenesDir):
-		os.system('%s %s' % (sysCommand, scenesDir))
-	return
+	open_( os.environ["MAYASCENESDIR"] )
 
 def openMayaSourceimages():
-	cachesDir =  os.environ["MAYASOURCEIMAGESDIR"]
-	if os.path.isdir(cachesDir):
-		os.system('%s %s' % (sysCommand, cachesDir))
-	return
+	open_( os.environ["MAYASOURCEIMAGESDIR"] )
+
+def openMayaRenders():
+	open_( os.environ["MAYARENDERSDIR"] )
+
+def openMayaPlayblasts():
+	open_( os.environ["MAYAPLAYBLASTSDIR"] )
 
 def openNuke():
-	nukeDir = os.environ['NUKEDIR']
-	if os.path.isdir(nukeDir):
-		os.system('%s %s' % (sysCommand, nukeDir))
-	return
-
-def openNukeElements():
-	nukeDir = os.environ['NUKEELEMENTSDIR']
-	if os.path.isdir(nukeDir):
-		os.system('%s %s' % (sysCommand, nukeDir))
-	return
-
-def openNukeRenders():
-	nukeDir = os.environ['NUKERENDERSDIR']
-	if os.path.isdir(nukeDir):
-		os.system('%s %s' % (sysCommand, nukeDir))
-	return
+	open_( os.environ['NUKEDIR'] )
 
 def openNukeScripts():
-	nukeDir = os.environ['NUKESCRIPTSDIR']
-	if os.path.isdir(nukeDir):
-		os.system('%s %s' % (sysCommand, nukeDir))
-	return
+	open_( os.environ['NUKESCRIPTSDIR'] )
+
+def openNukeElements():
+	open_( os.environ['NUKEELEMENTSDIR'] )
+
+def openNukeRenders():
+	open_( os.environ['NUKERENDERSDIR'] )
 
 def openRealflowScenes():
-	realflowDir = os.environ['REALFLOWSCENESDIR']
-	if os.path.isdir(realflowDir):
-		os.system('%s %s' % (sysCommand, realflowDir))
-	return
+	open_( os.environ['REALFLOWSCENESDIR'] )
 
-def openShot():
-	jobPath = os.environ['SHOTPATH']
-	if os.path.isdir(jobPath):
-		os.system('%s %s' % (sysCommand, jobPath))
-	return

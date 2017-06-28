@@ -12,6 +12,7 @@ def version(vCtrlFolder, current=False):
 	
 	##CHECKS FOR DIRECTORY EXISTENCE##
 	if not os.path.isdir(vCtrlFolder):
+		print("vCtrl: directory doesn't exist.")
 		currentVersion = 0
 	else:
 		##TRIES TO FIGURE OUT VERSIONING BASED ON EXISTENT CONTENTS##
@@ -32,6 +33,7 @@ def version(vCtrlFolder, current=False):
 					vrsLs.append(contentVrs)
 			##SORTS vrsLs AND RETRIEVES LAST ITEM (HIGHEST DIGIT)##
 			vrsLs.sort()
+		#	print(vrsLs)
 			currentVersion = int(vrsLs[-1])
 		
 		##IF NO VERSIONING DETECTED IN CONTENTS STARTS NEW VERSIONING##

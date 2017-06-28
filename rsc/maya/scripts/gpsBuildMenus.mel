@@ -1,11 +1,14 @@
 // [GPS] Build Menus
-// v0.1
 //
-// Michael Bonnington, Nuno Pereira
-// (c) 2015 Gramercy Park Studios
+// Nuno Pereira <nuno.pereira@gps-ldn.com>
+// Mike Bonnington <mike.bonnington@gps-ldn.com>
+// (c) 2015-2017 Gramercy Park Studios
 //
 // Dynamically modifies Maya's menus without the need to edit Maya's UI MEL scripts directly.
 
+
+// Get Maya version
+float $maya_ver = getApplicationVersionAsFloat();
 
 // This function suppresses recent menus...
 global proc checkGPSFileMenu()
@@ -28,7 +31,9 @@ global proc checkGPSFileMenu()
 }
 
 
-// File Menu
+///////////////
+// File Menu //
+///////////////
 
 string $fileMenu = "MayaWindow|mainFileMenu";
 buildFileMenu();
@@ -113,7 +118,9 @@ setParent -menu $fileMenu;
 checkGPSFileMenu();
 
 
-// Create Menu
+/////////////////
+// Create Menu //
+/////////////////
 
 string $createMenu = "MayaWindow|mainCreateMenu";
 ModCreateMenu $createMenu;
@@ -132,7 +139,9 @@ setParent -menu $createMenu;
 	setParent -menu ..;
 
 
-// Window Menu
+/////////////////
+// Window Menu //
+/////////////////
 
 string $windowMenu = "MayaWindow|mainWindowMenu";
 buildViewMenu($windowMenu);
@@ -155,9 +164,19 @@ setParent -menu $windowMenu;
 			 playblastDialogItem;
 
 
-// Time Slider Menu
+//////////////////////
+// Time Slider Menu //
+//////////////////////
 
-string $timelineMenu = "MayaWindow|toolBar6|MainTimeSliderLayout|formLayout9|TimeSliderMenu";
+string $timelineMenu = "";
+if ($maya_ver >= 2017) {
+	//print ("Running version 2017 or higher\n");
+	$timelineMenu = "TimeSlider|MainTimeSliderLayout|formLayout8|TimeSliderMenu"; // Maya 2017 and later
+} else {
+	//print ("Running version 2016 or earlier\n");
+	$timelineMenu = "MayaWindow|toolBar6|MainTimeSliderLayout|formLayout9|TimeSliderMenu"; // Maya 2016 and earlier
+};
+
 updateTimeSliderMenu $timelineMenu;
 //menu -exists $timelineMenu;
 //string $timeline_menuItems[] = `menu -ia -q $timelineMenu`;
@@ -176,7 +195,9 @@ setParent -menu $timelineMenu;
 			 GPSPlayblastItem;
 
 
-// Status Line Buttons
+/////////////////////////
+// Status Line Buttons //
+/////////////////////////
 
 setParent $gStatusLine;
 
@@ -210,7 +231,7 @@ iconTextButton -edit -image1 "saveScene.png"
                saveSceneButton;
 
 // GPS - Create a popup menu on the Save button for Save As and Incremental Save
-string $menu = `popupMenu -parent saveSceneButton`;
+string $save_menu = `popupMenu -parent saveSceneButton`;
 	menuItem -label "Incremental Save" -command "source menus2Py; menus2Py.incrementalSave()";
 	menuItem -label "Save As..." -command "source menus2Py; menus2Py.saveSceneAs()";
 
@@ -230,8 +251,12 @@ iconTextButton -image1 "editor.png"
                editorsButton;
 
 // GPS - Add popup menu for common editors
-string $menu = `popupMenu -b 1 -p editorsButton`;
-	menuItem -label "Outliner" -c "OutlinerWindow";
+string $editor_menu = `popupMenu -b 1 -p editorsButton`;
+	if ($maya_ver >= 2017) {
+		menuItem -label "Outliner" -c "OutlinerWindow";
+	} else {
+		menuItem -label "Outliner" -c "source dev_dockOutliner;dev_dockOutliner()"; // Custom dockable Outliner panel for Maya 2016 and earlier
+	};
 	menuItem -label "Node Editor" -c "NodeEditorWindow";
 	menuItem -divider true;
 	menuItem -label "Hypershade" -c "HypershadeWindow";
@@ -247,7 +272,7 @@ iconTextButton -image1 "browse.png"
                browseDirsButton;
 
 // GPS - Create a menu on the browse dir button for different directories
-string $menu = `popupMenu -b 1 -p browseDirsButton`;
+string $browser_menu = `popupMenu -b 1 -p browseDirsButton`;
 	menuItem -label "Browse scenes" -c "source menus2Py;menus2Py.browseScenes()";
 	menuItem -label "Browse playblasts" -c "source menus2Py;menus2Py.browsePlayblasts()";
 	menuItem -label "Browse renders" -c "source menus2Py;menus2Py.browseRenders()";
@@ -263,7 +288,7 @@ iconTextButton -image1 "review.png"
                reviewButton;
 
 // GPS - Create a menu on the review button for different review software
-string $menu = `popupMenu -b 1 -p reviewButton`;
+string $review_menu = `popupMenu -b 1 -p reviewButton`;
 	menuItem -label "HieroPlayer" -c "source menus2Py;menus2Py.launchHieroPlayer";
 	menuItem -label "djv_view" -c "source menus2Py;menus2Py.launchDjv";
 
@@ -288,10 +313,10 @@ text -label $jobInfo -h 27;
 setParent -menu ..;
 
 // Swap Object Mode / Component Mode buttons (fix for Maya 2014 only)
-//if (getApplicationVersionAsFloat == 2014) {
+if ($maya_ver == 2014) {
 	formLayout -edit
 	           -af selectBtnComponent right 0
 	           -ac selectBtnObject right 0 selectBtnComponent
 	           -ac selectBtnHierComb right 0 selectBtnObject
 	           masksForm;
-//}
+}

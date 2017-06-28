@@ -8,7 +8,7 @@
 import hiero.core as hc
 import os, sys
 #just like nuke hiero seems to ditch the main root environent where it has been called from so the path needs to be appended again
-sys.path.append(os.path.join(os.environ['PIPELINE'], 'core', 'ui'))
+sys.path.append(os.path.join(os.environ['IC_BASEDIR'], 'core', 'ui'))
 import env__init__
 env__init__.appendSysPaths()
 import verbose, osOps
