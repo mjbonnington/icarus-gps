@@ -42,8 +42,17 @@ class dialog(QtWidgets.QDialog):
 		self.setObjectName(WINDOW_OBJECT)
 		self.setWindowTitle(WINDOW_TITLE)
 
+		# Load UI & stylesheet
+		self.ui = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], UI_FILE))
+		if STYLESHEET is not None:
+			qss=os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
+			with open(qss, "r") as fh:
+				self.ui.setStyleSheet(fh.read())
+
 		# Set window flags
-		self.setWindowFlags(QtCore.Qt.Dialog)
+		# self.setWindowFlags(QtCore.Qt.Dialog)
+		self.ui.setWindowFlags(QtCore.Qt.CustomizeWindowHint | 
+			                   QtCore.Qt.WindowTitleHint)
 		# if os.environ['IC_RUNNING_OS'] == 'Darwin':
 		# 	self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | 
 		# 	                    QtCore.Qt.X11BypassWindowManagerHint | 
@@ -51,13 +60,6 @@ class dialog(QtWidgets.QDialog):
 		# else:
 		# 	self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | 
 		# 		                QtCore.Qt.WindowCloseButtonHint)
-
-		# Load UI & stylesheet
-		self.ui = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], UI_FILE))
-		if STYLESHEET is not None:
-			qss=os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
-			with open(qss, "r") as fh:
-				self.ui.setStyleSheet(fh.read())
 
 		# Connect signals & slots
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).clicked.connect(self.ok)

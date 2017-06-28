@@ -3,7 +3,7 @@
 # [Icarus] renderQueue.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2016 Gramercy Park Studios
+# (c) 2016-2017 Gramercy Park Studios
 #
 # Manages the Render Queue XML database.
 

@@ -116,9 +116,12 @@ class icarusApp(QtWidgets.QMainWindow):
 		self.setCentralWidget(self.ui)
 
 		# Restore window geometry and state (restoreState incompatible with PyQt5)
-		self.settings = QtCore.QSettings(VENDOR, WINDOW_TITLE)
-		self.restoreGeometry(self.settings.value("geometry", ""))
-		# self.restoreState(self.settings.value("windowState", ""))
+		try:
+			self.settings = QtCore.QSettings(VENDOR, WINDOW_TITLE)
+			self.restoreGeometry(self.settings.value("geometry", ""))
+			# self.restoreState(self.settings.value("windowState", ""))
+		except:
+			pass
 
 		# Instantiate jobs class
 		self.j = jobs.jobs()
@@ -1037,29 +1040,27 @@ Developers: %s
 	def launchRenderSubmit(self):
 		""" Launch Render Submitter window.
 		"""
-		import submit__main__
-		# reload(submit__main__)  # Python 3 doesn't like this
-		#submit__main__.run_(frameRange='1-10', flags='-rl CurrentLayer')
+		import render_submit
+		#render_submit.run_(frameRange='1-10', flags='-rl CurrentLayer')
 		try:
-			self.renderSubmitApp.show()
-			self.renderSubmitApp.raise_()
+			self.renderSubmitDialog.display()
+			# self.renderSubmitDialog.raise_()
 		except AttributeError:
-			self.renderSubmitApp = submit__main__.gpsRenderSubmitApp()
-			#print self.renderSubmitApp
-			self.renderSubmitApp.show()
+			self.renderSubmitDialog = render_submit.renderSubmitDialog(parent=self)
+			self.renderSubmitDialog.display()
+		# renderSubmitDialog = render_submit.renderSubmitDialog(parent=self)
+		# renderSubmitDialog.display()
 
 
 	def launchRenderQueue(self):
 		""" Launch Render Queue Manager window.
 		"""
-		import queue__main__
-		# reload(queue__main__)  # Python 3 doesn't like this
+		import render_queue__main__
 		try:
 			self.renderQueueApp.show()
 			self.renderQueueApp.raise_()
 		except AttributeError:
-			self.renderQueueApp = queue__main__.gpsRenderQueueApp()
-			#print self.renderQueueApp
+			self.renderQueueApp = render_queue__main__.renderQueueApp()
 			self.renderQueueApp.show()
 
 

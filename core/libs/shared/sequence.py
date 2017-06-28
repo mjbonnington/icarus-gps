@@ -118,10 +118,11 @@ def seqRange(sorted_list, gen_range=False):
 
 
 def chunks(l, n):
-    """ Yield successive n-sized chunks from l.
-    """
-    for i in xrange(0, len(l), n):
-        yield l[i:i+n]
+	""" Yield successive n-sized chunks from l.
+	"""
+	# for i in xrange(0, len(l), n):  # Python 2.x only
+	for i in range(0, len(l), n):
+		yield l[i:i+n]
 
 
 def getBases(path):
