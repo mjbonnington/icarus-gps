@@ -68,11 +68,11 @@ class renderQueueApp(QtWidgets.QMainWindow):
 			with open(qss, "r") as fh:
 				self.ui.setStyleSheet(fh.read())
 
-		# Set window flags
-		self.setWindowFlags(QtCore.Qt.Window)
-
 		# Set the main widget
 		self.setCentralWidget(self.ui)
+
+		# Set window flags
+		self.setWindowFlags(QtCore.Qt.Window)
 
 		# Restore window geometry and state
 		# (Restore state may cause issues with PyQt5)

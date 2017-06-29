@@ -61,6 +61,7 @@ class renderSubmitDialog(QtWidgets.QDialog):
 		self.setWindowFlags(QtCore.Qt.Dialog)
 		self.ui.setWindowFlags(QtCore.Qt.CustomizeWindowHint | 
 			                   QtCore.Qt.WindowTitleHint)
+
 		# Connect signals & slots
 		self.ui.type_comboBox.currentIndexChanged.connect(self.setJobTypeFromComboBox)
 		self.ui.sceneBrowse_toolButton.clicked.connect(self.sceneBrowse)
