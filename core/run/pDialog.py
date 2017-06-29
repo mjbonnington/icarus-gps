@@ -50,15 +50,15 @@ class dialog(QtWidgets.QDialog):
 				self.ui.setStyleSheet(fh.read())
 
 		# Set window flags
-		# self.setWindowFlags(QtCore.Qt.Dialog)
+		self.setWindowFlags(QtCore.Qt.Dialog)
 		self.ui.setWindowFlags(QtCore.Qt.CustomizeWindowHint | 
 			                   QtCore.Qt.WindowTitleHint)
 		# if os.environ['IC_RUNNING_OS'] == 'Darwin':
-		# 	self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | 
+		# 	self.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | 
 		# 	                    QtCore.Qt.X11BypassWindowManagerHint | 
 		# 	                    QtCore.Qt.WindowCloseButtonHint)
 		# else:
-		# 	self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | 
+		# 	self.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | 
 		# 		                QtCore.Qt.WindowCloseButtonHint)
 
 		# Connect signals & slots

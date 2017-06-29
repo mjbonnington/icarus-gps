@@ -50,9 +50,6 @@ class renderSubmitDialog(QtWidgets.QDialog):
 		self.setObjectName(WINDOW_OBJECT)
 		self.setWindowTitle(WINDOW_TITLE)
 
-		# Set window flags
-		self.setWindowFlags(QtCore.Qt.Dialog)
-
 		# Load UI & stylesheet
 		self.ui = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], UI_FILE))
 		if STYLESHEET is not None:
@@ -60,6 +57,10 @@ class renderSubmitDialog(QtWidgets.QDialog):
 			with open(qss, "r") as fh:
 				self.ui.setStyleSheet(fh.read())
 
+		# Set window flags
+		self.setWindowFlags(QtCore.Qt.Dialog)
+		self.ui.setWindowFlags(QtCore.Qt.CustomizeWindowHint | 
+			                   QtCore.Qt.WindowTitleHint)
 		# Connect signals & slots
 		self.ui.type_comboBox.currentIndexChanged.connect(self.setJobTypeFromComboBox)
 		self.ui.sceneBrowse_toolButton.clicked.connect(self.sceneBrowse)
