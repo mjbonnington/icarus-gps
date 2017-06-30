@@ -201,7 +201,7 @@ class settingsDialog(QtWidgets.QDialog):
 
 		self.ui.settings_frame.close()
 		ui_file = "settings_%s_ui.ui" %category
-		self.ui.settings_frame = QtCompat.load_ui(fname=os.path.join(os.path.dirname(os.path.realpath(__file__)), ui_file))
+		self.ui.settings_frame = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], ui_file))
 		self.ui.verticalLayout_2.addWidget(self.ui.settings_frame)
 
 		# Load values into form widgets
@@ -246,10 +246,10 @@ class settingsDialog(QtWidgets.QDialog):
 				# Combo box(es)...
 				if isinstance(widget, QtWidgets.QComboBox):
 					if text is not "":
-						widget.setCurrentIndex( widget.findText(text) )
+						widget.setCurrentIndex(widget.findText(text))
 					#print "%s: %s" %(attr, widget.currentText())
 					widget.currentIndexChanged.connect(signalMapper.map)
-					widget.currentIndexChanged.connect( lambda current: self.storeComboBoxValue(current) )
+					widget.currentIndexChanged.connect(lambda current: self.storeComboBoxValue(current))
 
 				# Line edit(s)...
 				if isinstance(widget, QtWidgets.QLineEdit):
@@ -257,7 +257,7 @@ class settingsDialog(QtWidgets.QDialog):
 						widget.setText(text)
 					#print "%s: %s" %(attr, widget.text())
 					widget.textEdited.connect(signalMapper.map)
-					widget.textEdited.connect( lambda current: self.storeValue(current) )
+					widget.textEdited.connect(lambda current: self.storeValue(current))
 
 				# Plain text edit(s)...
 				if isinstance(widget, QtWidgets.QPlainTextEdit):
@@ -265,7 +265,7 @@ class settingsDialog(QtWidgets.QDialog):
 						widget.setPlainText(text)
 					#print "%s: %s" %(attr, widget.text())
 					widget.textChanged.connect(signalMapper.map)
-					widget.textChanged.connect( lambda: self.storeValue() ) # This seems to give an TypeError when passing 'current', but still works as expected
+					widget.textChanged.connect(lambda: self.storeValue()) # This seems to give an TypeError when passing 'current', but still works as expected
 
 				# Spin box(es)...
 				if isinstance(widget, QtWidgets.QSpinBox):
@@ -273,7 +273,7 @@ class settingsDialog(QtWidgets.QDialog):
 						widget.setValue( int(text) )
 					#print "%s: %s" %(attr, widget.value())
 					widget.valueChanged.connect(signalMapper.map)
-					widget.valueChanged.connect( lambda current: self.storeValue(current) )
+					widget.valueChanged.connect(lambda current: self.storeValue(current))
 
 				# Double spin box(es)...
 				if isinstance(widget, QtWidgets.QDoubleSpinBox):
@@ -281,7 +281,7 @@ class settingsDialog(QtWidgets.QDialog):
 						widget.setValue( float(text) )
 					#print "%s: %s" %(attr, widget.value())
 					widget.valueChanged.connect(signalMapper.map)
-					widget.valueChanged.connect( lambda current: self.storeValue(current) )
+					widget.valueChanged.connect(lambda current: self.storeValue(current))
 
 		# Run special function to deal with resolution panel
 		if category == 'time':
@@ -758,7 +758,7 @@ class settingsDialog(QtWidgets.QDialog):
 				comboBox.setCurrentIndex( comboBox.findText(text) )
 
 			comboBox.currentIndexChanged.connect(signalMapper.map)
-			comboBox.currentIndexChanged.connect( lambda current: self.storeComboBoxValue(current) )
+			comboBox.currentIndexChanged.connect(lambda current: self.storeComboBoxValue(current))
 			formLayout[0].setWidget(i, QtWidgets.QFormLayout.FieldRole, comboBox)
 
 
@@ -799,8 +799,9 @@ class settingsDialog(QtWidgets.QDialog):
 		""" Get the value of the currently edited ComboBox. A bit hacky
 		"""
 		frame = self.ui.settings_frame
-		val = frame.findChildren(QtWidgets.QComboBox, '%s_comboBox' %self.currentAttr)[0].currentText()
-		self.storeValue(val)
+		print(self.currentAttr)
+		#val = frame.findChildren(QtWidgets.QComboBox, '%s_comboBox' %self.currentAttr)[0].currentText()
+		#self.storeValue(val)
 
 
 	def storeProperties(self, category):

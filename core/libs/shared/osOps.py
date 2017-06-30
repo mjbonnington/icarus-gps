@@ -15,20 +15,25 @@ import re
 import verbose
 
 
-def createDir(path, umask='000'):
-	""" Creates directory for the specified path with the specified umask.
-		Could probably be rewritten to use Python's own functions? Also remove
-		redundant umask functionality.
+def createDir(path):
+	""" Create a directory with the specified path.
+		TODO: add exception handling.
 	"""
 	path = os.path.normpath(path)
 
-	if not os.path.isdir(path):
+	if os.path.isdir(path):
+		verbose.warning("Directory already exists: %s" %path)
+
+	else:
 		os.makedirs(path)
+
+		# Hide the folder if its name starts with a dot, as these files are
+		# not automatically hidden on Windows
 		if os.environ['IC_RUNNING_OS'] == 'Windows':
-			if os.path.basename(path).startswith('.'): # hide the folder if the name starts with a dot, as these files are not automatically hidden on Windows
+			if os.path.basename(path).startswith('.'):
 				setHidden(path)
 
-		verbose.print_('mkdir "%s"' %path, 4) # commenting this line out as it causes an error if user config dir doesn't exist
+		verbose.print_('mkdir "%s"' %path, 4)  # this causes an error if user config dir doesn't exist
 		return path
 
 
@@ -57,15 +62,15 @@ def hardLink(source, destination, umask='000'):
 	dst = os.path.normpath(destination)
 
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
-		if os.path.isdir(dst): # if destination is a folder, append the filename from the source
+		if os.path.isdir(dst):  # if destination is a folder, append the filename from the source
 			filename = os.path.basename(src)
 			dst = os.path.join(dst, filename)
 
-		if os.path.isfile(dst): # delete the destination file if it already exists - this is to mimic the Unix behaviour and force creation of the hard link
+		if os.path.isfile(dst):  # delete the destination file if it already exists - this is to mimic the Unix behaviour and force creation of the hard link
 			os.system('del %s /f /q' % dst)
 
-		#cmdStr = 'mklink /H %s %s' % (dst, src) # this only works with local NTFS volumes
-		cmdStr = 'fsutil hardlink create %s %s >nul' % (dst, src) # works over SMB network shares; suppressing output to null
+		#cmdStr = 'mklink /H %s %s' % (dst, src)  # this only works with local NTFS volumes
+		cmdStr = 'fsutil hardlink create %s %s >nul' % (dst, src)  # works over SMB network shares; suppressing output to null
 	else:
 		cmdStr = '%s; ln -f %s %s' % (setUmask(umask), src, dst)
 
@@ -182,11 +187,11 @@ def absolutePath(relPath, stripTrailingSlash=False):
 def relativePath(absPath, token, tokenFormat='standard'):
 	""" Convert an absolute path to a relative path.
 		'token' is the name of an environment variable to replace.
-		Format specifies the environment variable format:
-			standard:  $NAME
-			bracketed: ${NAME}
-			windows:   %NAME%
-			nuke:      [getenv NAME]
+		'tokenFormat' specifies the environment variable format:
+			standard:  $VAR
+			bracketed: ${VAR}
+			windows:   %VAR%
+			nuke:      [getenv VAR]
 	"""
 	try:
 		if tokenFormat == 'standard':
@@ -199,8 +204,8 @@ def relativePath(absPath, token, tokenFormat='standard'):
 			formattedToken = '[getenv %s]' %token
 
 		envVar = os.environ[token].replace('\\', '/')
-		relPath = absPath.replace('\\', '/') # ensure backslashes from Windows paths are changed to forward slashes
-		relPath = relPath.replace(envVar, formattedToken) # change to relative path
+		relPath = absPath.replace('\\', '/')  # ensure backslashes from Windows paths are changed to forward slashes
+		relPath = relPath.replace(envVar, formattedToken)  # change to relative path
 
 		return os.path.normpath( relPath ).replace("\\", "/")
 
@@ -223,7 +228,7 @@ def translatePath(jobPath):
 				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTWIN'], os.environ['FILESYSTEMROOTOSX'])
 			elif jobPath.startswith(os.environ['FILESYSTEMROOTLINUX']):
 				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTLINUX'], os.environ['FILESYSTEMROOTOSX'])
-		else: # linux
+		else:  # Linux
 			if jobPath.startswith(os.environ['FILESYSTEMROOTWIN']):
 				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTWIN'], os.environ['FILESYSTEMROOTLINUX'])
 			elif jobPath.startswith(os.environ['FILESYSTEMROOTOSX']):

@@ -35,7 +35,7 @@
       <bool>true</bool>
      </property>
      <property name="plainText">
-      <string>These settings are for advanced users only. Please do not change unless you know what you're doing!</string>
+      <string>Warning: these settings will affect the operation of Icarus for all users. Please do not change unless you know what you're doing!</string>
      </property>
      <property name="backgroundVisible">
       <bool>false</bool>
@@ -63,7 +63,7 @@
         <bool>true</bool>
        </property>
        <property name="xmlTag" stdset="0">
-        <string>userPrefsRemote</string>
+        <string>userPrefsLocation_Remote</string>
        </property>
       </widget>
      </item>
@@ -73,11 +73,21 @@
         <string>Home folder</string>
        </property>
        <property name="xmlTag" stdset="0">
-        <string>userPrefsLocal</string>
+        <string>userPrefsLocation_Local</string>
        </property>
       </widget>
      </item>
     </layout>
+   </item>
+   <item row="2" column="1">
+    <widget class="QPushButton" name="editPaths_pushButton">
+     <property name="text">
+      <string>Edit Root Paths...</string>
+     </property>
+     <property name="exec" stdset="0">
+      <string>editPaths</string>
+     </property>
+    </widget>
    </item>
    <item row="3" column="0">
     <widget class="QLabel" name="jobsRelDir_label">
@@ -89,16 +99,6 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="shotsRelDir_label">
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Shots directory&lt;/span&gt;&lt;/p&gt;&lt;p&gt;This is the name for the subdirectory within the folder structure for each job where individual shots will be stored.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="text">
-      <string>Shots directory:</string>
-     </property>
-    </widget>
-   </item>
    <item row="3" column="1">
     <widget class="QLineEdit" name="jobsRelDir_lineEdit">
      <property name="text">
@@ -106,6 +106,16 @@
      </property>
      <property name="xmlTag" stdset="0">
       <string>jobsRelDir</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="shotsRelDir_label">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Shots directory&lt;/span&gt;&lt;/p&gt;&lt;p&gt;This is the name for the subdirectory within the folder structure for each job where individual shots will be stored.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>Shots directory:</string>
      </property>
     </widget>
    </item>
@@ -136,16 +146,6 @@
      </property>
      <property name="xmlTag" stdset="0">
       <string>globalAssetLib</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QPushButton" name="editPaths_pushButton">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="text">
-      <string>Edit Root Paths...</string>
      </property>
     </widget>
    </item>

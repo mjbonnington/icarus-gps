@@ -5,7 +5,7 @@
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2015-2016 Gramercy Park Studios
 #
-# Manipulates job settings data stored in an XML database.
+# Manipulates job / shot settings data stored in an XML database.
 # This class is also used to manage asset metadata.
 
 

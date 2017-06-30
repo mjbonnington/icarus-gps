@@ -273,17 +273,17 @@ class icarusApp(QtWidgets.QMainWindow):
 		# self.actionRenderQueue.triggered.connect(self.launchRenderQueue)
 		self.ui.toolMenu_toolButton.addAction(self.actionRenderQueue)
 
-		# self.separator = QtWidgets.QAction(None)
-		# self.separator.setSeparator(True)
-		# self.ui.toolMenu_toolButton.addAction(self.separator)
+		self.separator = QtWidgets.QAction(None)
+		self.separator.setSeparator(True)
+		self.ui.toolMenu_toolButton.addAction(self.separator)
 
-		# self.actionIcarusSettings = QtWidgets.QAction("Global Settings...", None)
-		# self.actionIcarusSettings.triggered.connect(self.globalSettings)
-		# self.ui.toolMenu_toolButton.addAction(self.actionIcarusSettings)
+		self.actionUserSettings = QtWidgets.QAction("User Settings...", None)
+		self.actionUserSettings.triggered.connect(self.userSettings)
+		self.ui.toolMenu_toolButton.addAction(self.actionUserSettings)
 
-		# self.actionUserSettings = QtWidgets.QAction("User Settings...", None)
-		# self.actionUserSettings.triggered.connect(self.userSettings)
-		# self.ui.toolMenu_toolButton.addAction(self.actionUserSettings)
+		self.actionIcarusSettings = QtWidgets.QAction("Global Settings...", None)
+		self.actionIcarusSettings.triggered.connect(self.globalSettings)
+		self.ui.toolMenu_toolButton.addAction(self.actionIcarusSettings)
 
 
 		# Register status bar with the verbose module in order to print
@@ -964,19 +964,20 @@ Developers: %s
 			categoryLs = ['user', ]
 			xmlData = os.path.join(os.environ['IC_USERPREFS'], 'userPrefs.xml')
 		elif settingsType == "Global":
-			categoryLs = ['global', ]
+			categoryLs = ['global', 'user']  # remove 'user'
 			xmlData = os.path.join(os.path.join(os.environ['IC_CONFIGDIR'], 'globalPrefs.xml'))
 
-		import job_settings__main__  # Change this to generic class when it's ready
-		# reload(job_settings__main__)  # Python 3 doesn't like this
-		settingsEditor = job_settings__main__.settingsDialog(parent=self, settingsType=settingsType, categoryLs=categoryLs, xmlData=xmlData, autoFill=autoFill)
+		# import job_settings__main__  # Change this to generic class when it's ready
+		# settingsEditor = job_settings__main__.settingsDialog(parent=self, settingsType=settingsType, categoryLs=categoryLs, xmlData=xmlData, autoFill=autoFill)
+		import settings
+		settingsEditor = settings.dialog(parent=self)
 
 		@settingsEditor.customSignal.connect
 		def storeAttr(attr):
 			settingsEditor.currentAttr = attr  # This feels a bit hacky - need to find a way to add this function to main class
 
-		# settingsEditor.show()
-		settingsEditor.ui.exec_()
+		# settingsEditor.ui.exec_()
+		settingsEditor.display(settingsType=settingsType, categoryLs=categoryLs, xmlData=xmlData, autoFill=autoFill)
 		return settingsEditor.returnValue  # Return True if user clicked Save, False for Cancel
 
 
@@ -984,16 +985,14 @@ Developers: %s
 		""" Open job settings dialog wrapper function.
 		"""
 		if self.openSettings("Job"):
-			# setJob.setup(self.job, self.shot) # Set up environment variables
-			self.j.setup(self.job, self.shot) # Set up environment variables
+			self.j.setup(self.job, self.shot)  # Set up environment variables
 
 
 	def shotSettings(self):
 		""" Open shot settings dialog wrapper function.
 		"""
 		if self.openSettings("Shot"):
-			# setJob.setup(self.job, self.shot) # Set up environment variables
-			self.j.setup(self.job, self.shot) # Set up environment variables
+			self.j.setup(self.job, self.shot)  # Set up environment variables
 
 
 	def userSettings(self):

@@ -59,21 +59,6 @@ QAbstractScrollArea:disabled {
 	background: transparent;
 }
 
-*[mandatoryField="true"] { /* custom background colour for mandatory fields */
-	background: #de727a;
-	color: #222;
-	/*border-color: #de727a;*/
-}
-
-*[inheritedValue="true"] { /* custom colour for inherited attribute values */
-	/*color: #de727a;*/
-	border-color: #de727a;
-}
-
-*[noBackground="true"] { /* no background colour */
-	background: transparent;
-}
-
 /* End Generic Elements */
 
 
@@ -1344,4 +1329,21 @@ QStatusBar {
 }*/
 
 /* End Status Bar */
+
+
+*[mandatoryField="true"] { /* custom background colour for mandatory fields */
+	background: #de727a;
+	color: #222;
+	/*border-color: #de727a;*/
+}
+
+*[inheritedValue="true"] { /* custom colour for inherited attribute values */
+	background: #fdf5a9;
+	color: #222;
+	border-color: #de727a;
+}
+
+*[noBackground="true"] { /* no background colour */
+	background: transparent;
+}
 
