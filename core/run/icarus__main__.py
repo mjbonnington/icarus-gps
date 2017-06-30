@@ -2083,6 +2083,13 @@ try:
 except AssertionError:
 	sys.exit("ERROR: %s requires Python version 2.7 or above." %WINDOW_TITLE)
 
+# Enable high DPI scaling
+try:
+	QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
+except AttributeError:
+	verbose.warning("High DPI scaling not available in Qt %s. User Interface elements may not display correctly." %QtCore.qVersion())
+	# pass
+
 if __name__ == '__main__':
 	run_standalone()
 

@@ -29,7 +29,7 @@ WINDOW_TITLE = "Version Manager"
 WINDOW_OBJECT = "versionManagerUI"
 
 # Set the UI and the stylesheet
-ui_file = "version_manager_ui.ui"
+UI_FILE = "version_manager_ui.ui"
 STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
 
 
