@@ -46,15 +46,15 @@ class dialog(QtWidgets.QDialog):
 		self.setObjectName(WINDOW_OBJECT)
 		self.setWindowTitle(WINDOW_TITLE)
 
-		# Set window flags
-		self.setWindowFlags(QtCore.Qt.Dialog)
-
 		# Load UI & stylesheet
 		self.ui = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], UI_FILE))
 		if STYLESHEET is not None:
 			qss=os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
 			with open(qss, "r") as fh:
 				self.ui.setStyleSheet(fh.read())
+
+		# Set window flags
+		self.setWindowFlags(QtCore.Qt.Dialog)
 
 		# Set up keyboard shortcuts
 		self.shortcut = QtWidgets.QShortcut(self)

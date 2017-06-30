@@ -14,7 +14,6 @@ import xml.etree.ElementTree as ET
 import defaultDirs
 import job__env__
 import osOps
-import userPrefs
 import verbose
 import xmlData
 
@@ -32,7 +31,7 @@ class jobs(xmlData.xmlData):
 		self.getRootPaths()
 
 
-	def setup(self, jobName, shotName):
+	def setup(self, jobName, shotName, storeLastJob=True):
 		""" Set job.
 		"""
 		jobPath = self.getPath(jobName, translate=True)
@@ -46,8 +45,10 @@ class jobs(xmlData.xmlData):
 			defaultDirs.create()
 
 			# Remember for next time
-			newEntry = '%s,%s' % (jobName, shotName)
-			userPrefs.edit('main', 'lastjob', newEntry)
+			if storeLastJob:
+				import userPrefs
+				newEntry = '%s,%s' % (jobName, shotName)
+				userPrefs.edit('main', 'lastjob', newEntry)
 
 			return True
 
@@ -229,7 +230,6 @@ class jobs(xmlData.xmlData):
 		if element is not None:
 			jobPath = element.find('path').text
 			if translate:
-				#return self.translatePath(jobPath)
 				return osOps.translatePath(jobPath)
 			else:
 				return jobPath

@@ -1,63 +1,59 @@
 #!/usr/bin/python
-#support	:Nuno Pereira - nuno.pereira@hogarthww.com
-#title    :vCtrl
+
+# [Icarus] vCtrl.py
+#
+# Nuno Pereira <nuno.pereira@gps-ldn.com>
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2013-2017 Gramercy Park Studios
+#
+# Manage version control for assets.
 
 
-import os, string
+import os
+import string
+
 
 def version(vCtrlFolder, current=False):
-
-	#####################DETERMINES CURRENT VERSION BASED ON VC OR DIRECTORY CONTENTS######################
-	#######################################################################################################
-	
-	##CHECKS FOR DIRECTORY EXISTENCE##
-	if not os.path.isdir(vCtrlFolder):
-		print("vCtrl: directory doesn't exist.")
-		currentVersion = 0
-	else:
-		##TRIES TO FIGURE OUT VERSIONING BASED ON EXISTENT CONTENTS##
+	""" Determine current version based on vc or directory contents.
+	"""
+	# Check if directory exists
+	if os.path.isdir(vCtrlFolder):
+		# Try to figure out versioning based on existing contents
 		try:
 			vCtrlFileLs = os.listdir(vCtrlFolder)
 			vrsLs = []
-			##CHECKS ALL ITEMS OF vCtrlFolder CHECKS FOR v### PATTERN.##
+			# Check all items in vCtrlFolder for 'v###' pattern
 			for vCtrlItem in vCtrlFileLs:
-				##gets first item of split list if _ found to strip out 'approved' from version'
+				# Get first item of split list if _ found to strip out 'approved' from version
 				contentVrs = vCtrlItem.split("_")[0]
-				##IF FOUND STRIPS v
+				# If found strip 'v'
 				if contentVrs.startswith("v"):
-					contentVrs = string.replace(contentVrs, "v", "")
+					contentVrs = contentVrs.replace("v", "")
 				elif contentVrs.startswith(".v"):
-					contentVrs = string.replace(contentVrs, ".v", "")
-				##CHECKS FOR NUMERIC AND ADDS IT TO vrsLs.
+					contentVrs = contentVrs.replace(".v", "")
+				# Check for numeral(s) and add to vrsLs
 				if contentVrs.isdigit():
 					vrsLs.append(contentVrs)
-			##SORTS vrsLs AND RETRIEVES LAST ITEM (HIGHEST DIGIT)##
+			# Sort vrsLs and retrieve last item (highest digit)
 			vrsLs.sort()
-		#	print(vrsLs)
+			# print(vrsLs)
 			currentVersion = int(vrsLs[-1])
-		
-		##IF NO VERSIONING DETECTED IN CONTENTS STARTS NEW VERSIONING##
+
+		# If no versioning detected in contents start new versioning
 		except IndexError:
 			currentVersion = 0
-	
-	
-	########################################PADDING CONTROL AND VERSIONING INCREMENTING#########################
-	############################################################################################################
-	
-	padding = "00"
+	else:
+		print("vCtrl: directory doesn't exist.")
+		currentVersion = 0
+
+	# Padding control and versioning increment
 	if current:
 		newVersion = currentVersion
 	else:
 		newVersion = currentVersion + 1
-	if newVersion > 9:
-		padding = "0"
-	
-		
-	#####################################################RETURN####################################################
-	###############################################################################################################
-	
-	##APPEDING "v" AND PADDING TO VERSION##
-	newVersion = "v%s%s" % (padding, newVersion)
-	
-	
+
+	# Prepend 'v' and padding to version
+	newVersion = "v%03d" %newVersion
+
 	return newVersion
+

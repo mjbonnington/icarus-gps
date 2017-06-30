@@ -14,7 +14,7 @@ import math
 import os
 import sys
 
-from Qt import QtCore, QtGui, QtWidgets, QtCompat
+from Qt import __binding__, QtCore, QtGui, QtWidgets, QtCompat
 from Qt.QtCore import QSignalMapper, Signal
 
 # Import custom modules
@@ -36,7 +36,7 @@ WINDOW_OBJECT = "settingsUI"
 
 # Set the UI and the stylesheet
 UI_FILE = "settings_ui.ui"
-STYLESHEET = None  # Set to None to use the parent app's stylesheet
+STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
 
 
 # ----------------------------------------------------------------------------
@@ -56,14 +56,15 @@ class settingsDialog(QtWidgets.QDialog):
 		self.setObjectName(WINDOW_OBJECT)
 		self.setWindowTitle("%s %s" %(settingsType, WINDOW_TITLE))
 
+		# Load UI & stylesheet
+		self.ui = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], UI_FILE))
+		if STYLESHEET is not None:
+			qss=os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
+			with open(qss, "r") as fh:
+				self.ui.setStyleSheet(fh.read())
+
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Dialog)
-
-		# Load UI
-		self.ui = QtCompat.load_ui(fname=os.path.join(os.path.dirname(os.path.realpath(__file__)), UI_FILE))
-		if STYLESHEET is not None:
-			with open(STYLESHEET, "r") as fh:
-				self.ui.setStyleSheet(fh.read())
 
 		# Some global variables to hold the currently edited attribute and its value. A bit hacky
 		self.currentCategory = ""
@@ -183,7 +184,10 @@ class settingsDialog(QtWidgets.QDialog):
 
 		# Create the signal mapper
 		signalMapper = QSignalMapper(self)
-		signalMapper.mapped.connect(self.customSignal)  # TEMP DISABLE new-style signal connection not working with PyQt5
+		if __binding__ in ('PySide'):
+			signalMapper.mapped.connect(self.customSignal)  # TEMP DISABLE new-style signal connection not working with PyQt5
+		else:
+			print("Using %s, custom signal mapper not working" %__binding__)
 		# QtCore.QObject.connect(signalMapper, QtCore.SIGNAL("mapped()"), self.customSignal, SLOT("map()"))
 
 		# Create new frame to hold properties UI
@@ -708,7 +712,10 @@ class settingsDialog(QtWidgets.QDialog):
 
 		# Create the signal mapper
 		signalMapper = QSignalMapper(self)
-		signalMapper.mapped.connect(self.customSignal)  # TEMP DISABLE new-style signal connection not working with PyQt5
+		if __binding__ in ('PySide'):
+			signalMapper.mapped.connect(self.customSignal)  # TEMP DISABLE new-style signal connection not working with PyQt5
+		else:
+			print("Using %s, custom signal mapper not working" %__binding__)
 
 		noSelectText = ""
 		apps = self.ap.getApps() # get apps and versions

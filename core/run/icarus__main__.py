@@ -32,16 +32,15 @@ try:
 except ImportError:
 	pass
 
-# Parse command-line arguments
 if os.environ['IC_ENV'] == "STANDALONE":
+	# Parse command-line arguments
 	parser = argparse.ArgumentParser()
 	parser.add_argument("-u", "--user", help="override username")
 	args = parser.parse_args()
 	if args.user:
 		os.environ['IC_USERNAME'] = args.user.lower()
 
-# Initialise Icarus environment and add libs to sys path
-if os.environ['IC_ENV'] == "STANDALONE":
+	# Initialise Icarus environment and add libs to sys path
 	import env__init__
 	env__init__.setEnv()
 
@@ -62,7 +61,7 @@ import osOps
 import pblChk
 import pblOptsPrc
 import sequence
-import setJob
+# import setJob
 import userPrefs
 import verbose
 
@@ -102,9 +101,6 @@ class icarusApp(QtWidgets.QMainWindow):
 		self.setObjectName(WINDOW_OBJECT)
 		self.setWindowTitle(WINDOW_TITLE)
 
-		# Set window flags
-		self.setWindowFlags(QtCore.Qt.Window)
-
 		# Load UI & stylesheet
 		self.ui = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], UI_FILE))
 		if STYLESHEET is not None:
@@ -115,10 +111,17 @@ class icarusApp(QtWidgets.QMainWindow):
 		# Set the main widget
 		self.setCentralWidget(self.ui)
 
-		# Restore window geometry and state (restoreState incompatible with PyQt5)
-		self.settings = QtCore.QSettings(VENDOR, WINDOW_TITLE)
-		self.restoreGeometry(self.settings.value("geometry", ""))
-		# self.restoreState(self.settings.value("windowState", ""))
+		# Set window flags
+		self.setWindowFlags(QtCore.Qt.Window)
+
+		# Restore window geometry and state
+		# (Restore state may cause issues with PyQt5)
+		try:
+			self.settings = QtCore.QSettings(VENDOR, WINDOW_TITLE)
+			self.restoreGeometry(self.settings.value("geometry", ""))
+			# self.restoreState(self.settings.value("windowState", ""))
+		except:
+			pass
 
 		# Instantiate jobs class
 		self.j = jobs.jobs()
@@ -1037,29 +1040,27 @@ Developers: %s
 	def launchRenderSubmit(self):
 		""" Launch Render Submitter window.
 		"""
-		import submit__main__
-		# reload(submit__main__)  # Python 3 doesn't like this
-		#submit__main__.run_(frameRange='1-10', flags='-rl CurrentLayer')
+		import render_submit
+		#render_submit.run_(frameRange='1-10', flags='-rl CurrentLayer')
 		try:
-			self.renderSubmitApp.show()
-			self.renderSubmitApp.raise_()
+			self.renderSubmitDialog.display()
+			# self.renderSubmitDialog.raise_()
 		except AttributeError:
-			self.renderSubmitApp = submit__main__.gpsRenderSubmitApp()
-			#print self.renderSubmitApp
-			self.renderSubmitApp.show()
+			self.renderSubmitDialog = render_submit.renderSubmitDialog(parent=self)
+			self.renderSubmitDialog.display()
+		# renderSubmitDialog = render_submit.renderSubmitDialog(parent=self)
+		# renderSubmitDialog.display()
 
 
 	def launchRenderQueue(self):
 		""" Launch Render Queue Manager window.
 		"""
-		import queue__main__
-		# reload(queue__main__)  # Python 3 doesn't like this
+		import render_queue__main__
 		try:
 			self.renderQueueApp.show()
 			self.renderQueueApp.raise_()
 		except AttributeError:
-			self.renderQueueApp = queue__main__.gpsRenderQueueApp()
-			#print self.renderQueueApp
+			self.renderQueueApp = render_queue__main__.renderQueueApp()
 			self.renderQueueApp.show()
 
 
@@ -1876,10 +1877,14 @@ Developers: %s
 
 	def closeEvent(self, event):
 		""" Store window geometry and state when closing the app.
-			(incompatible with PyQt5)
+			(Save state may cause issues with PyQt5)
 		"""
-		self.settings.setValue("geometry", self.saveGeometry())
-		# self.settings.setValue("windowState", self.saveState())
+		try:
+			self.settings.setValue("geometry", self.saveGeometry())
+			# self.settings.setValue("windowState", self.saveState())
+		except:
+			pass
+
 		QtWidgets.QMainWindow.closeEvent(self, event)
 
 

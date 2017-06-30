@@ -56,9 +56,6 @@ class previewUI(QtWidgets.QMainWindow):
 		self.setObjectName(WINDOW_OBJECT)
 		self.setWindowTitle(WINDOW_TITLE)
 
-		# Window type
-		self.setWindowFlags(QtCore.Qt.Tool)
-
 		# Load UI
 		self.ui = QtCompat.load_ui(fname=os.path.join(os.path.dirname(os.path.realpath(__file__)), UI_FILE))
 		if STYLESHEET is not None:
@@ -67,6 +64,9 @@ class previewUI(QtWidgets.QMainWindow):
 
 		# Set the main widget
 		self.setCentralWidget(self.ui)
+
+		# Set window flags
+		self.setWindowFlags(QtCore.Qt.Tool)
 
 		# Connect signals & slots
 		self.ui.preview_pushButton.clicked.connect(self.preview)
