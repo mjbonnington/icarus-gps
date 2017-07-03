@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>420</height>
+    <width>673</width>
+    <height>557</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -119,32 +119,61 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;User preferences location&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Choose whether to store user preferences in the pipeline config directory on the server, or in the user's home folder. If you have roaming profiles enabled, it's best to store in the home folder.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
-      <string>RadioButton group:</string>
+      <string>Radio Buttons:</string>
      </property>
     </widget>
    </item>
    <item row="6" column="1">
-    <layout class="QHBoxLayout" name="radioButton_horizontalLayout">
-     <item>
-      <widget class="QRadioButton" name="radioButton_option1_radioButton">
+    <layout class="QGridLayout" name="radioButton_gridLayout">
+     <item row="0" column="0">
+      <widget class="QRadioButton" name="radioButton1">
        <property name="text">
         <string>Option 1</string>
-       </property>
-       <property name="xmlTag" stdset="0">
-        <string>radioButton_option1</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="radioButton_option2_radioButton">
-       <property name="text">
-        <string>Option 2</string>
        </property>
        <property name="checked">
         <bool>true</bool>
        </property>
        <property name="xmlTag" stdset="0">
-        <string>radioButton_option2</string>
+        <string>radioButton</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QRadioButton" name="radioButton3">
+       <property name="text">
+        <string>Option 2</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+       <property name="xmlTag" stdset="0">
+        <string>radioButton</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QRadioButton" name="radioButton2">
+       <property name="text">
+        <string>Option 3</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+       <property name="xmlTag" stdset="0">
+        <string>radioButton</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QRadioButton" name="radioButton4">
+       <property name="text">
+        <string>Option 4</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+       <property name="xmlTag" stdset="0">
+        <string>radioButton</string>
        </property>
       </widget>
      </item>

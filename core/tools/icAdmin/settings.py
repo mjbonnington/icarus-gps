@@ -169,19 +169,19 @@ class dialog(QtWidgets.QDialog):
 		inherited = False
 
 		# Store the widget values of the currently open page
-		if storeProperties:
-			self.storeProperties(self.currentCategory)
+		# if storeProperties:
+		# 	self.storeProperties(self.currentCategory)
 
 		# verbose.print_("\n[%s]" %category, 4)
 		self.currentCategory = category  # a bit hacky
 
 		# Create the signal mapper
-		signalMapper = QSignalMapper(self)
-		if __binding__ in ('PySide'):
-			signalMapper.mapped.connect(self.customSignal)  # not working with PyQt5
-		else:
-			print("Using %s, custom signal mapper not working" %__binding__)
-		# QtCore.QObject.connect(signalMapper, QtCore.SIGNAL("mapped()"), self.customSignal, SLOT("map()"))
+		# signalMapper = QSignalMapper(self)
+		# if __binding__ in ('PySide'):
+		# 	signalMapper.mapped.connect(self.customSignal)  # not working with PyQt5
+		# else:
+		# 	print("Using %s, custom signal mapper not working" %__binding__)
+		# # QtCore.QObject.connect(signalMapper, QtCore.SIGNAL("mapped()"), self.customSignal, SLOT("map()"))
 
 		# Create new frame to hold properties UI & load into frame
 		self.ui.settings_frame.close()
@@ -206,91 +206,104 @@ class dialog(QtWidgets.QDialog):
 
 		for widget in widgets:
 			#attr = widget.objectName().split('_')[0] # use first part of widget object's name
-			attr = widget.property('xmlTag') # use widget's dynamic 'xmlTag'
+			attr = widget.property('xmlTag')  # Use widget's dynamic 'xmlTag'
 
 			if attr:
-				signalMapper.setMapping(widget, attr)
+				# signalMapper.setMapping(widget, attr)
 
-				if category == 'camera': # or category == 'time': # nasty hack to avoid camera panel inheriting non-existent values - fix with 'inheritable' attribute to UI file
-					text = self.xd.getValue(category, attr)
-				else:
-					text, inherited = self.inheritFrom(category, attr)
+				value = self.xd.getValue(category, attr)
+				# if category == 'camera': # or category == 'time': # nasty hack to avoid camera panel inheriting non-existent values - fix with 'inheritable' attribute to UI file
+				# 	value = self.xd.getValue(category, attr)
+				# else:
+				# 	value, inherited = self.inheritFrom(category, attr)
 
-				if inherited:
-					widget.setProperty('xmlTag', None)
-					widget.setProperty('inheritedValue', True)
-					widget.setToolTip("This value is being inherited. Change the value to override the inherited value.")
+				# if inherited:
+				# 	widget.setProperty('xmlTag', None)
+				# 	widget.setProperty('inheritedValue', True)
+				# 	widget.setToolTip("This value is being inherited. Change the value to override the inherited value.")
 
-					# Apply pop-up menu to remove override - can't get to work here
-					#widget.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+				# 	# Apply pop-up menu to remove override - can't get to work here
+				# 	#widget.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
-					#actionRemoveOverride = QtWidgets.QAction("Remove override", None)
-					#actionRemoveOverride.triggered.connect(self.removeOverrides)
-					#widget.addAction(actionRemoveOverride)
+				# 	#actionRemoveOverride = QtWidgets.QAction("Remove override", None)
+				# 	#actionRemoveOverride.triggered.connect(self.removeOverrides)
+				# 	#widget.addAction(actionRemoveOverride)
 
-				# Set up handlers for different widget types...
+				# Set up handlers for different widget types & apply values...
 
 				# Spin box(es)...
 				if isinstance(widget, QtWidgets.QSpinBox):
-					if text is not "":
-						widget.setValue(int(text))
-					#print "%s: %s" %(attr, widget.value())
-					widget.valueChanged.connect(signalMapper.map)
+					# widget.valueChanged.connect(signalMapper.map)
 					widget.valueChanged.connect(lambda value: self.storeValue(value))
+					if value is not "":
+						widget.setValue(int(value))
+					if storeProperties:
+						self.storeValueX(attr, widget.value())
 
 				# Double spin box(es)...
-				if isinstance(widget, QtWidgets.QDoubleSpinBox):
-					if text is not "":
-						widget.setValue(float(text))
-					#print "%s: %s" %(attr, widget.value())
-					widget.valueChanged.connect(signalMapper.map)
+				elif isinstance(widget, QtWidgets.QDoubleSpinBox):
+					# widget.valueChanged.connect(signalMapper.map)
 					widget.valueChanged.connect(lambda value: self.storeValue(value))
+					if value is not "":
+						widget.setValue(float(value))
+					if storeProperties:
+						self.storeValueX(attr, widget.value())
 
 				# Line edit(s)...
-				if isinstance(widget, QtWidgets.QLineEdit):
-					if text is not "":
-						widget.setText(text)
-					#print "%s: %s" %(attr, widget.text())
-					widget.textEdited.connect(signalMapper.map)
-					widget.textEdited.connect(lambda current: self.storeValue(current))
+				elif isinstance(widget, QtWidgets.QLineEdit):
+					# widget.textEdited.connect(signalMapper.map)
+					widget.textEdited.connect(lambda text: self.storeValue(text))
+					if value is not "":
+						widget.setText(value)
+					if storeProperties:
+						self.storeValueX(attr, widget.text())
 
 				# Plain text edit(s)...
-				if isinstance(widget, QtWidgets.QPlainTextEdit):
-					if text is not "":
-						widget.setPlainText(text)
-					#print "%s: %s" %(attr, widget.text())
-					widget.textChanged.connect(signalMapper.map)
-					widget.textChanged.connect(lambda: self.storeValue()) # This seems to give an TypeError when passing 'current', but still works as expected
+				elif isinstance(widget, QtWidgets.QPlainTextEdit):
+					# widget.textChanged.connect(signalMapper.map)
+					widget.textChanged.connect(self.storeTextEditValue)
 					# widget.textChanged.connect(lambda: self.storeValue(widget.plainText()))
+					if value is not "":
+						widget.setPlainText(value)
+					if storeProperties:
+						self.storeValueX(attr, widget.toPlainText())
 
 				# Check box(es)...
-				if isinstance(widget, QtWidgets.QCheckBox):
-					# if text is not "":
-					# 	widget.setCurrentIndex(widget.findText(text))
-					#print "%s: %s" %(attr, widget.currentText())
-					widget.toggled.connect(signalMapper.map)
+				elif isinstance(widget, QtWidgets.QCheckBox):
+					# widget.toggled.connect(signalMapper.map)
 					widget.toggled.connect(lambda checked: self.storeCheckBoxValue(checked))
+					if value is not "":
+						if value == "True":
+							widget.setCheckState(QtCore.Qt.Checked)
+						elif value == "False":
+							widget.setCheckState(QtCore.Qt.Unchecked)
 
 				# Radio button(s)...
-				if isinstance(widget, QtWidgets.QRadioButton):
-					# if text is not "":
-					# 	widget.setCurrentIndex(widget.findText(text))
-					#print "%s: %s" %(attr, widget.currentText())
-					widget.toggled.connect(signalMapper.map)
+				elif isinstance(widget, QtWidgets.QRadioButton):
+					# widget.toggled.connect(signalMapper.map)
 					widget.toggled.connect(lambda checked: self.storeRadioButtonValue(checked))
+					if value is not "":
+						if value == widget.text():
+							# widget.setAutoExclusive(False)
+							widget.setChecked(QtCore.Qt.Checked)
+							# widget.setAutoExclusive(True)
+						# else:
+						# 	widget.setAutoExclusive(False)
+						# 	widget.setChecked(QtCore.Qt.Unchecked)
+						# 	widget.setAutoExclusive(True)
 
 				# Combo box(es)...
-				if isinstance(widget, QtWidgets.QComboBox):
-					if text is not "":
-						widget.setCurrentIndex(widget.findText(text))
-					#print "%s: %s" %(attr, widget.currentText())
-					widget.currentIndexChanged.connect(signalMapper.map)
+				elif isinstance(widget, QtWidgets.QComboBox):
+					# widget.currentIndexChanged.connect(signalMapper.map)
 					widget.currentIndexChanged.connect(lambda index: self.storeComboBoxValue(index))
+					if value is not "":
+						widget.setCurrentIndex(widget.findText(value))
 
-				# Push button(s)...
-				if isinstance(widget, QtWidgets.QPushButton):
-					widget.clicked.connect(signalMapper.map)
-					widget.clicked.connect(lambda: self.execPushButton())
+		# Push button(s)...
+		if widget.property('exec'):
+			if isinstance(widget, QtWidgets.QPushButton):
+				# widget.clicked.connect(signalMapper.map)
+				widget.clicked.connect(self.execPushButton)
 
 		# # Run special function to deal with time panel
 		# if category == 'time':
@@ -305,29 +318,29 @@ class dialog(QtWidgets.QDialog):
 		# 	self.setupAppVersions()
 
 
-	def inheritFrom(self, category, attr):
-		""" Tries to get a value from the current settings type, and if no
-			value is found tries to inherit the value instead.
-			Returns two values:
-			'text' - the value of the requested attribute.
-			'inherited' - a Boolean value which is true if the value was
-			inherited.
-		"""
-		text = self.xd.getValue(category, attr)
-		inherited = False
+	# def inheritFrom(self, category, attr):
+	# 	""" Tries to get a value from the current settings type, and if no
+	# 		value is found tries to inherit the value instead.
+	# 		Returns two values:
+	# 		'text' - the value of the requested attribute.
+	# 		'inherited' - a Boolean value which is true if the value was
+	# 		inherited.
+	# 	"""
+	# 	text = self.xd.getValue(category, attr)
+	# 	inherited = False
 
-		if text is not "":
-			pass
+	# 	if text is not "":
+	# 		pass
 
-		elif self.settingsType == 'Shot':
-			jd = jobSettings.jobSettings()
-			jd.loadXML(os.path.join(os.environ['JOBDATA'], 'jobData.xml'))
-			text = jd.getValue(category, attr)
-			inherited = True
-			verbose.print_('%s.%s = %s (inheriting value from job data)' %(category, attr, text), 4)
+	# 	elif self.settingsType == 'Shot':
+	# 		jd = jobSettings.jobSettings()
+	# 		jd.loadXML(os.path.join(os.environ['JOBDATA'], 'jobData.xml'))
+	# 		text = jd.getValue(category, attr)
+	# 		inherited = True
+	# 		verbose.print_('%s.%s = %s (inheriting value from job data)' %(category, attr, text), 4)
 
-		# print("%s/%s: got value %s, inherited=%s" %(category, attr, text, inherited))
-		return text, inherited
+	# 	# print("%s/%s: got value %s, inherited=%s" %(category, attr, text, inherited))
+	# 	return text, inherited
 
 
 # --- Snipped out custom functions ---
@@ -344,38 +357,59 @@ class dialog(QtWidgets.QDialog):
 	# 	self.openProperties('apps')
 
 
+	def storeValueX(self, attr, value=""):
+		""" Store value in XML data.
+		"""
+		verbose.print_("%s.%s=%s (%s)" %(self.currentCategory, attr, value, type(value)), 4)
+		self.xd.setValue(self.currentCategory, attr, str(value))
+
+
 	def storeValue(self, value=""):
-		""" Stores the currently edited attribute value into the XML data
+		""" Get the value from a Spin Box, Double Spin Box or Line Edit and
+			store in XML data.
 		"""
 		# self.currentValue = str(val) # value must be a string for XML
 		# verbose.print_('%s.%s = %s' %(self.currentCategory, self.currentAttr, self.currentValue), 4)
 		# self.xd.setValue(self.currentCategory, self.currentAttr, self.currentValue)
-		print("[%s, %s] %s=%s" %(type(self.sender()), type(value), self.sender().property('xmlTag'), value))
+		attr = self.sender().property('xmlTag')
+		self.storeValueX(attr, value)
+
+
+	def storeTextEditValue(self):
+		""" Get the value from a Plain Text Edit and store in XML data.
+		"""
+		attr = self.sender().property('xmlTag')
+		value = self.sender().toPlainText()
+		self.storeValueX(attr, value)
 
 
 	def storeCheckBoxValue(self, value):
-		""" Get the value from a check box widget.
+		""" Get the value from a Check Box and store in XML data.
 		"""
-		print("[%s, %s] %s=%s" %(type(self.sender()), type(value), self.sender().property('xmlTag'), value))
+		attr = self.sender().property('xmlTag')
+		self.storeValueX(attr, value)
 
 
 	def storeRadioButtonValue(self, checked):
-		""" Get the value from a radio button widget.
+		""" Get the value from a Radio Button group and store in XML data.
 		"""
 		if checked:
-			attr, value = self.sender().property('xmlTag').split("_")
-			print("[%s, %s] %s=%s" %(type(self.sender()), type(value), attr, value))
+			# attr, value = self.sender().property('xmlTag').split("_")
+			attr = self.sender().property('xmlTag')
+			value = self.sender().text()
+			self.storeValueX(attr, value)
 
 
 	def storeComboBoxValue(self, index):
-		""" Get the value of the currently edited ComboBox. A bit hacky
+		""" Get the value from a Combo Box and store in XML data.
 		"""
 		# frame = self.ui.settings_frame
 		# print(self.currentAttr)
 		# #val = frame.findChildren(QtWidgets.QComboBox, '%s_comboBox' %self.currentAttr)[0].currentText()
 		# #self.storeValue(val)
+		attr = self.sender().property('xmlTag')
 		value = self.sender().currentText()
-		print("[%s, %s] %s=%s (index %d)" %(type(self.sender()), type(value), self.sender().property('xmlTag'), value, index))
+		self.storeValueX(attr, value)
 
 
 	def execPushButton(self):
@@ -384,38 +418,41 @@ class dialog(QtWidgets.QDialog):
 		print(self.sender().objectName(), self.sender().property('exec'))
 
 
-	def storeProperties(self, category):
-		""" Store properties for all relevant widgets on selected settings category panel
-		"""
-		widgets = self.ui.settings_frame.children()
+	# def storeProperties(self, category):
+	# 	""" Store attribute values for all relevant widgets on selected
+	# 		settings category panel.
+	# 	"""
+	# 	widgets = self.ui.settings_frame.children()
 
-		for widget in widgets:
-			attr = widget.property('xmlTag')
+	# 	for widget in widgets:
+	# 		attr = widget.property('xmlTag')
 
-			# Only store values of wigets which have the dynamic property 'xmlTag' set
-			if attr:
-				self.currentAttr = attr
+	# 		# Only store values of widgets which have the dynamic property
+	# 		# 'xmlTag' set...
+	# 		if attr:
+	# 			# self.currentAttr = attr
 
-				# Combo box(es)...
-				if isinstance(widget, QtWidgets.QComboBox):
-					#verbose.print_("%s: %s" %(attr, widget.currentText()), 4)
-					self.storeValue( widget.currentText() )
-					#self.storeComboBoxValue( widget.currentIndex() )
+	# 			# # Spin box(es)...
+	# 			# if isinstance(widget, QtWidgets.QSpinBox) or isinstance(widget, QtWidgets.QDoubleSpinBox):
+	# 			# 	#verbose.print_("%s: %s" %(attr, widget.value()), 4)
+	# 			# 	self.storeValue(widget.value())
+	# 			# 	# widget.emit()
 
-				# Line edit(s)...
-				if isinstance(widget, QtWidgets.QLineEdit):
-					#verbose.print_("%s: %s" %(attr, widget.text()), 4)
-					self.storeValue( widget.text() )
+	# 			# # Combo box(es)...
+	# 			# if isinstance(widget, QtWidgets.QComboBox):
+	# 			# 	#verbose.print_("%s: %s" %(attr, widget.currentText()), 4)
+	# 			# 	self.storeValue( widget.currentText() )
+	# 			# 	#self.storeComboBoxValue( widget.currentIndex() )
 
-				# Plain text edit(s)...
-				if isinstance(widget, QtWidgets.QPlainTextEdit):
-					#verbose.print_("%s: %s" %(attr, widget.toPlainText()), 4)
-					self.storeValue( widget.toPlainText() )
+	# 			# # Line edit(s)...
+	# 			# if isinstance(widget, QtWidgets.QLineEdit):
+	# 			# 	#verbose.print_("%s: %s" %(attr, widget.text()), 4)
+	# 			# 	self.storeValue( widget.text() )
 
-				# Spin box(es)...
-				if isinstance(widget, QtWidgets.QSpinBox) or isinstance(widget, QtWidgets.QDoubleSpinBox):
-					#verbose.print_("%s: %s" %(attr, widget.value()), 4)
-					self.storeValue( widget.value() )
+	# 			# # Plain text edit(s)...
+	# 			# if isinstance(widget, QtWidgets.QPlainTextEdit):
+	# 			# 	#verbose.print_("%s: %s" %(attr, widget.toPlainText()), 4)
+	# 			# 	self.storeValue( widget.toPlainText() )
 
 
 	def removeOverrides(self):
@@ -433,7 +470,7 @@ class dialog(QtWidgets.QDialog):
 
 
 	def save(self):
-		""" Save data
+		""" Save data.
 		"""
 		# Store the values from widgets on the current page
 		#self.storeProperties(self.currentCategory)
@@ -450,7 +487,7 @@ class dialog(QtWidgets.QDialog):
 
 
 	def saveAndExit(self):
-		""" Save data and exit
+		""" Save data and exit dialog.
 		"""
 		if self.save():
 			self.ui.hide()
@@ -460,7 +497,7 @@ class dialog(QtWidgets.QDialog):
 
 
 	def exit(self):
-		""" Exit the dialog
+		""" Exit the dialog.
 		"""
 		self.ui.hide()
 		self.returnValue = False
