@@ -44,7 +44,7 @@ STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
 class dialog(QtWidgets.QDialog):
 	""" Main dialog class.
 	"""
-	customSignal = Signal(str)
+	# customSignal = Signal(str)
 
 	def __init__(self, parent=None):
 		super(dialog, self).__init__(parent)
@@ -102,7 +102,7 @@ class dialog(QtWidgets.QDialog):
 		self.lockUI = True
 
 		# Instantiate XML data classes
-		self.jd = jobSettings.jobSettings()
+		self.xd = jobSettings.jobSettings()
 		# self.ap = appPaths.appPaths()
 		# self.rp = resPresets.resPresets()
 		# self.cp = camPresets.camPresets()
@@ -118,12 +118,12 @@ class dialog(QtWidgets.QDialog):
 		""" Initialise or reset by reloading data
 		"""
 		# Load data from xml file(s)
-		jd_load = self.jd.loadXML(self.xmlData)
+		xd_load = self.xd.loadXML(self.xmlData)
 		# ap_load = self.ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'))
 		# rp_load = self.rp.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'resPresets.xml'))
 		# cp_load = self.cp.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'camPresets.xml'))
 
-		#if jd_load and ap_load and rp_load:
+		#if xd_load and ap_load and rp_load:
 		#	pass
 		#else:
 		#	print "Warning: XML data error."
@@ -136,7 +136,7 @@ class dialog(QtWidgets.QDialog):
 				self.ui.categories_listWidget.addItem(cat)
 
 			# Set the maximum size of the list widget
-			self.ui.categories_listWidget.setMaximumWidth(self.ui.categories_listWidget.sizeHintForColumn(0) * 2)
+			self.ui.categories_listWidget.setMaximumWidth(self.ui.categories_listWidget.sizeHintForColumn(0) * 3)
 
 			# Select the first item & show the appropriate settings panel
 			if self.currentCategory == "":
@@ -194,7 +194,7 @@ class dialog(QtWidgets.QDialog):
 
 		# # Run special function to autofill the project and job number fields - must happen before we set the widget values for defaults to work correctly
 		# if category == 'job' and self.autoFill:
-		# 	self.jd.autoFill(self.xmlData)
+		# 	self.xd.autoFill(self.xmlData)
 
 		# # Run special function to deal with units panel - must happen before we set the widget values for defaults to work correctly
 		# if category == 'units':
@@ -212,7 +212,7 @@ class dialog(QtWidgets.QDialog):
 				signalMapper.setMapping(widget, attr)
 
 				if category == 'camera': # or category == 'time': # nasty hack to avoid camera panel inheriting non-existent values - fix with 'inheritable' attribute to UI file
-					text = self.jd.getValue(category, attr)
+					text = self.xd.getValue(category, attr)
 				else:
 					text, inherited = self.inheritFrom(category, attr)
 
@@ -230,37 +230,21 @@ class dialog(QtWidgets.QDialog):
 
 				# Set up handlers for different widget types...
 
-				# Check box(es)...
-				if isinstance(widget, QtWidgets.QCheckBox):
-					# if text is not "":
-					# 	widget.setCurrentIndex(widget.findText(text))
-					#print "%s: %s" %(attr, widget.currentText())
-					widget.toggled.connect(signalMapper.map)
-					widget.toggled.connect(lambda current: self.storeRadioButtonValue(current))
-
-				# Radio button(s)...
-				if isinstance(widget, QtWidgets.QRadioButton):
-					# if text is not "":
-					# 	widget.setCurrentIndex(widget.findText(text))
-					#print "%s: %s" %(attr, widget.currentText())
-					widget.toggled.connect(signalMapper.map)
-					widget.toggled.connect(lambda current: self.storeRadioButtonValue(current))
-
-				# Push button(s)...
-				if isinstance(widget, QtWidgets.QPushButton):
-					# if text is not "":
-					# 	widget.setCurrentIndex(widget.findText(text))
-					#print "%s: %s" %(attr, widget.currentText())
-					widget.clicked.connect(signalMapper.map)
-					widget.clicked.connect(lambda: self.execPushButton())
-
-				# Combo box(es)...
-				if isinstance(widget, QtWidgets.QComboBox):
+				# Spin box(es)...
+				if isinstance(widget, QtWidgets.QSpinBox):
 					if text is not "":
-						widget.setCurrentIndex(widget.findText(text))
-					#print "%s: %s" %(attr, widget.currentText())
-					widget.currentIndexChanged.connect(signalMapper.map)
-					widget.currentIndexChanged.connect(lambda current: self.storeComboBoxValue(current))
+						widget.setValue(int(text))
+					#print "%s: %s" %(attr, widget.value())
+					widget.valueChanged.connect(signalMapper.map)
+					widget.valueChanged.connect(lambda value: self.storeValue(value))
+
+				# Double spin box(es)...
+				if isinstance(widget, QtWidgets.QDoubleSpinBox):
+					if text is not "":
+						widget.setValue(float(text))
+					#print "%s: %s" %(attr, widget.value())
+					widget.valueChanged.connect(signalMapper.map)
+					widget.valueChanged.connect(lambda value: self.storeValue(value))
 
 				# Line edit(s)...
 				if isinstance(widget, QtWidgets.QLineEdit):
@@ -277,22 +261,36 @@ class dialog(QtWidgets.QDialog):
 					#print "%s: %s" %(attr, widget.text())
 					widget.textChanged.connect(signalMapper.map)
 					widget.textChanged.connect(lambda: self.storeValue()) # This seems to give an TypeError when passing 'current', but still works as expected
+					# widget.textChanged.connect(lambda: self.storeValue(widget.plainText()))
 
-				# Spin box(es)...
-				if isinstance(widget, QtWidgets.QSpinBox):
-					if text is not "":
-						widget.setValue( int(text) )
-					#print "%s: %s" %(attr, widget.value())
-					widget.valueChanged.connect(signalMapper.map)
-					widget.valueChanged.connect(lambda current: self.storeValue(current))
+				# Check box(es)...
+				if isinstance(widget, QtWidgets.QCheckBox):
+					# if text is not "":
+					# 	widget.setCurrentIndex(widget.findText(text))
+					#print "%s: %s" %(attr, widget.currentText())
+					widget.toggled.connect(signalMapper.map)
+					widget.toggled.connect(lambda checked: self.storeCheckBoxValue(checked))
 
-				# Double spin box(es)...
-				if isinstance(widget, QtWidgets.QDoubleSpinBox):
+				# Radio button(s)...
+				if isinstance(widget, QtWidgets.QRadioButton):
+					# if text is not "":
+					# 	widget.setCurrentIndex(widget.findText(text))
+					#print "%s: %s" %(attr, widget.currentText())
+					widget.toggled.connect(signalMapper.map)
+					widget.toggled.connect(lambda checked: self.storeRadioButtonValue(checked))
+
+				# Combo box(es)...
+				if isinstance(widget, QtWidgets.QComboBox):
 					if text is not "":
-						widget.setValue( float(text) )
-					#print "%s: %s" %(attr, widget.value())
-					widget.valueChanged.connect(signalMapper.map)
-					widget.valueChanged.connect(lambda current: self.storeValue(current))
+						widget.setCurrentIndex(widget.findText(text))
+					#print "%s: %s" %(attr, widget.currentText())
+					widget.currentIndexChanged.connect(signalMapper.map)
+					widget.currentIndexChanged.connect(lambda index: self.storeComboBoxValue(index))
+
+				# Push button(s)...
+				if isinstance(widget, QtWidgets.QPushButton):
+					widget.clicked.connect(signalMapper.map)
+					widget.clicked.connect(lambda: self.execPushButton())
 
 		# # Run special function to deal with time panel
 		# if category == 'time':
@@ -315,7 +313,7 @@ class dialog(QtWidgets.QDialog):
 			'inherited' - a Boolean value which is true if the value was
 			inherited.
 		"""
-		text = self.jd.getValue(category, attr)
+		text = self.xd.getValue(category, attr)
 		inherited = False
 
 		if text is not "":
@@ -335,46 +333,55 @@ class dialog(QtWidgets.QDialog):
 # --- Snipped out custom functions ---
 
 
-	def appPathsEditor(self):
-		""" Open the application paths editor dialog.
-		"""
-		import edit_app_paths
-		editAppPathsDialog = edit_app_paths.dialog(parent=self)
-		if editAppPathsDialog.display():
-			self.ap.loadXML()  # Reload XML and update comboBox contents after closing dialog
+	# def appPathsEditor(self):
+	# 	""" Open the application paths editor dialog.
+	# 	"""
+	# 	import edit_app_paths
+	# 	editAppPathsDialog = edit_app_paths.dialog(parent=self)
+	# 	if editAppPathsDialog.display():
+	# 		self.ap.loadXML()  # Reload XML and update comboBox contents after closing dialog
 
-		self.openProperties('apps')
-
-
-	def execPushButton(self):
-		""" Execute the function associated with a button.
-		"""
-		print(self.sender().objectName(), self.sender().property('exec'))
+	# 	self.openProperties('apps')
 
 
-	def storeValue(self, val=""):
+	def storeValue(self, value=""):
 		""" Stores the currently edited attribute value into the XML data
 		"""
 		# self.currentValue = str(val) # value must be a string for XML
 		# verbose.print_('%s.%s = %s' %(self.currentCategory, self.currentAttr, self.currentValue), 4)
-		# self.jd.setValue(self.currentCategory, self.currentAttr, self.currentValue)
-		print(self.sender().objectName(), self.sender().property('xmlTag'), val)
+		# self.xd.setValue(self.currentCategory, self.currentAttr, self.currentValue)
+		print("[%s, %s] %s=%s" %(type(self.sender()), type(value), self.sender().property('xmlTag'), value))
 
 
-	def storeComboBoxValue(self, value):
+	def storeCheckBoxValue(self, value):
+		""" Get the value from a check box widget.
+		"""
+		print("[%s, %s] %s=%s" %(type(self.sender()), type(value), self.sender().property('xmlTag'), value))
+
+
+	def storeRadioButtonValue(self, checked):
+		""" Get the value from a radio button widget.
+		"""
+		if checked:
+			attr, value = self.sender().property('xmlTag').split("_")
+			print("[%s, %s] %s=%s" %(type(self.sender()), type(value), attr, value))
+
+
+	def storeComboBoxValue(self, index):
 		""" Get the value of the currently edited ComboBox. A bit hacky
 		"""
 		# frame = self.ui.settings_frame
 		# print(self.currentAttr)
 		# #val = frame.findChildren(QtWidgets.QComboBox, '%s_comboBox' %self.currentAttr)[0].currentText()
 		# #self.storeValue(val)
-		print(self.sender().objectName(), self.sender().property('xmlTag'), value)
+		value = self.sender().currentText()
+		print("[%s, %s] %s=%s (index %d)" %(type(self.sender()), type(value), self.sender().property('xmlTag'), value, index))
 
 
-	def storeRadioButtonValue(self, value):
-		""" Get the value from a radio button widget.
+	def execPushButton(self):
+		""" Execute the function associated with a button.
 		"""
-		print(self.sender().objectName(), self.sender().property('xmlTag'), value)
+		print(self.sender().objectName(), self.sender().property('exec'))
 
 
 	def storeProperties(self, category):
@@ -420,7 +427,7 @@ class dialog(QtWidgets.QDialog):
 			attr = widget.property('xmlTag')
 
 			if attr:
-				self.jd.removeElement(self.currentCategory, attr)
+				self.xd.removeElement(self.currentCategory, attr)
 
 		self.openProperties(self.currentCategory, storeProperties=False)
 
@@ -434,7 +441,7 @@ class dialog(QtWidgets.QDialog):
 			self.openProperties(cat)
 			#self.storeProperties(cat)
 
-		if self.jd.saveXML():
+		if self.xd.saveXML():
 			verbose.message("%s settings saved." %self.settingsType)
 			return True
 		else:

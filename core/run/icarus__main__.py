@@ -961,10 +961,10 @@ Developers: %s
 			categoryLs = ['time', 'resolution', 'units', 'camera']
 			xmlData = os.path.join(os.environ['SHOTDATA'], 'shotData.xml')
 		elif settingsType == "User":
-			categoryLs = ['user', ]
+			categoryLs = ['user', 'global', 'test']
 			xmlData = os.path.join(os.environ['IC_USERPREFS'], 'userPrefs.xml')
 		elif settingsType == "Global":
-			categoryLs = ['global', 'user']  # remove 'user'
+			categoryLs = ['global', ]
 			xmlData = os.path.join(os.path.join(os.environ['IC_CONFIGDIR'], 'globalPrefs.xml'))
 
 		# import job_settings__main__  # Change this to generic class when it's ready
@@ -972,13 +972,13 @@ Developers: %s
 		import settings
 		settingsEditor = settings.dialog(parent=self)
 
-		@settingsEditor.customSignal.connect
-		def storeAttr(attr):
-			settingsEditor.currentAttr = attr  # This feels a bit hacky - need to find a way to add this function to main class
+		# @settingsEditor.customSignal.connect
+		# def storeAttr(attr):
+		# 	settingsEditor.currentAttr = attr  # This feels a bit hacky - need to find a way to add this function to main class
 
 		# settingsEditor.ui.exec_()
-		settingsEditor.display(settingsType=settingsType, categoryLs=categoryLs, xmlData=xmlData, autoFill=autoFill)
-		return settingsEditor.returnValue  # Return True if user clicked Save, False for Cancel
+		return settingsEditor.display(settingsType=settingsType, categoryLs=categoryLs, xmlData=xmlData, autoFill=autoFill)
+		# return settingsEditor.returnValue  # Return True if user clicked Save, False for Cancel
 
 
 	def jobSettings(self):

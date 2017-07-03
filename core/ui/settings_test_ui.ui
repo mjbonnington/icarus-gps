@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>settings_frame</class>
+ <widget class="QFrame" name="settings_frame">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>420</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <property name="frameShape">
+   <enum>QFrame::NoFrame</enum>
+  </property>
+  <layout class="QFormLayout" name="formLayout">
+   <property name="fieldGrowthPolicy">
+    <enum>QFormLayout::ExpandingFieldsGrow</enum>
+   </property>
+   <item row="1" column="0">
+    <widget class="QLabel" name="spinBox_label">
+     <property name="text">
+      <string>Spin Box:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QSpinBox" name="spinBox_spinBox">
+     <property name="minimum">
+      <number>0</number>
+     </property>
+     <property name="maximum">
+      <number>999999</number>
+     </property>
+     <property name="value">
+      <number>0</number>
+     </property>
+     <property name="xmlTag" stdset="0">
+      <string>spinBox</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="doubleSpinBox_label">
+     <property name="text">
+      <string>Double Spin Box:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QDoubleSpinBox" name="doubleSpinBox_doubleSpinBox">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="decimals">
+      <number>3</number>
+     </property>
+     <property name="minimum">
+      <double>0.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>1000.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.001000000000000</double>
+     </property>
+     <property name="xmlTag" stdset="0">
+      <string>doubleSpinBox</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="lineEdit_label">
+     <property name="text">
+      <string>Line Edit:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLineEdit" name="lineEdit_lineEdit">
+     <property name="xmlTag" stdset="0">
+      <string>lineEdit</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="plainTextEdit_label">
+     <property name="text">
+      <string>Plain Text Edit:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QPlainTextEdit" name="plainTextEdit_plainTextEdit">
+     <property name="xmlTag" stdset="0">
+      <string>plainTextEdit</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QCheckBox" name="checkBox_checkBox">
+     <property name="text">
+      <string>Check Box</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <property name="xmlTag" stdset="0">
+      <string>checkBox</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="radioButton_label">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;User preferences location&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Choose whether to store user preferences in the pipeline config directory on the server, or in the user's home folder. If you have roaming profiles enabled, it's best to store in the home folder.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>RadioButton group:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <layout class="QHBoxLayout" name="radioButton_horizontalLayout">
+     <item>
+      <widget class="QRadioButton" name="radioButton_option1_radioButton">
+       <property name="text">
+        <string>Option 1</string>
+       </property>
+       <property name="xmlTag" stdset="0">
+        <string>radioButton_option1</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioButton_option2_radioButton">
+       <property name="text">
+        <string>Option 2</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+       <property name="xmlTag" stdset="0">
+        <string>radioButton_option2</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="comboBox_label">
+     <property name="text">
+      <string>Combo Box:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <widget class="QComboBox" name="comboBox_comboBox">
+     <property name="xmlTag" stdset="0">
+      <string>comboBox</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>Item 1</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Item 2</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Item 3</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Item 4</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="8" column="1">
+    <widget class="QPushButton" name="executeAction_pushButton">
+     <property name="text">
+      <string>Execute Action</string>
+     </property>
+     <property name="exec" stdset="0">
+      <string>executeAction</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
