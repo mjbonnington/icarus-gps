@@ -63,7 +63,7 @@
         <bool>true</bool>
        </property>
        <property name="xmlTag" stdset="0">
-        <string>userPrefsLocation_Remote</string>
+        <string>userPrefsLocation</string>
        </property>
       </widget>
      </item>
@@ -73,7 +73,7 @@
         <string>Home folder</string>
        </property>
        <property name="xmlTag" stdset="0">
-        <string>userPrefsLocation_Local</string>
+        <string>userPrefsLocation</string>
        </property>
       </widget>
      </item>

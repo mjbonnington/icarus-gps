@@ -93,21 +93,20 @@ def saveAs(pathToPblAsset):
 
 def submitRender():
 	""" Launches GPS Render Submitter window.
+		The -i flag tells Nuke to use an interactive license rather than a
+		render license.
 	"""
-	import submit__main__
-	reload(submit__main__)
-	#frameRange = "%s-%s" %(int(mc.getAttr('defaultRenderGlobals.startFrame')), int(mc.getAttr('defaultRenderGlobals.endFrame')))
-	renderSubmitApp=submit__main__.gpsRenderSubmitApp(flags='-i') # the -i flag tells Nuke to use an interactive license rather than a render license
-	renderSubmitApp.exec_()
+	import render_submit
+	# try:
+	# 	renderSubmitDialog.display(flags='-i')
+	# except AttributeError:
+	renderSubmitDialog = render_submit.renderSubmitDialog()
+	renderSubmitDialog.display(flags='-i')
 
 
 def submitRenderSelected():
 	""" Launches GPS Render Submitter window, for rendering the currently selected write nodes only.
 	"""
-	import submit__main__
-	reload(submit__main__)
-	#frameRange = "%s-%s" %(int(mc.getAttr('defaultRenderGlobals.startFrame')), int(mc.getAttr('defaultRenderGlobals.endFrame')))
-
 	writeNodes = ''
 	selectedNodes = nuke.selectedNodes()
 	for selectedNode in selectedNodes:
@@ -118,8 +117,12 @@ def submitRenderSelected():
 	# if selectedNode.Class() == 'Write':
 	# 	writeNodes = '-X %s ' %selectedNode.name()
 
-	renderSubmitApp=submit__main__.gpsRenderSubmitApp(flags='-i %s' %writeNodes)
-	renderSubmitApp.exec_()
+	import render_submit
+	# try:
+	# 	renderSubmitDialog.display(flags='-i %s' %writeNodes)
+	# except AttributeError:
+	renderSubmitDialog = render_submit.renderSubmitDialog()
+	renderSubmitDialog.display(flags='-i %s' %writeNodes)
 
 
 def viewerSnapshot(pblPath):
