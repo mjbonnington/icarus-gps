@@ -35,7 +35,10 @@ class helper():
 		rangeStart = self.frame.rangeStart_spinBox.value()
 		rangeEnd = self.frame.rangeEnd_spinBox.value()
 
-		fps = int(self.parent.xd.getValue('units', 'fps'))
+		try:
+			fps = int(self.parent.xd.getValue('units', 'fps'))
+		except ValueError:
+			fps = 25
 		durationFrames = rangeEnd - rangeStart + 1
 		durationSecs = durationFrames / fps
 		durationStr = ""

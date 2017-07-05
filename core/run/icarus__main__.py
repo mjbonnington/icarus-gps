@@ -961,7 +961,7 @@ Developers: %s
 			categoryLs = ['time', 'resolution', 'units', 'camera']
 			xmlData = os.path.join(os.environ['SHOTDATA'], 'shotData.xml')
 		elif settingsType == "User":
-			categoryLs = ['user', 'global', 'test']
+			categoryLs = ['user', 'global', 'test', 'job', 'time', 'resolution', 'units', 'apps', 'other', 'camera']
 			xmlData = os.path.join(os.environ['IC_USERPREFS'], 'userPrefs.xml')
 		elif settingsType == "Global":
 			categoryLs = ['global', ]

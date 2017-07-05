@@ -87,22 +87,15 @@
       </spacer>
      </item>
      <item>
-      <widget class="QLabel" name="fps_label">
-       <property name="text">
-        <string>FPS:</string>
-       </property>
-       <property name="xmlTag" stdset="0">
-        <string>fps</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QSpinBox" name="fps_spinBox">
        <property name="readOnly">
         <bool>true</bool>
        </property>
        <property name="buttonSymbols">
         <enum>QAbstractSpinBox::NoButtons</enum>
+       </property>
+       <property name="suffix">
+        <string> fps</string>
        </property>
        <property name="minimum">
         <number>1</number>
