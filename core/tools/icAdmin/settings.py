@@ -16,7 +16,7 @@ from Qt import __binding__, QtCore, QtGui, QtWidgets, QtCompat
 from Qt.QtCore import QSignalMapper, Signal
 
 # Import custom modules
-import jobSettings
+import settingsData
 import verbose
 
 
@@ -105,7 +105,7 @@ class dialog(QtWidgets.QDialog):
 		self.lockUI = True
 
 		# Instantiate XML data classes
-		self.xd = jobSettings.jobSettings()
+		self.xd = settingsData.settingsData()
 
 		self.reset()
 
@@ -129,7 +129,7 @@ class dialog(QtWidgets.QDialog):
 				self.ui.categories_listWidget.addItem(cat)
 
 			# Set the maximum size of the list widget
-			self.ui.categories_listWidget.setMaximumWidth(self.ui.categories_listWidget.sizeHintForColumn(0) * 3)
+			self.ui.categories_listWidget.setMaximumWidth(self.ui.categories_listWidget.sizeHintForColumn(0) * 2)
 
 			# Select the first item & show the appropriate settings panel
 			if self.currentCategory == "":
@@ -340,7 +340,7 @@ class dialog(QtWidgets.QDialog):
 	# 		pass
 
 	# 	elif self.settingsType == 'Shot':
-	# 		jd = jobSettings.jobSettings()
+	# 		jd = settingsData.settingsData()
 	# 		jd.loadXML(os.path.join(os.environ['JOBDATA'], 'jobData.xml'))
 	# 		text = jd.getValue(category, attr)
 	# 		inherited = True
@@ -357,7 +357,7 @@ class dialog(QtWidgets.QDialog):
 	def execPushButton(self):
 		""" Execute the function associated with a button.
 		"""
-		print(self.sender().objectName(), self.sender().property('exec'))
+		verbose.print_(self.sender().objectName(), self.sender().property('exec'), 4)
 
 
 	@QtCore.Slot()
@@ -408,7 +408,7 @@ class dialog(QtWidgets.QDialog):
 	def storeValue(self, attr, value=""):
 		""" Store value in XML data.
 		"""
-		verbose.print_("%s.%s=%s %s" %(self.currentCategory, attr, value, type(value)), 4)
+		verbose.print_("%s %s.%s=%s" %(type(value), self.currentCategory, attr, value), 4)
 		self.xd.setValue(self.currentCategory, attr, str(value))
 
 

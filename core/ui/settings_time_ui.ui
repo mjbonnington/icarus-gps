@@ -74,8 +74,93 @@
        </property>
       </widget>
      </item>
+    </layout>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="posterFrame_label">
+     <property name="text">
+      <string>Poster frame:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <layout class="QHBoxLayout" name="posterFrame_horizontalLayout">
      <item>
-      <spacer name="range_horizontalSpacer">
+      <widget class="QSpinBox" name="posterFrame_spinBox">
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::NoButtons</enum>
+       </property>
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>9999</number>
+       </property>
+       <property name="value">
+        <number>1001</number>
+       </property>
+       <property name="xmlTag" stdset="0">
+        <string>posterFrame</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSlider" name="posterFrame_slider">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the priority for this render job.&lt;/p&gt;&lt;p&gt;Higher priority jobs will be rendered first. Setting the priority to zero will submit the job as paused.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>9999</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="tickPosition">
+        <enum>QSlider::NoTicks</enum>
+       </property>
+       <property name="tickInterval">
+        <number>10</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="duration_label">
+     <property name="text">
+      <string>Duration:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <layout class="QHBoxLayout" name="duration_horizontalLayout">
+     <item>
+      <widget class="QSpinBox" name="duration_spinBox">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::NoButtons</enum>
+       </property>
+       <property name="suffix">
+        <string> frames</string>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>10000</number>
+       </property>
+       <property name="value">
+        <number>100</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="duration_horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -91,36 +176,16 @@
       </spacer>
      </item>
      <item>
-      <widget class="QLabel" name="rangeInfo_label">
+      <widget class="QLabel" name="durationInfo_label">
        <property name="text">
-        <string>(duration: n frames)</string>
+        <string>4 seconds @ 25 fps</string>
+       </property>
+       <property name="xmlTag" stdset="0">
+        <string>fps</string>
        </property>
       </widget>
      </item>
     </layout>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="posterFrame_label">
-     <property name="text">
-      <string>Poster frame:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QSpinBox" name="posterFrame_spinBox">
-     <property name="minimum">
-      <number>0</number>
-     </property>
-     <property name="maximum">
-      <number>9999</number>
-     </property>
-     <property name="value">
-      <number>1001</number>
-     </property>
-     <property name="xmlTag" stdset="0">
-      <string>posterFrame</string>
-     </property>
-    </widget>
    </item>
   </layout>
  </widget>
@@ -129,5 +194,38 @@
   <tabstop>rangeEnd_spinBox</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>posterFrame_spinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>posterFrame_slider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>112</x>
+     <y>52</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>142</x>
+     <y>52</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>posterFrame_slider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>posterFrame_spinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>234</x>
+     <y>57</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>103</x>
+     <y>62</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

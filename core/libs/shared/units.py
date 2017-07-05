@@ -1,12 +1,11 @@
 #!/usr/bin/python
 
-# Units
-# v0.1
+# [Icarus] units.py
 #
-# Michael Bonnington 2015
-# Gramercy Park Studios
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2015 Gramercy Park Studios
 #
-# Look-up table for Maya's discrete unit preset values
+# Look-up table for Maya's discrete unit preset values.
 
 
 time = [('film',     'Film (24 fps)',       24), 

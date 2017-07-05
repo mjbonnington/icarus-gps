@@ -10,7 +10,7 @@
 
 
 import os, sys
-import jobSettings, mayaOps, verbose
+import settingsData, mayaOps, verbose
 import maya.cmds as mc
 
 
@@ -19,7 +19,7 @@ def alembic(ICSet, updatePath):
 	updatePath = os.path.expandvars(updatePath)
 
 	# Instantiate XML data classes
-	assetData = jobSettings.jobSettings()
+	assetData = settingsData.settingsData()
 	assetData.loadXML(os.path.join(updatePath, 'assetData.xml'), quiet=True)
 
 	assetPblName = assetData.getValue('asset', 'assetPblName')

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# [Icarus] settings_resolution.py
+# [Icarus] settings_camera.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2015-2017 Gramercy Park Studios
@@ -9,8 +9,6 @@
 
 
 import os
-
-from Qt import QtWidgets
 
 # Import custom modules
 import camPresets
@@ -34,7 +32,6 @@ class helper():
 
 		width = self.frame.filmbackWidth_doubleSpinBox.value()
 		height = self.frame.filmbackHeight_doubleSpinBox.value()
-		# camera_comboBox.setCurrentIndex(camera_comboBox.findText(self.rp.getPresetFromRes(width, height)))
 
 		# Connect signals & slots
 		self.uffp = lambda: self.updateFilmbackFromPreset()
@@ -45,7 +42,7 @@ class helper():
 		self.frame.filmbackHeight_doubleSpinBox.valueChanged.connect(self.rptc)
 
 
-	def updateFilmbackFromPreset(self, index=-1):
+	def updateFilmbackFromPreset(self):
 		""" Update filmback settings when a preset is chosen.
 		"""
 		camera = self.frame.camera_comboBox.currentText()
@@ -66,8 +63,8 @@ class helper():
 
 
 	def resetPresetToCustom(self, comboBox):
-		""" Reset filmback settings preset combo box to 'Custom' when values
-			are changed manually.
+		""" Reset specified combo box to 'Custom' when values are changed
+			manually.
 		"""
 		comboBox.setCurrentIndex(comboBox.findText('Custom'))
 

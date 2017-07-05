@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# [Icarus] settings_resolution.py
+# [Icarus] settings_apps.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2015-2017 Gramercy Park Studios
@@ -14,7 +14,6 @@ from Qt import QtWidgets
 
 # Import custom modules
 import appPaths
-import jobSettings
 
 
 class helper():
@@ -26,9 +25,7 @@ class helper():
 		self.parent = parent
 
 		self.jd = parent.xd
-		# self.jd = jobSettings.jobSettings()
 		self.ap = appPaths.appPaths()
-		# jd_load = self.jd.loadXML(os.path.join(os.environ['JOBDATA'], 'jobData.xml'))
 		ap_load = self.ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'))
 
 		self.setupAppVersions()

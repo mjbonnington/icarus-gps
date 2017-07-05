@@ -14,8 +14,8 @@ import sys
 
 import appPaths
 # import jobs
-import jobSettings
 import osOps
+import settingsData
 import verbose
 
 
@@ -58,9 +58,9 @@ def setEnv(envVars):
 	osOps.createDir(os.environ['JOBDATA'])
 
 	# Instantiate job / shot settings classes
-	jobData = jobSettings.jobSettings()
-	shotData = jobSettings.jobSettings()
-#	defaultData = jobSettings.jobSettings()
+	jobData = settingsData.settingsData()
+	shotData = settingsData.settingsData()
+#	defaultData = settingsData.settingsData()
 	ap = appPaths.appPaths()
 
 	jobDataLoaded = jobData.loadXML( os.path.join(jobDataPath, 'jobData.xml') )

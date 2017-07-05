@@ -1,14 +1,12 @@
 #!/usr/bin/python
 
-# [Icarus] settings_resolution.py
+# [Icarus] settings_units.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2015-2017 Gramercy Park Studios
 #
 # Units settings handler.
 
-
-from Qt import QtWidgets
 
 # Import custom modules
 import units
@@ -41,7 +39,7 @@ class helper():
 
 		# Connect signals & slots
 		self.frame.time_comboBox.currentIndexChanged.connect(lambda current: self.setFPS(current))
-		#frame.findChildren(QtWidgets.QSpinBox, 'fps_spinBox.valueChanged.connect(lambda value: self.setTimeUnit(value))
+		# self.frame.fps_spinBox.valueChanged.connect(lambda value: self.setTimeUnit(value))
 
 
 	def setFPS(self, current=None):

@@ -8,10 +8,9 @@
 # Resolution settings handler.
 
 
+from fractions import Fraction
 import math
 import os
-
-from Qt import QtWidgets
 
 # Import custom modules
 import resPresets
@@ -59,15 +58,20 @@ class helper():
 		self.frame.proxyWidth_spinBox.valueChanged.connect(self.urpw)
 		self.frame.proxyHeight_spinBox.valueChanged.connect(self.urph)
 
+		self.frame.proxyScale_doubleSpinBox.valueChanged.connect(lambda value: self.frame.proxyScale_slider.setValue(value*100))
+		self.frame.proxyScale_slider.valueChanged.connect(lambda value: self.frame.proxyScale_doubleSpinBox.setValue(value/100))
+
 
 	def calcAspectRatio(self):
 		""" Calculate aspect ratio.
 		"""
 		fullWidth = self.frame.fullWidth_spinBox.value()
 		fullHeight = self.frame.fullHeight_spinBox.value()
+		ar = Fraction(fullWidth, fullHeight)
 		self.aspectRatio = float(fullWidth) / float(fullHeight)
 
-		verbose.print_("Aspect ratio: %f" %self.aspectRatio, 4)
+		# verbose.print_("Aspect ratio: %f" %self.aspectRatio, 4)
+		self.frame.preserveAR_checkBox.setText("Lock aspect ratio to %d:%d (%.3f)" %(ar.numerator, ar.denominator, self.aspectRatio))
 
 
 	def updateResFromPreset(self, index=-1):
@@ -112,6 +116,7 @@ class helper():
 			height = int(math.ceil(width/self.aspectRatio))
 		else:
 			height = self.frame.fullHeight_spinBox.value()
+			self.calcAspectRatio()
 
 		# print("full res w: [%d]x%d (ar: %f)" %(width, height, self.aspectRatio))
 
@@ -146,6 +151,7 @@ class helper():
 			width = int(math.ceil(height*self.aspectRatio))
 		else:
 			width = self.frame.fullWidth_spinBox.value()
+			self.calcAspectRatio()
 
 		# print("full res h: %dx[%d] (ar: %f)" %(width, height, self.aspectRatio))
 

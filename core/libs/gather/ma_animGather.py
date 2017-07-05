@@ -10,7 +10,7 @@
 
 
 import os, sys, traceback
-import jobSettings, mayaOps, pDialog, verbose
+import settingsData, mayaOps, pDialog, verbose
 import maya.cmds as mc
 
 
@@ -19,7 +19,7 @@ def gather(gatherPath):
 	gatherPath = os.path.expandvars(gatherPath)
 
 	# Instantiate XML data classes
-	assetData = jobSettings.jobSettings()
+	assetData = settingsData.settingsData()
 	assetData.loadXML(os.path.join(gatherPath, 'assetData.xml'), quiet=True)
 
 	try:

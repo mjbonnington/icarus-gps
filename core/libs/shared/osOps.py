@@ -22,7 +22,8 @@ def createDir(path):
 	path = os.path.normpath(path)
 
 	if os.path.isdir(path):
-		verbose.warning("Directory already exists: %s" %path)
+		# verbose.warning("Directory already exists: %s" %path)
+		pass
 
 	else:
 		os.makedirs(path)

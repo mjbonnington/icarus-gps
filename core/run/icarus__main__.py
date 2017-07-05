@@ -1821,9 +1821,9 @@ Developers: %s
 		self.assetVersion = self.aVersionCol.currentItem().text()
 		self.gatherPath = os.path.join(self.gatherFrom, self.assetType, self.assetName, self.assetSubType, self.assetVersion)
 
-		import jobSettings
+		import settingsData
 		# Instantiate XML data classes
-		assetData = jobSettings.jobSettings()
+		assetData = settingsData.settingsData()
 		assetDataLoaded = assetData.loadXML(os.path.join(self.gatherPath, 'assetData.xml'))
 
 		# If XML files don't exist, create defaults, and attempt to convert data from Python data files

@@ -20,7 +20,7 @@ from Qt.QtCore import QSignalMapper, Signal
 # Import custom modules
 import appPaths
 import camPresets
-import jobSettings
+import settingsData
 import resPresets
 import units
 import verbose
@@ -81,7 +81,7 @@ class settingsDialog(QtWidgets.QDialog):
 		self.returnValue = False
 
 		# Instantiate XML data classes
-		self.jd = jobSettings.jobSettings()
+		self.jd = settingsData.settingsData()
 		self.ap = appPaths.appPaths()
 		self.rp = resPresets.resPresets()
 		self.cp = camPresets.camPresets()
@@ -309,7 +309,7 @@ class settingsDialog(QtWidgets.QDialog):
 			pass
 
 		elif self.settingsType == 'Shot':
-			jd = jobSettings.jobSettings()
+			jd = settingsData.settingsData()
 			jd.loadXML( os.path.join(os.environ['JOBDATA'], 'jobData.xml') )
 			text = jd.getValue(category, attr)
 			inherited = True

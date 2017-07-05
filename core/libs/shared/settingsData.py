@@ -1,11 +1,11 @@
 #!/usr/bin/python
 
-# [Icarus] jobSettings.py
+# [Icarus] settingsData.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2016 Gramercy Park Studios
+# (c) 2015-2017 Gramercy Park Studios
 #
-# Manipulates job / shot settings data stored in an XML database.
+# Manipulates settings data stored in an XML database.
 # This class is also used to manage asset metadata.
 
 
@@ -14,7 +14,7 @@ import xml.etree.ElementTree as ET
 import xmlData
 
 
-class jobSettings(xmlData.xmlData):
+class settingsData(xmlData.xmlData):
 	""" Manipulates XML database to store job settings.
 		Inherits xmlData class.
 	"""
@@ -35,11 +35,11 @@ class jobSettings(xmlData.xmlData):
 		#			if text is not None:
 		#				return text
 
-		return "" # return an empty string, not None, so value can be stored in an environment variable without raising an error
+		return ""  # Return an empty string, not None, so value can be stored in an environment variable without raising an error
 
 
 	def setValue(self, category, setting, newValue):
-		""" Set value. Create elements if they don't exist
+		""" Set value. Create elements if they don't exist.
 		"""
 		catElem = self.root.find("./data[@category='%s']" %category)
 		if catElem is None:
@@ -54,7 +54,7 @@ class jobSettings(xmlData.xmlData):
 
 
 	def removeElement(self, category, setting):
-		""" Remove the selected element
+		""" Remove the selected element.
 		"""
 		cat = self.root.find( "./data[@category='%s']" %category )
 		if cat is not None:
@@ -68,13 +68,13 @@ class jobSettings(xmlData.xmlData):
 
 
 #	def getAttr(self, category, setting, attr):
-#		""" Get the specified attribute
+#		""" Get the specified attribute.
 #		"""
 #		return self.root.find( "./data[@category='%s']/%s" %(category, setting) ).attrib[attr]
 
 
 	def getCategories(self):
-		""" Return a list of settings categories
+		""" Return a list of settings categories.
 		"""
 		cats = self.root.findall("./data")
 		c = []
@@ -84,7 +84,7 @@ class jobSettings(xmlData.xmlData):
 
 
 	def getSettings(self, category):
-		""" Return a list of settings for a given category
+		""" Return a list of settings for a given category.
 		"""
 		settings = self.root.findall("./data[@category='%s']/option" %category)
 		s = []
@@ -94,7 +94,7 @@ class jobSettings(xmlData.xmlData):
 
 
 	def getAppVersion(self, app):
-		""" Return version for specified app
+		""" Return version for specified app.
 		"""
 		#appElem = self.root.find("./data[@category='apps']/app[@name='%s']" %app)
 		#return appElem.attrib['version']
@@ -102,14 +102,16 @@ class jobSettings(xmlData.xmlData):
 
 
 	def autoFill(self, path):
-		""" Auto-fill the job and project number fields
+		""" Auto-fill the job and project number fields.
+			(this function should probably be moved elsewhere)
 		"""
 		self.setValue('job', 'projnum', self.parseJobPath(path, 'projnum'))
 		self.setValue('job', 'jobnum', self.parseJobPath(path, 'jobnum'))
 
 
 	def parseJobPath(self, path, element):
-		""" Find the element (project number, job number) in the job path
+		""" Find the element (project number, job number) in the job path.
+			(this function should probably be moved elsewhere)
 		"""
 		if element == 'projnum':
 			pattern = re.compile(r'\d{6}')
