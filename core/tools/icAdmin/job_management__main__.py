@@ -66,6 +66,9 @@ class jobManagementDialog(QtWidgets.QDialog):
 		self.ui.jobDisable_toolButton.clicked.connect(self.disableJobs)
 		self.ui.editPaths_toolButton.clicked.connect(self.editPaths)
 
+		self.ui.searchFilter_lineEdit.textChanged.connect(lambda text: self.reloadJobs(reloadDatabase=False, jobFilter=text))
+		self.ui.searchFilterClear_toolButton.clicked.connect(self.clearFilter)
+
 		self.ui.jobs_listWidget.itemSelectionChanged.connect(self.updateToolbarUI)
 		self.ui.jobs_listWidget.itemDoubleClicked.connect(self.editJob)
 		self.ui.jobs_listWidget.itemChanged.connect(lambda item: self.itemChecked(item))
@@ -129,11 +132,18 @@ class jobManagementDialog(QtWidgets.QDialog):
 			self.editPaths()
 
 
-	def reloadJobs(self, reloadDatabase=True, selectItem=None):
+	def clearFilter(self):
+		""" Clear the search filter field.
+		"""
+		self.ui.searchFilter_lineEdit.clear()
+
+
+	def reloadJobs(self, reloadDatabase=True, selectItem=None, jobFilter=""):
 		""" Refresh the jobs list view.
 			'reloadDatabase' will reload the XML data first.
 			'selectItem' specifies an item by name that will be selected
 			automatically.
+			'jobFilter' is a search string to filter the list.
 		"""
 		if reloadDatabase:
 			self.j.loadXML(quiet=True)  # Reload XML data
@@ -150,19 +160,13 @@ class jobManagementDialog(QtWidgets.QDialog):
 			jobName = self.j.getValue(jobElement, 'name')
 			jobPath = self.j.getValue(jobElement, 'path')
 
-			item = QtWidgets.QListWidgetItem(self.ui.jobs_listWidget)
-			item.setText(jobName)
+			# Populate list view
+			if jobFilter is not "":
+				if jobFilter in jobName:
+					item = self.addJobEntry(jobActive, jobName, jobPath)
 
-			# Check active entries
-			if jobActive == 'True':
-				item.setCheckState(QtCore.Qt.Checked)
 			else:
-				item.setCheckState(QtCore.Qt.Unchecked)
-
-			# Grey out entries that don't exist on disk
-			if not os.path.isdir(osOps.translatePath(jobPath)):
-				item.setForeground(QtGui.QColor(102,102,102))
-				item.setToolTip("Job path not found")
+				item = self.addJobEntry(jobActive, jobName, jobPath)
 
 			if selectItem == jobName:
 				selectedItem = item
@@ -178,6 +182,26 @@ class jobManagementDialog(QtWidgets.QDialog):
 			self.ui.jobs_listWidget.setCurrentItem(selectedItem)
 
 
+	def addJobEntry(self, jobActive, jobName, jobPath):
+		""" Add an entry to the jobs list view.
+		"""
+		item = QtWidgets.QListWidgetItem(self.ui.jobs_listWidget)
+		item.setText(jobName)
+
+		# Check active entries
+		if jobActive == 'True':
+			item.setCheckState(QtCore.Qt.Checked)
+		else:
+			item.setCheckState(QtCore.Qt.Unchecked)
+
+		# Grey out entries that don't exist on disk
+		if not os.path.isdir(osOps.translatePath(jobPath)):
+			item.setForeground(QtGui.QColor(102,102,102))
+			item.setToolTip("Job path not found")
+
+		return item
+
+
 	def deleteJobs(self):
 		""" Delete the selected job(s).
 		"""
@@ -190,16 +214,16 @@ class jobManagementDialog(QtWidgets.QDialog):
 		""" Enable the selected job(s).
 		"""
 		for item in self.ui.jobs_listWidget.selectedItems():
-			self.j.enableJob(item.text(), True)
 			item.setCheckState(QtCore.Qt.Checked)
+			# self.j.enableJob(item.text(), True)  # Already called via signals/slots
 
 
 	def disableJobs(self):
 		""" Disable the selected job(s).
 		"""
 		for item in self.ui.jobs_listWidget.selectedItems():
-			self.j.enableJob(item.text(), False)
 			item.setCheckState(QtCore.Qt.Unchecked)
+			# self.j.enableJob(item.text(), False)  # Already called via signals/slots
 
 
 	def itemChecked(self, item):
