@@ -6,6 +6,7 @@
 # (c) 2015-2017 Gramercy Park Studios
 #
 # Generic settings editor dialog.
+# TODO: Improve compatibility with PySide / PyQt5
 
 
 import math
@@ -357,7 +358,7 @@ class dialog(QtWidgets.QDialog):
 	def execPushButton(self):
 		""" Execute the function associated with a button.
 		"""
-		verbose.print_(self.sender().objectName(), self.sender().property('exec'), 4)
+		verbose.print_("%s %s" %(self.sender().objectName(), self.sender().property('exec')), 4)
 
 
 	@QtCore.Slot()

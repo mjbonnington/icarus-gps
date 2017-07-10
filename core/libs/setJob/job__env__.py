@@ -263,7 +263,7 @@ def setEnv(envVars):
 	os.environ['REALFLOWVERSION']                    = getAppExecPath('RealFlow')
 	os.environ['REALFLOWDIR']                        = osOps.absolutePath('$SHOTPATH/3D/realflow')
 	os.environ['REALFLOWSCENESDIR']                  = osOps.absolutePath('$REALFLOWDIR/$IC_USERNAME')
-	os.environ['RFDEFAULTPROJECT']                   = osOps.absolutePath('$REALFLOWSCENESDIR/$JOB_$SHOT')
+	os.environ['RFDEFAULTPROJECT']                   = osOps.absolutePath('$REALFLOWSCENESDIR/${JOB}_${SHOT}')  # Curly brackets required for correct variable expansion
 	os.environ['RF_COMMANDS_ORGANIZER_FILE_PATH']    = osOps.absolutePath('$REALFLOWSCENESDIR/.cmdsOrg/commandsOrganizer.dat')
 	os.environ['RF_RSC']                             = osOps.absolutePath('$IC_BASEDIR/rsc/realflow')
 	os.environ['RF_STARTUP_PYTHON_SCRIPT_FILE_PATH'] = osOps.absolutePath('$IC_BASEDIR/rsc/realflow/scripts/startup.rfs')
