@@ -67,7 +67,7 @@ def create():
 
 	# ________
 	# RealFlow
-	for directory in ('.cmdsOrg', ): # Trailing comma required to make iterable, otherwise for loop will iterate over string, i.e. '.', 'c', 'm', 'd', etc.
+	for directory in ('.cmdsOrg', ):  # Trailing comma required to make iterable, otherwise for loop will iterate over string, i.e. '.', 'c', 'm', 'd', etc.
 		uDir = os.path.join(os.environ['REALFLOWSCENESDIR'], directory)
 		if not os.path.isdir(uDir):
 			osOps.createDir(uDir)

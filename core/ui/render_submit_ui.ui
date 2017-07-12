@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>512</width>
-    <height>360</height>
+    <height>384</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -67,7 +67,7 @@
                <string>Maya</string>
               </property>
               <property name="icon">
-               <iconset resource="../../ui/rsc.qrc">
+               <iconset resource="rsc.qrc">
                 <normaloff>:/rsc/rsc/app_icon_maya.png</normaloff>
                 <disabledoff>:/rsc/rsc/app_icon_maya_disabled.png</disabledoff>
                 <selectedoff>:/rsc/rsc/app_icon_maya.png</selectedoff>:/rsc/rsc/app_icon_maya.png</iconset>
@@ -78,7 +78,7 @@
                <string>Nuke</string>
               </property>
               <property name="icon">
-               <iconset resource="../../ui/rsc.qrc">
+               <iconset resource="rsc.qrc">
                 <normaloff>:/rsc/rsc/app_icon_nuke.png</normaloff>
                 <disabledoff>:/rsc/rsc/app_icon_nuke_disabled.png</disabledoff>
                 <selectedoff>:/rsc/rsc/app_icon_nuke.png</selectedoff>:/rsc/rsc/app_icon_nuke.png</iconset>
@@ -391,7 +391,7 @@
   <tabstop>priority_slider</tabstop>
  </tabstops>
  <resources>
-  <include location="../../ui/rsc.qrc"/>
+  <include location="rsc.qrc"/>
  </resources>
  <connections>
   <connection>

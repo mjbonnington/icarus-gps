@@ -8,6 +8,7 @@
 # Resolution settings handler.
 
 
+from __future__ import division  # Enables true division for Python2
 from fractions import Fraction
 import math
 import os
@@ -23,6 +24,9 @@ class helper():
 		""" Setup resolution properties panel.
 		"""
 		self.frame = frame
+		self.parent = parent
+		self.parent.aspectRatio = 1
+	
 		self.rp = resPresets.resPresets()
 		rp_load = self.rp.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'resPresets.xml'))
 
@@ -62,16 +66,22 @@ class helper():
 		self.frame.proxyScale_slider.valueChanged.connect(lambda value: self.frame.proxyScale_doubleSpinBox.setValue(value/100))
 
 
+	def setup_(self):
+		"""
+		"""
+
 	def calcAspectRatio(self):
 		""" Calculate aspect ratio.
 		"""
-		fullWidth = self.frame.fullWidth_spinBox.value()
-		fullHeight = self.frame.fullHeight_spinBox.value()
+		# fullWidth = self.frame.fullWidth_spinBox.value()
+		# fullHeight = self.frame.fullHeight_spinBox.value()
+		fullWidth = int(self.parent.xd.getValue('resolution', 'fullWidth'))
+		fullHeight = int(self.parent.xd.getValue('resolution', 'fullHeight'))
 		ar = Fraction(fullWidth, fullHeight)
-		self.aspectRatio = float(fullWidth) / float(fullHeight)
+		self.parent.aspectRatio = float(fullWidth) / float(fullHeight)
 
-		# verbose.print_("Aspect ratio: %f" %self.aspectRatio, 4)
-		self.frame.preserveAR_checkBox.setText("Lock aspect ratio to %d:%d (%.3f)" %(ar.numerator, ar.denominator, self.aspectRatio))
+		verbose.print_("Aspect ratio: %f" %self.parent.aspectRatio, 4)
+		self.frame.preserveAR_checkBox.setText("Lock aspect ratio to %d:%d (%.3f)" %(ar.numerator, ar.denominator, self.parent.aspectRatio))
 
 
 	def updateResFromPreset(self, index=-1):
@@ -113,12 +123,12 @@ class helper():
 
 		preserveAR = self.frame.preserveAR_checkBox.isChecked()
 		if preserveAR:
-			height = int(math.ceil(width/self.aspectRatio))
+			height = int(math.ceil(width/self.parent.aspectRatio))
 		else:
 			height = self.frame.fullHeight_spinBox.value()
 			self.calcAspectRatio()
 
-		# print("full res w: [%d]x%d (ar: %f)" %(width, height, self.aspectRatio))
+		# print("full res w: [%d]x%d (ar: %f)" %(width, height, self.parent.aspectRatio))
 
 		# Set the preset to 'Custom'
 		comboBox = self.frame.resPreset_comboBox
@@ -148,12 +158,12 @@ class helper():
 
 		preserveAR = self.frame.preserveAR_checkBox.isChecked()
 		if preserveAR:
-			width = int(math.ceil(height*self.aspectRatio))
+			width = int(math.ceil(height*self.parent.aspectRatio))
 		else:
 			width = self.frame.fullWidth_spinBox.value()
 			self.calcAspectRatio()
 
-		# print("full res h: %dx[%d] (ar: %f)" %(width, height, self.aspectRatio))
+		# print("full res h: %dx[%d] (ar: %f)" %(width, height, self.parent.aspectRatio))
 
 		# Set the preset to 'Custom'
 		comboBox = self.frame.resPreset_comboBox
@@ -180,11 +190,11 @@ class helper():
 
 		preserveAR = self.frame.preserveAR_checkBox.isChecked()
 		if preserveAR:
-			height = int(math.ceil(width/self.aspectRatio))
+			height = int(math.ceil(width/self.parent.aspectRatio))
 		else:
 			height = self.frame.proxyHeight_spinBox.value()
 
-		# print("proxy res w: [%d]x%d (ar: %f)" %(width, height, self.aspectRatio))
+		# print("proxy res w: [%d]x%d (ar: %f)" %(width, height, self.parent.aspectRatio))
 
 		# Update height widget
 		self.frame.proxyHeight_spinBox.setValue(height)
@@ -201,11 +211,11 @@ class helper():
 
 		preserveAR = self.frame.preserveAR_checkBox.isChecked()
 		if preserveAR:
-			width = int(math.ceil(height*self.aspectRatio))
+			width = int(math.ceil(height*self.parent.aspectRatio))
 		else:
 			width = self.frame.proxyWidth_spinBox.value()
 
-		# print("proxy res h: %dx[%d] (ar: %f)" %(width, height, self.aspectRatio))
+		# print("proxy res h: %dx[%d] (ar: %f)" %(width, height, self.parent.aspectRatio))
 
 		# Update width widget
 		self.frame.proxyWidth_spinBox.setValue(width)
@@ -243,10 +253,14 @@ class helper():
 		""" Check proxy resolution matches full resolution x scale and set
 			appropriate proxy mode.
 		"""
-		fullWidth = self.frame.fullWidth_spinBox.value()
-		fullHeight = self.frame.fullHeight_spinBox.value()
-		proxyWidth = self.frame.proxyWidth_spinBox.value()
-		proxyHeight = self.frame.proxyHeight_spinBox.value()
+		# fullWidth = self.frame.fullWidth_spinBox.value()
+		# fullHeight = self.frame.fullHeight_spinBox.value()
+		# proxyWidth = self.frame.proxyWidth_spinBox.value()
+		# proxyHeight = self.frame.proxyHeight_spinBox.value()
+		fullWidth = int(self.parent.xd.getValue('resolution', 'fullWidth'))
+		fullHeight = int(self.parent.xd.getValue('resolution', 'fullHeight'))
+		proxyWidth = int(self.parent.xd.getValue('resolution', 'proxyWidth'))
+		proxyHeight = int(self.parent.xd.getValue('resolution', 'proxyHeight'))
 		proxyScale = self.frame.proxyScale_doubleSpinBox.value()
 
 		if (proxyWidth == fullWidth*proxyScale) and (proxyHeight == fullHeight*proxyScale):

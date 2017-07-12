@@ -3,7 +3,9 @@ v0.9.9 (--)
 -	[Icarus] Improved support for high-DPI displays.
 -	[Icarus] Updated the embedded djv_view to version 1.1.0, and 64-bit on Windows. QuickTime support is now provided by ffmpeg.
 -	[Icarus] Added the ability to override the user via a command-line argument: i.e. --user USERNAME.
+-	[Icarus] Added a search filter box to the Job Management dialog.
 -	[Nuke] Added Deadline 8 integrated submitter script.
+-	[RealFlow] Fixed a bug where the project folder name was not being generated properly due to incorrect expansion of enviroment variables.
 
 v0.9.8 (2017-05-19)
 -	[Icarus] Ported UI code to use Qt.py (https://fredrikaverpil.github.io/2016/07/25/developing-with-qt-py/) enabling support for all Qt Python bindings (e.g PySide2, PyQt5).

@@ -885,8 +885,9 @@ def submitRender():
 	frameRange = "%s-%s" %(int(mc.getAttr('defaultRenderGlobals.startFrame')), int(mc.getAttr('defaultRenderGlobals.endFrame')))
 
 	import render_submit
-	renderSubmitDialog = render_submit.renderSubmitDialog()
-	renderSubmitDialog.display(frameRange=frameRange)
+	render_submit.run_maya(frameRange=frameRange)
+	# renderSubmitDialog = render_submit.renderSubmitDialog()
+	# renderSubmitDialog.display(frameRange=frameRange)
 
 
 def submitRenderLayer():
@@ -896,8 +897,9 @@ def submitRenderLayer():
 	currentLayer = mc.editRenderLayerGlobals(query=True, currentRenderLayer=True)
 
 	import render_submit
-	renderSubmitDialog = render_submit.renderSubmitDialog()
-	renderSubmitDialog.display(frameRange=frameRange, flags='-rl %s' %currentLayer)
+	render_submit.run_maya(frameRange=frameRange, flags='-rl %s' %currentLayer)
+	# renderSubmitDialog = render_submit.renderSubmitDialog()
+	# renderSubmitDialog.display(frameRange=frameRange, flags='-rl %s' %currentLayer)
 
 
 def update():

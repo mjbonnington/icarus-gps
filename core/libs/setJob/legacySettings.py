@@ -30,6 +30,8 @@ def convertAppExecPath(app, path, ap):
 
 def convertJobData(dataPath, jd, ap):
 	""" Read job data from python source and save out an XML file.
+		'jd' is jobData object.
+		'ap' is appPaths object.
 	"""
 	if os.path.isfile(os.path.join(dataPath, 'jobData.py')):
 		sys.path.append(dataPath)
@@ -77,6 +79,7 @@ def convertJobData(dataPath, jd, ap):
 
 def convertShotData(dataPath, sd):
 	""" Read shot data from python source and save out an XML file.
+		'sd' is shotData object.
 	"""
 	if os.path.isfile(os.path.join(dataPath, 'shotData.py')):
 		sys.path.append(dataPath)

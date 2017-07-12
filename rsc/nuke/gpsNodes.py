@@ -11,7 +11,10 @@
 
 import os
 import nuke
-import gpsSave, osOps, vCtrl
+
+import gpsSave
+import osOps
+import vCtrl
 
 
 ############
