@@ -81,12 +81,14 @@ class SettingsDialog(QtWidgets.QDialog):
 		        settingsType="Generic", 
 		        categoryLs=[], 
 		        xmlData=None, 
+		        inherit=None, 
 		        autoFill=False):
 		""" Display the dialog.
 			'settingsType' is the name given to the settings dialog.
 			'categoryLs' is a list of categories, should correspond to a page
 			of properties defined by a .ui file.
 			'xmlData' is the path to the XML file storing the settings.
+			'inherit' whether to inherit any values.
 			'autoFill' when true, attempt to fill some fields automatically.
 		"""
 		self.returnValue = False
@@ -97,6 +99,7 @@ class SettingsDialog(QtWidgets.QDialog):
 		self.settingsType = settingsType
 		self.categoryLs = categoryLs
 		self.xmlData = xmlData
+		self.inherit = inherit
 		self.autoFill = autoFill
 
 		self.lockUI = True
@@ -180,12 +183,16 @@ class SettingsDialog(QtWidgets.QDialog):
 	def openProperties(self, category, storeProperties=True):
 		""" Open properties panel for selected settings category.
 		"""
-		inherited = False
-
-		self.currentCategory = category  # a bit hacky
+		self.currentCategory = category
 		verbose.print_(self.currentCategory, 4)
 
 		self.loadPanel(category)
+
+		inherited = False
+		inheritable = False
+		if (self.inherit is not None) and self.ui.settings_frame.property('inheritable'):
+			verbose.print_("(values inheritable from %s)" %self.inherit, 4)
+			inheritable = True
 
 		# Load values into form widgets
 		widgets = self.ui.settings_frame.children()
@@ -205,7 +212,7 @@ class SettingsDialog(QtWidgets.QDialog):
 			attr = widget.property('xmlTag')
 			if attr:
 				value = self.xd.getValue(category, attr)
-				# if category == 'camera': # or category == 'time':  # nasty hack to avoid camera panel inheriting non-existent values - fix with 'inheritable' attribute to UI file
+				# if inheritable:
 				# 	value = self.xd.getValue(category, attr)
 				# else:
 				# 	value, inherited = self.inheritFrom(category, attr)
@@ -294,29 +301,30 @@ class SettingsDialog(QtWidgets.QDialog):
 					widget.currentIndexChanged.connect(self.storeComboBoxValue)
 
 
-	# def inheritFrom(self, category, attr):
-	# 	""" Tries to get a value from the current settings type, and if no
-	# 		value is found tries to inherit the value instead.
-	# 		Returns two values:
-	# 		'text' - the value of the requested attribute.
-	# 		'inherited' - a Boolean value which is true if the value was
-	# 		inherited.
-	# 	"""
-	# 	text = self.xd.getValue(category, attr)
-	# 	inherited = False
+	def inheritFrom(self, category, attr):
+		""" Tries to get a value from the current settings type, and if no
+			value is found tries to inherit the value instead.
+			Returns two values:
+			'text' - the value of the requested attribute.
+			'inherited' - a Boolean value which is true if the value was
+			inherited.
+		"""
+		text = self.xd.getValue(category, attr)
+		inherited = False
 
-	# 	if text is not "":
-	# 		pass
+		if text is not "":
+			pass
 
-	# 	elif self.settingsType == 'Shot':
-	# 		jd = settingsData.settingsData()
-	# 		jd.loadXML(os.path.join(os.environ['JOBDATA'], 'jobData.xml'))
-	# 		text = jd.getValue(category, attr)
-	# 		inherited = True
-	# 		verbose.print_('%s.%s = %s (inheriting value from job data)' %(category, attr, text), 4)
+		# elif self.settingsType == 'Shot':
+		elif self.inherit == 'Job':
+			jd = settingsData.settingsData()
+			jd.loadXML(os.path.join(os.environ['JOBDATA'], 'jobData.xml'))
+			text = jd.getValue(category, attr)
+			inherited = True
+			verbose.print_('%s.%s = %s (inheriting value from job data)' %(category, attr, text), 4)
 
-	# 	# print("%s/%s: got value %s, inherited=%s" %(category, attr, text, inherited))
-	# 	return text, inherited
+		# print("%s/%s: got value %s, inherited=%s" %(category, attr, text, inherited))
+		return text, inherited
 
 
 # --- Snipped out custom functions ---
