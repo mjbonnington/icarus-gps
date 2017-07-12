@@ -116,9 +116,9 @@ def setEnv(envVars):
 
 	# Terminal / Command Prompt
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
-		os.environ['GPS_RC'] = osOps.absolutePath('$IC_BASEDIR/core/ui/gps_cmd.bat')
+		os.environ['IC_SHELL_RC'] = osOps.absolutePath('$IC_WORKINGDIR/shell_cmd.bat')
 	else:
-		os.environ['GPS_RC'] = osOps.absolutePath('$IC_BASEDIR/core/ui/.gps_rc')
+		os.environ['IC_SHELL_RC'] = osOps.absolutePath('$IC_WORKINGDIR/shell_rc')
 
 
 	# Job / shot env

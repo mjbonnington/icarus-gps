@@ -5,13 +5,13 @@ color 08
 
 
 rem cd into shot dir
-cd /d %SHOTPATH%
+cd /d "%SHOTPATH%"
 
 
 rem software aliases
-doskey maya="%MAYAVERSION%" -proj %SHOTPATH%\3D\maya
-doskey mayarender="%MAYARENDERVERSION%" -proj %SHOTPATH%\3D\maya
-doskey Render="%MAYARENDERVERSION%" -proj %SHOTPATH%\3D\maya
+doskey maya="%MAYAVERSION%" -proj "%MAYADIR%"
+doskey mayarender="%MAYARENDERVERSION%" -proj "%MAYADIR%"
+doskey Render="%MAYARENDERVERSION%" $*
 doskey nuke="%NUKEVERSION%"
 doskey nukex="%NUKEVERSION%" --nukex
 doskey mudbox="%MUDBOXVERSION%"
@@ -20,7 +20,7 @@ doskey realflow="%REALFLOWVERSION%"
 doskey djv="%DJV_PLAY%"
 
 rem other aliases
-doskey shot=cd %SHOTPATH%
+doskey shot=cd "%SHOTPATH%"
 doskey pwd=cd
 doskey clear=cls
 doskey ls=dir /w

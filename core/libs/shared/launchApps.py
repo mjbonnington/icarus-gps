@@ -104,10 +104,10 @@ def terminal():
 	""" Launch the terminal / command prompt.
 	"""
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
-		# subprocess.Popen("cmd /k %s" % os.environ['GPS_RC'], shell=True)
-		subprocess.Popen("start cmd /k %s" % os.environ['GPS_RC'], shell=True)
+		# subprocess.Popen("cmd /k %s" % os.environ['IC_SHELL_RC'], shell=True)
+		subprocess.Popen("start cmd /k %s" % os.environ['IC_SHELL_RC'], shell=True)
 	else:
-		subprocess.Popen("bash --rcfile %s" % os.environ['GPS_RC'], shell=True)
+		subprocess.Popen("bash --rcfile %s" % os.environ['IC_SHELL_RC'], shell=True)
 
 
 def prodBoard():

@@ -33,9 +33,9 @@ cd $SHOTPATH
 
 
 ##software aliases##
-alias maya="$MAYAVERSION -proj $SHOTPATH/3D/maya &"
-alias mayarender="$MAYARENDERVERSION -proj $SHOTPATH/3D/maya"
-alias Render="$MAYARENDERVERSION -proj $SHOTPATH/3D/maya"
+alias maya="$MAYAVERSION -proj $MAYADIR &"
+alias mayarender="$MAYARENDERVERSION -proj $MAYADIR"
+alias Render="$MAYARENDERVERSION"
 alias nuke="$NUKEVERSION &"
 alias nukex="$NUKEVERSION --nukex &"
 alias mudbox="$MUDBOXVERSION &"
