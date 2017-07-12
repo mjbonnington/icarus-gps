@@ -970,7 +970,7 @@ Developers: %s
 		# import job_settings__main__  # Change this to generic class when it's ready
 		# settingsEditor = job_settings__main__.settingsDialog(parent=self, settingsType=settingsType, categoryLs=categoryLs, xmlData=xmlData, autoFill=autoFill)
 		import settings
-		settingsEditor = settings.dialog(parent=self)
+		settingsEditor = settings.SettingsDialog(parent=self)
 
 		# @settingsEditor.customSignal.connect
 		# def storeAttr(attr):
