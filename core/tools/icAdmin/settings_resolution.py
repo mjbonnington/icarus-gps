@@ -13,6 +13,8 @@ from fractions import Fraction
 import math
 import os
 
+from Qt import QtWidgets
+
 # Import custom modules
 import resPresets
 import verbose
@@ -66,17 +68,26 @@ class helper():
 		self.frame.proxyScale_slider.valueChanged.connect(lambda value: self.frame.proxyScale_doubleSpinBox.setValue(value/100))
 
 
-	def setup_(self):
+	def getInt(self, attr):
+		""" Get the specified attribute value as an integer. First attempt to
+			read from stored value, then if that fails get value from the
+			widget.
 		"""
-		"""
+		try:
+			return int(self.parent.xd.getValue('resolution', attr))
+		except ValueError:
+			return self.frame.findChildren(QtWidgets.QSpinBox, '%s_spinBox' %attr)[0].value()
+
 
 	def calcAspectRatio(self):
 		""" Calculate aspect ratio.
 		"""
-		# fullWidth = self.frame.fullWidth_spinBox.value()
-		# fullHeight = self.frame.fullHeight_spinBox.value()
-		fullWidth = int(self.parent.xd.getValue('resolution', 'fullWidth'))
-		fullHeight = int(self.parent.xd.getValue('resolution', 'fullHeight'))
+		# # fullWidth = self.frame.fullWidth_spinBox.value()
+		# # fullHeight = self.frame.fullHeight_spinBox.value()
+		# fullWidth = int(self.parent.xd.getValue('resolution', 'fullWidth'))
+		# fullHeight = int(self.parent.xd.getValue('resolution', 'fullHeight'))
+		fullWidth = self.getInt('fullWidth')
+		fullHeight = self.getInt('fullHeight')
 		ar = Fraction(fullWidth, fullHeight)
 		self.parent.aspectRatio = float(fullWidth) / float(fullHeight)
 
@@ -253,14 +264,18 @@ class helper():
 		""" Check proxy resolution matches full resolution x scale and set
 			appropriate proxy mode.
 		"""
-		# fullWidth = self.frame.fullWidth_spinBox.value()
-		# fullHeight = self.frame.fullHeight_spinBox.value()
-		# proxyWidth = self.frame.proxyWidth_spinBox.value()
-		# proxyHeight = self.frame.proxyHeight_spinBox.value()
-		fullWidth = int(self.parent.xd.getValue('resolution', 'fullWidth'))
-		fullHeight = int(self.parent.xd.getValue('resolution', 'fullHeight'))
-		proxyWidth = int(self.parent.xd.getValue('resolution', 'proxyWidth'))
-		proxyHeight = int(self.parent.xd.getValue('resolution', 'proxyHeight'))
+		# # fullWidth = self.frame.fullWidth_spinBox.value()
+		# # fullHeight = self.frame.fullHeight_spinBox.value()
+		# # proxyWidth = self.frame.proxyWidth_spinBox.value()
+		# # proxyHeight = self.frame.proxyHeight_spinBox.value()
+		# fullWidth = int(self.parent.xd.getValue('resolution', 'fullWidth'))
+		# fullHeight = int(self.parent.xd.getValue('resolution', 'fullHeight'))
+		# proxyWidth = int(self.parent.xd.getValue('resolution', 'proxyWidth'))
+		# proxyHeight = int(self.parent.xd.getValue('resolution', 'proxyHeight'))
+		fullWidth = self.getInt('fullWidth')
+		fullHeight = self.getInt('fullHeight')
+		proxyWidth = self.getInt('proxyWidth')
+		proxyHeight = self.getInt('proxyHeight')
 		proxyScale = self.frame.proxyScale_doubleSpinBox.value()
 
 		if (proxyWidth == fullWidth*proxyScale) and (proxyHeight == fullHeight*proxyScale):

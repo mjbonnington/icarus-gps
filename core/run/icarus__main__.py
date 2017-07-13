@@ -273,17 +273,17 @@ class icarusApp(QtWidgets.QMainWindow):
 		# self.actionRenderQueue.triggered.connect(self.launchRenderQueue)
 		self.ui.toolMenu_toolButton.addAction(self.actionRenderQueue)
 
-		self.separator = QtWidgets.QAction(None)
-		self.separator.setSeparator(True)
-		self.ui.toolMenu_toolButton.addAction(self.separator)
+		# self.separator = QtWidgets.QAction(None)
+		# self.separator.setSeparator(True)
+		# self.ui.toolMenu_toolButton.addAction(self.separator)
 
-		self.actionUserSettings = QtWidgets.QAction("User Settings...", None)
-		self.actionUserSettings.triggered.connect(self.userSettings)
-		self.ui.toolMenu_toolButton.addAction(self.actionUserSettings)
+		# self.actionUserSettings = QtWidgets.QAction("User Settings...", None)
+		# self.actionUserSettings.triggered.connect(self.userSettings)
+		# self.ui.toolMenu_toolButton.addAction(self.actionUserSettings)
 
-		self.actionIcarusSettings = QtWidgets.QAction("Global Settings...", None)
-		self.actionIcarusSettings.triggered.connect(self.globalSettings)
-		self.ui.toolMenu_toolButton.addAction(self.actionIcarusSettings)
+		# self.actionIcarusSettings = QtWidgets.QAction("Global Settings...", None)
+		# self.actionIcarusSettings.triggered.connect(self.globalSettings)
+		# self.ui.toolMenu_toolButton.addAction(self.actionIcarusSettings)
 
 
 		# Register status bar with the verbose module in order to print
@@ -963,7 +963,8 @@ Developers: %s
 			xmlData = os.path.join(os.environ['SHOTDATA'], 'shotData.xml')
 			inherit = "Job"
 		elif settingsType == "User":
-			categoryLs = ['user', 'global', 'test', 'job', 'time', 'resolution', 'units', 'apps', 'other', 'camera']
+			categoryLs = ['user', ]
+			# categoryLs = ['user', 'global', 'test', 'job', 'time', 'resolution', 'units', 'apps', 'other', 'camera']
 			xmlData = os.path.join(os.environ['IC_USERPREFS'], 'userPrefs.xml')
 			inherit = None  # "Defaults"
 		elif settingsType == "Global":
