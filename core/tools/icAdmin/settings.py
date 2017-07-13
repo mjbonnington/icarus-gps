@@ -5,8 +5,9 @@
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2015-2017 Gramercy Park Studios
 #
-# Generic settings editor dialog.
-# TODO: Improve compatibility with PySide / PyQt5
+# Modular settings editor dialog.
+# Provides a skeleton dialog which can be extended with load-in panels, each
+# with their own UI file and helper module (if required).
 
 
 import math
