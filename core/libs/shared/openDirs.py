@@ -15,10 +15,10 @@ import os
 
 # Set correct command for operating system's file explorer
 if os.environ['IC_RUNNING_OS'] == 'Windows':
-	sysCommand = 'explorer'
+	sysCommand = 'explorer'  # 'start'
 elif os.environ['IC_RUNNING_OS'] == 'Darwin':
 	sysCommand = 'open'
-else:
+else:  # Linux
 	sysCommand = 'nautilus'
 
 

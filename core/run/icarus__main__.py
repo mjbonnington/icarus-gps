@@ -957,28 +957,27 @@ Developers: %s
 		if settingsType == "Job":
 			categoryLs = ['job', 'time', 'resolution', 'units', 'apps', 'other']
 			xmlData = os.path.join(os.environ['JOBDATA'], 'jobData.xml')
+			inherit = None  # "Defaults"
 		elif settingsType == "Shot":
 			categoryLs = ['time', 'resolution', 'units', 'camera']
 			xmlData = os.path.join(os.environ['SHOTDATA'], 'shotData.xml')
+			inherit = "Job"
 		elif settingsType == "User":
 			categoryLs = ['user', 'global', 'test', 'job', 'time', 'resolution', 'units', 'apps', 'other', 'camera']
 			xmlData = os.path.join(os.environ['IC_USERPREFS'], 'userPrefs.xml')
+			inherit = None  # "Defaults"
 		elif settingsType == "Global":
 			categoryLs = ['global', ]
 			xmlData = os.path.join(os.path.join(os.environ['IC_CONFIGDIR'], 'globalPrefs.xml'))
+			inherit = None
 
-		# import job_settings__main__  # Change this to generic class when it's ready
-		# settingsEditor = job_settings__main__.settingsDialog(parent=self, settingsType=settingsType, categoryLs=categoryLs, xmlData=xmlData, autoFill=autoFill)
 		import settings
-		settingsEditor = settings.dialog(parent=self)
-
-		# @settingsEditor.customSignal.connect
-		# def storeAttr(attr):
-		# 	settingsEditor.currentAttr = attr  # This feels a bit hacky - need to find a way to add this function to main class
-
-		# settingsEditor.ui.exec_()
-		return settingsEditor.display(settingsType=settingsType, categoryLs=categoryLs, xmlData=xmlData, autoFill=autoFill)
-		# return settingsEditor.returnValue  # Return True if user clicked Save, False for Cancel
+		settingsEditor = settings.SettingsDialog(parent=self)
+		return settingsEditor.display(settingsType=settingsType, 
+		                              categoryLs=categoryLs, 
+		                              xmlData=xmlData, 
+		                              inherit=inherit, 
+		                              autoFill=autoFill)
 
 
 	def jobSettings(self):

@@ -32,15 +32,9 @@ class helper():
 
 
 	def setupAppVersions(self, selectCurrent=True):
-		""" Setup application version properties panel and populate combo boxes
+		""" Setup application version properties panel and populate combo
+			boxes.
 		"""
-		# Create the signal mapper
-		# signalMapper = QSignalMapper(self)
-		# if __binding__ in ('PySide'):
-		# 	signalMapper.mapped.connect(self.customSignal)  # TEMP DISABLE new-style signal connection not working with PyQt5
-		# else:
-		# 	print("Using %s, custom signal mapper not working" %__binding__)
-
 		noSelectText = ""
 		apps = self.ap.getApps()  # Get apps and versions
 		formLayout = self.frame.findChildren(QtWidgets.QFormLayout, 'formLayout')[0]
@@ -61,8 +55,6 @@ class helper():
 			# print(comboBox.property('xmlTag'))
 			comboBox.clear()
 
-			# signalMapper.setMapping(comboBox, app)
-
 			versions = self.ap.getVersions(app)  # Populate the combo box with available app versions
 			availableVersions = [noSelectText, ]  # Leave a blank entry in case we want to leave version undefined
 			for version in versions:
@@ -79,11 +71,10 @@ class helper():
 				except AttributeError:
 					text = noSelectText
 					# comboBox.insertItem(text, 0)
-				#print "%s: %s" %(app, text)
+				#print("%s: %s" %(app, text))
 				comboBox.setCurrentIndex(comboBox.findText(text))
 
-			# comboBox.currentIndexChanged.connect(signalMapper.map)
-			comboBox.currentIndexChanged.connect(lambda index: self.parent.storeComboBoxValue(index))
+			# comboBox.currentIndexChanged.connect(lambda index: self.parent.storeComboBoxValue(index))
 			formLayout.setWidget(i, QtWidgets.QFormLayout.FieldRole, comboBox)
 
 

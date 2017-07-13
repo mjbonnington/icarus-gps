@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>145</height>
+    <height>128</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,6 +15,9 @@
   </property>
   <property name="frameShape">
    <enum>QFrame::NoFrame</enum>
+  </property>
+  <property name="inheritable" stdset="0">
+   <bool>true</bool>
   </property>
   <layout class="QFormLayout" name="formLayout">
    <property name="fieldGrowthPolicy">
