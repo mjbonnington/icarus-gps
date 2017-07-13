@@ -63,12 +63,12 @@ def renumber(numLs, start=1, step=1, padding=4, preserve=True, autopad=True):
 
 	if preserve:
 		for num in numLs:
-			newNumInt = int( str(num).zfill(padding) ) # casting to string as zfill only works on strings
+			newNumInt = int( str(num).zfill(padding) )  # Cast to string as zfill only works on strings
 			newNumLs.append(newNumInt)
 
 	else:
 		for num in numLs:
-			newNumInt = int( str(index).zfill(padding) ) # casting to string as zfill only works on strings
+			newNumInt = int( str(index).zfill(padding) )  # Cast to string as zfill only works on strings
 			newNumLs.append(newNumInt)
 			index += step
 

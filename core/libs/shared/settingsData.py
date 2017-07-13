@@ -11,6 +11,8 @@
 
 import re
 import xml.etree.ElementTree as ET
+
+# Import custom modules
 import xmlData
 
 
@@ -19,14 +21,23 @@ class settingsData(xmlData.xmlData):
 		Inherits xmlData class.
 	"""
 
-	def getValue(self, category, setting):
-		""" Get the specified value
+	def getValue(self, category, setting, type='str'):
+		""" Get the specified value.
+			'type' can be specified in order to return a value of a given
+			type, valid values are 'str', 'int', 'float', 'bool'.
 		"""
 		elem = self.root.find( "./data[@category='%s']/%s" %(category, setting) )
 		if elem is not None:
 			text = elem.text
 			if text is not None:
-				return text
+				if type == 'str':
+					return text
+				elif type == 'int':
+					return int(text)
+				elif type == 'float':
+					return float(text)
+				elif type == 'bool':
+					return bool(text)
 
 		#for catElem in self.root.findall('./data'):
 		#	if catElem.attrib.get('category') == category:

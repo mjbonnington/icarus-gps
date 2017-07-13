@@ -9,6 +9,8 @@
 
 
 import xml.etree.ElementTree as ET
+
+# Import custom modules
 import xmlData
 
 
@@ -19,7 +21,8 @@ class camPresets(xmlData.xmlData):
 
 	def getPresets(self, activeOnly=False):
 		""" Return a list of camera presets.
-			If 'activeOnly' is True, only cameras marked as active will be returned.
+			If 'activeOnly' is True, only cameras marked as active will be
+			returned.
 		"""
 		elements = self.root.findall("./camera")
 		presets = []

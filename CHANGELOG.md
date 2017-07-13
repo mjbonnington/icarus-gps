@@ -1,5 +1,5 @@
 v0.9.9 (--)
--	[Icarus] Updated code for compatibility with Python 3 and Qt 5.
+-	[Icarus] Major code update for compatibility with Python 3 and Qt 5.
 -	[Icarus] Improved support for high-DPI displays.
 -	[Icarus] Updated the embedded djv_view to version 1.1.0, and 64-bit on Windows. QuickTime support is now provided by ffmpeg.
 -	[Icarus] Added the ability to override the user via a command-line argument: i.e. --user USERNAME.

@@ -8,6 +8,7 @@
 # Time settings handler.
 
 
+from __future__ import division  # Enables true division for Python2
 import time
 
 # Import custom modules
