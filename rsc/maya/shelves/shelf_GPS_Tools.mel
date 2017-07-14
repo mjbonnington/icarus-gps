@@ -8,6 +8,32 @@ global proc shelf_GPS_Tools () {
         -manage 1
         -visible 1
         -preventOverride 0
+        -annotation "Create clusters for individual selected objects or components" 
+        -enableBackground 0
+        -align "center" 
+        -label "gpsClusterPerFace" 
+        -labelOffset 0
+        -font "plainLabelFont" 
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.2 
+        -image "gpsClusterPerFace.png" 
+        -image1 "gpsClusterPerFace.png" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "import gpsClusterPerFace; reload(gpsClusterPerFace); gpsClusterPerFace.gpsClusterPerFace()" 
+        -sourceType "python" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+    shelfButton
+        -enableCommandRepeat 1
+        -enable 1
+        -width 35
+        -height 35
+        -manage 1
+        -visible 1
+        -preventOverride 0
         -annotation "Extract faces from the currently selected object" 
         -enableBackground 0
         -align "center" 
