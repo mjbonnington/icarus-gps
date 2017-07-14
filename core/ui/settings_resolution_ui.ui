@@ -163,9 +163,6 @@
      </item>
      <item>
       <widget class="QSlider" name="proxyScale_slider">
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the priority for this render job.&lt;/p&gt;&lt;p&gt;Higher priority jobs will be rendered first. Setting the priority to zero will submit the job as paused.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
        <property name="minimum">
         <number>0</number>
        </property>

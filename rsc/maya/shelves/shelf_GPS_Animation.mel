@@ -11,7 +11,7 @@ global proc shelf_GPS_Animation () {
         -annotation "Create a turntable camera for the selected object(s)" 
         -enableBackground 0
         -align "center" 
-        -label "360_cam" 
+        -label "gpsTurntable" 
         -labelOffset 0
         -rotation 0
         -flipX 0
