@@ -58,6 +58,13 @@ def create():
 	#	if not os.path.isdir(uDir):
 	#		osOps.createDir(uDir)
 
+	# _____________
+	# After Effects
+	for directory in ('comps', 'elements', 'renders'):
+		uDir = os.path.join(os.environ['AFXDIR'], directory, username)
+		if not os.path.isdir(uDir):
+			osOps.createDir(uDir)
+
 	# ____
 	# Nuke
 	for directory in ('scripts', 'elements', 'renders'):

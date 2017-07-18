@@ -225,6 +225,14 @@ def setEnv(envVars):
 	os.environ['NUKE_PATH']       = osOps.absolutePath('$IC_BASEDIR/rsc/nuke')
 
 
+	# After Effects
+	os.environ['AFXVERSION']     = getAppExecPath('AfterEffects')
+	os.environ['AFXDIR']         = osOps.absolutePath('$SHOTPATH/2D/aftereffects')
+	os.environ['AFXELEMENTSDIR'] = osOps.absolutePath('$AFXDIR/elements/$IC_USERNAME')
+	os.environ['AFXCOMPSDIR']    = osOps.absolutePath('$AFXDIR/comps/$IC_USERNAME')
+	os.environ['AFXRENDERSDIR']  = osOps.absolutePath('$AFXDIR/renders/$IC_USERNAME')
+
+
 	# Mudbox
 	os.environ['MUDBOXVERSION']            = getAppExecPath('Mudbox')
 	os.environ['MUDBOXDIR']                = osOps.absolutePath('$SHOTPATH/3D/mudbox')

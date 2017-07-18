@@ -35,6 +35,10 @@ def launch(app=None):
 		execPath = os.environ['MUDBOXVERSION']
 		cmdStr = '"%s"' % execPath
 
+	elif app is 'AfterEffects':
+		execPath = os.environ['AFXVERSION']
+		cmdStr = '"%s"' % execPath
+
 	elif app is 'Nuke':
 		execPath = os.environ['NUKEVERSION']
 		cmdStr = '"%s"' % execPath

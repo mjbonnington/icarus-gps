@@ -152,16 +152,18 @@ class icarusApp(QtWidgets.QMainWindow):
 		self.ui.setNewShot_pushButton.clicked.connect(self.unlockJobUI)
 
 		# App launch buttons - should be dynamic?
-		self.ui.maya_pushButton.clicked.connect(lambda: self.launchApp('Maya'))
-		self.ui.mudbox_pushButton.clicked.connect(lambda: self.launchApp('Mudbox'))
-		self.ui.nuke_pushButton.clicked.connect(lambda: self.launchApp('Nuke'))
-		self.ui.mari_pushButton.clicked.connect(lambda: self.launchApp('Mari'))
-		self.ui.realflow_pushButton.clicked.connect(lambda: self.launchApp('RealFlow'))
-		self.ui.openProdBoard_pushButton.clicked.connect(launchApps.prodBoard)
-		self.ui.openReview_pushButton.clicked.connect(lambda: self.launchApp('HieroPlayer'))
-		self.ui.openTerminal_pushButton.clicked.connect(launchApps.terminal)
-		self.ui.browse_pushButton.clicked.connect(openDirs.openShot)
-		self.ui.render_pushButton.clicked.connect(self.launchRenderQueue) # was self.launchRenderSubmit
+		self.ui.maya_toolButton.clicked.connect(lambda: self.launchApp('Maya'))
+		self.ui.mudbox_toolButton.clicked.connect(lambda: self.launchApp('Mudbox'))
+		self.ui.c4d_toolButton.clicked.connect(lambda: self.launchApp('Cinema4D'))
+		self.ui.aftereffects_toolButton.clicked.connect(lambda: self.launchApp('AfterEffects'))
+		self.ui.nuke_toolButton.clicked.connect(lambda: self.launchApp('Nuke'))
+		self.ui.mari_toolButton.clicked.connect(lambda: self.launchApp('Mari'))
+		self.ui.realflow_toolButton.clicked.connect(lambda: self.launchApp('RealFlow'))
+		self.ui.openReview_toolButton.clicked.connect(lambda: self.launchApp('HieroPlayer'))
+		self.ui.render_toolButton.clicked.connect(self.launchRenderQueue) # was self.launchRenderSubmit
+		self.ui.openTerminal_toolButton.clicked.connect(launchApps.terminal)
+		self.ui.openProdBoard_toolButton.clicked.connect(launchApps.prodBoard)
+		self.ui.browse_toolButton.clicked.connect(openDirs.openShot)
 
 		# Publishing UI
 		# self.ui.renderPblAdd_pushButton.clicked.connect(self.renderTableAdd)
@@ -194,65 +196,65 @@ class icarusApp(QtWidgets.QMainWindow):
 		####################################
 
 		# Nuke
-		self.ui.nuke_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+		self.ui.nuke_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
 		self.actionNuke = QtWidgets.QAction("Nuke", None)
 		self.actionNuke.triggered.connect(lambda: self.launchApp('Nuke'))
-		self.ui.nuke_pushButton.addAction(self.actionNuke)
+		self.ui.nuke_toolButton.addAction(self.actionNuke)
 
 		self.actionNukeX = QtWidgets.QAction("NukeX", None)
 		self.actionNukeX.triggered.connect(lambda: self.launchApp('NukeX'))
-		self.ui.nuke_pushButton.addAction(self.actionNukeX)
+		self.ui.nuke_toolButton.addAction(self.actionNukeX)
 
 		# ***Removed NukeStudio Launcher until properly supported in Icarus***
 		# self.actionNukeStudio = QtWidgets.QAction("NukeStudio", None)
 		# self.actionNukeStudio.triggered.connect(lambda: self.launchApp('NukeStudio'))
-		# self.ui.nuke_pushButton.addAction(self.actionNukeStudio)
+		# self.ui.nuke_toolButton.addAction(self.actionNukeStudio)
 
 		# Review
-		self.ui.openReview_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+		self.ui.openReview_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
 		self.actionHieroPlayer = QtWidgets.QAction("HieroPlayer", None)
 		self.actionHieroPlayer.triggered.connect(lambda: self.launchApp('HieroPlayer'))
-		self.ui.openReview_pushButton.addAction(self.actionHieroPlayer)
+		self.ui.openReview_toolButton.addAction(self.actionHieroPlayer)
 
 		self.actionDjv = QtWidgets.QAction("djv_view", None)
 		self.actionDjv.triggered.connect(launchApps.djv)
-		self.ui.openReview_pushButton.addAction(self.actionDjv)
+		self.ui.openReview_toolButton.addAction(self.actionDjv)
 
 		# Browse
-		self.ui.browse_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+		self.ui.browse_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
 		self.actionOpenShot = QtWidgets.QAction("Shot", None)
 		self.actionOpenShot.triggered.connect(openDirs.openShot)
-		self.ui.browse_pushButton.addAction(self.actionOpenShot)
+		self.ui.browse_toolButton.addAction(self.actionOpenShot)
 
 		self.actionOpenJob = QtWidgets.QAction("Job", None)
 		self.actionOpenJob.triggered.connect(openDirs.openJob)
-		self.ui.browse_pushButton.addAction(self.actionOpenJob)
+		self.ui.browse_toolButton.addAction(self.actionOpenJob)
 
 		# Render
-		self.ui.render_pushButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+		self.ui.render_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
 		self.actionRenderQueue = QtWidgets.QAction("Render Queue", None)
 		self.actionRenderQueue.triggered.connect(self.launchRenderQueue)
-		self.ui.render_pushButton.addAction(self.actionRenderQueue)
+		self.ui.render_toolButton.addAction(self.actionRenderQueue)
 
 		self.actionRenderSubmit = QtWidgets.QAction("Submit Render", None)
 		self.actionRenderSubmit.triggered.connect(self.launchRenderSubmit)
-		self.ui.render_pushButton.addAction(self.actionRenderSubmit)
+		self.ui.render_toolButton.addAction(self.actionRenderSubmit)
 
 		# self.actionBrowseRenders = QtWidgets.QAction("Browse Renders", None)
 		# self.actionBrowseRenders.triggered.connect(self.launchRenderBrowser)
-		# self.ui.render_pushButton.addAction(self.actionBrowseRenders)
+		# self.ui.render_toolButton.addAction(self.actionBrowseRenders)
 
 		self.actionDeadlineMonitor = QtWidgets.QAction("Deadline Monitor", None)
 		self.actionDeadlineMonitor.triggered.connect(lambda: self.launchApp('DeadlineMonitor'))
-		self.ui.render_pushButton.addAction(self.actionDeadlineMonitor)
+		self.ui.render_toolButton.addAction(self.actionDeadlineMonitor)
 
 		self.actionDeadlineSlave = QtWidgets.QAction("Deadline Slave", None)
 		self.actionDeadlineSlave.triggered.connect(lambda: self.launchApp('DeadlineSlave'))
-		self.ui.render_pushButton.addAction(self.actionDeadlineSlave)
+		self.ui.render_toolButton.addAction(self.actionDeadlineSlave)
 
 		# Tools menu
 		self.ui.toolMenu_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
