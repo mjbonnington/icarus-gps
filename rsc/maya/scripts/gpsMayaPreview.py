@@ -74,10 +74,10 @@ class preview():
 	def storeHUD(self):
 		""" Store the current state of the HUD in a dictionary.
 		"""
-		hudLS = mc.headsUpDisplay(listHeadsUpDisplays=True)
+		hudLs = mc.headsUpDisplay(listHeadsUpDisplays=True)
 
 		hudDic = {}
-		for hud in hudLS:
+		for hud in hudLs:
 			hudDic[hud] = mc.headsUpDisplay(hud, query=True, vis=True)
 
 		return hudDic
@@ -86,16 +86,16 @@ class preview():
 	def showHUD(self, vis):
 		""" Hide or show all HUD elements at once.
 		"""
-		hudLS = mc.headsUpDisplay(listHeadsUpDisplays=True)
+		hudLs = mc.headsUpDisplay(listHeadsUpDisplays=True)
 
-		for hud in hudLS:
+		for hud in hudLs:
 			mc.headsUpDisplay(hud, edit=True, vis=vis)
 
 
 	def restoreHUD(self, hudDic):
 		""" Restore the HUD from the state stored in the dictionary.
 		"""
-		hudLS = mc.headsUpDisplay(listHeadsUpDisplays=True)
+		hudLs = mc.headsUpDisplay(listHeadsUpDisplays=True)
 
 		for hud, vis in hudDic.iteritems():
 			mc.headsUpDisplay(hud, edit=True, vis=vis)
@@ -143,6 +143,9 @@ class preview():
 		"""
 		# Hide all current HUD elements
 		self.showHUD(0)
+
+		# Delete pre-existing custom HUD elements
+		self.slateOff()
 
 		# Create custom HUD elements
 		section = 2
@@ -214,9 +217,9 @@ class preview():
 	def slateOff(self):
 		""" Remove the GPS slate elements.
 		"""
-		hudLS = mc.headsUpDisplay(listHeadsUpDisplays=True)
+		hudLs = mc.headsUpDisplay(listHeadsUpDisplays=True)
 
-		for hud in hudLS:
+		for hud in hudLs:
 			if hud.startswith('GPS_slate'):
 				if mc.headsUpDisplay(hud, exists=True):
 					mc.headsUpDisplay(hud, remove=True)
