@@ -160,13 +160,15 @@ class jobManagementDialog(QtWidgets.QDialog):
 			jobName = self.j.getValue(jobElement, 'name')
 			jobPath = self.j.getValue(jobElement, 'path')
 
-			# Populate list view
+			# Populate list view, using filter
 			if jobFilter is not "":
-				if jobFilter in jobName:
+				if jobFilter.lower() in jobName.lower():  # Case-insensitive
 					item = self.addJobEntry(jobActive, jobName, jobPath)
+				self.ui.searchFilterClear_toolButton.setEnabled(True)
 
 			else:
 				item = self.addJobEntry(jobActive, jobName, jobPath)
+				self.ui.searchFilterClear_toolButton.setEnabled(False)
 
 			if selectItem == jobName:
 				selectedItem = item
