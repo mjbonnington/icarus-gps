@@ -192,19 +192,24 @@ def setEnv(envVars):
 		os.environ['VRAY_FOR_MAYA_SHADERS'] = osOps.absolutePath('$IC_BASEDIR/rsc/maya/shaders')
 		#os.environ['VRAY_FOR_MAYA2014_PLUGINS_x64'] += os.pathsep + osOps.absolutePath('$IC_BASEDIR/rsc/maya/plugins')
 
-		if os.environ['IC_RUNNING_OS'] == 'Windows':  # Set up Redshift plugin for Maya
-			if getAppExecPath('Redshift'):
-				os.environ['REDSHIFT_COREDATAPATH']     = getAppExecPath('Redshift')
-				os.environ['REDSHIFT_COMMON_ROOT']      = osOps.absolutePath('$REDSHIFT_COREDATAPATH/Plugins/Maya/Common')
-				os.environ['REDSHIFT_PLUG_IN_PATH']     = osOps.absolutePath('$REDSHIFT_COREDATAPATH/Plugins/Maya/%s/nt-x86-64' %maya_ver)
-				os.environ['REDSHIFT_SCRIPT_PATH']      = osOps.absolutePath('$REDSHIFT_COMMON_ROOT/scripts')
-				os.environ['REDSHIFT_XBMLANGPATH']      = osOps.absolutePath('$REDSHIFT_COMMON_ROOT/icons')
-				os.environ['REDSHIFT_RENDER_DESC_PATH'] = osOps.absolutePath('$REDSHIFT_COMMON_ROOT/rendererDesc')
+		if os.environ['IC_RUNNING_OS'] == 'Windows':  # Set up centralised deployment of Redshift plugin for Maya
+			if getAppExecPath('Redshift') is not "":
+				os.environ['REDSHIFT_COREDATAPATH']         = getAppExecPath('Redshift')
+				os.environ['REDSHIFT_COMMON_ROOT']          = osOps.absolutePath('$REDSHIFT_COREDATAPATH/Plugins/Maya/Common')
+				os.environ['REDSHIFT_PLUG_IN_PATH']         = osOps.absolutePath('$REDSHIFT_COREDATAPATH/Plugins/Maya/%s/nt-x86-64' %maya_ver)
+				os.environ['REDSHIFT_SCRIPT_PATH']          = osOps.absolutePath('$REDSHIFT_COMMON_ROOT/scripts')
+				os.environ['REDSHIFT_XBMLANGPATH']          = osOps.absolutePath('$REDSHIFT_COMMON_ROOT/icons')
+				os.environ['REDSHIFT_RENDER_DESC_PATH']     = osOps.absolutePath('$REDSHIFT_COMMON_ROOT/rendererDesc')
+				os.environ['REDSHIFT_CUSTOM_TEMPLATE_PATH'] = osOps.absolutePath('$REDSHIFT_COMMON_ROOT/scripts/NETemplates')
+				os.environ['REDSHIFT_MAYAEXTENSIONSPATH']   = osOps.absolutePath('$REDSHIFT_PLUG_IN_PATH/extensions')
+				os.environ['REDSHIFT_PROCEDURALSPATH']      = osOps.absolutePath('$REDSHIFT_COREDATAPATH/Procedurals')
 				pluginsPath += os.pathsep + os.environ['REDSHIFT_PLUG_IN_PATH']
 				scriptsPath += os.pathsep + os.environ['REDSHIFT_SCRIPT_PATH']
 				iconsPath   += os.pathsep + os.environ['REDSHIFT_XBMLANGPATH']
 				os.environ['MAYA_RENDER_DESC_PATH'] = os.environ['REDSHIFT_RENDER_DESC_PATH']
-				os.environ['PATH'] += os.pathsep + os.environ['REDSHIFT_PLUG_IN_PATH']
+				# os.environ['PATH'] += os.pathsep + os.environ['REDSHIFT_PLUG_IN_PATH']
+				os.environ['PATH'] += os.pathsep + os.environ['REDSHIFT_PLUG_IN_PATH'] + os.pathsep + osOps.absolutePath('$REDSHIFT_COREDATAPATH/bin')
+				os.environ['MAYA_CUSTOM_TEMPLATE_PATH'] = os.environ['REDSHIFT_CUSTOM_TEMPLATE_PATH']
 			os.environ['redshift_LICENSE'] = "62843@10.105.11.11"
 
 		os.environ['MAYA_PLUG_IN_PATH'] = pluginsPath
