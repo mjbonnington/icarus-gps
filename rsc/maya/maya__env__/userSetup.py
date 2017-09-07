@@ -24,15 +24,13 @@ import verbose
 
 
 # Deploy custom tool shelves
-shelfResources = os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'maya', 'shelves')
 mayaShelvesDir = os.path.join(mc.about(preferences=True), 'prefs', 'shelves')
-
 try:
-	osOps.copyDirContents(shelfResources, mayaShelvesDir)
+	osOps.copyDirContents(os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'maya', 'shelves'), mayaShelvesDir)
+	osOps.copyDirContents(os.path.join(os.environ['JOBPUBLISHDIR'], 'ma_shelves'), mayaShelvesDir)
 	verbose.gpsToolDeploy('OK')
 except:
 	verbose.gpsToolDeploy('Failed')
-
 
 # List of plugins to load by default
 ma_pluginLs = ['AbcExport', 

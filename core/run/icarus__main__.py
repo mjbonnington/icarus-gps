@@ -1720,7 +1720,10 @@ Developers: %s
 		if column == self.aTypeCol:
 			for item in itemLs:
 				if item[:2] in envPrefix or item in envPrefix:
-					column.addItem(item)
+					if item == 'scripts' or item == 'icons' or item == 'ma_shelves':  # bodge
+						pass
+					else:
+						column.addItem(item)
 		else:
 			for item in itemLs:
 				if not item.startswith('.'):
@@ -2088,7 +2091,7 @@ except AssertionError:
 try:
 	QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 except AttributeError:
-	verbose.warning("High DPI scaling not available in Qt %s. User Interface elements may not display correctly." %QtCore.qVersion())
+	verbose.warning("High DPI scaling not available in Qt %s. User Interface elements may not display correctly on high DPI display devices." %QtCore.qVersion())
 	# pass
 
 if __name__ == '__main__':
