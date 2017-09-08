@@ -27,7 +27,7 @@ import verbose
 mayaShelvesDir = os.path.join(mc.about(preferences=True), 'prefs', 'shelves')
 try:
 	osOps.copyDirContents(os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'maya', 'shelves'), mayaShelvesDir)
-	osOps.copyDirContents(os.path.join(os.environ['JOBPUBLISHDIR'], 'ma_shelves'), mayaShelvesDir)
+	# osOps.copyDirContents(os.path.join(os.environ['JOBPUBLISHDIR'], 'ma_shelves'), mayaShelvesDir)
 	verbose.gpsToolDeploy('OK')
 except:
 	verbose.gpsToolDeploy('Failed')

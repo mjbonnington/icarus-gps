@@ -214,6 +214,7 @@ def setEnv(envVars):
 				os.environ['MAYA_CUSTOM_TEMPLATE_PATH'] = os.environ['REDSHIFT_CUSTOM_TEMPLATE_PATH']
 			os.environ['redshift_LICENSE'] = "62843@10.105.11.11"
 
+		os.environ['MAYA_SHELF_PATH'] = osOps.absolutePath('$JOBPUBLISHDIR/ma_shelves')
 		os.environ['MAYA_PLUG_IN_PATH'] = pluginsPath
 		os.environ['MAYA_SCRIPT_PATH'] = scriptsPath
 		os.environ['PYTHONPATH'] = scriptsPath
