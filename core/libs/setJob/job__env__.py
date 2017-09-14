@@ -286,6 +286,12 @@ def setEnv(envVars):
 	os.environ['RFOBJECTSPATH']                      = osOps.absolutePath('$SHOTPUBLISHDIR/ma_geoCache/realflow')
 
 
+	# Cinema 4D
+	os.environ['C4DVERSION']   = getAppExecPath('Cinema4D')
+	os.environ['C4DDIR']       = osOps.absolutePath('$SHOTPATH/3D/c4d')
+	os.environ['C4DSCENESDIR'] = osOps.absolutePath('$C4DDIR/scenes/$IC_USERNAME')
+
+
 	# Clarisse
 	# sys.path.append(os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'clarisse'))
 

@@ -58,6 +58,13 @@ def create():
 	#	if not os.path.isdir(uDir):
 	#		osOps.createDir(uDir)
 
+	# ________
+	# Cinema4D
+	for directory in ('scenes', ):
+		uDir = os.path.join(os.environ['C4DDIR'], directory, username)
+		if not os.path.isdir(uDir):
+			osOps.createDir(uDir)
+
 	# _____________
 	# After Effects
 	for directory in ('comps', 'elements', 'renders'):

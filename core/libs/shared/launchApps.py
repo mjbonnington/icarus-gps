@@ -35,6 +35,10 @@ def launch(app=None):
 		execPath = os.environ['MUDBOXVERSION']
 		cmdStr = '"%s"' % execPath
 
+	elif app is 'Cinema4D':
+		execPath = os.environ['C4DVERSION']
+		cmdStr = '"%s"' % execPath
+
 	elif app is 'AfterEffects':
 		execPath = os.environ['AFXVERSION']
 		cmdStr = '"%s"' % execPath

@@ -5,9 +5,9 @@ v0.9.9 (--)
 -	[Icarus] Added the ability to override the user via a command-line argument: i.e. --user USERNAME.
 -	[Icarus] Added a search filter box to the Job Management dialog.
 -	[Maya] Added custom shelf for job-specific scripts and tools.
--	[Maya] Added script to flip (reverse) selected animation keys/curves.
+-	[Maya] Added simple script to flip (reverse) selected animation keys/curves.
 -	[Nuke] Added Deadline 8 integrated submitter script.
--	[RealFlow] Fixed a bug where the project folder name was not being generated properly due to incorrect expansion of enviroment variables.
+-	[RealFlow] Fixed a bug where the project folder name was not being generated properly due to incorrect expansion of environment variables.
 
 v0.9.8 (2017-05-19)
 -	[Icarus] Ported UI code to use Qt.py (https://fredrikaverpil.github.io/2016/07/25/developing-with-qt-py/) enabling support for all Qt Python bindings (e.g PySide2, PyQt5).
