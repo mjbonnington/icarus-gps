@@ -18,7 +18,8 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 	dailySeq, dailyRange, dailyType, dailyPath = dailyPblOpts
 	#nameBody, extension = os.path.splitext(dailySeq)
 	#extension = extension[1:] # remove leading dot from file extension
-	nameBody, _, extension = dailySeq.rsplit('.', 2)
+	nameBody, padding_, extension = dailySeq.rsplit('.', 2)
+	padding = len(padding_)
 
 	job = os.environ['JOB']
 	assetType = 'dailies'
@@ -65,11 +66,12 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 			startFrame = endFrame = dailyRange # if frame range is a single frame
 
 		try:
-			posterFrame = int(os.environ['POSTERFRAME'])
+			posterFrame_ = int(os.environ['POSTERFRAME'])
 		except ValueError:
-			posterFrame = -1
-		if not (int(startFrame) <= posterFrame <= int(endFrame)): # if poster frame is not within frame range, use mid frame
-			posterFrame = (int(startFrame)+int(endFrame)) / 2
+			posterFrame_ = -1
+		if not (int(startFrame) <= posterFrame_ <= int(endFrame)): # if poster frame is not within frame range, use mid frame
+			posterFrame_ = (int(startFrame)+int(endFrame)) / 2
+		posterFrame = str(posterFrame_).zfill(padding)
 
 		# Pass arguments to djv to process the files in djvOps
 		dailyFileBody = '%s_dailies_%s' % (os.environ['SHOT'], subsetName)
@@ -93,6 +95,7 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 
 		# Create daily snapshot
 		previewoutFile = os.path.join(pblDir, 'preview')
+
 		djvOps.prcImg(inFile, previewoutFile, posterFrame, posterFrame, extension, resize=(512,288), outExt='jpg')
 		#djvOps.prcQt(inFile, pblDir, startFrame, endFrame, extension, resize=(512,288))
 

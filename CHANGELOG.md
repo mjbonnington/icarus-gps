@@ -6,6 +6,7 @@ v0.9.9 (--)
 -	[Icarus] Added a search filter box to the Job Management dialog.
 -	[Maya] Added custom shelf for job-specific scripts and tools.
 -	[Maya] Added simple script to flip (reverse) selected animation keys/curves.
+-	[Maya] Fixed a bug where GPS Preview would fail to encode a QuickTime movie.
 -	[Nuke] Added Deadline 8 integrated submitter script.
 -	[RealFlow] Fixed a bug where the project folder name was not being generated properly due to incorrect expansion of environment variables.
 

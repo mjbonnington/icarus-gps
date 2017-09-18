@@ -81,13 +81,6 @@ class previewUI(QtWidgets.QMainWindow):
 		self.ui.start_spinBox.valueChanged.connect(self.storeRangeStart)
 		self.ui.end_spinBox.valueChanged.connect(self.storeRangeEnd)
 
-		self.ui.offscreen_checkBox.stateChanged.connect(self.setOffscreen)
-		self.ui.noSelection_checkBox.stateChanged.connect(self.setNoSelection)
-		self.ui.guides_checkBox.stateChanged.connect(self.setGuides)
-		self.ui.slate_checkBox.stateChanged.connect(self.setSlate)
-		self.ui.launchViewer_checkBox.stateChanged.connect(self.setLaunchViewer)
-		self.ui.createQuicktime_checkBox.stateChanged.connect(self.setCreateQuicktime)
-
 		# Set input validators
 		# alphanumeric_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w\.-]+'), self.ui.file_lineEdit)
 		alphanumeric_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w]+'), self.ui.file_lineEdit)
@@ -95,22 +88,48 @@ class previewUI(QtWidgets.QMainWindow):
 
 		# Read values from config file
 		userPrefs.read()
-	
+
 		# Populate UI with env vars
 		self.setupUI()
 
 
 	#-------------------------------------------------------------------------
 	# UI functions
-	
+
 	def setupUI(self):
 		""" Initialise UI and set options to stored values if possible.
-			Currently a bit hacky.
 		"""
 		self.ui.jobShot_label.setText('%s - %s' % (os.environ['JOB'], os.environ['SHOT']))
 
 		self.resetFilename()
 		self.storeFilename()
+
+		# Load values into form widgets (make recursive)
+		for widget in self.ui.options_groupBox.children():
+
+			# Set up handlers for different widget types & apply values
+			attr = widget.property('xmlTag')
+			if attr:
+
+				# Check box(es)...
+				if isinstance(widget, QtWidgets.QCheckBox):
+					try:
+						value = userPrefs.config.getboolean('gpspreview', attr)
+						widget.setChecked(value)
+						#print("Set")
+					except:
+						self.storeValue(attr, self.getCheckBoxValue(widget))
+						#print("Store")
+					widget.toggled.connect(self.storeCheckBoxValue)
+
+				# # Combo box(es)...
+				# elif isinstance(widget, QtWidgets.QComboBox):
+				# 	if value is not "":
+				# 		widget.setCurrentIndex(widget.findText(value))
+				# 	if storeProperties:
+				# 		self.storeValue(attr, widget.currentText())
+				# 	# widget.currentIndexChanged.connect(lambda index: self.storeComboBoxValue(index))
+				# 	widget.currentIndexChanged.connect(self.storeComboBoxValue)
 
 		try:
 			self.ui.resolution_comboBox.setCurrentIndex(userPrefs.config.getint('gpspreview', 'resolutionmode'))
@@ -121,36 +140,6 @@ class previewUI(QtWidgets.QMainWindow):
 			self.ui.range_comboBox.setCurrentIndex(userPrefs.config.getint('gpspreview', 'framerangemode'))
 		except:
 			pass
-
-		try:
-			self.ui.offscreen_checkBox.setChecked(userPrefs.config.getboolean('gpspreview', 'offscreen'))
-		except:
-			self.setOffscreen(self.ui.offscreen_checkBox.checkState())
-
-		try:
-			self.ui.noSelection_checkBox.setChecked(userPrefs.config.getboolean('gpspreview', 'noselection'))
-		except:
-			self.setNoSelection(self.ui.noSelection_checkBox.checkState())
-
-		try:
-			self.ui.guides_checkBox.setChecked(userPrefs.config.getboolean('gpspreview', 'guides'))
-		except:
-			self.setGuides(self.ui.guides_checkBox.checkState())
-
-		try:
-			self.ui.slate_checkBox.setChecked(userPrefs.config.getboolean('gpspreview', 'slate'))
-		except:
-			self.setSlate(self.ui.slate_checkBox.checkState())
-
-		try:
-			self.ui.launchViewer_checkBox.setChecked(userPrefs.config.getboolean('gpspreview', 'launchviewer'))
-		except:
-			self.setLaunchViewer(self.ui.launchViewer_checkBox.checkState())
-
-		try:
-			self.ui.createQuicktime_checkBox.setChecked(userPrefs.config.getboolean('gpspreview', 'createqt'))
-		except:
-			self.setCreateQuicktime(self.ui.createQuicktime_checkBox.checkState())
 
 		self.updateResGrp()
 		self.updateRangeGrp()
@@ -207,7 +196,8 @@ class previewUI(QtWidgets.QMainWindow):
 				res = int((float(resOrig[0])*resMult)), int((float(resOrig[1])*resMult))
 
 		# Store mode setting in user prefs
-		userPrefs.edit('gpspreview', 'resolutionmode', str(self.ui.resolution_comboBox.currentIndex()))
+		#userPrefs.edit('gpspreview', 'resolutionmode', str(self.ui.resolution_comboBox.currentIndex()))
+		self.storeValue('resolutionmode', self.ui.resolution_comboBox.currentIndex())
 
 		# Update widgets
 		self.ui.x_spinBox.setValue(res[0])
@@ -254,7 +244,8 @@ class previewUI(QtWidgets.QMainWindow):
 				frRange = frame, frame
 
 		# Store mode setting in user prefs
-		userPrefs.edit('gpspreview', 'framerangemode', str(self.ui.range_comboBox.currentIndex()))
+		#userPrefs.edit('gpspreview', 'framerangemode', str(self.ui.range_comboBox.currentIndex()))
+		self.storeValue('framerangemode', self.ui.range_comboBox.currentIndex())
 
 		# Update widgets
 		self.ui.start_spinBox.setValue(frRange[0])
@@ -265,24 +256,29 @@ class previewUI(QtWidgets.QMainWindow):
 		self.ui.end_spinBox.blockSignals(False)
 
 
+	# @QtCore.Slot()
 	def storeFilename(self):
 		""" Store custom output filename in user prefs.
 		"""
 		filename = self.ui.file_lineEdit.text()
 		if filename:
 			# userPrefs.edit('gpspreview', 'customfilename', filename)
+			# self.storeValue('customfilename', filename)
 			self.ui.preview_pushButton.setEnabled(True)
 		else:
 			self.ui.preview_pushButton.setEnabled(False)
 
 
+	# @QtCore.Slot()
 	def storeRes(self):
 		""" Store custom resolution in user prefs.
 		"""
 		res = "%dx%d" %(self.ui.x_spinBox.value(), self.ui.y_spinBox.value())
-		userPrefs.edit('gpspreview', 'customresolution', res)
+		#userPrefs.edit('gpspreview', 'customresolution', res)
+		self.storeValue('customresolution', res)
 
 
+	# @QtCore.Slot()
 	def storeRangeStart(self):
 		""" Store custom frame range in user prefs.
 		"""
@@ -301,81 +297,39 @@ class previewUI(QtWidgets.QMainWindow):
 		self.ui.end_spinBox.blockSignals(False)
 
 		frRange = "%d-%d" %(self.ui.start_spinBox.value(), self.ui.end_spinBox.value())
-		userPrefs.edit('gpspreview', 'customframerange', frRange)
+		#userPrefs.edit('gpspreview', 'customframerange', frRange)
+		self.storeValue('customframerange', frRange)
 
 
+	# @QtCore.Slot()
 	def storeRangeEnd(self):
 		""" Store custom frame range in user prefs.
 		"""
 		rangeStart = self.ui.start_spinBox.value()
 		rangeEnd = self.ui.end_spinBox.value()
-
-		# Stop the other widgets from emitting signals
-		# self.ui.start_spinBox.blockSignals(True)
-
-		# Update widgets
-		# self.ui.start_spinBox.setMaximum(rangeEnd)
-		# if rangeEnd <= rangeStart:
-		# 	self.ui.start_spinBox.setValue(rangeEnd)
-
-		# Re-enable signals
-		# self.ui.start_spinBox.blockSignals(False)
-
 		frRange = "%d-%d" %(self.ui.start_spinBox.value(), self.ui.end_spinBox.value())
-		userPrefs.edit('gpspreview', 'customframerange', frRange)
+		#userPrefs.edit('gpspreview', 'customframerange', frRange)
+		self.storeValue('customframerange', frRange)
 
 
-	def setOffscreen(self, state):
-		if state == QtCore.Qt.Checked:
-			#self.offscreen = True
-			userPrefs.edit('gpspreview', 'offscreen', 'True')
-		else:
-			#self.offscreen = False
-			userPrefs.edit('gpspreview', 'offscreen', 'False')
+	# @QtCore.Slot()
+	def storeCheckBoxValue(self):
+		""" Get the value from a Check Box and store in XML data.
+		"""
+		attr = self.sender().property('xmlTag')
+		value = self.getCheckBoxValue(self.sender())
+		self.storeValue(attr, value)
 
-	def setNoSelection(self, state):
-		if state == QtCore.Qt.Checked:
-			#self.noSelect = True
-			userPrefs.edit('gpspreview', 'noselection', 'True')
-		else:
-			#self.noSelect = False
-			userPrefs.edit('gpspreview', 'noselection', 'False')
 
-	def setGuides(self, state):
-		if state == QtCore.Qt.Checked:
-			#self.guides = True
-			userPrefs.edit('gpspreview', 'guides', 'True')
-		else:
-			#self.guides = False
-			userPrefs.edit('gpspreview', 'guides', 'False')
-
-	def setSlate(self, state):
-		if state == QtCore.Qt.Checked:
-			#self.slate = True
-			userPrefs.edit('gpspreview', 'slate', 'True')
-		else:
-			#self.slate = False
-			userPrefs.edit('gpspreview', 'slate', 'False')
-
-	def setLaunchViewer(self, state):
-		if state == QtCore.Qt.Checked:
-			#self.viewer = True
-			userPrefs.edit('gpspreview', 'launchviewer', 'True')
-		else:
-			#self.viewer = False
-			userPrefs.edit('gpspreview', 'launchviewer', 'False')
-
-	def setCreateQuicktime(self, state):
-		if state == QtCore.Qt.Checked:
-			#self.createQt = True
-			userPrefs.edit('gpspreview', 'createqt', 'True')
-		else:
-			#self.createQt = False
-			userPrefs.edit('gpspreview', 'createqt', 'False')
+	def storeValue(self, attr, value=""):
+		""" Store value in XML data.
+		"""
+		verbose.print_("%20s %s.%s=%s" %(type(value), 'gpspreview', attr, value), 4)
+		userPrefs.edit('gpspreview', attr, str(value))
 
 
 	def getOpts(self):
-		""" Get UI options.
+		""" Get UI options before generating playblast.
 		"""
 		# Get file name output string
 		self.fileInput = self.ui.file_lineEdit.text()
@@ -423,8 +377,8 @@ class previewUI(QtWidgets.QMainWindow):
 		if os.path.isfile('%s.mov' %input):
 			osOps.recurseRemove(input)
 		output = self.outputDir
-		startFrame = self.frRange[0]
-		endFrame = self.frRange[1]
+		startFrame = str(self.frRange[0]).zfill(4)  # Hard-coded to 4-digit padding
+		endFrame = str(self.frRange[1]).zfill(4)  # Hard-coded to 4-digit padding
 		inExt = self.ext
 		djvOps.prcQt(input, output, startFrame, endFrame, inExt, name=self.outputFile, fps=os.environ['FPS'], resize=None)
 
@@ -436,6 +390,22 @@ class previewUI(QtWidgets.QMainWindow):
 		inPath = os.path.join(self.outputDir, '%s.#.%s' % (self.outputFile, self.ext))
 		djvOps.viewer(sequence.getFirst(inPath))
 
+
+	# ############################################
+	# # Dialog acceptance/cancellation functions #
+	# ############################################
+
+	# def update(self):
+	# 	""" Dialog accept function.
+	# 	"""
+	# 	self.ui.accept()
+
+	# def cancel(self):
+	# 	""" Dialog cancel function.
+	# 	"""
+	# 	print("X")
+	# 	_maya_delete_ui()
+	# 	self.ui.reject()
 
 # ----------------------------------------------------------------------------
 # End of main application class
@@ -523,7 +493,8 @@ def run_maya():
 		previewApp.show()  # Show the UI
 	elif DOCK_WITH_MAYA_UI:
 		allowed_areas = ['right', 'left']
-		mc.dockControl(WINDOW_TITLE, label=WINDOW_TITLE, area='left', content=WINDOW_OBJECT, allowedArea=allowed_areas)
+		mc.dockControl(WINDOW_TITLE, label=WINDOW_TITLE, area='left', 
+					   content=WINDOW_OBJECT, allowedArea=allowed_areas)
 
 
 def run_nuke():
@@ -563,10 +534,12 @@ def run_nuke():
 # Detect environment and run application
 if os.environ['IC_ENV'] == 'MAYA':
 	import maya.cmds as mc
+	verbose.print_("GPS Preview for Maya", 4)
 	run_maya()
 elif os.environ['IC_ENV'] == 'NUKE':
 	import nuke
 	import nukescripts
+	verbose.print_("GPS Preview for Nuke", 4)
 	run_nuke()
 # elif __name__ == '__main__':
 # 	run_standalone()

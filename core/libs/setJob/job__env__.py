@@ -301,7 +301,8 @@ def setEnv(envVars):
 	# djv_ver = jobData.getAppVersion('djv_view')
 	djv_embedded_ver = '1.1.0'
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
-		os.environ['DJV_CONVERT'] = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-Windows-32/bin/djv_convert.exe' %djv_embedded_ver)
+		#os.environ['DJV_CONVERT'] = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-1.0.5-Windows-32/bin/djv_convert.exe')  # Latest 32-bit version
+		os.environ['DJV_CONVERT'] = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-Windows-64/bin/djv_convert.exe' %djv_embedded_ver)
 		os.environ['DJV_PLAY']    = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-Windows-64/bin/djv_view.exe' %djv_embedded_ver)
 
 	elif os.environ['IC_RUNNING_OS'] == 'Darwin':

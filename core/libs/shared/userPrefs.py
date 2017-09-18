@@ -29,9 +29,11 @@ def read():
 	"""
 	if os.path.exists(configFile):
 		config.read(configFile)
+		verbose.print_("Read user prefs.", 4)
 
 	else:
 		create()
+		verbose.print_("Created user prefs.", 4)
 
 
 def write():
