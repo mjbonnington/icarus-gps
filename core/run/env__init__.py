@@ -18,7 +18,7 @@ def setEnv():
 	""" Set some environment variables for basic operation.
 	"""
 	# Set version string
-	os.environ['IC_VERSION'] = 'v0.9.9-20170918'
+	os.environ['IC_VERSION'] = 'v0.9.10-20170919'
 
 	# Standardise some environment variables across systems.
 	# Usernames will always be stored as lowercase for compatibility.

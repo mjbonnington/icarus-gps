@@ -188,6 +188,8 @@ class previewUI(QtWidgets.QMainWindow):
 			self.ui.y_spinBox.setEnabled(False) #setReadOnly(True)
 			if resMode == "Shot default":
 				res = int(os.environ['RESOLUTIONX']), int(os.environ['RESOLUTIONY'])
+			elif resMode == "Proxy":
+				res = int(os.environ['PROXY_RESOLUTIONX']), int(os.environ['PROXY_RESOLUTIONY'])
 			elif resMode == "Render settings":
 				res = appConnect.getResolution()
 			else:

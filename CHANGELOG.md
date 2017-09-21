@@ -1,9 +1,13 @@
-v0.9.9 (--)
+v0.9.10 (--)
+-	[Maya] Added preset for proxy resolution to GPS Preview options.
+
+v0.9.9 (2017-09-18)
 -	[Icarus] Major code update for compatibility with Python 3 and Qt 5.
 -	[Icarus] Improved support for high-DPI displays.
 -	[Icarus] Updated the embedded djv_view to version 1.1.0, and 64-bit on Windows. QuickTime support is now provided by ffmpeg.
 -	[Icarus] Added the ability to override the user via a command-line argument: i.e. --user USERNAME.
 -	[Icarus] Added a search filter box to the Job Management dialog.
+-	[Icarus] Added launch icons for After Effects and Cinema 4D.
 -	[Maya] Added custom shelf for job-specific scripts and tools.
 -	[Maya] Added simple script to flip (reverse) selected animation keys/curves.
 -	[Maya] Fixed a bug where GPS Preview would fail to encode a QuickTime movie.

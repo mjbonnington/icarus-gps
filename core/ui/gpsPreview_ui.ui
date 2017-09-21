@@ -102,6 +102,11 @@
            </item>
            <item>
             <property name="text">
+             <string>Proxy</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
              <string>150%</string>
             </property>
            </item>
