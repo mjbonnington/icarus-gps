@@ -55,13 +55,18 @@ def launch(app=None):
 		execPath = os.environ['NUKEVERSION']
 		cmdStr = '"%s" --studio' % execPath
 
+	elif app is 'HieroPlayer':
+		execPath = os.environ['HIEROPLAYERVERSION']
+		if execPath:
+			cmdStr = '"%s" --quiet' % execPath
+		else:
+			# Hiero Player is bundled with Nuke 9.x and later. 
+			execPath = os.environ['NUKEVERSION']
+			cmdStr = '"%s" --player --quiet' % execPath
+
 	elif app is 'Mari':
 		execPath = os.environ['MARIVERSION']
 		cmdStr = '"%s"' % execPath
-
-	elif app is 'HieroPlayer':
-		execPath = os.environ['HIEROPLAYERVERSION']
-		cmdStr = '"%s" -q' % execPath
 
 	elif app is 'RealFlow':
 		execPath = os.environ['REALFLOWVERSION']

@@ -204,9 +204,6 @@ def noFile():
 def noGetTranforms():
 	error("Could not get object transforms.")
 
-def noHrox(hroxFile):
-	error("File not found: %s" %hroxFile)
-
 def noICSetsPbl():
 	error("ICSets cannot be selected for publishing")
 

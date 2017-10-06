@@ -31,9 +31,9 @@ class gpsScatter():
 					groupName = obj + "_scatter"
 					parent = mc.listRelatives(obj, parent=True)
 					if parent == None:
-						mc.group(empty=True, n=groupName)
+						newGroup = mc.group(empty=True, n=groupName)
 					else:
-						mc.group(empty=True, n=groupName, p=parent[0])
+						newGroup = mc.group(empty=True, n=groupName, p=parent[0])
 				for i in range(nCopies):
 					# Copies
 					if geoType == 1:
@@ -48,7 +48,7 @@ class gpsScatter():
 						sel = mc.instance(obj)
 					self.scatterObjects(sel)
 					if newGroup:
-						mc.parent(sel, groupName)
+						mc.parent(sel, newGroup)
 				if not keepOrig:
 					mc.delete(obj)
 

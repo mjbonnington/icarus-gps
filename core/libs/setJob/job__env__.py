@@ -233,6 +233,12 @@ def setEnv(envVars):
 	os.environ['NUKE_PATH']       = osOps.absolutePath('$IC_BASEDIR/rsc/nuke')
 
 
+	# Hiero / HieroPlayer
+	os.environ['HIEROPLAYERVERSION'] = getAppExecPath('HieroPlayer')
+	os.environ['HIEROEDITORIALPATH'] = osOps.absolutePath('$JOBPATH/../Editorial/Hiero')
+	os.environ['HIERO_PLUGIN_PATH']  = osOps.absolutePath('$IC_BASEDIR/rsc/hiero')
+
+
 	# After Effects
 	os.environ['AFXVERSION']     = getAppExecPath('AfterEffects')
 	os.environ['AFXDIR']         = osOps.absolutePath('$SHOTPATH/2D/aftereffects')
@@ -267,12 +273,6 @@ def setEnv(envVars):
 	os.environ['MARI_DEFAULT_IMPORT_PATH']   = os.environ['MARITEXTURESDIR']
 	os.environ['MARI_DEFAULT_RENDER_PATH']   = os.environ['MARIRENDERSDIR']
 	os.environ['MARI_DEFAULT_CAMERA_PATH']   = os.environ['SHOTPUBLISHDIR']
-
-
-	# Hiero
-	os.environ['HIEROPLAYERVERSION'] = getAppExecPath('HieroPlayer')
-	os.environ['HIEROEDITORIALPATH'] = osOps.absolutePath('$JOBPATH/../Editorial/Hiero')
-	os.environ['HIERO_PLUGIN_PATH']  = osOps.absolutePath('$IC_BASEDIR/rsc/hiero')
 
 
 	# RealFlow (2013)
