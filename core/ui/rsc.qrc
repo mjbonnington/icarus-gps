@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="rsc">
+    <file>rsc/app_icon_deadline.png</file>
+    <file>rsc/app_icon_deadline_disabled.png</file>
     <file>rsc/status_icon_ready.png</file>
     <file>rsc/status_icon_stopped.png</file>
     <file>rsc/status_icon_waiting.png</file>

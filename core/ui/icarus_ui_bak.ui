@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>576</height>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -277,13 +277,7 @@ QToolButton:disabled {
        <attribute name="title">
         <string>Launcher</string>
        </attribute>
-       <layout class="QVBoxLayout" name="launchTab_verticalLayout">
-        <property name="spacing">
-         <number>8</number>
-        </property>
-        <property name="margin">
-         <number>8</number>
-        </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
          <widget class="QGroupBox" name="shotSetupParent_groupBox">
           <property name="sizePolicy">
@@ -298,10 +292,7 @@ QToolButton:disabled {
           <property name="title">
            <string>Shot Setup</string>
           </property>
-          <layout class="QHBoxLayout" name="shotSetup_horizontalLayout">
-           <property name="margin">
-            <number>8</number>
-           </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_16">
            <item>
             <widget class="QToolButton" name="refreshJobs_toolButton">
              <property name="toolTip">
@@ -456,9 +447,28 @@ QToolButton:disabled {
          </widget>
         </item>
         <item>
+         <spacer name="verticalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
          <widget class="QGroupBox" name="launchApp_groupBox">
           <property name="enabled">
            <bool>false</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Launches applications to work within the job environment.&lt;/p&gt;&lt;p&gt;This section becomes available once the job and shot environment is set.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -466,551 +476,429 @@ QToolButton:disabled {
           <property name="title">
            <string>Launch</string>
           </property>
-          <layout class="QVBoxLayout" name="launchApp_verticalLayout">
-           <property name="margin">
-            <number>8</number>
-           </property>
+          <layout class="QVBoxLayout" name="verticalLayout_13">
            <item>
-            <spacer name="launchApp_verticalSpacer1">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>0</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QScrollArea" name="launchApp_scrollArea">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Launches applications to work within the job environment.&lt;/p&gt;&lt;p&gt;This section becomes available once the job and shot environment is set.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::NoFrame</enum>
-             </property>
-             <property name="lineWidth">
-              <number>0</number>
-             </property>
-             <property name="widgetResizable">
-              <bool>true</bool>
-             </property>
-             <property name="noBackground" stdset="0">
-              <bool>true</bool>
-             </property>
-             <widget class="QWidget" name="launchApp_scrollAreaWidgetContents">
-              <property name="geometry">
-               <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>744</width>
-                <height>247</height>
-               </rect>
-              </property>
-              <property name="noBackground" stdset="0">
-               <bool>true</bool>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_12">
-               <property name="margin">
-                <number>0</number>
+            <layout class="QGridLayout" name="apps_gridLayout">
+             <item row="0" column="3">
+              <widget class="QToolButton" name="c4d_toolButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
                </property>
-               <item>
-                <layout class="QGridLayout" name="apps_gridLayout">
-                 <item row="0" column="2">
-                  <widget class="QToolButton" name="mudbox_toolButton">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="toolTip">
-                    <string>Launch Mudbox</string>
-                   </property>
-                   <property name="statusTip">
-                    <string>Launch Mudbox</string>
-                   </property>
-                   <property name="text">
-                    <string>Mudbox</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/app_icon_mudbox.png</normaloff>
-                     <disabledoff>:/rsc/rsc/app_icon_mudbox_disabled.png</disabledoff>:/rsc/rsc/app_icon_mudbox.png</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>48</width>
-                     <height>48</height>
-                    </size>
-                   </property>
-                   <property name="toolButtonStyle">
-                    <enum>Qt::ToolButtonTextUnderIcon</enum>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="3">
-                  <widget class="QToolButton" name="c4d_toolButton">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="toolTip">
-                    <string>Launch Cinema 4D</string>
-                   </property>
-                   <property name="statusTip">
-                    <string>Launch Cinema 4D</string>
-                   </property>
-                   <property name="text">
-                    <string>Cinema 4D</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/app_icons_c4d.png</normaloff>
-                     <disabledoff>:/rsc/rsc/app_icons_c4d_disabled.png</disabledoff>:/rsc/rsc/app_icons_c4d.png</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>48</width>
-                     <height>48</height>
-                    </size>
-                   </property>
-                   <property name="toolButtonStyle">
-                    <enum>Qt::ToolButtonTextUnderIcon</enum>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QToolButton" name="nuke_toolButton">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="toolTip">
-                    <string>Launch Nuke</string>
-                   </property>
-                   <property name="statusTip">
-                    <string>Launch Nuke</string>
-                   </property>
-                   <property name="text">
-                    <string>Nuke</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/app_icon_nuke.png</normaloff>
-                     <disabledoff>:/rsc/rsc/app_icon_nuke_disabled.png</disabledoff>:/rsc/rsc/app_icon_nuke.png</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>48</width>
-                     <height>48</height>
-                    </size>
-                   </property>
-                   <property name="toolButtonStyle">
-                    <enum>Qt::ToolButtonTextUnderIcon</enum>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="4">
-                  <widget class="QToolButton" name="mari_toolButton">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="toolTip">
-                    <string>Launch Mari</string>
-                   </property>
-                   <property name="statusTip">
-                    <string>Launch Mari</string>
-                   </property>
-                   <property name="text">
-                    <string>Mari</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/app_icon_mari.png</normaloff>
-                     <disabledoff>:/rsc/rsc/app_icon_mari_disabled.png</disabledoff>:/rsc/rsc/app_icon_mari.png</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>48</width>
-                     <height>48</height>
-                    </size>
-                   </property>
-                   <property name="toolButtonStyle">
-                    <enum>Qt::ToolButtonTextUnderIcon</enum>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QToolButton" name="maya_toolButton">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="toolTip">
-                    <string>Launch Maya</string>
-                   </property>
-                   <property name="statusTip">
-                    <string>Launch Maya</string>
-                   </property>
-                   <property name="text">
-                    <string>Maya</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/app_icon_maya.png</normaloff>
-                     <disabledoff>:/rsc/rsc/app_icon_maya_disabled.png</disabledoff>:/rsc/rsc/app_icon_maya.png</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>48</width>
-                     <height>48</height>
-                    </size>
-                   </property>
-                   <property name="toolButtonStyle">
-                    <enum>Qt::ToolButtonTextUnderIcon</enum>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="2">
-                  <widget class="QToolButton" name="aftereffects_toolButton">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="toolTip">
-                    <string>Launch After Effects</string>
-                   </property>
-                   <property name="statusTip">
-                    <string>Launch After Effects</string>
-                   </property>
-                   <property name="text">
-                    <string>After Effects</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/app_icon_ae.png</normaloff>
-                     <disabledoff>:/rsc/rsc/app_icon_ae_disabled.png</disabledoff>:/rsc/rsc/app_icon_ae.png</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>48</width>
-                     <height>48</height>
-                    </size>
-                   </property>
-                   <property name="toolButtonStyle">
-                    <enum>Qt::ToolButtonTextUnderIcon</enum>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="3">
-                  <widget class="QToolButton" name="realflow_toolButton">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="toolTip">
-                    <string>Launch RealFlow</string>
-                   </property>
-                   <property name="statusTip">
-                    <string>Launch RealFlow</string>
-                   </property>
-                   <property name="text">
-                    <string>RealFlow</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/app_icon_realflow.png</normaloff>
-                     <disabledoff>:/rsc/rsc/app_icon_realflow_disabled.png</disabledoff>:/rsc/rsc/app_icon_realflow.png</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>48</width>
-                     <height>48</height>
-                    </size>
-                   </property>
-                   <property name="toolButtonStyle">
-                    <enum>Qt::ToolButtonTextUnderIcon</enum>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="4">
-                  <widget class="QToolButton" name="deadline_toolButton">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="toolTip">
-                    <string>Launch Deadline</string>
-                   </property>
-                   <property name="statusTip">
-                    <string>Launch Deadline</string>
-                   </property>
-                   <property name="text">
-                    <string>Deadline</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/app_icon_deadline.png</normaloff>
-                     <disabledoff>:/rsc/rsc/app_icon_deadline_disabled.png</disabledoff>:/rsc/rsc/app_icon_deadline.png</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>48</width>
-                     <height>48</height>
-                    </size>
-                   </property>
-                   <property name="toolButtonStyle">
-                    <enum>Qt::ToolButtonTextUnderIcon</enum>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QGridLayout" name="utilities_gridLayout">
-                 <item row="0" column="5">
-                  <widget class="QToolButton" name="browse_toolButton">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="toolTip">
-                    <string>Browse project folders</string>
-                   </property>
-                   <property name="statusTip">
-                    <string>Browse project folders</string>
-                   </property>
-                   <property name="text">
-                    <string>Browse</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/icon_folder.png</normaloff>
-                     <disabledoff>:/rsc/rsc/icon_folder_disabled.png</disabledoff>:/rsc/rsc/icon_folder.png</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>40</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                   <property name="toolButtonStyle">
-                    <enum>Qt::ToolButtonTextUnderIcon</enum>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="0">
-                  <widget class="QToolButton" name="render_toolButton">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="toolTip">
-                    <string>Submit and monitor local and network renders</string>
-                   </property>
-                   <property name="statusTip">
-                    <string>Submit and monitor local and network renders</string>
-                   </property>
-                   <property name="text">
-                    <string>Render</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/icon_render.png</normaloff>
-                     <disabledoff>:/rsc/rsc/icon_render_disabled.png</disabledoff>:/rsc/rsc/icon_render.png</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>40</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                   <property name="toolButtonStyle">
-                    <enum>Qt::ToolButtonTextUnderIcon</enum>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="3">
-                  <widget class="QToolButton" name="openTerminal_toolButton">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="toolTip">
-                    <string>Enables the command-line prompt</string>
-                   </property>
-                   <property name="statusTip">
-                    <string>Enables the command-line prompt</string>
-                   </property>
-                   <property name="text">
-                    <string>Terminal</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/app_icon_terminal.png</normaloff>
-                     <disabledoff>:/rsc/rsc/app_icon_terminal_disabled.png</disabledoff>:/rsc/rsc/app_icon_terminal.png</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>40</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                   <property name="toolButtonStyle">
-                    <enum>Qt::ToolButtonTextUnderIcon</enum>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QToolButton" name="openReview_toolButton">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="toolTip">
-                    <string>Launch HieroPlayer or djv_view</string>
-                   </property>
-                   <property name="statusTip">
-                    <string>Launch HieroPlayer or djv_view</string>
-                   </property>
-                   <property name="text">
-                    <string>Review</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/icon_review.png</normaloff>
-                     <disabledoff>:/rsc/rsc/icon_review_disabled.png</disabledoff>:/rsc/rsc/icon_review.png</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>40</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                   <property name="toolButtonStyle">
-                    <enum>Qt::ToolButtonTextUnderIcon</enum>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="2">
-                  <widget class="QToolButton" name="openProdBoard_toolButton">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="toolTip">
-                    <string>Open production board in web browser</string>
-                   </property>
-                   <property name="statusTip">
-                    <string>Open production board in web browser</string>
-                   </property>
-                   <property name="text">
-                    <string>Board</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/icon_productionBoard.png</normaloff>
-                     <disabledoff>:/rsc/rsc/icon_productionBoard_disabled.png</disabledoff>:/rsc/rsc/icon_productionBoard.png</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>40</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                   <property name="toolButtonStyle">
-                    <enum>Qt::ToolButtonTextUnderIcon</enum>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </widget>
-            </widget>
+               <property name="toolTip">
+                <string>Launch Cinema 4D</string>
+               </property>
+               <property name="statusTip">
+                <string>Launch Cinema 4D</string>
+               </property>
+               <property name="text">
+                <string>Cinema 4D</string>
+               </property>
+               <property name="icon">
+                <iconset resource="rsc.qrc">
+                 <normaloff>:/rsc/rsc/app_icons_c4d.png</normaloff>
+                 <disabledoff>:/rsc/rsc/app_icons_c4d_disabled.png</disabledoff>:/rsc/rsc/app_icons_c4d.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>48</width>
+                 <height>48</height>
+                </size>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QToolButton" name="mudbox_toolButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string>Launch Mudbox</string>
+               </property>
+               <property name="statusTip">
+                <string>Launch Mudbox</string>
+               </property>
+               <property name="text">
+                <string>Mudbox</string>
+               </property>
+               <property name="icon">
+                <iconset resource="rsc.qrc">
+                 <normaloff>:/rsc/rsc/app_icon_mudbox.png</normaloff>
+                 <disabledoff>:/rsc/rsc/app_icon_mudbox_disabled.png</disabledoff>:/rsc/rsc/app_icon_mudbox.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>48</width>
+                 <height>48</height>
+                </size>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QToolButton" name="aftereffects_toolButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string>Launch After Effects</string>
+               </property>
+               <property name="statusTip">
+                <string>Launch After Effects</string>
+               </property>
+               <property name="text">
+                <string>After Effects</string>
+               </property>
+               <property name="icon">
+                <iconset resource="rsc.qrc">
+                 <normaloff>:/rsc/rsc/app_icon_ae.png</normaloff>
+                 <disabledoff>:/rsc/rsc/app_icon_ae_disabled.png</disabledoff>:/rsc/rsc/app_icon_ae.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>48</width>
+                 <height>48</height>
+                </size>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QToolButton" name="nuke_toolButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string>Launch Nuke or NukeX</string>
+               </property>
+               <property name="statusTip">
+                <string>Launch Nuke or NukeX</string>
+               </property>
+               <property name="text">
+                <string>Nuke</string>
+               </property>
+               <property name="icon">
+                <iconset resource="rsc.qrc">
+                 <normaloff>:/rsc/rsc/app_icon_nuke.png</normaloff>
+                 <disabledoff>:/rsc/rsc/app_icon_nuke_disabled.png</disabledoff>:/rsc/rsc/app_icon_nuke.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>48</width>
+                 <height>48</height>
+                </size>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QToolButton" name="maya_toolButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string>Launch Maya</string>
+               </property>
+               <property name="statusTip">
+                <string>Launch Maya</string>
+               </property>
+               <property name="text">
+                <string>Maya</string>
+               </property>
+               <property name="icon">
+                <iconset resource="rsc.qrc">
+                 <normaloff>:/rsc/rsc/app_icon_maya.png</normaloff>
+                 <disabledoff>:/rsc/rsc/app_icon_maya_disabled.png</disabledoff>:/rsc/rsc/app_icon_maya.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>48</width>
+                 <height>48</height>
+                </size>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="4">
+              <widget class="QToolButton" name="mari_toolButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string>Launch Mari</string>
+               </property>
+               <property name="statusTip">
+                <string>Launch Mari</string>
+               </property>
+               <property name="text">
+                <string>Mari</string>
+               </property>
+               <property name="icon">
+                <iconset resource="rsc.qrc">
+                 <normaloff>:/rsc/rsc/app_icon_mari.png</normaloff>
+                 <disabledoff>:/rsc/rsc/app_icon_mari_disabled.png</disabledoff>:/rsc/rsc/app_icon_mari.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>48</width>
+                 <height>48</height>
+                </size>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="3">
+              <widget class="QToolButton" name="realflow_toolButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string>Launch RealFlow</string>
+               </property>
+               <property name="statusTip">
+                <string>Launch RealFlow</string>
+               </property>
+               <property name="text">
+                <string>RealFlow</string>
+               </property>
+               <property name="icon">
+                <iconset resource="rsc.qrc">
+                 <normaloff>:/rsc/rsc/app_icon_realflow.png</normaloff>
+                 <disabledoff>:/rsc/rsc/app_icon_realflow_disabled.png</disabledoff>:/rsc/rsc/app_icon_realflow.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>48</width>
+                 <height>48</height>
+                </size>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="4">
+              <widget class="QToolButton" name="render_toolButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string>Submit and monitor local and network renders</string>
+               </property>
+               <property name="statusTip">
+                <string>Submit and monitor local and network renders</string>
+               </property>
+               <property name="text">
+                <string>Render</string>
+               </property>
+               <property name="icon">
+                <iconset resource="rsc.qrc">
+                 <normaloff>:/rsc/rsc/icon_render.png</normaloff>
+                 <disabledoff>:/rsc/rsc/icon_render_disabled.png</disabledoff>:/rsc/rsc/icon_render.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>48</width>
+                 <height>48</height>
+                </size>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="4">
+              <widget class="QToolButton" name="browse_toolButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string>Browse project folders</string>
+               </property>
+               <property name="statusTip">
+                <string>Browse project folders</string>
+               </property>
+               <property name="text">
+                <string>Browse</string>
+               </property>
+               <property name="icon">
+                <iconset resource="rsc.qrc">
+                 <normaloff>:/rsc/rsc/icon_folder.png</normaloff>
+                 <disabledoff>:/rsc/rsc/icon_folder_disabled.png</disabledoff>:/rsc/rsc/icon_folder.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>48</width>
+                 <height>48</height>
+                </size>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="3">
+              <widget class="QToolButton" name="openProdBoard_toolButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string>Open production board in web browser</string>
+               </property>
+               <property name="statusTip">
+                <string>Open production board in web browser</string>
+               </property>
+               <property name="text">
+                <string>Board</string>
+               </property>
+               <property name="icon">
+                <iconset resource="rsc.qrc">
+                 <normaloff>:/rsc/rsc/icon_productionBoard.png</normaloff>
+                 <disabledoff>:/rsc/rsc/icon_productionBoard_disabled.png</disabledoff>:/rsc/rsc/icon_productionBoard.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>48</width>
+                 <height>48</height>
+                </size>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2">
+              <widget class="QToolButton" name="openTerminal_toolButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string>Enables the command-line prompt</string>
+               </property>
+               <property name="statusTip">
+                <string>Enables the command-line prompt</string>
+               </property>
+               <property name="text">
+                <string>Terminal</string>
+               </property>
+               <property name="icon">
+                <iconset resource="rsc.qrc">
+                 <normaloff>:/rsc/rsc/app_icon_terminal.png</normaloff>
+                 <disabledoff>:/rsc/rsc/app_icon_terminal_disabled.png</disabledoff>:/rsc/rsc/app_icon_terminal.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>48</width>
+                 <height>48</height>
+                </size>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QToolButton" name="openReview_toolButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string>Launch HieroPlayer or djv_view</string>
+               </property>
+               <property name="statusTip">
+                <string>Launch HieroPlayer or djv_view</string>
+               </property>
+               <property name="text">
+                <string>Review</string>
+               </property>
+               <property name="icon">
+                <iconset resource="rsc.qrc">
+                 <normaloff>:/rsc/rsc/icon_review.png</normaloff>
+                 <disabledoff>:/rsc/rsc/icon_review_disabled.png</disabledoff>:/rsc/rsc/icon_review.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>48</width>
+                 <height>48</height>
+                </size>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="launchOptions_groupBox">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="title">
+           <string>Options</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <spacer name="launchApp_verticalSpacer2">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>0</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QToolButton" name="launchOptions_toolButton">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">QToolButton {
-	padding: 1px 12px 2px 1px;
-}
-
-QToolButton:pressed, QToolButton:checked:pressed {
-	padding: 2px 11px 1px 2px;
-}
-
-/*QToolButton:disabled {
-	color: #ccc;
-}*/
-</string>
-             </property>
+            <widget class="QCheckBox" name="minimise_checkBox">
              <property name="text">
-              <string>Launch options</string>
+              <string>Minimise on launch</string>
              </property>
-             <property name="icon">
-              <iconset resource="rsc.qrc">
-               <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
-               <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>15</width>
-               <height>15</height>
-              </size>
-             </property>
-             <property name="popupMode">
-              <enum>QToolButton::InstantPopup</enum>
-             </property>
-             <property name="toolButtonStyle">
-              <enum>Qt::ToolButtonTextBesideIcon</enum>
+             <property name="checked">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -1023,13 +911,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
        <attribute name="title">
         <string>Publish</string>
        </attribute>
-       <layout class="QVBoxLayout" name="publishTab_verticalLayout">
-        <property name="spacing">
-         <number>8</number>
-        </property>
-        <property name="margin">
-         <number>8</number>
-        </property>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
          <widget class="QFrame" name="frame">
           <property name="sizePolicy">
@@ -1062,10 +944,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
              <property name="title">
               <string>Publish to:</string>
              </property>
-             <layout class="QHBoxLayout" name="publishTo_horizontalLayout">
-              <property name="margin">
-               <number>8</number>
-              </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_5">
               <item>
                <widget class="QRadioButton" name="publishToLibrary_radioButton">
                 <property name="enabled">
@@ -1655,8 +1534,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>355</width>
-                    <height>291</height>
+                    <width>354</width>
+                    <height>315</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -2590,13 +2469,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
        <attribute name="title">
         <string>Gather</string>
        </attribute>
-       <layout class="QVBoxLayout" name="gatherTab_verticalLayout">
-        <property name="spacing">
-         <number>8</number>
-        </property>
-        <property name="margin">
-         <number>8</number>
-        </property>
+       <layout class="QVBoxLayout" name="verticalLayout_11">
         <item>
          <widget class="QFrame" name="gatherAssetTop_frame">
           <property name="sizePolicy">
@@ -2629,10 +2502,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
              <property name="title">
               <string>Gather from:</string>
              </property>
-             <layout class="QHBoxLayout" name="gatherFrom_horizontalLayout">
-              <property name="margin">
-               <number>8</number>
-              </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_6">
               <item>
                <widget class="QRadioButton" name="gatherFromLibrary_radioButton">
                 <property name="enabled">
@@ -3105,41 +2975,6 @@ p, li { white-space: pre-wrap; }
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuOptions">
-    <property name="title">
-     <string>Options</string>
-    </property>
-    <widget class="QMenu" name="menuSort_by">
-     <property name="title">
-      <string>Sort by</string>
-     </property>
-     <addaction name="actionName"/>
-     <addaction name="actionCategory"/>
-     <addaction name="actionVendor"/>
-     <addaction name="actionMost_used"/>
-    </widget>
-    <addaction name="actionMinimise_on_Launch"/>
-    <addaction name="menuSort_by"/>
-   </widget>
-   <widget class="QMenu" name="menuTools">
-    <property name="title">
-     <string>Tools</string>
-    </property>
-    <addaction name="actionJob_Management"/>
-    <addaction name="actionShot_Creator"/>
-    <addaction name="actionBatch_Rename"/>
-    <addaction name="actionRender_Queue"/>
-   </widget>
-   <widget class="QMenu" name="menuShot">
-    <property name="title">
-     <string>Shot</string>
-    </property>
-    <addaction name="actionJob_settings"/>
-    <addaction name="actionShot_settings"/>
-   </widget>
-   <addaction name="menuShot"/>
-   <addaction name="menuTools"/>
-   <addaction name="menuOptions"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionItem_1">
@@ -3150,82 +2985,6 @@ p, li { white-space: pre-wrap; }
   <action name="actionItem_2">
    <property name="text">
     <string>Item 2</string>
-   </property>
-  </action>
-  <action name="actionMinimise_on_Launch">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Minimise on launch</string>
-   </property>
-  </action>
-  <action name="actionName">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Name</string>
-   </property>
-  </action>
-  <action name="actionCategory">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Category</string>
-   </property>
-  </action>
-  <action name="actionVendor">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Vendor</string>
-   </property>
-  </action>
-  <action name="actionMost_used">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Most used</string>
-   </property>
-  </action>
-  <action name="actionShot_settings">
-   <property name="text">
-    <string>Shot settings...</string>
-   </property>
-  </action>
-  <action name="actionJob_settings">
-   <property name="text">
-    <string>Job settings...</string>
-   </property>
-  </action>
-  <action name="actionJob_Management">
-   <property name="text">
-    <string>Job Management...</string>
-   </property>
-  </action>
-  <action name="actionShot_Creator">
-   <property name="text">
-    <string>Shot Creator...</string>
-   </property>
-  </action>
-  <action name="actionBatch_Rename">
-   <property name="text">
-    <string>Batch Rename...</string>
-   </property>
-  </action>
-  <action name="actionRender_Queue">
-   <property name="text">
-    <string>Render Queue...</string>
    </property>
   </action>
  </widget>

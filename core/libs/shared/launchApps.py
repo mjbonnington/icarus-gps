@@ -75,13 +75,21 @@ def launch(app=None):
 		startup.autoDeploy()
 		cmdStr = '"%s"' % execPath
 
-	elif app is 'DeadlineMonitor':
-		execPath = os.environ['DEADLINEMONITORVERSION']
+	elif app is 'Deadline':
+		execPath = os.environ['DEADLINEVERSION']
 		cmdStr = '"%s"' % execPath
 
+	elif app is 'DeadlineMonitor':
+		execPath = os.environ['DEADLINEVERSION']
+		cmdStr = '"%s" -monitor' % execPath
+		# execPath = os.environ['DEADLINEMONITORVERSION']
+		# cmdStr = '"%s"' % execPath
+
 	elif app is 'DeadlineSlave':
-		execPath = os.environ['DEADLINESLAVEVERSION']
-		cmdStr = '"%s"' % execPath
+		execPath = os.environ['DEADLINEVERSION']
+		cmdStr = '"%s" -slave' % execPath
+		# execPath = os.environ['DEADLINESLAVEVERSION']
+		# cmdStr = '"%s"' % execPath
 
 	# elif app is 'djv_view':
 	# 	execPath = os.environ['DJVVERSION']

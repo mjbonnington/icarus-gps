@@ -159,7 +159,8 @@ class icarusApp(QtWidgets.QMainWindow):
 		self.ui.nuke_toolButton.clicked.connect(lambda: self.launchApp('Nuke'))
 		self.ui.mari_toolButton.clicked.connect(lambda: self.launchApp('Mari'))
 		self.ui.realflow_toolButton.clicked.connect(lambda: self.launchApp('RealFlow'))
-		self.ui.openReview_toolButton.clicked.connect(lambda: self.launchApp('HieroPlayer'))
+		self.ui.openReview_toolButton.clicked.connect(launchApps.djv)
+		self.ui.deadline_toolButton.clicked.connect(lambda: self.launchApp('Deadline'))
 		self.ui.render_toolButton.clicked.connect(self.launchRenderQueue) # was self.launchRenderSubmit
 		self.ui.openTerminal_toolButton.clicked.connect(launchApps.terminal)
 		self.ui.openProdBoard_toolButton.clicked.connect(launchApps.prodBoard)
@@ -184,11 +185,11 @@ class icarusApp(QtWidgets.QMainWindow):
 		# self.ui.toolMenu_toolButton.clicked.connect(self.launchBatchRename)
 
 		# Options
-		self.ui.minimise_checkBox.stateChanged.connect(self.setMinimiseOnAppLaunch)
+		self.ui.actionMinimise_on_Launch.toggled.connect(self.setMinimiseOnAppLaunch)
 
 		# Set minimise on launch checkbox from user prefs
 		self.boolMinimiseOnAppLaunch = userPrefs.config.getboolean('main', 'minimiseonlaunch')
-		self.ui.minimise_checkBox.setChecked(self.boolMinimiseOnAppLaunch)
+		self.ui.actionMinimise_on_Launch.setChecked(self.boolMinimiseOnAppLaunch)
 
 
 		####################################
@@ -211,27 +212,20 @@ class icarusApp(QtWidgets.QMainWindow):
 		# self.actionNukeStudio.triggered.connect(lambda: self.launchApp('NukeStudio'))
 		# self.ui.nuke_toolButton.addAction(self.actionNukeStudio)
 
-		# Review
-		self.ui.openReview_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-
 		self.actionHieroPlayer = QtWidgets.QAction("HieroPlayer", None)
 		self.actionHieroPlayer.triggered.connect(lambda: self.launchApp('HieroPlayer'))
-		self.ui.openReview_toolButton.addAction(self.actionHieroPlayer)
+		self.ui.nuke_toolButton.addAction(self.actionHieroPlayer)
 
-		self.actionDjv = QtWidgets.QAction("djv_view", None)
-		self.actionDjv.triggered.connect(launchApps.djv)
-		self.ui.openReview_toolButton.addAction(self.actionDjv)
+		# Deadline
+		self.ui.deadline_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
-		# Browse
-		self.ui.browse_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+		self.actionDeadlineMonitor = QtWidgets.QAction("Deadline Monitor", None)
+		self.actionDeadlineMonitor.triggered.connect(lambda: self.launchApp('DeadlineMonitor'))
+		self.ui.deadline_toolButton.addAction(self.actionDeadlineMonitor)
 
-		self.actionOpenShot = QtWidgets.QAction("Shot", None)
-		self.actionOpenShot.triggered.connect(openDirs.openShot)
-		self.ui.browse_toolButton.addAction(self.actionOpenShot)
-
-		self.actionOpenJob = QtWidgets.QAction("Job", None)
-		self.actionOpenJob.triggered.connect(openDirs.openJob)
-		self.ui.browse_toolButton.addAction(self.actionOpenJob)
+		self.actionDeadlineSlave = QtWidgets.QAction("Deadline Slave", None)
+		self.actionDeadlineSlave.triggered.connect(lambda: self.launchApp('DeadlineSlave'))
+		self.ui.deadline_toolButton.addAction(self.actionDeadlineSlave)
 
 		# Render
 		self.ui.render_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
@@ -248,16 +242,30 @@ class icarusApp(QtWidgets.QMainWindow):
 		# self.actionBrowseRenders.triggered.connect(self.launchRenderBrowser)
 		# self.ui.render_toolButton.addAction(self.actionBrowseRenders)
 
-		self.actionDeadlineMonitor = QtWidgets.QAction("Deadline Monitor", None)
-		self.actionDeadlineMonitor.triggered.connect(lambda: self.launchApp('DeadlineMonitor'))
-		self.ui.render_toolButton.addAction(self.actionDeadlineMonitor)
+		# Review
+		# self.ui.openReview_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
-		self.actionDeadlineSlave = QtWidgets.QAction("Deadline Slave", None)
-		self.actionDeadlineSlave.triggered.connect(lambda: self.launchApp('DeadlineSlave'))
-		self.ui.render_toolButton.addAction(self.actionDeadlineSlave)
+		# self.actionHieroPlayer = QtWidgets.QAction("HieroPlayer", None)
+		# self.actionHieroPlayer.triggered.connect(lambda: self.launchApp('HieroPlayer'))
+		# self.ui.openReview_toolButton.addAction(self.actionHieroPlayer)
+
+		# self.actionDjv = QtWidgets.QAction("djv_view", None)
+		# self.actionDjv.triggered.connect(launchApps.djv)
+		# self.ui.openReview_toolButton.addAction(self.actionDjv)
+
+		# Browse
+		self.ui.browse_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+
+		self.actionOpenShot = QtWidgets.QAction("Shot", None)
+		self.actionOpenShot.triggered.connect(openDirs.openShot)
+		self.ui.browse_toolButton.addAction(self.actionOpenShot)
+
+		self.actionOpenJob = QtWidgets.QAction("Job", None)
+		self.actionOpenJob.triggered.connect(openDirs.openJob)
+		self.ui.browse_toolButton.addAction(self.actionOpenJob)
 
 		# Tools menu
-		self.ui.toolMenu_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+		# self.ui.toolMenu_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
 		self.actionJobManagement = QtWidgets.QAction("Job Management...", None)
 		self.actionJobManagement.triggered.connect(self.launchJobManagement)
@@ -275,18 +283,19 @@ class icarusApp(QtWidgets.QMainWindow):
 		# self.actionRenderQueue.triggered.connect(self.launchRenderQueue)
 		self.ui.toolMenu_toolButton.addAction(self.actionRenderQueue)
 
-		# self.separator = QtWidgets.QAction(None)
-		# self.separator.setSeparator(True)
-		# self.ui.toolMenu_toolButton.addAction(self.separator)
+		self.separator = QtWidgets.QAction(None)
+		self.separator.setSeparator(True)
+		self.ui.toolMenu_toolButton.addAction(self.separator)
 
-		# self.actionUserSettings = QtWidgets.QAction("User Settings...", None)
-		# self.actionUserSettings.triggered.connect(self.userSettings)
-		# self.ui.toolMenu_toolButton.addAction(self.actionUserSettings)
+		self.actionUserSettings = QtWidgets.QAction("User Settings...", None)
+		self.actionUserSettings.triggered.connect(self.userSettings)
+		self.ui.toolMenu_toolButton.addAction(self.actionUserSettings)
 
-		# self.actionIcarusSettings = QtWidgets.QAction("Global Settings...", None)
-		# self.actionIcarusSettings.triggered.connect(self.globalSettings)
-		# self.ui.toolMenu_toolButton.addAction(self.actionIcarusSettings)
+		self.actionIcarusSettings = QtWidgets.QAction("Global Settings...", None)
+		self.actionIcarusSettings.triggered.connect(self.globalSettings)
+		self.ui.toolMenu_toolButton.addAction(self.actionIcarusSettings)
 
+		self.ui.launchOptions_toolButton.setMenu(self.ui.menuOptions)
 
 		# Register status bar with the verbose module in order to print
 		# messages to it...
@@ -297,7 +306,7 @@ class icarusApp(QtWidgets.QMainWindow):
 		# Adapt UI for environment awareness #
 		######################################
 
-		self.jobMngTab = self.ui.tabWidget.widget(0)
+		self.launchTab = self.ui.tabWidget.widget(0)
 		self.publishTab = self.ui.tabWidget.widget(1)
 		self.gatherTab = self.ui.tabWidget.widget(2)
 		self.publishAssetTab = self.ui.publishType_tabWidget.widget(0)
@@ -311,7 +320,7 @@ class icarusApp(QtWidgets.QMainWindow):
 		if os.environ['IC_ENV'] == 'STANDALONE':
 
 			# Hide UI items relating to app environment(s)
-			uiHideLs = ['setNewShot_pushButton', 'shotEnv_toolButton', 'appIcon_label']
+			uiHideLs = ['setNewShot_pushButton', 'shotEnv_toolButton', 'appIcon_label', 'menubar']
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
@@ -319,7 +328,7 @@ class icarusApp(QtWidgets.QMainWindow):
 			# Populate 'Job' and 'Shot' drop down menus
 			self.populateJobs(setLast=True)
 
-			# Delete all tabs except 'Job Management'
+			# Delete all tabs except 'Launcher'
 			for i in range(0, self.ui.tabWidget.count()-1):
 				self.ui.tabWidget.removeTab(1)
 
@@ -328,7 +337,7 @@ class icarusApp(QtWidgets.QMainWindow):
 				self.ui.publishType_tabWidget.removeTab(0)
 
 			# Apply job/shot settings pop-up menu to shotEnv label (only in standalone mode)
-			self.ui.shotEnv_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+			# self.ui.shotEnv_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
 			self.actionJobSettings = QtWidgets.QAction("Job Settings...", None)
 			self.actionJobSettings.triggered.connect(self.jobSettings)
@@ -350,7 +359,7 @@ class icarusApp(QtWidgets.QMainWindow):
 			self.ui.appIcon_label.setPixmap(pixmap)
 
 			# Hide certain UI items
-			uiHideLs = ['assetSubType_listWidget', 'toolMenu_toolButton']
+			uiHideLs = ['assetSubType_listWidget', 'toolMenu_toolButton', 'menubar']
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
@@ -359,7 +368,7 @@ class icarusApp(QtWidgets.QMainWindow):
 			self.populateShotLs(self.ui.publishToShot_comboBox)
 			self.populateShotLs(self.ui.gatherFromShot_comboBox)
 			self.updateJobLabel()
-			self.ui.tabWidget.removeTab(0) # Remove 'Job Management' tab
+			self.ui.tabWidget.removeTab(0) # Remove 'Launcher' tab
 			self.ui.publishType_tabWidget.removeTab(1) # Remove 'nk Asset' tab
 
 			# Attempt to set the publish asset type button to remember the last selection - 'self.connectNewSignalsSlots()' must be called already
@@ -381,7 +390,7 @@ class icarusApp(QtWidgets.QMainWindow):
 			self.ui.appIcon_label.setPixmap(pixmap)
 
 			# Hide certain UI items
-			uiHideLs = ['assetSubType_listWidget', 'toolMenu_toolButton']
+			uiHideLs = ['assetSubType_listWidget', 'toolMenu_toolButton', 'menubar']
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
@@ -390,7 +399,7 @@ class icarusApp(QtWidgets.QMainWindow):
 			self.populateShotLs(self.ui.publishToShot_comboBox)
 			self.populateShotLs(self.ui.gatherFromShot_comboBox)
 			self.updateJobLabel()
-			self.ui.tabWidget.removeTab(0) # Remove 'Job Management' tab
+			self.ui.tabWidget.removeTab(0) # Remove 'Launcher' tab
 			self.ui.publishType_tabWidget.removeTab(0) # Remove 'ma Asset' tab
 
 			# Attempt to set the publish asset type button to remember the last selection - 'self.connectNewSignalsSlots()' must be called already
@@ -638,9 +647,9 @@ class icarusApp(QtWidgets.QMainWindow):
 		return dialog
 
 
-	######################
-	# Job management tab #
-	######################
+	################
+	# Launcher tab #
+	################
 
 	def populateJobs(self, setLast=False):
 		""" Populates job drop down menu.
@@ -687,7 +696,7 @@ class icarusApp(QtWidgets.QMainWindow):
 			# Re-enable signals so that shot list gets repopulated
 			self.ui.job_comboBox.blockSignals(False)
 
-		# If no jobs found, disable all job management UI controls
+		# If no jobs found, disable all launcher / shot setup UI controls
 		else:
 			msg = "No active jobs found"
 			verbose.warning(msg)
@@ -818,7 +827,9 @@ class icarusApp(QtWidgets.QMainWindow):
 		self.ui.shotSetup_groupBox.setEnabled(False)
 		self.ui.refreshJobs_toolButton.setEnabled(False)
 		self.ui.launchApp_groupBox.setEnabled(True)
-		self.ui.launchOptions_groupBox.setEnabled(True)
+		# self.ui.launchApp_scrollArea.setEnabled(True)
+		# self.ui.launchApp_scrollAreaWidgetContents.setEnabled(True)
+		# self.ui.launchOptions_groupBox.setEnabled(True)
 		self.ui.tabWidget.insertTab(1, self.publishTab, 'Publish')
 		self.ui.tabWidget.insertTab(2, self.gatherTab, 'Assets')
 		self.ui.gather_pushButton.hide()
@@ -840,7 +851,9 @@ class icarusApp(QtWidgets.QMainWindow):
 		self.ui.shotSetup_groupBox.setEnabled(True)
 		self.ui.refreshJobs_toolButton.setEnabled(True)
 		self.ui.launchApp_groupBox.setEnabled(False)
-		self.ui.launchOptions_groupBox.setEnabled(False)
+		# self.ui.launchApp_scrollArea.setEnabled(False)
+		# self.ui.launchApp_scrollAreaWidgetContents.setEnabled(False)
+		# self.ui.launchOptions_groupBox.setEnabled(False)
 
 		self.ui.tabWidget.removeTab(1); self.ui.tabWidget.removeTab(1) # remove publish and assets tab - check this
 		self.ui.renderPbl_treeWidget.clear() # clear the render layer tree view widget
@@ -868,12 +881,14 @@ class icarusApp(QtWidgets.QMainWindow):
 			Ultimately, this option should form part of a 'User Prefs' dialog,
 			and be removed from the main UI.
 		"""
-		if state == QtCore.Qt.Checked:
-			self.boolMinimiseOnAppLaunch = True
-			userPrefs.edit('main', 'minimiseonlaunch', 'True')
-		else:
-			self.boolMinimiseOnAppLaunch = False
-			userPrefs.edit('main', 'minimiseonlaunch', 'False')
+		self.boolMinimiseOnAppLaunch = state
+		userPrefs.edit('main', 'minimiseonlaunch', str(state))
+		# if state == QtCore.Qt.Checked:
+		# 	self.boolMinimiseOnAppLaunch = True
+		# 	userPrefs.edit('main', 'minimiseonlaunch', 'True')
+		# else:
+		# 	self.boolMinimiseOnAppLaunch = False
+		# 	userPrefs.edit('main', 'minimiseonlaunch', 'False')
 
 
 	def printShotInfo(self):
@@ -957,7 +972,7 @@ Developers: %s
 		""" Open settings dialog.
 		"""
 		if settingsType == "Job":
-			categoryLs = ['job', 'time', 'resolution', 'units', 'apps', 'other']
+			categoryLs = ['job', 'apps', 'time', 'resolution', 'units', 'other']
 			xmlData = os.path.join(os.environ['JOBDATA'], 'jobData.xml')
 			inherit = None  # "Defaults"
 		elif settingsType == "Shot":
@@ -965,7 +980,7 @@ Developers: %s
 			xmlData = os.path.join(os.environ['SHOTDATA'], 'shotData.xml')
 			inherit = "Job"
 		elif settingsType == "User":
-			categoryLs = ['user', ]
+			categoryLs = ['user', 'launcher']
 			# categoryLs = ['user', 'global', 'test', 'job', 'time', 'resolution', 'units', 'apps', 'other', 'camera']
 			xmlData = os.path.join(os.environ['IC_USERPREFS'], 'userPrefs.xml')
 			inherit = None  # "Defaults"

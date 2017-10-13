@@ -318,8 +318,9 @@ def setEnv(envVars):
 
 
 	# Deadline Monitor / Slave
-	os.environ['DEADLINEMONITORVERSION'] = getAppExecPath('DeadlineMonitor')
-	os.environ['DEADLINESLAVEVERSION']   = getAppExecPath('DeadlineSlave')
+	os.environ['DEADLINEVERSION'] = getAppExecPath('Deadline')
+	# os.environ['DEADLINEMONITORVERSION'] = getAppExecPath('DeadlineMonitor')
+	# os.environ['DEADLINESLAVEVERSION']   = getAppExecPath('DeadlineSlave')
 
 
 	return True

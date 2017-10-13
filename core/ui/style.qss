@@ -59,6 +59,17 @@ QAbstractScrollArea:disabled {
 	background: transparent;
 }
 
+QScrollArea {
+	/*background: #444;
+	border: 2px groove #333;
+	border-radius: 2px;*/
+	border: none;
+}
+
+/*QScrollArea:disabled {
+	background: transparent;
+}*/
+
 /* End Generic Elements */
 
 
@@ -633,6 +644,7 @@ QGroupBox {
 	padding: 6px 3px;
 	border: 2px groove #333;
 	border-radius: 2px; /* was: 5px */
+	/*border: 1px solid #555;*/
 	background: transparent;
 }
 

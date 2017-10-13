@@ -17,16 +17,7 @@
    <bool>true</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="leftMargin">
-    <number>8</number>
-   </property>
-   <property name="topMargin">
-    <number>8</number>
-   </property>
-   <property name="rightMargin">
-    <number>8</number>
-   </property>
-   <property name="bottomMargin">
+   <property name="margin">
     <number>8</number>
    </property>
    <item>
@@ -56,27 +47,21 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>225</width>
-         <height>308</height>
+         <width>150</width>
+         <height>337</height>
         </rect>
        </property>
+       <property name="noBackground" stdset="0">
+        <bool>true</bool>
+       </property>
        <layout class="QVBoxLayout" name="settings_verticalLayout">
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
+        <property name="margin">
          <number>0</number>
         </property>
         <item>
          <widget class="QFrame" name="settings_frame">
           <property name="frameShape">
-           <enum>QFrame::Box</enum>
+           <enum>QFrame::NoFrame</enum>
           </property>
           <layout class="QFormLayout" name="formLayout">
            <property name="fieldGrowthPolicy">
