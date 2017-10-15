@@ -8,6 +8,8 @@
 # Generic settings editor dialog
 # TODO: inherit the generic settings class, containing the non job-specific
 # methods from this class
+#
+# THIS CLASS IS DEPRECATED - WILL BE REMOVED EVENTUALLY
 
 
 import math
@@ -718,7 +720,7 @@ class settingsDialog(QtWidgets.QDialog):
 			print("Using %s, custom signal mapper not working" %__binding__)
 
 		noSelectText = ""
-		apps = self.ap.getApps() # get apps and versions
+		apps = self.ap.getAppNames() # get apps and versions
 		formLayout = frame.findChildren(QtWidgets.QFormLayout, 'formLayout')
 		appPaths_pushButton = frame.findChildren(QtWidgets.QPushButton, 'appPaths_pushButton')
 

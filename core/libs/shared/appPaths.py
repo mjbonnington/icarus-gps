@@ -21,7 +21,46 @@ class appPaths(xmlData.xmlData):
 	"""
 
 	def getApps(self):
-		""" Return list of apps.
+		""" Return all apps as elements.
+		"""
+		return self.root.findall('./app')
+
+
+	def sortByName(self, elem):
+		return elem.get("name")
+
+	def sortByCategory(self, elem):
+		return elem.findtext("category")
+
+	def sortByVendor(self, elem):
+		return elem.findtext("vendor")
+
+
+	def getLaunchApps(self, sortBy=None):
+		""" Return all launchable apps as elements.
+		"""
+		apps = self.root.findall("./app[@launch='True']")
+		if sortBy == "Name":
+			apps[:] = sorted(apps, key=self.sortByName)
+		elif sortBy == "Category":
+			apps[:] = sorted(apps, key=self.sortByCategory)
+		elif sortBy == "Vendor":
+			apps[:] = sorted(apps, key=self.sortByVendor)
+		return apps
+
+
+	def getAppIDs(self):
+		""" Return list of apps (short name / ID).
+		"""
+		apps = self.root.findall('./app')
+		a = []
+		for app in apps:
+			a.append( app.get('id') )
+		return a
+
+
+	def getAppNames(self):
+		""" Return list of apps (long / display name).
 		"""
 		apps = self.root.findall('./app')
 		a = []

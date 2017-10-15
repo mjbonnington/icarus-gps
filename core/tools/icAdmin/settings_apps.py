@@ -36,7 +36,7 @@ class helper():
 			boxes.
 		"""
 		noSelectText = ""
-		apps = self.ap.getApps()  # Get apps and versions
+		apps = self.ap.getAppNames()  # Get apps and versions
 		formLayout = self.frame.findChildren(QtWidgets.QFormLayout, 'formLayout')[0]
 		appPaths_pushButton = self.frame.appPaths_pushButton
 

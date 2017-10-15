@@ -125,7 +125,7 @@ class dialog(QtWidgets.QDialog):
 		self.ui.appName_comboBox.clear()
 
 		# Populate menu with apps
-		for app in self.ap.getApps():
+		for app in self.ap.getAppNames():
 			self.ui.appName_comboBox.addItem(app)
 
 
