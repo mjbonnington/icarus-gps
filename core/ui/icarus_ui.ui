@@ -187,6 +187,12 @@ QToolButton:disabled {
        </item>
        <item>
         <widget class="QToolButton" name="toolMenu_toolButton">
+         <property name="toolTip">
+          <string>Tools menu</string>
+         </property>
+         <property name="statusTip">
+          <string>Tools menu</string>
+         </property>
          <property name="styleSheet">
           <string notr="true">QToolButton {
 	padding: 1px 12px 2px 1px;
@@ -219,7 +225,7 @@ QToolButton:disabled {
           <enum>QToolButton::InstantPopup</enum>
          </property>
          <property name="toolButtonStyle">
-          <enum>Qt::ToolButtonTextBesideIcon</enum>
+          <enum>Qt::ToolButtonIconOnly</enum>
          </property>
         </widget>
        </item>
@@ -1377,7 +1383,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
                     <x>0</x>
                     <y>0</y>
                     <width>355</width>
-                    <height>293</height>
+                    <height>291</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -2830,17 +2836,21 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>Options</string>
     </property>
-    <widget class="QMenu" name="menuSort_by">
+    <widget class="QMenu" name="menuLauncher">
      <property name="title">
-      <string>Sort by</string>
+      <string>Launcher</string>
      </property>
+     <addaction name="actionMinimise_on_Launch"/>
+     <addaction name="separator"/>
      <addaction name="actionName"/>
      <addaction name="actionCategory"/>
      <addaction name="actionVendor"/>
      <addaction name="actionMost_used"/>
     </widget>
-    <addaction name="actionMinimise_on_Launch"/>
-    <addaction name="menuSort_by"/>
+    <addaction name="actionUser_settings"/>
+    <addaction name="actionGlobal_settings"/>
+    <addaction name="separator"/>
+    <addaction name="menuLauncher"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -2850,17 +2860,32 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionShot_Creator"/>
     <addaction name="actionBatch_Rename"/>
     <addaction name="actionRender_Queue"/>
+    <addaction name="actionSubmit_render"/>
    </widget>
    <widget class="QMenu" name="menuShot">
     <property name="title">
      <string>Shot</string>
     </property>
+    <widget class="QMenu" name="menuRecent_shots">
+     <property name="title">
+      <string>Recent shots</string>
+     </property>
+     <addaction name="actionSet_recent_shot"/>
+    </widget>
+    <addaction name="menuRecent_shots"/>
     <addaction name="actionJob_settings"/>
     <addaction name="actionShot_settings"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout_Icarus"/>
    </widget>
    <addaction name="menuShot"/>
    <addaction name="menuTools"/>
    <addaction name="menuOptions"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionItem_1">
@@ -2896,9 +2921,6 @@ p, li { white-space: pre-wrap; }
    <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
    <property name="text">
     <string>Category</string>
    </property>
@@ -2913,6 +2935,9 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionMost_used">
    <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
     <bool>true</bool>
    </property>
    <property name="text">
@@ -2947,6 +2972,31 @@ p, li { white-space: pre-wrap; }
   <action name="actionRender_Queue">
    <property name="text">
     <string>Render Queue...</string>
+   </property>
+  </action>
+  <action name="actionAbout_Icarus">
+   <property name="text">
+    <string>About Icarus...</string>
+   </property>
+  </action>
+  <action name="actionUser_settings">
+   <property name="text">
+    <string>User settings...</string>
+   </property>
+  </action>
+  <action name="actionGlobal_settings">
+   <property name="text">
+    <string>Global settings...</string>
+   </property>
+  </action>
+  <action name="actionSet_recent_shot">
+   <property name="text">
+    <string>Set recent shot</string>
+   </property>
+  </action>
+  <action name="actionSubmit_render">
+   <property name="text">
+    <string>Submit render...</string>
    </property>
   </action>
  </widget>

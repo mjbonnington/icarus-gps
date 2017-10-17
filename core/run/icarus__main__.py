@@ -127,9 +127,6 @@ class icarusApp(QtWidgets.QMainWindow):
 		# Instantiate jobs class
 		self.j = jobs.jobs()
 
-		# Setup app launch icons
-		self.al = appLauncher.appLauncher(self, self.ui.launchApp_scrollAreaWidgetContents)
-
 		# Set up keyboard shortcuts
 		self.shortcutShotInfo = QtWidgets.QShortcut(self)
 		self.shortcutShotInfo.setKey('Ctrl+I')
@@ -143,32 +140,41 @@ class icarusApp(QtWidgets.QMainWindow):
 		self.shortcutEnvVarsAll.setKey('Ctrl+Shift+E')
 		self.shortcutEnvVarsAll.activated.connect(lambda: self.printEnvVars(allvars=True))
 
-		###########################
-		# Connect signals & slots #
-		###########################
+		self.shortcutToggleMenu = QtWidgets.QShortcut(self)
+		self.shortcutToggleMenu.setKey('Alt+M')
+		self.shortcutToggleMenu.activated.connect(self.toggleMenuBar)
+
+		# --------------------------------------------------------------------
+		# Connect signals & slots
+		# --------------------------------------------------------------------
 
 		self.ui.tabWidget.currentChanged.connect(self.adjustMainUI)
 
-		# Set shot UI
-		self.ui.refreshJobs_toolButton.clicked.connect(self.populateJobs)
-		self.ui.job_comboBox.currentIndexChanged.connect(self.populateShots)
-		self.ui.setShot_pushButton.clicked.connect(self.setupJob)
-		self.ui.setNewShot_pushButton.clicked.connect(self.unlockJobUI)
+		# Shot menu
+		last = userPrefs.config.get('main', 'lastjob').split(',')
+		self.ui.actionSet_recent_shot.setText("%s - %s" %(last[0], last[1]))
+		# self.ui.actionSet_recent_shot.triggered.connect(lambda: self.setupJob(last))
+		self.ui.actionJob_settings.triggered.connect(self.jobSettings)
+		self.ui.actionShot_settings.triggered.connect(self.shotSettings)
 
-		# App launch buttons - should be dynamic?
-		# self.ui.maya_toolButton.clicked.connect(lambda: self.launchApp('Maya'))
-		# self.ui.mudbox_toolButton.clicked.connect(lambda: self.launchApp('Mudbox'))
-		# self.ui.c4d_toolButton.clicked.connect(lambda: self.launchApp('Cinema4D'))
-		# self.ui.aftereffects_toolButton.clicked.connect(lambda: self.launchApp('AfterEffects'))
-		# self.ui.nuke_toolButton.clicked.connect(lambda: self.launchApp('Nuke'))
-		# self.ui.mari_toolButton.clicked.connect(lambda: self.launchApp('Mari'))
-		# self.ui.realflow_toolButton.clicked.connect(lambda: self.launchApp('RealFlow'))
-		# self.ui.deadline_toolButton.clicked.connect(lambda: self.launchApp('Deadline'))
-		self.ui.render_toolButton.clicked.connect(self.launchRenderQueue) # was self.launchRenderSubmit
-		self.ui.openReview_toolButton.clicked.connect(launchApps.djv)
-		self.ui.openProdBoard_toolButton.clicked.connect(launchApps.prodBoard)
-		self.ui.openTerminal_toolButton.clicked.connect(launchApps.terminal)
-		self.ui.browse_toolButton.clicked.connect(openDirs.openShot)
+		# Tools menu
+		self.ui.actionJob_Management.triggered.connect(self.launchJobManagement)
+		self.ui.actionShot_Creator.triggered.connect(self.launchShotCreator)
+		self.ui.actionBatch_Rename.triggered.connect(self.launchBatchRename)
+		self.ui.actionRender_Queue.triggered.connect(self.launchRenderQueue)
+		self.ui.actionSubmit_render.triggered.connect(self.launchRenderSubmit)
+
+		self.ui.toolMenu_toolButton.setMenu(self.ui.menuTools)  # Add tools menu to tool button in UI
+
+		# Options menu
+		self.ui.actionUser_settings.triggered.connect(self.userSettings)
+		self.ui.actionGlobal_settings.triggered.connect(self.globalSettings)
+
+		# Help menu
+		self.ui.actionAbout_Icarus.triggered.connect(self.about)
+
+		# Header toolbar
+		self.ui.about_toolButton.clicked.connect(self.about)
 
 		# Publishing UI
 		# self.ui.renderPblAdd_pushButton.clicked.connect(self.renderTableAdd)
@@ -184,138 +190,12 @@ class icarusApp(QtWidgets.QMainWindow):
 		self.ui.dailyPblAdd_pushButton.clicked.connect(self.dailyTableAdd)
 		self.ui.publish_pushButton.clicked.connect(self.initPublish)
 
-		# Header toolbar
-		self.ui.about_toolButton.clicked.connect(self.about)
-
-		# Options
-		self.ui.actionMinimise_on_Launch.toggled.connect(self.setMinimiseOnAppLaunch)
-		self.ui.actionName.toggled.connect(lambda: self.al.setupIconGrid(sortBy="Name"))
-		self.ui.actionCategory.toggled.connect(lambda: self.al.setupIconGrid(sortBy="Category"))
-		self.ui.actionVendor.toggled.connect(lambda: self.al.setupIconGrid(sortBy="Vendor"))
-		self.ui.actionMost_used.toggled.connect(lambda: self.al.setupIconGrid(sortBy="Most_used"))
-
-		# Launch options menu
-		self.ui.launchOptions_toolButton.setMenu(self.ui.menuOptions)
-
-		# Set minimise on launch checkbox from user prefs
-		self.boolMinimiseOnAppLaunch = userPrefs.config.getboolean('main', 'minimiseonlaunch')
-		self.ui.actionMinimise_on_Launch.setChecked(self.boolMinimiseOnAppLaunch)
-
-		# Make 'Sort by' actions mutually exclusive
-		alignmentGroup = QtWidgets.QActionGroup(self)
-		alignmentGroup.addAction(self.ui.actionName)
-		alignmentGroup.addAction(self.ui.actionCategory)
-		alignmentGroup.addAction(self.ui.actionVendor)
-		alignmentGroup.addAction(self.ui.actionMost_used)
-		#self.ui.actionCategory.setChecked(True)
-
-
-		####################################
-		# Add right-click menus to buttons #
-		####################################
-
-		# # Nuke
-		# self.ui.nuke_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-
-		# self.actionNuke = QtWidgets.QAction("Nuke", None)
-		# self.actionNuke.triggered.connect(lambda: self.launchApp('Nuke'))
-		# self.ui.nuke_toolButton.addAction(self.actionNuke)
-
-		# self.actionNukeX = QtWidgets.QAction("NukeX", None)
-		# self.actionNukeX.triggered.connect(lambda: self.launchApp('NukeX'))
-		# self.ui.nuke_toolButton.addAction(self.actionNukeX)
-
-		# # ***Removed NukeStudio Launcher until properly supported in Icarus***
-		# # self.actionNukeStudio = QtWidgets.QAction("NukeStudio", None)
-		# # self.actionNukeStudio.triggered.connect(lambda: self.launchApp('NukeStudio'))
-		# # self.ui.nuke_toolButton.addAction(self.actionNukeStudio)
-
-		# self.actionHieroPlayer = QtWidgets.QAction("HieroPlayer", None)
-		# self.actionHieroPlayer.triggered.connect(lambda: self.launchApp('HieroPlayer'))
-		# self.ui.nuke_toolButton.addAction(self.actionHieroPlayer)
-
-		# # Deadline
-		# self.ui.deadline_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-
-		# self.actionDeadlineMonitor = QtWidgets.QAction("Deadline Monitor", None)
-		# self.actionDeadlineMonitor.triggered.connect(lambda: self.launchApp('DeadlineMonitor'))
-		# self.ui.deadline_toolButton.addAction(self.actionDeadlineMonitor)
-
-		# self.actionDeadlineSlave = QtWidgets.QAction("Deadline Slave", None)
-		# self.actionDeadlineSlave.triggered.connect(lambda: self.launchApp('DeadlineSlave'))
-		# self.ui.deadline_toolButton.addAction(self.actionDeadlineSlave)
-
-		# Render
-		self.ui.render_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-
-		self.actionRenderQueue = QtWidgets.QAction("Render Queue", None)
-		self.actionRenderQueue.triggered.connect(self.launchRenderQueue)
-		self.ui.render_toolButton.addAction(self.actionRenderQueue)
-
-		self.actionRenderSubmit = QtWidgets.QAction("Submit Render", None)
-		self.actionRenderSubmit.triggered.connect(self.launchRenderSubmit)
-		self.ui.render_toolButton.addAction(self.actionRenderSubmit)
-
-		# self.actionBrowseRenders = QtWidgets.QAction("Browse Renders", None)
-		# self.actionBrowseRenders.triggered.connect(self.launchRenderBrowser)
-		# self.ui.render_toolButton.addAction(self.actionBrowseRenders)
-
-		# Review
-		# self.ui.openReview_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-
-		# self.actionHieroPlayer = QtWidgets.QAction("HieroPlayer", None)
-		# self.actionHieroPlayer.triggered.connect(lambda: self.launchApp('HieroPlayer'))
-		# self.ui.openReview_toolButton.addAction(self.actionHieroPlayer)
-
-		# self.actionDjv = QtWidgets.QAction("djv_view", None)
-		# self.actionDjv.triggered.connect(launchApps.djv)
-		# self.ui.openReview_toolButton.addAction(self.actionDjv)
-
-		# Browse
-		self.ui.browse_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-
-		self.actionOpenShot = QtWidgets.QAction("Shot", None)
-		self.actionOpenShot.triggered.connect(openDirs.openShot)
-		self.ui.browse_toolButton.addAction(self.actionOpenShot)
-
-		self.actionOpenJob = QtWidgets.QAction("Job", None)
-		self.actionOpenJob.triggered.connect(openDirs.openJob)
-		self.ui.browse_toolButton.addAction(self.actionOpenJob)
-
-		# Tools menu
-		# self.ui.toolMenu_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-
-		self.actionJobManagement = QtWidgets.QAction("Job Management...", None)
-		self.actionJobManagement.triggered.connect(self.launchJobManagement)
-		self.ui.toolMenu_toolButton.addAction(self.actionJobManagement)
-
-		self.actionShotCreator = QtWidgets.QAction("Shot Creator...", None)
-		self.actionShotCreator.triggered.connect(self.launchShotCreator)
-		self.ui.toolMenu_toolButton.addAction(self.actionShotCreator)
-
-		self.actionBatchRename = QtWidgets.QAction("Batch Rename", None)
-		self.actionBatchRename.triggered.connect(self.launchBatchRename)
-		self.ui.toolMenu_toolButton.addAction(self.actionBatchRename)
-
-		# self.actionRenderQueue = QtWidgets.QAction("Render Queue...", None)
-		# self.actionRenderQueue.triggered.connect(self.launchRenderQueue)
-		self.ui.toolMenu_toolButton.addAction(self.actionRenderQueue)
-
-		self.separator = QtWidgets.QAction(None)
-		self.separator.setSeparator(True)
-		self.ui.toolMenu_toolButton.addAction(self.separator)
-
-		self.actionUserSettings = QtWidgets.QAction("User Settings...", None)
-		self.actionUserSettings.triggered.connect(self.userSettings)
-		self.ui.toolMenu_toolButton.addAction(self.actionUserSettings)
-
-		self.actionIcarusSettings = QtWidgets.QAction("Global Settings...", None)
-		self.actionIcarusSettings.triggered.connect(self.globalSettings)
-		self.ui.toolMenu_toolButton.addAction(self.actionIcarusSettings)
-
 		# Register status bar with the verbose module in order to print
 		# messages to it...
 		verbose.registerStatusBar(self.ui.statusbar)
+
+		# Hide main menu bar
+		self.ui.menubar.hide()
 
 
 		######################################
@@ -336,32 +216,105 @@ class icarusApp(QtWidgets.QMainWindow):
 		if os.environ['IC_ENV'] == 'STANDALONE':
 
 			# Hide UI items relating to app environment(s)
-			uiHideLs = ['setNewShot_pushButton', 'shotEnv_toolButton', 'appIcon_label', 'menubar']
+			uiHideLs = ['setNewShot_pushButton', 'shotEnv_toolButton', 'appIcon_label']
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
 
 			# Populate 'Job' and 'Shot' drop down menus
 			self.populateJobs(setLast=True)
+			self.unlockJobUI()  # Currently used to make sure UI state (whether widgets are enabled/visible) is correct when opened, without relying on the UI file
 
 			# Delete all tabs except 'Launcher'
 			for i in range(0, self.ui.tabWidget.count()-1):
 				self.ui.tabWidget.removeTab(1)
 
-			# Delete 'ma_asset', 'nk_asset', 'Publish' tabs - REMEMBER TO UNCOMMENT THE FOLLOWING TWO LINES
+			# Delete 'ma_asset', 'nk_asset', 'Publish' tabs
 			for i in range(0, 2):
 				self.ui.publishType_tabWidget.removeTab(0)
 
+			# Setup app launch icons
+			self.al = appLauncher.AppLauncher(self, self.ui.launchApp_scrollAreaWidgetContents)
+
+			# ----------------------------------------------------------------
+			# Connect signals & slots
+			# ----------------------------------------------------------------
+
+			# Set shot UI
+			self.ui.refreshJobs_toolButton.clicked.connect(self.populateJobs)
+			self.ui.job_comboBox.currentIndexChanged.connect(self.populateShots)
+			self.ui.setShot_pushButton.clicked.connect(self.setupJob)
+			self.ui.setNewShot_pushButton.clicked.connect(self.unlockJobUI)
+
+			# Utility launch buttons (bottom row)
+			self.ui.render_toolButton.clicked.connect(self.launchRenderQueue)  # Was self.launchRenderSubmit
+			self.ui.openReview_toolButton.clicked.connect(launchApps.djv)
+			self.ui.openProdBoard_toolButton.clicked.connect(launchApps.prodBoard)
+			self.ui.openTerminal_toolButton.clicked.connect(launchApps.terminal)
+			self.ui.browse_toolButton.clicked.connect(openDirs.openShot)
+
+			# Launch options menu
+			self.ui.launchOptions_toolButton.setMenu(self.ui.menuLauncher)
+
+			# Set minimise on launch checkbox from user prefs
+			self.boolMinimiseOnAppLaunch = userPrefs.config.getboolean('main', 'minimiseonlaunch')
+			self.ui.actionMinimise_on_Launch.setChecked(self.boolMinimiseOnAppLaunch)
+			# TODO: Also set/store sort options in user prefs
+
+			self.ui.actionMinimise_on_Launch.toggled.connect(self.setMinimiseOnAppLaunch)
+			self.ui.actionName.triggered.connect(lambda: self.al.setupIconGrid(sortBy="Name"))
+			self.ui.actionCategory.triggered.connect(lambda: self.al.setupIconGrid(sortBy="Category"))
+			self.ui.actionVendor.triggered.connect(lambda: self.al.setupIconGrid(sortBy="Vendor"))
+			self.ui.actionMost_used.triggered.connect(lambda: self.al.setupIconGrid(sortBy="Most_used"))
+
+			# Add 'Sort by' separator label
+			label = QtWidgets.QLabel("Sort by:")
+			sortBy_separator = QtWidgets.QWidgetAction(self)
+			sortBy_separator.setDefaultWidget(label)
+			self.ui.menuLauncher.insertAction(self.ui.actionName, sortBy_separator)
+
+			# Make 'Sort by' actions mutually exclusive
+			alignmentGroup = QtWidgets.QActionGroup(self)
+			alignmentGroup.addAction(self.ui.actionName)
+			alignmentGroup.addAction(self.ui.actionCategory)
+			alignmentGroup.addAction(self.ui.actionVendor)
+			alignmentGroup.addAction(self.ui.actionMost_used)
+
+			# ----------------------------------------------------------------
+			# Add context menus to buttons
+			# ----------------------------------------------------------------
+
+			# Render
+			self.ui.render_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+			self.ui.render_toolButton.addAction(self.ui.actionRender_Queue)
+			self.ui.render_toolButton.addAction(self.ui.actionSubmit_render)
+
+			# Review
+			self.ui.openReview_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+
+			self.actionHieroPlayer = QtWidgets.QAction("HieroPlayer", None)
+			self.actionHieroPlayer.triggered.connect(lambda: self.launchApp('HieroPlayer'))
+			self.ui.openReview_toolButton.addAction(self.actionHieroPlayer)
+
+			self.actionDjv = QtWidgets.QAction("djv_view", None)
+			self.actionDjv.triggered.connect(launchApps.djv)
+			self.ui.openReview_toolButton.addAction(self.actionDjv)
+
+			# Browse
+			self.ui.browse_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+
+			self.actionOpenShot = QtWidgets.QAction("Shot", None)
+			self.actionOpenShot.triggered.connect(openDirs.openShot)
+			self.ui.browse_toolButton.addAction(self.actionOpenShot)
+
+			self.actionOpenJob = QtWidgets.QAction("Job", None)
+			self.actionOpenJob.triggered.connect(openDirs.openJob)
+			self.ui.browse_toolButton.addAction(self.actionOpenJob)
+
 			# Apply job/shot settings pop-up menu to shotEnv label (only in standalone mode)
-			# self.ui.shotEnv_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-
-			self.actionJobSettings = QtWidgets.QAction("Job Settings...", None)
-			self.actionJobSettings.triggered.connect(self.jobSettings)
-			self.ui.shotEnv_toolButton.addAction(self.actionJobSettings)
-
-			self.actionShotSettings = QtWidgets.QAction("Shot Settings...", None)
-			self.actionShotSettings.triggered.connect(self.shotSettings)
-			self.ui.shotEnv_toolButton.addAction(self.actionShotSettings)
+			self.ui.shotEnv_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+			self.ui.shotEnv_toolButton.addAction(self.ui.actionJob_settings)
+			self.ui.shotEnv_toolButton.addAction(self.ui.actionShot_settings)
 
 			self.ui.shotEnv_toolButton.setEnabled(True)
 
@@ -375,7 +328,7 @@ class icarusApp(QtWidgets.QMainWindow):
 			self.ui.appIcon_label.setPixmap(pixmap)
 
 			# Hide certain UI items
-			uiHideLs = ['assetSubType_listWidget', 'toolMenu_toolButton', 'menubar']
+			uiHideLs = ['assetSubType_listWidget', 'toolMenu_toolButton']
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
@@ -406,7 +359,7 @@ class icarusApp(QtWidgets.QMainWindow):
 			self.ui.appIcon_label.setPixmap(pixmap)
 
 			# Hide certain UI items
-			uiHideLs = ['assetSubType_listWidget', 'toolMenu_toolButton', 'menubar']
+			uiHideLs = ['assetSubType_listWidget', 'toolMenu_toolButton']
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
@@ -460,6 +413,15 @@ class icarusApp(QtWidgets.QMainWindow):
 		self.ui.assetSubType_listWidget.itemClicked.connect(self.updateAssetVersionCol)
 		self.ui.assetVersion_listWidget.itemClicked.connect(self.updateInfoField)
 		self.ui.assetVersion_listWidget.itemClicked.connect(self.updateImgPreview)
+
+
+	def toggleMenuBar(self):
+		""" Toggle visibility of main menu bar.
+		"""
+		if self.ui.menubar.isVisible():
+			self.ui.menubar.hide()
+		else:
+			self.ui.menubar.show()
 
 
 	def getMainTab(self):
@@ -809,13 +771,20 @@ class icarusApp(QtWidgets.QMainWindow):
 		self.ui.setShot_pushButton.setEnabled(True)
 
 
-	def setupJob(self):
+	def setupJob(self):#, job=None, shot=None):
 		""" Sets up shot environment, creates user directories and updates
 			user job log.
 		"""
 		self.job = self.ui.job_comboBox.currentText()
 		self.shot = self.ui.shot_comboBox.currentText()
-		# if setJob.setup(self.job, self.shot):
+		# if job is None:
+		# 	self.job = self.ui.job_comboBox.currentText()
+		# else:
+		# 	self.job = job
+		# if job is None:
+		# 	self.shot = self.ui.shot_comboBox.currentText()
+		# else:
+		# 	self.shot = shot
 		if self.j.setup(self.job, self.shot):
 			self.adjustPblTypeUI()
 			self.populateShotLs(self.ui.publishToShot_comboBox)
@@ -850,10 +819,14 @@ class icarusApp(QtWidgets.QMainWindow):
 		self.ui.tabWidget.insertTab(2, self.gatherTab, 'Assets')
 		self.ui.gather_pushButton.hide()
 		self.ui.setShot_pushButton.hide()
-		self.ui.shotEnv_toolButton.show()
 		self.ui.setNewShot_pushButton.show()
-		self.actionJobManagement.setEnabled(False)
-		self.actionShotCreator.setEnabled(False)
+		self.ui.shotEnv_toolButton.show()
+		self.ui.menuLauncher.setEnabled(True)
+		self.ui.actionJob_settings.setEnabled(True)
+		self.ui.actionShot_settings.setEnabled(True)
+		self.ui.actionJob_Management.setEnabled(False)
+		self.ui.actionShot_Creator.setEnabled(False)
+		self.ui.actionSubmit_render.setEnabled(True)
 		verbose.jobSet(self.job, self.shot)
 
 
@@ -874,13 +847,16 @@ class icarusApp(QtWidgets.QMainWindow):
 		self.ui.tabWidget.removeTab(1); self.ui.tabWidget.removeTab(1) # remove publish and assets tab - check this
 		self.ui.renderPbl_treeWidget.clear() # clear the render layer tree view widget
 		self.ui.dailyPbl_treeWidget.clear() # clear the dailies tree view widget
+		self.ui.setShot_pushButton.show()
+		self.ui.setNewShot_pushButton.hide()
 		self.ui.shotEnv_toolButton.setText('')
 		self.ui.shotEnv_toolButton.hide()
-		self.ui.setNewShot_pushButton.hide()
-		self.ui.setShot_pushButton.show()
-
-		self.actionJobManagement.setEnabled(True)
-		self.actionShotCreator.setEnabled(True)
+		self.ui.menuLauncher.setEnabled(False)
+		self.ui.actionJob_settings.setEnabled(False)
+		self.ui.actionShot_settings.setEnabled(False)
+		self.ui.actionJob_Management.setEnabled(True)
+		self.ui.actionShot_Creator.setEnabled(True)
+		self.ui.actionSubmit_render.setEnabled(False)
 
 
 	def updateJobLabel(self):

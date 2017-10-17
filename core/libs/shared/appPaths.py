@@ -36,10 +36,10 @@ class appPaths(xmlData.xmlData):
 		return elem.findtext("vendor")
 
 
-	def getLaunchApps(self, sortBy=None):
-		""" Return all launchable apps as elements.
+	def getVisibleApps(self, sortBy=None):
+		""" Return all visible (launchable) apps as elements.
 		"""
-		apps = self.root.findall("./app[@launch='True']")
+		apps = self.root.findall("./app[@visible='True']")
 		if sortBy == "Name":
 			apps[:] = sorted(apps, key=self.sortByName)
 		elif sortBy == "Category":
@@ -155,4 +155,14 @@ class appPaths(xmlData.xmlData):
 			guessedPath =  None
 
 		return guessedPath
+
+
+	def getSubMenus(self, app):
+		""" Return list of sub-menu items associated with app.
+		"""
+		items = self.root.findall("./app[@id='%s']/submenu[@visible='True']" %app)
+		item_ls = []
+		for item in items:
+			item_ls.append((item.get('name'), item.findtext('flag')))
+		return item_ls
 

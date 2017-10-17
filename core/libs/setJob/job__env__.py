@@ -7,6 +7,7 @@
 # (c) 2013-2017 Gramercy Park Studios
 #
 # Sets up job- and shot-related environment variables.
+# TODO: This module need total re-think in light of dynamic app launching.
 
 
 import os
@@ -39,6 +40,13 @@ def setEnv(envVars):
 		""" Return the path to the executable for the specified app on the
 			current OS.
 		"""
+		# # --- DEBUG SHIT ---
+		# print("getAppExecPath(%s)" %app)
+		# ver = getInheritedValue('apps', app)
+		# path = ap.getPath(app, ver, currentOS)
+		# print("%s: %s %s" %(ver, path, type(path)))
+		# return path
+		# # --- END DEBUG SHIT ---
 		return ap.getPath(app, getInheritedValue('apps', app), currentOS)
 
 
