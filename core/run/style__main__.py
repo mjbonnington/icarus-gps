@@ -21,10 +21,9 @@ from style_ui import * # <- modify style_ui to name of your app's UI file (as ge
 
 class testApp(QtGui.QMainWindow): # <- modify testApp to name of your app
 
-	def __init__(self, parent = None):
+	def __init__(self, parent=None):
 		super(testApp, self).__init__() # <- modify testApp to name of your app
 		self.ui = Ui_MainWindow()
-		print type(self.ui)
 		self.ui.setupUi(self)
 
 		# Connect signals & slots

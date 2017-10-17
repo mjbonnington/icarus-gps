@@ -52,7 +52,7 @@ QAbstractScrollArea {
 	/*padding: 2px;*/
 	background: #222;
 	border: 1px solid #555;
-	border-radius: 0px; /* 3px where there are scroll bars if possible */
+	border-radius: 0px;
 }
 
 QAbstractScrollArea:disabled {
@@ -139,7 +139,7 @@ QMenuBar {
 }
 
 QMenuBar::item {
-	padding: 4px 4px;
+	padding: 4px 8px; /* was 4px 4px */
 	background: transparent;
 }
 
@@ -160,7 +160,7 @@ QMenu {
 	/*top: -5px;*/
 	padding: 4px 0px;
 	background: #333;
-	border: 1px solid #555;
+	border: 1px solid #444;
 	border-radius: 0px;
 }
 
@@ -519,6 +519,23 @@ QAbstractItemView::item {
 	padding: 2px;
 }
 
+QAbstractItemView::item:selected {
+	background-color: #709e32;
+	color: #fff;
+}
+
+QAbstractItemView::item:hover {
+	/*padding: 1px;
+	border: 1px solid #709e32;*/
+	background-color: rgba(112, 158, 50, 25%);
+}
+
+QAbstractItemView::item:selected:hover {
+	/*padding: 1px;
+	border: 1px solid #709e32;*/
+	background-color: rgba(112, 158, 50, 75%);
+}
+
 QAbstractItemView::indicator {
 	width: 11px;
 	height: 11px;
@@ -655,7 +672,6 @@ QGroupBox {
 	padding: 6px 3px;
 	border: 2px groove #333;
 	border-radius: 2px; /* was: 5px */
-	/*border: 1px solid #555;*/
 	background: transparent;
 }
 
@@ -663,7 +679,7 @@ QGroupBox::title {
 	padding: 3px;
 	/*spacing: 5px;*/
 	left: 8px;
-	bottom: 3ex; /* was: 1.5ex */;
+	bottom: 3ex; /* was: 1.5ex */
 	/*subcontrol-origin: margin;
 	subcontrol-position: top center;*/
 	background: #444; /* needed to prevent text 'etching' effect with plastique style */
@@ -684,10 +700,27 @@ QGroupBox::indicator {
 
 QGroupBox:flat {
 	margin: 0;
-	/*margin-top: 2.5ex;  leave space at the top for the title */
-	padding: 0;
+	margin-top: 2.5ex; /* leave space at the top for the title */
+	padding: 6px 3px;
 	border: none;
+	background: #4c4c4c;
 }
+
+QGroupBox::title:flat {
+	width: 100%;
+	padding: 3px;
+	left: 8px;
+	bottom: 3ex; /* was: 1.5ex */
+	background: transparent; /* needed to prevent text 'etching' effect with plastique style */
+}
+
+/*QGroupBox::indicator:flat {
+	width: 11px;
+	height: 11px;
+	background: #222;
+	border: 1px solid #222;
+	border-radius: 2px;
+}*/
 
 /* End Group Box */
 

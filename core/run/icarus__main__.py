@@ -233,7 +233,7 @@ class icarusApp(QtWidgets.QMainWindow):
 			for i in range(0, 2):
 				self.ui.publishType_tabWidget.removeTab(0)
 
-			# Setup app launch icons
+			# Initialise app launch icons
 			self.al = appLauncher.AppLauncher(self, self.ui.launchApp_scrollAreaWidgetContents)
 
 			# ----------------------------------------------------------------
@@ -256,16 +256,14 @@ class icarusApp(QtWidgets.QMainWindow):
 			# Launch options menu
 			self.ui.launchOptions_toolButton.setMenu(self.ui.menuLauncher)
 
-			# Set minimise on launch checkbox from user prefs
-			self.boolMinimiseOnAppLaunch = userPrefs.config.getboolean('main', 'minimiseonlaunch')
+			# Set 'Minimise on launch' checkbox from user prefs
+			try:
+				self.boolMinimiseOnAppLaunch = userPrefs.config.getboolean('main', 'minimiseonlaunch')
+			except:
+				self.boolMinimiseOnAppLaunch = True
 			self.ui.actionMinimise_on_Launch.setChecked(self.boolMinimiseOnAppLaunch)
-			# TODO: Also set/store sort options in user prefs
 
 			self.ui.actionMinimise_on_Launch.toggled.connect(self.setMinimiseOnAppLaunch)
-			self.ui.actionName.triggered.connect(lambda: self.al.setupIconGrid(sortBy="Name"))
-			self.ui.actionCategory.triggered.connect(lambda: self.al.setupIconGrid(sortBy="Category"))
-			self.ui.actionVendor.triggered.connect(lambda: self.al.setupIconGrid(sortBy="Vendor"))
-			self.ui.actionMost_used.triggered.connect(lambda: self.al.setupIconGrid(sortBy="Most_used"))
 
 			# Add 'Sort by' separator label
 			label = QtWidgets.QLabel("Sort by:")
@@ -279,6 +277,25 @@ class icarusApp(QtWidgets.QMainWindow):
 			alignmentGroup.addAction(self.ui.actionCategory)
 			alignmentGroup.addAction(self.ui.actionVendor)
 			alignmentGroup.addAction(self.ui.actionMost_used)
+
+			# Set 'Sort by' menu from user prefs
+			try:
+				self.sortAppsBy = userPrefs.config.get('main', 'sortappsby')
+			except:
+				self.sortAppsBy = "Most_used"
+			if self.sortAppsBy == "Name":
+				self.ui.actionName.setChecked(True)
+			elif self.sortAppsBy == "Category":
+				self.ui.actionCategory.setChecked(True)
+			elif self.sortAppsBy == "Vendor":
+				self.ui.actionVendor.setChecked(True)
+			elif self.sortAppsBy == "Most_used":
+				self.ui.actionMost_used.setChecked(True)
+
+			self.ui.actionName.triggered.connect(lambda: self.setSortAppsBy("Name"))
+			self.ui.actionCategory.triggered.connect(lambda: self.setSortAppsBy("Category"))
+			self.ui.actionVendor.triggered.connect(lambda: self.setSortAppsBy("Vendor"))
+			self.ui.actionMost_used.triggered.connect(lambda: self.setSortAppsBy("Most_used"))
 
 			# ----------------------------------------------------------------
 			# Add context menus to buttons
@@ -317,6 +334,9 @@ class icarusApp(QtWidgets.QMainWindow):
 			self.ui.shotEnv_toolButton.addAction(self.ui.actionShot_settings)
 
 			self.ui.shotEnv_toolButton.setEnabled(True)
+
+			# Setup app launch icons
+			self.al.setupIconGrid(sortBy=self.sortAppsBy)
 
 
 		####################
@@ -791,6 +811,7 @@ class icarusApp(QtWidgets.QMainWindow):
 			self.populateShotLs(self.ui.gatherFromShot_comboBox)
 			self.connectNewSignalsSlots()
 			self.lockJobUI()
+			self.al.setupIconGrid(job=self.job, sortBy=self.sortAppsBy)
 		else:
 			dialogMsg = 'Unable to load job settings. Default values have been applied.\nPlease review the values in the job settings dialog and click Save when done.\n'
 			verbose.print_(dialogMsg, 1)
@@ -875,12 +896,14 @@ class icarusApp(QtWidgets.QMainWindow):
 		"""
 		self.boolMinimiseOnAppLaunch = state
 		userPrefs.edit('main', 'minimiseonlaunch', str(state))
-		# if state == QtCore.Qt.Checked:
-		# 	self.boolMinimiseOnAppLaunch = True
-		# 	userPrefs.edit('main', 'minimiseonlaunch', 'True')
-		# else:
-		# 	self.boolMinimiseOnAppLaunch = False
-		# 	userPrefs.edit('main', 'minimiseonlaunch', 'False')
+
+
+	def setSortAppsBy(self, value):
+		""" Stores 'Sort by' value for sorting app grid.
+		"""
+		self.al.setupIconGrid(job=self.job, sortBy=value)
+		self.sortAppsBy = value
+		userPrefs.edit('main', 'sortappsby', str(value))
 
 
 	def printShotInfo(self):
@@ -994,14 +1017,16 @@ Developers: %s
 		""" Open job settings dialog wrapper function.
 		"""
 		if self.openSettings("Job"):
-			self.j.setup(self.job, self.shot)  # Set up environment variables
+			#self.j.setup(self.job, self.shot)  # Set up environment variables
+			self.setupJob()
 
 
 	def shotSettings(self):
 		""" Open shot settings dialog wrapper function.
 		"""
 		if self.openSettings("Shot"):
-			self.j.setup(self.job, self.shot)  # Set up environment variables
+			#self.j.setup(self.job, self.shot)  # Set up environment variables
+			self.setupJob()
 
 
 	def userSettings(self):
@@ -2040,12 +2065,12 @@ def run_standalone():
 	"""
 	app = QtWidgets.QApplication(sys.argv)
 
-	# Apply application style
-	styles = QtWidgets.QStyleFactory.keys()
-	if 'Fusion' in styles:  # Qt5
-		app.setStyle('Fusion')
-	elif 'Plastique' in styles:
-		app.setStyle('Plastique')  # Qt4
+	# # Apply application style - disabled due to inconsistencies across OSs
+	# styles = QtWidgets.QStyleFactory.keys()
+	# if 'Fusion' in styles:  # Qt5
+	# 	app.setStyle('Fusion')
+	# elif 'Plastique' in styles:
+	# 	app.setStyle('Plastique')  # Qt4
 
 	# Apply UI style sheet
 	if STYLESHEET is not None:

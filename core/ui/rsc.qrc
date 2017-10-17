@@ -1,9 +1,9 @@
 <RCC>
   <qresource prefix="rsc">
-    <file>rsc/app_icon_deadline.png</file>
-    <file>rsc/app_icon_deadline_disabled.png</file>
     <file>rsc/status_icon_ready.png</file>
     <file>rsc/status_icon_stopped.png</file>
+    <file>rsc/tab_icon_maya.png</file>
+    <file>rsc/tab_icon_nuke.png</file>
     <file>rsc/status_icon_waiting.png</file>
     <file>rsc/status_icon_ok.png</file>
     <file>rsc/icon_resubmit_disabled.png</file>
@@ -16,8 +16,6 @@
     <file>rsc/icon_tick_disabled.png</file>
     <file>rsc/icon_refresh.png</file>
     <file>rsc/icon_refresh_disabled.png</file>
-    <file>rsc/app_icon_maya_tab.png</file>
-    <file>rsc/app_icon_nuke_tab.png</file>
     <file>rsc/publish_icon_comp.png</file>
     <file>rsc/publish_icon_comp_disabled.png</file>
     <file>rsc/publish_icon_setup.png</file>
@@ -56,31 +54,14 @@
     <file>rsc/icon_review_disabled.png</file>
     <file>rsc/icon_review.png</file>
     <file>rsc/icon_add_disabled.png</file>
-    <file>rsc/app_icon_hieroplayer.png</file>
-    <file>rsc/app_icon_hieroplayer_disabled.png</file>
     <file>rsc/icon_add.png</file>
     <file>rsc/icon_delete_disabled.png</file>
     <file>rsc/icon_delete.png</file>
-    <file>rsc/app_icon_mari_disabled.png</file>
-    <file>rsc/app_icon_mari.png</file>
-    <file>rsc/app_icon_nuke_disabled.png</file>
-    <file>rsc/app_icon_nuke.png</file>
-    <file>rsc/app_icon_realflow_disabled.png</file>
-    <file>rsc/app_icon_maya_disabled.png</file>
-    <file>rsc/app_icon_maya.png</file>
-    <file>rsc/app_icon_realflow.png</file>
-    <file>rsc/app_icon_terminal_disabled.png</file>
     <file>rsc/icon_folder_disabled.png</file>
-    <file>rsc/app_icon_ae.png</file>
-    <file>rsc/app_icon_ae_disabled.png</file>
-    <file>rsc/app_icon_ae.png</file>
     <file>rsc/icon_folder.png</file>
-    <file>rsc/app_icon_c4d.png</file>
-    <file>rsc/app_icon_c4d_disabled.png</file>
-    <file>rsc/app_icon_terminal.png</file>
-    <file>rsc/app_icon_mudbox_disabled.png</file>
-    <file>rsc/app_icon_mudbox.png</file>
     <file>rsc/icon_productionBoard_disabled.png</file>
+    <file>rsc/icon_terminal.png</file>
+    <file>rsc/icon_terminal_disabled.png</file>
     <file>rsc/icon_productionBoard.png</file>
   </qresource>
   <qresource>

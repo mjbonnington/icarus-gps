@@ -36,26 +36,30 @@ class helper():
 			boxes.
 		"""
 		noSelectText = ""
-		apps = self.ap.getAppNames()  # Get apps and versions
+		# apps = self.ap.getAppNames()  # Get apps and versions
+		app_ls = self.ap.getApps()  # Get apps and versions
 		formLayout = self.frame.findChildren(QtWidgets.QFormLayout, 'formLayout')[0]
 		appPaths_pushButton = self.frame.appPaths_pushButton
 
-		formLayout.setWidget(len(apps), QtWidgets.QFormLayout.FieldRole, appPaths_pushButton)  # Move edit button to bottom of form
-		appPaths_pushButton.clicked.connect(lambda: self.appPathsEditor())
+		formLayout.setWidget(len(app_ls), QtWidgets.QFormLayout.FieldRole, appPaths_pushButton)  # Move edit button to bottom of form
+		appPaths_pushButton.clicked.connect(self.appPathsEditor)
 
-		for i, app in enumerate(apps):
+		for i, app in enumerate(app_ls):
+			appName = app.get('id')
+			displayName = app.get('name')
+
 			label = QtWidgets.QLabel(self.frame)
-			label.setObjectName("%s_label" %app)
-			label.setText("%s:" %app)
+			label.setObjectName("%s_label" %appName)
+			label.setText("%s:" %displayName)
 			formLayout.setWidget(i, QtWidgets.QFormLayout.LabelRole, label)
 
 			comboBox = QtWidgets.QComboBox(self.frame)
-			comboBox.setObjectName("%s_comboBox" %app)
-			comboBox.setProperty('xmlTag', app)
+			comboBox.setObjectName("%s_comboBox" %appName)
+			comboBox.setProperty('xmlTag', appName)  # Use 'displayName' for backwards-compatibility
 			# print(comboBox.property('xmlTag'))
 			comboBox.clear()
 
-			versions = self.ap.getVersions(app)  # Populate the combo box with available app versions
+			versions = self.ap.getVersions(displayName)  # Populate the combo box with available app versions
 			availableVersions = [noSelectText, ]  # Leave a blank entry in case we want to leave version undefined
 			for version in versions:
 				if version == '[template]':
@@ -67,7 +71,8 @@ class helper():
 
 			if selectCurrent:  # Set selection to correct entry
 				try:
-					text = self.jd.getAppVersion(app)
+					# text = self.jd.getAppVersion(displayName)
+					text = self.jd.getAppVersion(appName)
 				except AttributeError:
 					text = noSelectText
 					# comboBox.insertItem(text, 0)

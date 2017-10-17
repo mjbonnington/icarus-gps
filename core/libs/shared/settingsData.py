@@ -104,12 +104,24 @@ class settingsData(xmlData.xmlData):
 		return s
 
 
+	def getApps(self):
+		""" Return list of apps that have been specified in the job settings.
+		"""
+		a = self.root.find("./data[@category='apps']")
+		# a = list(elem.iter())
+		print([(elem.tag, elem.text) for elem in a.iter() if elem is not a])
+		# print(a)
+		# for app in apps:
+		# 	a.append((app.get('id'), app.findtext("vendor")))
+		# return a
+
+
 	def getAppVersion(self, app):
 		""" Return version for specified app.
 		"""
 		#appElem = self.root.find("./data[@category='apps']/app[@name='%s']" %app)
 		#return appElem.attrib['version']
-		return self.root.find( "./data[@category='apps']/%s" %app ).text
+		return self.root.find("./data[@category='apps']/%s" %app).text
 
 
 	def autoFill(self, path):

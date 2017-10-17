@@ -602,8 +602,8 @@ QToolButton:disabled {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/app_icon_terminal.png</normaloff>
-                     <disabledoff>:/rsc/rsc/app_icon_terminal_disabled.png</disabledoff>:/rsc/rsc/app_icon_terminal.png</iconset>
+                     <normaloff>:/rsc/rsc/icon_terminal.png</normaloff>
+                     <disabledoff>:/rsc/rsc/icon_terminal_disabled.png</disabledoff>:/rsc/rsc/icon_terminal.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -899,7 +899,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
           <widget class="QWidget" name="maAssetPublishTab">
            <attribute name="icon">
             <iconset resource="rsc.qrc">
-             <normaloff>:/rsc/rsc/app_icon_maya_tab.png</normaloff>:/rsc/rsc/app_icon_maya_tab.png</iconset>
+             <normaloff>:/rsc/rsc/tab_icon_maya.png</normaloff>:/rsc/rsc/tab_icon_maya.png</iconset>
            </attribute>
            <attribute name="title">
             <string>ma Asset</string>
@@ -1517,7 +1517,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
           <widget class="QWidget" name="nkAssetPublishTab">
            <attribute name="icon">
             <iconset resource="rsc.qrc">
-             <normaloff>:/rsc/rsc/app_icon_nuke_tab.png</normaloff>:/rsc/rsc/app_icon_nuke_tab.png</iconset>
+             <normaloff>:/rsc/rsc/tab_icon_nuke.png</normaloff>:/rsc/rsc/tab_icon_nuke.png</iconset>
            </attribute>
            <attribute name="title">
             <string>nk Asset</string>
@@ -1811,8 +1811,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>136</width>
-                    <height>70</height>
+                    <width>355</width>
+                    <height>292</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_8">

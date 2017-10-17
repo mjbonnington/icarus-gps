@@ -30,7 +30,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <property name="usesScrollButtons">
        <bool>true</bool>
@@ -182,7 +182,10 @@
            <item>
             <widget class="QGroupBox" name="groupBox_4">
              <property name="title">
-              <string>Tool Buttons</string>
+              <string>Tool Buttons (flat group box)</string>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_11">
               <item>
@@ -551,10 +554,10 @@
            <item>
             <widget class="QGroupBox" name="groupBox_checkBoxes">
              <property name="title">
-              <string>Check Boxes</string>
+              <string>Check Boxes (flat group box)</string>
              </property>
              <property name="flat">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="checkable">
               <bool>true</bool>
@@ -741,13 +744,6 @@
            <bool>true</bool>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
-           <item row="0" column="2">
-            <widget class="QSpinBox" name="spinBox_3">
-             <property name="readOnly">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
            <item row="1" column="2">
             <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
              <property name="readOnly">
@@ -757,6 +753,13 @@
            </item>
            <item row="2" column="5">
             <widget class="QDateTimeEdit" name="dateTimeEdit"/>
+           </item>
+           <item row="0" column="2">
+            <widget class="QSpinBox" name="spinBox_3">
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
            <item row="1" column="5">
             <widget class="QDateEdit" name="dateEdit"/>
@@ -784,21 +787,8 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QSpinBox" name="spinBox"/>
-           </item>
            <item row="0" column="5">
             <widget class="QTimeEdit" name="timeEdit"/>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_5">
-             <property name="text">
-              <string>Double Spin Box / read-only / no buttons:</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
            </item>
            <item row="0" column="4">
             <widget class="QLabel" name="label_6">
@@ -810,17 +800,16 @@
              </property>
             </widget>
            </item>
-           <item row="3" column="1">
-            <widget class="QSlider" name="verticalSlider">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-            </widget>
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="spinBox"/>
            </item>
-           <item row="3" column="5">
-            <widget class="QSlider" name="horizontalSlider">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_5">
+             <property name="text">
+              <string>Double Spin Box / read-only / no buttons:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
              </property>
             </widget>
            </item>
@@ -834,15 +823,15 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="3">
-            <widget class="QSpinBox" name="spinBox_4">
+           <item row="1" column="3">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
              <property name="buttonSymbols">
               <enum>QAbstractSpinBox::NoButtons</enum>
              </property>
             </widget>
            </item>
-           <item row="1" column="3">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
+           <item row="0" column="3">
+            <widget class="QSpinBox" name="spinBox_4">
              <property name="buttonSymbols">
               <enum>QAbstractSpinBox::NoButtons</enum>
              </property>
@@ -1137,6 +1126,9 @@ p, li { white-space: pre-wrap; }
             <widget class="QListWidget" name="listWidget">
              <property name="alternatingRowColors">
               <bool>true</bool>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::MultiSelection</enum>
              </property>
              <item>
               <property name="text">
@@ -1905,7 +1897,7 @@ p, li { white-space: pre-wrap; }
      </widget>
     </item>
     <item>
-     <widget class="QGroupBox" name="groupBox_13">
+     <widget class="QGroupBox" name="mixedControls_groupBox">
       <property name="title">
        <string>Mixed controls</string>
       </property>
@@ -1913,6 +1905,54 @@ p, li { white-space: pre-wrap; }
        <bool>true</bool>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_7">
+       <item>
+        <layout class="QHBoxLayout" name="spinSlider_horizontalLayout">
+         <item>
+          <widget class="QSpinBox" name="spinSlider_spinBox">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the priority for this render job.&lt;/p&gt;&lt;p&gt;Higher priority jobs will be rendered first. Setting the priority to zero will submit the job as paused.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="buttonSymbols">
+            <enum>QAbstractSpinBox::NoButtons</enum>
+           </property>
+           <property name="minimum">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <number>100</number>
+           </property>
+           <property name="value">
+            <number>50</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="spinSlider_slider">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the priority for this render job.&lt;/p&gt;&lt;p&gt;Higher priority jobs will be rendered first. Setting the priority to zero will submit the job as paused.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="minimum">
+            <number>0</number>
+           </property>
+           <property name="maximum">
+            <number>100</number>
+           </property>
+           <property name="value">
+            <number>50</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="tickPosition">
+            <enum>QSlider::NoTicks</enum>
+           </property>
+           <property name="tickInterval">
+            <number>10</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
        <item>
         <widget class="QLineEdit" name="lineEdit_6">
          <property name="text">
@@ -2013,8 +2053,16 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>File</string>
     </property>
+    <widget class="QMenu" name="menuSub_menu">
+     <property name="title">
+      <string>Sub menu</string>
+     </property>
+     <addaction name="actionSub_menu_item"/>
+     <addaction name="actionAnother_sub_menu_item"/>
+    </widget>
     <addaction name="actionMenu"/>
     <addaction name="actionMenu_disabled"/>
+    <addaction name="menuSub_menu"/>
     <addaction name="separator"/>
     <addaction name="actionChecked"/>
     <addaction name="actionUnchecked"/>
@@ -2113,9 +2161,52 @@ p, li { white-space: pre-wrap; }
     <string>Unchecked (disabled)</string>
    </property>
   </action>
+  <action name="actionSub_menu_item">
+   <property name="text">
+    <string>Sub menu item</string>
+   </property>
+  </action>
+  <action name="actionAnother_sub_menu_item">
+   <property name="text">
+    <string>Another sub menu item</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="rsc.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>spinSlider_spinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinSlider_slider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>44</x>
+     <y>751</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>63</x>
+     <y>744</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinSlider_slider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinSlider_spinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>57</x>
+     <y>756</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>40</x>
+     <y>756</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

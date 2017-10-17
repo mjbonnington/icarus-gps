@@ -3,7 +3,7 @@ v0.9.10 (--)
 -	[Icarus] Updated support for HieroPlayer to versions bundled with Nuke 9 and later.
 -	[Maya] Added preset for proxy resolution to GPS Preview options.
 -	[Maya] Fixed a bug with GPS scatter script where new objects were not being parented to the correct group.
--	[Maya] Updated AdvancedSkeleton script to version 5. Removed from Icarus distribution, should now be located in the global library.
+-	[Maya] Updated AdvancedSkeleton script to version 5 and removed it from the main Icarus distribution, should now be located in the global library.
 
 v0.9.9 (2017-09-18)
 -	[Icarus] Major code update for compatibility with Python 3 and Qt 5.
