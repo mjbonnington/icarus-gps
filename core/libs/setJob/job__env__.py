@@ -33,7 +33,6 @@ def setEnv(envVars):
 			# if value == "":
 			# 	value = defaultData.getValue(category, setting)
 
-		print(value)
 		return value
 
 
@@ -41,13 +40,6 @@ def setEnv(envVars):
 		""" Return the path to the executable for the specified app on the
 			current OS.
 		"""
-		# # --- DEBUG SHIT ---
-		# print("getAppExecPath(%s)" %app)
-		# ver = getInheritedValue('apps', app)
-		# path = ap.getPath(app, ver, currentOS)
-		# print("%s: %s %s" %(ver, path, type(path)))
-		# return path
-		# # --- END DEBUG SHIT ---
 		return ap.getPath(app, getInheritedValue('apps', app), currentOS)
 
 
@@ -162,7 +154,7 @@ def setEnv(envVars):
 	# Application specific environment variables...
 
 	# Maya
-	os.environ['MAYAVERSION']         = getAppExecPath('maya')
+	os.environ['MAYAVERSION']         = getAppExecPath('Maya')
 	os.environ['MAYARENDERVERSION']   = osOps.absolutePath('%s/Render' % os.path.dirname( os.environ['MAYAVERSION'] ))
 	os.environ['MAYADIR']             = osOps.absolutePath('$SHOTPATH/3D/maya')
 	os.environ['MAYASCENESDIR']       = osOps.absolutePath('$MAYADIR/scenes/$IC_USERNAME')
@@ -205,7 +197,7 @@ def setEnv(envVars):
 
 		if os.environ['IC_RUNNING_OS'] == 'Windows':  # Set up centralised deployment of Redshift plugin for Maya
 			if getAppExecPath('rs') is not "":
-				os.environ['REDSHIFT_COREDATAPATH']         = getAppExecPath('rs')
+				os.environ['REDSHIFT_COREDATAPATH']         = getAppExecPath('Redshift')
 				os.environ['REDSHIFT_COMMON_ROOT']          = osOps.absolutePath('$REDSHIFT_COREDATAPATH/Plugins/Maya/Common')
 				os.environ['REDSHIFT_PLUG_IN_PATH']         = osOps.absolutePath('$REDSHIFT_COREDATAPATH/Plugins/Maya/%s/nt-x86-64' %maya_ver)
 				os.environ['REDSHIFT_SCRIPT_PATH']          = osOps.absolutePath('$REDSHIFT_COMMON_ROOT/scripts')
@@ -234,7 +226,7 @@ def setEnv(envVars):
 
 
 	# Nuke
-	os.environ['NUKEVERSION']     = getAppExecPath('nuke')
+	os.environ['NUKEVERSION']     = getAppExecPath('Nuke')
 	os.environ['NUKEDIR']         = osOps.absolutePath('$SHOTPATH/2D/nuke')
 	os.environ['NUKEELEMENTSDIR'] = osOps.absolutePath('$NUKEDIR/elements/$IC_USERNAME')
 	os.environ['NUKESCRIPTSDIR']  = osOps.absolutePath('$NUKEDIR/scripts/$IC_USERNAME')
@@ -243,13 +235,13 @@ def setEnv(envVars):
 
 
 	# Hiero / HieroPlayer
-	os.environ['HIEROPLAYERVERSION'] = getAppExecPath('hieroplayer')
+	os.environ['HIEROPLAYERVERSION'] = getAppExecPath('HieroPlayer')
 	os.environ['HIEROEDITORIALPATH'] = osOps.absolutePath('$JOBPATH/../Editorial/Hiero')
 	os.environ['HIERO_PLUGIN_PATH']  = osOps.absolutePath('$IC_BASEDIR/rsc/hiero')
 
 
 	# After Effects
-	os.environ['AFXVERSION']     = getAppExecPath('ae')
+	os.environ['AFXVERSION']     = getAppExecPath('AfterEffects')
 	os.environ['AFXDIR']         = osOps.absolutePath('$SHOTPATH/2D/aftereffects')
 	os.environ['AFXELEMENTSDIR'] = osOps.absolutePath('$AFXDIR/elements/$IC_USERNAME')
 	os.environ['AFXCOMPSDIR']    = osOps.absolutePath('$AFXDIR/comps/$IC_USERNAME')
@@ -257,7 +249,7 @@ def setEnv(envVars):
 
 
 	# Mudbox
-	os.environ['MUDBOXVERSION']            = getAppExecPath('mudbox')
+	os.environ['MUDBOXVERSION']            = getAppExecPath('Mudbox')
 	os.environ['MUDBOXDIR']                = osOps.absolutePath('$SHOTPATH/3D/mudbox')
 	os.environ['MUDBOXSCENESDIR']          = osOps.absolutePath('$MUDBOXDIR/scenes/$IC_USERNAME')
 	os.environ['MUDBOX_PLUG_IN_PATH']      = osOps.absolutePath('$IC_BASEDIR/rsc/mudbox/plugins') 
@@ -265,8 +257,8 @@ def setEnv(envVars):
 
 
 	# Mari
-	os.environ['MARIVERSION']                = getAppExecPath('mari')
-	os.environ['MARI_NUKEWORKFLOW_PATH']     = getAppExecPath('nuke')
+	os.environ['MARIVERSION']                = getAppExecPath('Mari')
+	os.environ['MARI_NUKEWORKFLOW_PATH']     = getAppExecPath('Nuke')
 	os.environ['MARIDIR']                    = osOps.absolutePath('$SHOTPATH/3D/mari')
 	os.environ['MARISCENESDIR']              = osOps.absolutePath('$MARIDIR/scenes/$IC_USERNAME')
 	os.environ['MARIGEODIR']                 = osOps.absolutePath('$MARIDIR/geo/$IC_USERNAME')
@@ -285,7 +277,7 @@ def setEnv(envVars):
 
 
 	# RealFlow (2013)
-	os.environ['REALFLOWVERSION']                    = getAppExecPath('realflow')
+	os.environ['REALFLOWVERSION']                    = getAppExecPath('RealFlow')
 	os.environ['REALFLOWDIR']                        = osOps.absolutePath('$SHOTPATH/3D/realflow')
 	os.environ['REALFLOWSCENESDIR']                  = osOps.absolutePath('$REALFLOWDIR/$IC_USERNAME')
 	os.environ['RFDEFAULTPROJECT']                   = osOps.absolutePath('$REALFLOWSCENESDIR/${JOB}_${SHOT}')  # Curly brackets required for correct variable expansion
@@ -296,7 +288,7 @@ def setEnv(envVars):
 
 
 	# Cinema 4D
-	os.environ['C4DVERSION']   = getAppExecPath('c4d')
+	os.environ['C4DVERSION']   = getAppExecPath('Cinema4D')
 	os.environ['C4DDIR']       = osOps.absolutePath('$SHOTPATH/3D/c4d')
 	os.environ['C4DSCENESDIR'] = osOps.absolutePath('$C4DDIR/scenes/$IC_USERNAME')
 
@@ -306,8 +298,8 @@ def setEnv(envVars):
 
 
 	# djv_view
-	# os.environ['DJVVERSION'] = getAppExecPath('djv')
-	# djv_ver = jobData.getAppVersion('djv')
+	# os.environ['DJVVERSION'] = getAppExecPath('djv_view')
+	# djv_ver = jobData.getAppVersion('djv_view')
 	djv_embedded_ver = '1.1.0'
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
 		#os.environ['DJV_CONVERT'] = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-1.0.5-Windows-32/bin/djv_convert.exe')  # Latest 32-bit version
@@ -327,9 +319,9 @@ def setEnv(envVars):
 
 
 	# Deadline Monitor / Slave
-	os.environ['DEADLINEVERSION'] = getAppExecPath('deadline')
-	# os.environ['DEADLINEMONITORVERSION'] = getAppExecPath('dl_mon')
-	# os.environ['DEADLINESLAVEVERSION']   = getAppExecPath('dl_slv')
+	os.environ['DEADLINEVERSION'] = getAppExecPath('Deadline')
+	# os.environ['DEADLINEMONITORVERSION'] = getAppExecPath('DeadlineMonitor')
+	# os.environ['DEADLINESLAVEVERSION']   = getAppExecPath('DeadlineSlave')
 
 
 	return True

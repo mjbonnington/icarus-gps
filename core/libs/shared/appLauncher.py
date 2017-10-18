@@ -65,7 +65,8 @@ class AppLauncher(QtWidgets.QDialog):
 			for app in all_apps:
 				# print(app.get('name'))
 				# print(self.jd.getAppVersion(app.get('id')))
-				if self.jd.getAppVersion(app.get('id')):  # app.get('name') for backwards-compatibility
+				# if self.jd.getAppVersion(app.get('id')):  # app.get('name') for backwards-compatibility
+				if self.jd.getAppVersion(app.get('name')):  # app.get('name') for backwards-compatibility
 					app_ls.append(app)
 		else:
 			app_ls = self.ap.getVisibleApps(sortBy=sortBy)
@@ -73,7 +74,7 @@ class AppLauncher(QtWidgets.QDialog):
 		rows = self.getRows(num_items)
 		for row, num_row_items in enumerate(rows):
 			# Create grid layout
-			icon_size = self.calcIconSize(num_row_items)
+			icon_size = self.getIconSize(num_row_items)
 			row_gridLayout = QtWidgets.QGridLayout()
 			row_gridLayout.setObjectName("apps_gridLayout%d" %row)
 			parentLayout.insertLayout(row, row_gridLayout)
@@ -155,38 +156,52 @@ class AppLauncher(QtWidgets.QDialog):
 		layout.addWidget(toolButton, 0, column, 1, 1)  # CHECK THIS!
 		# layout.addWidget(toolButton)
 
+		# Set environment variables
+
 
 	def getRows(self, num_items):
 		""" Calculate icon grid arrangement.
 			Returns an integer list with each item representing the number of
 			icons in each row.
 			N.B. Weird syntax here is to maintain compatibility due to the
-			different ways Python 2.x and 3.x handle integers and floats.
+			different ways Python 2.x and 3.x handle division between integers
+			and floats.
 		"""
+		# Specify some thresholds at which we cascade on to another row. In
+		# this instance it's hardcoded that we increase the number of rows
+		# after 4, 10, and thereafter every additional 5 items. There will
+		# never be more than 5 items in a row.
 		if num_items <= 4:
 			num_rows = 1
 		elif num_items <= 10:
 			num_rows = 2
 		else:
-			num_rows = int(math.ceil(num_items/(5*1.0)))
+			num_rows = int(math.ceil(num_items/5.0))
 
-		max_row_width = int(math.ceil(num_items/(num_rows*1.0)))
+		max_items_per_row = int(math.ceil(num_items/(num_rows*1.0)))
 
+		# Create list of rows each holding an integer value representing the
+		# number of items in each row.
 		rows = []
 		for i in range(num_rows):
-			rows.append(max_row_width)
+			rows.append(max_items_per_row)
 
+		# Progressively reduce items per row until we have the correct total
+		# number of items.
 		i = 0
 		while sum(rows) > num_items:
 			rows[i] -= 1
 			i += 1
 
+		# Sort the rows so that the rows with the fewest items appear first,
+		# then return the list.
 		rows.sort()
 		return rows
 
 
-	def calcIconSize(self, num_items):
-		""" Calculate icon size based on the number of icons in the row.
+	def getIconSize(self, num_items):
+		""" Return icon size in pixels as a tuple, based on the number of
+			icons in the row.
 		"""
 		if num_items == 5:
 			icon_size = 40, 40
@@ -211,7 +226,17 @@ class AppLauncher(QtWidgets.QDialog):
 		app = self.sender().property('displayName')
 		flags = self.sender().property('flags')
 		# print(self.sender().objectName(), app, flags)
+
+		# Set environment variables
+		# job__env__.setEnv(app)
+
+		# Create the folder structure
+		# defaultDirs.create(app)
+
+		# Run the executable
 		launchApps.launch(app, flags)
+
+		# Minimise the UI if the option is set
 		if self.parent.boolMinimiseOnAppLaunch:
 			self.parent.showMinimized()
 

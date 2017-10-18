@@ -42,7 +42,7 @@ class helper():
 		appPaths_pushButton = self.frame.appPaths_pushButton
 
 		formLayout.setWidget(len(app_ls), QtWidgets.QFormLayout.FieldRole, appPaths_pushButton)  # Move edit button to bottom of form
-		appPaths_pushButton.clicked.connect(self.appPathsEditor)
+		appPaths_pushButton.clicked.connect(lambda: self.appPathsEditor())  # Only works a lambda for some reason
 
 		for i, app in enumerate(app_ls):
 			appName = app.get('id')
@@ -55,7 +55,8 @@ class helper():
 
 			comboBox = QtWidgets.QComboBox(self.frame)
 			comboBox.setObjectName("%s_comboBox" %appName)
-			comboBox.setProperty('xmlTag', appName)  # Use 'displayName' for backwards-compatibility
+			# comboBox.setProperty('xmlTag', appName)  # Use 'displayName' for backwards-compatibility
+			comboBox.setProperty('xmlTag', displayName)  # Use 'displayName' for backwards-compatibility
 			# print(comboBox.property('xmlTag'))
 			comboBox.clear()
 

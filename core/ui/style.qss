@@ -536,6 +536,11 @@ QAbstractItemView::item:selected:hover {
 	background-color: rgba(112, 158, 50, 75%);
 }
 
+QAbstractItemView::item:selected:disabled {
+	background-color: #666;
+	color: #333;
+}
+
 QAbstractItemView::indicator {
 	width: 11px;
 	height: 11px;
@@ -668,22 +673,20 @@ QTableView QTableCornerButton::section:pressed {
 
 QGroupBox {
 	margin: 0;
-	margin-top: 2.5ex; /* leave space at the top for the title */
+	margin-top: 7px; /* was: 2.5ex - leave space at the top for the title */
 	padding: 6px 3px;
 	border: 2px groove #333;
-	border-radius: 2px; /* was: 5px */
+	border-radius: 2px;
 	background: transparent;
 }
 
 QGroupBox::title {
 	padding: 3px;
-	/*spacing: 5px;*/
 	left: 8px;
-	bottom: 3ex; /* was: 1.5ex */
+	bottom: 9px; /* was: 3ex */
 	/*subcontrol-origin: margin;
 	subcontrol-position: top center;*/
-	background: #444; /* needed to prevent text 'etching' effect with plastique style */
-	/*color: #aaa;*/
+	/*background: #444;  needed to prevent text 'etching' effect with plastique style */
 }
 
 /*QGroupBox::title:disabled {
@@ -699,19 +702,12 @@ QGroupBox::indicator {
 }
 
 QGroupBox:flat {
-	margin: 0;
-	margin-top: 2.5ex; /* leave space at the top for the title */
-	padding: 6px 3px;
 	border: none;
-	background: #4c4c4c;
+	/*background: #4c4c4c;*/
 }
 
 QGroupBox::title:flat {
-	width: 100%;
-	padding: 3px;
-	left: 8px;
-	bottom: 3ex; /* was: 1.5ex */
-	background: transparent; /* needed to prevent text 'etching' effect with plastique style */
+	/* background: transparent; needed to prevent text 'etching' effect with plastique style */
 }
 
 /*QGroupBox::indicator:flat {

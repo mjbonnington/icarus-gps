@@ -2065,7 +2065,9 @@ def run_standalone():
 	"""
 	app = QtWidgets.QApplication(sys.argv)
 
-	# # Apply application style - disabled due to inconsistencies across OSs
+	# Apply application style.
+	# On Windows best results are obtained when this is disabled.
+	# On Mac, best option is unclear due to inconsistent results.
 	# styles = QtWidgets.QStyleFactory.keys()
 	# if 'Fusion' in styles:  # Qt5
 	# 	app.setStyle('Fusion')
