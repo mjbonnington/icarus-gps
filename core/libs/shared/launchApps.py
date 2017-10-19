@@ -16,7 +16,7 @@ import sys
 import verbose
 
 
-def launch(app=None, flags=None):
+def launch(app=None, executable=None, flags=None):
 	""" Launch the specified application.
 	"""
 	execPath = ""
@@ -27,33 +27,17 @@ def launch(app=None, flags=None):
 		execPath = ""
 		cmdStr = ""
 
+	###################################
+	# Special cases for specific apps #
+	###################################
+
 	elif app == 'Maya':
 		execPath = os.environ['MAYAVERSION']
 		cmdStr = '"%s" -proj "%s"' % (execPath, os.environ['MAYADIR'])
 
-	elif app == 'Mudbox':
-		execPath = os.environ['MUDBOXVERSION']
-		cmdStr = '"%s"' % execPath
-
-	elif app == 'Cinema4D':
-		execPath = os.environ['C4DVERSION']
-		cmdStr = '"%s"' % execPath
-
-	elif app == 'AfterEffects':
-		execPath = os.environ['AFXVERSION']
-		cmdStr = '"%s"' % execPath
-
-	elif app == 'Nuke':
-		execPath = os.environ['NUKEVERSION']
-		cmdStr = '"%s"' % execPath
-
-	elif app == 'NukeX':
-		execPath = os.environ['NUKEVERSION']
-		cmdStr = '"%s" --nukex' % execPath
-
-	elif app == 'NukeStudio':
-		execPath = os.environ['NUKEVERSION']
-		cmdStr = '"%s" --studio' % execPath
+	elif app == 'Bridge':
+		execPath = os.environ['BRIDGEVERSION']
+		cmdStr = '"%s" "%s"' % (execPath, os.environ['SHOTPATH'])
 
 	elif app == 'HieroPlayer':
 		execPath = os.environ['HIEROPLAYERVERSION']
@@ -64,10 +48,6 @@ def launch(app=None, flags=None):
 			execPath = os.environ['NUKEVERSION']
 			cmdStr = '"%s" --player --quiet' % execPath
 
-	elif app == 'Mari':
-		execPath = os.environ['MARIVERSION']
-		cmdStr = '"%s"' % execPath
-
 	elif app == 'RealFlow':
 		execPath = os.environ['REALFLOWVERSION']
 		sys.path.append(os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'realflow', 'scripts'))
@@ -75,25 +55,17 @@ def launch(app=None, flags=None):
 		startup.autoDeploy()
 		cmdStr = '"%s"' % execPath
 
-	elif app == 'Deadline':
-		execPath = os.environ['DEADLINEVERSION']
+	###############
+	# Generic app #
+	###############
+
+	else:
+		execPath = executable
 		cmdStr = '"%s"' % execPath
 
-	elif app == 'DeadlineMonitor':
-		execPath = os.environ['DEADLINEVERSION']
-		cmdStr = '"%s" -monitor' % execPath
-		# execPath = os.environ['DEADLINEMONITORVERSION']
-		# cmdStr = '"%s"' % execPath
-
-	elif app == 'DeadlineSlave':
-		execPath = os.environ['DEADLINEVERSION']
-		cmdStr = '"%s" -slave' % execPath
-		# execPath = os.environ['DEADLINESLAVEVERSION']
-		# cmdStr = '"%s"' % execPath
-
-	# elif app == 'djv_view':
-	# 	execPath = os.environ['DJVVERSION']
-	# 	cmdStr = '"%s"' % execPath
+	#######
+	# End #
+	#######
 
 	if flags:
 		cmdStr += " %s" % flags

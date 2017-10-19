@@ -310,7 +310,7 @@ class icarusApp(QtWidgets.QMainWindow):
 			self.ui.openReview_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
 			self.actionHieroPlayer = QtWidgets.QAction("HieroPlayer", None)
-			self.actionHieroPlayer.triggered.connect(lambda: self.launchApp('HieroPlayer'))
+			self.actionHieroPlayer.triggered.connect(lambda: launchApps.launch('HieroPlayer'))
 			self.ui.openReview_toolButton.addAction(self.actionHieroPlayer)
 
 			self.actionDjv = QtWidgets.QAction("djv_view", None)
@@ -694,6 +694,9 @@ class icarusApp(QtWidgets.QMainWindow):
 			# Re-enable signals so that shot list gets repopulated
 			self.ui.job_comboBox.blockSignals(False)
 
+			# Setup app launch icons
+			# self.al.setupIconGrid(job=last_item, sortBy=self.sortAppsBy)
+
 		# If no jobs found, disable all launcher / shot setup UI controls
 		else:
 			msg = "No active jobs found"
@@ -1043,12 +1046,12 @@ Developers: %s
 			pass
 
 
-	def launchApp(self, app):
-		""" Launches an application from the Icarus UI.
-		"""
-		launchApps.launch(app)
-		if self.boolMinimiseOnAppLaunch:
-			self.showMinimized()
+	# def launchApp(self, app):
+	# 	""" Launches an application from the Icarus UI.
+	# 	"""
+	# 	launchApps.launch(app)
+	# 	if self.boolMinimiseOnAppLaunch:
+	# 		self.showMinimized()
 
 
 	# def launchTerminal(self):
@@ -1863,7 +1866,10 @@ Developers: %s
 		assetData = settingsData.settingsData()
 		assetDataLoaded = assetData.loadXML(os.path.join(self.gatherPath, 'assetData.xml'))
 
-		# If XML files don't exist, create defaults, and attempt to convert data from Python data files
+		# --------------------------------------------------------------------
+		# If XML files don't exist, create defaults, and attempt to convert
+		# data from Python data files.
+		# This code may be removed in the future.
 		if not assetDataLoaded:
 			import legacySettings
 
@@ -1872,6 +1878,7 @@ Developers: %s
 				assetData.loadXML()
 			else:
 				return False
+		# --------------------------------------------------------------------
 
 		# Print info to text field
 		infoText = ""

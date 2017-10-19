@@ -110,10 +110,11 @@ def gather(gatherPath):
 
 
 def chkNameConflict(obj):
-	""" Check if object(s) with same name exist in scene. Checks for ICSets on those objects and renames them accordingly.
+	""" Check if object(s) with same name exist in scene. Checks for ICSets on
+		those objects and renames them accordingly.
 	"""
 	if mc.objExists(obj):
 		verbose.nameConflict(obj)
 		objSetLs = mc.listSets(o=obj)
-		newObjName = mayaOps.renameObj([obj], '%s_' % obj, oldName=False)[0]
+		newObjName = mayaOps.renameObj([obj], '%s_1' %obj, oldName=False)[0]
 

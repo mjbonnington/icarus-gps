@@ -12,7 +12,7 @@ QWidget {
 	/*padding: 0;*/
 	/*background: #444;*/
 	color: rgba(204, 204, 204, 100%);
-	selection-background-color: #709e32; /*#00b2ee;*/
+	selection-background-color: rgba(112, 158, 50, 100%);
 	selection-color: #fff;
 	alternate-background-color: #262626;
 	/*alternate-background-color: rgba(255, 255, 255, 2%);*/
@@ -144,7 +144,7 @@ QMenuBar::item {
 }
 
 QMenuBar::item:selected, QMenuBar::item:pressed {
-	background: #709e32;
+	background: rgba(112, 158, 50, 50%);
 	color: #fff;
 }
 
@@ -172,7 +172,7 @@ QMenu::item {
 }
 
 QMenu::item:selected {
-	background: #709e32;
+	background: rgba(112, 158, 50, 50%);
 	color: #fff
 }
 
@@ -323,7 +323,7 @@ QPushButton:flat {
 }
 
 QPushButton:flat:hover {
-	border: 2px solid #709e32;
+	border: 2px solid rgba(112, 158, 50, 100%);
 }
 
 QPushButton:flat:pressed, QPushButton:flat:checked:pressed {
@@ -357,12 +357,16 @@ QToolButton { /* all types of tool button */
 }
 
 QToolButton:hover {
-	border: 2px solid #709e32;
+	border: 2px solid rgba(112, 158, 50, 100%);
 }
 
 QToolButton:pressed, QToolButton:checked:pressed {
 	padding: 2px 1px 1px 2px;
 	background: #3c3c3c;
+}
+
+QToolButton:disabled {
+	background: #474747;
 }
 
 QToolButton:checked {
@@ -520,19 +524,19 @@ QAbstractItemView::item {
 }
 
 QAbstractItemView::item:selected {
-	background-color: #709e32;
+	background-color: rgba(112, 158, 50, 100%);
 	color: #fff;
 }
 
 QAbstractItemView::item:hover {
 	/*padding: 1px;
-	border: 1px solid #709e32;*/
+	border: 1px solid rgba(112, 158, 50, 100%);*/
 	background-color: rgba(112, 158, 50, 25%);
 }
 
 QAbstractItemView::item:selected:hover {
 	/*padding: 1px;
-	border: 1px solid #709e32;*/
+	border: 1px solid rgba(112, 158, 50, 100%);*/
 	background-color: rgba(112, 158, 50, 75%);
 }
 
@@ -938,7 +942,7 @@ QComboBox::item:alternate {
 
 /* Color of the selected list item. */
 QComboBox::item:selected {
-	background: #709e32;
+	background: rgba(112, 158, 50, 100%);
 	color: #fff;
 	border: none;
 }
@@ -999,7 +1003,7 @@ QTextEdit, QPlainTextEdit {
 	/*min-height: 3.5ex;*/
 	border: 1px solid #555;
 	background: #222;
-	/*selection-background-color: #709e32;*/
+	/*selection-background-color: rgba(112, 158, 50, 100%);*/
 }
 
 QTextEdit:disabled, QTextEdit:read-only, QPlainTextEdit:disabled, QPlainTextEdit:read-only {
@@ -1350,7 +1354,7 @@ QProgressBar {
 }
 
 QProgressBar::chunk {
-	background: #709e32;
+	background: rgba(112, 158, 50, 100%);
 	width: 1px;
 }
 

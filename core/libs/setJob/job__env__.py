@@ -248,6 +248,15 @@ def setEnv(envVars):
 	os.environ['AFXRENDERSDIR']  = osOps.absolutePath('$AFXDIR/renders/$IC_USERNAME')
 
 
+	# Photoshop
+	# os.environ['PSVERSION'] = getAppExecPath('Photoshop')
+	os.environ['PSDIR']     = osOps.absolutePath('$SHOTPATH/2D/photoshop')
+
+
+	# Bridge
+	os.environ['BRIDGEVERSION'] = getAppExecPath('Bridge')
+
+
 	# Mudbox
 	os.environ['MUDBOXVERSION']            = getAppExecPath('Mudbox')
 	os.environ['MUDBOXDIR']                = osOps.absolutePath('$SHOTPATH/3D/mudbox')
@@ -319,7 +328,7 @@ def setEnv(envVars):
 
 
 	# Deadline Monitor / Slave
-	os.environ['DEADLINEVERSION'] = getAppExecPath('Deadline')
+	# os.environ['DEADLINEVERSION'] = getAppExecPath('Deadline')
 	# os.environ['DEADLINEMONITORVERSION'] = getAppExecPath('DeadlineMonitor')
 	# os.environ['DEADLINESLAVEVERSION']   = getAppExecPath('DeadlineSlave')
 
