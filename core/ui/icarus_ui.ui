@@ -1811,8 +1811,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>355</width>
-                    <height>292</height>
+                    <width>136</width>
+                    <height>70</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -2945,11 +2945,21 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionShot_settings">
+   <property name="icon">
+    <iconset resource="rsc.qrc">
+     <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
+     <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
+   </property>
    <property name="text">
     <string>Shot settings...</string>
    </property>
   </action>
   <action name="actionJob_settings">
+   <property name="icon">
+    <iconset resource="rsc.qrc">
+     <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
+     <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
+   </property>
    <property name="text">
     <string>Job settings...</string>
    </property>
@@ -2970,21 +2980,41 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionRender_Queue">
+   <property name="icon">
+    <iconset resource="rsc.qrc">
+     <normaloff>:/rsc/rsc/icon_render.png</normaloff>
+     <disabledoff>:/rsc/rsc/icon_render_disabled.png</disabledoff>:/rsc/rsc/icon_render.png</iconset>
+   </property>
    <property name="text">
     <string>Render Queue...</string>
    </property>
   </action>
   <action name="actionAbout_Icarus">
+   <property name="icon">
+    <iconset resource="rsc.qrc">
+     <normaloff>:/rsc/rsc/icon_info.png</normaloff>
+     <disabledoff>:/rsc/rsc/icon_info_disabled.png</disabledoff>:/rsc/rsc/icon_info.png</iconset>
+   </property>
    <property name="text">
     <string>About Icarus...</string>
    </property>
   </action>
   <action name="actionUser_settings">
+   <property name="icon">
+    <iconset resource="rsc.qrc">
+     <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
+     <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
+   </property>
    <property name="text">
     <string>User settings...</string>
    </property>
   </action>
   <action name="actionGlobal_settings">
+   <property name="icon">
+    <iconset resource="rsc.qrc">
+     <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
+     <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
+   </property>
    <property name="text">
     <string>Global settings...</string>
    </property>
@@ -2995,6 +3025,11 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionSubmit_render">
+   <property name="icon">
+    <iconset resource="rsc.qrc">
+     <normaloff>:/rsc/rsc/icon_render.png</normaloff>
+     <disabledoff>:/rsc/rsc/icon_render_disabled.png</disabledoff>:/rsc/rsc/icon_render.png</iconset>
+   </property>
    <property name="text">
     <string>Submit render...</string>
    </property>

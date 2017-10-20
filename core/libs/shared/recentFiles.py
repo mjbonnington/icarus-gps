@@ -21,7 +21,7 @@ import verbose
 
 
 config = SafeConfigParser()
-configFile = os.path.join(os.environ['RECENTFILESDIR'], '%s.ini' % os.environ['JOB'])
+configFile = os.path.join(os.environ['IC_RECENTFILESDIR'], '%s.ini' % os.environ['JOB'])
 
 
 def _read(env):
@@ -49,7 +49,7 @@ def _create(env):
 	""" Create config file if it doesn't exist and populate with with
 		defaults.
 	"""
-	recentFilesDir = os.environ['RECENTFILESDIR']
+	recentFilesDir = os.environ['IC_RECENTFILESDIR']
 
 	if not os.path.isdir(recentFilesDir):
 		osOps.createDir(recentFilesDir)

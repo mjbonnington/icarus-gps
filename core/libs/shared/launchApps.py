@@ -19,12 +19,11 @@ import verbose
 def launch(app=None, executable=None, flags=None):
 	""" Launch the specified application.
 	"""
-	execPath = ""
 	cmdStr = ""
 
 	# Build command string depending on app...
 	if app is None:
-		execPath = ""
+		# executable = ""
 		cmdStr = ""
 
 	###################################
@@ -32,47 +31,46 @@ def launch(app=None, executable=None, flags=None):
 	###################################
 
 	elif app == 'Maya':
-		execPath = os.environ['MAYAVERSION']
-		cmdStr = '"%s" -proj "%s"' % (execPath, os.environ['MAYADIR'])
+		executable = os.environ['MAYAVERSION']
+		cmdStr = '"%s" -proj "%s"' %(executable, os.environ['MAYADIR'])
 
 	elif app == 'Bridge':
-		execPath = os.environ['BRIDGEVERSION']
-		cmdStr = '"%s" "%s"' % (execPath, os.environ['SHOTPATH'])
+		executable = os.environ['BRIDGEVERSION']
+		cmdStr = '"%s" "%s"' %(executable, os.environ['SHOTPATH'])
 
 	elif app == 'HieroPlayer':
-		execPath = os.environ['HIEROPLAYERVERSION']
-		if execPath:
-			cmdStr = '"%s" --quiet' % execPath
+		executable = os.environ['HIEROPLAYERVERSION']
+		if executable:
+			cmdStr = '"%s" --quiet' %executable
 		else:
 			# Hiero Player is bundled with Nuke 9.x and later. 
-			execPath = os.environ['NUKEVERSION']
-			cmdStr = '"%s" --player --quiet' % execPath
+			executable = os.environ['NUKEVERSION']
+			cmdStr = '"%s" --player --quiet'% executable
 
 	elif app == 'RealFlow':
-		execPath = os.environ['REALFLOWVERSION']
+		executable = os.environ['REALFLOWVERSION']
 		sys.path.append(os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'realflow', 'scripts'))
 		import startup
 		startup.autoDeploy()
-		cmdStr = '"%s"' % execPath
+		cmdStr = '"%s"' %executable
 
 	###############
 	# Generic app #
 	###############
 
 	else:
-		execPath = executable
-		cmdStr = '"%s"' % execPath
+		cmdStr = '"%s"' %executable
 
 	#######
 	# End #
 	#######
 
 	if flags:
-		cmdStr += " %s" % flags
+		cmdStr += " %s" %flags
 
 	# Check executable path is set and exists, and launch app.
-	if execPath:
-		if os.path.isfile(execPath):
+	if executable:
+		if os.path.isfile(executable):
 			verbose.launchApp(app)
 			subprocess.Popen(cmdStr, shell=True)
 		else:
@@ -92,7 +90,7 @@ def djv():
 	"""
 	verbose.launchApp('djv_view')
 	import djvOps
-	#djvOps.viewer(os.environ['SHOTPATH'])
+	# djvOps.viewer(os.environ['SHOTPATH'])
 	djvOps.viewer()
 
 
@@ -101,9 +99,9 @@ def terminal():
 	"""
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
 		# subprocess.Popen("cmd /k %s" % os.environ['IC_SHELL_RC'], shell=True)
-		subprocess.Popen("start cmd /k %s" % os.environ['IC_SHELL_RC'], shell=True)
+		subprocess.Popen("start cmd /k %s" %os.environ['IC_SHELL_RC'], shell=True)
 	else:
-		subprocess.Popen("bash --rcfile %s" % os.environ['IC_SHELL_RC'], shell=True)
+		subprocess.Popen("bash --rcfile %s" %os.environ['IC_SHELL_RC'], shell=True)
 
 
 def prodBoard():
@@ -111,9 +109,9 @@ def prodBoard():
 	"""
 	# webbrowser.open(os.environ['PRODBOARD'], new=2, autoraise=True)
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
-		subprocess.Popen('explorer "%s"' % os.environ['PRODBOARD'], shell=True)
+		subprocess.Popen('explorer "%s"' %os.environ['PRODBOARD'], shell=True)
 	elif os.environ['IC_RUNNING_OS'] == 'Darwin':
-		subprocess.Popen('open "%s"' % os.environ['PRODBOARD'], shell=True)
+		subprocess.Popen('open "%s"' %os.environ['PRODBOARD'], shell=True)
 	else:
-		subprocess.Popen('xdg-open "%s"' % os.environ['PRODBOARD'], shell=True)
+		subprocess.Popen('xdg-open "%s"' %os.environ['PRODBOARD'], shell=True)
 

@@ -18,7 +18,7 @@ def setEnv():
 	""" Set some environment variables for basic operation.
 	"""
 	# Set version string
-	os.environ['IC_VERSION'] = 'v0.9.10-20171017'
+	os.environ['IC_VERSION'] = 'v0.9.10-20171020'
 
 	# Standardise some environment variables across systems.
 	# Usernames will always be stored as lowercase for compatibility.
@@ -58,6 +58,7 @@ def setEnv():
 	os.environ['IC_CONFIGDIR'] = os.path.join(os.environ['IC_BASEDIR'], 'core', 'config')
 	os.environ['IC_USERPREFS'] = os.path.join(os.environ['IC_CONFIGDIR'], 'users', os.environ['IC_USERNAME'])  # User prefs stored on server
 	#os.environ['IC_USERPREFS'] = os.path.join(os.environ['IC_USERHOME'], os.environ['DATAFILESRELATIVEDIR'])  # User prefs stored in user home folder
+	os.environ['IC_RECENTFILESDIR'] = os.path.join(os.environ['IC_USERPREFS'], 'recentFiles')
 
 	appendSysPaths()
 

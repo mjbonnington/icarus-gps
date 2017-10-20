@@ -309,23 +309,37 @@ class icarusApp(QtWidgets.QMainWindow):
 			# Review
 			self.ui.openReview_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
-			self.actionHieroPlayer = QtWidgets.QAction("HieroPlayer", None)
-			self.actionHieroPlayer.triggered.connect(lambda: launchApps.launch('HieroPlayer'))
-			self.ui.openReview_toolButton.addAction(self.actionHieroPlayer)
-
 			self.actionDjv = QtWidgets.QAction("djv_view", None)
 			self.actionDjv.triggered.connect(launchApps.djv)
+			icon = QtGui.QIcon()
+			icon.addPixmap(QtGui.QPixmap(osOps.absolutePath("$IC_FORMSDIR/rsc/app_icon_djv.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+			icon.addPixmap(QtGui.QPixmap(osOps.absolutePath("$IC_FORMSDIR/rsc/app_icon_djv_disabled.png")), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+			self.actionDjv.setIcon(icon)
 			self.ui.openReview_toolButton.addAction(self.actionDjv)
+
+			self.actionHieroPlayer = QtWidgets.QAction("HieroPlayer", None)
+			self.actionHieroPlayer.triggered.connect(lambda: launchApps.launch('HieroPlayer'))
+			icon = QtGui.QIcon()
+			icon.addPixmap(QtGui.QPixmap(osOps.absolutePath("$IC_FORMSDIR/rsc/app_icon_hieroplayer.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+			icon.addPixmap(QtGui.QPixmap(osOps.absolutePath("$IC_FORMSDIR/rsc/app_icon_hieroplayer_disabled.png")), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+			self.actionHieroPlayer.setIcon(icon)
+			self.ui.openReview_toolButton.addAction(self.actionHieroPlayer)
 
 			# Browse
 			self.ui.browse_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
+			icon = QtGui.QIcon()
+			icon.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_folder.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+			icon.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_folder_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+
 			self.actionOpenShot = QtWidgets.QAction("Shot", None)
 			self.actionOpenShot.triggered.connect(openDirs.openShot)
+			self.actionOpenShot.setIcon(icon)
 			self.ui.browse_toolButton.addAction(self.actionOpenShot)
 
 			self.actionOpenJob = QtWidgets.QAction("Job", None)
 			self.actionOpenJob.triggered.connect(openDirs.openJob)
+			self.actionOpenJob.setIcon(icon)
 			self.ui.browse_toolButton.addAction(self.actionOpenJob)
 
 			# Apply job/shot settings pop-up menu to shotEnv label (only in standalone mode)
@@ -919,18 +933,18 @@ class icarusApp(QtWidgets.QMainWindow):
 
   Frame range: %s
 
-   Resolution: %s (full)
-               %s (proxy)
+   Resolution: %sx%s (full)
+               %sx%s (proxy)
 
  Linear units: %s
 Angular units: %s
    Time units: %s (%s fps)
-""" %(os.environ['JOB'], os.environ['SHOT'],
-      os.environ['FRAMERANGE'],
-      os.environ['RESOLUTION'],
-      os.environ['PROXY_RESOLUTION'],
-      os.environ['UNIT'],
-      os.environ['ANGLE'],
+""" %(os.environ['JOB'], os.environ['SHOT'], 
+      os.environ['FRAMERANGE'], 
+      os.environ['RESOLUTIONX'], os.environ['RESOLUTIONY'], 
+      os.environ['PROXY_RESOLUTIONX'], os.environ['PROXY_RESOLUTIONY'], 
+      os.environ['UNIT'], 
+      os.environ['ANGLE'], 
       os.environ['TIMEFORMAT'], os.environ['FPS']))
 
 		except KeyError:

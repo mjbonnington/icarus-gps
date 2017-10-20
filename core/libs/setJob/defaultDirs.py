@@ -31,7 +31,9 @@ def create(app=None):
 				osOps.createDir(directory)
 
 		# Plate directories
-		plates = (os.environ['RESOLUTION'], os.environ['PROXY_RESOLUTION'])
+		res_full = "%sx%s" %(os.environ['RESOLUTIONX'], os.environ['RESOLUTIONY'])
+		res_proxy = "%sx%s" %(os.environ['PROXY_RESOLUTIONX'], os.environ['PROXY_RESOLUTIONY'])
+		plates = (res_full, res_proxy)
 		platesDir = os.path.join(os.environ['SHOTPATH'], 'Plate')
 		if not os.path.isdir(platesDir):
 			osOps.createDir(platesDir)

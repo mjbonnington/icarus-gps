@@ -64,9 +64,9 @@ def setEnv(envVars):
 #	defaultData = settingsData.settingsData()
 	ap = appPaths.appPaths()
 
-	jobDataLoaded = jobData.loadXML( os.path.join(jobDataPath, 'jobData.xml') )
-	shotDataLoaded = shotData.loadXML( os.path.join(shotDataPath, 'shotData.xml') )
-#	defaultData.loadXML( os.path.join(os.environ['IC_CONFIGDIR'], 'defaultData.xml') )
+	jobDataLoaded = jobData.loadXML(os.path.join(jobDataPath, 'jobData.xml'))
+	shotDataLoaded = shotData.loadXML(os.path.join(shotDataPath, 'shotData.xml'))
+#	defaultData.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'defaultData.xml'))
 	ap.loadXML( os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml') )
 
 	# If XML files don't exist, create defaults, and attempt to convert data
@@ -99,7 +99,7 @@ def setEnv(envVars):
 		if legacySettings.checkAssetPath():
 			assetDir = '.publish'
 		else:
-			assetDir = 'Assets' # perhaps this shouldn't be hard-coded?
+			assetDir = 'Assets'  # Perhaps this shouldn't be hard-coded?
 
 		jobData.setValue('meta', 'assetDir', assetDir)
 		jobData.saveXML()
@@ -123,31 +123,27 @@ def setEnv(envVars):
 
 
 	# Job / shot env
-#	os.environ['GLOBALPUBLISHDIR']  = osOps.absolutePath(getInheritedValue('other', 'assetlib')) # path needs to be translated for OS portability
+#	os.environ['GLOBALPUBLISHDIR']  = osOps.absolutePath(getInheritedValue('other', 'assetlib'))  # Path needs to be translated for OS portability
 	os.environ['JOBPUBLISHDIR']     = osOps.absolutePath('$JOBPATH/$PUBLISHRELATIVEDIR')
 	os.environ['SHOTPUBLISHDIR']    = osOps.absolutePath('$SHOTPATH/$PUBLISHRELATIVEDIR')
-	os.environ['WIPSDIR']           = osOps.absolutePath('$JOBPATH/../Deliverables/WIPS') # perhaps this shouldn't be hard-coded?
-	os.environ['RECENTFILESDIR']    = osOps.absolutePath('$IC_USERPREFS/recentFiles')
-#	os.environ['ELEMENTSLIBRARY']   = osOps.absolutePath(getInheritedValue('other', 'elementslib')) # path needs to be translated for OS portability
-	os.environ['ELEMENTSLIBRARY']   = osOps.absolutePath(getInheritedValue('other', 'elementslib'))
+	os.environ['WIPSDIR']           = osOps.absolutePath('$JOBPATH/../Deliverables/WIPS')  # Perhaps this shouldn't be hard-coded?
+	os.environ['ELEMENTSLIBRARY']   = osOps.absolutePath(getInheritedValue('other', 'elementslib'))  # Path needs to be translated for OS portability
 	os.environ['PRODBOARD']         = getInheritedValue('other', 'prodboard')
 	os.environ['UNIT']              = getInheritedValue('units', 'linear')
 	os.environ['ANGLE']             = getInheritedValue('units', 'angle')
 	os.environ['TIMEFORMAT']        = getInheritedValue('units', 'time')
 	os.environ['FPS']               = getInheritedValue('units', 'fps')
-#	os.environ['HANDLES']           = getInheritedValue('time', 'handles') # need to split this into in and out points
+#	os.environ['HANDLES']           = getInheritedValue('time', 'handles')  # Using INFRAME & OUTFRAME instead - not implemented
 	os.environ['STARTFRAME']        = getInheritedValue('time', 'rangeStart')
 	os.environ['ENDFRAME']          = getInheritedValue('time', 'rangeEnd')
 	os.environ['INFRAME']           = getInheritedValue('time', 'inFrame')
 	os.environ['OUTFRAME']          = getInheritedValue('time', 'outFrame')
-	os.environ['FRAMERANGE']        = '%s-%s' % (os.environ['STARTFRAME'], os.environ['ENDFRAME']) # is this necessary?
+	os.environ['FRAMERANGE']        = '%s-%s' % (os.environ['STARTFRAME'], os.environ['ENDFRAME'])
 	os.environ['POSTERFRAME']       = getInheritedValue('time', 'posterFrame')
 	os.environ['RESOLUTIONX']       = getInheritedValue('resolution', 'fullWidth')
 	os.environ['RESOLUTIONY']       = getInheritedValue('resolution', 'fullHeight')
-	os.environ['RESOLUTION']        = '%sx%s' % (os.environ['RESOLUTIONX'], os.environ['RESOLUTIONY']) # is this necessary?
 	os.environ['PROXY_RESOLUTIONX'] = getInheritedValue('resolution', 'proxyWidth')
 	os.environ['PROXY_RESOLUTIONY'] = getInheritedValue('resolution', 'proxyHeight')
-	os.environ['PROXY_RESOLUTION']  = '%sx%s' % (os.environ['PROXY_RESOLUTIONX'], os.environ['PROXY_RESOLUTIONY']) # is this necessary?
 	os.environ['ASPECTRATIO']       = str( float(os.environ['RESOLUTIONX']) / float(os.environ['RESOLUTIONY']) )
 
 
