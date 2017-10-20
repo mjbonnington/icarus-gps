@@ -185,7 +185,7 @@ class AppLauncher(QtWidgets.QDialog):
 				exec_str = "self.%s = action" %actionName
 				exec(exec_str)
 
-		layout.addWidget(toolButton, 0, column, 0)
+		layout.addWidget(toolButton, 0, column)
 
 		# Set environment variables
 
