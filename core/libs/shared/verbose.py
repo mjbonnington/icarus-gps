@@ -172,7 +172,7 @@ def launchAppNotFound(application):
 	error("Unable to launch %s - the executable could not be found." %application)
 
 def launchAppNotSet(application):
-	error("Unable to launch %s - executable path not set. Please set the correct location from the job settings window." %application)
+	error("Unable to launch %s - executable path not set. Please set the correct location from the Job Settings dialog." %application)
 
 def jobSet(job, shot):
 	message("Shot set: Now working on %s - %s" %(job, shot))

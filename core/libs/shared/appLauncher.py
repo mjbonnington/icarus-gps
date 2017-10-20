@@ -70,6 +70,7 @@ class AppLauncher(QtWidgets.QDialog):
 					layout.itemAt(i).widget().deleteLater()
 				layout.deleteLater()
 
+		# Get apps
 		item_index = 0
 		if job:
 			all_apps = self.ap.getVisibleApps(sortBy=sortBy)
@@ -83,17 +84,28 @@ class AppLauncher(QtWidgets.QDialog):
 			app_ls = self.ap.getVisibleApps(sortBy=sortBy)
 			self.showToolTips = False
 
+		# Create icons
 		num_items = len(app_ls)
-		rows = self.getRows(num_items)
-		for row, num_row_items in enumerate(rows):
-			# Create grid layout
-			icon_size = self.getIconSize(num_row_items)
-			row_gridLayout = QtWidgets.QGridLayout()
-			row_gridLayout.setObjectName("apps_gridLayout%d" %row)
-			parentLayout.insertLayout(row, row_gridLayout)
-			for col in range(num_row_items):
-				self.createIcon(app_ls[item_index], icon_size, row_gridLayout, col)
-				item_index += 1
+		if num_items:
+			rows = self.getRows(num_items)
+			for row, num_row_items in enumerate(rows):
+				# Create grid layout
+				icon_size = self.getIconSize(num_row_items)
+				row_gridLayout = QtWidgets.QGridLayout()
+				row_gridLayout.setObjectName("apps_gridLayout%d" %row)
+				parentLayout.insertLayout(row, row_gridLayout)
+				for col in range(num_row_items):
+					self.createIcon(app_ls[item_index], icon_size, row_gridLayout, col)
+					item_index += 1
+
+		# Create placeholder icon
+		# else:
+		# 	icon_size = self.getIconSize(1)
+		# 	row_gridLayout = QtWidgets.QGridLayout()
+		# 	row_gridLayout.setObjectName("apps_gridLayout")
+		# 	parentLayout.insertLayout(0, row_gridLayout)
+		# 	appPlaceholder_toolButton
+		# 	row_gridLayout.addWidget(self.parent.ui.appPlaceholder_toolButton, 0, 0, 0)
 
 
 	def createIcon(self, app, iconSize, layout, column):
@@ -116,18 +128,14 @@ class AppLauncher(QtWidgets.QDialog):
 		sizePolicy.setHeightForWidth(toolButton.sizePolicy().hasHeightForWidth())
 		toolButton.setSizePolicy(sizePolicy)
 		icon = QtGui.QIcon()
-		# icon.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_%s.png" %appName), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-		# icon.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_%s_disabled.png" %appName), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
 		iconNormalPath = osOps.absolutePath("$IC_FORMSDIR/rsc/app_icon_%s.png" %appName)
 		iconDisabledPath = osOps.absolutePath("$IC_FORMSDIR/rsc/app_icon_%s_disabled.png" %appName)
 		if os.path.isfile(iconNormalPath):
 			icon.addPixmap(QtGui.QPixmap(iconNormalPath), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 			icon.addPixmap(QtGui.QPixmap(iconDisabledPath), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-			# icon.addPixmap(QtGui.QPixmap(iconDisabledPath), QtGui.QIcon.Active, QtGui.QIcon.Off)
 		else:  # Use generic icon
 			icon.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_editor.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 			icon.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_editor_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-			# icon.addPixmap(QtGui.QPixmap(":/rsc/rsc/icon_editor_disabled.png"), QtGui.QIcon.Active, QtGui.QIcon.Off)
 		toolButton.setIcon(icon)
 		toolButton.setIconSize(QtCore.QSize(iconSize[0], iconSize[1]))  # Vary according to number of items in row - QSize won't accept tuple
 		toolButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
@@ -154,8 +162,9 @@ class AppLauncher(QtWidgets.QDialog):
 			# self.createSubmenus(submenus, toolButton)
 			toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 			for entry in submenus:
-				menuName = entry[0]
-				flags = entry[1]
+				menuName, flags = entry
+				# menuName = entry[0]
+				# flags = entry[1]
 				actionName = "action%s" %menuName.replace(" ", "")
 				# print(actionName, entry)
 
@@ -172,11 +181,11 @@ class AppLauncher(QtWidgets.QDialog):
 				toolButton.addAction(action)
 
 				# Make a class-scope reference to this object
+				# (won't work without it for some reason)
 				exec_str = "self.%s = action" %actionName
 				exec(exec_str)
 
-		layout.addWidget(toolButton, 0, column, 1, 1)  # CHECK THIS!
-		# layout.addWidget(toolButton)
+		layout.addWidget(toolButton, 0, column, 0)
 
 		# Set environment variables
 

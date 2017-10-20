@@ -830,7 +830,7 @@ class icarusApp(QtWidgets.QMainWindow):
 			self.lockJobUI()
 			self.al.setupIconGrid(job=self.job, sortBy=self.sortAppsBy)
 		else:
-			dialogMsg = 'Unable to load job settings. Default values have been applied.\nPlease review the values in the job settings dialog and click Save when done.\n'
+			dialogMsg = 'Unable to load job settings. Default values have been applied.\nPlease review the values in the Job Settings dialog and click Save when done.\n'
 			verbose.print_(dialogMsg, 1)
 
 			# Confirmation dialog

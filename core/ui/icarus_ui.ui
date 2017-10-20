@@ -467,7 +467,7 @@ QToolButton:disabled {
            <bool>false</bool>
           </property>
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Launches applications to work within the job environment.&lt;/p&gt;&lt;p&gt;This section becomes available once the job and shot environment is set.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Launch applications to work within the job environment.&lt;/p&gt;&lt;p&gt;This section becomes available once the job and shot environment is set.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="title">
            <string>Launch</string>
@@ -499,7 +499,7 @@ QToolButton:disabled {
                 <x>0</x>
                 <y>0</y>
                 <width>744</width>
-                <height>65</height>
+                <height>176</height>
                </rect>
               </property>
               <property name="sizePolicy">
@@ -516,9 +516,12 @@ QToolButton:disabled {
                 <number>0</number>
                </property>
                <item>
-                <layout class="QGridLayout" name="utilities_gridLayout">
-                 <item row="0" column="5">
-                  <widget class="QToolButton" name="browse_toolButton">
+                <layout class="QGridLayout" name="apps_gridLayout">
+                 <item row="0" column="0">
+                  <widget class="QToolButton" name="appPlaceholder_toolButton">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
                      <horstretch>0</horstretch>
@@ -526,23 +529,23 @@ QToolButton:disabled {
                     </sizepolicy>
                    </property>
                    <property name="toolTip">
-                    <string>Browse project folders</string>
+                    <string>No applications have been set for this job. Please set some from the Job Settings dialog.</string>
                    </property>
                    <property name="statusTip">
-                    <string>Browse project folders</string>
+                    <string>No applications have been set for this job. Applications can be set up from the Job Settings dialog.</string>
                    </property>
                    <property name="text">
-                    <string>Browse</string>
+                    <string>No Applications</string>
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/icon_folder.png</normaloff>
-                     <disabledoff>:/rsc/rsc/icon_folder_disabled.png</disabledoff>:/rsc/rsc/icon_folder.png</iconset>
+                     <normaloff>:/rsc/rsc/icon_info.png</normaloff>
+                     <disabledoff>:/rsc/rsc/icon_info_disabled.png</disabledoff>:/rsc/rsc/icon_info.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
-                     <width>40</width>
-                     <height>40</height>
+                     <width>80</width>
+                     <height>80</height>
                     </size>
                    </property>
                    <property name="toolButtonStyle">
@@ -550,6 +553,10 @@ QToolButton:disabled {
                    </property>
                   </widget>
                  </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QGridLayout" name="utilities_gridLayout">
                  <item row="0" column="0">
                   <widget class="QToolButton" name="render_toolButton">
                    <property name="sizePolicy">
@@ -571,39 +578,6 @@ QToolButton:disabled {
                     <iconset resource="rsc.qrc">
                      <normaloff>:/rsc/rsc/icon_render.png</normaloff>
                      <disabledoff>:/rsc/rsc/icon_render_disabled.png</disabledoff>:/rsc/rsc/icon_render.png</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>40</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                   <property name="toolButtonStyle">
-                    <enum>Qt::ToolButtonTextUnderIcon</enum>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="3">
-                  <widget class="QToolButton" name="openTerminal_toolButton">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="toolTip">
-                    <string>Enables the command-line prompt</string>
-                   </property>
-                   <property name="statusTip">
-                    <string>Enables the command-line prompt</string>
-                   </property>
-                   <property name="text">
-                    <string>Terminal</string>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/icon_terminal.png</normaloff>
-                     <disabledoff>:/rsc/rsc/icon_terminal_disabled.png</disabledoff>:/rsc/rsc/icon_terminal.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -649,6 +623,39 @@ QToolButton:disabled {
                    </property>
                   </widget>
                  </item>
+                 <item row="0" column="3">
+                  <widget class="QToolButton" name="openTerminal_toolButton">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="toolTip">
+                    <string>Enables the command-line prompt</string>
+                   </property>
+                   <property name="statusTip">
+                    <string>Enables the command-line prompt</string>
+                   </property>
+                   <property name="text">
+                    <string>Terminal</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="rsc.qrc">
+                     <normaloff>:/rsc/rsc/icon_terminal.png</normaloff>
+                     <disabledoff>:/rsc/rsc/icon_terminal_disabled.png</disabledoff>:/rsc/rsc/icon_terminal.png</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>40</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                   <property name="toolButtonStyle">
+                    <enum>Qt::ToolButtonTextUnderIcon</enum>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="0" column="2">
                   <widget class="QToolButton" name="openProdBoard_toolButton">
                    <property name="sizePolicy">
@@ -670,6 +677,39 @@ QToolButton:disabled {
                     <iconset resource="rsc.qrc">
                      <normaloff>:/rsc/rsc/icon_productionBoard.png</normaloff>
                      <disabledoff>:/rsc/rsc/icon_productionBoard_disabled.png</disabledoff>:/rsc/rsc/icon_productionBoard.png</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>40</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                   <property name="toolButtonStyle">
+                    <enum>Qt::ToolButtonTextUnderIcon</enum>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="4">
+                  <widget class="QToolButton" name="browse_toolButton">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="toolTip">
+                    <string>Browse project folders</string>
+                   </property>
+                   <property name="statusTip">
+                    <string>Browse project folders</string>
+                   </property>
+                   <property name="text">
+                    <string>Browse</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="rsc.qrc">
+                     <normaloff>:/rsc/rsc/icon_folder.png</normaloff>
+                     <disabledoff>:/rsc/rsc/icon_folder_disabled.png</disabledoff>:/rsc/rsc/icon_folder.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
