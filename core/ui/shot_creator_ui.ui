@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>400</height>
+    <height>485</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,10 +20,10 @@
    <item>
     <widget class="QGroupBox" name="job_groupBox">
      <property name="title">
-      <string/>
+      <string>Current job</string>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
        <widget class="QLabel" name="job_label">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -36,10 +36,24 @@
         </property>
        </widget>
       </item>
-      <item>
+      <item row="0" column="1">
        <widget class="QComboBox" name="job_comboBox">
         <property name="editable">
          <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPlainTextEdit" name="shots_plainTextEdit">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Existing shots:</string>
         </property>
        </widget>
       </item>
@@ -169,7 +183,7 @@
    <item>
     <widget class="QGroupBox" name="shotPreview_groupBox">
      <property name="title">
-      <string>Preview</string>
+      <string>Shot creation preview</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
@@ -203,7 +217,7 @@
   <tabstop>shotCreator_buttonBox</tabstop>
  </tabstops>
  <resources>
-  <include location="../../ui/rsc.qrc"/>
+  <include location="rsc.qrc"/>
  </resources>
  <connections>
   <connection>

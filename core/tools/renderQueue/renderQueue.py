@@ -12,9 +12,9 @@ import xml.etree.ElementTree as ET
 import xmlData
 
 
-class renderQueue(xmlData.xmlData):
+class renderQueue(xmlData.XMLData):
 	""" Class to hold the render queue database.
-		Inherits xmlData class
+		Inherits XMLData class
 	"""
 
 	def newJob(self, genericOpts, renderOpts, tasks, user, submitTime, comment):

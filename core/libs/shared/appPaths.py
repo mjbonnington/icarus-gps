@@ -15,9 +15,9 @@ import verbose
 import xmlData
 
 
-class appPaths(xmlData.xmlData):
+class appPaths(xmlData.XMLData):
 	""" Manipulates XML database to store application version paths.
-		Inherits xmlData class.
+		Inherits XMLData class.
 	"""
 
 	def getApps(self):

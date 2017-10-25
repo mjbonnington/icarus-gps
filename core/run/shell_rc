@@ -38,9 +38,7 @@ alias mayarender="$MAYARENDERVERSION -proj $MAYADIR"
 alias Render="$MAYARENDERVERSION"
 alias nuke="$NUKEVERSION &"
 alias nukex="$NUKEVERSION --nukex &"
-alias mudbox="$MUDBOXVERSION &"
-alias mari="$MARIVERSION &"
-alias realflow="'$REALFLOWVERSION' &"
+alias hieroplayer="$NUKEVERSION --player &"
 if [[ $IC_RUNNING_OS == 'Linux' ]]; then
 	alias djv="export LD_LIBRARY_PATH=$DJV_LIB; $DJV_PLAY &"
 else
@@ -54,9 +52,9 @@ alias cls="clear"
 alias dir="ls -l"
 alias ll="ls -ltr"
 alias lseq="$IC_BASEDIR/core/libs/shared/sequenceLs.py"
-alias rb="$IC_BASEDIR/core/tools/renderBrowser/rb__main__.py -style fusion"
-alias br="$IC_BASEDIR/core/tools/renderBrowser/rename__main__.py -style fusion"
-alias submit="$IC_BASEDIR/core/tools/gpsSubmit/submit__main__.py -style fusion"
+#alias rb="$IC_BASEDIR/core/tools/renderBrowser/rb__main__.py"
+#alias br="$IC_BASEDIR/core/tools/renderBrowser/rename__main__.py"
+#alias submit="$IC_BASEDIR/core/tools/gpsSubmit/submit__main__.py"
 
 #############################
 # Sourcing user own aliases

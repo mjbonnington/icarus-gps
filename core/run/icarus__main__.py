@@ -2147,7 +2147,6 @@ try:
 	QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 except AttributeError:
 	verbose.warning("High DPI scaling not available in Qt %s. User Interface elements may not display correctly on high DPI display devices." %QtCore.qVersion())
-	# pass
 
 if __name__ == '__main__':
 	run_standalone()

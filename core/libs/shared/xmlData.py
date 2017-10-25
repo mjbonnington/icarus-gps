@@ -9,15 +9,24 @@
 # Classes written to handle specific data files should inherit this class.
 
 
-import xml.etree.ElementTree as ET
 import os
+import xml.etree.ElementTree as ET
+
 import verbose
 
 
-class xmlData():
+class XMLData():
 
-	def __init__(self):
-		pass
+	def __init__(self, datafile=None):
+		if datafile is not None:
+			self.datafile = os.path.normpath(datafile)
+
+
+	def createXML(self):
+		""" Create empty XML data file.
+		"""
+		self.root = ET.Element('root')
+		self.tree = ET.ElementTree(self.root)
 
 
 	def loadXML(self, datafile=None, quiet=False):
@@ -38,8 +47,7 @@ class xmlData():
 		except (IOError, ET.ParseError):
 			if not quiet:
 				verbose.warning("XML data file is invalid or doesn't exist: \"%s\"" %self.datafile)
-			self.root = ET.Element('root')
-			self.tree = ET.ElementTree(self.root)
+			self.createXML()
 			return False
 
 

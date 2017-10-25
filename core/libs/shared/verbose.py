@@ -44,14 +44,14 @@ def error(message):
 	print_("ERROR: " + message, 1)
 
 
-def print_(message, verbosityLevel=3, status=True, log=False):
+def print_(message, verbosityLevel=4, status=True, log=False):
 	""" Print the message to the console.
 		If 'status' is True, the message will be shown on the main UI status
 		bar.
 		If 'log' is True, the message will be written to a logfile (not yet
 		implemented).
 
-		Verbosity Levels:
+		Verbosity levels:
 		0 - Nothing is output
 		1 - Errors and messages requiring user action
 		2 - Errors and warning messages

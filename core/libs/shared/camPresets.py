@@ -14,9 +14,9 @@ import xml.etree.ElementTree as ET
 import xmlData
 
 
-class camPresets(xmlData.xmlData):
+class camPresets(xmlData.XMLData):
 	""" Manipulates XML database to store camera presets.
-		Inherits xmlData class.
+		Inherits XMLData class.
 	"""
 
 	def getPresets(self, activeOnly=False):

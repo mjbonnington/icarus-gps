@@ -17,25 +17,29 @@ import verbose
 
 def createDir(path):
 	""" Create a directory with the specified path.
-		TODO: add exception handling.
 	"""
 	path = os.path.normpath(path)
 
 	if os.path.isdir(path):
-		# verbose.warning("Directory already exists: %s" %path)
+		verbose.message("Directory already exists: %s" %path)
 		pass
 
 	else:
-		os.makedirs(path)
+		try:
+			os.makedirs(path)
 
-		# Hide the folder if its name starts with a dot, as these files are
-		# not automatically hidden on Windows
-		if os.environ['IC_RUNNING_OS'] == 'Windows':
-			if os.path.basename(path).startswith('.'):
-				setHidden(path)
+			# Hide the folder if its name starts with a dot, as these files are
+			# not automatically hidden on Windows
+			if os.environ['IC_RUNNING_OS'] == 'Windows':
+				if os.path.basename(path).startswith('.'):
+					setHidden(path)
 
-		verbose.print_('mkdir "%s"' %path, 4)  # this causes an error if user config dir doesn't exist
-		return path
+			verbose.print_('mkdir "%s"' %path, 4)  # This causes an error if user config dir doesn't exist
+			return path
+
+		except:
+			verbose.error("Cannot create directory: %s" %path)
+			return False
 
 
 def setPermissions(path, mode='a+w'):

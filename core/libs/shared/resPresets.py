@@ -14,9 +14,9 @@ import xml.etree.ElementTree as ET
 import xmlData
 
 
-class resPresets(xmlData.xmlData):
+class resPresets(xmlData.XMLData):
 	""" Manipulates XML database to store resolution presets.
-		Inherits xmlData class.
+		Inherits XMLData class.
 	"""
 
 	def getPresets(self):

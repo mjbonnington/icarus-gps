@@ -16,9 +16,9 @@ import xml.etree.ElementTree as ET
 import xmlData
 
 
-class settingsData(xmlData.xmlData):
+class settingsData(xmlData.XMLData):
 	""" Manipulates XML database to store job settings.
-		Inherits xmlData class.
+		Inherits XMLData class.
 	"""
 
 	def getValue(self, category, setting, type='str'):

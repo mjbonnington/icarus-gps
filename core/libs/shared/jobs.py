@@ -19,11 +19,11 @@ import verbose
 import xmlData
 
 
-class jobs(xmlData.xmlData):
+class jobs(xmlData.XMLData):
 	""" Manipulates XML database for storing jobs.
 		Add and remove jobs, make jobs active or inactive, modify job
 		properties.
-		Inherits xmlData class.
+		Inherits XMLData class.
 	"""
 	def __init__(self):
 		""" Automatically load datafile on initialisation.
