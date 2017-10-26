@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root location="$SHOTPATH/3D">
+	<dir name="maya" env="MAYADIR">
+		<file name="workspace.mel" />
+		<dir name="scenes">
+			<dir name="$IC_USERNAME" env="MAYASCENESDIR" />
+		</dir>
+		<dir name="sourceimages">
+			<dir name="$IC_USERNAME" env="MAYASOURCEIMAGESDIR" />
+		</dir>
+		<dir name="renders">
+			<dir name="$IC_USERNAME" env="MAYARENDERSDIR" />
+		</dir>
+		<dir name="playblasts">
+			<dir name="$IC_USERNAME" env="MAYAPLAYBLASTSDIR" />
+		</dir>
+		<dir name="cache" />
+		<dir name="data" />
+		<dir name="scripts" />
+	</dir>
+</root>

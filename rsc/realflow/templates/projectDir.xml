@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root location="$SHOTPATH/3D/realflow">
+	<dir name="$IC_USERNAME">
+		<dir name=".cmdsOrg"/>
+		<dir name="${JOB}_${SHOT}"/>
+	</dir>
+</root>

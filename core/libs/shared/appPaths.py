@@ -160,9 +160,10 @@ class appPaths(xmlData.XMLData):
 	def getSubMenus(self, app):
 		""" Return list of sub-menu items associated with app.
 		"""
-		items = self.root.findall("./app[@id='%s']/submenu[@visible='True']" %app)
-		item_ls = []
-		for item in items:
-			item_ls.append((item.get('name'), item.findtext('flag')))
-		return item_ls
+		return self.root.findall("./app[@id='%s']/submenu[@visible='True']" %app)
+		# items = self.root.findall("./app[@id='%s']/submenu[@visible='True']" %app)
+		# item_ls = []
+		# for item in items:
+		# 	item_ls.append((item.get('name'), item.findtext('flag')))
+		# return item_ls
 

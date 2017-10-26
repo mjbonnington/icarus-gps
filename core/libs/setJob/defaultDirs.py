@@ -59,22 +59,22 @@ def create(app=None):
 	# App-specific project folders #
 	################################
 
-	elif app == 'Maya':
-		for directory in ('scenes', 'playblasts', 'sourceimages', 'renders', ):
-			uDir = os.path.join(os.environ['MAYADIR'], directory, username)
-			if not os.path.isdir(uDir):
-				osOps.createDir(uDir)
+	# elif app == 'Maya':
+	# 	for directory in ('scenes', 'playblasts', 'sourceimages', 'renders', ):
+	# 		uDir = os.path.join(os.environ['MAYADIR'], directory, username)
+	# 		if not os.path.isdir(uDir):
+	# 			osOps.createDir(uDir)
 
-		for directory in ('cache', 'data', 'scripts', ):
-			nDir = os.path.join(os.environ['MAYADIR'], directory)
-			if not os.path.isdir(nDir):
-				osOps.createDir(nDir)
+	# 	for directory in ('cache', 'data', 'scripts', ):
+	# 		nDir = os.path.join(os.environ['MAYADIR'], directory)
+	# 		if not os.path.isdir(nDir):
+	# 			osOps.createDir(nDir)
 
-		# Copy workspace.mel definition file into Maya project dir
-		workspace_def = os.path.join(os.environ['MAYADIR'], 'workspace.mel')
-		if not os.path.isfile(workspace_def):
-			src = os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'maya', 'templates', 'workspace.mel')
-			osOps.copy(src, workspace_def)
+	# 	# Copy workspace.mel definition file into Maya project dir
+	# 	workspace_def = os.path.join(os.environ['MAYADIR'], 'workspace.mel')
+	# 	if not os.path.isfile(workspace_def):
+	# 		src = os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'maya', 'templates', 'workspace.mel')
+	# 		osOps.copy(src, workspace_def)
 
 	elif app == 'Mudbox':
 		for directory in ('scenes', 'models', 'sourceimages', ):

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<root location="$SHOTPATH/2D/nuke">
-	<dir name="scripts">
+<root location="$SHOTPATH/2D/ae">
+	<dir name="comps">
 		<dir name="$IC_USERNAME"/>
 	</dir>
 	<dir name="elements">

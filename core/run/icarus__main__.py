@@ -92,11 +92,11 @@ DOCK_WITH_NUKE_UI = False
 # Main application class
 # ----------------------------------------------------------------------------
 
-class icarusApp(QtWidgets.QMainWindow):
+class IcarusApp(QtWidgets.QMainWindow):
 	""" Main application class.
 	"""
 	def __init__(self, parent=None):
-		super(icarusApp, self).__init__(parent)
+		super(IcarusApp, self).__init__(parent)
 
 		# Set object name and window title
 		self.setObjectName(WINDOW_OBJECT)
@@ -2019,7 +2019,7 @@ def run_maya():
 	""" Run in Maya.
 	"""
 	_maya_delete_ui()  # Delete any already existing UI
-	icApp = icarusApp(parent=_maya_main_window())
+	icApp = IcarusApp(parent=_maya_main_window())
 
 	# Makes Maya perform magic which makes the window stay on top in OS X and
 	# Linux. As an added bonus, it'll make Maya remember the window position.
@@ -2046,7 +2046,7 @@ def run_nuke():
 	"""
 	_nuke_delete_ui()  # Delete any already existing UI
 	if not DOCK_WITH_NUKE_UI:
-		icApp = icarusApp(parent=_nuke_main_window())
+		icApp = IcarusApp(parent=_nuke_main_window())
 		icApp.setWindowFlags(QtCore.Qt.Tool)
 		icApp.show()  # Show the UI
 	elif DOCK_WITH_NUKE_UI:
@@ -2075,7 +2075,7 @@ def run_nuke():
 # 		mainApp = QtGui.QApplication(WINDOW_TITLE)
 # 	except RuntimeError:
 # 		mainApp = QtCore.QCoreApplication.instance()
-# 	app = icarusApp()
+# 	app = IcarusApp()
 # 	app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint)
 # 	app.show()
 # 	icarus_clarisseWrap.exec_(mainApp)
@@ -2105,7 +2105,7 @@ def run_standalone():
 	app.setWindowIcon(QtGui.QIcon(os.path.join(os.environ['IC_FORMSDIR'], "rsc", "icarus.png")))
 
 	# Instantiate main application class
-	icApp = icarusApp()
+	icApp = IcarusApp()
 
 	# Set Window flags
 	icApp.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint)

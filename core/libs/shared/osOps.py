@@ -21,15 +21,15 @@ def createDir(path):
 	path = os.path.normpath(path)
 
 	if os.path.isdir(path):
-		verbose.message("Directory already exists: %s" %path)
+		verbose.print_("Directory already exists: %s" %path, 4)
 		pass
 
 	else:
 		try:
 			os.makedirs(path)
 
-			# Hide the folder if its name starts with a dot, as these files are
-			# not automatically hidden on Windows
+			# Hide the folder if its name starts with a dot, as these files
+			# are not automatically hidden on Windows
 			if os.environ['IC_RUNNING_OS'] == 'Windows':
 				if os.path.basename(path).startswith('.'):
 					setHidden(path)
@@ -130,9 +130,9 @@ def copy(source, destination):
 	dst = os.path.normpath(destination)
 
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
-		cmdStr = 'copy /Y %s %s' % (src, dst)
+		cmdStr = 'copy /Y "%s" "%s"' % (src, dst)
 	else:
-		cmdStr = 'cp -rf %s %s' % (src, dst)
+		cmdStr = 'cp -rf "%s" "%s"' % (src, dst)
 
 	verbose.print_(cmdStr, 4)
 	os.system(cmdStr)

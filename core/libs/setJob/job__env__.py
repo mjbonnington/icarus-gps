@@ -133,7 +133,7 @@ def setEnv(envVars):
 	os.environ['ANGLE']             = getInheritedValue('units', 'angle')
 	os.environ['TIMEFORMAT']        = getInheritedValue('units', 'time')
 	os.environ['FPS']               = getInheritedValue('units', 'fps')
-#	os.environ['HANDLES']           = getInheritedValue('time', 'handles')  # Using INFRAME & OUTFRAME instead - not implemented
+#	os.environ['HANDLES']           = getInheritedValue('time', 'handles')  # Using INFRAME & OUTFRAME instead - although not implemented
 	os.environ['STARTFRAME']        = getInheritedValue('time', 'rangeStart')
 	os.environ['ENDFRAME']          = getInheritedValue('time', 'rangeEnd')
 	os.environ['INFRAME']           = getInheritedValue('time', 'inFrame')
@@ -144,21 +144,20 @@ def setEnv(envVars):
 	os.environ['RESOLUTIONY']       = getInheritedValue('resolution', 'fullHeight')
 	os.environ['PROXY_RESOLUTIONX'] = getInheritedValue('resolution', 'proxyWidth')
 	os.environ['PROXY_RESOLUTIONY'] = getInheritedValue('resolution', 'proxyHeight')
-	os.environ['ASPECTRATIO']       = str( float(os.environ['RESOLUTIONX']) / float(os.environ['RESOLUTIONY']) )
+	os.environ['ASPECTRATIO']       = str(float(os.environ['RESOLUTIONX']) / float(os.environ['RESOLUTIONY']))
 
 
 	# Application specific environment variables...
 
 	# Maya
 	os.environ['MAYAVERSION']         = getAppExecPath('Maya')
-	os.environ['MAYARENDERVERSION']   = osOps.absolutePath('%s/Render' % os.path.dirname( os.environ['MAYAVERSION'] ))
-	os.environ['MAYADIR']             = osOps.absolutePath('$SHOTPATH/3D/maya')
-	os.environ['MAYASCENESDIR']       = osOps.absolutePath('$MAYADIR/scenes/$IC_USERNAME')
-	os.environ['MAYAPLAYBLASTSDIR']   = osOps.absolutePath('$MAYADIR/playblasts/$IC_USERNAME')
-	os.environ['MAYACACHEDIR']        = osOps.absolutePath('$MAYADIR/cache/$IC_USERNAME')
-	os.environ['MAYASOURCEIMAGESDIR'] = osOps.absolutePath('$MAYADIR/sourceimages/$IC_USERNAME')
-	os.environ['MAYARENDERSDIR']      = osOps.absolutePath('$MAYADIR/renders/$IC_USERNAME')
-	os.environ['MAYASHAREDRESOURCES'] = osOps.absolutePath('$FILESYSTEMROOT/_Library/3D/Maya') # store this in ic global prefs?
+	os.environ['MAYARENDERVERSION']   = osOps.absolutePath('%s/Render' %os.path.dirname(os.environ['MAYAVERSION']))
+	# os.environ['MAYADIR']             = osOps.absolutePath('$SHOTPATH/3D/maya')
+	# os.environ['MAYASCENESDIR']       = osOps.absolutePath('$MAYADIR/scenes/$IC_USERNAME')
+	# os.environ['MAYASOURCEIMAGESDIR'] = osOps.absolutePath('$MAYADIR/sourceimages/$IC_USERNAME')
+	# os.environ['MAYARENDERSDIR']      = osOps.absolutePath('$MAYADIR/renders/$IC_USERNAME')
+	# os.environ['MAYAPLAYBLASTSDIR']   = osOps.absolutePath('$MAYADIR/playblasts/$IC_USERNAME')
+	os.environ['MAYASHAREDRESOURCES'] = osOps.absolutePath('$FILESYSTEMROOT/_Library/3D/Maya')  # Store this in ic global prefs?
 
 	try:
 		maya_ver = jobData.getAppVersion('maya')
@@ -188,7 +187,7 @@ def setEnv(envVars):
 		#os.environ['MAYA_PRESET_PATH'] = osOps.absolutePath('$IC_BASEDIR/rsc/maya/presets')
 		#os.environ['MI_CUSTOM_SHADER_PATH'] = osOps.absolutePath('$IC_BASEDIR/rsc/maya/shaders/include')
 		#os.environ['MI_LIBRARY_PATH'] = osOps.absolutePath('$IC_BASEDIR/rsc/maya/shaders')
-		os.environ['VRAY_FOR_MAYA_SHADERS'] = osOps.absolutePath('$IC_BASEDIR/rsc/maya/shaders')
+		#os.environ['VRAY_FOR_MAYA_SHADERS'] = osOps.absolutePath('$IC_BASEDIR/rsc/maya/shaders')
 		#os.environ['VRAY_FOR_MAYA2014_PLUGINS_x64'] += os.pathsep + osOps.absolutePath('$IC_BASEDIR/rsc/maya/plugins')
 
 		if os.environ['IC_RUNNING_OS'] == 'Windows':  # Set up centralised deployment of Redshift plugin for Maya
@@ -294,8 +293,8 @@ def setEnv(envVars):
 
 	# Cinema 4D
 	os.environ['C4DVERSION']   = getAppExecPath('Cinema4D')
-	os.environ['C4DDIR']       = osOps.absolutePath('$SHOTPATH/3D/c4d')
-	os.environ['C4DSCENESDIR'] = osOps.absolutePath('$C4DDIR/scenes/$IC_USERNAME')
+	# os.environ['C4DDIR']       = osOps.absolutePath('$SHOTPATH/3D/c4d')
+	# os.environ['C4DSCENESDIR'] = osOps.absolutePath('$C4DDIR/scenes/$IC_USERNAME')
 
 
 	# Clarisse
