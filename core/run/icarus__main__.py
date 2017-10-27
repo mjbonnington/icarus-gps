@@ -222,8 +222,8 @@ class IcarusApp(QtWidgets.QMainWindow):
 				eval(hideProc)
 
 			# Populate 'Job' and 'Shot' drop down menus
-			self.populateJobs(setLast=True)
-			self.unlockJobUI()  # Currently used to make sure UI state (whether widgets are enabled/visible) is correct when opened, without relying on the UI file
+			self.populateJobs(setLast=True, reloadJobs=False)
+			self.unlockJobUI(refreshShots=False)  # Currently used to make sure UI state (whether widgets are enabled/visible) is correct when opened, without relying on the UI file
 
 			# Delete all tabs except 'Launcher'
 			for i in range(0, self.ui.tabWidget.count()-1):
@@ -244,7 +244,7 @@ class IcarusApp(QtWidgets.QMainWindow):
 			self.ui.refreshJobs_toolButton.clicked.connect(self.populateJobs)
 			self.ui.job_comboBox.currentIndexChanged.connect(self.populateShots)
 			self.ui.setShot_pushButton.clicked.connect(self.setupJob)
-			self.ui.setNewShot_pushButton.clicked.connect(self.unlockJobUI)
+			self.ui.setNewShot_pushButton.clicked.connect(lambda: self.unlockJobUI(refreshShots=True))
 
 			# Utility launch buttons (bottom row)
 			self.ui.render_toolButton.clicked.connect(self.launchRenderQueue)  # Was self.launchRenderSubmit
@@ -663,7 +663,7 @@ class IcarusApp(QtWidgets.QMainWindow):
 	# Launcher tab #
 	################
 
-	def populateJobs(self, setLast=False):
+	def populateJobs(self, setLast=False, reloadJobs=True):
 		""" Populates job drop down menu.
 		"""
 		verbose.print_("Populating jobs combo box...", 4)
@@ -684,8 +684,11 @@ class IcarusApp(QtWidgets.QMainWindow):
 		# Remove all items
 		self.ui.job_comboBox.clear()
 
+		# Reload jobs database
+		if reloadJobs:
+			self.j.loadXML()
+
 		# Populate combo box with list of shots
-		self.j.loadXML() # Reload jobs database
 		jobLs = sorted(self.j.getActiveJobs())
 		if jobLs:
 			self.ui.job_comboBox.insertItems(0, jobLs)
@@ -781,8 +784,8 @@ class IcarusApp(QtWidgets.QMainWindow):
 
 			# Warning dialog
 			import pDialog
-			dialogTitle = 'No Shots Found'
-			dialogMsg = 'No shots were found for this job. Would you like to create some shots now?'
+			dialogTitle = "No Shots Found"
+			dialogMsg = "No shots were found for the job '%s'. Would you like to create some shots now?" %selJob
 			dialog = pDialog.dialog()
 			if dialog.display(dialogMsg, dialogTitle):
 				self.launchShotCreator()
@@ -868,12 +871,12 @@ class IcarusApp(QtWidgets.QMainWindow):
 		verbose.jobSet(self.job, self.shot)
 
 
-	def unlockJobUI(self):
+	def unlockJobUI(self, refreshShots=True):
 		""" Unlocks UI if 'Set New Shot' is clicked.
 		"""
 		# Re-scan for shots
-		#self.populateJobs()
-		self.populateShots()
+		if refreshShots:
+			self.populateShots()
 
 		self.ui.shotSetup_groupBox.setEnabled(True)
 		self.ui.refreshJobs_toolButton.setEnabled(True)

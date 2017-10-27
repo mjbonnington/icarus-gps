@@ -45,11 +45,16 @@ class DirStructure(xmlData.XMLData):
 		# Create files
 		for file in element.findall("file"):
 			name = file.get("name")
+			env = file.get("env")
 
 			newfile = osOps.absolutePath("%s/%s" %(basedir, name))
 			if not os.path.isfile(newfile):
 				src = osOps.absolutePath("%s/%s" %(os.path.dirname(self.datafile), name))
 				osOps.copy(src, newfile)
+
+			# Set environment variables
+			if env:
+				os.environ[env] = newfile
 
 		return
 
@@ -82,6 +87,11 @@ class DirStructure(xmlData.XMLData):
 	# 		verbose.warning("Could not create project folders because the root folder was not specified.")
 
 	# 	self.saveXML(datafile)
+
+
+	# def createDefault(self):
+	# 	""" Create default folder structure if XML doesn't exist.
+	# 	"""
 
 
 	# def checkIllegalChars(self, instr):

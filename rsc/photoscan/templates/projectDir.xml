@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root location="$SHOTPATH/3D">
+	<dir name="photoscan" env="PHOTOSCANDIR">
+		<dir name="scenes">
+			<dir name="$IC_USERNAME" />
+		</dir>
+		<dir name="cameras">
+			<dir name="$IC_USERNAME" />
+		</dir>
+		<dir name="pointClouds">
+			<dir name="$IC_USERNAME" />
+		</dir>
+		<dir name="geometry">
+			<dir name="$IC_USERNAME" />
+		</dir>
+		<dir name="sourceimages">
+			<dir name="$IC_USERNAME" />
+		</dir>
+	</dir>
+</root>

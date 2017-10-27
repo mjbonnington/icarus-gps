@@ -41,18 +41,23 @@ def launch(app=None, executable=None, flags=None):
 	elif app == 'HieroPlayer':
 		executable = os.environ['HIEROPLAYERVERSION']
 		if executable:
-			cmdStr = '"%s" --quiet' %executable
+			cmdStr = '"%s"' %executable
 		else:
 			# Hiero Player is bundled with Nuke 9.x and later. 
 			executable = os.environ['NUKEVERSION']
-			cmdStr = '"%s" --player --quiet'% executable
+			cmdStr = '"%s" --player'% executable
 
 	elif app == 'RealFlow':
 		executable = os.environ['REALFLOWVERSION']
 		sys.path.append(os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'realflow', 'scripts'))
 		import startup
 		startup.autoDeploy()
-		cmdStr = '"%s"' %executable
+		if os.environ['IC_RUNNING_OS'] == 'Windows':
+			# Workaround to prevent RealFlow closing the shell on launch
+			dirname, basename = os.path.split(executable)
+			cmdStr = 'cd /d "%s" & start %s' %(dirname, basename)
+		else:
+			cmdStr = '"%s"' %executable
 
 	###############
 	# Generic app #

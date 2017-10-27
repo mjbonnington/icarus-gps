@@ -152,7 +152,7 @@ def setEnv(envVars):
 	# Maya
 	os.environ['MAYAVERSION']         = getAppExecPath('Maya')
 	os.environ['MAYARENDERVERSION']   = osOps.absolutePath('%s/Render' %os.path.dirname(os.environ['MAYAVERSION']))
-	# os.environ['MAYADIR']             = osOps.absolutePath('$SHOTPATH/3D/maya')
+	os.environ['MAYADIR']             = osOps.absolutePath('$SHOTPATH/3D/maya')
 	# os.environ['MAYASCENESDIR']       = osOps.absolutePath('$MAYADIR/scenes/$IC_USERNAME')
 	# os.environ['MAYASOURCEIMAGESDIR'] = osOps.absolutePath('$MAYADIR/sourceimages/$IC_USERNAME')
 	# os.environ['MAYARENDERSDIR']      = osOps.absolutePath('$MAYADIR/renders/$IC_USERNAME')
@@ -237,15 +237,15 @@ def setEnv(envVars):
 
 	# After Effects
 	os.environ['AFXVERSION']     = getAppExecPath('AfterEffects')
-	os.environ['AFXDIR']         = osOps.absolutePath('$SHOTPATH/2D/aftereffects')
-	os.environ['AFXELEMENTSDIR'] = osOps.absolutePath('$AFXDIR/elements/$IC_USERNAME')
-	os.environ['AFXCOMPSDIR']    = osOps.absolutePath('$AFXDIR/comps/$IC_USERNAME')
-	os.environ['AFXRENDERSDIR']  = osOps.absolutePath('$AFXDIR/renders/$IC_USERNAME')
+	# os.environ['AFXDIR']         = osOps.absolutePath('$SHOTPATH/2D/aftereffects')
+	# os.environ['AFXELEMENTSDIR'] = osOps.absolutePath('$AFXDIR/elements/$IC_USERNAME')
+	# os.environ['AFXCOMPSDIR']    = osOps.absolutePath('$AFXDIR/comps/$IC_USERNAME')
+	# os.environ['AFXRENDERSDIR']  = osOps.absolutePath('$AFXDIR/renders/$IC_USERNAME')
 
 
 	# Photoshop
 	# os.environ['PSVERSION'] = getAppExecPath('Photoshop')
-	os.environ['PSDIR']     = osOps.absolutePath('$SHOTPATH/2D/photoshop')
+	# os.environ['PSDIR']     = osOps.absolutePath('$SHOTPATH/2D/photoshop')
 
 
 	# Bridge
@@ -282,10 +282,10 @@ def setEnv(envVars):
 
 	# RealFlow (2013)
 	os.environ['REALFLOWVERSION']                    = getAppExecPath('RealFlow')
-	os.environ['REALFLOWDIR']                        = osOps.absolutePath('$SHOTPATH/3D/realflow')
-	os.environ['REALFLOWSCENESDIR']                  = osOps.absolutePath('$REALFLOWDIR/$IC_USERNAME')
-	os.environ['RFDEFAULTPROJECT']                   = osOps.absolutePath('$REALFLOWSCENESDIR/${JOB}_${SHOT}')  # Curly brackets required for correct variable expansion
-	os.environ['RF_COMMANDS_ORGANIZER_FILE_PATH']    = osOps.absolutePath('$REALFLOWSCENESDIR/.cmdsOrg/commandsOrganizer.dat')
+	# os.environ['REALFLOWDIR']                        = osOps.absolutePath('$SHOTPATH/3D/realflow')
+	# os.environ['REALFLOWSCENESDIR']                  = osOps.absolutePath('$REALFLOWDIR/$IC_USERNAME')
+	# os.environ['RFDEFAULTPROJECT']                   = osOps.absolutePath('$REALFLOWSCENESDIR/${JOB}_${SHOT}')  # Curly brackets required for correct variable expansion
+	# os.environ['RF_COMMANDS_ORGANIZER_FILE_PATH']    = osOps.absolutePath('$REALFLOWSCENESDIR/.cmdsOrg/commandsOrganizer.dat')
 	os.environ['RF_RSC']                             = osOps.absolutePath('$IC_BASEDIR/rsc/realflow')
 	os.environ['RF_STARTUP_PYTHON_SCRIPT_FILE_PATH'] = osOps.absolutePath('$IC_BASEDIR/rsc/realflow/scripts/startup.rfs')
 	os.environ['RFOBJECTSPATH']                      = osOps.absolutePath('$SHOTPUBLISHDIR/ma_geoCache/realflow')

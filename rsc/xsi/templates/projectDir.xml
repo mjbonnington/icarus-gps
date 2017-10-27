@@ -1,16 +1,17 @@
 <?xml version='1.0' encoding='utf-8'?>
 <root location="$SHOTPATH/3D">
-	<dir name="${JOB}_${SHOT}">
-		<dir name="xsi" env="XSIDIR">
+	<dir name="xsi">
+		<dir name="${JOB}_${SHOT}" env="XSIDIR">
 			<dir name="Scenes">
 				<dir name="$IC_USERNAME" env="XSISCENESDIR" />
 			</dir>
 			<dir name="Pictures">
-				<dir name="$IC_USERNAME" env="XSISOURCEIMAGESDIR" />
+				<dir name="$IC_USERNAME" env="XSIPICTURESDIR" />
 			</dir>
 			<dir name="Render_Pictures">
-				<dir name="$IC_USERNAME" env="XSIRENDERSDIR" />
+				<dir name="$IC_USERNAME" env="XSIRENDERPICTURESSDIR" />
 			</dir>
+			<dir name="Cache" />
 			<dir name="system">
 				<dir name="$IC_USERNAME" env="XSISYSTEMDIR" />
 				<file name="dsprojectinfo" />

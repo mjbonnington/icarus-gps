@@ -1,12 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
-<root location="$SHOTPATH/2D/ae">
-	<dir name="comps">
-		<dir name="$IC_USERNAME"/>
-	</dir>
-	<dir name="elements">
-		<dir name="$IC_USERNAME"/>
-	</dir>
-	<dir name="renders">
-		<dir name="$IC_USERNAME"/>
+<root location="$SHOTPATH/2D">
+	<dir name="ae" env="AEDIR">
+		<dir name="comps">
+			<dir name="$IC_USERNAME" env="AECOMPSDIR" />
+		</dir>
+		<dir name="elements">
+			<dir name="$IC_USERNAME" env="AEELEMENTSDIR" />
+		</dir>
+		<dir name="renders">
+			<dir name="$IC_USERNAME" env="AERENDERSDIR" />
+		</dir>
 	</dir>
 </root>

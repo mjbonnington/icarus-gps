@@ -12,7 +12,6 @@ import os
 import xml.etree.ElementTree as ET
 
 # Import custom modules
-import defaultDirs
 import job__env__
 import osOps
 import verbose
@@ -43,7 +42,7 @@ class jobs(xmlData.XMLData):
 		if job__env__.setEnv(envVars):
 
 			# Create folder structure
-			defaultDirs.create()
+			self.createDirs()
 
 			# Remember for next time
 			if storeLastJob:
@@ -55,6 +54,42 @@ class jobs(xmlData.XMLData):
 
 		else:
 			return False
+
+
+	def createDirs(self):
+		""" Create directory structure inside shot folder.
+			TODO: The folder structure should be defined in an XML data file
+			and generated based on that.
+		"""
+		# Published asset directories
+		for directory in (os.environ['JOBPUBLISHDIR'], os.environ['SHOTPUBLISHDIR']):
+			if not os.path.isdir(directory):
+				osOps.createDir(directory)
+
+		# Plate directories
+		res_full = "%sx%s" %(os.environ['RESOLUTIONX'], os.environ['RESOLUTIONY'])
+		res_proxy = "%sx%s" %(os.environ['PROXY_RESOLUTIONX'], os.environ['PROXY_RESOLUTIONY'])
+		plates = (res_full, res_proxy)
+		platesDir = os.path.join(os.environ['SHOTPATH'], 'Plate')
+		if not os.path.isdir(platesDir):
+			osOps.createDir(platesDir)
+
+		# Delete any pre-existing redundant plate directories that are empty
+		try:
+			for directory in os.listdir(platesDir):
+				existingDir = os.path.join(platesDir, directory)
+				if os.path.isdir(existingDir) and not os.listdir(existingDir):
+					if directory not in plates:
+						osOps.recurseRemove(existingDir)
+
+			# Create plate directory named with resolution
+			for directory in plates:
+				plateDir = os.path.join(platesDir, directory)
+				if not os.path.isdir(plateDir):
+					osOps.createDir(plateDir)
+
+		except:
+			pass
 
 
 	def getRootPaths(self):
