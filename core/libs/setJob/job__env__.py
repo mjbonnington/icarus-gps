@@ -222,10 +222,10 @@ def setEnv(envVars):
 
 	# Nuke
 	os.environ['NUKEVERSION']     = getAppExecPath('Nuke')
-	os.environ['NUKEDIR']         = osOps.absolutePath('$SHOTPATH/2D/nuke')
-	os.environ['NUKEELEMENTSDIR'] = osOps.absolutePath('$NUKEDIR/elements/$IC_USERNAME')
-	os.environ['NUKESCRIPTSDIR']  = osOps.absolutePath('$NUKEDIR/scripts/$IC_USERNAME')
-	os.environ['NUKERENDERSDIR']  = osOps.absolutePath('$NUKEDIR/renders/$IC_USERNAME')
+	# os.environ['NUKEDIR']         = osOps.absolutePath('$SHOTPATH/2D/nuke')
+	# os.environ['NUKEELEMENTSDIR'] = osOps.absolutePath('$NUKEDIR/elements/$IC_USERNAME')
+	# os.environ['NUKESCRIPTSDIR']  = osOps.absolutePath('$NUKEDIR/scripts/$IC_USERNAME')
+	# os.environ['NUKERENDERSDIR']  = osOps.absolutePath('$NUKEDIR/renders/$IC_USERNAME')
 	os.environ['NUKE_PATH']       = osOps.absolutePath('$IC_BASEDIR/rsc/nuke')
 
 
@@ -254,8 +254,8 @@ def setEnv(envVars):
 
 	# Mudbox
 	os.environ['MUDBOXVERSION']            = getAppExecPath('Mudbox')
-	os.environ['MUDBOXDIR']                = osOps.absolutePath('$SHOTPATH/3D/mudbox')
-	os.environ['MUDBOXSCENESDIR']          = osOps.absolutePath('$MUDBOXDIR/scenes/$IC_USERNAME')
+	# os.environ['MUDBOXDIR']                = osOps.absolutePath('$SHOTPATH/3D/mudbox')
+	# os.environ['MUDBOXSCENESDIR']          = osOps.absolutePath('$MUDBOXDIR/scenes/$IC_USERNAME')
 	os.environ['MUDBOX_PLUG_IN_PATH']      = osOps.absolutePath('$IC_BASEDIR/rsc/mudbox/plugins') 
 	os.environ['MUDBOX_IDLE_LICENSE_TIME'] = '60'
 

@@ -59,6 +59,8 @@ def create(app=None):
 	# App-specific project folders #
 	################################
 
+	# Note: this is now being done elsewhere...
+
 	# elif app == 'Maya':
 	# 	for directory in ('scenes', 'playblasts', 'sourceimages', 'renders', ):
 	# 		uDir = os.path.join(os.environ['MAYADIR'], directory, username)
@@ -76,11 +78,11 @@ def create(app=None):
 	# 		src = os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'maya', 'templates', 'workspace.mel')
 	# 		osOps.copy(src, workspace_def)
 
-	elif app == 'Mudbox':
-		for directory in ('scenes', 'models', 'sourceimages', ):
-			uDir = os.path.join(os.environ['MUDBOXDIR'], directory, username)
-			if not os.path.isdir(uDir):
-				osOps.createDir(uDir)
+	# elif app == 'Mudbox':
+	# 	for directory in ('scenes', 'models', 'sourceimages', ):
+	# 		uDir = os.path.join(os.environ['MUDBOXDIR'], directory, username)
+	# 		if not os.path.isdir(uDir):
+	# 			osOps.createDir(uDir)
 
 	elif app == 'Cinema4D':
 		for directory in ('scenes', ):
@@ -99,11 +101,11 @@ def create(app=None):
 			if not os.path.isdir(uDir):
 				osOps.createDir(uDir)
 
-	elif app == 'Nuke':
-		for directory in ('scripts', 'elements', 'renders', ):
-			uDir = os.path.join(os.environ['NUKEDIR'], directory, username)
-			if not os.path.isdir(uDir):
-				osOps.createDir(uDir)
+	# elif app == 'Nuke':
+	# 	for directory in ('scripts', 'elements', 'renders', ):
+	# 		uDir = os.path.join(os.environ['NUKEDIR'], directory, username)
+	# 		if not os.path.isdir(uDir):
+	# 			osOps.createDir(uDir)
 
 	elif app == 'Mari':
 		for directory in ('scenes', 'geo', 'sourceimages', 'textures', 'renders', 'archives', ):

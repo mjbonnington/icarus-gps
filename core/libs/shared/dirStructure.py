@@ -55,7 +55,7 @@ class DirStructure(xmlData.XMLData):
 
 
 	def createDirStructure(self, datafile=None):
-		""" Creates folder structure from XML definition.
+		""" Create folder structure from XML definition.
 		"""
 		if datafile is not None:
 			self.loadXML(datafile)
@@ -67,19 +67,21 @@ class DirStructure(xmlData.XMLData):
 		else:
 			verbose.warning("Could not create project folders because the root folder was not specified.")
 
-		# basedir = self.root.get("location")
-		# env = self.root.get("env")
 
-		# # Create folders
-		# newdir = osOps.absolutePath(basedir)
-		# if not os.path.isdir(newdir):
-		# 	osOps.createDir(newdir)
+	# def createXML(self, basedir, datafile=None):
+	# 	""" Create XML definition of folder structure.
+	# 	"""
+	# 	if datafile is not None:
+	# 		self.loadXML(datafile)
 
-		# # Set environment variables
-		# if env:
-		# 	os.environ[env] = newdir
+	# 	basedir = self.root.get("location")
 
-		# self.createDirRecursive(self.root, newdir)
+	# 	if basedir:
+	# 		self.createDirRecursive(self.root, basedir)
+	# 	else:
+	# 		verbose.warning("Could not create project folders because the root folder was not specified.")
+
+	# 	self.saveXML(datafile)
 
 
 	# def checkIllegalChars(self, instr):

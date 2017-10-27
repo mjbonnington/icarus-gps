@@ -293,11 +293,10 @@ class AppLauncher(QtWidgets.QDialog):
 		# print(self.sender().objectName(), displayName, version, executable, flags)
 
 		# Create project folder structure & set environment variables
-		print(type(projectFolders), projectFolders)
 		if projectFolders:
 			folder_xml = osOps.absolutePath("$IC_BASEDIR/rsc/%s/templates/projectDir.xml" %shortName)
 			self.ds.createDirStructure(folder_xml)
-			# defaultDirs.create(displayName)
+			# defaultDirs.create(displayName)  # Deprecated
 
 		# Run the executable
 #		launchApps.launch(displayName, executable, flags)
