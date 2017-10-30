@@ -26,14 +26,22 @@ class appPaths(xmlData.XMLData):
 		return self.root.findall('./app')
 
 
+	# ------------------------------------------------------------------------
+	# These functions are used by getVisibleApps() to return a sorted list of
+	# elements...
 	def sortByName(self, elem):
-		return elem.get("name")
+		return elem.get("name").lower()
 
 	def sortByCategory(self, elem):
-		return elem.findtext("category")
+		return elem.findtext("category").lower()
 
 	def sortByVendor(self, elem):
-		return elem.findtext("vendor")
+		return elem.findtext("vendor").lower()
+
+	def sortByMostUsed(self, elem):
+		import userPrefs
+		return userPrefs.query('launchcounter', elem.get("id"), datatype='int', default=0)
+	# ------------------------------------------------------------------------
 
 
 	def getVisibleApps(self, sortBy=None):
@@ -46,6 +54,8 @@ class appPaths(xmlData.XMLData):
 			apps[:] = sorted(apps, key=self.sortByCategory)
 		elif sortBy == "Vendor":
 			apps[:] = sorted(apps, key=self.sortByVendor)
+		elif sortBy == "Most_used":
+			apps[:] = sorted(apps, key=self.sortByMostUsed, reverse=True)
 		return apps
 
 

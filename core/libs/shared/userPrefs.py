@@ -57,10 +57,10 @@ def create():
 		osOps.createDir(userPrefsDir)
 
 	config.add_section('main')
-	config.set('main', 'lastjob', '')
-	config.set('main', 'numrecentfiles', '10')
-	config.set('main', 'minimiseonlaunch', 'True')
-	config.set('main', 'verbosity', '2')
+	# config.set('main', 'lastjob', '')
+	# config.set('main', 'numrecentfiles', '10')
+	# config.set('main', 'minimiseonlaunch', 'True')
+	# config.set('main', 'verbosity', '2')
 
 	config.add_section('gpspreview')
 	config.set('gpspreview', 'resolutionmode', '0')
@@ -75,14 +75,64 @@ def create():
 	write()
 
 
+def query(section, key, datatype='str', default=None, create=False):
+	""" Get a value and from config file.
+		If the value doesn't exist return a default value.
+		If 'create' is true, also store the value in the config file.
+	"""
+	value = None
+
+	if datatype == 'str':
+		try:
+			return config.get(section, key)
+		except:
+			if type(default) is str:
+				value = default
+			else:
+				value = ""
+
+	elif datatype == 'int':
+		try:
+			return config.getint(section, key)
+		except:
+			if type(default) is int:
+				value = default
+			else:
+				value = 0
+
+	elif datatype == 'float':
+		try:
+			return config.getfloat(section, key)
+		except:
+			if type(default) is float:
+				value = default
+			else:
+				value = 0.0
+
+	elif datatype == 'bool':
+		try:
+			return config.getboolean(section, key)
+		except:
+			if type(default) is bool:
+				value = default
+			else:
+				value = False
+
+	if create:
+		edit(section, key, value)
+
+	return value
+
+
 def edit(section, key, value):
 	""" Set a value and save config file to disk.
 		If the section doesn't exist it will be created.
+		Values are always stored as strings.
 	"""
 	if not config.has_section(section):
 		config.add_section(section)
 
-	config.set(section, key, value)
+	config.set(section, key, str(value))
 
 	write()
 

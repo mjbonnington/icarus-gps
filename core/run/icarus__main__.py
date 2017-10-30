@@ -62,7 +62,6 @@ import osOps
 import pblChk
 import pblOptsPrc
 import sequence
-# import setJob
 import userPrefs
 import verbose
 
@@ -144,15 +143,18 @@ class IcarusApp(QtWidgets.QMainWindow):
 		self.shortcutToggleMenu.setKey('Alt+M')
 		self.shortcutToggleMenu.activated.connect(self.toggleMenuBar)
 
+		# Automatically set main tab to 'Launcher'
+		self.ui.main_tabWidget.setCurrentIndex(0)
+
 		# --------------------------------------------------------------------
 		# Connect signals & slots
 		# --------------------------------------------------------------------
 
-		self.ui.tabWidget.currentChanged.connect(self.adjustMainUI)
+		self.ui.main_tabWidget.currentChanged.connect(self.adjustMainUI)
 
 		# Shot menu
-		last = userPrefs.config.get('main', 'lastjob').split(',')
-		self.ui.actionSet_recent_shot.setText("%s - %s" %(last[0], last[1]))
+		# last = userPrefs.query('main', 'lastjob').split(',')  # RECENT SHOTS NOT IMPLEMENTED
+		# self.ui.actionSet_recent_shot.setText("%s - %s" %(last[0], last[1]))
 		# self.ui.actionSet_recent_shot.triggered.connect(lambda: self.setupJob(last))
 		self.ui.actionJob_settings.triggered.connect(self.jobSettings)
 		self.ui.actionShot_settings.triggered.connect(self.shotSettings)
@@ -202,9 +204,9 @@ class IcarusApp(QtWidgets.QMainWindow):
 		# Adapt UI for environment awareness #
 		######################################
 
-		self.launchTab = self.ui.tabWidget.widget(0)
-		self.publishTab = self.ui.tabWidget.widget(1)
-		self.gatherTab = self.ui.tabWidget.widget(2)
+		self.launchTab = self.ui.main_tabWidget.widget(0)
+		self.publishTab = self.ui.main_tabWidget.widget(1)
+		self.gatherTab = self.ui.main_tabWidget.widget(2)
 		self.publishAssetTab = self.ui.publishType_tabWidget.widget(0)
 		self.publishRenderTab = self.ui.publishType_tabWidget.widget(1)
 
@@ -226,8 +228,8 @@ class IcarusApp(QtWidgets.QMainWindow):
 			self.unlockJobUI(refreshShots=False)  # Currently used to make sure UI state (whether widgets are enabled/visible) is correct when opened, without relying on the UI file
 
 			# Delete all tabs except 'Launcher'
-			for i in range(0, self.ui.tabWidget.count()-1):
-				self.ui.tabWidget.removeTab(1)
+			for i in range(0, self.ui.main_tabWidget.count()-1):
+				self.ui.main_tabWidget.removeTab(1)
 
 			# Delete 'ma_asset', 'nk_asset', 'Publish' tabs
 			for i in range(0, 2):
@@ -247,20 +249,19 @@ class IcarusApp(QtWidgets.QMainWindow):
 			self.ui.setNewShot_pushButton.clicked.connect(lambda: self.unlockJobUI(refreshShots=True))
 
 			# Utility launch buttons (bottom row)
-			self.ui.render_toolButton.clicked.connect(self.launchRenderQueue)  # Was self.launchRenderSubmit
+			self.ui.render_toolButton.clicked.connect(self.launchRenderQueue)
 			self.ui.openReview_toolButton.clicked.connect(launchApps.djv)
 			self.ui.openProdBoard_toolButton.clicked.connect(launchApps.prodBoard)
 			self.ui.openTerminal_toolButton.clicked.connect(launchApps.terminal)
 			self.ui.browse_toolButton.clicked.connect(openDirs.openShot)
 
+			# self.ui.appPlaceholder_toolButton.clicked.connect(lambda: self.jobSettings(startPanel='apps'))
+
 			# Launch options menu
 			self.ui.launchOptions_toolButton.setMenu(self.ui.menuLauncher)
 
 			# Set 'Minimise on launch' checkbox from user prefs
-			try:
-				self.boolMinimiseOnAppLaunch = userPrefs.config.getboolean('main', 'minimiseonlaunch')
-			except:
-				self.boolMinimiseOnAppLaunch = True
+			self.boolMinimiseOnAppLaunch = userPrefs.query('main', 'minimiseonlaunch', datatype='bool', default=True, create=True)
 			self.ui.actionMinimise_on_Launch.setChecked(self.boolMinimiseOnAppLaunch)
 
 			self.ui.actionMinimise_on_Launch.toggled.connect(self.setMinimiseOnAppLaunch)
@@ -279,10 +280,7 @@ class IcarusApp(QtWidgets.QMainWindow):
 			alignmentGroup.addAction(self.ui.actionMost_used)
 
 			# Set 'Sort by' menu from user prefs
-			try:
-				self.sortAppsBy = userPrefs.config.get('main', 'sortappsby')
-			except:
-				self.sortAppsBy = "Most_used"
+			self.sortAppsBy = userPrefs.query('main', 'sortappsby', datatype='str', default="Most_used")
 			if self.sortAppsBy == "Name":
 				self.ui.actionName.setChecked(True)
 			elif self.sortAppsBy == "Category":
@@ -371,7 +369,7 @@ class IcarusApp(QtWidgets.QMainWindow):
 			self.populateShotLs(self.ui.publishToShot_comboBox)
 			self.populateShotLs(self.ui.gatherFromShot_comboBox)
 			self.updateJobLabel()
-			self.ui.tabWidget.removeTab(0) # Remove 'Launcher' tab
+			self.ui.main_tabWidget.removeTab(0) # Remove 'Launcher' tab
 			self.ui.publishType_tabWidget.removeTab(1) # Remove 'nk Asset' tab
 
 			# Attempt to set the publish asset type button to remember the last selection - 'self.connectNewSignalsSlots()' must be called already
@@ -402,7 +400,7 @@ class IcarusApp(QtWidgets.QMainWindow):
 			self.populateShotLs(self.ui.publishToShot_comboBox)
 			self.populateShotLs(self.ui.gatherFromShot_comboBox)
 			self.updateJobLabel()
-			self.ui.tabWidget.removeTab(0) # Remove 'Launcher' tab
+			self.ui.main_tabWidget.removeTab(0) # Remove 'Launcher' tab
 			self.ui.publishType_tabWidget.removeTab(0) # Remove 'ma Asset' tab
 
 			# Attempt to set the publish asset type button to remember the last selection - 'self.connectNewSignalsSlots()' must be called already
@@ -461,8 +459,8 @@ class IcarusApp(QtWidgets.QMainWindow):
 	def getMainTab(self):
 		""" Gets the current main tab.
 		"""
-		tabIndex = self.ui.tabWidget.currentIndex()
-		tabText = self.ui.tabWidget.tabText(tabIndex)
+		tabIndex = self.ui.main_tabWidget.currentIndex()
+		tabText = self.ui.main_tabWidget.tabText(tabIndex)
 		return tabIndex, tabText
 
 
@@ -680,6 +678,7 @@ class IcarusApp(QtWidgets.QMainWindow):
 		else:
 			last_item = self.ui.job_comboBox.currentText()
 		# print(last_item)
+		# self.lastjob = last_item
 
 		# Remove all items
 		self.ui.job_comboBox.clear()
@@ -856,9 +855,9 @@ class IcarusApp(QtWidgets.QMainWindow):
 		# self.ui.launchApp_scrollArea.setEnabled(True)
 		# self.ui.launchApp_scrollAreaWidgetContents.setEnabled(True)
 		# self.ui.launchOptions_groupBox.setEnabled(True)
-		self.ui.tabWidget.insertTab(1, self.publishTab, 'Publish')
-		self.ui.tabWidget.insertTab(2, self.gatherTab, 'Assets')
-		self.ui.gather_pushButton.hide()
+		self.ui.main_tabWidget.insertTab(1, self.publishTab, 'Publish')
+		self.ui.main_tabWidget.insertTab(2, self.gatherTab, 'Assets')
+		self.ui.gather_groupBox.hide()
 		self.ui.setShot_pushButton.hide()
 		self.ui.setNewShot_pushButton.show()
 		self.ui.shotEnv_toolButton.show()
@@ -885,7 +884,7 @@ class IcarusApp(QtWidgets.QMainWindow):
 		# self.ui.launchApp_scrollAreaWidgetContents.setEnabled(False)
 		# self.ui.launchOptions_groupBox.setEnabled(False)
 
-		self.ui.tabWidget.removeTab(1); self.ui.tabWidget.removeTab(1) # remove publish and assets tab - check this
+		self.ui.main_tabWidget.removeTab(1); self.ui.main_tabWidget.removeTab(1) # remove publish and assets tab - check this
 		self.ui.renderPbl_treeWidget.clear() # clear the render layer tree view widget
 		self.ui.dailyPbl_treeWidget.clear() # clear the dailies tree view widget
 		self.ui.setShot_pushButton.show()
@@ -1003,7 +1002,7 @@ Developers: %s
 		# verbose.print_(about_msg, 4)
 
 
-	def openSettings(self, settingsType, autoFill=False):
+	def openSettings(self, settingsType, startPanel=None, autoFill=False):
 		""" Open settings dialog.
 		"""
 		if settingsType == "Job":
@@ -1024,19 +1023,23 @@ Developers: %s
 			xmlData = os.path.join(os.path.join(os.environ['IC_CONFIGDIR'], 'globalPrefs.xml'))
 			inherit = None
 
+		if startPanel not in categoryLs:
+			startPanel = None
+
 		import settings
 		settingsEditor = settings.SettingsDialog(parent=self)
 		return settingsEditor.display(settingsType=settingsType, 
 		                              categoryLs=categoryLs, 
+		                              startPanel=startPanel, 
 		                              xmlData=xmlData, 
 		                              inherit=inherit, 
 		                              autoFill=autoFill)
 
 
-	def jobSettings(self):
+	def jobSettings(self, startPanel=None):
 		""" Open job settings dialog wrapper function.
 		"""
-		if self.openSettings("Job"):
+		if self.openSettings("Job", startPanel=startPanel):
 			#self.j.setup(self.job, self.shot)  # Set up environment variables
 			self.setupJob()
 
@@ -1061,14 +1064,6 @@ Developers: %s
 		"""
 		if self.openSettings("Global"):
 			pass
-
-
-	# def launchApp(self, app):
-	# 	""" Launches an application from the Icarus UI.
-	# 	"""
-	# 	launchApps.launch(app)
-	# 	if self.boolMinimiseOnAppLaunch:
-	# 		self.showMinimized()
 
 
 	# def launchTerminal(self):
@@ -1711,8 +1706,9 @@ Developers: %s
 	# Gather tab #
 	##############
 
-	#ui adjustments
-	def adjustGatherTab(self, showGatherButton = False):
+	def adjustGatherTab(self, showGatherButton=False):
+		""" UI adjustments.
+		"""
 		self.ui.gather_pushButton.setEnabled(False)
 		if showGatherButton:
 			self.ui.gather_pushButton.setEnabled(True)
@@ -2125,12 +2121,9 @@ def run_standalone():
 # Read user prefs config file - if it doesn't exist it will be created
 userPrefs.read()
 
-# Set verbosity
-try:
-	os.environ['IC_VERBOSITY'] = userPrefs.config.get('main', 'verbosity')
-except:
-	userPrefs.edit('main', 'verbosity', '2')
-	os.environ['IC_VERBOSITY'] = userPrefs.config.get('main', 'verbosity')
+# Set verbosity, number of recent files
+os.environ['IC_VERBOSITY'] = userPrefs.query('main', 'verbosity', datatype='str', default="2", create=True)
+os.environ['IC_NUMRECENTFILES'] = userPrefs.query('main', 'numrecentfiles', datatype='str', default="10", create=True)
 
 # Version message
 verbose.icarusLaunch(WINDOW_TITLE.upper(),

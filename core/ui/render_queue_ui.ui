@@ -60,7 +60,7 @@
              <string>Submit</string>
             </property>
             <property name="icon">
-             <iconset resource="../../ui/rsc.qrc">
+             <iconset resource="rsc.qrc">
               <normaloff>:/rsc/rsc/icon_render.png</normaloff>
               <disabledoff>:/rsc/rsc/icon_render_disabled.png</disabledoff>:/rsc/rsc/icon_render.png</iconset>
             </property>
@@ -90,7 +90,7 @@
              <string>Refresh</string>
             </property>
             <property name="icon">
-             <iconset resource="../../ui/rsc.qrc">
+             <iconset resource="rsc.qrc">
               <normaloff>:/rsc/rsc/icon_refresh.png</normaloff>
               <disabledoff>:/rsc/rsc/icon_refresh_disabled.png</disabledoff>:/rsc/rsc/icon_refresh.png</iconset>
             </property>
@@ -141,7 +141,7 @@
              <string>Pause</string>
             </property>
             <property name="icon">
-             <iconset resource="../../ui/rsc.qrc">
+             <iconset resource="rsc.qrc">
               <normaloff>:/rsc/rsc/icon_pause.png</normaloff>
               <disabledoff>:/rsc/rsc/icon_pause_disabled.png</disabledoff>:/rsc/rsc/icon_pause.png</iconset>
             </property>
@@ -174,7 +174,7 @@
              <string>Kill</string>
             </property>
             <property name="icon">
-             <iconset resource="../../ui/rsc.qrc">
+             <iconset resource="rsc.qrc">
               <normaloff>:/rsc/rsc/icon_cross.png</normaloff>
               <disabledoff>:/rsc/rsc/icon_cross_disabled.png</disabledoff>:/rsc/rsc/icon_cross.png</iconset>
             </property>
@@ -204,7 +204,7 @@
              <string>Delete</string>
             </property>
             <property name="icon">
-             <iconset resource="../../ui/rsc.qrc">
+             <iconset resource="rsc.qrc">
               <normaloff>:/rsc/rsc/icon_delete.png</normaloff>
               <disabledoff>:/rsc/rsc/icon_delete_disabled.png</disabledoff>:/rsc/rsc/icon_delete.png</iconset>
             </property>
@@ -237,7 +237,7 @@
              <string>Resubmit</string>
             </property>
             <property name="icon">
-             <iconset resource="../../ui/rsc.qrc">
+             <iconset resource="rsc.qrc">
               <normaloff>:/rsc/rsc/icon_resubmit.png</normaloff>
               <disabledoff>:/rsc/rsc/icon_resubmit_disabled.png</disabledoff>:/rsc/rsc/icon_resubmit.png</iconset>
             </property>
@@ -372,7 +372,7 @@
              <string>Complete</string>
             </property>
             <property name="icon">
-             <iconset resource="../../ui/rsc.qrc">
+             <iconset resource="rsc.qrc">
               <normaloff>:/rsc/rsc/icon_tick.png</normaloff>
               <disabledoff>:/rsc/rsc/icon_tick_disabled.png</disabledoff>:/rsc/rsc/icon_tick.png</iconset>
             </property>
@@ -402,7 +402,7 @@
              <string>Requeue</string>
             </property>
             <property name="icon">
-             <iconset resource="../../ui/rsc.qrc">
+             <iconset resource="rsc.qrc">
               <normaloff>:/rsc/rsc/icon_resubmit.png</normaloff>
               <disabledoff>:/rsc/rsc/icon_resubmit_disabled.png</disabledoff>:/rsc/rsc/icon_resubmit.png</iconset>
             </property>
@@ -561,7 +561,7 @@ QToolButton:disabled {
               <string>hostname</string>
              </property>
              <property name="icon">
-              <iconset resource="../../ui/rsc.qrc">
+              <iconset resource="rsc.qrc">
                <normaloff>:/rsc/rsc/status_icon_ready.png</normaloff>:/rsc/rsc/status_icon_ready.png</iconset>
              </property>
              <property name="iconSize">
@@ -629,7 +629,7 @@ QToolButton:disabled {
   </widget>
  </widget>
  <resources>
-  <include location="../../ui/rsc.qrc"/>
+  <include location="rsc.qrc"/>
  </resources>
  <connections/>
 </ui>

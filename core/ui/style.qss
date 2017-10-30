@@ -44,9 +44,9 @@ QWidget:focus { /* add highlight for input focus */
 	selection-color: #333;
 }*/
 
-QFrame {
+/*QFrame {
 	background: #444;
-}
+}*/
 
 QAbstractScrollArea {
 	/*padding: 2px;*/
@@ -706,8 +706,10 @@ QGroupBox::indicator {
 }
 
 QGroupBox:flat {
+	margin: 0;
+	padding: 0;
 	border: none;
-	/*background: #4c4c4c;*/
+	/*background: #3e3e3e;*/
 }
 
 QGroupBox::title:flat {
@@ -797,13 +799,13 @@ QTabBar::tab:only-one { /* if there is only one tab, we don't want overlapping m
  *
  */
 
-/*QFrame {
-	border: 1px inset #333;
+QFrame {
+	/*border: 1px inset #333;*/
 }
 
 QFrame:no-frame {
 	border: none;
-}*/
+}
 
 /* End Frame */
 

@@ -59,13 +59,13 @@ class SettingsDialog(QtWidgets.QDialog):
 		self.setWindowFlags(QtCore.Qt.Dialog)
 
 		# Set up keyboard shortcuts
-		#self.shortcutSave = QtWidgets.QShortcut(self)
-		#self.shortcutSave.setKey('Ctrl+S')
-		#self.shortcutSave.activated.connect(self.save)
+		self.ui.shortcutLock = QtWidgets.QShortcut(self)
+		self.ui.shortcutLock.setKey('Ctrl+L')
+		self.ui.shortcutLock.activated.connect(self.toggleLockUI)
 
-		self.shortcutLock = QtWidgets.QShortcut(self)
-		self.shortcutLock.setKey('Ctrl+L')
-		self.shortcutLock.activated.connect(self.toggleLockUI)
+		# self.shortcutSave = QtWidgets.QShortcut(self)
+		# self.shortcutSave.setKey('Ctrl+S')
+		# self.shortcutSave.activated.connect(self.save)
 
 		# self.shortcutRemoveOverride = QtWidgets.QShortcut(self)
 		# self.shortcutRemoveOverride.setKey('Ctrl+R')
@@ -73,6 +73,7 @@ class SettingsDialog(QtWidgets.QDialog):
 
 		# Connect signals & slots
 		self.ui.categories_listWidget.currentItemChanged.connect(lambda current: self.openProperties(current.text()))
+		# self.ui.categories_listWidget.itemActivated.connect(lambda item: self.openProperties(current.text()))
 
 		# self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Reset).clicked.connect(self.reset)
 		self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Save).clicked.connect(self.saveAndExit)
@@ -82,6 +83,7 @@ class SettingsDialog(QtWidgets.QDialog):
 	def display(self, 
 		        settingsType="Generic", 
 		        categoryLs=[], 
+		        startPanel=None, 
 		        xmlData=None, 
 		        inherit=None, 
 		        autoFill=False):
@@ -89,6 +91,7 @@ class SettingsDialog(QtWidgets.QDialog):
 			'settingsType' is the name given to the settings dialog.
 			'categoryLs' is a list of categories, should correspond to a page
 			of properties defined by a .ui file.
+			'startPanel' if set will jump straight to the named panel.
 			'xmlData' is the path to the XML file storing the settings.
 			'inherit' whether to inherit any values.
 			'autoFill' when true, attempt to fill some fields automatically.
@@ -96,7 +99,11 @@ class SettingsDialog(QtWidgets.QDialog):
 		self.returnValue = False
 
 		# Declare some global variables
-		self.currentCategory = ""
+		if startPanel:
+			print("Start Panel: " + startPanel)
+			self.currentCategory = startPanel
+		else:
+			self.currentCategory = ""
 
 		self.settingsType = settingsType
 		self.categoryLs = categoryLs
@@ -110,6 +117,7 @@ class SettingsDialog(QtWidgets.QDialog):
 		self.xd = settingsData.settingsData()
 
 		self.reset()
+		self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Reset).setEnabled(False)  # temporarily disable the reset button
 
 		self.ui.setWindowTitle("%s %s" %(settingsType, WINDOW_TITLE))
 
@@ -120,6 +128,8 @@ class SettingsDialog(QtWidgets.QDialog):
 	def reset(self):
 		""" Initialise or reset by reloading data.
 		"""
+		# self.ui.categories_listWidget.blockSignals(True)
+
 		# Load data from xml file(s)
 		xd_load = self.xd.loadXML(self.xmlData)
 
@@ -141,6 +151,8 @@ class SettingsDialog(QtWidgets.QDialog):
 
 			currentItem.setSelected(True)
 			# self.openProperties(currentItem.text())
+
+		# self.ui.categories_listWidget.blockSignals(False)
 
 
 	def keyPressEvent(self, event):
@@ -194,10 +206,11 @@ class SettingsDialog(QtWidgets.QDialog):
 
 
 	def openProperties(self, category, storeProperties=True):
-		""" Open properties panel for selected settings category.
+		""" Open properties panel for selected settings category. Loads UI
+			file and sets up widgets.
 		"""
 		self.currentCategory = category
-		verbose.print_(self.currentCategory, 4)
+		verbose.print_("Category: " + self.currentCategory, 4)
 
 		if self.loadPanel(category):
 			inherited = False
@@ -208,10 +221,6 @@ class SettingsDialog(QtWidgets.QDialog):
 
 			# Load values into form widgets
 			widgets = self.ui.settings_frame.children()
-
-			# # Run special function to autofill the project and job number fields - must happen before we set the widget values for defaults to work correctly
-			# if category == 'job' and self.autoFill:
-			# 	self.xd.autoFill(self.xmlData)
 
 			for widget in widgets:
 

@@ -43,7 +43,7 @@ def launch(app=None, executable=None, flags=None):
 		if executable:
 			cmdStr = '"%s"' %executable
 		else:
-			# Hiero Player is bundled with Nuke 9.x and later. 
+			# Hiero Player is bundled with Nuke 9.x and later.
 			executable = os.environ['NUKEVERSION']
 			cmdStr = '"%s" --player'% executable
 

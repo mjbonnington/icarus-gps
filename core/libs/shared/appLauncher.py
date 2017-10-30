@@ -24,7 +24,7 @@ import launchApps  # temp?
 import osOps
 # import recentFiles  # for sorting by most used
 import settingsData
-# import sequence
+import userPrefs
 import verbose
 
 
@@ -73,17 +73,17 @@ class AppLauncher(QtWidgets.QDialog):
 
 		# Get apps
 		item_index = 0
+		app_ls = []
 		if job:
 			all_apps = self.ap.getVisibleApps(sortBy=sortBy)
-			app_ls = []
 			for app in all_apps:
 				# if self.jd.getAppVersion(app.get('id')):  # app.get('name') for backwards-compatibility
 				if self.jd.getAppVersion(app.get('name')):  # app.get('name') for backwards-compatibility
 					app_ls.append(app)
-			self.showToolTips = True
-		else:
-			app_ls = self.ap.getVisibleApps(sortBy=sortBy)
-			self.showToolTips = False
+			# self.showToolTips = True
+		# else:  # If job not specified, show all available apps
+		# 	app_ls = self.ap.getVisibleApps(sortBy=sortBy)
+		# 	# self.showToolTips = False
 
 		# Create icons
 		num_items = len(app_ls)
@@ -99,14 +99,12 @@ class AppLauncher(QtWidgets.QDialog):
 					self.createIcon(app_ls[item_index], icon_size, row_gridLayout, col)
 					item_index += 1
 
-		# Create placeholder icon
-		# else:
-		# 	icon_size = self.getIconSize(1)
-		# 	row_gridLayout = QtWidgets.QGridLayout()
-		# 	row_gridLayout.setObjectName("apps_gridLayout")
-		# 	parentLayout.insertLayout(0, row_gridLayout)
-		# 	appPlaceholder_toolButton
-		# 	row_gridLayout.addWidget(self.parent.ui.appPlaceholder_toolButton, 0, 0, 0)
+			# Hide 'No Apps' placeholder button
+			self.parent.ui.appPlaceholder_toolButton.hide()
+
+		else:
+			# Show 'No Apps' placeholder button
+			self.parent.ui.appPlaceholder_toolButton.show()
 
 
 	def getIcon(self, element, appName=None):
@@ -149,9 +147,9 @@ class AppLauncher(QtWidgets.QDialog):
 		appVersion = self.jd.getAppVersion(displayName)
 		appExecutable = self.ap.getPath(displayName, appVersion, self.currentOS)
 		flags = app.findtext('flags')
-		tooltip = ""
-		if self.showToolTips:
-			tooltip = "Launch %s %s" %(displayName, appVersion)
+		# tooltip = ""
+		# if self.showToolTips:
+		tooltip = "Launch %s %s" %(displayName, appVersion)
 		# print(layout.objectName(), column, shortName)
 
 		toolButton = QtWidgets.QToolButton(self.frame)
@@ -175,8 +173,8 @@ class AppLauncher(QtWidgets.QDialog):
 
 		if not os.path.isfile(appExecutable):
 			toolButton.setEnabled(False)
-			if self.showToolTips:
-				tooltip = "%s %s executable not found" %(displayName, appVersion)
+			# if self.showToolTips:
+			tooltip = "%s %s executable not found" %(displayName, appVersion)
 
 		toolButton.setToolTip(tooltip)
 		toolButton.setStatusTip(tooltip)
@@ -202,8 +200,8 @@ class AppLauncher(QtWidgets.QDialog):
 				action.setProperty('version', appVersion)
 				action.setProperty('executable', appExecutable)
 				action.setProperty('flags', flags)
-				if self.showToolTips:
-					tooltip = "Launch %s %s" %(menuName, appVersion)
+				# if self.showToolTips:
+				tooltip = "Launch %s %s" %(menuName, appVersion)
 				action.setToolTip(tooltip)    # Does nothing?
 				action.setStatusTip(tooltip)  # Does nothing?
 				action.triggered.connect(self.launchApp)
@@ -298,6 +296,11 @@ class AppLauncher(QtWidgets.QDialog):
 
 		# Run the executable
 		launchApps.launch(displayName, executable, flags)
+
+		# Increase launch counter
+		count = userPrefs.query('launchcounter', shortName, datatype='int', default=0)
+		count += 1
+		userPrefs.edit('launchcounter', shortName, count)
 
 		# Minimise the UI if the option is set
 		if self.parent.boolMinimiseOnAppLaunch:
