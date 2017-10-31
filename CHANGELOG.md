@@ -1,5 +1,6 @@
 v0.9.10 (--)
 -	[Icarus] Updated application launcher. App icons can be added/removed/sorted dynamically depending on preference.
+-	[Icarus] The ten most recent shots are now stored and can be set quickly via a context menu on the Set Shot button.
 -	[Icarus] Application project folders are now created 'on-demand' rather than all at once when the shot is set. This should help reduce redundant empty folders in projects.
 -	[Icarus] Updated support for HieroPlayer to versions bundled with Nuke 9 and later.
 -	[Maya] Added preset for proxy resolution to GPS Preview options.

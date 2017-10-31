@@ -164,6 +164,8 @@ def setEnv(envVars):
 
 		os.environ['MAYA_DEBUG_ENABLE_CRASH_REPORTING'] = '0'
 		os.environ['MAYA_FORCE_PANEL_FOCUS'] = '0'  # This should prevent panel stealing focus from Qt window on keypress.
+		os.environ['MAYA_DISABLE_CLIC_IPM'] = '1'  # Disable the In Product Messaging button (should improve Maya startup & shutdown time).
+		os.environ['MAYA_DISABLE_CIP'] = '1'  # Disable the Customer Involvement Program (should improve Maya startup & shutdown time).
 
 		pluginsPath = osOps.absolutePath('$IC_BASEDIR/rsc/maya/plugins') + os.pathsep \
 					+ osOps.absolutePath('$MAYASHAREDRESOURCES/%s/plug-ins' %maya_ver)

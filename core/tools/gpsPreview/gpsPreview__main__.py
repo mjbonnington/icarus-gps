@@ -327,7 +327,7 @@ class previewUI(QtWidgets.QMainWindow):
 		""" Store value in XML data.
 		"""
 		verbose.print_("%20s %s.%s=%s" %(type(value), 'gpspreview', attr, value), 4)
-		userPrefs.edit('gpspreview', attr, str(value))
+		userPrefs.edit('gpspreview', attr, value)
 
 
 	def getOpts(self):

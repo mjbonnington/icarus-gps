@@ -48,7 +48,8 @@ class jobs(xmlData.XMLData):
 			if storeLastJob:
 				import userPrefs
 				newEntry = '%s,%s' % (jobName, shotName)
-				userPrefs.edit('main', 'lastjob', newEntry)
+				# userPrefs.edit('main', 'lastjob', newEntry)
+				userPrefs.updateRecentShots(newEntry)
 
 			return True
 

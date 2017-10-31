@@ -20,8 +20,9 @@ import osOps
 import verbose
 
 
+userPrefsDir = os.environ['IC_USERPREFS']
 config = SafeConfigParser()
-configFile = os.path.join(os.environ['IC_USERPREFS'], 'userPrefs.ini')
+configFile = os.path.join(userPrefsDir, 'userPrefs.ini')
 
 
 def read():
@@ -40,37 +41,19 @@ def write():
 	""" Write config file to disk.
 	"""
 	try:
+		# read()
 		with open(configFile, 'w') as f:
 			config.write(f)
 
 	except IOError:
-		verbose.warning('Unable to write user prefs configuration file.')
+		verbose.error("Unable to write user prefs configuration file.")
 
 
 def create():
-	""" Create config file if it doesn't exist and populate with with
-		defaults.
+	""" Create config file if it doesn't exist.
 	"""
-	userPrefsDir = os.environ['IC_USERPREFS']
-
 	if not os.path.exists(userPrefsDir):
 		osOps.createDir(userPrefsDir)
-
-	config.add_section('main')
-	# config.set('main', 'lastjob', '')
-	# config.set('main', 'numrecentfiles', '10')
-	# config.set('main', 'minimiseonlaunch', 'True')
-	# config.set('main', 'verbosity', '2')
-
-	config.add_section('gpspreview')
-	config.set('gpspreview', 'resolutionmode', '0')
-	config.set('gpspreview', 'framerangemode', '0')
-	config.set('gpspreview', 'offscreen', 'True')
-	config.set('gpspreview', 'noselection', 'True')
-	config.set('gpspreview', 'guides', 'True')
-	config.set('gpspreview', 'slate', 'True')
-	config.set('gpspreview', 'launchviewer', 'True')
-	config.set('gpspreview', 'createqt', 'False')
 
 	write()
 
@@ -135,4 +118,54 @@ def edit(section, key, value):
 	config.set(section, key, str(value))
 
 	write()
+
+
+def updateRecentShots(newEntry):
+	""" Update recent shots list and save config file to disk.
+	"""
+	read()
+
+	# Create recent section and shots entry if they don't exist
+	if not config.has_section('recent'):
+		config.add_section('recent')
+	if not config.has_option('recent', 'shots'):
+		config.set('recent', 'shots', '')
+
+	recentShotLs = []  # Clear recent shot list
+
+	fileStr = config.get('recent', 'shots')
+	if not fileStr=='':
+		recentShotLs = fileStr.split('; ')
+	else:
+		recentShotLs = []
+
+	if newEntry in recentShotLs:  # If entry already exists, delete it
+		recentShotLs.remove(newEntry)
+
+	recentShotLs.insert(0, newEntry)  # Prepend entry to the list
+
+	while len(recentShotLs) > int(os.environ['IC_NUMRECENTFILES']):
+		recentShotLs.pop()
+
+	# Encode the list into a single line with entries separated by semicolons
+	config.set('recent', 'shots', '; '.join(n for n in recentShotLs))
+
+	write()
+
+
+def getRecentShots(last=False):
+	""" Read recent shots list and return list/array.
+	"""
+	read()
+
+	try:
+		recentShotLs = config.get('recent', 'shots').split('; ')
+		recentShotLs = recentShotLs[:int(os.environ['IC_NUMRECENTFILES'])]
+	except:
+		recentShotLs = []
+
+	if last:
+		return recentShotLs[0]
+	else:
+		return recentShotLs
 

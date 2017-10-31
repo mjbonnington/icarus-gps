@@ -79,13 +79,6 @@ class DirStructure(xmlData.XMLData):
 	# 	if datafile is not None:
 	# 		self.loadXML(datafile)
 
-	# 	basedir = self.root.get("location")
-
-	# 	if basedir:
-	# 		self.createDirRecursive(self.root, basedir)
-	# 	else:
-	# 		verbose.warning("Could not create project folders because the root folder was not specified.")
-
 	# 	self.saveXML(datafile)
 
 

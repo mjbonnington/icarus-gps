@@ -37,6 +37,7 @@ class AppLauncher(QtWidgets.QDialog):
 		self.frame = frame
 		self.parent = parent
 
+		# Instantiate data classes
 		self.ap = appPaths.appPaths()
 		self.jd = settingsData.settingsData()
 		self.ds = dirStructure.DirStructure()
@@ -57,10 +58,9 @@ class AppLauncher(QtWidgets.QDialog):
 		"""
 		verbose.print_("Populating app launcher icons...", 4)
 
-		ap_load = self.ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'))
 		if job is not None:
-			jd_load = self.jd.loadXML(os.path.join(os.environ['JOBDATA'], 'jobData.xml'))
-			# self.jd.getApps()  # redundant?
+			self.ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'))
+			self.jd.loadXML(os.path.join(os.environ['JOBDATA'], 'jobData.xml'))
 
 		parentLayout = self.frame.findChildren(QtWidgets.QVBoxLayout, 'launchApp_verticalLayout')[0]
 
@@ -81,6 +81,7 @@ class AppLauncher(QtWidgets.QDialog):
 				if self.jd.getAppVersion(app.get('name')):  # app.get('name') for backwards-compatibility
 					app_ls.append(app)
 			# self.showToolTips = True
+
 		# else:  # If job not specified, show all available apps
 		# 	app_ls = self.ap.getVisibleApps(sortBy=sortBy)
 		# 	# self.showToolTips = False
@@ -298,6 +299,7 @@ class AppLauncher(QtWidgets.QDialog):
 		launchApps.launch(displayName, executable, flags)
 
 		# Increase launch counter
+		userPrefs.read()  # Reload user prefs file
 		count = userPrefs.query('launchcounter', shortName, datatype='int', default=0)
 		count += 1
 		userPrefs.edit('launchcounter', shortName, count)

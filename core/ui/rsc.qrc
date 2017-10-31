@@ -1,5 +1,9 @@
 <RCC>
   <qresource prefix="rsc">
+    <file>rsc/icon_locked.png</file>
+    <file>rsc/icon_locked_disabled.png</file>
+    <file>rsc/icon_unlocked.png</file>
+    <file>rsc/icon_unlocked_disabled.png</file>
     <file>rsc/status_icon_ready.png</file>
     <file>rsc/status_icon_stopped.png</file>
     <file>rsc/tab_icon_maya.png</file>

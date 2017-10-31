@@ -60,7 +60,7 @@ import appLauncher  # merge these two?
 import openDirs
 import osOps
 import pblChk
-import pblOptsPrc
+# import pblOptsPrc
 import sequence
 import userPrefs
 import verbose
@@ -123,6 +123,17 @@ class IcarusApp(QtWidgets.QMainWindow):
 		except:
 			pass
 
+		# Automatically set main tab to 'Launcher' - removes the requirement
+		# for the UI file to be saved with this as the current tab.
+		self.ui.main_tabWidget.setCurrentIndex(0)
+
+		# Hide main menu bar
+		self.ui.menubar.hide()
+
+		# Register status bar with the verbose module in order to print
+		# messages to it...
+		verbose.registerStatusBar(self.ui.statusbar)
+
 		# Instantiate jobs class
 		self.j = jobs.jobs()
 
@@ -143,9 +154,6 @@ class IcarusApp(QtWidgets.QMainWindow):
 		self.shortcutToggleMenu.setKey('Alt+M')
 		self.shortcutToggleMenu.activated.connect(self.toggleMenuBar)
 
-		# Automatically set main tab to 'Launcher'
-		self.ui.main_tabWidget.setCurrentIndex(0)
-
 		# --------------------------------------------------------------------
 		# Connect signals & slots
 		# --------------------------------------------------------------------
@@ -153,9 +161,7 @@ class IcarusApp(QtWidgets.QMainWindow):
 		self.ui.main_tabWidget.currentChanged.connect(self.adjustMainUI)
 
 		# Shot menu
-		# last = userPrefs.query('main', 'lastjob').split(',')  # RECENT SHOTS NOT IMPLEMENTED
-		# self.ui.actionSet_recent_shot.setText("%s - %s" %(last[0], last[1]))
-		# self.ui.actionSet_recent_shot.triggered.connect(lambda: self.setupJob(last))
+		self.ui.menuRecent_shots.aboutToShow.connect(self.updateRecentShotsMenu)
 		self.ui.actionJob_settings.triggered.connect(self.jobSettings)
 		self.ui.actionShot_settings.triggered.connect(self.shotSettings)
 
@@ -192,13 +198,6 @@ class IcarusApp(QtWidgets.QMainWindow):
 		self.ui.dailyPblAdd_pushButton.clicked.connect(self.dailyTableAdd)
 		self.ui.publish_pushButton.clicked.connect(self.initPublish)
 
-		# Register status bar with the verbose module in order to print
-		# messages to it...
-		verbose.registerStatusBar(self.ui.statusbar)
-
-		# Hide main menu bar
-		self.ui.menubar.hide()
-
 
 		######################################
 		# Adapt UI for environment awareness #
@@ -218,7 +217,7 @@ class IcarusApp(QtWidgets.QMainWindow):
 		if os.environ['IC_ENV'] == 'STANDALONE':
 
 			# Hide UI items relating to app environment(s)
-			uiHideLs = ['setNewShot_pushButton', 'shotEnv_toolButton', 'appIcon_label']
+			uiHideLs = ['shotEnv_toolButton', 'appIcon_label']
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' % uiItem
 				eval(hideProc)
@@ -245,8 +244,7 @@ class IcarusApp(QtWidgets.QMainWindow):
 			# Set shot UI
 			self.ui.refreshJobs_toolButton.clicked.connect(self.populateJobs)
 			self.ui.job_comboBox.currentIndexChanged.connect(self.populateShots)
-			self.ui.setShot_pushButton.clicked.connect(self.setupJob)
-			self.ui.setNewShot_pushButton.clicked.connect(lambda: self.unlockJobUI(refreshShots=True))
+			self.ui.setShot_toolButton.toggled.connect(lambda checked: self.setShot(checked))
 
 			# Utility launch buttons (bottom row)
 			self.ui.render_toolButton.clicked.connect(self.launchRenderQueue)
@@ -256,12 +254,13 @@ class IcarusApp(QtWidgets.QMainWindow):
 			self.ui.browse_toolButton.clicked.connect(openDirs.openShot)
 
 			# self.ui.appPlaceholder_toolButton.clicked.connect(lambda: self.jobSettings(startPanel='apps'))
+			self.ui.appPlaceholder_toolButton.clicked.connect(self.appSettings)
 
 			# Launch options menu
 			self.ui.launchOptions_toolButton.setMenu(self.ui.menuLauncher)
 
 			# Set 'Minimise on launch' checkbox from user prefs
-			self.boolMinimiseOnAppLaunch = userPrefs.query('main', 'minimiseonlaunch', datatype='bool', default=True, create=True)
+			self.boolMinimiseOnAppLaunch = userPrefs.query('main', 'minimiseonlaunch', datatype='bool', default=True)
 			self.ui.actionMinimise_on_Launch.setChecked(self.boolMinimiseOnAppLaunch)
 
 			self.ui.actionMinimise_on_Launch.toggled.connect(self.setMinimiseOnAppLaunch)
@@ -323,6 +322,14 @@ class IcarusApp(QtWidgets.QMainWindow):
 			self.actionHieroPlayer.setIcon(icon)
 			self.ui.openReview_toolButton.addAction(self.actionHieroPlayer)
 
+			self.actionBridge = QtWidgets.QAction("Bridge", None)
+			self.actionBridge.triggered.connect(lambda: launchApps.launch('Bridge'))
+			icon = QtGui.QIcon()
+			icon.addPixmap(QtGui.QPixmap(osOps.absolutePath("$IC_FORMSDIR/rsc/app_icon_bridge.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+			icon.addPixmap(QtGui.QPixmap(osOps.absolutePath("$IC_FORMSDIR/rsc/app_icon_bridge_disabled.png")), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+			self.actionBridge.setIcon(icon)
+			self.ui.openReview_toolButton.addAction(self.actionBridge)
+
 			# Browse
 			self.ui.browse_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
@@ -372,14 +379,17 @@ class IcarusApp(QtWidgets.QMainWindow):
 			self.ui.main_tabWidget.removeTab(0) # Remove 'Launcher' tab
 			self.ui.publishType_tabWidget.removeTab(1) # Remove 'nk Asset' tab
 
-			# Attempt to set the publish asset type button to remember the last selection - 'self.connectNewSignalsSlots()' must be called already
+			# Attempt to set the publish asset type button to remember the
+			# last selection - 'self.connectNewSignalsSlots()' must be called
+			# already.
 			try:
+				assetType = userPrefs.query('main', 'lastpublishma')
 				for toolButton in self.ui.ma_assetType_frame.children():
 					if isinstance(toolButton, QtWidgets.QToolButton):
-						if toolButton.text() == userPrefs.config.get('main', 'lastpublishma'):
+						if toolButton.text() == assetType:
 							toolButton.setChecked(True)
 			except:
-				pass
+				verbose.print_("Could not select %s asset type." %assetType)
 
 
 		####################
@@ -403,14 +413,17 @@ class IcarusApp(QtWidgets.QMainWindow):
 			self.ui.main_tabWidget.removeTab(0) # Remove 'Launcher' tab
 			self.ui.publishType_tabWidget.removeTab(0) # Remove 'ma Asset' tab
 
-			# Attempt to set the publish asset type button to remember the last selection - 'self.connectNewSignalsSlots()' must be called already
+			# Attempt to set the publish asset type button to remember the
+			# last selection - 'self.connectNewSignalsSlots()' must be called
+			# already.
 			try:
+				assetType = userPrefs.query('main', 'lastpublishnk')
 				for toolButton in self.ui.nk_assetType_frame.children():
 					if isinstance(toolButton, QtWidgets.QToolButton):
-						if toolButton.text() == userPrefs.config.get('main', 'lastpublishnk'):
+						if toolButton.text() == assetType:
 							toolButton.setChecked(True)
 			except:
-				pass
+				verbose.print_("Could not select %s asset type." %assetType)
 
 	# End of function __init__
 
@@ -456,19 +469,11 @@ class IcarusApp(QtWidgets.QMainWindow):
 			self.ui.menubar.show()
 
 
-	def getMainTab(self):
-		""" Gets the current main tab.
+	def getCurrentTab(self, tabWidget):
+		""" Returns the index and name of the current tab of tabWidget.
 		"""
-		tabIndex = self.ui.main_tabWidget.currentIndex()
-		tabText = self.ui.main_tabWidget.tabText(tabIndex)
-		return tabIndex, tabText
-
-
-	def getPblTab(self):
-		""" Gets the current publish type tab.
-		"""
-		tabIndex = self.ui.publishType_tabWidget.currentIndex()
-		tabText = self.ui.publishType_tabWidget.tabText(tabIndex)
+		tabIndex = tabWidget.currentIndex()
+		tabText = tabWidget.tabText(tabIndex)
 		return tabIndex, tabText
 
 
@@ -476,7 +481,7 @@ class IcarusApp(QtWidgets.QMainWindow):
 		""" Makes UI adjustments and connections based on which tab is
 			currently selected.
 		"""
-		mainTabName = self.getMainTab()[1]
+		mainTabName = self.getCurrentTab(self.ui.main_tabWidget)[1]
 		if mainTabName == 'Gather' or mainTabName == 'Assets':
 			self.defineColumns()
 			self.updateAssetTypeCol()
@@ -672,7 +677,8 @@ class IcarusApp(QtWidgets.QMainWindow):
 		# Store last set or current item
 		if setLast:
 			try:
-				last_item, _ = userPrefs.config.get('main', 'lastjob').split(',')
+				# last_item, _ = userPrefs.query('main', 'lastjob').split(',')
+				last_item, _ = userPrefs.getRecentShots(last=True).split(',')
 			except:
 				last_item = None
 		else:
@@ -687,21 +693,15 @@ class IcarusApp(QtWidgets.QMainWindow):
 		if reloadJobs:
 			self.j.loadXML()
 
-		# Populate combo box with list of shots
+		# Populate combo box with list of jobs
 		jobLs = sorted(self.j.getActiveJobs())
 		if jobLs:
 			self.ui.job_comboBox.insertItems(0, jobLs)
 
-			# Attempt to set the combo box selections to remember the last item.
-			index = self.ui.job_comboBox.findText(last_item)
-			# print(index)
-
-			if index is not -1:
-				self.ui.job_comboBox.setCurrentIndex(index)
+			# Attempt to set the combo box to remember the last item.
+			if self.setComboBox(self.ui.job_comboBox, last_item):
 				self.populateShots(setLast=setLast)
 			else:
-				verbose.print_("Unable to set last job.", 4)
-				self.ui.job_comboBox.setCurrentIndex(0)
 				self.populateShots()
 
 			self.ui.shotSetup_groupBox.setEnabled(True)
@@ -725,8 +725,8 @@ class IcarusApp(QtWidgets.QMainWindow):
 
 			# Warning dialog
 			import pDialog
-			dialogTitle = 'No Jobs Found'
-			dialogMsg = 'No active jobs were found. Would you like to set up some jobs now?'
+			dialogTitle = "No Jobs Found"
+			dialogMsg = "No active jobs were found. Would you like to set up some jobs now?"
 			dialog = pDialog.dialog()
 			if dialog.display(dialogMsg, dialogTitle):
 				self.launchJobManagement()
@@ -742,7 +742,8 @@ class IcarusApp(QtWidgets.QMainWindow):
 		# Store last set or current item
 		if setLast:
 			try:
-				_, last_item = userPrefs.config.get('main', 'lastjob').split(',')
+				# _, last_item = userPrefs.query('main', 'lastjob').split(',')
+				_, last_item = userPrefs.getRecentShots(last=True).split(',')
 			except:
 				last_item = None
 		else:
@@ -758,19 +759,11 @@ class IcarusApp(QtWidgets.QMainWindow):
 		if shotLs:
 			self.ui.shot_comboBox.insertItems(0, shotLs)
 
-			# Attempt to set the combo box selections to remember the last item.
-			index = self.ui.shot_comboBox.findText(last_item)
-			# print(index)
-
-			if index is not -1:
-				self.ui.shot_comboBox.setCurrentIndex(index)
-			else:
-				verbose.print_("Unable to set last shot.", 4)
-				self.ui.shot_comboBox.setCurrentIndex(0)
+			# Attempt to set the combo box to remember the last item.
+			self.setComboBox(self.ui.shot_comboBox, last_item)
 
 			self.ui.shot_comboBox.setEnabled(True)
 			self.ui.setShot_label.setEnabled(True)
-			self.ui.setShot_pushButton.setEnabled(True)
 
 			return True
 
@@ -779,7 +772,6 @@ class IcarusApp(QtWidgets.QMainWindow):
 			self.ui.shot_comboBox.insertItem(0, '[None]')
 			self.ui.shot_comboBox.setEnabled(False)
 			self.ui.setShot_label.setEnabled(False)
-			self.ui.setShot_pushButton.setEnabled(False)
 
 			# Warning dialog
 			import pDialog
@@ -804,26 +796,31 @@ class IcarusApp(QtWidgets.QMainWindow):
 			comboBox.setCurrentIndex(comboBox.findText(os.environ['SHOT']))
 
 
-	def updateJobUI(self):
+	def setComboBox(self, comboBox, text):
 		""" Update job tab UI with shot selection.
 		"""
-		self.ui.setShot_pushButton.setEnabled(True)
+		index = comboBox.findText(text)
+
+		if index is not -1:
+			comboBox.setCurrentIndex(index)
+			return True
+		else:
+			verbose.print_("Unable to set %s to %s" %(comboBox.objectName(), text), 4)
+			comboBox.setCurrentIndex(0)
+			return False
 
 
-	def setupJob(self):#, job=None, shot=None):
+	def setupJob(self, job=None, shot=None):
 		""" Sets up shot environment, creates user directories and updates
 			user job log.
 		"""
+		if job is not None:
+			self.setComboBox(self.ui.job_comboBox, job)
+		if shot is not None:
+			self.setComboBox(self.ui.shot_comboBox, shot)
 		self.job = self.ui.job_comboBox.currentText()
 		self.shot = self.ui.shot_comboBox.currentText()
-		# if job is None:
-		# 	self.job = self.ui.job_comboBox.currentText()
-		# else:
-		# 	self.job = job
-		# if job is None:
-		# 	self.shot = self.ui.shot_comboBox.currentText()
-		# else:
-		# 	self.shot = shot
+
 		if self.j.setup(self.job, self.shot):
 			self.adjustPblTypeUI()
 			self.populateShotLs(self.ui.publishToShot_comboBox)
@@ -831,6 +828,7 @@ class IcarusApp(QtWidgets.QMainWindow):
 			self.connectNewSignalsSlots()
 			self.lockJobUI()
 			self.al.setupIconGrid(job=self.job, sortBy=self.sortAppsBy)
+
 		else:
 			dialogMsg = 'Unable to load job settings. Default values have been applied.\nPlease review the values in the Job Settings dialog and click Save when done.\n'
 			verbose.print_(dialogMsg, 1)
@@ -845,21 +843,76 @@ class IcarusApp(QtWidgets.QMainWindow):
 				self.setupJob()
 
 
+	# @QtCore.Slot()
+	def setShot(self, checked):
+		""" Wrapper function to set/unset shot from the tool button.
+		"""
+		if checked:
+			self.setupJob()
+		else:
+			self.unlockJobUI(refreshShots=True)
+
+
+	# @QtCore.Slot()
+	def setupRecentJob(self):
+		""" Wrapper function to set up shot from the recent shots menu.
+		"""
+		job = self.sender().property('job')
+		shot = self.sender().property('shot')
+
+		self.setupJob(job, shot)
+
+
+	# @QtCore.Slot()
+	def updateRecentShotsMenu(self):
+		""" Updates the recent shots menu.
+		"""
+		verbose.print_("Populating recent shots menu...", 4)
+		self.ui.menuRecent_shots.clear()
+
+		# userPrefs.read()
+		recentShots = userPrefs.getRecentShots()
+		if recentShots:
+			self.ui.menuRecent_shots.setEnabled(True)
+			self.ui.setShot_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+			for i, entry in enumerate(recentShots):
+				job, shot = entry.split(',')
+				menuName = "%s - %s" %(job, shot)
+				actionName = "action%s" %i
+				action = QtWidgets.QAction(menuName, None)
+				action.setObjectName(actionName)
+				action.setText(menuName)
+				action.setProperty('job', job)
+				action.setProperty('shot', shot)
+				tooltip = "Set shot to %s - %s" %(job, shot)
+				action.setToolTip(tooltip)
+				action.setStatusTip(tooltip)
+				action.triggered.connect(self.setupRecentJob)
+				self.ui.menuRecent_shots.addAction(action)
+				self.ui.setShot_toolButton.addAction(action)
+
+				# Make a class-scope reference to this object
+				# (won't work without it for some reason)
+				exec_str = "self.%s = action" %actionName
+				exec(exec_str)
+
+		else:
+			self.ui.menuRecent_shots.setEnabled(False)
+
+
 	def lockJobUI(self):
 		""" Updates and locks UI job tab.
 		"""
 		self.updateJobLabel()
+		self.updateRecentShotsMenu()
+
 		self.ui.shotSetup_groupBox.setEnabled(False)
 		self.ui.refreshJobs_toolButton.setEnabled(False)
 		self.ui.launchApp_groupBox.setEnabled(True)
-		# self.ui.launchApp_scrollArea.setEnabled(True)
-		# self.ui.launchApp_scrollAreaWidgetContents.setEnabled(True)
-		# self.ui.launchOptions_groupBox.setEnabled(True)
 		self.ui.main_tabWidget.insertTab(1, self.publishTab, 'Publish')
 		self.ui.main_tabWidget.insertTab(2, self.gatherTab, 'Assets')
 		self.ui.gather_groupBox.hide()
-		self.ui.setShot_pushButton.hide()
-		self.ui.setNewShot_pushButton.show()
+		self.ui.setShot_toolButton.setChecked(True)
 		self.ui.shotEnv_toolButton.show()
 		self.ui.menuLauncher.setEnabled(True)
 		self.ui.actionJob_settings.setEnabled(True)
@@ -867,6 +920,7 @@ class IcarusApp(QtWidgets.QMainWindow):
 		self.ui.actionJob_Management.setEnabled(False)
 		self.ui.actionShot_Creator.setEnabled(False)
 		self.ui.actionSubmit_render.setEnabled(True)
+
 		verbose.jobSet(self.job, self.shot)
 
 
@@ -876,19 +930,15 @@ class IcarusApp(QtWidgets.QMainWindow):
 		# Re-scan for shots
 		if refreshShots:
 			self.populateShots()
+		self.updateRecentShotsMenu()
 
 		self.ui.shotSetup_groupBox.setEnabled(True)
 		self.ui.refreshJobs_toolButton.setEnabled(True)
 		self.ui.launchApp_groupBox.setEnabled(False)
-		# self.ui.launchApp_scrollArea.setEnabled(False)
-		# self.ui.launchApp_scrollAreaWidgetContents.setEnabled(False)
-		# self.ui.launchOptions_groupBox.setEnabled(False)
-
-		self.ui.main_tabWidget.removeTab(1); self.ui.main_tabWidget.removeTab(1) # remove publish and assets tab - check this
-		self.ui.renderPbl_treeWidget.clear() # clear the render layer tree view widget
-		self.ui.dailyPbl_treeWidget.clear() # clear the dailies tree view widget
-		self.ui.setShot_pushButton.show()
-		self.ui.setNewShot_pushButton.hide()
+		self.ui.main_tabWidget.removeTab(1)  # Remove publish & assets tab
+		self.ui.main_tabWidget.removeTab(1)  # Remove publish & assets tab
+		self.ui.renderPbl_treeWidget.clear() # Clear the render layer tree view widget
+		self.ui.dailyPbl_treeWidget.clear()  # Clear the dailies tree view widget
 		self.ui.shotEnv_toolButton.setText('')
 		self.ui.shotEnv_toolButton.hide()
 		self.ui.menuLauncher.setEnabled(False)
@@ -905,16 +955,15 @@ class IcarusApp(QtWidgets.QMainWindow):
 		if os.environ['IC_ENV'] != 'STANDALONE':
 			self.job = os.environ['JOB']
 			self.shot = os.environ['SHOT']
-		self.ui.shotEnv_toolButton.setText('%s - %s' % (self.job, self.shot))
+
+		self.ui.shotEnv_toolButton.setText('%s - %s' %(self.job, self.shot))
 
 
 	def setMinimiseOnAppLaunch(self, state):
 		""" Sets state of minimise on app launch variable.
-			Ultimately, this option should form part of a 'User Prefs' dialog,
-			and be removed from the main UI.
 		"""
 		self.boolMinimiseOnAppLaunch = state
-		userPrefs.edit('main', 'minimiseonlaunch', str(state))
+		userPrefs.edit('main', 'minimiseonlaunch', state)
 
 
 	def setSortAppsBy(self, value):
@@ -922,7 +971,7 @@ class IcarusApp(QtWidgets.QMainWindow):
 		"""
 		self.al.setupIconGrid(job=self.job, sortBy=value)
 		self.sortAppsBy = value
-		userPrefs.edit('main', 'sortappsby', str(value))
+		userPrefs.edit('main', 'sortappsby', value)
 
 
 	def printShotInfo(self):
@@ -1022,6 +1071,10 @@ Developers: %s
 			categoryLs = ['global', ]
 			xmlData = os.path.join(os.path.join(os.environ['IC_CONFIGDIR'], 'globalPrefs.xml'))
 			inherit = None
+		if settingsType == "App":
+			categoryLs = ['apps', ]
+			xmlData = os.path.join(os.environ['JOBDATA'], 'jobData.xml')
+			inherit = None  # "Defaults"
 
 		if startPanel not in categoryLs:
 			startPanel = None
@@ -1066,12 +1119,12 @@ Developers: %s
 			pass
 
 
-	# def launchTerminal(self):
-	# 	""" Launches terminal and locks tool button.
-	# 	"""
-	# 	launchApps.terminal()
-	# 	if self.boolMinimiseOnAppLaunch:
-	# 		self.showMinimized()
+	def appSettings(self):
+		""" Open job settings dialog wrapper function.
+			Only with apps (temporary bodge)
+		"""
+		if self.openSettings("App"):
+			self.setupJob()
 
 
 	def preview(self, path=None):
@@ -1460,7 +1513,7 @@ Developers: %s
 		"""
 	#	self.approved, self.mail = '', ''
 		self.pblNotes = self.ui.notes_textEdit.text() #.toPlainText() # Edited line as notes box is now line edit widget, not text edit
-		self.pblType = self.getPblTab()[1]
+		self.pblType = self.getCurrentTab(self.ui.publishType_tabWidget)[1]
 		self.slShot = self.ui.publishToShot_comboBox.currentText()
 
 		# Get path to publish to. If selected shot doesn't match shot the correct publish path is assigned based on the selected shot
@@ -2123,7 +2176,7 @@ userPrefs.read()
 
 # Set verbosity, number of recent files
 os.environ['IC_VERBOSITY'] = userPrefs.query('main', 'verbosity', datatype='str', default="2", create=True)
-os.environ['IC_NUMRECENTFILES'] = userPrefs.query('main', 'numrecentfiles', datatype='str', default="10", create=True)
+os.environ['IC_NUMRECENTFILES'] = userPrefs.query('recent', 'numrecentfiles', datatype='str', default="10", create=True)
 
 # Version message
 verbose.icarusLaunch(WINDOW_TITLE.upper(),

@@ -21,7 +21,7 @@ import verbose
 
 
 config = SafeConfigParser()
-configFile = os.path.join(os.environ['IC_RECENTFILESDIR'], '%s.ini' % os.environ['JOB'])
+configFile = os.path.join(os.environ['IC_RECENTFILESDIR'], '%s.ini' %os.environ['JOB'])
 
 
 def _read(env):

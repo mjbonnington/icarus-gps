@@ -306,33 +306,6 @@ QToolButton:disabled {
             <number>8</number>
            </property>
            <item>
-            <widget class="QToolButton" name="refreshJobs_toolButton">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Refresh&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Reload the job database and update the job and shot list combo boxes.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="statusTip">
-              <string>Reload the job database</string>
-             </property>
-             <property name="text">
-              <string>Refresh</string>
-             </property>
-             <property name="icon">
-              <iconset resource="rsc.qrc">
-               <normaloff>:/rsc/rsc/icon_refresh.png</normaloff>
-               <disabledoff>:/rsc/rsc/icon_refresh_disabled.png</disabledoff>:/rsc/rsc/icon_refresh.png</iconset>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>15</width>
-               <height>15</height>
-              </size>
-             </property>
-             <property name="toolButtonStyle">
-              <enum>Qt::ToolButtonIconOnly</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="QFrame" name="shotSetup_groupBox">
              <property name="enabled">
               <bool>true</bool>
@@ -377,6 +350,33 @@ QToolButton:disabled {
               <item>
                <widget class="QComboBox" name="shot_comboBox"/>
               </item>
+              <item>
+               <widget class="QToolButton" name="refreshJobs_toolButton">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Refresh&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Reload the job database and update the job and shot list combo boxes.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="statusTip">
+                 <string>Reload the job database</string>
+                </property>
+                <property name="text">
+                 <string>Refresh</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="rsc.qrc">
+                  <normaloff>:/rsc/rsc/icon_refresh.png</normaloff>
+                  <disabledoff>:/rsc/rsc/icon_refresh_disabled.png</disabledoff>:/rsc/rsc/icon_refresh.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>15</width>
+                  <height>15</height>
+                 </size>
+                </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonIconOnly</enum>
+                </property>
+               </widget>
+              </item>
              </layout>
             </widget>
            </item>
@@ -409,46 +409,54 @@ QToolButton:disabled {
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="setShot_pushButton">
+               <widget class="QToolButton" name="setShot_toolButton">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
+                </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Set shot environment&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Set or unset the the shot environment. Right-click or hold for recent shots.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="statusTip">
+                 <string>Set or unset the the shot environment</string>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QToolButton {
+	padding: 1px 12px 2px 1px;
+}
+
+QToolButton:pressed, QToolButton:checked:pressed {
+	padding: 2px 11px 1px 2px;
+}
+
+/*QToolButton:disabled {
+	color: #ccc;
+}*/
+</string>
                 </property>
                 <property name="text">
                  <string>Set Shot</string>
                 </property>
-                <property name="autoDefault">
+                <property name="icon">
+                 <iconset resource="rsc.qrc">
+                  <normaloff>:/rsc/rsc/icon_unlocked.png</normaloff>
+                  <normalon>:/rsc/rsc/icon_locked.png</normalon>
+                  <disabledoff>:/rsc/rsc/icon_unlocked_disabled.png</disabledoff>
+                  <disabledon>:/rsc/rsc/icon_locked_disabled.png</disabledon>:/rsc/rsc/icon_unlocked.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>15</width>
+                  <height>15</height>
+                 </size>
+                </property>
+                <property name="checkable">
                  <bool>true</bool>
                 </property>
-                <property name="default">
-                 <bool>true</bool>
-                </property>
-                <property name="flat">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="setNewShot_pushButton">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string>Set New Shot</string>
-                </property>
-                <property name="autoDefault">
-                 <bool>true</bool>
-                </property>
-                <property name="default">
-                 <bool>false</bool>
-                </property>
-                <property name="flat">
-                 <bool>false</bool>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonTextBesideIcon</enum>
                 </property>
                </widget>
               </item>
@@ -519,9 +527,6 @@ QToolButton:disabled {
                 <layout class="QGridLayout" name="appPlaceholder_gridLayout">
                  <item row="0" column="0">
                   <widget class="QToolButton" name="appPlaceholder_toolButton">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
                      <horstretch>0</horstretch>
@@ -529,7 +534,7 @@ QToolButton:disabled {
                     </sizepolicy>
                    </property>
                    <property name="toolTip">
-                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;No Applications&lt;/span&gt;&lt;/p&gt;&lt;p&gt;No applications have been set for this job. Please set some from the Job Settings dialog.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;No applications&lt;/span&gt;&lt;/p&gt;&lt;p&gt;No applications have been set for this job. Please set some from the Job Settings dialog.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                    </property>
                    <property name="statusTip">
                     <string>No applications have been set for this job. Applications can be set up from the Job Settings dialog.</string>
@@ -599,10 +604,10 @@ QToolButton:disabled {
                     </sizepolicy>
                    </property>
                    <property name="toolTip">
-                    <string>Launch HieroPlayer or djv_view</string>
+                    <string>Launch reviewing tools</string>
                    </property>
                    <property name="statusTip">
-                    <string>Launch HieroPlayer or djv_view</string>
+                    <string>Launch reviewing tools</string>
                    </property>
                    <property name="text">
                     <string>Review</string>
@@ -632,10 +637,10 @@ QToolButton:disabled {
                     </sizepolicy>
                    </property>
                    <property name="toolTip">
-                    <string>Enables the command-line prompt</string>
+                    <string>Open the command-line prompt</string>
                    </property>
                    <property name="statusTip">
-                    <string>Enables the command-line prompt</string>
+                    <string>Open the command-line prompt</string>
                    </property>
                    <property name="text">
                     <string>Terminal</string>
@@ -1848,8 +1853,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>136</width>
-                    <height>70</height>
+                    <width>355</width>
+                    <height>296</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_8">
