@@ -1,4 +1,4 @@
-v0.9.10 (--)
+v0.9.10 (2017-10-31)
 -	[Icarus] Updated application launcher. App icons can be added/removed/sorted dynamically depending on preference.
 -	[Icarus] The ten most recent shots are now stored and can be set quickly via a context menu on the Set Shot button.
 -	[Icarus] Application project folders are now created 'on-demand' rather than all at once when the shot is set. This should help reduce redundant empty folders in projects.
