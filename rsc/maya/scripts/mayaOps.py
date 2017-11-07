@@ -905,45 +905,53 @@ def submitRenderLayer():
 def update():
 	""" Automatically set some defaults from the shot settings.
 	"""
-	unit          = os.environ['UNIT']
-	angle         = os.environ['ANGLE']
-	timeFormat    = os.environ['TIMEFORMAT']
-	startFrame    = os.environ['STARTFRAME']
-	endFrame      = os.environ['ENDFRAME']
-	startFrameInt = int(startFrame)
-	endFrameInt   = int(endFrame)
-	try:
-		inFrame     = os.environ['INFRAME']
-		outFrame    = os.environ['OUTFRAME']
-		inFrameInt  = int(inFrame)
-		outFrameInt = int(outFrame)
-	except:
-		inFrame     = startFrame
-		outFrame    = endFrame
-		inFrameInt  = startFrameInt
-		outFrameInt = endFrameInt
+	unit = os.getenv('UNIT', 'cm')
+	angle = os.getenv('ANGLE', 'deg')
+	timeFormat = os.getenv('TIMEFORMAT', 'pal')
+	startFrame = int(os.getenv('STARTFRAME', '1001'))
+	endFrame = int(os.getenv('ENDFRAME', '1100'))
+	inFrame = int(os.getenv('INFRAME', startFrame))
+	outFrame = int(os.getenv('OUTFRAME', endFrame))
+	psExecutable = os.getenv('PSVERSION', '')
+	djvExecutable = os.getenv('DJVVERSION', '')
 
 	# Setting defaults for Maya startup
-	mc.optionVar(sv = ('workingUnitAngular', '%s' % angle))
-	mc.optionVar(sv = ('workingUnitAngularDefault', '%s' % angle))
-	mc.optionVar(sv = ('workingUnitAngularHold', '%s' % angle))
-	mc.optionVar(sv = ('workingUnitLinear', '%s' % unit))
-	mc.optionVar(sv = ('workingUnitLinearDefault', '%s' % unit))
-	mc.optionVar(sv = ('workingUnitLinearHold', '%s' % unit))
-	mc.optionVar(sv = ('workingUnitTime', '%s' % timeFormat))
-	mc.optionVar(sv = ('workingUnitTimeDefault', '%s' % timeFormat))
-	mc.optionVar(sv = ('workingUnitTimeHold', '%s' % timeFormat))
-	mc.optionVar(fv = ('playbackMinRangeDefault', startFrameInt))
-	mc.optionVar(fv = ('playbackMinDefault', inFrameInt))
-	mc.optionVar(fv = ('playbackMaxRangeDefault', endFrameInt))
-	mc.optionVar(fv = ('playbackMaxDefault', outFrameInt))
-	mc.optionVar(sv = ('upAxisDirection', 'y'))
-	mc.optionVar(sv = ('workingUnitLinear', '%s' % unit))
-	mc.optionVar(sv = ('workingUnitAngular', '%s' % angle))
-	mc.optionVar(sv = ('workingUnitTime', '%s' % timeFormat))
+	mc.optionVar(sv=('workingUnitLinear', unit))
+	mc.optionVar(sv=('workingUnitLinearDefault', unit))
+	# mc.optionVar(sv=('workingUnitLinearHold', unit))
+	mc.optionVar(sv=('workingUnitAngular', angle))
+	mc.optionVar(sv=('workingUnitAngularDefault', angle))
+	# mc.optionVar(sv=('workingUnitAngularHold', angle))
+	mc.optionVar(sv=('workingUnitTime', timeFormat))
+	mc.optionVar(sv=('workingUnitTimeDefault', timeFormat))
+	# mc.optionVar(sv=('workingUnitTimeHold', timeFormat))
+
+	mc.optionVar(fv=('playbackMinRangeDefault', startFrame))
+	mc.optionVar(fv=('playbackMinDefault', inFrame))
+	mc.optionVar(fv=('playbackMaxRangeDefault', endFrame))
+	mc.optionVar(fv=('playbackMaxDefault', outFrame))
+
+	mc.optionVar(sv=('upAxisDirection', 'y'))
+
+	# mc.optionVar(sv=('workingUnitLinear', unit))
+	# mc.optionVar(sv=('workingUnitAngular', angle))
+	# mc.optionVar(sv=('workingUnitTime', timeFormat))
+
+	mc.optionVar(sv=('EditImageDir', psExecutable))
+	mc.optionVar(sv=('PhotoshopDir', psExecutable))
+
+	mc.optionVar(sv=('PlayblastCmdAvi', djvExecutable))
+	mc.optionVar(sv=('PlayblastCmdQuicktime', djvExecutable))
+	mc.optionVar(sv=('ViewImageDir', djvExecutable))
+	mc.optionVar(sv=('ViewSequenceDir', djvExecutable))
 
 	mc.currentUnit(l=unit, a=angle, t=timeFormat)
-	mc.playbackOptions(animationStartTime=startFrame, minTime=inFrame, maxTime=outFrame, animationEndTime=endFrame, playbackSpeed=0, maxPlaybackSpeed=1)
+	mc.playbackOptions(animationStartTime=startFrame, 
+	                   minTime=inFrame, 
+	                   maxTime=outFrame, 
+	                   animationEndTime=endFrame, 
+	                   playbackSpeed=0, 
+	                   maxPlaybackSpeed=1)
 
 
 ###################updates ic set version#################

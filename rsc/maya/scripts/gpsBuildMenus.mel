@@ -4,7 +4,8 @@
 // Mike Bonnington <mike.bonnington@gps-ldn.com>
 // (c) 2015-2017 Gramercy Park Studios
 //
-// Dynamically modifies Maya's menus without the need to edit Maya's UI MEL scripts directly.
+// Dynamically modifies Maya's menus without the need to edit Maya's UI MEL
+// scripts directly.
 
 
 // Get Maya version
@@ -38,12 +39,13 @@ global proc checkGPSFileMenu()
 string $fileMenu = "MayaWindow|mainFileMenu";
 buildFileMenu();
 string $fileWindow_menu = `menu -exists $fileMenu`;
-string $fileWindow_menuItems[] = `menu -ia -q $fileMenu`;
-
 menu -edit -postMenuCommand checkGPSFileMenu $fileMenu;
 
-// Delete file menu entries up to item number 12
-for ($i=0; $i<=12; $i++) deleteUI -mi $fileWindow_menuItems[$i];
+// Delete file open / save menu items
+deleteUI -menuItem newProject;
+deleteUI -menuItem openProject;
+deleteUI -menuItem saveItem;
+deleteUI -menuItem saveAsItem;
 
 // Delete project window and set project menu items
 deleteUI -menuItem projectWindowFileItem;
@@ -54,6 +56,22 @@ deleteUI -menuItem FileMenuRecentFileItems;
 deleteUI -menuItem FileMenuRecentBackupItems;
 deleteUI -menuItem FileMenuRecentProjectItems;
 
+// Delete other unreferenced menu items
+for ($item in `menu -ia -q $fileMenu`) {
+	string $cmd = `menuItem -q -command $item`;
+	string $label = `menuItem -q -label $item`;
+
+	// Menu items by command
+	if ($cmd == "IncrementAndSave")
+		deleteUI -menuItem $item;
+
+	// Dividers by label
+	if ($label == "Project")
+		if (`menuItem -q -divider $item`) deleteUI -menuItem $item;
+	if ($label == "Recent")
+		if (`menuItem -q -divider $item`) deleteUI -menuItem $item;
+}
+
 // Add GPS entries
 setParent -menu $fileMenu;
 
@@ -61,6 +79,7 @@ setParent -menu $fileMenu;
 	menuItem -insertAfter ""
 			 -label "[GPS] New"
 			 -annotation ("Create a new scene")
+			 -image "newScene.png"
 			 -command ("source menus2Py; menus2Py.newScene()")
 			 GPSNewScene;
 
@@ -68,25 +87,35 @@ setParent -menu $fileMenu;
 	menuItem -insertAfter GPSNewScene
 			 -label "[GPS] Open..."
 			 -annotation ("Open a saved scene")
+			 -image "openScene.png"
 			 -command ("source menus2Py; menus2Py.openScene()")
-			 GPSOpenScene; // tmpMenu;
+			 GPSOpenScene;
 
 	// GPS Open Recent Scene (edit the existing menu item)
 	menuItem -insertAfter GPSOpenScene
 			 -subMenu true
 			 -label "[GPS] Open Recent"
+			 -image "openScene.png"
 			 -postMenuCommand "source menus2Py; menus2Py.updateRecentFilesMenu(\"GPSFileMenuRecentFileItems\")"
 			 GPSFileMenuRecentFileItems;
 	setParent -menu ..;
 
-	menuItem -insertAfter GPSFileMenuRecentFileItems
-			 -divider true
-			 GPSFileDivider1;
+	if ($maya_ver >= 2016) {
+		menuItem -insertAfter GPSFileMenuRecentFileItems
+				 -divider true
+				 -longDivider false
+				 GPSFileDivider1;
+	} else {
+		menuItem -insertAfter GPSFileMenuRecentFileItems
+				 -divider true
+				 GPSFileDivider1;
+	}
 
 	// GPS Save Scene
 	menuItem -insertAfter GPSFileDivider1
 			 -label "[GPS] Save"
 			 -annotation ("Save the current scene")
+			 -image "saveScene.png"
 			 -command ("source menus2Py; menus2Py.saveScene()")
 			 GPSSaveScene;
 
@@ -94,6 +123,7 @@ setParent -menu $fileMenu;
 	menuItem -insertAfter GPSSaveScene
 			 -label "[GPS] Save As..."
 			 -annotation ("Save scene with a new name")
+			 -image "saveSceneAs.png"
 			 -command ("source menus2Py; menus2Py.saveSceneAs()")
 			 GPSSaveSceneAs;
 
@@ -101,19 +131,9 @@ setParent -menu $fileMenu;
 	menuItem -insertAfter GPSSaveSceneAs
 			 -label "[GPS] Incremental Save"
 			 -annotation "Save the current scene as new version"
+			 -image "incrementalSave.png"
 			 -command ("source menus2Py; menus2Py.incrementalSave()")
 			 GPSIncrementalSave;
-
-	menuItem -insertAfter GPSIncrementalSave
-			 -divider true
-			 GPSFileDivider2;
-
-	// GPS Launch Icarus UI
-	menuItem -insertAfter GPSFileDivider2
-			 -label "Icarus UI..."
-			 -annotation ("Launch Icarus UI")
-			 -command ("source menus2Py;menus2Py.launchIcarus()")
-			 GPSLaunchIcarusUI;
 
 checkGPSFileMenu();
 
@@ -134,6 +154,7 @@ setParent -menu $createMenu;
 			 -subMenu true
 			 -tearOff true
 			 -label "[GPS] Camera Presets"
+			 -image "gpsCamera.png"
 			 -postMenuCommand "source menus2Py; menus2Py.updatePresetCameraMenu(\"GPSCreatePresetCameraItems\")"
 			 GPSCreatePresetCameraItems;
 	setParent -menu ..;
@@ -148,20 +169,33 @@ buildViewMenu($windowMenu);
 //string $mainWindow_menu = `menu -exists $windowMenu`;
 //$mainWindow_menuItems[] = `menu -ia -q $windowMenu`;
 
-//deleting menu default entries
-//playblast
-//deleteUI -mi $mainWindow_menuItems[18];
+// Delete existing menu items
 //deleteUI -menuItem playblastItem;
 
+// Add GPS entries
 setParent -menu $windowMenu;
+	// Replace the existing Playblast menu item with GPS Preview
 	menuItem -edit
 			 -label ("[GPS] Preview")
 			 -command ("source menus2Py; menus2Py.gpsPreview()")
 			 -annotation ("Launches GPS Preview")
+			 -image "gpsPlayblast.png"
 			 playblastItem;
 	menuItem -edit
 			 -command ("source menus2Py; menus2Py.gpsPreview()")
 			 playblastDialogItem;
+
+	menuItem -insertAfter playblastItem
+			 -divider true
+			 GPSWindowDivider1;
+
+	// GPS Launch Icarus UI
+	menuItem -insertAfter GPSWindowDivider1
+			 -label "Icarus UI..."
+			 -annotation ("Launch Icarus UI")
+			 -image "icarus.png"
+			 -command ("source menus2Py; menus2Py.launchIcarus()")
+			 GPSLaunchIcarusUI;
 
 
 //////////////////////
@@ -181,17 +215,16 @@ updateTimeSliderMenu $timelineMenu;
 //menu -exists $timelineMenu;
 //string $timeline_menuItems[] = `menu -ia -q $timelineMenu`;
 
-//deleting menu default entries
-//playblast
-//deleteUI -mi $timeline_menuItems[15];
+// Delete existing menu items
 deleteUI -menuItem timeSliderPlayblastItem;
 
-//Adding GPS entries
+// Add GPS entries
 setParent -menu $timelineMenu;
 	menuItem -divider true;
 	menuItem -label ("[GPS] Preview...")
 			 -command ("source menus2Py; menus2Py.gpsPreview()")
 			 -annotation ("Launches GPS Preview")
+			 -image "gpsPlayblast.png"
 			 GPSPlayblastItem;
 
 

@@ -246,7 +246,7 @@ def setEnv(envVars):
 
 
 	# Photoshop
-	# os.environ['PSVERSION'] = getAppExecPath('Photoshop')
+	os.environ['PSVERSION'] = getAppExecPath('Photoshop')
 	# os.environ['PSDIR']     = osOps.absolutePath('$SHOTPATH/2D/photoshop')
 
 
@@ -304,7 +304,7 @@ def setEnv(envVars):
 
 
 	# djv_view
-	# os.environ['DJVVERSION'] = getAppExecPath('djv_view')
+	os.environ['DJVVERSION'] = getAppExecPath('djv_view')
 	# djv_ver = jobData.getAppVersion('djv_view')
 	djv_embedded_ver = '1.1.0'
 	if os.environ['IC_RUNNING_OS'] == 'Windows':

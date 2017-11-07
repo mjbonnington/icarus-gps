@@ -15,6 +15,7 @@ from Qt import QtCompat, QtCore, QtGui, QtWidgets
 
 # Import custom modules
 import osOps
+import verbose
 
 
 # ----------------------------------------------------------------------------
@@ -62,8 +63,10 @@ class dialog(QtWidgets.QDialog):
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.cancel)
 
 		# Set input validators
-		alphanumeric_validator = QtGui.QRegExpValidator( QtCore.QRegExp(r'[\w\.-]+'), self.ui.jobName_lineEdit)
+		alphanumeric_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w\.-]+'), self.ui.jobName_lineEdit)
 		self.ui.jobName_lineEdit.setValidator(alphanumeric_validator)
+		# path_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w\.-/\\\:\$\{\}]+'), self.ui.jobName_lineEdit)
+		# self.ui.jobPath_lineEdit.setValidator(path_validator)
 
 
 	def display(self, jobName, jobPath, jobActive):
@@ -84,15 +87,21 @@ class dialog(QtWidgets.QDialog):
 
 
 	def updateUI(self):
-		""" Disables the OK button if either of the text fields are empty.
+		""" Disables the OK button if either of the text fields are empty or
+			the job path is invalid.
 		"""
-		if self.ui.jobName_lineEdit.text() == "" or self.ui.jobPath_lineEdit.text() == "":
-			self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(False)
-		else:
-			self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(True)
+		enable = True
+		jobPath = osOps.translatePath(self.ui.jobPath_lineEdit.text())
 
-		# if not os.path.isdir(osOps.translatePath(self.ui.jobPath_lineEdit.text())):
-		# 	print("Path is invalid.")
+		if self.ui.jobName_lineEdit.text() == "":
+			enable = False
+		if self.ui.jobPath_lineEdit.text() == "":
+			enable = False
+		if not osOps.checkIllegalChars(jobPath):
+			verbose.illegalCharacters(jobPath)
+			enable = False
+
+		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(enable)
 
 
 	def browseDir(self):
@@ -115,19 +124,30 @@ class dialog(QtWidgets.QDialog):
 		if dialogPath:
 		# if dialog.exec_():
 		# 	dialogPath = dialog.getExistingDirectory(self, self.tr('Directory'), dialogHome, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
-			jobPath = osOps.relativePath(dialogPath, 'JOBSROOT')
-			self.ui.jobPath_lineEdit.setText(jobPath)
-			# Only autofill job name field it it's empty
-			if not self.ui.jobName_lineEdit.text():
-				try:
-					# if os.environ['JOBSROOT'] in osOps.absolutePath(jobPath):
-					#       jobName = jobPath.split('/')[1]
-					# else:
-					#       jobName = jobPath.split('/')[-1]
-					jobName = jobPath.split('/')[1]
-					self.ui.jobName_lineEdit.setText(jobName)
-				except IndexError:
-					pass
+			if osOps.checkIllegalChars(dialogPath): #, r'[^\w\.-]'):
+				jobPath = osOps.relativePath(dialogPath, 'JOBSROOT')
+				self.ui.jobPath_lineEdit.setText(jobPath)
+				# Only autofill job name field it it's empty
+				if not self.ui.jobName_lineEdit.text():
+					try:
+						# if os.environ['JOBSROOT'] in osOps.absolutePath(jobPath):
+						#       jobName = jobPath.split('/')[1]
+						# else:
+						#       jobName = jobPath.split('/')[-1]
+						jobName = jobPath.split('/')[1]
+						self.ui.jobName_lineEdit.setText(jobName)
+					except IndexError:
+						pass
+
+			else:
+				verbose.illegalCharacters(dialogPath)
+
+				# Warning dialog
+				import pDialog
+				dialogTitle = "Path contains illegal characters"
+				dialogMsg = "The path \"%s\" contains illegal characters. File and folder names must be formed of alphanumeric characters, underscores, hyphens and dots only." %dialogPath
+				dialog = pDialog.dialog()
+				dialog.display(dialogMsg, dialogTitle, conf=True)
 
 		# return dialogPath
 		self.ui.raise_()  # Keep the dialog in front
