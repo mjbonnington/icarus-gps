@@ -26,7 +26,8 @@ nuke.pluginAddPath('./icons')
 nuke.pluginAddPath('./scripts')
 nuke.pluginAddPath('./plugins')
 # Third-party locations
-nuke.pluginAddPath('./gizmos/pxf')
+nuke.pluginAddPath('./gizmos/cryptomatte')
+nuke.pluginAddPath('./gizmos/pixelfudger')
 
 # Nuke seems to ditch the main root environment where it has been called from
 # so the path needs to be appended again.
@@ -43,7 +44,8 @@ import gpsNodes
 os.environ['IC_ENV'] = 'NUKE'
 
 # Third-party initializations go here
-
+import cryptomatte_utilities
+cryptomatte_utilities.setup_cryptomatte()
 
 # Shot directories
 try:

@@ -2,6 +2,8 @@ v0.9.11 (--)
 -	[Icarus] Job management now performs check for non-alphanumeric characters in paths.
 -	[Maya] Fixed a couple of issues with Icarus' customised menu items.
 -	[Maya] Preferences for image viewer and Photoshop executables are now set automatically based on job settings.
+-	[Nuke] Added Cryptomatte gizmos.
+-	[Nuke] Updated Pixelfudger tools/gizmos.
 
 v0.9.10 (2017-10-31)
 -	[Icarus] Updated application launcher. App icons can be added/removed/sorted dynamically depending on preference.

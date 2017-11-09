@@ -1,16 +1,21 @@
 # [GPS] Render View Select AOV
-# v0.6
+# v0.7
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015 Gramercy Park Studios
+# (c) 2015-2017 Gramercy Park Studios
 #
-# This script adds a combo box to the Render View toolbar which enables you to view render passes / AOVs directly in the Render View.
-# To initialise, run the script with 'import gpsRenderViewSelectAOV; gpsRenderViewSelectAOV.selectAOV()'
+# This script adds a combo box to the Render View toolbar which enables you to
+# view render passes / AOVs directly in the Render View.
+# To initialise, run the script with
+# 'import gpsRenderViewSelectAOV; gpsRenderViewSelectAOV.selectAOV()'
 # The Render View must be set to 32-bit mode.
 # Compatible with Maya 2016's new Color Management system.
-# Currently supports the following renderers: Arnold, Redshift, MentalRay (currently pre-Maya 2015 only).
-# Removed VRay support as this functionality already exists in the VRay Framebuffer.
+# Currently supports the following renderers: Arnold, Redshift, MentalRay
+# (currently pre-Maya 2015 only).
+# (V-Ray support was removed as this functionality already exists in the V-Ray
+# Framebuffer).
 # Multi-channel EXRs are not supported.
+
 
 import maya.cmds as mc
 import maya.mel as mel
@@ -27,7 +32,7 @@ class selectAOV():
 		# Load OpenEXR plugin
 		mc.loadPlugin( "OpenEXRLoader" )
 
-		# Check for Maya 2016 Color Management
+		# Check for Color Management feature (introduced in Maya 2016)
 		try:
 			self.colorManagementEnabled = mc.colorManagementPrefs( query=True, cme=True )
 		except:
@@ -60,7 +65,9 @@ class selectAOV():
 			mc.setAttr( "defaultRenderGlobals.imageFilePrefix", imageFilePrefix, type="string" )
 
 			# Set correct output gamma
-			mc.setAttr( "defaultArnoldRenderOptions.display_gamma", 1 )
+			# (disable for Maya 2016 and later with Color Management enabled)
+			if not self.colorManagementEnabled:
+				mc.setAttr( "defaultArnoldRenderOptions.display_gamma", 1 )
 
 			# Add pre- and post-render commands
 			mc.setAttr( "defaultRenderGlobals.preMel", 'python("gpsRenderViewSelectAOV.selectAOV().pre_render()")', type="string" )
@@ -83,7 +90,8 @@ class selectAOV():
 			# Store the updated prefix string
 			mc.setAttr( "defaultRenderGlobals.imageFilePrefix", imageFilePrefix, type="string" )
 
-			# Set correct output gamma - disable for Maya 2016 and later with Color Management enabled
+			# Set correct output gamma
+			# (disable for Maya 2016 and later with Color Management enabled)
 			if not self.colorManagementEnabled:
 				mc.setAttr( "redshiftOptions.displayGammaValue", 2.2 )
 
@@ -120,7 +128,8 @@ class selectAOV():
 		else:
 			mc.error( "The renderer %s is not supported" %self.renderer )
 
-		# Set up Maya Render View for 32-bit float / linear - disable for Maya 2016 and later with Color Management enabled
+		# Set up Maya Render View for 32-bit float / linear
+		# (disable for Maya 2016 and later with Color Management enabled)
 		if not self.colorManagementEnabled:
 			mc.setAttr( "defaultViewColorManager.imageColorProfile", 2 )
 			mc.setAttr( "defaultViewColorManager.displayColorProfile", 3 )
@@ -172,7 +181,8 @@ class selectAOV():
 
 
 	def getAOVNames(self):
-		""" Find all the active AOVs in the scene and return their names in a list.
+		""" Find all the active AOVs in the scene and return their names in a
+			list.
 		"""
 		# Default beauty pass will always be added to the start of the list
 		aov_name_ls = [self.default_beauty_aov_name]
@@ -203,7 +213,8 @@ class selectAOV():
 			aov_node_ls = mc.ls( type="renderPass" )
 
 			for aov_node in aov_node_ls:
-				# Only add to list if render pass is connected to current render layer and is renderable
+				# Only add to list if render pass is connected to current
+				# render layer and is renderable
 				associated_layers = mc.listConnections( "%s.owner" %aov_node )
 				if associated_layers is not None:
 					if current_layer in associated_layers:
