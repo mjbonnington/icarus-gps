@@ -69,6 +69,7 @@ def setEnv(envVars):
 #	defaultData.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'defaultData.xml'))
 	ap.loadXML( os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml') )
 
+	# ------------------------------------------------------------------------
 	# If XML files don't exist, create defaults, and attempt to convert data
 	# from Python data files
 	if not jobDataLoaded:
@@ -104,6 +105,7 @@ def setEnv(envVars):
 		jobData.setValue('meta', 'assetDir', assetDir)
 		jobData.saveXML()
 		os.environ['PUBLISHRELATIVEDIR'] = assetDir
+	# ------------------------------------------------------------------------
 
 
 	# Set OS identifier strings to get correct app executable paths
@@ -157,7 +159,7 @@ def setEnv(envVars):
 	# os.environ['MAYASOURCEIMAGESDIR'] = osOps.absolutePath('$MAYADIR/sourceimages/$IC_USERNAME')
 	# os.environ['MAYARENDERSDIR']      = osOps.absolutePath('$MAYADIR/renders/$IC_USERNAME')
 	# os.environ['MAYAPLAYBLASTSDIR']   = osOps.absolutePath('$MAYADIR/playblasts/$IC_USERNAME')
-	os.environ['MAYASHAREDRESOURCES'] = osOps.absolutePath('$FILESYSTEMROOT/_Library/3D/Maya')  # Store this in ic global prefs?
+	os.environ['MAYASHAREDRESOURCES'] = osOps.absolutePath('$FILESYSTEMROOT/_Library/3D/Maya')  # Store this in app settings / ic global prefs?
 
 	try:
 		maya_ver = jobData.getAppVersion('maya')
@@ -193,6 +195,7 @@ def setEnv(envVars):
 		#os.environ['VRAY_FOR_MAYA2014_PLUGINS_x64'] += os.pathsep + osOps.absolutePath('$IC_BASEDIR/rsc/maya/plugins')
 
 		if os.environ['IC_RUNNING_OS'] == 'Windows':  # Set up centralised deployment of Redshift plugin for Maya
+			# if getAppExecPath('Redshift') is not "":
 			if getAppExecPath('rs') is not "":
 				os.environ['REDSHIFT_COREDATAPATH']         = getAppExecPath('Redshift')
 				os.environ['REDSHIFT_COMMON_ROOT']          = osOps.absolutePath('$REDSHIFT_COREDATAPATH/Plugins/Maya/Common')
@@ -224,7 +227,7 @@ def setEnv(envVars):
 
 	# Nuke
 	os.environ['NUKEVERSION']     = getAppExecPath('Nuke')
-	os.environ['NUKEDIR']         = osOps.absolutePath('$SHOTPATH/2D/nuke')  # currently needed by render submitter
+	os.environ['NUKEDIR']         = osOps.absolutePath('$SHOTPATH/2D/nuke')  # Currently needed by render submitter
 	# os.environ['NUKEELEMENTSDIR'] = osOps.absolutePath('$NUKEDIR/elements/$IC_USERNAME')
 	# os.environ['NUKESCRIPTSDIR']  = osOps.absolutePath('$NUKEDIR/scripts/$IC_USERNAME')
 	# os.environ['NUKERENDERSDIR']  = osOps.absolutePath('$NUKEDIR/renders/$IC_USERNAME')

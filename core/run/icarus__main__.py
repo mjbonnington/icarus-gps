@@ -1059,7 +1059,7 @@ Developers: %s
 			xmlData = os.path.join(os.environ['JOBDATA'], 'jobData.xml')
 			inherit = None  # "Defaults"
 		elif settingsType == "Shot":
-			categoryLs = ['time', 'resolution', 'units', 'camera']
+			categoryLs = ['shot', 'time', 'resolution', 'units', 'camera']
 			xmlData = os.path.join(os.environ['SHOTDATA'], 'shotData.xml')
 			inherit = "Job"
 		elif settingsType == "User":

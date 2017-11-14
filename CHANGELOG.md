@@ -1,5 +1,6 @@
 v0.9.11 (--)
 -	[Icarus] Job management now performs check for non-alphanumeric characters in paths.
+-	[Icarus] Added Title and Notes fields to shot settings.
 -	[Maya] Fixed a couple of issues with Icarus' customised menu items.
 -	[Maya] Preferences for image viewer and Photoshop executables are now set automatically based on job settings.
 -	[Nuke] Added Cryptomatte gizmos.
