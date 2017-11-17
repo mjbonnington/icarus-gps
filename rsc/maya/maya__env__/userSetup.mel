@@ -32,6 +32,9 @@ if ($root != "None")
 	}
 }
 
+// Run UI related stuff
+//if (size(lsUI -windows))
+//{
 // Build GPS menus
 source gpsBuildMenus;
 
@@ -56,4 +59,5 @@ hotkey -ctl -k "S" -n "GPSSaveAs";
 nameCommand "GPSSaveIncremental" -ann "[GPS] Save Scene Incrementally" -c "source menus2Py; menus2Py.incrementalSave()";
 hotkey -cmd -alt -k "s" -n "GPSSaveIncremental";
 hotkey -ctl -alt -k "s" -n "GPSSaveIncremental";
+//}
 

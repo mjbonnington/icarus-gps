@@ -19,10 +19,14 @@ class gpsColourPicker():
 		self.winName = "gpsColourPicker"
 
 
-	def UI(self, index=1):
+	def UI(self, index=None):
 		""" Create UI.
 		"""
-		self.index = index
+		if index is None:
+			self.index = mc.displayColor('headsUpDisplayLabels', q=1) + 1
+			# mc.displayColor('headsUpDisplayValues', query=True)
+		else:
+			self.index = index
 
 		# Check if UI window already exists
 		if mc.window(self.winName, exists=True):
@@ -59,8 +63,16 @@ class gpsColourPicker():
 		mc.columnLayout(name)
 
 		mc.separator(height=4, style="none")
-		#mc.colorSliderGrp("colour", label="Colour: ", rgb=(0, 0, 0))
-		mc.colorIndexSliderGrp("colour", label="Colour: ", min=1, max=31, value=self.index)
+		columns = 16; rows = 2
+		cellWidth = 25; cellHeight = 25
+		mc.palettePort(dimensions=(columns, rows), 
+		               width=cellWidth*columns, 
+		               height=cellHeight*rows)
+		# mc.colorSliderGrp("colour", label="Colour: ", rgb=(0, 0, 0))
+		# mc.colorIndexSliderGrp("colour", label="Colour: ", 
+		#                        min=2, max=32, value=self.index, 
+		#                        forceDragRefresh=True, 
+		#                        changeCommand=lambda *args: self.applyColour())
 		mc.setParent(name)
 
 		mc.separator(height=8, style="none")
@@ -70,9 +82,17 @@ class gpsColourPicker():
 	def applyColour(self):
 		""" Return selected colour.
 		"""
-		self.index = mc.colorIndexSliderGrp("colour", q=1, value=True)
-		mc.deleteUI(self.winName)
+		self.index = mc.colorIndexSliderGrp("colour", q=1, value=True) - 1
 		print(self.index)
+		mc.displayColor('headsUpDisplayLabels', self.index, dormant=True)
+		mc.displayColor('headsUpDisplayValues', self.index, dormant=True)
+
+
+	def applyColourAndClose(self):
+		""" Return selected colour.
+		"""
+		self.applyColour()
+		mc.deleteUI(self.winName)
 
 
 	# def setColour(self, obj):
