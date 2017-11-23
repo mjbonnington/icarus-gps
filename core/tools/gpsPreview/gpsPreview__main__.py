@@ -99,7 +99,7 @@ class previewUI(QtWidgets.QMainWindow):
 	def setupUI(self):
 		""" Initialise UI and set options to stored values if possible.
 		"""
-		self.ui.jobShot_label.setText('%s - %s' % (os.environ['JOB'], os.environ['SHOT']))
+		# self.ui.jobShot_label.setText('%s - %s' % (os.environ['JOB'], os.environ['SHOT']))
 
 		self.resetFilename()
 		self.storeFilename()

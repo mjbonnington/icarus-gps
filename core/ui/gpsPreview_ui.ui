@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>480</width>
-    <height>320</height>
+    <height>240</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,33 +18,6 @@
     <property name="margin">
      <number>8</number>
     </property>
-    <item>
-     <widget class="QLabel" name="jobShot_label">
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="Line" name="upper_h_line">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <spacer name="verticalSpacer_2">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>32</width>
-        <height>5</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
     <item>
      <layout class="QHBoxLayout" name="file_horizontalLayout">
       <item>
@@ -90,6 +63,9 @@
          <bool>false</bool>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
+         <property name="margin">
+          <number>8</number>
+         </property>
          <item>
           <widget class="QComboBox" name="resolution_comboBox">
            <property name="currentIndex">
@@ -210,6 +186,9 @@
          <string>Frame Range</string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="margin">
+          <number>8</number>
+         </property>
          <item>
           <widget class="QComboBox" name="range_comboBox">
            <property name="currentIndex">
@@ -291,6 +270,9 @@
        <string>Options</string>
       </property>
       <layout class="QGridLayout" name="gridLayout">
+       <property name="margin">
+        <number>8</number>
+       </property>
        <item row="0" column="0">
         <widget class="QCheckBox" name="offscreen_checkBox">
          <property name="toolTip">
@@ -391,24 +373,17 @@
      </widget>
     </item>
     <item>
-     <spacer name="verticalSpacer_3">
+     <spacer name="verticalSpacer">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
         <width>32</width>
-        <height>25</height>
+        <height>12</height>
        </size>
       </property>
      </spacer>
-    </item>
-    <item>
-     <widget class="Line" name="lower_h_line">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
     </item>
     <item>
      <widget class="QPushButton" name="preview_pushButton">

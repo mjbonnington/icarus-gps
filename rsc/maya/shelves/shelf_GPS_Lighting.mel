@@ -32,7 +32,7 @@ global proc shelf_GPS_Lighting () {
 		-mi "Update Render Output Path" ( "source gpsRenderSetup.mel; gpsRenderSetup.setOutputPath()" )
 		-mi "Update Render Frame Range" ( "source gpsRenderSetup.mel; gpsRenderSetup.setFrameRange()" )
 		-mi "Update Render Resolution"  ( "source gpsRenderSetup.mel; gpsRenderSetup.setResolution()" )
-		-mi "Add AOV Selector to Maya Render View" ( "import gpsRenderViewSelectAOV; reload(gpsRenderViewSelectAOV); gpsRenderViewSelectAOV.selectAOV()" )
+		-mi "Add AOV Selector to Maya Render View" ( "import gpsRenderViewSelectAOV; reload(gpsRenderViewSelectAOV); gpsRenderViewSelectAOV.SelectAOV()" )
 		-mip 4
 	;
 
@@ -338,7 +338,7 @@ global proc shelf_GPS_Lighting () {
 		-sourceType "python"
 		-commandRepeatable 1
 		-flat 1
-		-mi "Add V-Ray Physical Camera Settings" ( "import gpsCreateCamera; gpsCreateCamera.gpsCreateCamera().addPhysical()" )
+		-mi "Add V-Ray Physical Camera Attributes" ( "import gpsCreateCamera; gpsCreateCamera.gpsCreateCamera().addPhysical()" )
 		-mip 0
 	;
 	shelfButton
@@ -435,7 +435,7 @@ global proc shelf_GPS_Lighting () {
 		-manage 1
 		-visible 1
 		-preventOverride 0
-		-annotation "Submit to Render Queue" 
+		-annotation "Submit Render" 
 		-enableBackground 0
 		-align "center" 
 		-label "gpsSubmitRender" 
@@ -443,8 +443,8 @@ global proc shelf_GPS_Lighting () {
 		-font "plainLabelFont" 
 		-overlayLabelColor 0.8 0.8 0.8 
 		-overlayLabelBackColor 0 0 0 0.2 
-		-image "gpsSubmitRenderMenu.png" 
-		-image1 "gpsSubmitRenderMenu.png" 
+		-image "gpsSubmitRender.png" 
+		-image1 "gpsSubmitRender.png" 
 		-style "iconOnly" 
 		-marginWidth 1
 		-marginHeight 1

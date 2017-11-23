@@ -48,7 +48,7 @@ class gpsColourPicker():
 
 		mc.separator(height=8, style="none")
 		mc.rowLayout(numberOfColumns=2)
-		mc.button(width=198, height=28, label="Apply", command=lambda *args: self.applyColour())
+		mc.button(width=198, height=28, label="Apply", command=lambda *args: self.applyColourAndClose())
 		mc.button(width=198, height=28, label="Close", command=lambda *args: mc.deleteUI(self.winName))
 		#setUITemplate -popTemplate;
 
@@ -65,14 +65,14 @@ class gpsColourPicker():
 		mc.separator(height=4, style="none")
 		columns = 16; rows = 2
 		cellWidth = 25; cellHeight = 25
-		mc.palettePort(dimensions=(columns, rows), 
-		               width=cellWidth*columns, 
-		               height=cellHeight*rows)
+		# mc.palettePort(dimensions=(columns, rows), 
+		#                width=cellWidth*columns, 
+		#                height=cellHeight*rows)
 		# mc.colorSliderGrp("colour", label="Colour: ", rgb=(0, 0, 0))
-		# mc.colorIndexSliderGrp("colour", label="Colour: ", 
-		#                        min=2, max=32, value=self.index, 
-		#                        forceDragRefresh=True, 
-		#                        changeCommand=lambda *args: self.applyColour())
+		mc.colorIndexSliderGrp("colour", label="Colour: ", 
+		                       min=2, max=32, value=self.index, 
+		                       forceDragRefresh=True, 
+		                       changeCommand=lambda *args: self.applyColour())
 		mc.setParent(name)
 
 		mc.separator(height=8, style="none")

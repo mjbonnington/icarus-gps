@@ -1,5 +1,45 @@
 global proc shelf_GPS_Animation () {
 
+    // Get Maya version
+    float $maya_ver = `getApplicationVersionAsFloat`;
+
+   shelfButton
+        -enableCommandRepeat 1
+        -enable 1
+        -width 35
+        -height 35
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "GPS Preview - create a playblast" 
+        -enableBackground 0
+        -align "center" 
+        -label "gpsPreview" 
+        -labelOffset 0
+        -rotation 0
+        -flipX 0
+        -flipY 0
+        -useAlpha 1
+        -font "plainLabelFont" 
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.5 
+        -image "gpsPlayblast.png" 
+        -image1 "gpsPlayblast.png" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "source menus2Py; menus2Py.gpsPreview()"
+        -sourceType "mel" 
+        -commandRepeatable 1
+        -flat 1
+        -mi "Change HUD Colour" ( "import gpsColourPicker; reload(gpsColourPicker); gpsColourPicker.gpsColourPicker().UI()" )
+        -mip 0
+    ;
+
+    if ($maya_ver >= 2016) {
+        addShelfSeparator();
+    }
+
    shelfButton
         -enableCommandRepeat 1
         -enable 1

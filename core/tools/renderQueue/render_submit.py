@@ -62,10 +62,14 @@ class renderSubmitDialog(QtWidgets.QDialog):
 			with open(qss, "r") as fh:
 				self.ui.setStyleSheet(fh.read())
 
+		# Set the main widget
+		# self.setCentralWidget(self.ui)
+
 		# Set window flags
-		self.setWindowFlags(QtCore.Qt.Dialog)
-		self.ui.setWindowFlags(QtCore.Qt.CustomizeWindowHint | 
-			                   QtCore.Qt.WindowTitleHint)
+		self.setWindowFlags(QtCore.Qt.Tool)
+		# self.setWindowFlags(QtCore.Qt.Dialog)
+		# self.ui.setWindowFlags(QtCore.Qt.CustomizeWindowHint | 
+		# 	                   QtCore.Qt.WindowTitleHint)
 
 		# Connect signals & slots
 		self.ui.type_comboBox.currentIndexChanged.connect(self.setJobTypeFromComboBox)
@@ -547,10 +551,12 @@ def run_nuke():
 # Detect environment and run application
 if os.environ['IC_ENV'] == 'MAYA':
 	import maya.cmds as mc
+	verbose.print_("GPS Render Submit for Maya", 4)
 	run_maya()
 elif os.environ['IC_ENV'] == 'NUKE':
 	import nuke
 	import nukescripts
+	verbose.print_("GPS Render Submit for Nuke", 4)
 	run_nuke()
 # elif __name__ == '__main__':
 # 	run_standalone()
