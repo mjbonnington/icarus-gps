@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>512</width>
+    <height>384</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Submit Render</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <property name="margin">
+    <number>8</number>
+   </property>
+   <item>
+    <widget class="QFrame" name="main_frame">
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="margin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QGroupBox" name="render_groupBox">
+        <property name="title">
+         <string>Render options</string>
+        </property>
+        <layout class="QFormLayout" name="formLayout_4">
+         <item row="0" column="0">
+          <widget class="QLabel" name="type_label">
+           <property name="text">
+            <string>Type:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="scene_label">
+           <property name="text">
+            <string>Scene:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <layout class="QHBoxLayout" name="type_horizontalLayout">
+           <item>
+            <widget class="QComboBox" name="type_comboBox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <item>
+              <property name="text">
+               <string>Maya</string>
+              </property>
+              <property name="icon">
+               <iconset resource="rsc.qrc">
+                <normaloff>:/rsc/rsc/app_icon_maya.png</normaloff>
+                <disabledoff>:/rsc/rsc/app_icon_maya_disabled.png</disabledoff>
+                <selectedoff>:/rsc/rsc/app_icon_maya.png</selectedoff>:/rsc/rsc/app_icon_maya.png</iconset>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Nuke</string>
+              </property>
+              <property name="icon">
+               <iconset resource="rsc.qrc">
+                <normaloff>:/rsc/rsc/app_icon_nuke.png</normaloff>
+                <disabledoff>:/rsc/rsc/app_icon_nuke_disabled.png</disabledoff>
+                <selectedoff>:/rsc/rsc/app_icon_nuke.png</selectedoff>:/rsc/rsc/app_icon_nuke.png</iconset>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <spacer name="type_horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="1">
+          <layout class="QHBoxLayout" name="scene_horizontalLayout">
+           <item>
+            <widget class="QComboBox" name="scene_comboBox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="maxCount">
+              <number>10</number>
+             </property>
+             <property name="insertPolicy">
+              <enum>QComboBox::InsertAtTop</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="sceneBrowse_toolButton">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="overrideFrameRange_groupBox">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allows the frame range(s) to be explicitly stated.&lt;/p&gt;&lt;p&gt;If unchecked, the start and end frames will be read from the scene.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="title">
+         <string>Override frame range</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <layout class="QFormLayout" name="formLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="frameRange_label">
+           <property name="text">
+            <string>Frames:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <layout class="QHBoxLayout" name="frameRange_horizontalLayout">
+           <item>
+            <widget class="QLineEdit" name="frameRange_lineEdit">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;List of frames to be rendered.&lt;/p&gt;&lt;p&gt;Individual frames should be separated with commas, and sequences can be specified using a hyphen, e.g. 1, 5-10.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="taskSize_label">
+           <property name="text">
+            <string>Task size:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <layout class="QHBoxLayout" name="taskSize_horizontalLayout">
+           <item>
+            <widget class="QSpinBox" name="taskSize_spinBox">
+             <property name="toolTip">
+              <string>How many frames to submit for each task.</string>
+             </property>
+             <property name="buttonSymbols">
+              <enum>QAbstractSpinBox::NoButtons</enum>
+             </property>
+             <property name="suffix">
+              <string> frame(s)</string>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>9999</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSlider" name="taskSize_slider">
+             <property name="toolTip">
+              <string>How many frames to submit for each task.</string>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>1</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="tickPosition">
+              <enum>QSlider::NoTicks</enum>
+             </property>
+             <property name="tickInterval">
+              <number>10</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="flags_groupBox">
+        <property name="toolTip">
+         <string>Allows additional command-line flags to be specified.</string>
+        </property>
+        <property name="title">
+         <string>Additional command-line flags</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <layout class="QFormLayout" name="formLayout_2">
+         <property name="fieldGrowthPolicy">
+          <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+         </property>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="flags_lineEdit">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="submit_groupBox">
+        <property name="title">
+         <string>Submission options</string>
+        </property>
+        <layout class="QFormLayout" name="formLayout_3">
+         <item row="0" column="0">
+          <widget class="QLabel" name="priority_label">
+           <property name="text">
+            <string>Priority:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <layout class="QHBoxLayout" name="priority_horizontalLayout">
+           <item>
+            <widget class="QSpinBox" name="priority_spinBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the priority for this render job.&lt;/p&gt;&lt;p&gt;Higher priority jobs will be rendered first. Setting the priority to zero will submit the job as paused.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="buttonSymbols">
+              <enum>QAbstractSpinBox::NoButtons</enum>
+             </property>
+             <property name="minimum">
+              <number>0</number>
+             </property>
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>50</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSlider" name="priority_slider">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the priority for this render job.&lt;/p&gt;&lt;p&gt;Higher priority jobs will be rendered first. Setting the priority to zero will submit the job as paused.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="minimum">
+              <number>0</number>
+             </property>
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>50</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="tickPosition">
+              <enum>QSlider::NoTicks</enum>
+             </property>
+             <property name="tickInterval">
+              <number>10</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="comment_label">
+           <property name="text">
+            <string>Comment:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <layout class="QHBoxLayout" name="comment_horizontalLayout">
+           <item>
+            <widget class="QLineEdit" name="comment_lineEdit">
+             <property name="toolTip">
+              <string>Add notes about this render job (optional).</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="buttonBox_horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="submit_pushButton">
+       <property name="text">
+        <string>Submit</string>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="close_pushButton">
+       <property name="text">
+        <string>Close</string>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>submit_pushButton</tabstop>
+  <tabstop>close_pushButton</tabstop>
+  <tabstop>taskSize_spinBox</tabstop>
+  <tabstop>taskSize_slider</tabstop>
+  <tabstop>flags_groupBox</tabstop>
+  <tabstop>flags_lineEdit</tabstop>
+  <tabstop>priority_spinBox</tabstop>
+  <tabstop>priority_slider</tabstop>
+ </tabstops>
+ <resources>
+  <include location="rsc.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>priority_spinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>priority_slider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>91</x>
+     <y>229</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>137</x>
+     <y>229</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>priority_slider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>priority_spinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>212</x>
+     <y>235</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>93</x>
+     <y>237</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>taskSize_spinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>taskSize_slider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>119</x>
+     <y>110</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>216</x>
+     <y>106</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>taskSize_slider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>taskSize_spinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>258</x>
+     <y>120</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>130</x>
+     <y>119</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

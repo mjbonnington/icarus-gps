@@ -162,7 +162,8 @@ def setEnv(envVars):
 	os.environ['MAYASHAREDRESOURCES'] = osOps.absolutePath('$FILESYSTEMROOT/_Library/3D/Maya')  # Store this in app settings / ic global prefs?
 
 	try:
-		maya_ver = jobData.getAppVersion('maya')
+		maya_ver = jobData.getAppVersion('Maya')
+		os.environ['MAYA_VER'] = maya_ver
 
 		os.environ['MAYA_DEBUG_ENABLE_CRASH_REPORTING'] = '0'
 		os.environ['MAYA_FORCE_PANEL_FOCUS'] = '0'  # This should prevent panel stealing focus from Qt window on keypress.
@@ -328,7 +329,8 @@ def setEnv(envVars):
 
 
 	# Deadline Monitor / Slave
-	# os.environ['DEADLINEVERSION'] = getAppExecPath('Deadline')
+	os.environ['DEADLINEVERSION'] = getAppExecPath('Deadline')
+	os.environ['DEADLINECMDVERSION']   = osOps.absolutePath('%s/deadlinecommand' %os.path.dirname(os.environ['DEADLINEVERSION']))
 	# os.environ['DEADLINEMONITORVERSION'] = getAppExecPath('DeadlineMonitor')
 	# os.environ['DEADLINESLAVEVERSION']   = getAppExecPath('DeadlineSlave')
 

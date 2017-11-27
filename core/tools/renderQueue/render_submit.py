@@ -41,7 +41,7 @@ STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
 # Main dialog class
 # ----------------------------------------------------------------------------
 
-class renderSubmitDialog(QtWidgets.QDialog):
+class renderSubmitDialog(QtWidgets.QMainWindow):
 	""" Main dialog class.
 	"""
 	def __init__(self, parent=None):
@@ -59,7 +59,7 @@ class renderSubmitDialog(QtWidgets.QDialog):
 				self.ui.setStyleSheet(fh.read())
 
 		# Set the main widget
-		# self.setCentralWidget(self.ui)
+		self.setCentralWidget(self.ui)
 
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Tool)
@@ -69,6 +69,7 @@ class renderSubmitDialog(QtWidgets.QDialog):
 
 		# Connect signals & slots
 		self.ui.type_comboBox.currentIndexChanged.connect(self.setJobTypeFromComboBox)
+		self.ui.submitTo_comboBox.currentIndexChanged.connect(self.setQueueManagerFromComboBox)
 		self.ui.sceneBrowse_toolButton.clicked.connect(self.sceneBrowse)
 
 		self.ui.frameRange_lineEdit.editingFinished.connect(self.calcFrameList)  # was textEdited
@@ -96,12 +97,15 @@ class renderSubmitDialog(QtWidgets.QDialog):
 
 		# Set job type from Icarus environment when possible
 		if os.environ['IC_ENV'] == 'STANDALONE':
-			try:
-				self.jobType = userPrefs.config.get('renderqueue', 'lastrenderjobtype')
-			except:
-				self.jobType = self.ui.type_comboBox.currentText()
+			# try:
+			# 	self.jobType = userPrefs.config.get('renderqueue', 'lastrenderjobtype')
+			# except:
+			# 	self.jobType = self.ui.type_comboBox.currentText()
+			self.jobType = userPrefs.query('renderqueue', 'lastrenderjobtype', default=self.ui.type_comboBox.currentText())
+			self.submitTo = userPrefs.query('renderqueue', 'submitto', default=self.ui.submitTo_comboBox.currentText())
 
 			self.ui.type_comboBox.setCurrentIndex(self.ui.type_comboBox.findText(self.jobType))
+			self.ui.submitTo_comboBox.setCurrentIndex(self.ui.submitTo_comboBox.findText(self.submitTo))
 			self.setJobType()
 			self.setSceneList()
 
@@ -160,8 +164,10 @@ class renderSubmitDialog(QtWidgets.QDialog):
 			self.ui.flags_groupBox.setChecked(True)
 			self.ui.flags_lineEdit.setText(flags)
 
-		self.ui.show()
-		self.ui.raise_()
+		# self.ui.show()
+		# self.ui.raise_()
+		self.show()
+		self.raise_()
 		return self.returnValue
 
 
@@ -173,6 +179,14 @@ class renderSubmitDialog(QtWidgets.QDialog):
 		userPrefs.edit('renderqueue', 'lastrenderjobtype', self.jobType)
 		self.setJobType()
 		self.setSceneList()
+
+
+	def setQueueManagerFromComboBox(self):
+		""" Set queue manager to submit job to - called when the job type
+			combo box value is changed.
+		"""
+		self.submitTo = self.ui.submitTo_comboBox.currentText()
+		userPrefs.edit('renderqueue', 'submitto', self.submitTo)
 
 
 	def setJobType(self):
@@ -314,6 +328,15 @@ class renderSubmitDialog(QtWidgets.QDialog):
 
 
 	def submit(self):
+		""" Submit job.
+		"""
+		if self.submitTo == "RenderQueue":
+			self.submitToRenderQueue()
+		if self.submitTo == "Deadline":
+			self.submitToDeadline()
+
+
+	def submitToRenderQueue(self):
 		""" Submit job to render queue.
 		"""
 		timeFormatStr = "%Y/%m/%d %H:%M:%S" # "%a, %d %b %Y %H:%M:%S"
@@ -397,6 +420,111 @@ class renderSubmitDialog(QtWidgets.QDialog):
 			return
 
 
+	def submitToDeadline(self):
+		""" Submit job to Deadline.
+		"""
+		# timeFormatStr = "%Y/%m/%d %H:%M:%S" # "%a, %d %b %Y %H:%M:%S"
+		pluginInfoFile = ""
+
+		if not self.calcFrameList(quiet=False):
+			return
+
+		###################
+		# Generic options #
+		###################
+
+		frames = self.ui.frameRange_lineEdit.text()
+		taskSize = self.ui.taskSize_spinBox.value()
+		framesMsg = '%d %s to be rendered; %d %s to be submitted.\n' %(len(self.numList), verbose.pluralise("frame", len(self.numList)), len(self.taskList), verbose.pluralise("task", len(self.taskList)))
+
+		pool = "3d"  # temp assignment
+		group = "maya-redshift"  # temp assignment
+
+		priority = self.ui.priority_spinBox.value()
+		comment = self.ui.comment_lineEdit.text()
+
+		#############################
+		# Renderer-specific options #
+		#############################
+
+		if self.jobType == 'Maya':
+			plugin = 'MayaBatch'
+			version = os.environ['MAYA_VER']  #jobData.getAppVersion('Maya')
+			mayaScene = self.absolutePath(self.ui.scene_comboBox.currentText()).replace("\\", "/")  # Implicit if submitting from Maya UI
+			mayaProject = self.guessMayaProject(mayaScene)
+			jobName = os.path.basename(mayaScene)
+		elif self.jobType == 'Nuke':
+			plugin = 'Nuke'
+			nukeScript = self.absolutePath(self.ui.scene_comboBox.currentText()).replace("\\", "/")  # Implicit if submitting from Nuke UI
+			jobName = os.path.basename(nukeScript)
+
+		# Package option variables into tuples
+		genericOpts = jobName, self.jobType, frames, taskSize, priority
+		# if self.jobType == 'Maya':
+		# 	renderOpts = mayaScene, mayaProject, flags, renderCmd
+		# elif self.jobType == 'Nuke':
+		# 	renderOpts = nukeScript, flags, renderCmd
+
+		# Confirmation dialog
+		import pDialog
+
+		dialogTitle = 'Submit Render to Deadline - %s' %jobName
+		dialogMsg = ''
+		dialogMsg += 'Name:\t%s\nType:\t%s\nFrames:\t%s\nTask size:\t%s\nPriority:\t%s\n\n' %genericOpts
+		# if self.jobType == 'Maya':
+		# 	dialogMsg += 'Scene:\t%s\nProject:\t%s\nFlags:\t%s\nCommand:\t%s\n\n' %renderOpts
+		# elif self.jobType == 'Nuke':
+		# 	dialogMsg += 'Script:\t%s\nFlags:\t%s\nCommand:\t%s\n\n' %renderOpts
+		dialogMsg += framesMsg
+		dialogMsg += 'Do you want to continue?'
+
+		dialog = pDialog.dialog()
+		if dialog.display(dialogMsg, dialogTitle):
+
+			# Generate info files
+			jobInfoFile = os.path.splitext(mayaScene)[0] + "_deadlineJobInfo.txt"
+			fh = open(jobInfoFile, 'w')
+			fh.write("Plugin=%s\n" %plugin)
+			fh.write("Name=%s\n" %jobName)
+			fh.write("Comment=%s\n" %comment)
+			fh.write("Frames=%s\n" %frames)
+			fh.write("ChunkSize=%s\n" %taskSize)
+			fh.write("Pool=%s\n" %pool)
+			fh.write("Group=%s\n" %group)
+			fh.write("Priority=%s\n" %priority)
+			# fh.write("OutputDirectory0=%s\n" %mayaOps.getRenderImagePath())
+			# fh.write("OutputFilename0=%s\n" %mayaOps.getRenderImageName())
+			fh.close()
+
+			pluginInfoFile = os.path.splitext(mayaScene)[0] + "_deadlinePluginInfo.txt"
+			fh = open(pluginInfoFile, 'w')
+			fh.write("Version=%s\n" %version)
+			fh.write("Build=64bit\n")
+			# fh.write("Renderer=%s\n" %mayaOps.getCurrentRenderer())
+			fh.write("StrictErrorChecking=1\n")
+			fh.write("ProjectPath=%s\n" %mayaProject)
+			# fh.write("OutputFilePath=%s\n" %mayaOps.getOutputFilePath())
+			# fh.write("OutputFilePrefix=%s\n" %mayaOps.getOutputFilePrefix())
+			fh.write("SceneFile=%s\n" %mayaScene)
+			fh.close()
+
+			# Execute deadlinecommand
+			import subprocess
+			cmdStr = '"%s" "%s" "%s"' %(os.environ['DEADLINECMDVERSION'], jobInfoFile, pluginInfoFile)
+			verbose.print_(cmdStr, 4)
+			subprocess.Popen(cmdStr, shell=True)
+			# os.system(cmdStr)
+
+			# Post-confirmation dialog
+			dialogTitle = 'Submitted Render to Deadline - %s' %jobName
+			dialogMsg = ''
+			dialogMsg += 'Name:\t%s\nType:\t%s\nFrames:\t%s\nTask size:\t%s\nPriority:\t%s\n\n' %genericOpts
+			dialogMsg += 'Render job submitted succesfully.'
+			dialog.display(dialogMsg, dialogTitle, conf=True)
+		else:
+			return
+
+
 	def showEvent(self, event):
 		""" Event handler for when window is shown.
 		"""
@@ -408,7 +536,8 @@ class renderSubmitDialog(QtWidgets.QDialog):
 	def exit(self):
 		""" Exit the dialog.
 		"""
-		self.ui.hide()
+		# self.ui.hide()
+		self.hide()
 
 # ----------------------------------------------------------------------------
 # End of main dialog class
@@ -469,7 +598,7 @@ def _nuke_main_window():
 # Run functions
 # ----------------------------------------------------------------------------
 
-def run_maya(frameRange=None, flags=None):
+def run_maya(**kwargs):
 	""" Run in Maya.
 	"""
 	_maya_delete_ui()  # Delete any already existing UI
@@ -479,39 +608,39 @@ def run_maya(frameRange=None, flags=None):
 	# Linux. As an added bonus, it'll make Maya remember the window position.
 	renderSubmitUI.setProperty("saveWindowPref", True)
 
-	renderSubmitUI.display(frameRange=frameRange, flags=flags)  # Show the UI
+	renderSubmitUI.display(**kwargs)  # Show the UI
 
 
-def run_nuke(frameRange=None, flags=None):
+def run_nuke(**kwargs):
 	""" Run in Nuke.
 
 		Note:
 			If you want the UI to always stay on top, replace:
-			`renderSubmitUI.ui.setWindowFlags(QtCore.Qt.Tool)`
+			'renderSubmitUI.ui.setWindowFlags(QtCore.Qt.Tool)'
 			with:
-			`renderSubmitUI.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)`
+			'renderSubmitUI.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)'
 
 			If you want the UI to be modal:
-			`renderSubmitUI.ui.setWindowModality(QtCore.Qt.WindowModal)`
+			'renderSubmitUI.ui.setWindowModality(QtCore.Qt.WindowModal)'
 	"""
 	_nuke_delete_ui()  # Delete any already existing UI
 	renderSubmitUI = renderSubmitDialog(parent=_nuke_main_window())
 
-	#renderSubmitUI.setWindowFlags(QtCore.Qt.Tool)
+	# renderSubmitUI.setWindowFlags(QtCore.Qt.Tool)
 
-	renderSubmitUI.display(frameRange=frameRange, flags=flags)  # Show the UI
+	renderSubmitUI.display(**kwargs)  # Show the UI
 
 
 # Detect environment and run application
 if os.environ['IC_ENV'] == 'MAYA':
 	import maya.cmds as mc
 	verbose.print_("GPS Render Submit for Maya", 4)
-	run_maya()
+	# run_maya()
 elif os.environ['IC_ENV'] == 'NUKE':
 	import nuke
 	import nukescripts
 	verbose.print_("GPS Render Submit for Nuke", 4)
-	run_nuke()
+	# run_nuke()
 # elif __name__ == '__main__':
 # 	run_standalone()
 

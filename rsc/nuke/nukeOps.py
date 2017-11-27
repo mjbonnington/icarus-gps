@@ -103,7 +103,8 @@ def submitRender():
 
 
 def submitRenderSelected():
-	""" Launches GPS Render Submitter window, for rendering the currently selected write nodes only.
+	""" Launches GPS Render Submitter window, for rendering the currently
+		selected write nodes only.
 	"""
 	writeNodes = ''
 	selectedNodes = nuke.selectedNodes()
