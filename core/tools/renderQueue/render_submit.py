@@ -36,10 +36,6 @@ WINDOW_OBJECT = "renderSubmitUI"
 UI_FILE = "render_submit_ui.ui"
 STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
 
-# Other options
-DOCK_WITH_MAYA_UI = False
-DOCK_WITH_NUKE_UI = False
-
 
 # ----------------------------------------------------------------------------
 # Main dialog class
@@ -454,7 +450,6 @@ def _nuke_delete_ui():
 def _maya_main_window():
 	""" Return Maya's main window.
 	"""
-#	for obj in QtWidgets.qApp.topLevelWidgets():
 	for obj in QtWidgets.QApplication.topLevelWidgets():
 		if obj.objectName() == 'MayaWindow':
 			return obj
@@ -464,33 +459,10 @@ def _maya_main_window():
 def _nuke_main_window():
 	""" Returns Nuke's main window.
 	"""
-#	for obj in QtWidgets.qApp.topLevelWidgets():
 	for obj in QtWidgets.QApplication.topLevelWidgets():
 		if (obj.inherits('QMainWindow') and obj.metaObject().className() == 'Foundry::UI::DockMainWindow'):
 			return obj
 	raise RuntimeError("Could not find DockMainWindow instance")
-
-
-def _nuke_set_zero_margins(widget_object):
-	""" Remove Nuke margins when docked UI.
-		More info:
-		https://gist.github.com/maty974/4739917
-	"""
-	parentApp = QtWidgets.QApplication.allWidgets()
-	parentWidgetList = []
-	for parent in parentApp:
-		for child in parent.children():
-			if widget_object.__class__.__name__ == child.__class__.__name__:
-				parentWidgetList.append(parent.parentWidget())
-				parentWidgetList.append(parent.parentWidget().parentWidget())
-				parentWidgetList.append(parent.parentWidget().parentWidget().parentWidget())
-
-				for sub in parentWidgetList:
-					for tinychild in sub.children():
-						try:
-							tinychild.setContentsMargins(0, 0, 0, 0)
-						except:
-							pass
 
 
 # ----------------------------------------------------------------------------
@@ -507,14 +479,10 @@ def run_maya(frameRange=None, flags=None):
 	# Linux. As an added bonus, it'll make Maya remember the window position.
 	renderSubmitUI.setProperty("saveWindowPref", True)
 
-	if not DOCK_WITH_MAYA_UI:
-		renderSubmitUI.display(frameRange=frameRange, flags=flags)  # Show the UI
-	elif DOCK_WITH_MAYA_UI:
-		allowed_areas = ['right', 'left']
-		mc.dockControl(WINDOW_TITLE, label=WINDOW_TITLE, area='left', content=WINDOW_OBJECT, allowedArea=allowed_areas)
+	renderSubmitUI.display(frameRange=frameRange, flags=flags)  # Show the UI
 
 
-def run_nuke():
+def run_nuke(frameRange=None, flags=None):
 	""" Run in Nuke.
 
 		Note:
@@ -527,25 +495,11 @@ def run_nuke():
 			`renderSubmitUI.ui.setWindowModality(QtCore.Qt.WindowModal)`
 	"""
 	_nuke_delete_ui()  # Delete any already existing UI
-	if not DOCK_WITH_NUKE_UI:
-		renderSubmitUI = renderSubmitDialog(parent=_nuke_main_window())
-		renderSubmitUI.setWindowFlags(QtCore.Qt.Tool)
-		renderSubmitUI.show()  # Show the UI
-	elif DOCK_WITH_NUKE_UI:
-		prefix = ''
-		basename = os.path.basename(__file__)
-		module_name = basename[: basename.rfind('.')]
-		if __name__ == module_name:
-			prefix = module_name + '.'
-		panel = nukescripts.panels.registerWidgetAsPanel(
-			widget=prefix + WINDOW_TITLE,  # module_name.Class_name
-			name=WINDOW_TITLE,
-			id='uk.co.thefoundry.' + WINDOW_TITLE,
-			create=True)
-		pane = nuke.getPaneFor('Properties.1')
-		panel.addToPane(pane)
-		renderSubmitUI = panel.customKnob.getObject().widget
-		_nuke_set_zero_margins(renderSubmitUI)
+	renderSubmitUI = renderSubmitDialog(parent=_nuke_main_window())
+
+	#renderSubmitUI.setWindowFlags(QtCore.Qt.Tool)
+
+	renderSubmitUI.display(frameRange=frameRange, flags=flags)  # Show the UI
 
 
 # Detect environment and run application

@@ -97,11 +97,9 @@ def submitRender():
 		render license.
 	"""
 	import render_submit
-	# try:
-	# 	renderSubmitDialog.display(flags='-i')
-	# except AttributeError:
-	renderSubmitDialog = render_submit.renderSubmitDialog()
-	renderSubmitDialog.display(flags='-i')
+	render_submit.run_nuke(flags='-i')
+	# renderSubmitDialog = render_submit.renderSubmitDialog()
+	# renderSubmitDialog.display(flags='-i')
 
 
 def submitRenderSelected():
@@ -118,11 +116,9 @@ def submitRenderSelected():
 	# 	writeNodes = '-X %s ' %selectedNode.name()
 
 	import render_submit
-	# try:
-	# 	renderSubmitDialog.display(flags='-i %s' %writeNodes)
-	# except AttributeError:
-	renderSubmitDialog = render_submit.renderSubmitDialog()
-	renderSubmitDialog.display(flags='-i %s' %writeNodes)
+	render_submit.run_nuke(flags='-i %s' %writeNodes)
+	# renderSubmitDialog = render_submit.renderSubmitDialog()
+	# renderSubmitDialog.display(flags='-i %s' %writeNodes)
 
 
 def viewerSnapshot(pblPath):
