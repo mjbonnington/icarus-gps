@@ -1143,15 +1143,11 @@ Developers: %s
 		""" Launch Render Submitter window.
 		"""
 		import render_submit
-		#render_submit.run_(frameRange='1-10', flags='-rl CurrentLayer')
 		try:
-			self.renderSubmitDialog.display()
-			# self.renderSubmitDialog.raise_()
+			self.renderSubmitUI.display()
 		except AttributeError:
-			self.renderSubmitDialog = render_submit.renderSubmitDialog(parent=self)
-			self.renderSubmitDialog.display()
-		# renderSubmitDialog = render_submit.renderSubmitDialog(parent=self)
-		# renderSubmitDialog.display()
+			self.renderSubmitUI = render_submit.RenderSubmitUI(parent=self)
+			self.renderSubmitUI.display()
 
 
 	def launchRenderQueue(self):

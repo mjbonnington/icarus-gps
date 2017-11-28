@@ -880,18 +880,23 @@ def snapShot(output_folder, isolate=True, fit=False):
 
 
 def submitRender():
-	""" Launches GPS Render Submitter window.
+	""" Launch Render Submitter window.
 	"""
 	frameRange = "%s-%s" %(int(mc.getAttr('defaultRenderGlobals.startFrame')), int(mc.getAttr('defaultRenderGlobals.endFrame')))
 
 	import render_submit
 	render_submit.run_maya(frameRange=frameRange)
-	# renderSubmitDialog = render_submit.renderSubmitDialog()
-	# renderSubmitDialog.display(frameRange=frameRange)
+
+	# import render_submit
+	# try:
+	# 	renderSubmitUI.display()
+	# except (AttributeError, UnboundLocalError):
+	# 	renderSubmitUI = render_submit.renderSubmitUI(parent=render_submit._maya_main_window())
+	# 	renderSubmitUI.display(frameRange=frameRange)
 
 
 def submitRenderLayer():
-	""" Launches GPS Render Submitter window for the current render layer.
+	""" Launch Render Submitter window for the current render layer.
 	"""
 	frameRange = "%s-%s" %(int(mc.getAttr('defaultRenderGlobals.startFrame')), int(mc.getAttr('defaultRenderGlobals.endFrame')))
 	currentLayer = mc.editRenderLayerGlobals(query=True, currentRenderLayer=True)

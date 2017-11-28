@@ -34,30 +34,32 @@ if ($root != "None")
 
 // Run UI related stuff
 //if (size(lsUI -windows))
-//{
-// Build GPS menus
-source gpsBuildMenus;
+int $batchMode = `about -batch`;
+if (!$batchMode)
+{
+	// Build GPS menus
+	source gpsBuildMenus;
 
-// Set up keyboard shortcuts for GPS tools
-// New Scene...
-nameCommand "GPSNew" -ann "[GPS] New Scene" -c "source menus2Py; menus2Py.newScene()";
-hotkey -cmd -k "n" -n "GPSNew";
-hotkey -ctl -k "n" -n "GPSNew";
-// Open Scene...
-nameCommand "GPSOpen" -ann "[GPS] Open Scene" -c "source menus2Py; menus2Py.openScene()";
-hotkey -cmd -k "o" -n "GPSOpen";
-hotkey -ctl -k "o" -n "GPSOpen";
-// Save Scene...
-nameCommand "GPSSave" -ann "[GPS] Save Scene" -c "source menus2Py; menus2Py.saveScene()";
-hotkey -cmd -k "s" -n "GPSSave";
-hotkey -ctl -k "s" -n "GPSSave";
-// Save Scene As...
-nameCommand "GPSSaveAs" -ann "[GPS] Save Scene As" -c "source menus2Py; menus2Py.saveSceneAs()";
-hotkey -cmd -k "S" -n "GPSSaveAs";
-hotkey -ctl -k "S" -n "GPSSaveAs";
-// Incremental Save...
-nameCommand "GPSSaveIncremental" -ann "[GPS] Save Scene Incrementally" -c "source menus2Py; menus2Py.incrementalSave()";
-hotkey -cmd -alt -k "s" -n "GPSSaveIncremental";
-hotkey -ctl -alt -k "s" -n "GPSSaveIncremental";
-//}
+	// Set up keyboard shortcuts for GPS tools
+	// New Scene...
+	nameCommand "GPSNew" -ann "[GPS] New Scene" -c "source menus2Py; menus2Py.newScene()";
+	hotkey -cmd -k "n" -n "GPSNew";
+	hotkey -ctl -k "n" -n "GPSNew";
+	// Open Scene...
+	nameCommand "GPSOpen" -ann "[GPS] Open Scene" -c "source menus2Py; menus2Py.openScene()";
+	hotkey -cmd -k "o" -n "GPSOpen";
+	hotkey -ctl -k "o" -n "GPSOpen";
+	// Save Scene...
+	nameCommand "GPSSave" -ann "[GPS] Save Scene" -c "source menus2Py; menus2Py.saveScene()";
+	hotkey -cmd -k "s" -n "GPSSave";
+	hotkey -ctl -k "s" -n "GPSSave";
+	// Save Scene As...
+	nameCommand "GPSSaveAs" -ann "[GPS] Save Scene As" -c "source menus2Py; menus2Py.saveSceneAs()";
+	hotkey -cmd -k "S" -n "GPSSaveAs";
+	hotkey -ctl -k "S" -n "GPSSaveAs";
+	// Incremental Save...
+	nameCommand "GPSSaveIncremental" -ann "[GPS] Save Scene Incrementally" -c "source menus2Py; menus2Py.incrementalSave()";
+	hotkey -cmd -alt -k "s" -n "GPSSaveIncremental";
+	hotkey -ctl -alt -k "s" -n "GPSSaveIncremental";
+}
 
