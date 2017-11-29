@@ -15,51 +15,65 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <property name="margin">
      <number>0</number>
     </property>
     <item>
-     <layout class="QFormLayout" name="submitTo_formLayout">
-      <property name="leftMargin">
-       <number>12</number>
+     <widget class="QFrame" name="submitTo_frame">
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
       </property>
-      <property name="topMargin">
-       <number>6</number>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
       </property>
-      <property name="rightMargin">
-       <number>12</number>
+      <property name="lineWidth">
+       <number>0</number>
       </property>
-      <property name="bottomMargin">
-       <number>6</number>
-      </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="submitTo_label">
-        <property name="text">
-         <string>Submit to:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="submitTo_comboBox">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <item>
+      <layout class="QFormLayout" name="submitTo_formLayout">
+       <property name="leftMargin">
+        <number>12</number>
+       </property>
+       <property name="topMargin">
+        <number>6</number>
+       </property>
+       <property name="rightMargin">
+        <number>12</number>
+       </property>
+       <property name="bottomMargin">
+        <number>6</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="submitTo_label">
          <property name="text">
-          <string>Render Queue</string>
+          <string>Submit to:</string>
          </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Deadline</string>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="submitTo_comboBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
-        </item>
-       </widget>
-      </item>
-     </layout>
+         <item>
+          <property name="text">
+           <string>Render Queue</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Deadline</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </item>
     <item>
      <widget class="QScrollArea" name="submitOptions_scrollArea">
@@ -78,7 +92,7 @@
          <x>0</x>
          <y>0</y>
          <width>510</width>
-         <height>519</height>
+         <height>531</height>
         </rect>
        </property>
        <property name="noBackground" stdset="0">
@@ -89,7 +103,7 @@
          <number>6</number>
         </property>
         <property name="topMargin">
-         <number>0</number>
+         <number>4</number>
         </property>
         <property name="rightMargin">
          <number>6</number>

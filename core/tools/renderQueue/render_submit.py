@@ -37,6 +37,7 @@ WINDOW_OBJECT = "renderSubmitUI"
 UI_FILE = "render_submit_ui.ui"
 STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
 
+# Prevent spawned processes from opening a shell window
 CREATE_NO_WINDOW = 0x08000000
 
 
@@ -49,6 +50,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow):
 	"""
 	def __init__(self, parent=None):
 		super(RenderSubmitUI, self).__init__(parent)
+		self.parent = parent
 
 		# Set object name and window title
 		self.setObjectName(WINDOW_OBJECT)
@@ -66,9 +68,6 @@ class RenderSubmitUI(QtWidgets.QMainWindow):
 
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Tool)
-		# self.setWindowFlags(QtCore.Qt.Dialog)
-		# self.ui.setWindowFlags(QtCore.Qt.CustomizeWindowHint | 
-		# 	                   QtCore.Qt.WindowTitleHint)
 
 		# Connect signals & slots
 		self.ui.submitTo_comboBox.currentIndexChanged.connect(self.setQueueManagerFromComboBox)
@@ -105,6 +104,10 @@ class RenderSubmitUI(QtWidgets.QMainWindow):
 		self.actionFrameListOption3.triggered.connect(self.setFrameListPreset)
 		self.ui.frameListOptions_toolButton.addAction(self.actionFrameListOption3)
 
+		self.actionFrameListOption4 = QtWidgets.QAction("Sort and consolidate", None)
+		self.actionFrameListOption4.triggered.connect(self.setFrameListPreset)
+		self.ui.frameListOptions_toolButton.addAction(self.actionFrameListOption4)
+
 		self.ui.frameListOptions_toolButton.setEnabled(False)  # TEMP DISABLE
 
 		# Set input validators
@@ -124,17 +127,26 @@ class RenderSubmitUI(QtWidgets.QMainWindow):
 		# Read user prefs config file - if it doesn't exist it will be created
 		userPrefs.read()
 
-		# Restore widgets from user prefs settings
-		self.submitTo = userPrefs.query('rendersubmit', 'submitto', default=self.ui.submitTo_comboBox.currentText())
+		# Set 'Submit to' option depending on the parent window, or user prefs
+		if self.parent.windowTitle() == "Render Queue":
+			self.submitTo = "Render Queue"
+			self.ui.submitTo_frame.setEnabled(False)
+			self.ui.submitTo_frame.hide()
+		else:
+			self.submitTo = userPrefs.query('rendersubmit', 'submitto', default=self.ui.submitTo_comboBox.currentText())
+			self.ui.submitTo_frame.setEnabled(True)
+			self.ui.submitTo_frame.show()
 		self.ui.submitTo_comboBox.setCurrentIndex(self.ui.submitTo_comboBox.findText(self.submitTo))
+		self.ui.submit_pushButton.setText("Submit to %s" %self.submitTo)
 
+		# Restore widgets from user prefs settings
 		pool = userPrefs.query('rendersubmit', 'pool', datatype='str', default='')
 		self.ui.pool_comboBox.addItem(pool)
 
 		group = userPrefs.query('rendersubmit', 'group', datatype='str', default='')
 		self.ui.group_comboBox.addItem(group)
 
-		priority = userPrefs.query('rendersubmit', 'priority', datatype='int', default='')
+		priority = userPrefs.query('rendersubmit', 'priority', datatype='int', default=50)
 		self.ui.priority_spinBox.setValue(priority)
 
 		comment = userPrefs.query('rendersubmit', 'comment', datatype='str', default='')
@@ -236,7 +248,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow):
 		"""
 		if self.jobType == 'Maya':
 			try:
-				self.relativeScenesDir = osOps.absolutePath( '%s/%s' %(os.environ['MAYADIR'], 'scenes') )
+				self.relativeScenesDir = osOps.absolutePath('%s/%s' %(os.environ['MAYADIR'], 'scenes'))
 			except KeyError:
 				self.relativeScenesDir = ""
 			self.ui.scene_label.setText("Scene:")
@@ -244,14 +256,15 @@ class RenderSubmitUI(QtWidgets.QMainWindow):
 			self.ui.renderer_comboBox.show()
 		elif self.jobType == 'Nuke':
 			try:
-				self.relativeScenesDir = osOps.absolutePath( '%s/%s' %(os.environ['NUKEDIR'], 'scripts') )
+				self.relativeScenesDir = osOps.absolutePath('%s/%s' %(os.environ['NUKEDIR'], 'scripts'))
 			except KeyError:
 				self.relativeScenesDir = ""
 			self.ui.scene_label.setText("Script:")
 			self.ui.renderer_label.hide()
 			self.ui.renderer_comboBox.hide()
 
-		self.relativeScenesToken = '...'  # Representative string to replace the path specified above
+		# Representative string to replace the path specified above
+		self.relativeScenesToken = '...'
 
 
 	def setSceneList(self):
@@ -263,7 +276,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow):
 		try:
 			import recentFiles
 			for filePath in recentFiles.getLs(self.jobType):
-				fullPath = osOps.absolutePath( os.environ['SHOTPATH'] + filePath )
+				fullPath = osOps.absolutePath(os.environ['SHOTPATH'] + filePath)
 				relPath = self.relativePath(fullPath)
 				if relPath:
 					self.ui.scene_comboBox.addItem(relPath)
@@ -314,13 +327,6 @@ class RenderSubmitUI(QtWidgets.QMainWindow):
 				self.ui.scene_comboBox.setCurrentIndex(0)  # Always insert the new entry at the top of the list and select it
 			else:
 				verbose.print_("Warning: Only %s belonging to the current shot can be submitted." %fileTerminology, 2)
-
-
-	# def storeOptions(self):
-	# 	""" Store persistent settings in user prefs.
-	# 	"""
-	# 	self.storeValue('pool', self.ui.pool_comboBox.currentText())
-	# 	self.storeValue('group', self.ui.group_comboBox.currentText())
 
 
 	# @QtCore.Slot()
@@ -375,7 +381,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow):
 			pools = subprocess.check_output([os.environ['DEADLINECMDVERSION'], '-pools'], creationflags=CREATE_NO_WINDOW)
 			self.populateComboBox(self.ui.pool_comboBox, self.strToList(pools))
 		except:
-			verbose.warning("Could not retrieve Deadline pools")
+			verbose.warning("Could not retrieve Deadline pools.")
 
 
 	def getDeadlineGroups(self):
@@ -385,7 +391,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow):
 			groups = subprocess.check_output([os.environ['DEADLINECMDVERSION'], '-groups'], creationflags=CREATE_NO_WINDOW)
 			self.populateComboBox(self.ui.group_comboBox, self.strToList(groups))
 		except:
-			verbose.warning("Could not retrieve Deadline groups")
+			verbose.warning("Could not retrieve Deadline groups.")
 
 
 	def getRenderers(self):
@@ -429,10 +435,13 @@ class RenderSubmitUI(QtWidgets.QMainWindow):
 			comboBox.setCurrentIndex(index)
 
 
+	# @QtCore.Slot()
 	def setFrameListPreset(self):
 		""" Set frame list from preset
 		"""
 		pass
+		print(self.sender().text())
+
 
 
 	def calcFrameList(self, quiet=True):
@@ -494,7 +503,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow):
 	def submit(self):
 		""" Submit job.
 		"""
-		if self.submitTo == "RenderQueue":
+		if self.submitTo == "Render Queue":
 			self.submitToRenderQueue()
 		if self.submitTo == "Deadline":
 			self.submitToDeadline()
@@ -575,7 +584,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow):
 			self.rq.newJob(genericOpts, renderOpts, self.taskList, os.environ['IC_USERNAME'], time.strftime(timeFormatStr), comment)
 
 			# Post-confirmation dialog
-			dialogTitle = 'Submitted Render - %s' %jobName
+			dialogTitle = 'Submission Results - %s' %jobName
 			dialogMsg = ''
 			dialogMsg += 'Name:\t%s\nType:\t%s\nFrames:\t%s\nTask size:\t%s\nPriority:\t%s\n\n' %genericOpts
 			dialogMsg += 'Render job submitted succesfully.'
@@ -644,45 +653,50 @@ class RenderSubmitUI(QtWidgets.QMainWindow):
 
 		dialog = pDialog.dialog()
 		if dialog.display(dialogMsg, dialogTitle):
+			try:
+				# Generate submission info files
+				jobInfoFile = os.path.splitext(scene)[0] + "_deadlineJobInfo.txt"
+				fh = open(jobInfoFile, 'w')
+				fh.write("Plugin=%s\n" %plugin)
+				fh.write("Name=%s\n" %jobName)
+				fh.write("Comment=%s\n" %comment)
+				fh.write("Frames=%s\n" %frames)
+				fh.write("ChunkSize=%s\n" %taskSize)
+				fh.write("Pool=%s\n" %pool)
+				fh.write("Group=%s\n" %group)
+				fh.write("Priority=%s\n" %priority)
+				if priority == 0:
+					fh.write("InitialStatus=Suspended\n")
+				# fh.write("OutputDirectory0=%s\n" %mayaOps.getRenderImagePath())
+				# fh.write("OutputFilename0=%s\n" %mayaOps.getRenderImageName())
+				fh.close()
 
-			# Generate submission info files
-			jobInfoFile = os.path.splitext(scene)[0] + "_deadlineJobInfo.txt"
-			fh = open(jobInfoFile, 'w')
-			fh.write("Plugin=%s\n" %plugin)
-			fh.write("Name=%s\n" %jobName)
-			fh.write("Comment=%s\n" %comment)
-			fh.write("Frames=%s\n" %frames)
-			fh.write("ChunkSize=%s\n" %taskSize)
-			fh.write("Pool=%s\n" %pool)
-			fh.write("Group=%s\n" %group)
-			fh.write("Priority=%s\n" %priority)
-			if priority == 0:
-				fh.write("InitialStatus=Suspended\n")
-			# fh.write("OutputDirectory0=%s\n" %mayaOps.getRenderImagePath())
-			# fh.write("OutputFilename0=%s\n" %mayaOps.getRenderImageName())
-			fh.close()
+				pluginInfoFile = os.path.splitext(scene)[0] + "_deadlinePluginInfo.txt"
+				fh = open(pluginInfoFile, 'w')
+				fh.write("Version=%s\n" %version)
+				fh.write("Build=64bit\n")
+				fh.write("Renderer=%s\n" %renderer)
+				fh.write("StrictErrorChecking=1\n")
+				fh.write("ProjectPath=%s\n" %mayaProject)
+				# fh.write("OutputFilePath=%s\n" %mayaOps.getOutputFilePath())
+				# fh.write("OutputFilePrefix=%s\n" %mayaOps.getOutputFilePrefix())
+				fh.write("SceneFile=%s\n" %scene)
+				fh.close()
 
-			pluginInfoFile = os.path.splitext(scene)[0] + "_deadlinePluginInfo.txt"
-			fh = open(pluginInfoFile, 'w')
-			fh.write("Version=%s\n" %version)
-			fh.write("Build=64bit\n")
-			fh.write("Renderer=%s\n" %renderer)
-			fh.write("StrictErrorChecking=1\n")
-			fh.write("ProjectPath=%s\n" %mayaProject)
-			# fh.write("OutputFilePath=%s\n" %mayaOps.getOutputFilePath())
-			# fh.write("OutputFilePrefix=%s\n" %mayaOps.getOutputFilePrefix())
-			fh.write("SceneFile=%s\n" %scene)
-			fh.close()
+				# Execute deadlinecommand
+				output = subprocess.check_output([os.environ['DEADLINECMDVERSION'], jobInfoFile, pluginInfoFile], creationflags=CREATE_NO_WINDOW)
 
-			# Execute deadlinecommand
-			output = subprocess.check_output([os.environ['DEADLINECMDVERSION'], jobInfoFile, pluginInfoFile], creationflags=CREATE_NO_WINDOW)
+				# Delete submission info files
+				osOps.recurseRemove(jobInfoFile)
+				osOps.recurseRemove(pluginInfoFile)
 
-			# Delete submission info files
-			osOps.recurseRemove(jobInfoFile)
-			osOps.recurseRemove(pluginInfoFile)
+			except:
+				output = "Could not submit job to Deadline."
+				verbose.error(output)
+				output += "\nEither the Deadline executable could not be found, or the submission info files could not be written."
 
 			# Post-confirmation dialog
-			dialogTitle = 'Submitted Render to Deadline - %s' %jobName
+			dialogTitle = 'Submission Results - %s' %jobName
 			dialogMsg = ''
 			dialogMsg += 'Name:\t%s\nType:\t%s\nFrames:\t%s\nTask size:\t%s\nPriority:\t%s\n\n' %genericOpts
 			dialogMsg += output

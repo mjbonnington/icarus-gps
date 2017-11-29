@@ -154,8 +154,8 @@ def setEnv(envVars):
 	# Maya
 	os.environ['MAYAVERSION']         = getAppExecPath('Maya')
 	os.environ['MAYARENDERVERSION']   = osOps.absolutePath('%s/Render' %os.path.dirname(os.environ['MAYAVERSION']))
-	os.environ['MAYADIR']             = osOps.absolutePath('$SHOTPATH/3D/maya')  # currently needed by render submitter
-	# os.environ['MAYASCENESDIR']       = osOps.absolutePath('$MAYADIR/scenes/$IC_USERNAME')
+	os.environ['MAYADIR']             = osOps.absolutePath('$SHOTPATH/3D/maya')  # Currently needed by render submitter
+	os.environ['MAYASCENESDIR']       = osOps.absolutePath('$MAYADIR/scenes/$IC_USERNAME')  # Currently needed by render submitter
 	# os.environ['MAYASOURCEIMAGESDIR'] = osOps.absolutePath('$MAYADIR/sourceimages/$IC_USERNAME')
 	# os.environ['MAYARENDERSDIR']      = osOps.absolutePath('$MAYADIR/renders/$IC_USERNAME')
 	# os.environ['MAYAPLAYBLASTSDIR']   = osOps.absolutePath('$MAYADIR/playblasts/$IC_USERNAME')
@@ -230,7 +230,7 @@ def setEnv(envVars):
 	os.environ['NUKEVERSION']     = getAppExecPath('Nuke')
 	os.environ['NUKEDIR']         = osOps.absolutePath('$SHOTPATH/2D/nuke')  # Currently needed by render submitter
 	# os.environ['NUKEELEMENTSDIR'] = osOps.absolutePath('$NUKEDIR/elements/$IC_USERNAME')
-	# os.environ['NUKESCRIPTSDIR']  = osOps.absolutePath('$NUKEDIR/scripts/$IC_USERNAME')
+	os.environ['NUKESCRIPTSDIR']  = osOps.absolutePath('$NUKEDIR/scripts/$IC_USERNAME')  # Currently needed by render submitter
 	# os.environ['NUKERENDERSDIR']  = osOps.absolutePath('$NUKEDIR/renders/$IC_USERNAME')
 	os.environ['NUKE_PATH']       = osOps.absolutePath('$IC_BASEDIR/rsc/nuke')
 

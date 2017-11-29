@@ -33,7 +33,6 @@ if ($root != "None")
 }
 
 // Run UI related stuff
-//if (size(lsUI -windows))
 int $batchMode = `about -batch`;
 if (!$batchMode)
 {
@@ -62,4 +61,3 @@ if (!$batchMode)
 	hotkey -cmd -alt -k "s" -n "GPSSaveIncremental";
 	hotkey -ctl -alt -k "s" -n "GPSSaveIncremental";
 }
-

@@ -498,7 +498,7 @@ class renderQueueApp(QtWidgets.QMainWindow):
 		"""
 		self.ui.slaveControl_toolButton.setText("%s (%s)" %(self.localhost, self.slaveStatus))
 
-		line = str( self.renderProcess.readAllStandardOutput() )
+		line = str(self.renderProcess.readAllStandardOutput(), 'utf-8')
 		self.renderOutput += line
 		self.ui.output_textEdit.setPlainText(self.renderOutput)
 		self.ui.output_textEdit.moveCursor(QtGui.QTextCursor.End)
