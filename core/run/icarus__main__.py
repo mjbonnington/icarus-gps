@@ -2141,11 +2141,12 @@ def run_standalone():
 	# Apply application style.
 	# On Windows best results are obtained when this is disabled.
 	# On Mac, best option is unclear due to inconsistent results.
-	# styles = QtWidgets.QStyleFactory.keys()
-	# if 'Fusion' in styles:  # Qt5
-	# 	app.setStyle('Fusion')
-	# elif 'Plastique' in styles:
-	# 	app.setStyle('Plastique')  # Qt4
+	if os.environ['IC_RUNNING_OS'] == 'Darwin':
+		styles = QtWidgets.QStyleFactory.keys()
+		if 'Fusion' in styles:  # Qt5
+			app.setStyle('Fusion')
+		elif 'Plastique' in styles:
+			app.setStyle('Plastique')  # Qt4
 
 	# Apply UI style sheet
 	if STYLESHEET is not None:
