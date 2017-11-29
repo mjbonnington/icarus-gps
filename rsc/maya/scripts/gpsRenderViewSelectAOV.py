@@ -211,13 +211,19 @@ class SelectAOV():
 					aov_name_ls.append(mc.getAttr("%s.name" %aov_node))
 
 		elif self.renderer == "redshift":
-			# List all Redshift AOV nodes
-			aov_node_ls = mc.ls(type="RedshiftAOV")
+			# Only if global AOV mode is enabled
+			if mc.getAttr("redshiftOptions.aovGlobalEnableMode") == 1:
+				# List all Redshift AOV nodes
+				aov_node_ls = mc.ls(type="RedshiftAOV")
 
-			for aov_node in aov_node_ls:
-				# Only add to list if AOV is enabled
-				if mc.getAttr("%s.enabled" %aov_node):
-					aov_name_ls.append(mc.getAttr("%s.name" %aov_node))
+				for aov_node in aov_node_ls:
+					# Only add to list if AOV is enabled
+					if mc.getAttr("%s.enabled" %aov_node):
+						aov_name_ls.append(mc.getAttr("%s.name" %aov_node))
+
+			else:
+				mc.optionMenu("aov_comboBox", edit=True, enable=False)
+
 
 		elif self.renderer == "mentalRay":
 			# Get the current render layer

@@ -371,15 +371,21 @@ class RenderSubmitUI(QtWidgets.QMainWindow):
 	def getDeadlinePools(self):
 		""" Get Deadline pools & populate combo box.
 		"""
-		pools = subprocess.check_output([os.environ['DEADLINECMDVERSION'], '-pools'], creationflags=CREATE_NO_WINDOW)
-		self.populateComboBox(self.ui.pool_comboBox, self.strToList(pools))
+		try:
+			pools = subprocess.check_output([os.environ['DEADLINECMDVERSION'], '-pools'], creationflags=CREATE_NO_WINDOW)
+			self.populateComboBox(self.ui.pool_comboBox, self.strToList(pools))
+		except:
+			verbose.warning("Could not retrieve Deadline pools")
 
 
 	def getDeadlineGroups(self):
 		""" Get Deadline groups & populate combo box.
 		"""
-		groups = subprocess.check_output([os.environ['DEADLINECMDVERSION'], '-groups'], creationflags=CREATE_NO_WINDOW)
-		self.populateComboBox(self.ui.group_comboBox, self.strToList(groups))
+		try:
+			groups = subprocess.check_output([os.environ['DEADLINECMDVERSION'], '-groups'], creationflags=CREATE_NO_WINDOW)
+			self.populateComboBox(self.ui.group_comboBox, self.strToList(groups))
+		except:
+			verbose.warning("Could not retrieve Deadline groups")
 
 
 	def getRenderers(self):
