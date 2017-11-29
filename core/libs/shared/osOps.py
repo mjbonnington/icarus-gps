@@ -212,10 +212,10 @@ def relativePath(absPath, token, tokenFormat='standard'):
 		relPath = absPath.replace('\\', '/')  # ensure backslashes from Windows paths are changed to forward slashes
 		relPath = relPath.replace(envVar, formattedToken)  # change to relative path
 
-		return os.path.normpath( relPath ).replace("\\", "/")
+		return os.path.normpath(relPath).replace("\\", "/")
 
 	except:
-		return os.path.normpath( absPath ).replace("\\", "/")
+		return os.path.normpath(absPath).replace("\\", "/")
 
 
 def translatePath(jobPath):
@@ -246,7 +246,19 @@ def translatePath(jobPath):
 		return jobPath
 
 
-def sanitize(instr, pattern='\W', replace=''):
+def checkIllegalChars(path, pattern=r'[^\w\.-]'):
+	""" Checks path for illegal characters, ignoring delimiter characters such
+		as / \ : etc.
+		Returns True if no illegal characters are found.
+	"""
+	clean_str = re.sub(r'[/\\]', '', os.path.splitdrive(path)[1])
+	if re.search(pattern, clean_str) is None:
+		return True
+	else:
+		return False
+
+
+def sanitize(instr, pattern=r'\W', replace=''):
 	""" Sanitizes characters in string. Default removes all non-alphanumeric
 		characters.
 	"""

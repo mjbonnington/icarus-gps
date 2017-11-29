@@ -52,6 +52,7 @@ class TestApp(QtWidgets.QMainWindow):  # Replace 'TestApp' with the name of your
 
 		# Connect signals & slots
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.exit)
+		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).clicked.connect(self.reloadStyleSheet)
 
 
 	# [Application code goes here]
@@ -66,6 +67,15 @@ class TestApp(QtWidgets.QMainWindow):  # Replace 'TestApp' with the name of your
 		print("%s %s" %(__binding__, __binding_version__))
 		print("Qt %s" %QtCore.qVersion())
 		print(type(self.ui))
+
+
+	def reloadStyleSheet(self):
+		""" Reload stylesheet.
+		"""
+		if STYLESHEET is not None:
+			qss=os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
+			with open(qss, "r") as fh:
+				self.ui.setStyleSheet(fh.read())
 
 
 	def exit(self):

@@ -69,6 +69,7 @@ def setEnv(envVars):
 #	defaultData.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'defaultData.xml'))
 	ap.loadXML( os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml') )
 
+	# ------------------------------------------------------------------------
 	# If XML files don't exist, create defaults, and attempt to convert data
 	# from Python data files
 	if not jobDataLoaded:
@@ -104,6 +105,7 @@ def setEnv(envVars):
 		jobData.setValue('meta', 'assetDir', assetDir)
 		jobData.saveXML()
 		os.environ['PUBLISHRELATIVEDIR'] = assetDir
+	# ------------------------------------------------------------------------
 
 
 	# Set OS identifier strings to get correct app executable paths
@@ -157,10 +159,11 @@ def setEnv(envVars):
 	# os.environ['MAYASOURCEIMAGESDIR'] = osOps.absolutePath('$MAYADIR/sourceimages/$IC_USERNAME')
 	# os.environ['MAYARENDERSDIR']      = osOps.absolutePath('$MAYADIR/renders/$IC_USERNAME')
 	# os.environ['MAYAPLAYBLASTSDIR']   = osOps.absolutePath('$MAYADIR/playblasts/$IC_USERNAME')
-	os.environ['MAYASHAREDRESOURCES'] = osOps.absolutePath('$FILESYSTEMROOT/_Library/3D/Maya')  # Store this in ic global prefs?
+	os.environ['MAYASHAREDRESOURCES'] = osOps.absolutePath('$FILESYSTEMROOT/_Library/3D/Maya')  # Store this in app settings / ic global prefs?
 
 	try:
-		maya_ver = jobData.getAppVersion('maya')
+		maya_ver = jobData.getAppVersion('Maya')
+		os.environ['MAYA_VER'] = maya_ver
 
 		os.environ['MAYA_DEBUG_ENABLE_CRASH_REPORTING'] = '0'
 		os.environ['MAYA_FORCE_PANEL_FOCUS'] = '0'  # This should prevent panel stealing focus from Qt window on keypress.
@@ -193,6 +196,7 @@ def setEnv(envVars):
 		#os.environ['VRAY_FOR_MAYA2014_PLUGINS_x64'] += os.pathsep + osOps.absolutePath('$IC_BASEDIR/rsc/maya/plugins')
 
 		if os.environ['IC_RUNNING_OS'] == 'Windows':  # Set up centralised deployment of Redshift plugin for Maya
+			# if getAppExecPath('Redshift') is not "":
 			if getAppExecPath('rs') is not "":
 				os.environ['REDSHIFT_COREDATAPATH']         = getAppExecPath('Redshift')
 				os.environ['REDSHIFT_COMMON_ROOT']          = osOps.absolutePath('$REDSHIFT_COREDATAPATH/Plugins/Maya/Common')
@@ -224,7 +228,7 @@ def setEnv(envVars):
 
 	# Nuke
 	os.environ['NUKEVERSION']     = getAppExecPath('Nuke')
-	os.environ['NUKEDIR']         = osOps.absolutePath('$SHOTPATH/2D/nuke')  # currently needed by render submitter
+	os.environ['NUKEDIR']         = osOps.absolutePath('$SHOTPATH/2D/nuke')  # Currently needed by render submitter
 	# os.environ['NUKEELEMENTSDIR'] = osOps.absolutePath('$NUKEDIR/elements/$IC_USERNAME')
 	# os.environ['NUKESCRIPTSDIR']  = osOps.absolutePath('$NUKEDIR/scripts/$IC_USERNAME')
 	# os.environ['NUKERENDERSDIR']  = osOps.absolutePath('$NUKEDIR/renders/$IC_USERNAME')
@@ -246,7 +250,7 @@ def setEnv(envVars):
 
 
 	# Photoshop
-	# os.environ['PSVERSION'] = getAppExecPath('Photoshop')
+	os.environ['PSVERSION'] = getAppExecPath('Photoshop')
 	# os.environ['PSDIR']     = osOps.absolutePath('$SHOTPATH/2D/photoshop')
 
 
@@ -304,7 +308,7 @@ def setEnv(envVars):
 
 
 	# djv_view
-	# os.environ['DJVVERSION'] = getAppExecPath('djv_view')
+	os.environ['DJVVERSION'] = getAppExecPath('djv_view')
 	# djv_ver = jobData.getAppVersion('djv_view')
 	djv_embedded_ver = '1.1.0'
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
@@ -325,7 +329,8 @@ def setEnv(envVars):
 
 
 	# Deadline Monitor / Slave
-	# os.environ['DEADLINEVERSION'] = getAppExecPath('Deadline')
+	os.environ['DEADLINEVERSION'] = getAppExecPath('Deadline')
+	os.environ['DEADLINECMDVERSION']   = osOps.absolutePath('%s/deadlinecommand' %os.path.dirname(os.environ['DEADLINEVERSION']))
 	# os.environ['DEADLINEMONITORVERSION'] = getAppExecPath('DeadlineMonitor')
 	# os.environ['DEADLINESLAVEVERSION']   = getAppExecPath('DeadlineSlave')
 

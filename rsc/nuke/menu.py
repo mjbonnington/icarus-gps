@@ -9,10 +9,26 @@
 # Customises Nuke's menus and toolbars.
 
 
-# Third party gizmos and plugins menu build
-import pixelfudger
-#
 import gpsSave
+
+
+# ----------------------------------------------------------------------------
+# Third-party gizmos and plugins
+
+# Cryptomatte
+import cryptomatte_utilities
+cryptomatte_utilities.setup_cryptomatte_ui()
+
+# Pixelfudger
+import pixelfudger
+
+# Deadline integrated submitter
+import DeadlineNukeClient
+menubar = nuke.menu("Nuke")
+tbmenu = menubar.addMenu("&Thinkbox")
+tbmenu.addCommand("Submit Nuke To Deadline", DeadlineNukeClient.main, "")
+
+# ----------------------------------------------------------------------------
 
 
 # Detect if running app is Nuke or NukeX
@@ -37,7 +53,6 @@ openJobDir = 'import openDirs; openDirs.openJob()'
 openElementsLibDir = 'import openDirs; openDirs.openElementsLib()'
 launchProdBoard  = 'import launchApps; launchApps.prodBoard()'
 launchNuke = 'import launchApps; launchApps.launch("%s")' % nukeType
-# launchIcarus = 'reload(icarus__main__)'
 launchIcarus = 'import icarus__main__; icarus__main__.run_nuke()'
 launchDjv = 'import nukeOps; nukeOps.launchDjv()'
 launchHieroPlayer = 'import launchApps; launchApps.launch("HieroPlayer")'
@@ -189,12 +204,5 @@ gpsSave.updateRecentFilesMenu(openRecentMenu_nodes)
 
 
 # Add callback function to add script to recent files on script load...
-nuke.addOnScriptLoad( gpsSave.updateRecentFiles )
-
-
-# Add Deadline integrated submitter
-import DeadlineNukeClient
-menubar = nuke.menu("Nuke")
-tbmenu = menubar.addMenu("&Thinkbox")
-tbmenu.addCommand("Submit Nuke To Deadline", DeadlineNukeClient.main, "")
+nuke.addOnScriptLoad(gpsSave.updateRecentFiles)
 

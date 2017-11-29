@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>288</height>
+    <height>329</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,14 +20,14 @@
    <property name="fieldGrowthPolicy">
     <enum>QFormLayout::ExpandingFieldsGrow</enum>
    </property>
-   <item row="0" column="0">
+   <item row="1" column="0">
     <widget class="QLabel" name="projnum_label">
      <property name="text">
       <string>Project number:</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
+   <item row="1" column="1">
     <widget class="QSpinBox" name="projnum_spinBox">
      <property name="minimum">
       <number>0</number>
@@ -43,17 +43,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="jobnum_label">
-     <property name="text">
-      <string>Job number:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
+   <item row="2" column="1">
     <widget class="QSpinBox" name="jobnum_spinBox">
      <property name="minimum">
       <number>0</number>
@@ -69,7 +59,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
+   <item row="4" column="0">
     <widget class="QLabel" name="client_label">
      <property name="text">
       <string>Client:</string>
@@ -79,14 +69,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
-    <widget class="QLineEdit" name="client_lineEdit">
-     <property name="xmlTag" stdset="0">
-      <string>client</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
+   <item row="6" column="0">
     <widget class="QLabel" name="brand_label">
      <property name="text">
       <string>Brand:</string>
@@ -96,62 +79,28 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
+   <item row="6" column="1">
     <widget class="QLineEdit" name="brand_lineEdit">
      <property name="xmlTag" stdset="0">
       <string>brand</string>
      </property>
     </widget>
    </item>
-   <item row="6" column="0">
-    <widget class="QLabel" name="title_label">
-     <property name="text">
-      <string>Title:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
-    <widget class="QLineEdit" name="title_lineEdit">
-     <property name="xmlTag" stdset="0">
-      <string>title</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="0">
-    <widget class="QLabel" name="deliverable_label">
-     <property name="text">
-      <string>Deliverable:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="1">
-    <widget class="QLineEdit" name="deliverable_lineEdit">
-     <property name="xmlTag" stdset="0">
-      <string>deliverable</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="0">
+   <item row="10" column="0">
     <widget class="QLabel" name="notes_label">
      <property name="text">
       <string>Notes:</string>
      </property>
     </widget>
    </item>
-   <item row="8" column="1">
+   <item row="10" column="1">
     <widget class="QPlainTextEdit" name="notes_plainTextEdit">
      <property name="xmlTag" stdset="0">
       <string>notes</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="0">
+   <item row="3" column="0">
     <widget class="QLabel" name="billingnum_label">
      <property name="text">
       <string>Maconomy number:</string>
@@ -161,7 +110,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
+   <item row="3" column="1">
     <widget class="QSpinBox" name="billingnum_spinBox">
      <property name="minimum">
       <number>0</number>
@@ -174,6 +123,43 @@
      </property>
      <property name="xmlTag" stdset="0">
       <string>billingnum</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="jobnum_label">
+     <property name="text">
+      <string>Job number:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QLineEdit" name="client_lineEdit">
+     <property name="xmlTag" stdset="0">
+      <string>client</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="job_label">
+     <property name="text">
+      <string>Job:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLineEdit" name="job_lineEdit">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="xmlTag" stdset="0">
+      <string>job</string>
      </property>
     </widget>
    </item>
@@ -194,15 +180,53 @@
      </property>
     </widget>
    </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="title_label">
+     <property name="text">
+      <string>Title:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <widget class="QLineEdit" name="title_lineEdit">
+     <property name="xmlTag" stdset="0">
+      <string>title</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QLabel" name="deliverable_label">
+     <property name="text">
+      <string>Deliverable:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1">
+    <widget class="QLineEdit" name="deliverable_lineEdit">
+     <property name="xmlTag" stdset="0">
+      <string>deliverable</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <tabstops>
+  <tabstop>job_lineEdit</tabstop>
   <tabstop>projnum_spinBox</tabstop>
   <tabstop>jobnum_spinBox</tabstop>
+  <tabstop>billingnum_spinBox</tabstop>
   <tabstop>client_lineEdit</tabstop>
+  <tabstop>agency_lineEdit</tabstop>
   <tabstop>brand_lineEdit</tabstop>
   <tabstop>title_lineEdit</tabstop>
   <tabstop>deliverable_lineEdit</tabstop>
+  <tabstop>notes_plainTextEdit</tabstop>
  </tabstops>
  <resources/>
  <connections/>

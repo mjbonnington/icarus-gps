@@ -185,14 +185,14 @@ class renderQueueApp(QtWidgets.QMainWindow):
 
 
 	def launchRenderSubmit(self):
-		""" Launches GPS Render Submitter window.
+		""" Launch Render Submitter window.
 		"""
 		import render_submit
 		try:
-			self.renderSubmitDialog.display()
+			self.renderSubmitUI.display()
 		except AttributeError:
-			self.renderSubmitDialog = render_submit.renderSubmitDialog(parent=self)
-			self.renderSubmitDialog.display()
+			self.renderSubmitUI = render_submit.RenderSubmitUI(parent=self)
+			self.renderSubmitUI.display()
 
 
 	def rebuildRenderQueueView(self):

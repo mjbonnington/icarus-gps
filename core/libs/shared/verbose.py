@@ -156,7 +156,7 @@ def icarusLaunch(name, version, vendor="", location="", user=""):
 def ignored(asset):
 	warning("%s ignored" %asset)
 
-def illegalCharacters(string=''):
+def illegalCharacters(string=""):
 	error('"%s" contains illegal characters.' %string)
 
 def integersInput(input_):

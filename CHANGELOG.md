@@ -1,4 +1,12 @@
-v0.9.10 (--)
+v0.9.11 (--)
+-	[Icarus] Job management now performs check for non-alphanumeric characters in paths.
+-	[Icarus] Added Title and Notes fields to shot settings.
+-	[Maya] Fixed a couple of issues with the UI code to generate Icarus' customised menu items.
+-	[Maya] Preferences for image viewer and Photoshop executables are now set automatically based on job settings.
+-	[Nuke] Added Cryptomatte gizmos.
+-	[Nuke] Updated Pixelfudger tools/gizmos.
+
+v0.9.10 (2017-10-31)
 -	[Icarus] Updated application launcher. App icons can be added/removed/sorted dynamically depending on preference.
 -	[Icarus] The ten most recent shots are now stored and can be set quickly via a context menu on the Set Shot button.
 -	[Icarus] Application project folders are now created 'on-demand' rather than all at once when the shot is set. This should help reduce redundant empty folders in projects.
