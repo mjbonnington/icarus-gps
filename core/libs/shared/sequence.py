@@ -71,7 +71,6 @@ def numRange(num_int_list, padding=0, quiet=False):
 		if not quiet:
 			verbose.error("Number list only works with integer values.")
 		return False
-		
 
 	# Find sequences
 	first = None
@@ -82,15 +81,15 @@ def numRange(num_int_list, padding=0, quiet=False):
 			last = x
 		else:
 			if first == last:
-				num_range_str = num_range_str + "%s, " %str(first).zfill(padding)
+				num_range_str += "%s, " %str(first).zfill(padding)
 			else:
-				num_range_str = num_range_str + "%s-%s, " %(str(first).zfill(padding), str(last).zfill(padding))
+				num_range_str += "%s-%s, " %(str(first).zfill(padding), str(last).zfill(padding))
 			first = last = x
 	if first is not None:
 		if first == last:
-			num_range_str = num_range_str + "%s" %str(first).zfill(padding)
+			num_range_str += "%s" %str(first).zfill(padding)
 		else:
-			num_range_str = num_range_str + "%s-%s" %(str(first).zfill(padding), str(last).zfill(padding))
+			num_range_str += "%s-%s" %(str(first).zfill(padding), str(last).zfill(padding))
 
 	return num_range_str
 

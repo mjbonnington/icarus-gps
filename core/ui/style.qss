@@ -677,9 +677,11 @@ QTableView QTableCornerButton::section:pressed {
 
 QGroupBox {
 	margin: 0;
-	margin-top: 7px; /* was: 2.5ex - leave space at the top for the title */
-	padding: 6px 3px;
-	border: 2px groove #333;
+	margin-top: 8px; /* was: 2.5ex - leave space at the top for the title */
+	padding-top: 2px;
+	/*padding: 6px 3px;*/
+	/*border: 2px groove #333;*/
+	border: 1px solid #4c4c4c;
 	border-radius: 2px;
 	background: transparent;
 }
@@ -687,7 +689,7 @@ QGroupBox {
 QGroupBox::title {
 	padding: 3px;
 	left: 8px;
-	bottom: 9px; /* was: 3ex */
+	bottom: 10px; /* was: 3ex */
 	/*subcontrol-origin: margin;
 	subcontrol-position: top center;*/
 	/*background: #444;  needed to prevent text 'etching' effect with plastique style */
@@ -712,9 +714,9 @@ QGroupBox:flat {
 	/*background: #3e3e3e;*/
 }
 
-QGroupBox::title:flat {
-	/* background: transparent; needed to prevent text 'etching' effect with plastique style */
-}
+/* QGroupBox::title:flat {
+	background: transparent;
+}*/
 
 /*QGroupBox::indicator:flat {
 	width: 11px;
@@ -723,6 +725,61 @@ QGroupBox::title:flat {
 	border: 1px solid #222;
 	border-radius: 2px;
 }*/
+
+QGroupBox[expandable="true"] {
+	margin: 0;
+	/*margin-top: 20px;*/
+	padding: 0;
+	border: 1px solid #4c4c4c;
+	border-top: 20px solid #4c4c4c;
+	border-radius: 0px;
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	/*background: #4c4c4c;*/
+}
+
+QGroupBox[expandable="true"]::title {
+	height: 20px;
+	margin: 0;
+	padding: 3px 6px;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	border: none;
+	border-radius: 0px;
+	/*subcontrol-origin: margin;
+	subcontrol-position: top center;*/
+	background: #4c4c4c;
+}
+
+/*QGroupBox[expandable="true"]::title:hover {
+	background: #555;
+}*/
+
+QGroupBox[expandable="true"]::indicator {
+	width: 11px;
+	height: 11px;
+	margin: 0;
+	padding: 0;
+	border: none;
+	border-radius: 0px;
+	border-image: none;
+	background: none;
+	image: url(:/images/arrow_right.png);
+}
+
+QGroupBox[expandable="true"]::indicator:disabled {
+	image: url(:/images/arrow_right_disabled.png);
+}
+
+QGroupBox[expandable="true"]::indicator:checked {
+	image: url(:/images/arrow_down.png);
+}
+
+QGroupBox[expandable="true"]::indicator:checked:disabled {
+	image: url(:/images/arrow_down_disabled.png);
+}
 
 /* End Group Box */
 

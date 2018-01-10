@@ -7,9 +7,6 @@
 // Commands to execute at Maya startup.
 
 
-// Update Maya scene at startup
-python ("import mayaOps; mayaOps.update()");
-
 // Set up path remapping for cross-platform support
 string $root = `getenv FILESYSTEMROOT`;
 string $win_root = `getenv FILESYSTEMROOTWIN`;
@@ -60,4 +57,8 @@ if (!$batchMode)
 	nameCommand "GPSSaveIncremental" -ann "[GPS] Save Scene Incrementally" -c "source menus2Py; menus2Py.incrementalSave()";
 	hotkey -cmd -alt -k "s" -n "GPSSaveIncremental";
 	hotkey -ctl -alt -k "s" -n "GPSSaveIncremental";
+
+	// Update Maya scene defaults at startup
+	python ("import mayaOps; mayaOps.update()");
+	//source gpsRenderSetup.mel; gpsRenderSetup.setCommonOptions()
 }

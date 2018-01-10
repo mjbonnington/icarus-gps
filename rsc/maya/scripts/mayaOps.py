@@ -902,7 +902,8 @@ def submitRenderLayer():
 	currentLayer = mc.editRenderLayerGlobals(query=True, currentRenderLayer=True)
 
 	import render_submit
-	render_submit.run_maya(frameRange=frameRange, flags='-rl %s' %currentLayer)
+	# render_submit.run_maya(frameRange=frameRange, flags='-rl %s' %currentLayer)
+	render_submit.run_maya(frameRange=frameRange, layers=currentLayer)
 	# renderSubmitDialog = render_submit.renderSubmitDialog()
 	# renderSubmitDialog.display(frameRange=frameRange, flags='-rl %s' %currentLayer)
 

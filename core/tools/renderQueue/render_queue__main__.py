@@ -498,7 +498,10 @@ class renderQueueApp(QtWidgets.QMainWindow):
 		"""
 		self.ui.slaveControl_toolButton.setText("%s (%s)" %(self.localhost, self.slaveStatus))
 
-		line = str(self.renderProcess.readAllStandardOutput(), 'utf-8')
+		try:
+			line = str(self.renderProcess.readAllStandardOutput(), 'utf-8')
+		except TypeError:  # Python 2.x compatibility
+			line = str(self.renderProcess.readAllStandardOutput())
 		self.renderOutput += line
 		self.ui.output_textEdit.setPlainText(self.renderOutput)
 		self.ui.output_textEdit.moveCursor(QtGui.QTextCursor.End)
