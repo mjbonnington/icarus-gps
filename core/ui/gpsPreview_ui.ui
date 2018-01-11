@@ -62,6 +62,9 @@
            <property name="mandatoryField" stdset="0">
             <bool>false</bool>
            </property>
+           <property name="xmlTag" stdset="0">
+            <string>name</string>
+           </property>
           </widget>
          </item>
          <item>
@@ -86,7 +89,7 @@
        <item row="2" column="0">
         <widget class="QLabel" name="cam_label">
          <property name="text">
-          <string>Camera:</string>
+          <string>Render from:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -112,6 +115,9 @@
            <property name="autoExclusive">
             <bool>true</bool>
            </property>
+           <property name="xmlTag" stdset="0">
+            <string>renderfrom</string>
+           </property>
           </widget>
          </item>
          <item>
@@ -123,13 +129,16 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>Camera:</string>
+            <string>Camera</string>
            </property>
            <property name="checked">
             <bool>false</bool>
            </property>
            <property name="autoExclusive">
             <bool>true</bool>
+           </property>
+           <property name="xmlTag" stdset="0">
+            <string>renderfrom</string>
            </property>
           </widget>
          </item>
@@ -144,6 +153,9 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="xmlTag" stdset="0">
+            <string>camera</string>
+           </property>
           </widget>
          </item>
         </layout>
@@ -152,6 +164,9 @@
         <layout class="QHBoxLayout" name="format_horizontalLayout">
          <item>
           <widget class="QComboBox" name="format_comboBox">
+           <property name="xmlTag" stdset="0">
+            <string>format</string>
+           </property>
            <item>
             <property name="text">
              <string>JPEG sequence</string>
@@ -241,6 +256,9 @@
          <property name="currentIndex">
           <number>0</number>
          </property>
+         <property name="xmlTag" stdset="0">
+          <string>framerangemode</string>
+         </property>
          <item>
           <property name="text">
            <string>Shot default</string>
@@ -316,6 +334,9 @@
          </property>
          <property name="currentIndex">
           <number>0</number>
+         </property>
+         <property name="xmlTag" stdset="0">
+          <string>resolutionmode</string>
          </property>
          <item>
           <property name="text">

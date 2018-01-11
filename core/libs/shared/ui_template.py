@@ -29,6 +29,10 @@ import verbose
 # Configuration
 # ----------------------------------------------------------------------------
 
+VENDOR = "Gramercy Park Studios"
+COPYRIGHT = "(c) 2013-2018"
+DEVELOPERS = "Nuno Pereira, Mike Bonnington"
+
 # Set window title and object names
 # WINDOW_TITLE = "Custom Window"
 # WINDOW_OBJECT = "customUI"
@@ -50,54 +54,9 @@ class TemplateUI(QtWidgets.QMainWindow):
 	"""
 	def __init__(self, parent=None):
 		super(TemplateUI, self).__init__(parent)
-		self.parent = parent
 
 		# Instantiate XML data classes
 		self.xd = settingsData.settingsData()
-
-		# # Set object name and window title
-		# self.setObjectName(WINDOW_OBJECT)
-		# self.setWindowTitle(WINDOW_TITLE)
-
-		# # Load UI & stylesheet
-		# self.ui = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], UI_FILE))
-		# self.reloadStyleSheet()
-
-		# # Set the main widget
-		# self.setCentralWidget(self.ui)
-
-		# # Set window flags
-		# self.setWindowFlags(QtCore.Qt.Tool)
-
-		# # Set up keyboard shortcuts
-		# self.shortcutReloadStyleSheet = QtWidgets.QShortcut(self)
-		# self.shortcutReloadStyleSheet.setKey('Ctrl+R')
-		# self.shortcutReloadStyleSheet.activated.connect(self.reloadStyleSheet)
-
-		# Connect signals & slots
-		# pass
-
-
-	# def display(self):
-	# 	""" Display the window.
-	# 	"""
-	# 	self.returnValue = False
-
-	# 	# Read user prefs config file - if it doesn't exist it will be created
-	# 	#userPrefs.read()
-
-	# 	# Instantiate XML data classes
-	# 	self.xd = settingsData.settingsData()
-	# 	#xd_load = self.xd.loadXML(self.xmlData)
-
-	# 	self.xmlData = settingsFile
-	# 	self.xd.loadXML(self.xmlData)
-	# 	self.setupWidgets(self.ui)
-
-	# 	self.show()
-	# 	self.raise_()
-
-	# 	return self.returnValue
 
 
 	def setupUI(self, WINDOW_OBJECT, WINDOW_TITLE, UI_FILE, STYLESHEET):
@@ -115,8 +74,28 @@ class TemplateUI(QtWidgets.QMainWindow):
 		self.setCentralWidget(self.ui)
 		self.setupWidgets(self.ui)
 
-		# Set window flags
-		self.setWindowFlags(QtCore.Qt.Tool)
+		# Restore window geometry and state
+		if os.environ['IC_ENV'] == 'STANDALONE':
+			# (Restore state may cause issues with PyQt5)
+			verbose.print_("Restoring window geometry.")
+			try:
+				#print(self.windowTitle())
+				self.settings = QtCore.QSettings(VENDOR, WINDOW_TITLE)
+				self.restoreGeometry(self.settings.value("geometry", ""))
+				# self.restoreState(self.settings.value("windowState", ""))
+			except:
+				pass
+
+		elif os.environ['IC_ENV'] == 'MAYA':
+			# Makes Maya perform magic which makes the window stay on top in
+			# OS X and Linux. As an added bonus, it'll make Maya remember the
+			# window position.
+			self.setProperty("saveWindowPref", True)
+
+		elif os.environ['IC_ENV'] == 'NUKE':
+			pass
+
+
 
 
 	# def fileDialog(self, dialogHome):
@@ -307,7 +286,10 @@ class TemplateUI(QtWidgets.QMainWindow):
 						if storeProperties:
 							self.storeValue(category, attr, widget.currentText())
 						if not updateOnly:
-							widget.currentIndexChanged.connect(self.storeComboBoxValue)
+							if widget.isEditable():
+								widget.editTextChanged.connect(self.storeComboBoxValue)
+							else:
+								widget.currentIndexChanged.connect(self.storeComboBoxValue)
 
 
 	def findCategory(self, widget):
@@ -333,35 +315,6 @@ class TemplateUI(QtWidgets.QMainWindow):
 			return True
 		else:
 			return False
-
-
-	# # @QtCore.Slot()
-	# def storeWidgetValue(self):
-	# 	widget = self.sender()
-	# 	attr = widget.property('xmlTag')
-
-	# 	if isinstance(widget, QtWidgets.QSpinBox):
-	# 		value = widget.value()
-	# 		self.storeValue(category, attr, value)
-	# 	elif isinstance(widget, QtWidgets.QDoubleSpinBox):
-	# 		value = widget.value()
-	# 		self.storeValue(category, attr, value)
-	# 	elif isinstance(widget, QtWidgets.QLineEdit):
-	# 		value = widget.text()
-	# 		self.storeValue(category, attr, value)
-	# 	elif isinstance(widget, QtWidgets.QPlainTextEdit):
-	# 		value = widget.toPlainText()
-	# 		self.storeValue(category, attr, value)
-	# 	elif isinstance(widget, QtWidgets.QCheckBox):
-	# 		value = self.getCheckBoxValue(widget)
-	# 		self.storeValue(category, attr, value)
-	# 	elif isinstance(widget, QtWidgets.QRadioButton):
-	# 		if widget.isChecked():
-	# 			value = widget.text()
-	# 			self.storeValue(category, attr, value)
-	# 	elif isinstance(widget, QtWidgets.QComboBox):
-	# 		value = widget.currentText()
-	# 		self.storeValue(category, attr, value)
 
 
 	# @QtCore.Slot()
@@ -476,7 +429,7 @@ class TemplateUI(QtWidgets.QMainWindow):
 		"""
 		string = string.decode()
 		ls = string.splitlines()
-		verbose.print_(ls)
+		#verbose.print_(ls)
 		return ls
 
 
@@ -493,6 +446,22 @@ class TemplateUI(QtWidgets.QMainWindow):
 	# 	""" Event handler for when window is shown.
 	# 	"""
 	# 	pass
+
+
+	def closeEvent(self, event):
+		""" Event handler for when window is closed.
+			Store window geometry and state.
+			(Save state may cause issues with PyQt5)
+		"""
+		if os.environ['IC_ENV'] == 'STANDALONE':
+			verbose.print_("Storing window geometry.")
+			try:
+				self.settings.setValue("geometry", self.saveGeometry())
+				# self.settings.setValue("windowState", self.saveState())
+			except:
+				pass
+
+			QtWidgets.QMainWindow.closeEvent(self, event)
 
 
 	def save(self):
@@ -517,7 +486,7 @@ class TemplateUI(QtWidgets.QMainWindow):
 
 
 	def exit(self):
-		""" Exit the dialog.
+		""" Exit the window with negative return value.
 		"""
 		self.returnValue = False
 		self.hide()
@@ -539,7 +508,7 @@ class TemplateUI(QtWidgets.QMainWindow):
 
 
 # ----------------------------------------------------------------------------
-# DCC application helper functions - MOVE TO MODULE
+# DCC application helper functions
 # ----------------------------------------------------------------------------
 
 def _maya_delete_ui(WINDOW_OBJECT, WINDOW_TITLE):
@@ -575,6 +544,28 @@ def _nuke_main_window():
 		if (obj.inherits('QMainWindow') and obj.metaObject().className() == 'Foundry::UI::DockMainWindow'):
 			return obj
 	raise RuntimeError("Could not find DockMainWindow instance")
+
+
+def _nuke_set_zero_margins(widget_object):
+	""" Remove Nuke margins when docked UI.
+		More info:
+		https://gist.github.com/maty974/4739917
+	"""
+	parentApp = QtWidgets.QApplication.allWidgets()
+	parentWidgetList = []
+	for parent in parentApp:
+		for child in parent.children():
+			if widget_object.__class__.__name__ == child.__class__.__name__:
+				parentWidgetList.append(parent.parentWidget())
+				parentWidgetList.append(parent.parentWidget().parentWidget())
+				parentWidgetList.append(parent.parentWidget().parentWidget().parentWidget())
+
+				for sub in parentWidgetList:
+					for tinychild in sub.children():
+						try:
+							tinychild.setContentsMargins(0, 0, 0, 0)
+						except:
+							pass
 
 
 # ----------------------------------------------------------------------------

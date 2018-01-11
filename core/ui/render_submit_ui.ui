@@ -51,6 +51,9 @@
          <property name="text">
           <string>Submit to:</string>
          </property>
+         <property name="buddy">
+          <cstring>submitTo_comboBox</cstring>
+         </property>
         </widget>
        </item>
        <item row="0" column="1">
@@ -147,6 +150,9 @@
              <property name="text">
               <string>Job type:</string>
              </property>
+             <property name="buddy">
+              <cstring>type_comboBox</cstring>
+             </property>
             </widget>
            </item>
            <item row="0" column="1">
@@ -195,6 +201,9 @@
             <widget class="QLabel" name="scene_label">
              <property name="text">
               <string>Scene:</string>
+             </property>
+             <property name="buddy">
+              <cstring>scene_comboBox</cstring>
              </property>
             </widget>
            </item>
@@ -281,6 +290,9 @@
              <property name="text">
               <string>Render layers:</string>
              </property>
+             <property name="buddy">
+              <cstring>layers_lineEdit</cstring>
+             </property>
             </widget>
            </item>
            <item row="1" column="1">
@@ -348,6 +360,9 @@ QToolButton:pressed, QToolButton:checked:pressed {
              <property name="text">
               <string>Renderer:</string>
              </property>
+             <property name="buddy">
+              <cstring>renderer_comboBox</cstring>
+             </property>
             </widget>
            </item>
            <item row="0" column="1">
@@ -384,6 +399,9 @@ QToolButton:pressed, QToolButton:checked:pressed {
             <widget class="QLabel" name="flags_label">
              <property name="text">
               <string>Additional flags:</string>
+             </property>
+             <property name="buddy">
+              <cstring>flags_lineEdit</cstring>
              </property>
             </widget>
            </item>
@@ -441,6 +459,9 @@ QToolButton:pressed, QToolButton:checked:pressed {
             <widget class="QLabel" name="writeNodes_label">
              <property name="text">
               <string>Write nodes:</string>
+             </property>
+             <property name="buddy">
+              <cstring>writeNodes_lineEdit</cstring>
              </property>
             </widget>
            </item>
@@ -552,6 +573,9 @@ QToolButton:pressed, QToolButton:checked:pressed {
              <property name="text">
               <string>Frames:</string>
              </property>
+             <property name="buddy">
+              <cstring>frames_lineEdit</cstring>
+             </property>
             </widget>
            </item>
            <item row="0" column="1">
@@ -618,6 +642,9 @@ QToolButton:pressed, QToolButton:checked:pressed {
             <widget class="QLabel" name="taskSize_label">
              <property name="text">
               <string>Task size:</string>
+             </property>
+             <property name="buddy">
+              <cstring>taskSize_spinBox</cstring>
              </property>
             </widget>
            </item>
@@ -698,6 +725,9 @@ QToolButton:pressed, QToolButton:checked:pressed {
              <property name="text">
               <string>Priority:</string>
              </property>
+             <property name="buddy">
+              <cstring>priority_spinBox</cstring>
+             </property>
             </widget>
            </item>
            <item row="2" column="1">
@@ -753,6 +783,9 @@ QToolButton:pressed, QToolButton:checked:pressed {
              <property name="text">
               <string>Comment:</string>
              </property>
+             <property name="buddy">
+              <cstring>comment_lineEdit</cstring>
+             </property>
             </widget>
            </item>
            <item row="3" column="1">
@@ -777,12 +810,18 @@ QToolButton:pressed, QToolButton:checked:pressed {
              <property name="text">
               <string>Pool:</string>
              </property>
+             <property name="buddy">
+              <cstring>pool_comboBox</cstring>
+             </property>
             </widget>
            </item>
            <item row="1" column="0">
             <widget class="QLabel" name="group_label">
              <property name="text">
               <string>Group:</string>
+             </property>
+             <property name="buddy">
+              <cstring>group_comboBox</cstring>
              </property>
             </widget>
            </item>
@@ -927,6 +966,33 @@ QToolButton:pressed, QToolButton:checked:pressed {
    </layout>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>submitTo_comboBox</tabstop>
+  <tabstop>submitOptions_scrollArea</tabstop>
+  <tabstop>type_comboBox</tabstop>
+  <tabstop>scene_comboBox</tabstop>
+  <tabstop>sceneBrowse_toolButton</tabstop>
+  <tabstop>renderer_comboBox</tabstop>
+  <tabstop>layers_lineEdit</tabstop>
+  <tabstop>layerOptions_toolButton</tabstop>
+  <tabstop>flags_lineEdit</tabstop>
+  <tabstop>writeNodes_lineEdit</tabstop>
+  <tabstop>writeNodeOptions_toolButton</tabstop>
+  <tabstop>interactiveLicense_checkBox</tabstop>
+  <tabstop>frames_lineEdit</tabstop>
+  <tabstop>frameListOptions_toolButton</tabstop>
+  <tabstop>taskSize_spinBox</tabstop>
+  <tabstop>taskSize_slider</tabstop>
+  <tabstop>pool_comboBox</tabstop>
+  <tabstop>getPools_toolButton</tabstop>
+  <tabstop>group_comboBox</tabstop>
+  <tabstop>getGroups_toolButton</tabstop>
+  <tabstop>priority_spinBox</tabstop>
+  <tabstop>priority_slider</tabstop>
+  <tabstop>comment_lineEdit</tabstop>
+  <tabstop>submit_pushButton</tabstop>
+  <tabstop>close_pushButton</tabstop>
+ </tabstops>
  <resources>
   <include location="rsc.qrc"/>
  </resources>
@@ -938,12 +1004,12 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>88</x>
-     <y>153</y>
+     <x>96</x>
+     <y>497</y>
     </hint>
     <hint type="destinationlabel">
-     <x>165</x>
-     <y>148</y>
+     <x>261</x>
+     <y>496</y>
     </hint>
    </hints>
   </connection>
@@ -954,12 +1020,12 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>233</x>
-     <y>162</y>
+     <x>329</x>
+     <y>496</y>
     </hint>
     <hint type="destinationlabel">
-     <x>84</x>
-     <y>167</y>
+     <x>96</x>
+     <y>497</y>
     </hint>
    </hints>
   </connection>
@@ -970,12 +1036,12 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>116</x>
-     <y>268</y>
+     <x>140</x>
+     <y>378</y>
     </hint>
     <hint type="destinationlabel">
-     <x>187</x>
-     <y>265</y>
+     <x>327</x>
+     <y>377</y>
     </hint>
    </hints>
   </connection>
@@ -986,12 +1052,12 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>276</x>
-     <y>275</y>
+     <x>416</x>
+     <y>377</y>
     </hint>
     <hint type="destinationlabel">
-     <x>118</x>
-     <y>284</y>
+     <x>140</x>
+     <y>378</y>
     </hint>
    </hints>
   </connection>
