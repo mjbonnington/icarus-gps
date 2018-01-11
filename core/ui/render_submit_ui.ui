@@ -263,7 +263,7 @@
           <property name="expandable" stdset="0">
            <bool>true</bool>
           </property>
-          <property name="xmlTag" stdset="0">
+          <property name="xmlCategory" stdset="0">
            <string>maya</string>
           </property>
           <layout class="QFormLayout" name="mayaOptions_formLayout">
@@ -424,7 +424,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
           <property name="expandable" stdset="0">
            <bool>true</bool>
           </property>
-          <property name="xmlTag" stdset="0">
+          <property name="xmlCategory" stdset="0">
            <string>nuke</string>
           </property>
           <layout class="QFormLayout" name="nukeOptions_formLayout">
@@ -534,7 +534,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
           <property name="expandable" stdset="0">
            <bool>true</bool>
           </property>
-          <property name="xmlTag" stdset="0">
+          <property name="xmlCategory" stdset="0">
            <string>frames</string>
           </property>
           <layout class="QFormLayout" name="frames_formLayout">
@@ -683,7 +683,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
           <property name="expandable" stdset="0">
            <bool>true</bool>
           </property>
-          <property name="xmlTag" stdset="0">
+          <property name="xmlCategory" stdset="0">
            <string>submission</string>
           </property>
           <layout class="QFormLayout" name="submit_formLayout">

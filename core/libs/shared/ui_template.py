@@ -8,6 +8,9 @@
 # UI Template.
 # A class derived from QMainWindow to act as a template for all windows and
 # dialogs.
+# This module provides windowing / UI helper functions for better integration
+# of PySide / PyQt UIs in supported DCC applications.
+# Currently only supports Maya and Nuke.
 
 
 import os
@@ -27,12 +30,12 @@ import verbose
 # ----------------------------------------------------------------------------
 
 # Set window title and object names
-WINDOW_TITLE = "Custom Window"
-WINDOW_OBJECT = "customUI"
+# WINDOW_TITLE = "Custom Window"
+# WINDOW_OBJECT = "customUI"
 
 # Set the UI and the stylesheet
-UI_FILE = "settings_test_ui.ui"
-STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
+# UI_FILE = "settings_test_ui.ui"
+# STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
 
 # Prevent spawned processes from opening a shell window
 CREATE_NO_WINDOW = 0x08000000
@@ -48,6 +51,9 @@ class TemplateUI(QtWidgets.QMainWindow):
 	def __init__(self, parent=None):
 		super(TemplateUI, self).__init__(parent)
 		self.parent = parent
+
+		# Instantiate XML data classes
+		self.xd = settingsData.settingsData()
 
 		# # Set object name and window title
 		# self.setObjectName(WINDOW_OBJECT)
@@ -72,26 +78,89 @@ class TemplateUI(QtWidgets.QMainWindow):
 		# pass
 
 
-	def display(self):
-		""" Display the window.
+	# def display(self):
+	# 	""" Display the window.
+	# 	"""
+	# 	self.returnValue = False
+
+	# 	# Read user prefs config file - if it doesn't exist it will be created
+	# 	#userPrefs.read()
+
+	# 	# Instantiate XML data classes
+	# 	self.xd = settingsData.settingsData()
+	# 	#xd_load = self.xd.loadXML(self.xmlData)
+
+	# 	self.xmlData = settingsFile
+	# 	self.xd.loadXML(self.xmlData)
+	# 	self.setupWidgets(self.ui)
+
+	# 	self.show()
+	# 	self.raise_()
+
+	# 	return self.returnValue
+
+
+	def setupUI(self, WINDOW_OBJECT, WINDOW_TITLE, UI_FILE, STYLESHEET):
+		""" Setup the UI.
 		"""
-		self.returnValue = False
+		# Set object name and window title
+		self.setObjectName(WINDOW_OBJECT)
+		self.setWindowTitle(WINDOW_TITLE)
 
-		# Read user prefs config file - if it doesn't exist it will be created
-		#userPrefs.read()
+		# Load UI & stylesheet
+		self.ui = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], UI_FILE))
+		self.reloadStyleSheet(STYLESHEET)
 
-		# Instantiate XML data classes
-		self.xd = settingsData.settingsData()
-		#xd_load = self.xd.loadXML(self.xmlData)
-
-		self.xmlData = settingsFile
-		self.xd.loadXML(self.xmlData)
+		# Set the main widget & perform custom widget setup
+		self.setCentralWidget(self.ui)
 		self.setupWidgets(self.ui)
 
-		self.show()
-		self.raise_()
+		# Set window flags
+		self.setWindowFlags(QtCore.Qt.Tool)
 
-		return self.returnValue
+
+	# def fileDialog(self, dialogHome):
+	# 	""" Opens a dialog from which to select a single file.
+	# 		The env check puts the main window in the background so dialog pop
+	# 		up can return properly when running inside certain applications.
+	# 		The window flags bypass a Mac bug that made the dialog always
+	# 		appear under the Icarus window. This is ignored in a Linux env.
+	# 	"""
+	# 	envOverride = ['MAYA', 'NUKE']
+	# 	if os.environ['IC_ENV'] in envOverride:
+	# 		if os.environ['IC_RUNNING_OS'] == 'Darwin':
+	# 			self.setWindowFlags(QtCore.Qt.WindowStaysOnBottomHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+	# 			self.show()
+	# 		dialog = QtWidgets.QFileDialog.getOpenFileName(self, self.tr('Files'), dialogHome, 'All files (*.*)')
+	# 		if os.environ['IC_RUNNING_OS'] == 'Darwin':
+	# 			self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+	# 			self.show()
+	# 	else:
+	# 		dialog = QtWidgets.QFileDialog.getOpenFileName(self, self.tr('Files'), dialogHome, 'All files (*.*)')
+
+	# 	return dialog[0]
+
+
+	# def folderDialog(self, dialogHome):
+	# 	""" Opens a dialog from which to select a folder.
+	# 		The env check puts the main window in the background so dialog pop
+	# 		up can return properly when running inside certain applications.
+	# 		The window flags bypass a Mac bug that made the dialog always
+	# 		appear under the Icarus window. This is ignored in a Linux env.
+	# 	"""
+	# 	envOverride = ['MAYA', 'NUKE']
+	# 	if os.environ['IC_ENV'] in envOverride:
+	# 		if os.environ['IC_RUNNING_OS'] == 'Darwin':
+	# 			self.setWindowFlags(QtCore.Qt.WindowStaysOnBottomHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+	# 			self.show()
+	# 		dialog = QtWidgets.QFileDialog.getExistingDirectory(self, self.tr('Directory'), dialogHome, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
+	# 		if os.environ['IC_RUNNING_OS'] == 'Darwin':
+	# 			self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+	# 			self.show()
+	# 	else:
+	# 		dialog = QtWidgets.QFileDialog.getExistingDirectory(self, self.tr('Directory'), dialogHome, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
+
+	# 	return dialog
 
 
 	# def sceneBrowse(self):
@@ -128,118 +197,133 @@ class TemplateUI(QtWidgets.QMainWindow):
 	# 			verbose.warning("Only %s belonging to the current shot can be submitted." %fileTerminology)
 
 
-	def setupWidgets(self, category, storeProperties=True):
-		""" Set up all the child widgets of the specified parent object.
-		"""
-
-
-	def setupExpandableGroupBoxes(self, parentObject):
-		""" Enable expansion of custom rollout group box controls.
-		"""
-		for groupBox in parentObject.findChildren(QtWidgets.QGroupBox):
-			if groupBox.property('expandable'):
-				groupBox.setCheckable(True)
-				#groupBox.setChecked(expand)
-				groupBox.setFixedHeight(groupBox.sizeHint().height())
-				groupBox.toggled.connect(self.toggleExpandGroup)
-
-
-	# @QtCore.Slot()
-	def toggleExpandGroup(self):
-		""" Toggle expansion of custom rollout group box control.
-		"""
-		groupBox = self.sender()
-		state = groupBox.isChecked()
-		if state:
-			groupBox.setFixedHeight(groupBox.sizeHint().height())
-		else:
-			groupBox.setFixedHeight(20)  # Slightly hacky - needs to match value defined in QSS
-
-
 	# ------------------------------------------------------------------------
 	# Widget handlers
 
-	def setupWidgets(self, parentObject, category, storeProperties=True):
+	def setupWidgets(self, parentObject, storeProperties=True, updateOnly=False):
 		""" Set up all the child widgets of the specified parent object.
+			If 'storeProperties' is True, the values will be stored in the XML
+			data as well as applied to the widgets.
+			If 'updateOnly' is True, only the widgets' values will be updated.
 		"""
+		if updateOnly:
+			storeProperties = False
+
 		for widget in parentObject.findChildren(QtWidgets.QWidget):
+
+			# Enable expansion of custom rollout group box controls...
+			if widget.property('expandable'):
+				if isinstance(widget, QtWidgets.QGroupBox):
+					widget.setCheckable(True)
+					# widget.setChecked(expand)
+					widget.setFixedHeight(widget.sizeHint().height())
+					if not updateOnly:
+						widget.toggled.connect(self.toggleExpandGroup)
 
 			# Set up handler for push buttons...
 			if widget.property('exec'):
 				if isinstance(widget, QtWidgets.QPushButton):
-					widget.clicked.connect(self.execPushButton)
+					if not updateOnly:
+						widget.clicked.connect(self.execPushButton)
 
 			# Set up handlers for different widget types & apply values
 			attr = widget.property('xmlTag')
 			if attr:
-				value = self.xd.getValue(category, attr)
+				self.base_widget = widget.objectName()
+				category = self.findCategory(widget)
+				if category:
+					widget.setProperty('xmlCategory', category)
+					value = self.xd.getValue(category, attr)
 
-				# Spin boxes...
-				if isinstance(widget, QtWidgets.QSpinBox):
-					if value is not "":
-						widget.setValue(int(value))
-					if storeProperties:
-						self.storeValue(attr, widget.value())
-					widget.valueChanged.connect(self.storeSpinBoxValue)
+					# Spin boxes...
+					if isinstance(widget, QtWidgets.QSpinBox):
+						if value is not "":
+							widget.setValue(int(value))
+						if storeProperties:
+							self.storeValue(category, attr, widget.value())
+						if not updateOnly:
+							widget.valueChanged.connect(self.storeSpinBoxValue)
 
-				# Double spin boxes...
-				elif isinstance(widget, QtWidgets.QDoubleSpinBox):
-					if value is not "":
-						widget.setValue(float(value))
-					if storeProperties:
-						self.storeValue(attr, widget.value())
-					widget.valueChanged.connect(self.storeSpinBoxValue)
+					# Double spin boxes...
+					elif isinstance(widget, QtWidgets.QDoubleSpinBox):
+						if value is not "":
+							widget.setValue(float(value))
+						if storeProperties:
+							self.storeValue(category, attr, widget.value())
+						if not updateOnly:
+							widget.valueChanged.connect(self.storeSpinBoxValue)
 
-				# Line edits...
-				elif isinstance(widget, QtWidgets.QLineEdit):
-					if value is not "":
-						widget.setText(value)
-					if storeProperties:
-						self.storeValue(attr, widget.text())
-					widget.textEdited.connect(self.storeLineEditValue)
+					# Line edits...
+					elif isinstance(widget, QtWidgets.QLineEdit):
+						if value is not "":
+							widget.setText(value)
+						if storeProperties:
+							self.storeValue(category, attr, widget.text())
+						if not updateOnly:
+							widget.textEdited.connect(self.storeLineEditValue)
 
-				# Plain text edits...
-				elif isinstance(widget, QtWidgets.QPlainTextEdit):
-					if value is not "":
-						widget.setPlainText(value)
-					if storeProperties:
-						self.storeValue(attr, widget.toPlainText())
-					widget.textChanged.connect(self.storeTextEditValue)
+					# Plain text edits...
+					elif isinstance(widget, QtWidgets.QPlainTextEdit):
+						if value is not "":
+							widget.setPlainText(value)
+						if storeProperties:
+							self.storeValue(category, attr, widget.toPlainText())
+						if not updateOnly:
+							widget.textChanged.connect(self.storeTextEditValue)
 
-				# Check boxes...
-				elif isinstance(widget, QtWidgets.QCheckBox):
-					if value is not "":
-						if value == "True":
-							widget.setCheckState(QtCore.Qt.Checked)
-						elif value == "False":
-							widget.setCheckState(QtCore.Qt.Unchecked)
-					if storeProperties:
-						self.storeValue(attr, self.getCheckBoxValue(widget))
-					widget.toggled.connect(self.storeCheckBoxValue)
+					# Check boxes...
+					elif isinstance(widget, QtWidgets.QCheckBox):
+						if value is not "":
+							if value == "True":
+								widget.setCheckState(QtCore.Qt.Checked)
+							elif value == "False":
+								widget.setCheckState(QtCore.Qt.Unchecked)
+						if storeProperties:
+							self.storeValue(category, attr, self.getCheckBoxValue(widget))
+						if not updateOnly:
+							widget.toggled.connect(self.storeCheckBoxValue)
 
-				# Radio buttons...
-				elif isinstance(widget, QtWidgets.QRadioButton):
-					if value is not "":
-						widget.setAutoExclusive(False)
-						if value == widget.text():
-							widget.setChecked(True)
-						else:
-							widget.setChecked(False)
-						widget.setAutoExclusive(True)
-					if storeProperties:
-						if widget.isChecked():
-							self.storeValue(attr, widget.text())
-					widget.toggled.connect(self.storeRadioButtonValue)
+					# Radio buttons...
+					elif isinstance(widget, QtWidgets.QRadioButton):
+						if value is not "":
+							widget.setAutoExclusive(False)
+							if value == widget.text():
+								widget.setChecked(True)
+							else:
+								widget.setChecked(False)
+							widget.setAutoExclusive(True)
+						if storeProperties:
+							if widget.isChecked():
+								self.storeValue(category, attr, widget.text())
+						if not updateOnly:
+							widget.toggled.connect(self.storeRadioButtonValue)
 
-				# Combo boxes...
-				elif isinstance(widget, QtWidgets.QComboBox):
-					if value is not "":
-						if widget.findText(value) == -1:
-							self.ui.pool_comboBox.addItem(value)
-						widget.setCurrentIndex(widget.findText(value))
-					if storeProperties:
-						self.storeValue(attr, widget.currentText())
-					widget.currentIndexChanged.connect(self.storeComboBoxValue)
+					# Combo boxes...
+					elif isinstance(widget, QtWidgets.QComboBox):
+						if value is not "":
+							if widget.findText(value) == -1:
+								widget.addItem(value)
+							widget.setCurrentIndex(widget.findText(value))
+						if storeProperties:
+							self.storeValue(category, attr, widget.currentText())
+						if not updateOnly:
+							widget.currentIndexChanged.connect(self.storeComboBoxValue)
+
+
+	def findCategory(self, widget):
+		""" Recursively check the parents of the given widget until a custom
+			property 'xmlCategory' is found.
+		"""
+		if widget.property('xmlCategory'):
+			#verbose.print_("Category '%s' found for '%s'." %(widget.property('xmlCategory'), widget.objectName()))
+			return widget.property('xmlCategory')
+		else:
+			# Stop iterating if the widget's parent in the main window...
+			if isinstance(widget.parent(), QtWidgets.QMainWindow):
+				verbose.warning("No category could be found for '%s'. The widget's value cannot be stored." %self.base_widget)
+				return None
+			else:
+				return self.findCategory(widget.parent())
 
 
 	def getCheckBoxValue(self, checkBox):
@@ -258,62 +342,66 @@ class TemplateUI(QtWidgets.QMainWindow):
 
 	# 	if isinstance(widget, QtWidgets.QSpinBox):
 	# 		value = widget.value()
-	# 		self.storeValue(attr, value)
+	# 		self.storeValue(category, attr, value)
 	# 	elif isinstance(widget, QtWidgets.QDoubleSpinBox):
 	# 		value = widget.value()
-	# 		self.storeValue(attr, value)
+	# 		self.storeValue(category, attr, value)
 	# 	elif isinstance(widget, QtWidgets.QLineEdit):
 	# 		value = widget.text()
-	# 		self.storeValue(attr, value)
+	# 		self.storeValue(category, attr, value)
 	# 	elif isinstance(widget, QtWidgets.QPlainTextEdit):
 	# 		value = widget.toPlainText()
-	# 		self.storeValue(attr, value)
+	# 		self.storeValue(category, attr, value)
 	# 	elif isinstance(widget, QtWidgets.QCheckBox):
 	# 		value = self.getCheckBoxValue(widget)
-	# 		self.storeValue(attr, value)
+	# 		self.storeValue(category, attr, value)
 	# 	elif isinstance(widget, QtWidgets.QRadioButton):
 	# 		if widget.isChecked():
 	# 			value = widget.text()
-	# 			self.storeValue(attr, value)
+	# 			self.storeValue(category, attr, value)
 	# 	elif isinstance(widget, QtWidgets.QComboBox):
 	# 		value = widget.currentText()
-	# 		self.storeValue(attr, value)
+	# 		self.storeValue(category, attr, value)
 
 
 	# @QtCore.Slot()
 	def storeSpinBoxValue(self):
 		""" Get the value from a Spin Box and store in XML data.
 		"""
+		category = self.sender().property('xmlCategory')
 		attr = self.sender().property('xmlTag')
 		value = self.sender().value()
-		self.storeValue(attr, value)
+		self.storeValue(category, attr, value)
 
 
 	# @QtCore.Slot()
 	def storeLineEditValue(self):
 		""" Get the value from a Line Edit and store in XML data.
 		"""
+		category = self.sender().property('xmlCategory')
 		attr = self.sender().property('xmlTag')
 		value = self.sender().text()
-		self.storeValue(attr, value)
+		self.storeValue(category, attr, value)
 
 
 	# @QtCore.Slot()
 	def storeTextEditValue(self):
 		""" Get the value from a Plain Text Edit and store in XML data.
 		"""
+		category = self.sender().property('xmlCategory')
 		attr = self.sender().property('xmlTag')
 		value = self.sender().toPlainText()
-		self.storeValue(attr, value)
+		self.storeValue(category, attr, value)
 
 
 	# @QtCore.Slot()
 	def storeCheckBoxValue(self):
 		""" Get the value from a Check Box and store in XML data.
 		"""
+		category = self.sender().property('xmlCategory')
 		attr = self.sender().property('xmlTag')
 		value = self.getCheckBoxValue(self.sender())
-		self.storeValue(attr, value)
+		self.storeValue(category, attr, value)
 
 
 	# @QtCore.Slot()
@@ -321,26 +409,62 @@ class TemplateUI(QtWidgets.QMainWindow):
 		""" Get the value from a Radio Button group and store in XML data.
 		"""
 		if self.sender().isChecked():
+			category = self.sender().property('xmlCategory')
 			attr = self.sender().property('xmlTag')
 			value = self.sender().text()
-			self.storeValue(attr, value)
+			self.storeValue(category, attr, value)
 
 
 	# @QtCore.Slot()
 	def storeComboBoxValue(self):
 		""" Get the value from a Combo Box and store in XML data.
 		"""
+		category = self.sender().property('xmlCategory')
 		attr = self.sender().property('xmlTag')
 		value = self.sender().currentText()
-		self.storeValue(attr, value)
+		self.storeValue(category, attr, value)
 
 
-	def storeValue(self, attr, value=""):
+	def storeValue(self, category, attr, value=""):
 		""" Store value in XML data.
 		"""
 		verbose.print_("%20s %s.%s=%s" %(type(value), category, attr, value))
 		# userPrefs.edit(category, attr, value)
 		self.xd.setValue(category, attr, str(value))
+
+
+	# @QtCore.Slot()
+	def toggleExpandGroup(self):
+		""" Toggle expansion of custom rollout group box control.
+		"""
+		groupBox = self.sender()
+		state = groupBox.isChecked()
+		if state:
+			groupBox.setFixedHeight(groupBox.sizeHint().height())
+		else:
+			groupBox.setFixedHeight(20)  # Slightly hacky - needs to match value defined in QSS
+
+
+	def populateComboBox(self, comboBox, contents_list):
+		""" Use a list (contents_list) to populate a combo box.
+		"""
+		# Store current value
+		current = comboBox.currentText()
+
+		# Clear menu
+		comboBox.clear()
+
+		# Populate menu
+		for item in contents_list:
+			if item:
+				comboBox.addItem(item)
+
+		# Set to current value
+		index = comboBox.findText(current)
+		if index == -1:
+			comboBox.setCurrentIndex(0)
+		else:
+			comboBox.setCurrentIndex(index)
 
 	# End widget handlers
 	# ------------------------------------------------------------------------
@@ -356,31 +480,7 @@ class TemplateUI(QtWidgets.QMainWindow):
 		return ls
 
 
-	def populateComboBox(self, comboBox, contentsLs):
-		""" Populate combo box.
-		"""
-		# Store current value
-		current = comboBox.currentText()
-
-		# Clear menu
-		comboBox.clear()
-
-		# Populate menu
-		for item in contentsLs:
-			if item:
-				comboBox.addItem(item)
-
-		# Set to current value
-		index = comboBox.findText(current)
-		if index == -1:
-			comboBox.setCurrentIndex(0)
-		else:
-			comboBox.setCurrentIndex(index)
-
-
-
-
-	def reloadStyleSheet(self):
+	def reloadStyleSheet(self, STYLESHEET):
 		""" Reload stylesheet.
 		"""
 		if STYLESHEET is not None:
@@ -389,10 +489,10 @@ class TemplateUI(QtWidgets.QMainWindow):
 				self.ui.setStyleSheet(fh.read())
 
 
-	def showEvent(self, event):
-		""" Event handler for when window is shown.
-		"""
-		pass
+	# def showEvent(self, event):
+	# 	""" Event handler for when window is shown.
+	# 	"""
+	# 	pass
 
 
 	def save(self):
@@ -442,7 +542,7 @@ class TemplateUI(QtWidgets.QMainWindow):
 # DCC application helper functions - MOVE TO MODULE
 # ----------------------------------------------------------------------------
 
-def _maya_delete_ui():
+def _maya_delete_ui(WINDOW_OBJECT, WINDOW_TITLE):
 	""" Delete existing UI in Maya.
 	"""
 	if mc.window(WINDOW_OBJECT, query=True, exists=True):
@@ -451,7 +551,7 @@ def _maya_delete_ui():
 		mc.deleteUI('MayaWindow|' + WINDOW_TITLE)  # Delete docked window
 
 
-def _nuke_delete_ui():
+def _nuke_delete_ui(WINDOW_OBJECT, WINDOW_TITLE):
 	""" Delete existing UI in Nuke.
 	"""
 	for obj in QtWidgets.QApplication.allWidgets():
@@ -481,39 +581,40 @@ def _nuke_main_window():
 # Run functions
 # ----------------------------------------------------------------------------
 
-def run_maya(**kwargs):
-	""" Run in Maya.
-	"""
-	_maya_delete_ui()  # Delete any already existing UI
-	customUI = TemplateUI(parent=_maya_main_window())
+# def run_maya(**kwargs):
+# 	""" Run in Maya.
+# 	"""
+# 	_maya_delete_ui()  # Delete any already existing UI
+# 	customUI = TemplateUI(parent=_maya_main_window())
 
-	# Makes Maya perform magic which makes the window stay on top in OS X and
-	# Linux. As an added bonus, it'll make Maya remember the window position.
-	customUI.setProperty("saveWindowPref", True)
+# 	# Makes Maya perform magic which makes the window stay on top in OS X and
+# 	# Linux. As an added bonus, it'll make Maya remember the window position.
+# 	customUI.setProperty("saveWindowPref", True)
 
-	customUI.display(**kwargs)  # Show the UI
+# 	customUI.display(**kwargs)  # Show the UI
 
 
-def run_nuke(**kwargs):
-	""" Run in Nuke.
-	"""
-	_nuke_delete_ui()  # Delete any already existing UI
-	customUI = TemplateUI(parent=_nuke_main_window())
+# def run_nuke(**kwargs):
+# 	""" Run in Nuke.
+# 	"""
+# 	_nuke_delete_ui()  # Delete any already existing UI
+# 	customUI = TemplateUI(parent=_nuke_main_window())
 
-	customUI.display(**kwargs)  # Show the UI
+# 	customUI.display(**kwargs)  # Show the UI
 
 
 # Detect environment and run application
 if os.environ['IC_ENV'] == 'STANDALONE':
-	verbose.print_("[GPS] %s" %WINDOW_TITLE)
+	pass
+	# verbose.print_("[GPS] %s" %WINDOW_TITLE)
 elif os.environ['IC_ENV'] == 'MAYA':
 	import maya.cmds as mc
-	verbose.print_("[GPS] %s for Maya" %WINDOW_TITLE)
+	# verbose.print_("[GPS] %s for Maya" %WINDOW_TITLE)
 	# run_maya()
 elif os.environ['IC_ENV'] == 'NUKE':
 	import nuke
 	import nukescripts
-	verbose.print_("[GPS] %s for Nuke" %WINDOW_TITLE)
+	# verbose.print_("[GPS] %s for Nuke" %WINDOW_TITLE)
 	# run_nuke()
 # elif __name__ == '__main__':
 # 	run_standalone()

@@ -14,6 +14,9 @@
    <string>GPS Preview</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="xmlCategory" stdset="0">
+    <string>gpspreview</string>
+   </property>
    <layout class="QVBoxLayout" name="main_verticalLayout">
     <property name="margin">
      <number>8</number>
@@ -28,6 +31,9 @@
       </property>
       <property name="checkable">
        <bool>false</bool>
+      </property>
+      <property name="expandable" stdset="0">
+       <bool>true</bool>
       </property>
       <layout class="QFormLayout" name="generalOptions_formLayout">
        <property name="fieldGrowthPolicy">
@@ -175,12 +181,9 @@
        </item>
       </layout>
       <zorder>file_label</zorder>
-      <zorder>file_label</zorder>
       <zorder>cam_label</zorder>
       <zorder></zorder>
-      <zorder></zorder>
       <zorder>label</zorder>
-      <zorder>layoutWidget</zorder>
      </widget>
     </item>
     <item>
@@ -196,6 +199,9 @@
       </property>
       <property name="checkable">
        <bool>false</bool>
+      </property>
+      <property name="expandable" stdset="0">
+       <bool>true</bool>
       </property>
       <layout class="QGridLayout" name="res_range_gridLayout">
        <property name="margin">
@@ -407,6 +413,9 @@
       </property>
       <property name="checkable">
        <bool>false</bool>
+      </property>
+      <property name="expandable" stdset="0">
+       <bool>true</bool>
       </property>
       <layout class="QGridLayout" name="options_gridLayout">
        <property name="margin">
