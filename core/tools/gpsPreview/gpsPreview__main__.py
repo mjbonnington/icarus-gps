@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2014-2017 Gramercy Park Studios
+# (c) 2014-2018 Gramercy Park Studios
 #
 # GPS Preview: a generic UI for previewing animations, replaces Maya's
 # playblast interface.
@@ -46,40 +46,38 @@ DOCK_WITH_NUKE_UI = False
 # Main window class
 # ----------------------------------------------------------------------------
 
-class previewUI(UI.TemplateUI):
-	""" Launches and controls GPS Preview UI.
+class PreviewUI(UI.TemplateUI):
+	""" GPS Preview UI.
 	"""
 	def __init__(self, parent=None):
-		super(previewUI, self).__init__(parent)
+		super(PreviewUI, self).__init__(parent)
 		self.parent = parent
 
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Tool)
 
-		# Instantiate XML data classes
-		# self.xd = settingsData.settingsData()  # DONE IN TEMPLATE
+		# Load XML data
 		xd_load = self.xd.loadXML(os.path.join(os.environ['IC_USERPREFS'], 'userPrefs.xml'))
 		self.setupUI(WINDOW_OBJECT, WINDOW_TITLE, UI_FILE, STYLESHEET)
 
 		# Connect signals & slots
-		self.ui.preview_pushButton.clicked.connect(self.preview)
-		self.ui.reset_toolButton.clicked.connect(self.resetFilename)
+		self.ui.name_lineEdit.textChanged.connect(self.checkFilename)
+		self.ui.nameUpdate_toolButton.clicked.connect(self.updateFilename)
+		self.ui.camera_radioButton.toggled.connect(self.updateCameras)
 		self.ui.resolution_comboBox.currentIndexChanged.connect(self.updateResGrp)
-		self.ui.range_comboBox.currentIndexChanged.connect(self.updateRangeGrp)
-
-		self.ui.file_lineEdit.textChanged.connect(self.storeFilename)
 		self.ui.x_spinBox.valueChanged.connect(self.storeRes)
 		self.ui.y_spinBox.valueChanged.connect(self.storeRes)
+		self.ui.range_comboBox.currentIndexChanged.connect(self.updateRangeGrp)
 		self.ui.start_spinBox.valueChanged.connect(self.storeRangeStart)
 		self.ui.end_spinBox.valueChanged.connect(self.storeRangeEnd)
+		self.ui.preview_pushButton.clicked.connect(self.preview)
 
 		# Set input validators
-		# alphanumeric_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w\.-]+'), self.ui.file_lineEdit)
-		alphanumeric_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w]+'), self.ui.file_lineEdit)
-		self.ui.file_lineEdit.setValidator(alphanumeric_validator)
+		alphanumeric_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w]+'), self.ui.name_lineEdit) #r'[\w\.-]+'
+		self.ui.name_lineEdit.setValidator(alphanumeric_validator)
 
 		# Populate UI with env vars
-		self.display()
+		# self.display()
 
 
 	def display(self):
@@ -89,47 +87,12 @@ class previewUI(UI.TemplateUI):
 
 		# Read user prefs config file - if it doesn't exist it will be created
 		# userPrefs.read()
+		# self.xd.loadXML()
 
-		self.resetFilename()
-		self.storeFilename()
-
-		# # Load values into form widgets (make recursive)
-		# for widget in self.ui.options_groupBox.children():
-
-		# 	# Set up handlers for different widget types & apply values
-		# 	attr = widget.property('xmlTag')
-		# 	if attr:
-
-		# 		# Check box(es)...
-		# 		if isinstance(widget, QtWidgets.QCheckBox):
-		# 			try:
-		# 				value = userPrefs.config.getboolean('gpspreview', attr)
-		# 				widget.setChecked(value)
-		# 				#print("Set")
-		# 			except:
-		# 				self.storeValue(attr, self.getCheckBoxValue(widget))
-		# 				#print("Store")
-		# 			widget.toggled.connect(self.storeCheckBoxValue)
-
-		# 		# # Combo box(es)...
-		# 		# elif isinstance(widget, QtWidgets.QComboBox):
-		# 		# 	if value is not "":
-		# 		# 		widget.setCurrentIndex(widget.findText(value))
-		# 		# 	if storeProperties:
-		# 		# 		self.storeValue(attr, widget.currentText())
-		# 		# 	# widget.currentIndexChanged.connect(lambda index: self.storeComboBoxValue(index))
-		# 		# 	widget.currentIndexChanged.connect(self.storeComboBoxValue)
-
-		# try:
-		# 	self.ui.resolution_comboBox.setCurrentIndex(userPrefs.config.getint('gpspreview', 'resolutionmode'))
-		# except:
-		# 	pass
-
-		# try:
-		# 	self.ui.range_comboBox.setCurrentIndex(userPrefs.config.getint('gpspreview', 'framerangemode'))
-		# except:
-		# 	pass
-
+		if not self.ui.name_lineEdit.text():
+			self.updateFilename()
+		self.checkFilename()
+		self.updateCameras()
 		self.updateResGrp()
 		self.updateRangeGrp()
 
@@ -138,20 +101,17 @@ class previewUI(UI.TemplateUI):
 		return self.returnValue
 
 
-	# def getCheckBoxValue(self, checkBox):
-	# 	""" Get the value from a checkbox and return a Boolean value.
-	# 	"""
-	# 	if checkBox.checkState() == QtCore.Qt.Checked:
-	# 		return True
-	# 	else:
-	# 		return False
-
-
-	def resetFilename(self):
+	def updateFilename(self):
 		""" Reset filename field to use scene/script/project filename.
 		"""
-		filename = osOps.sanitize(appConnect.getScene(), pattern="[^\w]", replace="_")
-		self.ui.file_lineEdit.setText(filename)
+		filename = osOps.sanitize(appConnect.getScene(), pattern=r"[^\w]", replace="_")
+		self.ui.name_lineEdit.setText(filename)
+
+
+	def updateCameras(self):
+		""" Update camera combo box.
+		"""
+		self.populateComboBox(self.ui.camera_comboBox, appConnect.getCameras())
 
 
 	def updateResGrp(self):
@@ -169,17 +129,20 @@ class previewUI(UI.TemplateUI):
 		if resMode == "Custom":
 			self.ui.x_spinBox.setEnabled(True) #setReadOnly(False)
 			self.ui.y_spinBox.setEnabled(True) #setReadOnly(False)
+			self.ui.resSep_label.setEnabled(True)
 			# Read values from user settings
-			try:
-				#res = userPrefs.config.get('gpspreview', 'customresolution').split('x')
-				res = self.xd.getValue('gpspreview', 'customresolution').split('x')
-				res[0] = int(res[0])
-				res[1] = int(res[1])
-			except:
-				pass
+			#res = userPrefs.config.get('gpspreview', 'customresolution').split('x')
+			value = self.xd.getValue('gpspreview', 'customresolution')
+			if value is not "":
+				try:
+					res = value.split('x')
+					res = int(res[0]), int(res[1])
+				except:
+					pass
 		else:
 			self.ui.x_spinBox.setEnabled(False) #setReadOnly(True)
 			self.ui.y_spinBox.setEnabled(False) #setReadOnly(True)
+			self.ui.resSep_label.setEnabled(False)
 			if resMode == "Shot default":
 				res = int(os.environ['RESOLUTIONX']), int(os.environ['RESOLUTIONY'])
 			elif resMode == "Proxy":
@@ -190,10 +153,6 @@ class previewUI(UI.TemplateUI):
 				resOrig = appConnect.getResolution()
 				resMult = float(self.ui.resolution_comboBox.currentText().replace('%', '')) / 100.0
 				res = int((float(resOrig[0])*resMult)), int((float(resOrig[1])*resMult))
-
-		# Store mode setting in user prefs
-		#userPrefs.edit('gpspreview', 'resolutionmode', str(self.ui.resolution_comboBox.currentIndex()))
-		#self.storeValue('resolutionmode', self.ui.resolution_comboBox.currentIndex())
 
 		# Update widgets
 		self.ui.x_spinBox.setValue(res[0])
@@ -219,17 +178,20 @@ class previewUI(UI.TemplateUI):
 		if rangeMode == "Custom":
 			self.ui.start_spinBox.setEnabled(True) #setReadOnly(False)
 			self.ui.end_spinBox.setEnabled(True) #setReadOnly(False)
+			self.ui.rangeSep_label.setEnabled(True)
 			# Read values from user settings
-			try:
-				#frRange = userPrefs.config.get('gpspreview', 'customframerange').split('-')
-				frRange = self.xd.getValue('gpspreview', 'customframerange').split('-')
-				frRange[0] = int(frRange[0])
-				frRange[1] = int(frRange[1])
-			except:
-				pass
+			#frRange = userPrefs.config.get('gpspreview', 'customframerange').split('-')
+			value = self.xd.getValue('gpspreview', 'customframerange')
+			if value is not "":
+				try:
+					frRange = value.split('-')
+					frRange = int(frRange[0]), int(frRange[1])
+				except:
+					pass
 		else:
 			self.ui.start_spinBox.setEnabled(False) #setReadOnly(True)
 			self.ui.end_spinBox.setEnabled(False) #setReadOnly(True)
+			self.ui.rangeSep_label.setEnabled(False)
 			self.ui.start_spinBox.setMaximum(9999)
 			self.ui.end_spinBox.setMinimum(0)
 			if rangeMode == "Shot default":
@@ -239,10 +201,6 @@ class previewUI(UI.TemplateUI):
 			elif rangeMode == "Current frame only":
 				frame = appConnect.getCurrentFrame()
 				frRange = frame, frame
-
-		# Store mode setting in user prefs
-		#userPrefs.edit('gpspreview', 'framerangemode', str(self.ui.range_comboBox.currentIndex()))
-		#self.storeValue('framerangemode', self.ui.range_comboBox.currentIndex())
 
 		# Update widgets
 		self.ui.start_spinBox.setValue(frRange[0])
@@ -254,10 +212,10 @@ class previewUI(UI.TemplateUI):
 
 
 	# @QtCore.Slot()
-	def storeFilename(self):
-		""" Store custom output filename in user prefs.
+	def checkFilename(self):
+		""" Check custom output filename and adjust UI appropriately.
 		"""
-		filename = self.ui.file_lineEdit.text()
+		filename = self.ui.name_lineEdit.text()
 		if filename:
 			# userPrefs.edit('gpspreview', 'customfilename', filename)
 			# self.storeValue('customfilename', filename)
@@ -309,40 +267,33 @@ class previewUI(UI.TemplateUI):
 		self.storeValue('gpspreview', 'customframerange', frRange)
 
 
-	# # @QtCore.Slot()
-	# def storeCheckBoxValue(self):
-	# 	""" Get the value from a Check Box and store in XML data.
-	# 	"""
-	# 	attr = self.sender().property('xmlTag')
-	# 	value = self.getCheckBoxValue(self.sender())
-	# 	self.storeValue(attr, value)
-
-
-	# def storeValue(self, attr, value=""):
-	# 	""" Store value in XML data.
-	# 	"""
-	# 	verbose.print_("%20s %s.%s=%s" %(type(value), 'gpspreview', attr, value), 4)
-	# 	userPrefs.edit('gpspreview', attr, value)
-
-
 	def getOpts(self):
 		""" Get UI options before generating playblast.
 		"""
 		try:
 			# Get file name output string
-			self.fileInput = self.ui.file_lineEdit.text()
+			self.fileInput = self.ui.name_lineEdit.text()
+
+			# Get file format
+			self.format = self.ui.format_comboBox.currentText()
+
+			# Get camera
+			if self.ui.camera_radioButton.isChecked():
+				self.camera = self.ui.camera_comboBox.currentText()
+			else:
+				self.camera = appConnect.getActiveCamera()
 
 			# Get frame range and resolution
 			self.res = self.ui.x_spinBox.value(), self.ui.y_spinBox.value()
 			self.frRange = self.ui.start_spinBox.value(), self.ui.end_spinBox.value()
 
-			# Get values from checkboxes
+			# Get option values from checkboxes
 			self.offscreen = self.getCheckBoxValue(self.ui.offscreen_checkBox)
 			self.noSelect = self.getCheckBoxValue(self.ui.noSelection_checkBox)
 			self.guides = self.getCheckBoxValue(self.ui.guides_checkBox)
 			self.slate = self.getCheckBoxValue(self.ui.slate_checkBox)
 			self.viewer = self.getCheckBoxValue(self.ui.launchViewer_checkBox)
-			self.createQt = self.getCheckBoxValue(self.ui.createQuicktime_checkBox)
+			self.createQt = self.getCheckBoxValue(self.ui.createQuickTime_checkBox)
 
 			return True
 
@@ -354,23 +305,37 @@ class previewUI(UI.TemplateUI):
 		""" Get options, pass information to appConnect and save options once
 			appConnect is done.
 		"""
-		self.save()  # Save settings
-
 		self.updateRangeGrp()
 		if self.getOpts():
-			previewSetup = appConnect.connect(self.fileInput, self.res, self.frRange, self.offscreen, self.noSelect, self.guides, self.slate)
+			if not self.offscreen:
+				self.showMinimized()
+			# previewSetup = appConnect.connect(self.fileInput, self.res, self.frRange, self.offscreen, self.noSelect, self.guides, self.slate)
+			previewSetup = appConnect.connect(fileInput=self.fileInput, 
+			                                  format=self.format, 
+			                                  camera=self.camera, 
+			                                  res=self.res, 
+			                                  frRange=self.frRange, 
+			                                  offscreen=self.offscreen, 
+			                                  noSelect=self.noSelect, 
+			                                  guides=self.guides, 
+			                                  slate=self.slate)
 			previewOutput = previewSetup.appPreview()
 			if previewOutput:
 				self.outputDir, self.outputFile, self.frRange, self.ext = previewOutput
 				if self.createQt:
-					self.createQuicktime()
+					self.createQuickTime()
 				if self.viewer:
 					self.launchViewer()
-				osOps.setPermissions(self.outputDir)
+				#osOps.setPermissions(self.outputDir)
+
+			if not self.offscreen:
+				self.showNormal()
+
+		self.save()  # Save settings
 
 
-	def createQuicktime(self):
-		""" Creates a QuickTime movie.
+	def createQuickTime(self):
+		""" Creates a QuickTime movie using djv for encoding.
 		"""
 		# Delete qt file if exists in output dir...
 		input = os.path.join(self.outputDir, self.outputFile)
@@ -396,90 +361,9 @@ class previewUI(UI.TemplateUI):
 		"""
 		self.save()  # Save settings
 
-
-	# ############################################
-	# # Dialog acceptance/cancellation functions #
-	# ############################################
-
-	# def update(self):
-	# 	""" Dialog accept function.
-	# 	"""
-	# 	self.ui.accept()
-
-	# def cancel(self):
-	# 	""" Dialog cancel function.
-	# 	"""
-	# 	print("X")
-	# 	_maya_delete_ui()
-	# 	self.ui.reject()
-
 # ----------------------------------------------------------------------------
 # End of main window class
 # ----------------------------------------------------------------------------
-
-
-# ----------------------------------------------------------------------------
-# DCC application helper functions - MOVE TO MODULE
-# ----------------------------------------------------------------------------
-
-# def _maya_delete_ui():
-# 	""" Delete existing UI in Maya.
-# 	"""
-# 	if mc.window(WINDOW_OBJECT, q=True, exists=True):
-# 		mc.deleteUI(WINDOW_OBJECT)  # Delete window
-# 	if mc.dockControl('MayaWindow|' + WINDOW_TITLE, q=True, exists=True):
-# 		mc.deleteUI('MayaWindow|' + WINDOW_TITLE)  # Delete docked window
-
-
-# def _nuke_delete_ui():
-# 	""" Delete existing UI in Nuke.
-# 	"""
-# 	for obj in QtWidgets.QApplication.allWidgets():
-# 		if obj.objectName() == WINDOW_OBJECT:
-# 			obj.deleteLater()
-
-
-# def _maya_main_window():
-# 	""" Return Maya's main window.
-# 	"""
-# #	for obj in QtWidgets.qApp.topLevelWidgets():
-# 	for obj in QtWidgets.QApplication.topLevelWidgets():
-# 		if obj.objectName() == 'MayaWindow':
-# 			return obj
-# 	raise RuntimeError("Could not find MayaWindow instance")
-
-
-# def _nuke_main_window():
-# 	""" Returns Nuke's main window.
-# 	"""
-# #	for obj in QtWidgets.qApp.topLevelWidgets():
-# 	for obj in QtWidgets.QApplication.topLevelWidgets():
-# 		if (obj.inherits('QMainWindow') and obj.metaObject().className() == 'Foundry::UI::DockMainWindow'):
-# 			return obj
-# 	raise RuntimeError("Could not find DockMainWindow instance")
-
-
-# def _nuke_set_zero_margins(widget_object):
-# 	""" Remove Nuke margins when docked UI.
-# 		More info:
-# 		https://gist.github.com/maty974/4739917
-# 	"""
-# 	parentApp = QtWidgets.QApplication.allWidgets()
-# 	parentWidgetList = []
-# 	for parent in parentApp:
-# 		for child in parent.children():
-# 			if widget_object.__class__.__name__ == child.__class__.__name__:
-# 				parentWidgetList.append(parent.parentWidget())
-# 				parentWidgetList.append(parent.parentWidget().parentWidget())
-# 				parentWidgetList.append(parent.parentWidget().parentWidget().parentWidget())
-
-# 				for sub in parentWidgetList:
-# 					for tinychild in sub.children():
-# 						try:
-# 							tinychild.setContentsMargins(0, 0, 0, 0)
-# 						except:
-# 							pass
-
 
 # ----------------------------------------------------------------------------
 # Run functions - MOVE TO TEMPLATE MODULE?
@@ -489,7 +373,7 @@ def run_maya(**kwargs):
 	""" Run in Maya.
 	"""
 	UI._maya_delete_ui(WINDOW_OBJECT, WINDOW_TITLE)  # Delete any already existing UI
-	previewApp = previewUI(parent=UI._maya_main_window())
+	previewApp = PreviewUI(parent=UI._maya_main_window())
 
 	if not DOCK_WITH_MAYA_UI:
 		previewApp.display(**kwargs)  # Show the UI
@@ -514,7 +398,7 @@ def run_nuke(**kwargs):
 	UI._nuke_delete_ui(WINDOW_OBJECT, WINDOW_TITLE)  # Delete any already existing UI
 
 	if not DOCK_WITH_NUKE_UI:
-		previewApp = previewUI(parent=UI._nuke_main_window())
+		previewApp = PreviewUI(parent=UI._nuke_main_window())
 		previewApp.setWindowFlags(QtCore.Qt.Tool)
 		previewApp.display(**kwargs)  # Show the UI
 	elif DOCK_WITH_NUKE_UI:
@@ -540,12 +424,12 @@ if os.environ['IC_ENV'] == 'STANDALONE':
 elif os.environ['IC_ENV'] == 'MAYA':
 	import maya.cmds as mc
 	verbose.print_("[GPS] %s for Maya" %WINDOW_TITLE)
-	run_maya()
+	# run_maya()
 elif os.environ['IC_ENV'] == 'NUKE':
 	import nuke
 	import nukescripts
 	verbose.print_("[GPS] %s for Nuke" %WINDOW_TITLE)
-	run_nuke()
+	# run_nuke()
 # elif __name__ == '__main__':
 # 	run_standalone()
 

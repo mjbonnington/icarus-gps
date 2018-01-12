@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2014-2017 Gramercy Park Studios
+# (c) 2014-2018 Gramercy Park Studios
 #
 # Generate playblasts for GPS Preview.
 
@@ -16,11 +16,17 @@ import time
 import verbose
 
 
+# ----------------------------------------------------------------------------
+# Main class
+# ----------------------------------------------------------------------------
+
 class preview():
 
-	def __init__(self, outputDir, outputFile, res, frRange, offscreen, noSelect, guides, slate):
+	def __init__(self, outputDir, outputFile, format, camera, res, frRange, offscreen, noSelect, guides, slate):
 		self.playblastDir = outputDir
 		self.outputFile = outputFile
+		self.format = format
+		self.camera = camera
 		self.res = res
 		self.frRange = (int(frRange[0]), int(frRange[1]))
 
@@ -115,7 +121,8 @@ class preview():
 
 	# Camera and lens info
 	def hudCamera(self):
-		activeCamera = self.getActiveCamera()
+		#activeCamera = self.getActiveCamera(mc.getPanel(withFocus=True))
+		activeCamera = self.camera
 		cameraShape = [activeCamera]
 		if mc.nodeType(activeCamera) != 'camera':
 			cameraShape = mc.listRelatives(activeCamera, shapes=True)
@@ -150,68 +157,68 @@ class preview():
 		# Create custom HUD elements
 		section = 2
 		mc.headsUpDisplay('GPS_slate_header', 
-		                  section=section, 
-		                  block=mc.headsUpDisplay(nextFreeBlock=section), 
-		                  blockSize='small', 
-		                  command=lambda *args: self.hudHeader(), 
-		                  ev='playblasting', 
-		                  dataFontSize='large')
+						  section=section, 
+						  block=mc.headsUpDisplay(nextFreeBlock=section), 
+						  blockSize='small', 
+						  command=lambda *args: self.hudHeader(), 
+						  ev='playblasting', 
+						  dataFontSize='large')
 
 		section = 0
 		mc.headsUpDisplay('GPS_slate_job', 
-		                  section=section, 
-		                  block=mc.headsUpDisplay(nextFreeBlock=section), 
-		                  blockSize='small', 
-		                  command=lambda *args: self.hudJob(), 
-		                  ev='playblasting', 
-		                  dataFontSize='small')
+						  section=section, 
+						  block=mc.headsUpDisplay(nextFreeBlock=section), 
+						  blockSize='small', 
+						  command=lambda *args: self.hudJob(), 
+						  ev='playblasting', 
+						  dataFontSize='small')
 
 		section = 4
 		mc.headsUpDisplay('GPS_slate_scene', 
-		                  section=section, 
-		                  block=mc.headsUpDisplay(nextFreeBlock=section), 
-		                  blockSize='small', 
-		                  #blockAlignment='right', 
-		                  command=lambda *args: self.hudScene(), 
-		                  ev='playblasting', 
-		                  dataFontSize='small')
+						  section=section, 
+						  block=mc.headsUpDisplay(nextFreeBlock=section), 
+						  blockSize='small', 
+						  #blockAlignment='right', 
+						  command=lambda *args: self.hudScene(), 
+						  ev='playblasting', 
+						  dataFontSize='small')
 
 		section = 4
 		mc.headsUpDisplay('GPS_slate_camera', 
-		                  section=section, 
-		                  block=mc.headsUpDisplay(nextFreeBlock=section), 
-		                  blockSize='small', 
-		                  #blockAlignment='right', 
-		                  command=lambda *args: self.hudCamera(), 
-		                  ev='playblasting', 
-		                  dataFontSize='small')
+						  section=section, 
+						  block=mc.headsUpDisplay(nextFreeBlock=section), 
+						  blockSize='small', 
+						  #blockAlignment='right', 
+						  command=lambda *args: self.hudCamera(), 
+						  ev='playblasting', 
+						  dataFontSize='small')
 
 		section = 5
 		mc.headsUpDisplay('GPS_slate_time', 
-		                  section=section, 
-		                  block=mc.headsUpDisplay(nextFreeBlock=section), 
-		                  blockSize='small', 
-		                  command=lambda *args: self.hudTime(), 
-		                  ev='playblasting', 
-		                  dataFontSize='small')
+						  section=section, 
+						  block=mc.headsUpDisplay(nextFreeBlock=section), 
+						  blockSize='small', 
+						  command=lambda *args: self.hudTime(), 
+						  ev='playblasting', 
+						  dataFontSize='small')
 
 		section = 5
 		mc.headsUpDisplay('GPS_slate_artist', 
-		                  section=section, 
-		                  block=mc.headsUpDisplay(nextFreeBlock=section), 
-		                  blockSize='small', 
-		                  command=lambda *args: self.hudArtist(), 
-		                  ev='playblasting', 
-		                  dataFontSize='small')
+						  section=section, 
+						  block=mc.headsUpDisplay(nextFreeBlock=section), 
+						  blockSize='small', 
+						  command=lambda *args: self.hudArtist(), 
+						  ev='playblasting', 
+						  dataFontSize='small')
 
 		section = 9
 		mc.headsUpDisplay('GPS_slate_frame', 
-		                  section=section, 
-		                  block=mc.headsUpDisplay(nextFreeBlock=section), 
-		                  blockSize='small', 
-		                  command=lambda *args: self.hudFrame(), 
-		                  attachToRefresh = True, 
-		                  dataFontSize='large')
+						  section=section, 
+						  block=mc.headsUpDisplay(nextFreeBlock=section), 
+						  blockSize='small', 
+						  command=lambda *args: self.hudFrame(), 
+						  attachToRefresh = True, 
+						  dataFontSize='large')
 
 
 	def slateOff(self):
@@ -228,27 +235,112 @@ class preview():
 	# end slate
 
 
-	def getActiveCamera(self):
-		""" Get the current active camera.
+	def _independent_panel(self, width, height, off_screen=False):
+		"""Create capture-window context without decorations
+
+		Arguments:
+			width (int): Width of panel
+			height (int): Height of panel
+
+		Example:
+			>>> with _independent_panel(800, 600):
+			...   mc.capture()
+
 		"""
-		try:
-			activeCamera = mc.modelPanel(mc.getPanel(withFocus=True), cam=True, q=True)
-			return activeCamera
-		except RuntimeError:
-			mc.warning("No active view selected. Please choose a camera view to preview.")
-			return False
+
+		# # Move to centre of active screen
+		# desktop = QtWidgets.QApplication.desktop()
+		# screen = desktop.screenNumber(desktop.cursor().pos())
+		# self.move(desktop.screenGeometry(screen).center() - self.ui.frameGeometry().center())
+
+		# center panel on screen
+		screen_width, screen_height = 1920, 1200 #_get_screen_size()
+		topLeft = [int((screen_height-height)/2.0),
+				   int((screen_width-width)/2.0)]
+
+		window = mc.window(width=width, 
+							 height=height, 
+							 topLeftCorner=topLeft, 
+							 menuBarVisible=False, 
+							 titleBar=False, 
+							 visible=not off_screen)
+		mc.paneLayout()
+		panel = mc.modelPanel(menuBarVisible=False, 
+							  label='CapturePanel')
+
+		# Hide icons under panel menus
+		bar_layout = mc.modelPanel(panel, q=True, barLayout=True)
+		mc.frameLayout(bar_layout, edit=True, collapse=True)
+
+		if not off_screen:
+			mc.showWindow(window)
+
+		# Set the modelEditor of the modelPanel as the active view so it takes
+		# the playback focus. Does seem redundant with the `refresh` added in.
+		editor = mc.modelPanel(panel, query=True, modelEditor=True)
+		mc.modelEditor(editor, edit=True, activeView=True)
+
+		# Force a draw refresh of Maya so it keeps focus on the new panel
+		# This focus is required to force preview playback in the independent
+		# panel.
+		mc.refresh(force=True)
+
+		return window, panel
+		# try:
+		# 	yield panel
+		# finally:
+		# 	# Delete the panel to fix memory leak (about 5 mb per capture)
+		# 	mc.deleteUI(panel, panel=True)
+		# 	mc.deleteUI(window)
+
+
+	# def getActiveCamera(self, panel):
+	# 	""" Get the current active camera.
+	# 	"""
+	# 	try:
+	# 		activeCamera = mc.modelPanel(panel, cam=True, q=True)
+	# 		return activeCamera
+	# 	except RuntimeError:
+	# 		mc.warning("No active view selected. Please choose a camera view to preview.")
+	# 		return False
+
+
+	def getPanelFromCamera(self, cameraName):
+		""" Return the panel(s) associated with the specified camera.
+		"""
+		panel_list=[]
+		for panel in mc.getPanel(type="modelPanel"):
+			if mc.modelPanel(panel, query=True, camera=True) == cameraName:
+				panel_list.append(panel)
+		return panel_list
 
 
 	def playblast_(self):
 		""" Sets playblast options and runs playblast.
 		"""
-		# Get active camera
-		activeCamera = self.getActiveCamera()
+		# with self._independent_panel(width=self.res[0], 
+		#                              height=self.res[1], 
+		#                              off_screen=self.offscreen) as panel:
+		# 	mc.setFocus(panel)
+
+		# captureWindow, self.activePanel = self._independent_panel(width=self.res[0], height=self.res[1], off_screen=self.offscreen)
+		# mc.setFocus(self.activePanel)
+
+		# Get active panel
+		activePanelOrig = mc.getPanel(withFocus=True)
+		activeCameraOrig = mc.modelPanel(activePanelOrig, cam=True, q=True)
+
+		# Get active camera and shape
+		activeCamera = self.camera #self.getActiveCamera(self.activePanel)
 		if not activeCamera:
 			return
 		cameraShape = [activeCamera]
 		if mc.nodeType(activeCamera) != 'camera':
 			cameraShape = mc.listRelatives(activeCamera, shapes=True)
+
+		# Look through camera if no panel 
+		if not self.getPanelFromCamera(self.camera):
+			mc.lookThru(activePanelOrig, activeCamera)
 
 		# Store current options
 		displayOptions = self.storeAttributes(cameraShape[0], ['displayResolution', 'displayFieldChart', 'displaySafeAction', 'displaySafeTitle', 'displayFilmPivot', 'displayFilmOrigin', 'overscan', 'panZoomEnabled'])
@@ -301,6 +393,13 @@ class preview():
 		self.restoreHUD(hudState)
 		self.displayHUD(setValue=displayHUD)
 
+		# Restore camera panel
+		mc.lookThru(activePanelOrig, activeCameraOrig)
+
+		# # Delete capture window
+		# mc.deleteUI(self.activePanel, panel=True)
+		# mc.deleteUI(captureWindow)
+
 		# Return frame range and file extension
 		return self.frRange , 'jpg'
 
@@ -308,17 +407,23 @@ class preview():
 	def run_playblast(self):
 		""" Maya command to generate playblast.
 		"""
-		mc.playblast(filename='%s/%s' % (self.playblastDir, self.outputFile), 
-		             startTime=self.frRange[0], 
-		             endTime=self.frRange[1], 
-		             framePadding=4, 
-		             width=self.res[0], 
-		             height=self.res[1], 
-		             percent=100, 
-		             format='image', 
-		             compression='jpg', 
-		             viewer=False, 
-		             offScreen=self.offscreen, 
-		             clearCache=True, 
-		             showOrnaments=True)
+		#print(mc.playblast(ae=True))
+		mc.playblast(filename='%s/%s' %(self.playblastDir, self.outputFile), 
+					 startTime=self.frRange[0], 
+					 endTime=self.frRange[1], 
+					 framePadding=4, 
+					 width=self.res[0], 
+					 height=self.res[1], 
+					 percent=100, 
+					 format='image', 
+					 compression='jpg', 
+					 viewer=False, 
+					 offScreen=self.offscreen, 
+					 clearCache=True, 
+					 showOrnaments=True)
+#		             editorPanelName=self.activePanel)
+
+# ----------------------------------------------------------------------------
+# End of main class
+# ----------------------------------------------------------------------------
 

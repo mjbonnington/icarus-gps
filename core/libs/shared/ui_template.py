@@ -239,7 +239,8 @@ class TemplateUI(QtWidgets.QMainWindow):
 						if storeProperties:
 							self.storeValue(category, attr, widget.text())
 						if not updateOnly:
-							widget.textEdited.connect(self.storeLineEditValue)
+							# widget.textEdited.connect(self.storeLineEditValue)
+							widget.textChanged.connect(self.storeLineEditValue)
 
 					# Plain text edits...
 					elif isinstance(widget, QtWidgets.QPlainTextEdit):

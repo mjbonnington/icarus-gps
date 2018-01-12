@@ -47,7 +47,7 @@ CREATE_NO_WINDOW = 0x08000000
 # ----------------------------------------------------------------------------
 
 class RenderSubmitUI(UI.TemplateUI):
-	""" Main window class.
+	""" Render submit UI.
 	"""
 	def __init__(self, parent=None):
 		super(RenderSubmitUI, self).__init__(parent)
@@ -56,8 +56,7 @@ class RenderSubmitUI(UI.TemplateUI):
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Tool)
 
-		# Instantiate XML data classes
-		# self.xd = settingsData.settingsData()  # DONE IN TEMPLATE
+		# Load XML data
 		xd_load = self.xd.loadXML(os.path.join(os.environ['IC_USERPREFS'], 'icSubmissionData.xml'))
 		self.setupUI(WINDOW_OBJECT, WINDOW_TITLE, UI_FILE, STYLESHEET)
 

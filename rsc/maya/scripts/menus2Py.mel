@@ -205,7 +205,7 @@ global proc menus2Py.bulkRename()
 global proc menus2Py.gpsPreview()
 {
 	//python("import gpsPreviewLauncher; gpsPreviewLauncher.launch(env='MAYA')");
-	python("import gpsPreview__main__; reload(gpsPreview__main__)");
+	python("import gpsPreview__main__; gpsPreview__main__.run_maya()");
 }
 
 

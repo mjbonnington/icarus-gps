@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>320</height>
+    <height>316</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
    </property>
    <layout class="QVBoxLayout" name="main_verticalLayout">
     <property name="margin">
-     <number>8</number>
+     <number>6</number>
     </property>
     <item>
      <widget class="QGroupBox" name="generalOptions_groupBox">
@@ -51,14 +51,14 @@
           <string>Name:</string>
          </property>
          <property name="buddy">
-          <cstring>file_lineEdit</cstring>
+          <cstring>name_lineEdit</cstring>
          </property>
         </widget>
        </item>
        <item row="0" column="1">
-        <layout class="QHBoxLayout" name="file_horizontalLayout">
+        <layout class="QHBoxLayout" name="name_horizontalLayout">
          <item>
-          <widget class="QLineEdit" name="file_lineEdit">
+          <widget class="QLineEdit" name="name_lineEdit">
            <property name="mandatoryField" stdset="0">
             <bool>false</bool>
            </property>
@@ -68,7 +68,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="reset_toolButton">
+          <widget class="QToolButton" name="nameUpdate_toolButton">
            <property name="toolTip">
             <string>Update the file name output field with the current scene name.</string>
            </property>
@@ -83,6 +83,9 @@
         <widget class="QLabel" name="label">
          <property name="text">
           <string>Format:</string>
+         </property>
+         <property name="buddy">
+          <cstring>format_comboBox</cstring>
          </property>
         </widget>
        </item>
@@ -523,7 +526,7 @@
         </widget>
        </item>
        <item row="1" column="2">
-        <widget class="QCheckBox" name="createQuicktime_checkBox">
+        <widget class="QCheckBox" name="createQuickTime_checkBox">
          <property name="enabled">
           <bool>false</bool>
          </property>
