@@ -62,7 +62,7 @@ class PreviewUI(UI.TemplateUI):
 
 		# Connect signals & slots
 		self.ui.name_lineEdit.textChanged.connect(self.checkFilename)
-		self.ui.nameUpdate_toolButton.clicked.connect(self.updateFilename)
+		#self.ui.nameUpdate_toolButton.clicked.connect(self.updateFilename)
 		self.ui.camera_radioButton.toggled.connect(self.updateCameras)
 		self.ui.resolution_comboBox.currentIndexChanged.connect(self.updateResGrp)
 		self.ui.x_spinBox.valueChanged.connect(self.storeRes)
@@ -72,12 +72,24 @@ class PreviewUI(UI.TemplateUI):
 		self.ui.end_spinBox.valueChanged.connect(self.storeRangeEnd)
 		self.ui.preview_pushButton.clicked.connect(self.preview)
 
-		# Set input validators
-		alphanumeric_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w]+'), self.ui.name_lineEdit) #r'[\w\.-]+'
-		self.ui.name_lineEdit.setValidator(alphanumeric_validator)
+		# Context menus
+		self.ui.nameUpdate_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
-		# Populate UI with env vars
-		# self.display()
+		self.actionNameOption1 = QtWidgets.QAction("Reset to default", None)
+		self.actionNameOption1.triggered.connect(self.updateFilename)
+		self.ui.nameUpdate_toolButton.addAction(self.actionNameOption1)
+
+		self.actionNameOption2 = QtWidgets.QAction("Insert scene name token <Scene>", None)
+		self.actionNameOption2.triggered.connect(lambda: self.insertFilenameToken("<Scene>"))
+		self.ui.nameUpdate_toolButton.addAction(self.actionNameOption2)
+
+		self.actionNameOption3 = QtWidgets.QAction("Insert camera name token <Camera>", None)
+		self.actionNameOption3.triggered.connect(lambda: self.insertFilenameToken("<Camera>"))
+		self.ui.nameUpdate_toolButton.addAction(self.actionNameOption3)
+
+		# Set input validators
+		alphanumeric_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w<>]+'), self.ui.name_lineEdit) #r'[\w\.-]+'
+		self.ui.name_lineEdit.setValidator(alphanumeric_validator)
 
 
 	def display(self):
@@ -85,32 +97,51 @@ class PreviewUI(UI.TemplateUI):
 		"""
 		self.returnValue = False
 
-		# Read user prefs config file - if it doesn't exist it will be created
-		# userPrefs.read()
-		# self.xd.loadXML()
+		self.initSettings()
 
-		if not self.ui.name_lineEdit.text():
-			self.updateFilename()
-		self.checkFilename()
-		self.updateCameras()
-		self.updateResGrp()
-		self.updateRangeGrp()
+		# self.ui.activeView_lineEdit.hide()
 
 		self.show()
 		self.raise_()
+
 		return self.returnValue
+
+
+	def initSettings(self):
+		""" Initialise settings.
+		"""
+		if not self.ui.name_lineEdit.text():
+			self.updateFilename()
+		self.updateCameras()
+		self.updateResGrp()
+		self.updateRangeGrp()
+		self.checkFilename()
 
 
 	def updateFilename(self):
 		""" Reset filename field to use scene/script/project filename.
 		"""
-		filename = osOps.sanitize(appConnect.getScene(), pattern=r"[^\w]", replace="_")
+		# filename = osOps.sanitize(appConnect.getScene(), pattern=r"[^\w]", replace="_")
+		if len(appConnect.getCameras(renderableOnly=True)) > 1:
+			filename = "<Scene>_<Camera>"
+		else:
+			filename = "<Scene>"
 		self.ui.name_lineEdit.setText(filename)
 
 
-	def updateCameras(self):
-		""" Update camera combo box.
+	def insertFilenameToken(self, token):
+		""" Insert token into filename field.
 		"""
+		self.ui.name_lineEdit.insert(token)
+
+
+	def updateCameras(self):
+		""" Update active view and camera combo box.
+		"""
+		activeView = appConnect.getActiveView()
+		if activeView:
+			self.activeView = activeView
+			# self.ui.activeView_lineEdit.setText(appConnect.getActiveView())
 		self.populateComboBox(self.ui.camera_comboBox, appConnect.getCameras())
 
 
@@ -216,12 +247,20 @@ class PreviewUI(UI.TemplateUI):
 		""" Check custom output filename and adjust UI appropriately.
 		"""
 		filename = self.ui.name_lineEdit.text()
-		if filename:
+
+		# Replace tokens and sanitize...
+		filename = filename.replace('<Scene>', osOps.sanitize(appConnect.getScene(), pattern=r"[^\w]", replace="_"))
+		filename = filename.replace('<Camera>', self.getCurrentCamera())
+
+		if filename and filename == osOps.sanitize(filename):
 			# userPrefs.edit('gpspreview', 'customfilename', filename)
 			# self.storeValue('customfilename', filename)
 			self.ui.preview_pushButton.setEnabled(True)
+			verbose.print_("Filename preview: '%s'" %filename)
+			return filename
 		else:
 			self.ui.preview_pushButton.setEnabled(False)
+			return False
 
 
 	# @QtCore.Slot()
@@ -267,23 +306,32 @@ class PreviewUI(UI.TemplateUI):
 		self.storeValue('gpspreview', 'customframerange', frRange)
 
 
+	def getCurrentCamera(self):
+		""" Get the current camera to playblast from.
+		"""
+		if self.ui.camera_radioButton.isChecked():
+			return self.ui.camera_comboBox.currentText()
+		else:
+			return appConnect.getActiveCamera(panel=self.activeView)
+
+
 	def getOpts(self):
 		""" Get UI options before generating playblast.
 		"""
 		try:
 			# Get file name output string
-			self.fileInput = self.ui.name_lineEdit.text()
+			self.fileInput = self.checkFilename() #self.ui.name_lineEdit.text()
 
 			# Get file format
 			self.format = self.ui.format_comboBox.currentText()
 
 			# Get camera
-			if self.ui.camera_radioButton.isChecked():
-				self.camera = self.ui.camera_comboBox.currentText()
-			else:
-				self.camera = appConnect.getActiveCamera()
+			self.updateCameras()
+			# self.activeView = self.ui.activeView_lineEdit.text()
+			self.camera = self.getCurrentCamera()
 
 			# Get frame range and resolution
+			self.updateRangeGrp()
 			self.res = self.ui.x_spinBox.value(), self.ui.y_spinBox.value()
 			self.frRange = self.ui.start_spinBox.value(), self.ui.end_spinBox.value()
 
@@ -305,25 +353,27 @@ class PreviewUI(UI.TemplateUI):
 		""" Get options, pass information to appConnect and save options once
 			appConnect is done.
 		"""
-		self.updateRangeGrp()
 		if self.getOpts():
 			if not self.offscreen:
 				self.showMinimized()
-			# previewSetup = appConnect.connect(self.fileInput, self.res, self.frRange, self.offscreen, self.noSelect, self.guides, self.slate)
-			previewSetup = appConnect.connect(fileInput=self.fileInput, 
-			                                  format=self.format, 
-			                                  camera=self.camera, 
-			                                  res=self.res, 
-			                                  frRange=self.frRange, 
-			                                  offscreen=self.offscreen, 
-			                                  noSelect=self.noSelect, 
-			                                  guides=self.guides, 
-			                                  slate=self.slate)
+
+			# previewSetup = appConnect.AppConnect(self.fileInput, self.res, self.frRange, self.offscreen, self.noSelect, self.guides, self.slate)
+			previewSetup = appConnect.AppConnect(fileInput=self.fileInput, 
+			                                     format=self.format, 
+			                                     activeView=self.activeView, 
+			                                     camera=self.camera, 
+			                                     res=self.res, 
+			                                     frRange=self.frRange, 
+			                                     offscreen=self.offscreen, 
+			                                     noSelect=self.noSelect, 
+			                                     guides=self.guides, 
+			                                     slate=self.slate)
 			previewOutput = previewSetup.appPreview()
 			if previewOutput:
-				self.outputDir, self.outputFile, self.frRange, self.ext = previewOutput
-				if self.createQt:
-					self.createQuickTime()
+				# self.outputDir, self.outputFile, self.frRange, self.ext = previewOutput
+				self.outputFilePath = previewOutput
+				# if self.createQt:
+				# 	self.createQuickTime()
 				if self.viewer:
 					self.launchViewer()
 				#osOps.setPermissions(self.outputDir)
@@ -334,26 +384,31 @@ class PreviewUI(UI.TemplateUI):
 		self.save()  # Save settings
 
 
-	def createQuickTime(self):
-		""" Creates a QuickTime movie using djv for encoding.
-		"""
-		# Delete qt file if exists in output dir...
-		input = os.path.join(self.outputDir, self.outputFile)
-		if os.path.isfile('%s.mov' %input):
-			osOps.recurseRemove(input)
-		output = self.outputDir
-		startFrame = str(self.frRange[0]).zfill(4)  # Hard-coded to 4-digit padding
-		endFrame = str(self.frRange[1]).zfill(4)  # Hard-coded to 4-digit padding
-		inExt = self.ext
-		djvOps.prcQt(input, output, startFrame, endFrame, inExt, name=self.outputFile, fps=os.environ['FPS'], resize=None)
+	# def createQuickTime(self):
+	# 	""" Creates a QuickTime movie using djv for encoding.
+	# 	"""
+	# 	# Delete qt file if exists in output dir...
+	# 	input = os.path.join(self.outputDir, self.outputFile)
+	# 	if os.path.isfile('%s.mov' %input):
+	# 		osOps.recurseRemove(input)
+	# 	output = self.outputDir
+	# 	startFrame = str(self.frRange[0]).zfill(4)  # Hard-coded to 4-digit padding
+	# 	endFrame = str(self.frRange[1]).zfill(4)  # Hard-coded to 4-digit padding
+	# 	inExt = self.ext
+	# 	djvOps.prcQt(input, output, startFrame, endFrame, inExt, name=self.outputFile, fps=os.environ['FPS'], resize=None)
 
 
 	def launchViewer(self):
 		""" Launch viewer.
 		"""
 		import sequence
-		inPath = os.path.join(self.outputDir, '%s.#.%s' % (self.outputFile, self.ext))
-		djvOps.viewer(sequence.getFirst(inPath))
+		if self.format == "JPEG sequence":
+			self.outputFilePath = sequence.getFirst(self.outputFilePath)
+		elif self.format == "QuickTime":
+			self.outputFilePath += ".mov"
+		# inPath = os.path.join(self.outputDir, '%s.#.%s' % (self.outputFile, self.ext))
+		# djvOps.viewer(sequence.getFirst(inPath))
+		djvOps.viewer(sequence.getFirst(self.outputFilePath))
 
 
 	def closeEvent(self, event):
@@ -369,18 +424,24 @@ class PreviewUI(UI.TemplateUI):
 # Run functions - MOVE TO TEMPLATE MODULE?
 # ----------------------------------------------------------------------------
 
-def run_maya(**kwargs):
+def run_maya(showUI=True):
 	""" Run in Maya.
 	"""
 	UI._maya_delete_ui(WINDOW_OBJECT, WINDOW_TITLE)  # Delete any already existing UI
 	previewApp = PreviewUI(parent=UI._maya_main_window())
 
-	if not DOCK_WITH_MAYA_UI:
-		previewApp.display(**kwargs)  # Show the UI
-	elif DOCK_WITH_MAYA_UI:
-		allowed_areas = ['right', 'left']
-		mc.dockControl(WINDOW_TITLE, label=WINDOW_TITLE, area='left', 
-					   content=WINDOW_OBJECT, allowedArea=allowed_areas)
+	if showUI:  # Show the UI
+		previewApp.display()
+	else:  # Run playblast without displaying the UI
+		previewApp.initSettings()
+		previewApp.preview()
+
+	# if not DOCK_WITH_MAYA_UI:
+	# 	previewApp.display(**kwargs)  # Show the UI
+	# elif DOCK_WITH_MAYA_UI:
+	# 	allowed_areas = ['right', 'left']
+	# 	mc.dockControl(WINDOW_TITLE, label=WINDOW_TITLE, area='left', 
+	# 	               content=WINDOW_OBJECT, allowedArea=allowed_areas)
 
 
 def run_nuke(**kwargs):

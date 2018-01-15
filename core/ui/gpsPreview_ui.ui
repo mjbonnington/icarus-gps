@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>316</height>
+    <height>320</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -69,11 +69,44 @@
          </item>
          <item>
           <widget class="QToolButton" name="nameUpdate_toolButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="toolTip">
-            <string>Update the file name output field with the current scene name.</string>
+            <string>Output file name options</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QToolButton {
+	padding: 1px 12px 2px 1px;
+}
+
+QToolButton:pressed, QToolButton:checked:pressed {
+	padding: 2px 11px 1px 2px;
+}
+</string>
            </property>
            <property name="text">
-            <string>&lt;</string>
+            <string>Frame list options</string>
+           </property>
+           <property name="icon">
+            <iconset resource="rsc.qrc">
+             <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
+             <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>15</width>
+             <height>15</height>
+            </size>
+           </property>
+           <property name="popupMode">
+            <enum>QToolButton::InstantPopup</enum>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonIconOnly</enum>
            </property>
           </widget>
          </item>
@@ -98,6 +131,40 @@
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
+       </item>
+       <item row="1" column="1">
+        <layout class="QHBoxLayout" name="format_horizontalLayout">
+         <item>
+          <widget class="QComboBox" name="format_comboBox">
+           <property name="xmlTag" stdset="0">
+            <string>format</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>JPEG sequence</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>QuickTime</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <spacer name="format_horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
        </item>
        <item row="2" column="1">
         <layout class="QHBoxLayout" name="cam_horizontalLayout">
@@ -163,45 +230,12 @@
          </item>
         </layout>
        </item>
-       <item row="1" column="1">
-        <layout class="QHBoxLayout" name="format_horizontalLayout">
-         <item>
-          <widget class="QComboBox" name="format_comboBox">
-           <property name="xmlTag" stdset="0">
-            <string>format</string>
-           </property>
-           <item>
-            <property name="text">
-             <string>JPEG sequence</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>QuickTime</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item>
-          <spacer name="format_horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
       </layout>
       <zorder>file_label</zorder>
       <zorder>cam_label</zorder>
       <zorder></zorder>
       <zorder>label</zorder>
+      <zorder></zorder>
      </widget>
     </item>
     <item>
@@ -570,7 +604,9 @@
    </layout>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="rsc.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>camera_radioButton</sender>

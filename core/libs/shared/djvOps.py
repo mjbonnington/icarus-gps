@@ -89,7 +89,7 @@ def viewer(path=None):
 
 	# Export path to djv codec libraries according to OS
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
-		cmdStr += "cd /d %s & " % startupDir
+		cmdStr += 'cd /d "%s" & ' % startupDir
 	elif os.environ['IC_RUNNING_OS'] == 'Darwin':
 		cmdStr += "export DYLD_FALLBACK_LIBRARY_PATH=%s; " %os.environ['DJV_LIB']
 		cmdStr += "cd %s; " % startupDir
@@ -99,9 +99,9 @@ def viewer(path=None):
 
 	# Build the command based on whether path is a file or a directory
 	if pathIsFile:
-		cmdStr += "%s %s" %(os.environ['DJV_PLAY'], path)
+		cmdStr += '"%s" "%s"' %(os.environ['DJV_PLAY'], path)
 	else:
-		cmdStr += os.environ['DJV_PLAY']
+		cmdStr += '"%s"' %os.environ['DJV_PLAY']
 
 	# Call command with subprocess in order to not lock the system while djv
 	# is running

@@ -17,15 +17,16 @@ import os
 # ----------------------------------------------------------------------------
 
 #class connect(object):
-class connect(object):
+class AppConnect(object):
 	""" Connects gpsPreview to the relevant application and passes args to its
 		internal preview API.
 	"""
-	def __init__(self, fileInput, format, camera, res, frRange, offscreen, noSelect, guides, slate):
+	def __init__(self, fileInput, format, activeView, camera, res, frRange, offscreen, noSelect, guides, slate):
 	#def __init__(self, **kwargs):
 		self.fileInput = fileInput
 		self.outputFile = os.path.split(self.fileInput)[1]
 		self.format = format
+		self.activeView = activeView
 		self.camera = camera
 		self.hres = int(res[0])
 		self.vres = int(res[1])
@@ -47,8 +48,9 @@ class connect(object):
 			self.outputDir = os.path.join(os.environ['MAYAPLAYBLASTSDIR'], self.fileInput)
 			mayaPreviewOutput = self.mayaPreview()
 			if mayaPreviewOutput:
-				self.frRange, ext = mayaPreviewOutput
-				return self.outputDir, self.outputFile, self.frRange, ext
+				# self.frRange, ext = mayaPreviewOutput
+				# return self.outputDir, self.outputFile, self.frRange, ext
+				return mayaPreviewOutput
 			else:
 				return
 
@@ -57,7 +59,7 @@ class connect(object):
 		""" Begin Maya preview (playblast).
 		"""
 		import gpsMayaPreview
-		previewSetup = gpsMayaPreview.preview(self.outputDir, self.outputFile, self.format, self.camera, (self.hres, self.vres), self.frRange, self.offscreen, self.noSelect, self.guides, self.slate)
+		previewSetup = gpsMayaPreview.Preview(self.outputDir, self.outputFile, self.format, self.activeView, self.camera, (self.hres, self.vres), self.frRange, self.offscreen, self.noSelect, self.guides, self.slate)
 		return previewSetup.playblast_()
 
 # ----------------------------------------------------------------------------
@@ -72,14 +74,15 @@ def getScene():
 		return os.path.splitext(os.path.basename(mayaOps.getScene()))[0]
 
 
-def getCameras():
+def getCameras(renderableOnly=False):
 	""" Returns list of cameras in the scene. Renderable cameras will be
 		listed first.
 	"""
 	if os.environ['IC_ENV'] == 'MAYA':
 		import maya.cmds as mc
-		noSelectText = ""
-		camera_list = [noSelectText, ]
+		# noSelectText = ""
+		# camera_list = [noSelectText, ]
+		camera_list = []
 		# cameras = mc.ls(cameras=True)
 		persp_cameras = mc.listCameras(perspective=True)
 		ortho_cameras = mc.listCameras(orthographic=True)
@@ -87,18 +90,45 @@ def getCameras():
 		for camera in cameras:
 			if mc.getAttr(camera+'.renderable'):
 				camera_list.insert(0, camera)
-			else:
+			elif renderableOnly == False:
 				camera_list.append(camera)
 
 		return camera_list
 
 
-def getActiveCamera():
-	""" Returns camera for the currently active panel.
+def getActiveCamera(panel=None):
+	""" Returns camera for the specified panel. If no panel is specified,
+		use the currently active panel.
 	"""
 	if os.environ['IC_ENV'] == 'MAYA':
 		import maya.cmds as mc
-		return mc.modelPanel(mc.getPanel(withFocus=True), cam=True, q=True)
+		if panel is None:
+			panel = mc.getPanel(withFocus=True)
+		camera = mc.modelPanel(panel, cam=True, q=True)
+
+		#print(camera)
+
+		return camera
+
+
+def getActiveView():
+	""" Returns currently active panel. If panel has no camera attached,
+		return False.
+	"""
+	if os.environ['IC_ENV'] == 'MAYA':
+		import maya.cmds as mc
+		panel = mc.getPanel(withFocus=True)
+		try:
+			camera = mc.modelPanel(panel, cam=True, q=True)
+		except:
+			camera = None
+
+		#print(panel, camera)
+
+		if camera is not None:
+			return panel
+		else:
+			return False
 
 
 def getResolution():

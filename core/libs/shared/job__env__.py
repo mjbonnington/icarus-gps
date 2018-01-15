@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2017 Gramercy Park Studios
+# (c) 2013-2018 Gramercy Park Studios
 #
 # Sets up job- and shot-related environment variables.
 # TODO: This module needs total re-think in light of dynamic app launching.
@@ -310,22 +310,30 @@ def setEnv(envVars):
 	# djv_view
 	os.environ['DJVVERSION'] = getAppExecPath('djv_view')
 	# djv_ver = jobData.getAppVersion('djv_view')
-	djv_embedded_ver = '1.1.0'
+	# djv_embedded_ver = '1.1.0'
+	# if os.environ['IC_RUNNING_OS'] == 'Windows':
+	# 	#os.environ['DJV_CONVERT'] = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-1.0.5-Windows-32/bin/djv_convert.exe')  # Latest 32-bit version
+	# 	os.environ['DJV_CONVERT'] = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-Windows-64/bin/djv_convert.exe' %djv_embedded_ver)
+	# 	os.environ['DJV_PLAY']    = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-Windows-64/bin/djv_view.exe' %djv_embedded_ver)
+
+	# elif os.environ['IC_RUNNING_OS'] == 'Darwin':
+	# 	os.environ['DJV_LIB']     = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-OSX-64.app/Contents/Resources/lib' %djv_embedded_ver)
+	# 	os.environ['DJV_CONVERT'] = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-OSX-64.app/Contents/Resources/bin/djv_convert' %djv_embedded_ver)
+	# 	os.environ['DJV_PLAY']    = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-OSX-64.app/Contents/Resources/bin/djv_view.sh' %djv_embedded_ver)
+	# 	# os.environ['DJV_PLAY']    = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-OSX-64.app/Contents/MacOS/djv-1.0.5-OSX-64' %djv_embedded_ver)
+
+	# else:
+	# 	os.environ['DJV_LIB']     = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-Linux-64/lib' %djv_embedded_ver)
+	# 	os.environ['DJV_CONVERT'] = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-Linux-64/bin/djv_convert' %djv_embedded_ver)
+	# 	os.environ['DJV_PLAY']    = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-Linux-64/bin/djv_view' %djv_embedded_ver)
+
+	os.environ['DJV_PLAY'] = os.environ['DJVVERSION']
+	os.environ['DJV_LIB']  = osOps.absolutePath('%s/../lib' %os.path.dirname(os.environ['DJVVERSION']))
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
-		#os.environ['DJV_CONVERT'] = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-1.0.5-Windows-32/bin/djv_convert.exe')  # Latest 32-bit version
-		os.environ['DJV_CONVERT'] = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-Windows-64/bin/djv_convert.exe' %djv_embedded_ver)
-		os.environ['DJV_PLAY']    = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-Windows-64/bin/djv_view.exe' %djv_embedded_ver)
+		os.environ['DJV_CONVERT'] = osOps.absolutePath('%s/djv_convert.exe' %os.path.dirname(os.environ['DJVVERSION']))
 
-	elif os.environ['IC_RUNNING_OS'] == 'Darwin':
-		os.environ['DJV_LIB']     = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-OSX-64.app/Contents/Resources/lib' %djv_embedded_ver)
-		os.environ['DJV_CONVERT'] = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-OSX-64.app/Contents/Resources/bin/djv_convert' %djv_embedded_ver)
-		os.environ['DJV_PLAY']    = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-OSX-64.app/Contents/Resources/bin/djv_view.sh' %djv_embedded_ver)
-		# os.environ['DJV_PLAY']    = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-OSX-64.app/Contents/MacOS/djv-1.0.5-OSX-64' %djv_embedded_ver)
-
-	else:
-		os.environ['DJV_LIB']     = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-Linux-64/lib' %djv_embedded_ver)
-		os.environ['DJV_CONVERT'] = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-Linux-64/bin/djv_convert' %djv_embedded_ver)
-		os.environ['DJV_PLAY']    = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-Linux-64/bin/djv_view' %djv_embedded_ver)
+	else:  # Mac OS X and Linux...
+		os.environ['DJV_CONVERT'] = osOps.absolutePath('%s/djv_convert' %os.path.dirname(os.environ['DJVVERSION']))
 
 
 	# Deadline Monitor / Slave

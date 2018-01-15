@@ -177,7 +177,7 @@ setParent -menu $windowMenu;
 	// Replace the existing Playblast menu item with GPS Preview
 	menuItem -edit
 			 -label ("[GPS] Preview")
-			 -command ("source menus2Py; menus2Py.gpsPreview()")
+			 -command ("source menus2Py; menus2Py.gpsPreviewNoUI()")
 			 -annotation ("Launches GPS Preview")
 			 -image "gpsPlayblast.png"
 			 playblastItem;

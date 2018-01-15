@@ -39,13 +39,13 @@ def launch(app=None, executable=None, flags=None):
 		cmdStr = '"%s" "%s"' %(executable, os.environ['SHOTPATH'])
 
 	elif app == 'HieroPlayer':
-		executable = os.environ['HIEROPLAYERVERSION']
-		if executable:
+		try:
+			executable = os.environ['HIEROPLAYERVERSION']
 			cmdStr = '"%s"' %executable
-		else:
+		except KeyError:
 			# Hiero Player is bundled with Nuke 9.x and later.
 			executable = os.environ['NUKEVERSION']
-			cmdStr = '"%s" --player'% executable
+			cmdStr = '"%s" --player' %executable
 
 	elif app == 'RealFlow':
 		executable = os.environ['REALFLOWVERSION']

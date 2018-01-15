@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2017 Gramercy Park Studios
+# (c) 2013-2018 Gramercy Park Studios
 #
 # Initialises main pipeline environment.
 
@@ -18,7 +18,7 @@ def setEnv():
 	""" Set some environment variables for basic operation.
 	"""
 	# Set version string
-	os.environ['IC_VERSION'] = 'v0.9.11-20180112'
+	os.environ['IC_VERSION'] = 'v0.9.11-20180115'
 
 	# Standardise some environment variables across systems.
 	# Usernames will always be stored as lowercase for compatibility.

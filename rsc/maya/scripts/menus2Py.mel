@@ -2,7 +2,7 @@
 //
 // Nuno Pereira <nuno.pereira@gps-ldn.com>
 // Mike Bonnington <mike.bonnington@gps-ldn.com>
-// (c) 2013-2017 Gramercy Park Studios
+// (c) 2013-2018 Gramercy Park Studios
 //
 // This module makes mel menus in maya communicate with custom python scripts.
 
@@ -206,6 +206,12 @@ global proc menus2Py.gpsPreview()
 {
 	//python("import gpsPreviewLauncher; gpsPreviewLauncher.launch(env='MAYA')");
 	python("import gpsPreview__main__; gpsPreview__main__.run_maya()");
+}
+
+
+global proc menus2Py.gpsPreviewNoUI()
+{
+	python("import gpsPreview__main__; gpsPreview__main__.run_maya(showUI=False)");
 }
 
 
