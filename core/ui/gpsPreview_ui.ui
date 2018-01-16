@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>320</height>
+    <height>400</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -482,13 +482,13 @@ QToolButton:pressed, QToolButton:checked:pressed {
        <item row="0" column="0">
         <widget class="QCheckBox" name="offscreen_checkBox">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Render the playblast offscreen.&lt;/p&gt;&lt;p&gt;The content of the viewport will not be visible whilst the playblast is being generated. Rendering may be slightly faster.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Render the playblast offscreen.&lt;/p&gt;&lt;p&gt;The content of the viewport will not be visible whilst the playblast is being generated. Rendering may be slightly faster.&lt;/p&gt;&lt;p&gt;If using the legacy viewport, this option will need to be enabled to ensure correct output when the output resolution is larger than the viewport.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
           <string>Render offscreen</string>
          </property>
          <property name="checked">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
          <property name="xmlTag" stdset="0">
           <string>offscreen</string>
@@ -560,21 +560,18 @@ QToolButton:pressed, QToolButton:checked:pressed {
         </widget>
        </item>
        <item row="1" column="2">
-        <widget class="QCheckBox" name="createQuickTime_checkBox">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
+        <widget class="QCheckBox" name="interruptible_checkBox">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Encode QuickTime movie in addition to the JPG sequence.&lt;/p&gt;&lt;p&gt;This will add to the time taken to generate the playblast.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pressing ESC during playblasting will interrupt the playblast.&lt;/p&gt;&lt;p&gt;If checked, the incomplete playblast will still be loaded in the viewer, if that option is set.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
-          <string>Create QuickTime</string>
+          <string>Interruptible</string>
          </property>
          <property name="checked">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="xmlTag" stdset="0">
-          <string>createqt</string>
+          <string>interruptible</string>
          </property>
         </widget>
        </item>
@@ -595,9 +592,43 @@ QToolButton:pressed, QToolButton:checked:pressed {
      </spacer>
     </item>
     <item>
+     <widget class="QPlainTextEdit" name="message_plainTextEdit">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="warning" stdset="0">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QPushButton" name="preview_pushButton">
       <property name="text">
        <string>Preview</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normalon>:/rsc/rsc/icon_review.png</normalon>
+        <disabledon>:/rsc/rsc/icon_review_disabled.png</disabledon>
+       </iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>11</width>
+        <height>11</height>
+       </size>
       </property>
      </widget>
     </item>

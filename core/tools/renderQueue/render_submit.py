@@ -94,43 +94,16 @@ class RenderSubmitUI(UI.TemplateUI):
 		self.ui.close_pushButton.clicked.connect(self.saveAndExit)
 
 		# Context menus
-		self.ui.frameListOptions_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+		self.addContextMenu(self.ui.frameListOptions_toolButton, "Shot default", self.getFrameRangeFromShotSettings)
+		self.addContextMenu(self.ui.frameListOptions_toolButton, "Render settings", self.getFrameRangeFromRenderSettings)
+		self.addContextMenu(self.ui.frameListOptions_toolButton, "Sequential", self.setFrameListPreset)  #placeholder
+		self.addContextMenu(self.ui.frameListOptions_toolButton, "First, last, sequential", self.setFrameListPreset)  #placeholder
 
-		self.actionFrameListOption1 = QtWidgets.QAction("Shot default", None)
-		self.actionFrameListOption1.triggered.connect(self.getFrameRangeFromShotSettings)
-		self.ui.frameListOptions_toolButton.addAction(self.actionFrameListOption1)
+		self.addContextMenu(self.ui.layerOptions_toolButton, "Current layer only", self.getCurrentRenderLayer)
+		self.addContextMenu(self.ui.layerOptions_toolButton, "All renderable layers", self.getRenderLayers)
 
-		self.actionFrameListOption2 = QtWidgets.QAction("Render settings", None)
-		self.actionFrameListOption2.triggered.connect(self.getFrameRangeFromRenderSettings)
-		self.ui.frameListOptions_toolButton.addAction(self.actionFrameListOption2)
-
-		self.actionFrameListOption3 = QtWidgets.QAction("Sequential", None)
-		self.actionFrameListOption3.triggered.connect(self.setFrameListPreset)
-		self.ui.frameListOptions_toolButton.addAction(self.actionFrameListOption3)
-
-		self.actionFrameListOption4 = QtWidgets.QAction("First, last, sequential", None)
-		self.actionFrameListOption4.triggered.connect(self.setFrameListPreset)
-		self.ui.frameListOptions_toolButton.addAction(self.actionFrameListOption4)
-
-		self.ui.layerOptions_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-
-		self.actionLayerOption1 = QtWidgets.QAction("Current layer only", None)
-		self.actionLayerOption1.triggered.connect(self.getCurrentRenderLayer)
-		self.ui.layerOptions_toolButton.addAction(self.actionLayerOption1)
-
-		self.actionLayerOption2 = QtWidgets.QAction("All renderable layers", None)
-		self.actionLayerOption2.triggered.connect(self.getRenderLayers)
-		self.ui.layerOptions_toolButton.addAction(self.actionLayerOption2)
-
-		self.ui.writeNodeOptions_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-
-		self.actionWriteNodeOption1 = QtWidgets.QAction("Selected write node only", None)
-		self.actionWriteNodeOption1.triggered.connect(self.getCurrentRenderLayer)
-		self.ui.writeNodeOptions_toolButton.addAction(self.actionWriteNodeOption1)
-
-		self.actionWriteNodeOption2 = QtWidgets.QAction("All write nodes", None)
-		self.actionWriteNodeOption2.triggered.connect(self.getRenderLayers)
-		self.ui.writeNodeOptions_toolButton.addAction(self.actionWriteNodeOption2)
+		self.addContextMenu(self.ui.writeNodeOptions_toolButton, "Selected write node only", self.getCurrentRenderLayer)  #placeholder
+		self.addContextMenu(self.ui.writeNodeOptions_toolButton, "All write nodes", self.getRenderLayers)  #placeholder
 
 		# Set input validators
 		layer_list_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w, ]+'), self.ui.layers_lineEdit)

@@ -309,6 +309,27 @@ class TemplateUI(QtWidgets.QMainWindow):
 				return self.findCategory(widget.parent())
 
 
+	def addContextMenu(self, widget, name, command):
+		""" Add context menu item to widget.
+			'widget' should be a Push Button or Tool Button.
+			'name' is the text to be displayed in the menu.
+			'command' is the function to run when the item is triggered.
+		"""
+		widget.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+		actionName = "action%s" %osOps.sanitize(name, pattern=r"[^\w]", replace="_")
+
+		action = QtWidgets.QAction(name, None)
+		# action.setIcon(icon)
+		action.setObjectName(actionName)
+		action.triggered.connect(command)
+		widget.addAction(action)
+
+		# Make a class-scope reference to this object
+		# (won't work without it for some reason)
+		exec_str = "self.%s = action" %actionName
+		exec(exec_str)
+
+
 	def getCheckBoxValue(self, checkBox):
 		""" Get the value from a checkbox and return a Boolean value.
 		"""
@@ -397,6 +418,8 @@ class TemplateUI(QtWidgets.QMainWindow):
 			groupBox.setFixedHeight(groupBox.sizeHint().height())
 		else:
 			groupBox.setFixedHeight(20)  # Slightly hacky - needs to match value defined in QSS
+
+		#self.setFixedHeight(self.sizeHint().height())  # Resize window
 
 
 	def populateComboBox(self, comboBox, contents_list):

@@ -1452,6 +1452,12 @@ QStatusBar {
 	/*border-color: #de727a;*/
 }
 
+*[warning="true"] { /* custom background colour for warning messages */
+	background: #dcce87;
+	color: #222;
+	border-color: #dcce87;
+}
+
 *[inheritedValue="true"] { /* custom colour for inherited attribute values */
 	background: #fdf5a9;
 	color: #222;

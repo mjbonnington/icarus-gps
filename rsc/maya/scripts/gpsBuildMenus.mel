@@ -178,11 +178,12 @@ setParent -menu $windowMenu;
 	menuItem -edit
 			 -label ("[GPS] Preview")
 			 -command ("source menus2Py; menus2Py.gpsPreviewNoUI()")
-			 -annotation ("Launches GPS Preview")
+			 -annotation ("GPS Preview")
 			 -image "gpsPlayblast.png"
 			 playblastItem;
 	menuItem -edit
 			 -command ("source menus2Py; menus2Py.gpsPreview()")
+			 -annotation ("Launches GPS Preview UI")
 			 playblastDialogItem;
 
 	menuItem -insertAfter playblastItem

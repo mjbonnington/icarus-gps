@@ -13,6 +13,7 @@
 
 import os
 import subprocess
+import sys
 
 from Qt import QtCompat, QtCore, QtGui, QtWidgets
 import ui_template as UI
@@ -57,7 +58,8 @@ class PreviewUI(UI.TemplateUI):
 		self.setWindowFlags(QtCore.Qt.Tool)
 
 		# Load XML data
-		xd_load = self.xd.loadXML(os.path.join(os.environ['IC_USERPREFS'], 'userPrefs.xml'))
+		# xd_load = self.xd.loadXML(os.path.join(os.environ['IC_USERPREFS'], 'userPrefs.xml'))
+		xd_load = self.xd.loadXML(os.path.join(os.environ['IC_USERPREFS'], 'gpsPreview.xml'))
 		self.setupUI(WINDOW_OBJECT, WINDOW_TITLE, UI_FILE, STYLESHEET)
 
 		# Connect signals & slots
@@ -73,19 +75,9 @@ class PreviewUI(UI.TemplateUI):
 		self.ui.preview_pushButton.clicked.connect(self.preview)
 
 		# Context menus
-		self.ui.nameUpdate_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-
-		self.actionNameOption1 = QtWidgets.QAction("Reset to default", None)
-		self.actionNameOption1.triggered.connect(self.updateFilename)
-		self.ui.nameUpdate_toolButton.addAction(self.actionNameOption1)
-
-		self.actionNameOption2 = QtWidgets.QAction("Insert scene name token <Scene>", None)
-		self.actionNameOption2.triggered.connect(lambda: self.insertFilenameToken("<Scene>"))
-		self.ui.nameUpdate_toolButton.addAction(self.actionNameOption2)
-
-		self.actionNameOption3 = QtWidgets.QAction("Insert camera name token <Camera>", None)
-		self.actionNameOption3.triggered.connect(lambda: self.insertFilenameToken("<Camera>"))
-		self.ui.nameUpdate_toolButton.addAction(self.actionNameOption3)
+		self.addContextMenu(self.ui.nameUpdate_toolButton, "Reset to default", self.updateFilename)
+		self.addContextMenu(self.ui.nameUpdate_toolButton, "Insert scene name token <Scene>", lambda: self.insertFilenameToken("<Scene>"))
+		self.addContextMenu(self.ui.nameUpdate_toolButton, "Insert camera name token <Camera>", lambda: self.insertFilenameToken("<Camera>"))
 
 		# Set input validators
 		alphanumeric_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w<>]+'), self.ui.name_lineEdit) #r'[\w\.-]+'
@@ -99,8 +91,6 @@ class PreviewUI(UI.TemplateUI):
 
 		self.initSettings()
 
-		# self.ui.activeView_lineEdit.hide()
-
 		self.show()
 		self.raise_()
 
@@ -110,18 +100,22 @@ class PreviewUI(UI.TemplateUI):
 	def initSettings(self):
 		""" Initialise settings.
 		"""
+		self.activeView = self.xd.getValue('gpspreview', 'activeview')
+		# self.ui.activeView_lineEdit.hide()
+		self.ui.message_plainTextEdit.hide()
+
 		if not self.ui.name_lineEdit.text():
 			self.updateFilename()
-		self.updateCameras()
+		# self.updateCameras()
 		self.updateResGrp()
 		self.updateRangeGrp()
 		self.checkFilename()
 
 
 	def updateFilename(self):
-		""" Reset filename field to use scene/script/project filename.
+		""" Update filename field.
 		"""
-		# filename = osOps.sanitize(appConnect.getScene(), pattern=r"[^\w]", replace="_")
+		# Add camera token only if multiple renderable cameras found
 		if len(appConnect.getCameras(renderableOnly=True)) > 1:
 			filename = "<Scene>_<Camera>"
 		else:
@@ -139,9 +133,14 @@ class PreviewUI(UI.TemplateUI):
 		""" Update active view and camera combo box.
 		"""
 		activeView = appConnect.getActiveView()
-		if activeView:
+		if activeView:  # Only update active view if it has a camera attached
 			self.activeView = activeView
-			# self.ui.activeView_lineEdit.setText(appConnect.getActiveView())
+			self.storeValue('gpspreview', 'activeview', self.activeView)
+			verbose.print_("Active view set to %s" %self.activeView)
+			# self.ui.activeView_lineEdit.setText(activeView)
+		else:
+			verbose.warning("Using active view %s" %self.activeView)
+
 		self.populateComboBox(self.ui.camera_comboBox, appConnect.getCameras())
 
 
@@ -247,18 +246,22 @@ class PreviewUI(UI.TemplateUI):
 		""" Check custom output filename and adjust UI appropriately.
 		"""
 		filename = self.ui.name_lineEdit.text()
+		camera = self.getCurrentCamera()
 
-		# Replace tokens and sanitize...
+		# Replace tokens and remove invalid characters...
 		filename = filename.replace('<Scene>', osOps.sanitize(appConnect.getScene(), pattern=r"[^\w]", replace="_"))
-		filename = filename.replace('<Camera>', self.getCurrentCamera())
+		filename = filename.replace('<Camera>', camera)
 
-		if filename and filename == osOps.sanitize(filename):
-			# userPrefs.edit('gpspreview', 'customfilename', filename)
-			# self.storeValue('customfilename', filename)
-			self.ui.preview_pushButton.setEnabled(True)
+		if filename and filename == osOps.sanitize(filename): # and camera:
 			verbose.print_("Filename preview: '%s'" %filename)
+			self.ui.message_plainTextEdit.hide()
+			self.ui.preview_pushButton.setEnabled(True)
 			return filename
 		else:
+			msg = "Invalid output name."
+			verbose.warning(msg)
+			self.ui.message_plainTextEdit.setPlainText(msg)
+			self.ui.message_plainTextEdit.show()
 			self.ui.preview_pushButton.setEnabled(False)
 			return False
 
@@ -309,10 +312,12 @@ class PreviewUI(UI.TemplateUI):
 	def getCurrentCamera(self):
 		""" Get the current camera to playblast from.
 		"""
+		self.updateCameras()
 		if self.ui.camera_radioButton.isChecked():
 			return self.ui.camera_comboBox.currentText()
 		else:
-			return appConnect.getActiveCamera(panel=self.activeView)
+			#print(self.activeView)
+			return appConnect.getActiveCamera(self.activeView)
 
 
 	def getOpts(self):
@@ -326,7 +331,7 @@ class PreviewUI(UI.TemplateUI):
 			self.format = self.ui.format_comboBox.currentText()
 
 			# Get camera
-			self.updateCameras()
+			# self.updateCameras()
 			# self.activeView = self.ui.activeView_lineEdit.text()
 			self.camera = self.getCurrentCamera()
 
@@ -341,7 +346,8 @@ class PreviewUI(UI.TemplateUI):
 			self.guides = self.getCheckBoxValue(self.ui.guides_checkBox)
 			self.slate = self.getCheckBoxValue(self.ui.slate_checkBox)
 			self.viewer = self.getCheckBoxValue(self.ui.launchViewer_checkBox)
-			self.createQt = self.getCheckBoxValue(self.ui.createQuickTime_checkBox)
+			self.interruptible = self.getCheckBoxValue(self.ui.interruptible_checkBox)
+			# self.createQt = self.getCheckBoxValue(self.ui.createQuickTime_checkBox)
 
 			return True
 
@@ -349,15 +355,15 @@ class PreviewUI(UI.TemplateUI):
 			return False
 
 
-	def preview(self):
+	def preview(self, showUI=True):
 		""" Get options, pass information to appConnect and save options once
 			appConnect is done.
 		"""
 		if self.getOpts():
-			if not self.offscreen:
+			# Minimise window if rendering offscreen
+			if not self.offscreen and showUI:
 				self.showMinimized()
 
-			# previewSetup = appConnect.AppConnect(self.fileInput, self.res, self.frRange, self.offscreen, self.noSelect, self.guides, self.slate)
 			previewSetup = appConnect.AppConnect(fileInput=self.fileInput, 
 			                                     format=self.format, 
 			                                     activeView=self.activeView, 
@@ -367,18 +373,28 @@ class PreviewUI(UI.TemplateUI):
 			                                     offscreen=self.offscreen, 
 			                                     noSelect=self.noSelect, 
 			                                     guides=self.guides, 
-			                                     slate=self.slate)
+			                                     slate=self.slate, 
+			                                     interruptible=self.interruptible)
 			previewOutput = previewSetup.appPreview()
-			if previewOutput:
-				# self.outputDir, self.outputFile, self.frRange, self.ext = previewOutput
-				self.outputFilePath = previewOutput
+			if previewOutput[0]:
+				# print(previewOutput[1])
+				self.outputFilePath = previewOutput[1]
 				# if self.createQt:
 				# 	self.createQuickTime()
 				if self.viewer:
 					self.launchViewer()
-				#osOps.setPermissions(self.outputDir)
+				# osOps.setPermissions(self.outputDir)
+				self.ui.message_plainTextEdit.hide()
+				# print(self.sizeHint())
+				# self.setFixedHeight(self.sizeHint().height())
+			else:
+				self.ui.message_plainTextEdit.setPlainText(previewOutput[1])
+				self.ui.message_plainTextEdit.show()
+				# print(self.sizeHint())
+				# self.setFixedHeight(self.sizeHint().height())
 
-			if not self.offscreen:
+			# Restore window
+			if not self.offscreen and showUI:
 				self.showNormal()
 
 		self.save()  # Save settings
@@ -406,9 +422,7 @@ class PreviewUI(UI.TemplateUI):
 			self.outputFilePath = sequence.getFirst(self.outputFilePath)
 		elif self.format == "QuickTime":
 			self.outputFilePath += ".mov"
-		# inPath = os.path.join(self.outputDir, '%s.#.%s' % (self.outputFile, self.ext))
-		# djvOps.viewer(sequence.getFirst(inPath))
-		djvOps.viewer(sequence.getFirst(self.outputFilePath))
+		djvOps.viewer(self.outputFilePath)
 
 
 	def closeEvent(self, event):
@@ -434,7 +448,8 @@ def run_maya(showUI=True):
 		previewApp.display()
 	else:  # Run playblast without displaying the UI
 		previewApp.initSettings()
-		previewApp.preview()
+		previewApp.preview(showUI=showUI)
+		# previewApp.hide()
 
 	# if not DOCK_WITH_MAYA_UI:
 	# 	previewApp.display(**kwargs)  # Show the UI

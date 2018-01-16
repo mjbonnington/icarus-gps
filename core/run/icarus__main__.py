@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2017 Gramercy Park Studios
+# (c) 2013-2018 Gramercy Park Studios
 #
 # Launches and controls the main Icarus UI.
 
@@ -72,7 +72,7 @@ import verbose
 # ----------------------------------------------------------------------------
 
 VENDOR = "Gramercy Park Studios"
-COPYRIGHT = "(c) 2013-2017"
+COPYRIGHT = "(c) 2013-2018"
 DEVELOPERS = "Nuno Pereira, Mike Bonnington"
 
 # Set window title and object names

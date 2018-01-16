@@ -6,7 +6,7 @@
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2014-2018 Gramercy Park Studios
 #
-# Generate playblasts for GPS Preview.
+# Generate Maya playblasts for GPS Preview.
 
 
 import maya.cmds as mc
@@ -22,7 +22,7 @@ import verbose
 
 class Preview():
 
-	def __init__(self, outputDir, outputFile, format, activeView, camera, res, frRange, offscreen, noSelect, guides, slate):
+	def __init__(self, outputDir, outputFile, format, activeView, camera, res, frRange, offscreen, noSelect, guides, slate, interruptible):
 		self.playblastDir = outputDir
 		self.outputFile = outputFile
 		if format == "JPEG sequence":
@@ -41,6 +41,7 @@ class Preview():
 		self.noSelect = noSelect
 		self.guides = guides
 		self.slate = slate
+		self.interruptible = interruptible
 
 
 	def storeAttributes(self, obj, attrLs):
@@ -132,9 +133,14 @@ class Preview():
 		cameraShape = [activeCamera]
 		if mc.nodeType(activeCamera) != 'camera':
 			cameraShape = mc.listRelatives(activeCamera, shapes=True)
-		cameraLens = mc.getAttr(cameraShape[0] + '.focalLength')
-		cameraLens = round(cameraLens, 2)
-		camInfo = '%s %s mm' %(activeCamera, cameraLens)
+		if mc.getAttr(cameraShape[0] + '.orthographic'):
+			orthoWidth = mc.getAttr(cameraShape[0] + '.orthographicWidth')
+			orthoWidth = round(orthoWidth, 2)
+			camInfo = '%s (ortho %s)' %(activeCamera, orthoWidth)
+		else:
+			cameraLens = mc.getAttr(cameraShape[0] + '.focalLength')
+			cameraLens = round(cameraLens, 2)
+			camInfo = '%s (%s mm)' %(activeCamera, cameraLens)
 		return camInfo
 
 	# Date & time
@@ -253,22 +259,34 @@ class Preview():
 	def playblast_(self):
 		""" Sets playblast options and runs playblast.
 		"""
+		if not self.activeView:
+			msg = "No active view selected. Please select a camera panel to playblast and try again."
+			mc.warning(msg)
+			return False, msg
+
+		# Get current active panel camera
+		try:
+			activeCameraOrig = mc.modelPanel(self.activeView, cam=True, q=True)
+		except:
+			msg = "Panel '%s' not found. Please select a camera panel to playblast and try again." %self.activeView
+			mc.warning(msg)
+			return False, msg
+
+		# Get active camera and shape
+		activeCamera = self.camera
+		if not activeCamera:
+			msg = "Unable to generate playblast as no camera was specified."
+			mc.warning(msg)
+			return False, msg
+		cameraShape = [activeCamera]
+		if mc.nodeType(activeCamera) != 'camera':
+			cameraShape = mc.listRelatives(activeCamera, shapes=True)
+
 		# Disable undo
 		mc.undoInfo(openChunk=True, chunkName='gpsPreview')
 		# undoState = mc.undoInfo(q=True, state=True)
 		# if undoState:
 		# 	mc.undoInfo(state=False)
-
-		# Get current active panel camera
-		activeCameraOrig = mc.modelPanel(self.activeView, cam=True, q=True)
-
-		# Get active camera and shape
-		activeCamera = self.camera
-		if not activeCamera:
-			return
-		cameraShape = [activeCamera]
-		if mc.nodeType(activeCamera) != 'camera':
-			cameraShape = mc.listRelatives(activeCamera, shapes=True)
 
 		# Look through camera if no active panel
 		mc.lookThru(self.activeView, activeCamera)
@@ -332,30 +350,47 @@ class Preview():
 		# if undoState:
 		# 	mc.undoInfo(state=True)
 
-		# Return frame range and file extension - CHECK THIS!
-		print(output)
-		return output
-		#return self.frRange, 'jpg'
+		# Return file output
+		# print(output)
+		if output:
+			return True, output
+		# Return the output file path even if the playblast was interrupted.
+		# In the playblast command's return value, Maya automatically adds the
+		# extension for jpg, but not mov. We are replicating that behaviour
+		# here.
+		else:
+			if self.interruptible:
+				if self.format == "image":
+					output = os.path.join(self.playblastDir, '%s.#.%s' %(self.outputFile, self.compression))
+				elif self.format == "qt":
+					output = os.path.join(self.playblastDir, self.outputFile)
+				return True, output
+			else:  # Fail on interrupt
+				return False, "Playblast was interrupted."
 
 
 	def run_playblast(self):
 		""" Maya command to generate playblast.
 		"""
-		return mc.playblast(filename='%s/%s' %(self.playblastDir, self.outputFile), 
-		                    startTime=self.frRange[0], 
-		                    endTime=self.frRange[1], 
-		                    framePadding=4, 
-		                    width=self.res[0], 
-		                    height=self.res[1], 
-		                    percent=100, 
-		                    format=self.format, 
-		                    compression=self.compression, 
-		                    sound=self.sound, 
-		                    viewer=False, 
-		                    offScreen=self.offscreen, 
-		                    clearCache=True, 
-		                    showOrnaments=True)
-#		                    editorPanelName=self.activePanel)
+		pb_args = {}
+		pb_args['filename'] = '%s/%s' %(self.playblastDir, self.outputFile)
+		pb_args['startTime'] = self.frRange[0]
+		pb_args['endTime'] = self.frRange[1]
+		pb_args['framePadding'] = 4
+		pb_args['width'] = self.res[0]
+		pb_args['height'] = self.res[1]
+		pb_args['percent'] = 100
+		pb_args['format'] = self.format
+		pb_args['compression'] = self.compression
+		if self.sound:
+			pb_args['sound'] = self.sound
+		pb_args['viewer'] = False
+		pb_args['offScreen'] = self.offscreen
+		pb_args['clearCache'] = True
+		pb_args['showOrnaments'] = True
+		pb_args['editorPanelName'] = self.activeView
+
+		return mc.playblast(**pb_args)
 
 # ----------------------------------------------------------------------------
 # End of main class

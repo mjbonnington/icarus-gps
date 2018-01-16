@@ -2,8 +2,10 @@ v0.9.11 (--)
 -	[Icarus] Added Title and Notes fields to shot settings.
 -	[Icarus] Job management now performs check for non-alphanumeric characters in paths.
 -	[Icarus] Removed djv_view from distribution. Icarus will now use the executable specified in the job settings.
+-	[Maya] GPS Preview can now output QuickTime movies with sound.
 -	[Maya] GPS Preview can now generate a playblast from either the active panel or a specific camera.
 -	[Maya] GPS Preview output filename field now accepts <Scene> and <Camera> tokens.
+-	[Maya] GPS Preview can generate a playblast directly, bypassing the UI.
 -	[Maya] Fixed a couple of issues with the UI code to generate Icarus' customised menu items.
 -	[Maya] Preferences for image viewer and Photoshop executables are now set automatically based on job settings.
 -	[Nuke] Added Cryptomatte gizmos.

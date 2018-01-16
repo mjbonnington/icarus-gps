@@ -11,6 +11,15 @@
 
 import os
 
+# Detect environment and import approprate modules
+if os.environ['IC_ENV'] == 'STANDALONE':
+	pass
+elif os.environ['IC_ENV'] == 'MAYA':
+	import maya.cmds as mc
+elif os.environ['IC_ENV'] == 'NUKE':
+	import nuke
+	import nukescripts
+
 
 # ----------------------------------------------------------------------------
 # Main class
@@ -21,7 +30,7 @@ class AppConnect(object):
 	""" Connects gpsPreview to the relevant application and passes args to its
 		internal preview API.
 	"""
-	def __init__(self, fileInput, format, activeView, camera, res, frRange, offscreen, noSelect, guides, slate):
+	def __init__(self, fileInput, format, activeView, camera, res, frRange, offscreen, noSelect, guides, slate, interruptible):
 	#def __init__(self, **kwargs):
 		self.fileInput = fileInput
 		self.outputFile = os.path.split(self.fileInput)[1]
@@ -39,39 +48,45 @@ class AppConnect(object):
 		self.noSelect = noSelect
 		self.guides = guides
 		self.slate = slate
+		self.interruptible = interruptible
 
 
 	def appPreview(self):
-		""" Detect environment.
+		""" Detect environment & begin preview.
 		"""
 		if os.environ['IC_ENV'] == 'MAYA':
 			self.outputDir = os.path.join(os.environ['MAYAPLAYBLASTSDIR'], self.fileInput)
-			mayaPreviewOutput = self.mayaPreview()
-			if mayaPreviewOutput:
-				# self.frRange, ext = mayaPreviewOutput
-				# return self.outputDir, self.outputFile, self.frRange, ext
-				return mayaPreviewOutput
-			else:
-				return
-
-
-	def mayaPreview(self):
-		""" Begin Maya preview (playblast).
-		"""
-		import gpsMayaPreview
-		previewSetup = gpsMayaPreview.Preview(self.outputDir, self.outputFile, self.format, self.activeView, self.camera, (self.hres, self.vres), self.frRange, self.offscreen, self.noSelect, self.guides, self.slate)
-		return previewSetup.playblast_()
+			import gpsMayaPreview
+			previewSetup = gpsMayaPreview.Preview(self.outputDir, 
+			                                      self.outputFile, 
+			                                      self.format, 
+			                                      self.activeView, 
+			                                      self.camera, 
+			                                      (self.hres, self.vres), 
+			                                      self.frRange, 
+			                                      self.offscreen, 
+			                                      self.noSelect, 
+			                                      self.guides, 
+			                                      self.slate, 
+			                                      self.interruptible)
+			return previewSetup.playblast_()
 
 # ----------------------------------------------------------------------------
 # End of main class
 # ----------------------------------------------------------------------------
 
+
 def getScene():
 	""" Returns name of scene/script/project file.
 	"""
 	if os.environ['IC_ENV'] == 'MAYA':
-		import mayaOps
-		return os.path.splitext(os.path.basename(mayaOps.getScene()))[0]
+		scene = mc.file(q=True, sceneName=True)
+		sceneName = os.path.splitext(os.path.basename(scene))[0]
+
+		if sceneName:
+			return sceneName
+		else:
+			return "untitled"
 
 
 def getCameras(renderableOnly=False):
@@ -79,7 +94,6 @@ def getCameras(renderableOnly=False):
 		listed first.
 	"""
 	if os.environ['IC_ENV'] == 'MAYA':
-		import maya.cmds as mc
 		# noSelectText = ""
 		# camera_list = [noSelectText, ]
 		camera_list = []
@@ -96,17 +110,14 @@ def getCameras(renderableOnly=False):
 		return camera_list
 
 
-def getActiveCamera(panel=None):
-	""" Returns camera for the specified panel. If no panel is specified,
-		use the currently active panel.
+def getActiveCamera(panel):
+	""" Returns camera for the specified panel.
 	"""
 	if os.environ['IC_ENV'] == 'MAYA':
-		import maya.cmds as mc
-		if panel is None:
-			panel = mc.getPanel(withFocus=True)
-		camera = mc.modelPanel(panel, cam=True, q=True)
-
-		#print(camera)
+		try:
+			camera = mc.modelPanel(panel, cam=True, q=True)
+		except:
+			camera = ""
 
 		return camera
 
@@ -116,16 +127,10 @@ def getActiveView():
 		return False.
 	"""
 	if os.environ['IC_ENV'] == 'MAYA':
-		import maya.cmds as mc
 		panel = mc.getPanel(withFocus=True)
-		try:
-			camera = mc.modelPanel(panel, cam=True, q=True)
-		except:
-			camera = None
+		camera = getActiveCamera(panel)
 
-		#print(panel, camera)
-
-		if camera is not None:
+		if camera is not "":
 			return panel
 		else:
 			return False
@@ -136,8 +141,10 @@ def getResolution():
 		tuple (integer, integer).
 	"""
 	if os.environ['IC_ENV'] == 'MAYA':
-		import maya.cmds as mc
-		return mc.getAttr("defaultResolution.w"), mc.getAttr("defaultResolution.h")
+		width = mc.getAttr("defaultResolution.w")
+		height = mc.getAttr("defaultResolution.h")
+
+		return width, height
 
 
 def getFrameRange():
@@ -145,14 +152,17 @@ def getFrameRange():
 		(integer, integer).
 	"""
 	if os.environ['IC_ENV'] == 'MAYA':
-		import maya.cmds as mc
-		return int(mc.playbackOptions(min=True, q=True)), int(mc.playbackOptions(max=True, q=True))
+		start = int(mc.playbackOptions(min=True, q=True))
+		end = int(mc.playbackOptions(max=True, q=True))
+
+		return start, end
 
 
 def getCurrentFrame():
 	""" Returns the current frame of scene/script/project file as an integer.
 	"""
 	if os.environ['IC_ENV'] == 'MAYA':
-		import maya.cmds as mc
-		return int(mc.currentTime(q=True))
+		frame = int(mc.currentTime(q=True))
+
+		return frame
 
