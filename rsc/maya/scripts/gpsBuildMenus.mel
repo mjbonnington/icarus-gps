@@ -2,7 +2,7 @@
 //
 // Nuno Pereira <nuno.pereira@gps-ldn.com>
 // Mike Bonnington <mike.bonnington@gps-ldn.com>
-// (c) 2015-2017 Gramercy Park Studios
+// (c) 2015-2018 Gramercy Park Studios
 //
 // Dynamically modifies Maya's menus without the need to edit Maya's UI MEL
 // scripts directly.
@@ -27,7 +27,7 @@ global proc checkGPSFileMenu()
 
 	// Create "Send To" menu items for one-click
 	// interop with available applications.
-	//
+	
 	//buildSendToSubMenus;
 }
 
@@ -75,7 +75,7 @@ for ($item in `menu -ia -q $fileMenu`) {
 // Add GPS entries
 setParent -menu $fileMenu;
 
-	// GPS New Scene
+	// New Scene
 	menuItem -insertAfter ""
 			 -label "[GPS] New"
 			 -annotation ("Create a new scene")
@@ -83,7 +83,7 @@ setParent -menu $fileMenu;
 			 -command ("source menus2Py; menus2Py.newScene()")
 			 GPSNewScene;
 
-	// GPS Open Scene
+	// Open Scene
 	menuItem -insertAfter GPSNewScene
 			 -label "[GPS] Open..."
 			 -annotation ("Open a saved scene")
@@ -91,7 +91,7 @@ setParent -menu $fileMenu;
 			 -command ("source menus2Py; menus2Py.openScene()")
 			 GPSOpenScene;
 
-	// GPS Open Recent Scene (edit the existing menu item)
+	// Open Recent Scene
 	menuItem -insertAfter GPSOpenScene
 			 -subMenu true
 			 -label "[GPS] Open Recent"
@@ -111,7 +111,7 @@ setParent -menu $fileMenu;
 				 GPSFileDivider1;
 	}
 
-	// GPS Save Scene
+	// Save Scene
 	menuItem -insertAfter GPSFileDivider1
 			 -label "[GPS] Save"
 			 -annotation ("Save the current scene")
@@ -119,7 +119,7 @@ setParent -menu $fileMenu;
 			 -command ("source menus2Py; menus2Py.saveScene()")
 			 GPSSaveScene;
 
-	// GPS Save Scene As
+	// Save Scene As
 	menuItem -insertAfter GPSSaveScene
 			 -label "[GPS] Save As..."
 			 -annotation ("Save scene with a new name")
@@ -127,7 +127,7 @@ setParent -menu $fileMenu;
 			 -command ("source menus2Py; menus2Py.saveSceneAs()")
 			 GPSSaveSceneAs;
 
-	// GPS - Incremental Save
+	// Incremental Save
 	menuItem -insertAfter GPSSaveSceneAs
 			 -label "[GPS] Incremental Save"
 			 -annotation "Save the current scene as new version"
@@ -149,7 +149,7 @@ if ( !`optionVar -exists GPSCreateCameraRig` ) optionVar -iv GPSCreateCameraRig 
 if ( !`optionVar -exists GPSAddVRayPhysicalCamera` ) optionVar -iv GPSAddVRayPhysicalCamera 0;
 
 setParent -menu $createMenu;
-	// GPS - Create Cameras menu
+	// Create Cameras menu
 	menuItem -insertAfter LightsItem
 			 -subMenu true
 			 -tearOff true
@@ -183,14 +183,14 @@ setParent -menu $windowMenu;
 			 playblastItem;
 	menuItem -edit
 			 -command ("source menus2Py; menus2Py.gpsPreview()")
-			 -annotation ("Launches GPS Preview UI")
+			 -annotation ("Launch GPS Preview UI")
 			 playblastDialogItem;
 
 	menuItem -insertAfter playblastItem
 			 -divider true
 			 GPSWindowDivider1;
 
-	// GPS Launch Icarus UI
+	// Launch Icarus UI
 	menuItem -insertAfter GPSWindowDivider1
 			 -label "Icarus UI..."
 			 -annotation ("Launch Icarus UI")
@@ -203,30 +203,45 @@ setParent -menu $windowMenu;
 // Time Slider Menu //
 //////////////////////
 
-string $timelineMenu = "";
-if ($maya_ver >= 2017) {
-	//print ("Running version 2017 or higher\n");
-	$timelineMenu = "TimeSlider|MainTimeSliderLayout|formLayout8|TimeSliderMenu"; // Maya 2017 and later
-} else {
-	//print ("Running version 2016 or earlier\n");
-	$timelineMenu = "MayaWindow|toolBar6|MainTimeSliderLayout|formLayout9|TimeSliderMenu"; // Maya 2016 and earlier
-};
+string $timelineMenu = "TimeSliderMenu";
+// string $timelineMenu = "";
+// if ($maya_ver >= 2017) {
+// 	//print ("Running version 2017 or higher\n");
+// 	$timelineMenu = "TimeSlider|MainTimeSliderLayout|formLayout8|TimeSliderMenu"; // Maya 2017 and later
+// } else {
+// 	//print ("Running version 2016 or earlier\n");
+// 	$timelineMenu = "MayaWindow|toolBar6|MainTimeSliderLayout|formLayout9|TimeSliderMenu"; // Maya 2016 and earlier
+// };
 
 updateTimeSliderMenu $timelineMenu;
 //menu -exists $timelineMenu;
 //string $timeline_menuItems[] = `menu -ia -q $timelineMenu`;
 
-// Delete existing menu items
-deleteUI -menuItem timeSliderPlayblastItem;
-
 // Add GPS entries
 setParent -menu $timelineMenu;
-	menuItem -divider true;
-	menuItem -label ("[GPS] Preview...")
-			 -command ("source menus2Py; menus2Py.gpsPreview()")
-			 -annotation ("Launches GPS Preview")
+	// Replace the existing Playblast menu item with GPS Preview
+	menuItem -edit
+			 -label ("[GPS] Preview")
+			 -command ("source menus2Py; menus2Py.gpsPreviewNoUI()")
+			 -annotation ("GPS Preview")
 			 -image "gpsPlayblast.png"
-			 GPSPlayblastItem;
+			 timeSliderPlayblastItem;
+	menuItem -edit
+			 -command ("source menus2Py; menus2Py.gpsPreview()")
+			 -annotation ("Launch GPS Preview UI")
+			 timeSliderPlayblastOptionItem;
+
+// Delete existing menu items
+//deleteUI -menuItem timeSliderPlayblastItem;
+
+// Add GPS entries
+// setParent -menu $timelineMenu;
+// 	menuItem -divider true;
+// 	menuItem -label ("[GPS] Preview...")
+// 			 -command ("source menus2Py; menus2Py.gpsPreview()")
+// 			 -annotation ("Launch GPS Preview")
+// 			 -image "gpsPlayblast.png"
+// 			 GPSPlayblastItem;
 
 
 /////////////////////////
@@ -237,59 +252,60 @@ setParent $gStatusLine;
 
 int $iconHeight = 26;
 
-// GPS - New Scene
+// New Scene
 iconTextButton -edit -image1 "newScene.png"
                -width $iconHeight -height $iconHeight
                -command ("source menus2Py; menus2Py.newScene()")
                -annotation "New scene"
                newSceneButton;
 
-// GPS - Open Scene
+// Open Scene
 iconTextButton -edit -image1 "openScene.png"
                -width $iconHeight -height $iconHeight
                -command ("source menus2Py; menus2Py.openScene()")
                -annotation "Open scene. Right click for recent files."
                openSceneButton;
 
-// GPS - Create a popup menu for Recent Files on the Open Scene button
+// Create a popup menu for Recent Files on the Open Scene button
 deleteUI -menu OpenSceneButtonRecentFileItems;
 popupMenu -parent openSceneButton OpenSceneButtonRecentFileItems;
 	menu -edit -postMenuCommand "source menus2Py; menus2Py.updateRecentFilesMenu(\"OpenSceneButtonRecentFileItems\")" OpenSceneButtonRecentFileItems;
 setParent -menu ..;
 
-// GPS - Save Scene
+// Save Scene
 iconTextButton -edit -image1 "saveScene.png"
                -width $iconHeight -height $iconHeight
                -command ("source menus2Py; menus2Py.saveScene()")
                -annotation "Save scene"
                saveSceneButton;
 
-// GPS - Create a popup menu on the Save button for Save As and Incremental Save
+// Create a popup menu on the Save button for Save As and Incremental Save
 string $save_menu = `popupMenu -parent saveSceneButton`;
 	menuItem -label "Incremental Save" -command "source menus2Py; menus2Py.incrementalSave()";
 	menuItem -label "Save As..." -command "source menus2Py; menus2Py.saveSceneAs()";
 
 // The following are new buttons added to the end of the status line toolbar...
 
-// GPS - Rename Tools
+// Rename Tools
 iconTextButton -image1 "bulkRename.png"
                -width $iconHeight -height $iconHeight
                -command ("source menus2Py.mel;menus2Py.bulkRename()")
                -annotation "Advanced renaming of objects"
                bulkRenameButton;
 
-// GPS - Common Editors
+// Common Editors
 iconTextButton -image1 "editor.png"
                -width $iconHeight -height $iconHeight
                -annotation "Open commonly used editor windows"
                editorsButton;
 
-// GPS - Add popup menu for common editors
+// Add popup menu for common editors
 string $editor_menu = `popupMenu -b 1 -p editorsButton`;
 	if ($maya_ver >= 2017) {
 		menuItem -label "Outliner" -c "OutlinerWindow";
 	} else {
-		menuItem -label "Outliner" -c "source dev_dockOutliner;dev_dockOutliner()"; // Custom dockable Outliner panel for Maya 2016 and earlier
+		// Custom dockable Outliner panel for Maya 2016 and earlier
+		menuItem -label "Outliner" -c "source dev_dockOutliner;dev_dockOutliner()";
 	};
 	menuItem -label "Node Editor" -c "NodeEditorWindow";
 	menuItem -divider true;
@@ -299,13 +315,13 @@ string $editor_menu = `popupMenu -b 1 -p editorsButton`;
 	menuItem -label "Graph Editor" -c "GraphEditor";
 	menuItem -label "Dope Sheet" -c "DopeSheetEditor";
 
-// GPS - Browse Project Directories
+// Browse Project Directories
 iconTextButton -image1 "browse.png"
                -width $iconHeight -height $iconHeight
                -annotation "Browse project directories"
                browseDirsButton;
 
-// GPS - Create a menu on the browse dir button for different directories
+// Create a menu on the browse dir button for different directories
 string $browser_menu = `popupMenu -b 1 -p browseDirsButton`;
 	menuItem -label "Browse scenes" -c "source menus2Py;menus2Py.browseScenes()";
 	menuItem -label "Browse playblasts" -c "source menus2Py;menus2Py.browsePlayblasts()";
@@ -314,33 +330,33 @@ string $browser_menu = `popupMenu -b 1 -p browseDirsButton`;
 	menuItem -label "Browse shot" -c "source menus2Py;menus2Py.browseShot()";
 	menuItem -label "Browse job" -c "source menus2Py;menus2Py.browseJob()";
 
-// GPS - Review
+// Review
 iconTextButton -image1 "review.png"
                -width $iconHeight -height $iconHeight
                -command ("source menus2Py.mel;menus2Py.launchHieroPlayer;")
                -annotation "Launch review app"
                reviewButton;
 
-// GPS - Create a menu on the review button for different review software
+// Create a menu on the review button for different review software
 string $review_menu = `popupMenu -b 1 -p reviewButton`;
 	menuItem -label "HieroPlayer" -c "source menus2Py;menus2Py.launchHieroPlayer";
 	menuItem -label "djv_view" -c "source menus2Py;menus2Py.launchDjv";
 
-// GPS - Open Production Board
+// Open Production Board
 iconTextButton -image1 "productionBoard.png"
                -width $iconHeight -height $iconHeight
                -command ("source menus2Py.mel;menus2Py.launchProdBoard;")
                -annotation "Open the Production Board"
                launchProdBoardButton;
 
-// GPS - Launch Icarus UI
+// Launch Icarus UI
 iconTextButton -image1 "icarus.png"
                -width $iconHeight -height $iconHeight
                -command ("source menus2Py;menus2Py.launchIcarus()")
                -annotation "Launch Icarus UI"
                launchIcarusButton;
 
-// GPS - Print current job and shot info
+// Print current job and shot info
 string $jobInfo = `getenv JOB` + " - " + `getenv SHOT`;
 text -label "   ";
 text -label $jobInfo -h 27;
