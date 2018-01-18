@@ -57,6 +57,17 @@ class jobs(xmlData.XMLData):
 			return False
 
 
+	def checkShotExists(self, jobName, shotName):
+		""" Check if shot path exists.
+		"""
+		jobPath = self.getPath(jobName, translate=True)
+		shotPath = osOps.absolutePath("%s/$SHOTSROOTRELATIVEDIR/%s" %(jobPath, shotName))
+		if os.path.isdir(shotPath):
+			return True
+		else:
+			return False
+
+
 	def createDirs(self):
 		""" Create directory structure inside shot folder.
 			TODO: The folder structure should be defined in an XML data file

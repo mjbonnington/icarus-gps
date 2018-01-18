@@ -245,6 +245,7 @@ class IcarusApp(QtWidgets.QMainWindow):
 			# Set shot UI
 			self.ui.refreshJobs_toolButton.clicked.connect(self.populateJobs)
 			self.ui.job_comboBox.currentIndexChanged.connect(self.populateShots)
+			# self.ui.shot_comboBox.view().pressed.connect(self.populateShots)  # Auto-populate combo box when clicked - cannot get to work
 			self.ui.setShot_toolButton.toggled.connect(lambda checked: self.setShot(checked))
 
 			# Utility launch buttons (bottom row)
@@ -815,33 +816,49 @@ class IcarusApp(QtWidgets.QMainWindow):
 		""" Sets up shot environment, creates user directories and updates
 			user job log.
 		"""
-		if job is not None:
+		if job is None:
+			job = self.ui.job_comboBox.currentText()
+		else:
 			self.setComboBox(self.ui.job_comboBox, job)
-		if shot is not None:
-			self.setComboBox(self.ui.shot_comboBox, shot)
-		self.job = self.ui.job_comboBox.currentText()
-		self.shot = self.ui.shot_comboBox.currentText()
 
-		if self.j.setup(self.job, self.shot):
-			self.adjustPblTypeUI()
-			self.populateShotLs(self.ui.publishToShot_comboBox)
-			self.populateShotLs(self.ui.gatherFromShot_comboBox)
-			self.connectNewSignalsSlots()
-			self.lockJobUI()
-			self.al.setupIconGrid(job=self.job, sortBy=self.sortAppsBy)
+		if shot is None:
+			shot = self.ui.shot_comboBox.currentText()
+		else:
+			self.setComboBox(self.ui.shot_comboBox, shot)
+
+		self.job = job
+		self.shot = shot
+
+		if self.j.checkShotExists(self.job, self.shot):
+
+			if self.j.setup(self.job, self.shot):
+				self.adjustPblTypeUI()
+				self.populateShotLs(self.ui.publishToShot_comboBox)
+				self.populateShotLs(self.ui.gatherFromShot_comboBox)
+				self.connectNewSignalsSlots()
+				self.lockJobUI()
+				self.al.setupIconGrid(job=self.job, sortBy=self.sortAppsBy)
+
+				return True
+
+			else:
+				dialogMsg = 'Unable to load job settings. Default values have been applied.\nPlease review the values in the Job Settings dialog and click Save when done.\n'
+				verbose.print_(dialogMsg, 1)
+
+				# Confirmation dialog
+				import pDialog
+				dialogTitle = 'Job settings not found'
+				dialog = pDialog.dialog()
+				dialog.display(dialogMsg, dialogTitle, conf=True)
+
+				if self.openSettings("Job", autoFill=True):
+					self.setupJob()
+
+				return False
 
 		else:
-			dialogMsg = 'Unable to load job settings. Default values have been applied.\nPlease review the values in the Job Settings dialog and click Save when done.\n'
-			verbose.print_(dialogMsg, 1)
-
-			# Confirmation dialog
-			import pDialog
-			dialogTitle = 'Job settings not found'
-			dialog = pDialog.dialog()
-			dialog.display(dialogMsg, dialogTitle, conf=True)
-
-			if self.openSettings("Job", autoFill=True):
-				self.setupJob()
+			verbose.warning("Shot '%s' doesn't exist." %self.shot)
+			return False
 
 
 	# @QtCore.Slot()
@@ -849,7 +866,9 @@ class IcarusApp(QtWidgets.QMainWindow):
 		""" Wrapper function to set/unset shot from the tool button.
 		"""
 		if checked:
-			self.setupJob()
+			if not self.setupJob():
+				# Set check state of button to off
+				self.ui.setShot_toolButton.setChecked(False)
 		else:
 			self.unlockJobUI(refreshShots=True)
 
