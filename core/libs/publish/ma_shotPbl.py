@@ -4,7 +4,8 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# Benjamin Parry <ben.parry@gps-ldn.com>
+# (c) 2013-2018 Gramercy Park Studios
 #
 # Publish an asset of the type ma_shot.
 
@@ -58,9 +59,11 @@ def publish(pblTo, pblNotes):
 		# Publish operations
 		# Copy textures to publish directory (use hardlink instead?)
 		txFullPath = os.path.join(pblDir, 'tx')
-		txRelPath = txFullPath.replace(os.path.expandvars('$JOBPATH'), '$JOBPATH')
-		txPaths = (txFullPath, txRelPath)
-		mayaOps.relinkTexture(txPaths, updateMaya=True)
+		# txRelPath = txFullPath.replace(os.path.expandvars('$JOBPATH'), '$JOBPATH')
+		# txPaths = (txFullPath, txRelPath)
+
+		# Returns a dict for fileNodes and oldTxPaths if updateMaya = True
+		oldTxPaths = mayaOps.updateTextures(txFullPath, updateMaya=True)
 
 		# Take snapshot
 		mayaOps.snapShot(pblDir, isolate=False, fit=False)
@@ -71,6 +74,11 @@ def publish(pblTo, pblNotes):
 		activeScene = mayaOps.getScene()
 		mayaOps.redirectScene(pathToPblAsset)
 		mayaOps.saveFile(fileType, updateRecentFiles=False)
+
+		# Reverts the texture paths
+		if oldTxPaths:
+				mayaOps.relinkTextures(oldTxPaths)
+
 		mayaOps.redirectScene(activeScene)
 
 		# Delete in-progress tmp file

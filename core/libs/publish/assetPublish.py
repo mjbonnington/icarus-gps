@@ -4,13 +4,14 @@
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# Benjamin Parry <ben.parry@gps-ldn.com>
+# (c) 2013-2018 Gramercy Park Studios
 #
 # Generic asset publishing module.
 
 
 import os, sys, traceback
-#import maya.cmds as mc
+import maya.cmds as mc
 import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, inProgress
 
 
@@ -105,9 +106,11 @@ def publish(genericOpts, assetType, assetTypeOpts):
 		if textures:
 			# Copy textures to publish directory (use hardlink instead?)
 			txFullPath = os.path.join(pblDir, 'tx')
-			txRelPath = txFullPath.replace(os.path.expandvars('$JOBPATH'), '$JOBPATH')
-			txPaths = (txFullPath, txRelPath)
-			mayaOps.relinkTexture(txPaths, txObjLs=allObjLs, updateMaya=True)
+			# txRelPath = txFullPath.replace(os.path.expandvars('$JOBPATH'), '$JOBPATH')
+			# txPaths = (txFullPath, txRelPath)
+
+			# Returns a dict for fileNodes and oldTxPaths if updateMaya = True
+			oldTxPaths = mayaOps.updateTextures(txFullPath, txObjLs=allObjLs, updateMaya=True)
 
 		# Take snapshot
 		mayaOps.snapShot(pblDir, isolate=True, fit=True)
@@ -116,6 +119,10 @@ def publish(genericOpts, assetType, assetTypeOpts):
 		pathToPblAsset = os.path.join(pblDir, '%s.%s' % (assetPblName, extension))
 		verbose.pblFeed(msg=assetPblName)
 		mayaOps.exportSelection(pathToPblAsset, fileType)
+
+		# Reverts the texture paths
+		if textures and oldTxPaths:
+				mayaOps.relinkTextures(oldTxPaths)
 
 		# Delete in-progress tmp file
 		inProgress.end(pblDir)

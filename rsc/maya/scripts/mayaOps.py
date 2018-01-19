@@ -4,7 +4,8 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2017 Gramercy Park Studios
+# Benjamin Parry <ben.parry@gps-ldn.com>
+# (c) 2013-2018 Gramercy Park Studios
 #
 # Maya operations module.
 
@@ -633,7 +634,8 @@ def parentCnstrHrq(obj1, obj2):
 
 
 def redirectScene(sceneFile):
-	""" Redirect scene name and path.
+	"""
+	Redirect scene name and path.
 	"""
 	mc.file(rename=sceneFile)
 
@@ -682,9 +684,21 @@ def referenceTag(obj, assetPblName):
 	mc.setAttr('%s.icRefTag' % obj, l=False)
 	mc.setAttr('%s.icRefTag' % obj, assetPblName, typ='string', l=True)
 
-################relinks fileNode paths######################
-def relinkTexture(txPaths, txObjLs=None, updateMaya=True, copy=True):
-	txFullPath, txRelPath = txPaths
+
+def updateTextures(txPath, txObjLs=None, updateMaya=True, copy=True):
+	"""
+    Handles copying and updating texture file node paths for incoming txObjLs
+    :param txPath: The directory of the new texture file path.
+    :param txObjLs: A list of objects.
+    :param updateMaya: Updated the file paths in the current scene.
+    :param copy: Makes a copy of the textures to the directory txPath
+    :return:
+        If updateMaya=True: A dictionary of all modified texture 
+        file nodes{texture File Node: file path before modification}
+        If updateMaya=False: None
+    """
+	# txFullPath, txRelPath = txPaths
+	currentPaths = {}
 	if not txObjLs:
 		fileNode = mc.itemFilter(byType='file')
 		fileNodeLs = mc.lsThroughFilter(fileNode)
@@ -701,16 +715,31 @@ def relinkTexture(txPaths, txObjLs=None, updateMaya=True, copy=True):
 			if not mc.getAttr('%s.useFrameExtension' % fileNode):
 				filePath = mc.getAttr(fileNode + '.fileTextureName')
 				#getting full path from mayaAttributes
+				oldFilePath = filePath
 				filePath = os.path.expandvars(filePath)
 				if os.path.isfile(filePath):
-					fileName = filePath.split('/')
-					fileName = fileName.pop()
+					fileName = filePath.split('/')[-1]
 					if copy:
-						shutil.copy(filePath, txFullPath)
+						shutil.copy(filePath, txPath)
 					if updateMaya:
+						currentPaths[fileNode] = oldFilePath
 						#vray does not support relative path env vars in texures. Until this changes full path is written
 						#mc.setAttr(fileNode + '.fileTextureName', os.path.join(txRelPath, fileName), type='string')
-						mc.setAttr(fileNode + '.fileTextureName', os.path.join(txFullPath, fileName), type='string')
+						mc.setAttr(fileNode + '.fileTextureName', os.path.join(txPath, fileName), type='string')
+						
+	if updateMaya:
+		return currentPaths
+	else:
+		return
+
+
+def relinkTextures(txDict):
+	"""
+	Changes the path directory of the incoming txFileNodes
+	:param txDict: A dict of txFileNode Keys and path values
+	"""
+	for txFileNode, path in txDict.items():
+		mc.setAttr(txFileNode + '.fileTextureName', path, type='string')
 
 ####################removes drawing overrides##################
 #returns 0, if it does not override anything, 1 if objects cvould not be overriden because of display layers, 2 otherwise

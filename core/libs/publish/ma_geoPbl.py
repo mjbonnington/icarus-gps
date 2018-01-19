@@ -4,7 +4,8 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# Benjamin Parry <ben.parry@gps-ldn.com>
+# (c) 2013-2018 Gramercy Park Studios
 #
 # Publish an asset of the type ic_geo.
 
@@ -102,9 +103,11 @@ def publish(pblTo, slShot, subtype, textures, pblNotes):
 		if textures:
 			# Copy textures to publish directory (use hardlink instead?)
 			txFullPath = os.path.join(pblDir, 'tx')
-			txRelPath = txFullPath.replace(os.path.expandvars('$JOBPATH'), '$JOBPATH')
-			txPaths = (txFullPath, txRelPath)
-			mayaOps.relinkTexture(txPaths, txObjLs=allObjLs, updateMaya=False)
+			# txRelPath = txFullPath.replace(os.path.expandvars('$JOBPATH'), '$JOBPATH')
+			# txPaths = (txFullPath, txRelPath)
+			
+			# Returns a dict for fileNodes and oldTxPaths if updateMaya = True
+			oldTxPaths = mayaOps.updateTextures(txFullPath, txObjLs=allObjLs, updateMaya=True)
 
 		# Take snapshot
 		mayaOps.snapShot(pblDir, isolate=True, fit=True)
@@ -113,6 +116,10 @@ def publish(pblTo, slShot, subtype, textures, pblNotes):
 		pathToPblAsset = os.path.join(pblDir, '%s.%s' % (assetPblName, extension))
 		verbose.pblFeed(msg=assetPblName)
 		mayaOps.exportGeo(objLs, subtype, pathToPblAsset)
+
+		# Reverts the texture paths
+		if textures and oldTxPaths:
+				mayaOps.relinkTextures(oldTxPaths)
 
 		# Delete in-progress tmp file
 		inProgress.end(pblDir)
