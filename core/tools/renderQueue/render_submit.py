@@ -14,7 +14,7 @@ import subprocess
 import sys
 import time
 
-from Qt import QtCompat, QtCore, QtGui, QtWidgets
+from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
 
 # Import custom modules
@@ -56,7 +56,7 @@ class RenderSubmitUI(UI.TemplateUI):
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Tool)
 
-		# Load XML data
+		# Load settings data
 		xd_load = self.xd.loadXML(os.path.join(os.environ['IC_USERPREFS'], 'icSubmissionData.xml'))
 		self.setupUI(WINDOW_OBJECT, WINDOW_TITLE, UI_FILE, STYLESHEET)
 

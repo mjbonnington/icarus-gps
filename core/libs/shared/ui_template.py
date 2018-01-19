@@ -492,10 +492,10 @@ class TemplateUI(QtWidgets.QMainWindow):
 		""" Save data.
 		"""
 		if self.xd.saveXML():
-			verbose.message("Settings saved.")
+			# verbose.message("Settings saved.")
 			return True
 		else:
-			verbose.error("Settings could not be saved.")
+			# verbose.error("Settings could not be saved.")
 			return False
 
 
