@@ -17,6 +17,9 @@
    <bool>true</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="margin">
+    <number>8</number>
+   </property>
    <item>
     <widget class="QGroupBox" name="jobSettings_groupBox">
      <property name="sizePolicy">
@@ -28,9 +31,15 @@
      <property name="title">
       <string>Job settings</string>
      </property>
-     <layout class="QFormLayout" name="formLayout_15">
+     <layout class="QFormLayout" name="jobSettings_formLayout">
       <property name="fieldGrowthPolicy">
        <enum>QFormLayout::ExpandingFieldsGrow</enum>
+      </property>
+      <property name="labelAlignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+      <property name="margin">
+       <number>8</number>
       </property>
       <item row="0" column="0">
        <widget class="QLabel" name="jobName_label">
@@ -72,7 +81,7 @@
            <string>...</string>
           </property>
           <property name="icon">
-           <iconset resource="../../ui/rsc.qrc">
+           <iconset resource="rsc.qrc">
             <normaloff>:/rsc/rsc/icon_folder.png</normaloff>
             <disabledoff>:/rsc/rsc/icon_folder_disabled.png</disabledoff>:/rsc/rsc/icon_folder.png</iconset>
           </property>
@@ -128,7 +137,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../../ui/rsc.qrc"/>
+  <include location="rsc.qrc"/>
  </resources>
  <connections>
   <connection>

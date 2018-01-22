@@ -103,14 +103,15 @@ class IcarusApp(QtWidgets.QMainWindow):
 		self.setWindowTitle(WINDOW_TITLE)
 
 		# Load UI & stylesheet
-		self.ui = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], UI_FILE))
+		uifile = os.path.join(os.environ['IC_FORMSDIR'], UI_FILE)
+		self.ui = QtCompat.loadUi(uifile, self)
 		if STYLESHEET is not None:
-			qss=os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
+			qss = os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
 			with open(qss, "r") as fh:
-				self.ui.setStyleSheet(fh.read())
+				self.setStyleSheet(fh.read())
 
 		# Set the main widget
-		self.setCentralWidget(self.ui)
+		#self.setCentralWidget(self.ui.centralwidget)
 
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Window)

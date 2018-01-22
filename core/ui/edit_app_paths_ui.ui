@@ -82,7 +82,7 @@
            <string>...</string>
           </property>
           <property name="icon">
-           <iconset resource="../../ui/rsc.qrc">
+           <iconset resource="rsc.qrc">
             <normaloff>:/rsc/rsc/icon_delete.png</normaloff>
             <disabledoff>:/rsc/rsc/icon_delete_disabled.png</disabledoff>:/rsc/rsc/icon_delete.png</iconset>
           </property>
@@ -133,7 +133,7 @@
            <string>...</string>
           </property>
           <property name="icon">
-           <iconset resource="../../ui/rsc.qrc">
+           <iconset resource="rsc.qrc">
             <normaloff>:/rsc/rsc/icon_delete.png</normaloff>
             <disabledoff>:/rsc/rsc/icon_delete_disabled.png</disabledoff>:/rsc/rsc/icon_delete.png</iconset>
           </property>
@@ -260,7 +260,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../../ui/rsc.qrc"/>
+  <include location="rsc.qrc"/>
  </resources>
  <connections/>
 </ui>
