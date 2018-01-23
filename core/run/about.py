@@ -3,9 +3,9 @@
 # [Icarus] about.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2017 Gramercy Park Studios
+# (c) 2015-2018 Gramercy Park Studios
 #
-# Implements pop-up 'About' dialog
+# Pop-up 'About' dialog / splash screen
 
 
 import os
@@ -26,37 +26,32 @@ UI_FILE = "about_ui.ui"
 # Main dialog class
 # ----------------------------------------------------------------------------
 
-class dialog(QtWidgets.QMainWindow):
+class dialog(QtWidgets.QDialog):
 	""" Main dialog class.
 	"""
 	def __init__(self, parent=None):
 		super(dialog, self).__init__(parent)
 
 		# Load UI
-		self.ui = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], UI_FILE))
-
-		# Set the main widget
-		self.setCentralWidget(self.ui)
+		uifile = os.path.join(os.environ['IC_FORMSDIR'], UI_FILE)
+		self.ui = QtCompat.loadUi(uifile, self)
 
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Popup)
-		# self.setWindowFlags(QtCore.Qt.FramelessWindowHint | 
-		#                     QtCore.Qt.Popup | 
-		#                     QtCore.Qt.SplashScreen | 
-		#                     QtCore.Qt.WindowStaysOnTopHint)
 
 
-	def display(self, message):
+	def display(self, message=""):
 		""" Display message in about dialog.
 		"""
-		self.ui.aboutMessage_label.setText(message)
+		if message:
+			self.ui.aboutMessage_label.setText(message)
 
 		# Move to centre of active screen
 		desktop = QtWidgets.QApplication.desktop()
 		screen = desktop.screenNumber(desktop.cursor().pos())
-		self.move(desktop.screenGeometry(screen).center() - self.ui.frameGeometry().center())
-		self.show()
-		self.ui.exec_()
+		self.move(desktop.screenGeometry(screen).center() - self.frameGeometry().center())
+
+		self.exec_()
 
 
 	def mousePressEvent(self, QMouseEvent):

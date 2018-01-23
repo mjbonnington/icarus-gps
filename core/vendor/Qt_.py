@@ -1,14 +1,38 @@
-"""Minimal Python 2 & 3 shim around all Qt bindings
+"""The MIT License (MIT)
 
-DOCUMENTATION
-    Qt.py was born in the film and visual effects industry to address
-    the growing need for the development of software capable of running
-    with more than one flavour of the Qt bindings for Python - PySide,
-    PySide2, PyQt4 and PyQt5.
+Copyright (c) 2016-2017 Marcus Ottosson
 
-    1. Build for one, run with all
-    2. Explicit is better than implicit
-    3. Support co-existence
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Documentation
+
+    Map all bindings to PySide2
+
+    Project goals:
+        Qt.py was born in the film and visual effects industry to address
+        the growing need for the development of software capable of running
+        with more than one flavour of the Qt bindings for Python - PySide,
+        PySide2, PyQt4 and PyQt5.
+
+        1. Build for one, run with all
+        2. Explicit is better than implicit
+        3. Support co-existence
 
     Default resolution order:
         - PySide2
@@ -31,10 +55,6 @@ DOCUMENTATION
 
     For more details, visit https://github.com/mottosso/Qt.py
 
-LICENSE
-
-    See end of file for license (MIT, BSD) information.
-
 """
 
 import os
@@ -43,7 +63,7 @@ import types
 import shutil
 import importlib
 
-__version__ = "1.0.0"
+__version__ = "1.0.0.b3"
 
 # Enable support for `from Qt import *`
 __all__ = []
@@ -51,7 +71,6 @@ __all__ = []
 # Flags from environment variables
 QT_VERBOSE = bool(os.getenv("QT_VERBOSE"))
 QT_PREFERRED_BINDING = os.getenv("QT_PREFERRED_BINDING", "")
-QT_SIP_API_HINT = os.getenv("QT_SIP_API_HINT")
 
 # Reference to Qt.py
 Qt = sys.modules[__name__]
@@ -431,7 +450,6 @@ _common_members = {
         "QMetaMethod",
         "QMetaObject",
         "QMetaProperty",
-        "QMetaType",
         "QMimeData",
         "QModelIndex",
         "QMutex",
@@ -599,18 +617,6 @@ _common_members = {
 }
 
 
-def _apply_site_config():
-    try:
-        import QtSiteConfig
-    except ImportError:
-        # If no QtSiteConfig module found, no modifications
-        # to _common_members are needed.
-        pass
-    else:
-        # Update _common_members with any changes made by QtSiteConfig
-        QtSiteConfig.update_members(_common_members)
-
-
 def _new_module(name):
     return types.ModuleType(__name__ + "." + name)
 
@@ -654,7 +660,8 @@ def _pyside2():
     Qt.__binding_version__ = module.__version__
 
     if hasattr(Qt, "_QtUiTools"):
-        Qt.QtCompat.loadUi = _loadUi
+        Qt.QtCompat.loadUi = lambda fname: \
+            Qt._QtUiTools.QUiLoader().load(fname)
 
     if hasattr(Qt, "_QtGui") and hasattr(Qt, "_QtCore"):
         Qt.QtCore.QStringListModel = Qt._QtGui.QStringListModel
@@ -687,7 +694,8 @@ def _pyside():
     Qt.__binding_version__ = module.__version__
 
     if hasattr(Qt, "_QtUiTools"):
-        Qt.QtCompat.loadUi = _loadUi
+        Qt.QtCompat.loadUi = lambda fname: \
+            Qt._QtUiTools.QUiLoader().load(fname)
 
     if hasattr(Qt, "_QtGui"):
         setattr(Qt, "QtWidgets", _new_module("QtWidgets"))
@@ -730,7 +738,7 @@ def _pyqt5():
     _setup(module, ["uic"])
 
     if hasattr(Qt, "_uic"):
-        Qt.QtCompat.loadUi = _loadUi
+        Qt.QtCompat.loadUi = lambda fname: Qt._uic.loadUi(fname)
 
     if hasattr(Qt, "_QtWidgets"):
         Qt.QtCompat.setSectionResizeMode = \
@@ -758,44 +766,26 @@ def _pyqt4():
     """Initialise PyQt4"""
 
     import sip
-
-    # Validation of envivornment variable. Prevents an error if
-    # the variable is invalid since it's just a hint.
     try:
-        hint = int(QT_SIP_API_HINT)
-    except TypeError:
-        hint = None  # Variable was None, i.e. not set.
-    except ValueError:
-        raise ImportError("QT_SIP_API_HINT=%s must be a 1 or 2")
-
-    for api in ("QString",
-                "QVariant",
-                "QDate",
-                "QDateTime",
-                "QTextStream",
-                "QTime",
-                "QUrl"):
-        try:
-            sip.setapi(api, hint or 2)
-        except AttributeError:
-            raise ImportError("PyQt4 < 4.6 isn't supported by Qt.py")
-        except ValueError:
-            actual = sip.getapi(api)
-            if not hint:
-                raise ImportError("API version already set to %d" % actual)
-            else:
-                # Having provided a hint indicates a soft constraint, one
-                # that doesn't throw an exception.
-                sys.stderr.write(
-                    "Warning: API '%s' has already been set to %d.\n"
-                    % (api, actual)
-                )
+        sip.setapi("QString", 2)
+        sip.setapi("QVariant", 2)
+        sip.setapi("QDate", 2)
+        sip.setapi("QDateTime", 2)
+        sip.setapi("QTextStream", 2)
+        sip.setapi("QTime", 2)
+        sip.setapi("QUrl", 2)
+    except AttributeError as e:
+        raise ImportError(str(e))
+        # PyQt4 < v4.6
+    except ValueError as e:
+        # API version already set to v1
+        raise ImportError(str(e))
 
     import PyQt4 as module
     _setup(module, ["uic"])
 
     if hasattr(Qt, "_uic"):
-        Qt.QtCompat.loadUi = _loadUi
+        Qt.QtCompat.loadUi = lambda fname: Qt._uic.loadUi(fname)
 
     if hasattr(Qt, "_QtGui"):
         setattr(Qt, "QtWidgets", _new_module("QtWidgets"))
@@ -840,7 +830,7 @@ def _none():
     Qt.__binding__ = "None"
     Qt.__qt_version__ = "0.0.0"
     Qt.__binding_version__ = "0.0.0"
-    Qt.QtCompat.loadUi = lambda uifile, baseinstance=None: None
+    Qt.QtCompat.loadUi = lambda fname: None
     Qt.QtCompat.setSectionResizeMode = lambda *args, **kwargs: None
 
     for submodule in _common_members.keys():
@@ -851,108 +841,6 @@ def _none():
 def _log(text):
     if QT_VERBOSE:
         sys.stdout.write(text + "\n")
-
-
-def _loadUi(uifile, baseinstance=None):
-    """Dynamically load a user interface from the given `uifile`
-
-    This function calls `uic.loadUi` if using PyQt bindings,
-    else it implements a comparable binding for PySide.
-
-    Documentation:
-        http://pyqt.sourceforge.net/Docs/PyQt5/designer.html#PyQt5.uic.loadUi
-
-    Arguments:
-        uifile (str): Absolute path to Qt Designer file.
-        baseinstance (QWidget): Instantiated QWidget or subclass thereof
-
-    Return:
-        baseinstance if `baseinstance` is not `None`. Otherwise
-        return the newly created instance of the user interface.
-
-    """
-    if hasattr(baseinstance, "layout") and baseinstance.layout():
-        message = ("QLayout: Attempting to add Layout to %s which "
-                   "already has a layout")
-        raise RuntimeError(message % (baseinstance))
-
-    if hasattr(Qt, "_uic"):
-        return Qt._uic.loadUi(uifile, baseinstance)
-
-    elif hasattr(Qt, "_QtUiTools"):
-        # Implement `PyQt5.uic.loadUi` for PySide(2)
-
-        class _UiLoader(Qt._QtUiTools.QUiLoader):
-            """Create the user interface in a base instance.
-
-            Unlike `Qt._QtUiTools.QUiLoader` itself this class does not
-            create a new instance of the top-level widget, but creates the user
-            interface in an existing instance of the top-level class if needed.
-
-            This mimics the behaviour of `PyQt5.uic.loadUi`.
-
-            """
-
-            def __init__(self, baseinstance):
-                super(_UiLoader, self).__init__(baseinstance)
-                self.baseinstance = baseinstance
-
-            def load(self, uifile, *args, **kwargs):
-                from xml.etree.ElementTree import ElementTree
-
-                # For whatever reason, if this doesn't happen then
-                # reading an invalid or non-existing .ui file throws
-                # a RuntimeError.
-                etree = ElementTree()
-                etree.parse(uifile)
-
-                widget = Qt._QtUiTools.QUiLoader.load(
-                    self, uifile, *args, **kwargs)
-
-                # Workaround for PySide 1.0.9, see issue #208
-                widget.parentWidget()
-
-                return widget
-
-            def createWidget(self, class_name, parent=None, name=""):
-                """Called for each widget defined in ui file
-
-                Overridden here to populate `baseinstance` instead.
-
-                """
-
-                if parent is None and self.baseinstance:
-                    # Supposed to create the top-level widget,
-                    # return the base instance instead
-                    return self.baseinstance
-
-                # For some reason, Line is not in the list of available
-                # widgets, but works fine, so we have to special case it here.
-                if class_name in self.availableWidgets() + ["Line"]:
-                    # Create a new widget for child widgets
-                    widget = Qt._QtUiTools.QUiLoader.createWidget(self,
-                                                                  class_name,
-                                                                  parent,
-                                                                  name)
-
-                else:
-                    raise Exception("Custom widget '%s' not supported"
-                                    % class_name)
-
-                if self.baseinstance:
-                    # Set an attribute for the new child widget on the base
-                    # instance, just like PyQt5.uic.loadUi does.
-                    setattr(self.baseinstance, name, widget)
-
-                return widget
-
-        widget = _UiLoader(baseinstance).load(uifile)
-        Qt.QtCore.QMetaObject.connectSlotsByName(widget)
-
-        return widget
-
-    else:
-        raise NotImplementedError("No implementation available for loadUi")
 
 
 def _convert(lines):
@@ -968,9 +856,9 @@ def _convert(lines):
     """
 
     def parse(line):
-        line = line.replace("from PySide2 import", "from Qt import QtCompat,")
+        line = line.replace("from PySide2 import", "from Qt import")
         line = line.replace("QtWidgets.QApplication.translate",
-                            "QtCompat.translate")
+                            "Qt.QtCompat.translate")
         return line
 
     parsed = list()
@@ -1054,9 +942,6 @@ def _install():
 
     _log("Order: '%s'" % "', '".join(order))
 
-    # Allow site-level customization of the available modules.
-    _apply_site_config()
-
     found_binding = False
     for name in order:
         _log("Trying %s" % name)
@@ -1108,11 +993,6 @@ def _install():
 
 _install()
 
-# Setup Binding Enum states
-Qt.IsPySide2 = Qt.__binding__ == 'PySide2'
-Qt.IsPyQt5 = Qt.__binding__ == 'PyQt5'
-Qt.IsPySide = Qt.__binding__ == 'PySide'
-Qt.IsPyQt4 = Qt.__binding__ == 'PyQt4'
 
 """Augment QtCompat
 
@@ -1129,96 +1009,3 @@ Qt.QtCompat._convert = _convert
 # Enable command-line interface
 if __name__ == "__main__":
     _cli(sys.argv[1:])
-
-
-# The MIT License (MIT)
-#
-# Copyright (c) 2016-2017 Marcus Ottosson
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-#
-# In PySide(2), loadUi does not exist, so we implement it
-#
-# `_UiLoader` is adapted from the qtpy project, which was further influenced
-# by qt-helpers which was released under a 3-clause BSD license which in turn
-# is based on a solution at:
-#
-# - https://gist.github.com/cpbotha/1b42a20c8f3eb9bb7cb8
-#
-# The License for this code is as follows:
-#
-# qt-helpers - a common front-end to various Qt modules
-#
-# Copyright (c) 2015, Chris Beaumont and Thomas Robitaille
-#
-# All rights reserved.
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions are
-# met:
-#
-#  * Redistributions of source code must retain the above copyright
-#    notice, this list of conditions and the following disclaimer.
-#  * Redistributions in binary form must reproduce the above copyright
-#    notice, this list of conditions and the following disclaimer in the
-#    documentation and/or other materials provided with the
-#    distribution.
-#  * Neither the name of the Glue project nor the names of its contributors
-#    may be used to endorse or promote products derived from this software
-#    without specific prior written permission.
-#
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-# IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-# THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-# PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
-# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
-# Which itself was based on the solution at
-#
-# https://gist.github.com/cpbotha/1b42a20c8f3eb9bb7cb8
-#
-# which was released under the MIT license:
-#
-# Copyright (c) 2011 Sebastian Wiesner <lunaryorn@gmail.com>
-# Modifications by Charl Botha <cpbotha@vxlabs.com>
-#
-# Permission is hereby granted, free of charge, to any person obtaining a
-# copy of this software and associated documentation files
-# (the "Software"),to deal in the Software without restriction,
-# including without limitation
-# the rights to use, copy, modify, merge, publish, distribute, sublicense,
-# and/or sell copies of the Software, and to permit persons to whom the
-# Software is furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included
-# in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
