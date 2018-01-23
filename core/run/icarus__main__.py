@@ -843,7 +843,7 @@ class IcarusApp(QtWidgets.QMainWindow):
 
 			else:
 				dialogMsg = 'Unable to load job settings. Default values have been applied.\nPlease review the values in the Job Settings dialog and click Save when done.\n'
-				verbose.print_(dialogMsg, 1)
+				verbose.warning(dialogMsg)
 
 				# Confirmation dialog
 				import pDialog
@@ -1091,7 +1091,7 @@ Developers: %s
 			categoryLs = ['global', ]
 			xmlData = os.path.join(os.path.join(os.environ['IC_CONFIGDIR'], 'globalPrefs.xml'))
 			inherit = None
-		if settingsType == "App":
+		if settingsType == "App":  # Temporary
 			categoryLs = ['apps', ]
 			xmlData = os.path.join(os.environ['JOBDATA'], 'jobData.xml')
 			inherit = None  # "Defaults"
@@ -1100,13 +1100,31 @@ Developers: %s
 			startPanel = None
 
 		import settings
-		settingsEditor = settings.SettingsDialog(parent=self)
-		return settingsEditor.display(settingsType=settingsType, 
-		                              categoryLs=categoryLs, 
-		                              startPanel=startPanel, 
-		                              xmlData=xmlData, 
-		                              inherit=inherit, 
-		                              autoFill=autoFill)
+		# try:
+		# 	result = self.settingsEditor.display(settingsType=settingsType, 
+		# 	                                     categoryLs=categoryLs, 
+		# 	                                     startPanel=startPanel, 
+		# 	                                     xmlData=xmlData, 
+		# 	                                     inherit=inherit, 
+		# 	                                     autoFill=autoFill)
+		# except AttributeError:
+		# 	self.settingsEditor = settings.SettingsDialog(parent=self)
+		# 	result = self.settingsEditor.display(settingsType=settingsType, 
+		# 	                                     categoryLs=categoryLs, 
+		# 	                                     startPanel=startPanel, 
+		# 	                                     xmlData=xmlData, 
+		# 	                                     inherit=inherit, 
+		# 	                                     autoFill=autoFill)
+
+		self.settingsEditor = settings.SettingsDialog(parent=self)
+		result = self.settingsEditor.display(settingsType=settingsType, 
+		                                     categoryLs=categoryLs, 
+		                                     startPanel=startPanel, 
+		                                     xmlData=xmlData, 
+		                                     inherit=inherit, 
+		                                     autoFill=autoFill)
+		print(result)
+		return result
 
 
 	def jobSettings(self, startPanel=None):
