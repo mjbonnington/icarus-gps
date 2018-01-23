@@ -215,6 +215,12 @@ global proc menus2Py.gpsPreviewNoUI()
 }
 
 
+global proc menus2Py.submitRender()
+{
+	python("import render_submit; render_submit.run_maya()");
+}
+
+
 global proc menus2Py.launchDjv()
 {
 	python("import launchApps; launchApps.djv()");

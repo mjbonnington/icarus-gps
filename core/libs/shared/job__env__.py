@@ -222,7 +222,7 @@ def setEnv(envVars):
 		os.environ['PYTHONPATH'] = scriptsPath
 		os.environ['XBMLANGPATH'] = iconsPath
 
-	except (AttributeError, KeyError):
+	except (AttributeError, KeyError, TypeError):
 		verbose.warning("Unable to set Maya environment variables - please check job settings to ensure Maya version is set.")
 
 

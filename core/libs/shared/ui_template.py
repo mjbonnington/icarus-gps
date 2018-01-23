@@ -31,7 +31,7 @@ import verbose
 
 VENDOR = "Gramercy Park Studios"
 COPYRIGHT = "(c) 2013-2018"
-DEVELOPERS = "Nuno Pereira, Mike Bonnington"
+DEVELOPERS = "Nuno Pereira, Mike Bonnington, Ben Parry"
 
 # Set window title and object names
 # WINDOW_TITLE = "Custom Window"
@@ -49,29 +49,36 @@ CREATE_NO_WINDOW = 0x08000000
 # Main window class
 # ----------------------------------------------------------------------------
 
-class TemplateUI(QtWidgets.QMainWindow):
+#class TemplateUI(QtWidgets.QMainWindow):
+class TemplateUI():
 	""" Main window class.
 	"""
 	def __init__(self, parent=None):
-		super(TemplateUI, self).__init__(parent)
+		#super(TemplateUI, self).__init__(parent)
 
-		# Instantiate XML data classes
+		# Instantiate XML data class(es)
 		self.xd = settingsData.settingsData()
 
+		self.currentAttrStr = ""
 
-	def setupUI(self, WINDOW_OBJECT, WINDOW_TITLE, UI_FILE, STYLESHEET):
+
+	def setupUI(self, window_object, window_title, ui_file, stylesheet):
 		""" Setup the UI.
 		"""
 		# Set object name and window title
-		self.setObjectName(WINDOW_OBJECT)
-		self.setWindowTitle(WINDOW_TITLE)
+		self.setObjectName(window_object)
+		self.setWindowTitle(window_title)
 
 		# Load UI & stylesheet
-		self.ui = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], UI_FILE))
-		self.reloadStyleSheet(STYLESHEET)
+		self.ui = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], ui_file))
+		self.reloadStyleSheet(stylesheet)
 
 		# Set the main widget & perform custom widget setup
-		self.setCentralWidget(self.ui)
+		print(type(self), type(self.ui))
+		try:
+			self.setCentralWidget(self.ui)
+		except:
+			pass
 		self.setupWidgets(self.ui)
 
 		# Restore window geometry and state
@@ -80,7 +87,7 @@ class TemplateUI(QtWidgets.QMainWindow):
 			verbose.print_("Restoring window geometry.")
 			try:
 				#print(self.windowTitle())
-				self.settings = QtCore.QSettings(VENDOR, WINDOW_TITLE)
+				self.settings = QtCore.QSettings(VENDOR, window_title)
 				self.restoreGeometry(self.settings.value("geometry", ""))
 				# self.restoreState(self.settings.value("windowState", ""))
 			except:
@@ -96,95 +103,64 @@ class TemplateUI(QtWidgets.QMainWindow):
 			pass
 
 
+	def fileDialog(self, startingDir, fileFilter='All files (*.*)'):
+		""" Opens a dialog from which to select a single file.
+			The env check puts the main window in the background so dialog pop
+			up can return properly when running inside certain applications.
+			The window flags bypass a Mac bug that made the dialog always
+			appear under the Icarus window. This is ignored in a Linux env.
+		"""
+		envOverride = ['MAYA', 'NUKE']
+		if os.environ['IC_ENV'] in envOverride:
+			if os.environ['IC_RUNNING_OS'] == 'Darwin':
+				self.setWindowFlags(QtCore.Qt.WindowStaysOnBottomHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+				self.show()
+			dialog = QtWidgets.QFileDialog.getOpenFileName(self, self.tr('Files'), startingDir, fileFilter)
+			if os.environ['IC_RUNNING_OS'] == 'Darwin':
+				self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+				self.show()
+		else:
+			dialog = QtWidgets.QFileDialog.getOpenFileName(self, self.tr('Files'), startingDir, fileFilter)
+
+		return dialog[0]
 
 
-	# def fileDialog(self, dialogHome):
-	# 	""" Opens a dialog from which to select a single file.
-	# 		The env check puts the main window in the background so dialog pop
-	# 		up can return properly when running inside certain applications.
-	# 		The window flags bypass a Mac bug that made the dialog always
-	# 		appear under the Icarus window. This is ignored in a Linux env.
-	# 	"""
-	# 	envOverride = ['MAYA', 'NUKE']
-	# 	if os.environ['IC_ENV'] in envOverride:
-	# 		if os.environ['IC_RUNNING_OS'] == 'Darwin':
-	# 			self.setWindowFlags(QtCore.Qt.WindowStaysOnBottomHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
-	# 			self.show()
-	# 		dialog = QtWidgets.QFileDialog.getOpenFileName(self, self.tr('Files'), dialogHome, 'All files (*.*)')
-	# 		if os.environ['IC_RUNNING_OS'] == 'Darwin':
-	# 			self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
-	# 			self.show()
-	# 	else:
-	# 		dialog = QtWidgets.QFileDialog.getOpenFileName(self, self.tr('Files'), dialogHome, 'All files (*.*)')
+	def folderDialog(self, startingDir):
+		""" Opens a dialog from which to select a folder.
+			The env check puts the main window in the background so dialog pop
+			up can return properly when running inside certain applications.
+			The window flags bypass a Mac bug that made the dialog always
+			appear under the Icarus window. This is ignored in a Linux env.
+		"""
+		envOverride = ['MAYA', 'NUKE']
+		if os.environ['IC_ENV'] in envOverride:
+			if os.environ['IC_RUNNING_OS'] == 'Darwin':
+				self.setWindowFlags(QtCore.Qt.WindowStaysOnBottomHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+				self.show()
+			dialog = QtWidgets.QFileDialog.getExistingDirectory(self, self.tr('Directory'), startingDir, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
+			if os.environ['IC_RUNNING_OS'] == 'Darwin':
+				self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+				self.show()
+		else:
+			dialog = QtWidgets.QFileDialog.getExistingDirectory(self, self.tr('Directory'), startingDir, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
 
-	# 	return dialog[0]
-
-
-	# def folderDialog(self, dialogHome):
-	# 	""" Opens a dialog from which to select a folder.
-	# 		The env check puts the main window in the background so dialog pop
-	# 		up can return properly when running inside certain applications.
-	# 		The window flags bypass a Mac bug that made the dialog always
-	# 		appear under the Icarus window. This is ignored in a Linux env.
-	# 	"""
-	# 	envOverride = ['MAYA', 'NUKE']
-	# 	if os.environ['IC_ENV'] in envOverride:
-	# 		if os.environ['IC_RUNNING_OS'] == 'Darwin':
-	# 			self.setWindowFlags(QtCore.Qt.WindowStaysOnBottomHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
-	# 			self.show()
-	# 		dialog = QtWidgets.QFileDialog.getExistingDirectory(self, self.tr('Directory'), dialogHome, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
-	# 		if os.environ['IC_RUNNING_OS'] == 'Darwin':
-	# 			self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
-	# 			self.show()
-	# 	else:
-	# 		dialog = QtWidgets.QFileDialog.getExistingDirectory(self, self.tr('Directory'), dialogHome, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
-
-	# 	return dialog
-
-
-	# def sceneBrowse(self):
-	# 	""" Browse for a scene/script file.
-	# 	"""
-	# 	if self.jobType == 'Maya':
-	# 		fileDir = os.environ.get('MAYASCENESDIR', '.')  # Go to current dir if env var is not set
-	# 		fileFilter = 'Maya files (*.ma *.mb)'
-	# 		fileTerminology = 'scenes'
-	# 	elif self.jobType == 'Nuke':
-	# 		fileDir = os.environ.get('NUKESCRIPTSDIR', '.')  # Go to current dir if env var is not set
-	# 		fileFilter = 'Nuke files (*.nk)'
-	# 		fileTerminology = 'scripts'
-	# 	else:
-	# 		fileDir = os.environ.get('JOBPATH', '.')  # Go to current dir if env var is not set
-	# 		fileFilter = 'All files (*.*)'
-	# 		fileTerminology = 'commands'
-
-	# 	currentDir = os.path.dirname(self.makePathAbsolute(self.ui.scene_comboBox.currentText()))
-	# 	if os.path.exists(currentDir):
-	# 		startingDir = currentDir
-	# 	else:
-	# 		startingDir = fileDir
-
-	# 	filePath = QtWidgets.QFileDialog.getOpenFileName(self, self.tr('Files'), startingDir, fileFilter)
-	# 	if filePath[0]:
-	# 		newEntry = self.makePathRelative(osOps.absolutePath(filePath[0]))
-	# 		#newEntry = osOps.absolutePath(filePath[0])
-	# 		if newEntry:
-	# 			self.ui.scene_comboBox.removeItem(self.ui.scene_comboBox.findText(newEntry))  # If the entry already exists in the list, delete it
-	# 			self.ui.scene_comboBox.insertItem(0, newEntry)
-	# 			self.ui.scene_comboBox.setCurrentIndex(0)  # Always insert the new entry at the top of the list and select it
-	# 		else:
-	# 			verbose.warning("Only %s belonging to the current shot can be submitted." %fileTerminology)
+		return dialog
 
 
 	# ------------------------------------------------------------------------
 	# Widget handlers
 
-	def setupWidgets(self, parentObject, storeProperties=True, updateOnly=False):
+	def setupWidgets(self, parentObject, forceCategory=None, storeProperties=True, updateOnly=False):
 		""" Set up all the child widgets of the specified parent object.
+			If 'forceCategory' is specified, this will override the category
+			of all child widgets.
 			If 'storeProperties' is True, the values will be stored in the XML
 			data as well as applied to the widgets.
 			If 'updateOnly' is True, only the widgets' values will be updated.
 		"""
+		if forceCategory is not None:
+			category = forceCategory
+
 		if updateOnly:
 			storeProperties = False
 
@@ -209,7 +185,8 @@ class TemplateUI(QtWidgets.QMainWindow):
 			attr = widget.property('xmlTag')
 			if attr:
 				self.base_widget = widget.objectName()
-				category = self.findCategory(widget)
+				if forceCategory is None:
+					category = self.findCategory(widget)
 				if category:
 					widget.setProperty('xmlCategory', category)
 					value = self.xd.getValue(category, attr)
@@ -340,6 +317,13 @@ class TemplateUI(QtWidgets.QMainWindow):
 
 
 	# @QtCore.Slot()
+	def execPushButton(self):
+		""" Execute the function associated with a button.
+		"""
+		verbose.print_("%s %s" %(self.sender().objectName(), self.sender().property('exec')))
+
+
+	# @QtCore.Slot()
 	def storeSpinBoxValue(self):
 		""" Get the value from a Spin Box and store in XML data.
 		"""
@@ -403,9 +387,14 @@ class TemplateUI(QtWidgets.QMainWindow):
 	def storeValue(self, category, attr, value=""):
 		""" Store value in XML data.
 		"""
-		verbose.print_("%20s %s.%s=%s" %(type(value), category, attr, value))
+		currentAttrStr = "%20s %s.%s" %(type(value), category, attr)
+		if currentAttrStr == self.currentAttrStr:
+			verbose.print_("%s=%s" %(currentAttrStr, value), inline=True)
+		else:
+			verbose.print_("%s=%s" %(currentAttrStr, value))
 		# userPrefs.edit(category, attr, value)
 		self.xd.setValue(category, attr, str(value))
+		self.currentAttrStr = currentAttrStr
 
 
 	# @QtCore.Slot()
@@ -457,24 +446,18 @@ class TemplateUI(QtWidgets.QMainWindow):
 		return ls
 
 
-	def reloadStyleSheet(self, STYLESHEET):
+	def reloadStyleSheet(self, stylesheet):
 		""" Reload stylesheet.
 		"""
-		if STYLESHEET is not None:
-			qss=os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
+		if stylesheet is not None:
+			qss=os.path.join(os.environ['IC_FORMSDIR'], stylesheet)
 			with open(qss, "r") as fh:
-				self.ui.setStyleSheet(fh.read())
+				#self.ui.setStyleSheet(fh.read())
+				self.setStyleSheet(fh.read())
 
 
-	# def showEvent(self, event):
-	# 	""" Event handler for when window is shown.
-	# 	"""
-	# 	pass
-
-
-	def closeEvent(self, event):
-		""" Event handler for when window is closed.
-			Store window geometry and state.
+	def storeWindow(self):
+		""" Store window geometry and state.
 			(Save state may cause issues with PyQt5)
 		"""
 		if os.environ['IC_ENV'] == 'STANDALONE':
@@ -485,7 +468,18 @@ class TemplateUI(QtWidgets.QMainWindow):
 			except:
 				pass
 
-			QtWidgets.QMainWindow.closeEvent(self, event)
+
+	# def showEvent(self, event):
+	# 	""" Event handler for when window is shown.
+	# 	"""
+	# 	pass
+
+
+	def closeEvent(self, event):
+		""" Event handler for when window is closed.
+		"""
+		self.storeWindow()
+		QtWidgets.QMainWindow.closeEvent(self, event)
 
 
 	def save(self):
@@ -505,6 +499,8 @@ class TemplateUI(QtWidgets.QMainWindow):
 		if self.save():
 			self.returnValue = True
 			self.hide()
+			self.ui.hide()
+			#self.exit()
 		else:
 			self.exit()
 
@@ -512,7 +508,8 @@ class TemplateUI(QtWidgets.QMainWindow):
 	def exit(self):
 		""" Exit the window with negative return value.
 		"""
-		self.returnValue = False
+		self.storeWindow()
+		#self.returnValue = False
 		self.hide()
 
 # ----------------------------------------------------------------------------
@@ -535,20 +532,20 @@ class TemplateUI(QtWidgets.QMainWindow):
 # DCC application helper functions
 # ----------------------------------------------------------------------------
 
-def _maya_delete_ui(WINDOW_OBJECT, WINDOW_TITLE):
+def _maya_delete_ui(window_object, window_title):
 	""" Delete existing UI in Maya.
 	"""
-	if mc.window(WINDOW_OBJECT, query=True, exists=True):
-		mc.deleteUI(WINDOW_OBJECT)  # Delete window
-	if mc.dockControl('MayaWindow|' + WINDOW_TITLE, query=True, exists=True):
-		mc.deleteUI('MayaWindow|' + WINDOW_TITLE)  # Delete docked window
+	if mc.window(window_object, query=True, exists=True):
+		mc.deleteUI(window_object)  # Delete window
+	if mc.dockControl('MayaWindow|' + window_title, query=True, exists=True):
+		mc.deleteUI('MayaWindow|' + window_title)  # Delete docked window
 
 
-def _nuke_delete_ui(WINDOW_OBJECT, WINDOW_TITLE):
+def _nuke_delete_ui(window_object, window_title):
 	""" Delete existing UI in Nuke.
 	"""
 	for obj in QtWidgets.QApplication.allWidgets():
-		if obj.objectName() == WINDOW_OBJECT:
+		if obj.objectName() == window_object:
 			obj.deleteLater()
 
 

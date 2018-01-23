@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>512</width>
-    <height>604</height>
+    <width>480</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -104,8 +104,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>512</width>
-         <height>537</height>
+         <width>480</width>
+         <height>533</height>
         </rect>
        </property>
        <property name="noBackground" stdset="0">
@@ -378,6 +378,41 @@ QToolButton:pressed, QToolButton:checked:pressed {
                <property name="xmlTag" stdset="0">
                 <string>renderer</string>
                </property>
+               <item>
+                <property name="text">
+                 <string>mayaSoftware</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>mayaHardware</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>mayaHardware2</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>mentalRay</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>arnold</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>vray</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>redshift</string>
+                </property>
+               </item>
               </widget>
              </item>
              <item>

@@ -46,19 +46,19 @@ CREATE_NO_WINDOW = 0x08000000
 # Main window class
 # ----------------------------------------------------------------------------
 
-class RenderSubmitUI(UI.TemplateUI):
+class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 	""" Render submit UI.
 	"""
 	def __init__(self, parent=None):
 		super(RenderSubmitUI, self).__init__(parent)
 		self.parent = parent
 
-		# Set window flags
-		self.setWindowFlags(QtCore.Qt.Tool)
-
 		# Load settings data
 		xd_load = self.xd.loadXML(os.path.join(os.environ['IC_USERPREFS'], 'icSubmissionData.xml'))
 		self.setupUI(WINDOW_OBJECT, WINDOW_TITLE, UI_FILE, STYLESHEET)
+
+		# Set window flags
+		self.setWindowFlags(QtCore.Qt.Tool)
 
 		# Set up keyboard shortcuts
 		# self.shortcutReloadStyleSheet = QtWidgets.QShortcut(self)
@@ -117,14 +117,9 @@ class RenderSubmitUI(UI.TemplateUI):
 		""" Display the window.
 		"""
 		self.returnValue = False
-		# self.xmlData = 
 
 		# Read user prefs config file - if it doesn't exist it will be created
 		userPrefs.read()
-
-		# # Instantiate XML data classes
-		# self.xd = settingsData.settingsData()
-		# # xd_load = self.xd.loadXML(self.xmlData)
 
 		# Set 'Submit to' option depending on the parent window, or user prefs
 		if self.parent.windowTitle() == "Render Queue":
@@ -206,9 +201,31 @@ class RenderSubmitUI(UI.TemplateUI):
 			# self.ui.flags_groupBox.setChecked(True)
 			self.ui.flags_lineEdit.setText(flags)
 
+		self.ui.show()
 		self.show()
 		self.raise_()
+
 		return self.returnValue
+
+
+	def getSettingsFile(self, scene, suffix=""):
+		""" Determine the path to the settings file based on the full path of
+			the scene file.
+		"""
+		if os.path.isfile(scene):
+			sceneDir, sceneFile = os.path.split(scene)
+			settingsDir = os.path.join(sceneDir, os.environ['DATAFILESRELATIVEDIR'])
+			#settingsFile = os.path.splitext(sceneFile)[0] + suffix
+			settingsFile = osOps.sanitize(sceneFile, replace='_') + suffix
+
+			# Create settings directory if it doesn't exist
+			if not os.path.isdir(settingsDir):
+				osOps.createDir(settingsDir)
+
+			return os.path.join(settingsDir, settingsFile)
+
+		else:
+			return False
 
 
 	# @QtCore.Slot()
@@ -216,8 +233,8 @@ class RenderSubmitUI(UI.TemplateUI):
 		""" Apply the specific settings for the scene/script file.
 		"""
 		scene = self.makePathAbsolute(self.ui.scene_comboBox.currentText()).replace("\\", "/")
-		if os.path.isfile(scene):
-			self.xmlData = os.path.splitext(scene)[0] + "_icSubmissionData.xml"
+		self.xmlData = self.getSettingsFile(scene, suffix="_icSubmissionData.xml")
+		if self.xmlData:
 			self.xd.loadXML(self.xmlData)
 			self.setupWidgets(self.ui, updateOnly=True)
 
@@ -335,10 +352,12 @@ class RenderSubmitUI(UI.TemplateUI):
 		else:
 			startingDir = fileDir
 
-		filePath = QtWidgets.QFileDialog.getOpenFileName(self, self.tr('Files'), startingDir, fileFilter)
-		if filePath[0]:
-			newEntry = self.makePathRelative(osOps.absolutePath(filePath[0]))
-			#newEntry = osOps.absolutePath(filePath[0])
+		# filePath = QtWidgets.QFileDialog.getOpenFileName(self, self.tr('Files'), startingDir, fileFilter)[0]
+		filePath = self.fileDialog(startingDir, fileFilter)
+
+		if filePath:
+			newEntry = self.makePathRelative(osOps.absolutePath(filePath))
+			#newEntry = osOps.absolutePath(filePath)
 			if newEntry:
 				self.ui.scene_comboBox.removeItem(self.ui.scene_comboBox.findText(newEntry))  # If the entry already exists in the list, delete it
 				self.ui.scene_comboBox.insertItem(0, newEntry)
@@ -452,9 +471,8 @@ class RenderSubmitUI(UI.TemplateUI):
 
 	# @QtCore.Slot()
 	def setFrameListPreset(self):
-		""" Set frame list from preset
+		""" Set frame list from preset - TEMPORARY FUNCTION
 		"""
-		pass
 		print(self.sender().text())
 
 
@@ -598,13 +616,13 @@ class RenderSubmitUI(UI.TemplateUI):
 		if self.ui.frames_groupBox.isChecked():
 			frames = self.ui.frames_lineEdit.text()
 			taskSize = self.ui.taskSize_spinBox.value()
-			framesMsg = '%d %s to be rendered; %d %s to be submitted.\n' %(len(self.numList), verbose.pluralise("frame", len(self.numList)), len(self.taskList), verbose.pluralise("task", len(self.taskList)))
+			frames_msg = '%d %s to be rendered; %d %s to be submitted.\n' %(len(self.numList), verbose.pluralise("frame", len(self.numList)), len(self.taskList), verbose.pluralise("task", len(self.taskList)))
 		else:
 			frames = 'Unknown'
 			taskSize = 'Unknown'
 			self.numList = []
 			self.taskList = [frames, ]
-			framesMsg = 'The frame range was not specified so the job cannot be distributed into tasks. The job will be submitted as a single task and the frame range will be read from the scene at render time.\n'
+			frames_msg = 'The frame range was not specified so the job cannot be distributed into tasks. The job will be submitted as a single task and the frame range will be read from the scene at render time.\n'
 
 		if self.ui.flags_groupBox.isChecked():
 			flags = self.ui.flags_lineEdit.text()
@@ -643,26 +661,26 @@ class RenderSubmitUI(UI.TemplateUI):
 		# Confirmation dialog
 		import pDialog
 
-		dialogTitle = 'Submit Render - %s' %jobName
-		dialogMsg = ''
-		dialogMsg += 'Name:\t%s\nType:\t%s\nFrames:\t%s\nTask size:\t%s\nPriority:\t%s\n\n' %genericOpts
+		dialog_title = 'Submit Render - %s' %jobName
+		dialog_msg = ''
+		dialog_msg += 'Name:\t%s\nType:\t%s\nFrames:\t%s\nTask size:\t%s\nPriority:\t%s\n\n' %genericOpts
 		# if self.jobType == 'Maya':
-		# 	dialogMsg += 'Scene:\t%s\nProject:\t%s\nFlags:\t%s\nCommand:\t%s\n\n' %renderOpts
+		# 	dialog_msg += 'Scene:\t%s\nProject:\t%s\nFlags:\t%s\nCommand:\t%s\n\n' %renderOpts
 		# elif self.jobType == 'Nuke':
-		# 	dialogMsg += 'Script:\t%s\nFlags:\t%s\nCommand:\t%s\n\n' %renderOpts
-		dialogMsg += framesMsg
-		dialogMsg += 'Do you want to continue?'
+		# 	dialog_msg += 'Script:\t%s\nFlags:\t%s\nCommand:\t%s\n\n' %renderOpts
+		dialog_msg += frames_msg
+		dialog_msg += 'Do you want to continue?'
 
 		dialog = pDialog.dialog()
-		if dialog.display(dialogMsg, dialogTitle):
+		if dialog.display(dialog_msg, dialog_title):
 			self.rq.newJob(genericOpts, renderOpts, self.taskList, os.environ['IC_USERNAME'], time.strftime(timeFormatStr), comment)
 
 			# Post-confirmation dialog
-			dialogTitle = 'Submission Results - %s' %jobName
-			dialogMsg = ''
-			dialogMsg += 'Name:\t%s\nType:\t%s\nFrames:\t%s\nTask size:\t%s\nPriority:\t%s\n\n' %genericOpts
-			dialogMsg += 'Render job submitted succesfully.'
-			dialog.display(dialogMsg, dialogTitle, conf=True)
+			dialog_title = 'Submission Results - %s' %jobName
+			dialog_msg = ''
+			dialog_msg += 'Name:\t%s\nType:\t%s\nFrames:\t%s\nTask size:\t%s\nPriority:\t%s\n\n' %genericOpts
+			dialog_msg += 'Render job submitted succesfully.'
+			dialog.display(dialog_msg, dialog_title, conf=True)
 		else:
 			return
 
@@ -681,7 +699,7 @@ class RenderSubmitUI(UI.TemplateUI):
 
 		frames = self.ui.frames_lineEdit.text()
 		taskSize = self.ui.taskSize_spinBox.value()
-		framesMsg = '%d %s to be rendered; %d %s to be submitted.\n' %(len(self.numList), verbose.pluralise("frame", len(self.numList)), len(self.taskList), verbose.pluralise("task", len(self.taskList)))
+		frames_msg = '%d %s to be rendered; %d %s to be submitted.\n' %(len(self.numList), verbose.pluralise("frame", len(self.numList)), len(self.taskList), verbose.pluralise("task", len(self.taskList)))
 
 		pool = self.ui.pool_comboBox.currentText()
 		group = self.ui.group_comboBox.currentText()
@@ -722,17 +740,18 @@ class RenderSubmitUI(UI.TemplateUI):
 		# Confirmation dialog
 		import pDialog
 
-		dialogTitle = 'Submit Render to Deadline - %s' %jobName
-		dialogMsg = ''
-		dialogMsg += 'Name:\t%s\nType:\t%s\nFrames:\t%s\nTask size:\t%s\nPriority:\t%s\n\n' %genericOpts
-		dialogMsg += framesMsg
-		dialogMsg += 'Do you want to continue?'
+		dialog_title = 'Submit Render to Deadline - %s' %jobName
+		dialog_msg = ''
+		dialog_msg += 'Name:\t%s\nType:\t%s\nFrames:\t%s\nTask size:\t%s\nPriority:\t%s\n\n' %genericOpts
+		dialog_msg += frames_msg
+		dialog_msg += 'Do you want to continue?'
 
 		dialog = pDialog.dialog()
-		if dialog.display(dialogMsg, dialogTitle):
+		if dialog.display(dialog_msg, dialog_title):
 			try:
 				# Generate submission info files
-				jobInfoFile = os.path.splitext(scene)[0] + "_deadlineJobInfo.txt"
+				jobInfoFile = self.getSettingsFile(scene, suffix="_deadlineJobInfo.txt")
+				# jobInfoFile = os.path.splitext(scene)[0] + "_deadlineJobInfo.txt"
 				fh = open(jobInfoFile, 'w')
 				fh.write("Plugin=%s\n" %plugin)
 				if renderLayers:
@@ -756,7 +775,8 @@ class RenderSubmitUI(UI.TemplateUI):
 				fh.write("ExtraInfo1=%s\n" %os.environ['SHOT'])
 				fh.close()
 
-				pluginInfoFile = os.path.splitext(scene)[0] + "_deadlinePluginInfo.txt"
+				pluginInfoFile = self.getSettingsFile(scene, suffix="_deadlinePluginInfo.txt")
+				# pluginInfoFile = os.path.splitext(scene)[0] + "_deadlinePluginInfo.txt"
 				fh = open(pluginInfoFile, 'w')
 				fh.write("Version=%s\n" %version)
 				fh.write("Build=64bit\n")
@@ -773,23 +793,30 @@ class RenderSubmitUI(UI.TemplateUI):
 				fh.close()
 
 				# Execute deadlinecommand
-				output = subprocess.check_output([os.environ['DEADLINECMDVERSION'], jobInfoFile, pluginInfoFile], creationflags=CREATE_NO_WINDOW)
+				cmd_output = subprocess.check_output([os.environ['DEADLINECMDVERSION'], jobInfoFile, pluginInfoFile], creationflags=CREATE_NO_WINDOW)
+				output_str = cmd_output.decode()
 
-				# Delete submission info files
+				result_msg = "Successfully submitted job to Deadline."
+				verbose.message(result_msg)
+
+				# Delete submission info files - TEMPORARILY DISABLED FOR DEBUGGING PURPOSES
 				# osOps.recurseRemove(jobInfoFile)
 				# osOps.recurseRemove(pluginInfoFile)
 
 			except:
-				output = "Could not submit job to Deadline."
-				verbose.error(output)
-				output += "\nEither the Deadline executable could not be found, or the submission info files could not be written."
+				import traceback
+				exc_type, exc_value, exc_traceback = sys.exc_info()
+				traceback.print_exception(exc_type, exc_value, exc_traceback)
+				result_msg = "Failed to submit job to Deadline."
+				verbose.error(result_msg)
+				output_str = "Either the Deadline executable could not be found, or the submission info files could not be written." #\n\n%s" % traceback.format_exc()
 
 			# Post-confirmation dialog
-			dialogTitle = 'Submission Results - %s' %jobName
-			dialogMsg = ''
-			dialogMsg += 'Name:\t%s\nType:\t%s\nFrames:\t%s\nTask size:\t%s\nPriority:\t%s\n\n' %genericOpts
-			dialogMsg += output.decode()
-			dialog.display(dialogMsg, dialogTitle, conf=True)
+			dialog_title = 'Submission Results - %s' %jobName
+			dialog_msg = ''
+			dialog_msg += 'Name:\t%s\nType:\t%s\nFrames:\t%s\nTask size:\t%s\nPriority:\t%s\n\n' %genericOpts
+			dialog_msg += result_msg + "\n" + output_str
+			dialog.display(dialog_msg, dialog_title, conf=True)
 		else:
 			return
 

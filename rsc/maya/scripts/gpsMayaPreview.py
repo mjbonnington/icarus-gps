@@ -75,13 +75,18 @@ class Preview():
 	def displayHUD(self, query=False, setValue=True):
 		""" Show, hide or query the entire HUD.
 		"""
-		currentPanel = mc.getPanel(withFocus=True)
-		panelType = mc.getPanel(typeOf=currentPanel)
-		if panelType == "modelPanel":
-			if query:
-				return mc.modelEditor(currentPanel, query=True, hud=True)
-			else:
-				mc.modelEditor(currentPanel, edit=True, hud=setValue)
+		# currentPanel = mc.getPanel(withFocus=True)
+		# panelType = mc.getPanel(typeOf=currentPanel)
+		# if panelType == "modelPanel":
+		# 	if query:
+		# 		return mc.modelEditor(currentPanel, query=True, hud=True)
+		# 	else:
+		# 		mc.modelEditor(currentPanel, edit=True, hud=setValue)
+
+		if query:
+			return mc.modelEditor(self.activeView, query=True, hud=True)
+		else:
+			mc.modelEditor(self.activeView, edit=True, hud=setValue)
 
 
 	def storeHUD(self):
@@ -321,9 +326,13 @@ class Preview():
 			mc.setAttr(cameraShape[0]+".displayFilmPivot", False)
 			mc.setAttr(cameraShape[0]+".displayFilmOrigin", False)
 
-		# Set overscan value to 1.0 & disable 2D pan/zoom
+		# Set overscan value to 1.0 & disable 2D pan/zoom (unless render
+		# pan/zoom is enabled)
 		mc.setAttr(cameraShape[0]+".overscan", 1.0)
-		mc.setAttr(cameraShape[0]+".panZoomEnabled", 0)
+		if mc.getAttr(cameraShape[0]+".panZoomEnabled") and mc.getAttr(cameraShape[0]+".renderPanZoom"):
+			pass
+		else:
+			mc.setAttr(cameraShape[0]+".panZoomEnabled", 0)
 
 		# Actually generate playblast!
 		output = self.run_playblast()

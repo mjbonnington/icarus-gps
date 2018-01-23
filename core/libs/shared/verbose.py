@@ -10,18 +10,41 @@
 
 
 import os
+#import sys
 
+
+# Enable VT100 escape sequence for Windows 10 ver. 1607
+if os.environ['IC_ENV'] == 'STANDALONE':
+	os.system('')
 
 # Define some ANSI colour codes
-# class bcolors:
-# 	HEADER = '\033[95m'
-# 	OKBLUE = '\033[94m'
-# 	OKGREEN = '\033[92m'
-# 	WARNING = '\033[93m'
-# 	FAIL = '\033[91m'
-# 	ENDC = '\033[0m'
-# 	BOLD = '\033[1m'
-# 	UNDERLINE = '\033[4m'
+class bcolors:
+	if os.environ['IC_ENV'] == 'STANDALONE':
+		HEADER = '\033[95m'
+		OKBLUE = '\033[94m'
+		OKGREEN = '\033[92m'
+		WARNING = '\033[93m'
+		FAIL = '\033[91m'
+		ENDC = '\033[0m'
+		BOLD = '\033[1m'
+		UNDERLINE = '\033[4m'
+		DARK = '\033[30;1m'
+		INVERT = '\033[7m'
+		ICGREEN = '\033[38;5;106m'
+		INLINE = u'\u001b[1A\u001b[1000D\u001b[0K'
+	else:
+		HEADER = ''
+		OKBLUE = ''
+		OKGREEN = ''
+		WARNING = ''
+		FAIL = ''
+		ENDC = ''
+		BOLD = ''
+		UNDERLINE = ''
+		DARK = ''
+		INVERT = ''
+		ICGREEN = ''
+		INLINE = ''
 
 statusBar = None
 
@@ -34,17 +57,15 @@ def message(message):
 def warning(message):
 	""" Print a warning message.
 	"""
-	#print_(bcolors.WARNING + "Warning: " + message + bcolors.ENDC, 2)
 	print_("Warning: " + message, 2)
 
 def error(message):
 	""" Print an error message.
 	"""
-	#print_(bcolors.FAIL + "ERROR: " + message + bcolors.ENDC, 1)
 	print_("ERROR: " + message, 1)
 
 
-def print_(message, verbosityLevel=4, status=True, log=False):
+def print_(message, verbosityLevel=4, status=True, inline=False, log=False):
 	""" Print the message to the console.
 		If 'status' is True, the message will be shown on the main UI status
 		bar.
@@ -65,14 +86,29 @@ def print_(message, verbosityLevel=4, status=True, log=False):
 	except KeyError:
 		verbositySetting = 3
 
-	# Print message to the console
-	if verbosityLevel <= verbositySetting:
-		print(message)
-
 	# Print message to the status bar
 	if verbosityLevel <= 3 and status and statusBar is not None:
 		timeout = 1800 + max(2400, len(message)*60)
 		statusBar.showMessage(message, timeout)
+
+	# Print message to the console
+	if verbosityLevel <= verbositySetting:
+		if verbosityLevel == 4:
+			message = bcolors.DARK + message + bcolors.ENDC
+		elif verbosityLevel == 3:
+			message = bcolors.OKGREEN + message + bcolors.ENDC
+		elif verbosityLevel == 2:
+			message = bcolors.WARNING + message + bcolors.ENDC
+		elif verbosityLevel == 1:
+			message = bcolors.FAIL + message + bcolors.ENDC
+
+		# Print inline
+		if inline:
+			# sys.stdout.write(u"\u001b[1000D" + message)
+			# sys.stdout.flush()
+			print(bcolors.INLINE + message)
+		else:
+			print(message)
 
 
 def registerStatusBar(statusBarObj):
@@ -147,7 +183,7 @@ def gpsToolDeploy(status):
 	message("Deploying GPS tools... %s" %status)
 
 def icarusLaunch(name, version, vendor="", location="", user=""):
-	print_("%s %s" %(name, version), 0)
+	print_("%s%s%s %s" %(bcolors.ICGREEN, name, bcolors.ENDC, version), 0)
 	print_(vendor, 0)
 	print_('[Running from "%s"]' %location, 4)
 	print_('[User: %s]' %user, 4)
