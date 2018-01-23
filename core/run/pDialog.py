@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2017 Gramercy Park Studios
+# (c) 2013-2018 Gramercy Park Studios
 #
 # Launches and controls a generic prompt dialog.
 
@@ -13,6 +13,7 @@ import os
 import sys
 
 from Qt import QtCompat, QtCore, QtWidgets
+import ui_template as UI
 
 
 # ----------------------------------------------------------------------------
@@ -27,43 +28,41 @@ WINDOW_OBJECT = "promptDialogUI"
 UI_FILE = "pDialog_ui.ui"
 STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
 
+# Other options
+STORE_WINDOW_GEOMETRY = False
+
 
 # ----------------------------------------------------------------------------
 # Main dialog class
 # ----------------------------------------------------------------------------
 
-class dialog(QtWidgets.QDialog):
-	""" Main dialog class.
+class dialog(QtWidgets.QDialog, UI.TemplateUI):
+	""" Prompt dialog class.
 	"""
 	def __init__(self, parent=None):
 		super(dialog, self).__init__(parent)
 
-		# Set object name and window title
-		self.setObjectName(WINDOW_OBJECT)
-		self.setWindowTitle(WINDOW_TITLE)
-
-		# Load UI & stylesheet
-		self.ui = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], UI_FILE))
-		if STYLESHEET is not None:
-			qss=os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
-			with open(qss, "r") as fh:
-				self.ui.setStyleSheet(fh.read())
+		self.setupUI(window_object=WINDOW_OBJECT, 
+		             window_title=WINDOW_TITLE, 
+		             ui_file=UI_FILE, 
+		             stylesheet=STYLESHEET, 
+		             store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
 
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Dialog)
-		self.ui.setWindowFlags(QtCore.Qt.CustomizeWindowHint | 
-			                   QtCore.Qt.WindowTitleHint)
+		self.setWindowFlags(QtCore.Qt.CustomizeWindowHint | 
+		                    QtCore.Qt.WindowTitleHint)
 		# if os.environ['IC_RUNNING_OS'] == 'Darwin':
-		# 	self.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | 
+		# 	self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | 
 		# 	                    QtCore.Qt.X11BypassWindowManagerHint | 
 		# 	                    QtCore.Qt.WindowCloseButtonHint)
 		# else:
-		# 	self.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | 
-		# 		                QtCore.Qt.WindowCloseButtonHint)
+		# 	self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | 
+		# 	                    QtCore.Qt.WindowCloseButtonHint)
 
 		# Connect signals & slots
-		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).clicked.connect(self.ok)
-		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.cancel)
+		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).clicked.connect(self.accept)
+		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.reject)
 
 
 	def display(self, message, title=WINDOW_TITLE, conf=False, modal=True):
@@ -73,29 +72,13 @@ class dialog(QtWidgets.QDialog):
 			'modal' - a modal dialog (default)
 		"""
 		self.ui.message_textEdit.setText(message)
-		self.ui.setWindowTitle(title)
-		self.returnValue = False
+		self.setWindowTitle(title)
 
 		if conf:
 			self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).hide()
 
 		if modal:
-			self.ui.exec_()
-			return self.returnValue
+			return self.exec_()
 		else:
-			self.ui.show()
-
-
-	def ok(self):
-		""" Dialog accept function.
-		"""
-		self.returnValue = True
-		self.ui.accept()
-
-
-	def cancel(self):
-		""" Dialog cancel function.
-		"""
-		self.returnValue = False
-		self.ui.reject()
+			self.show()
 

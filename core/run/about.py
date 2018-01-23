@@ -51,11 +51,12 @@ class dialog(QtWidgets.QDialog):
 		screen = desktop.screenNumber(desktop.cursor().pos())
 		self.move(desktop.screenGeometry(screen).center() - self.frameGeometry().center())
 
-		self.exec_()
+		#self.show()
+		self.exec_()  # Make the dialog modal
 
 
 	def mousePressEvent(self, QMouseEvent):
 		""" Close about dialog if mouse is clicked.
 		"""
-		self.hide()
+		self.accept()
 

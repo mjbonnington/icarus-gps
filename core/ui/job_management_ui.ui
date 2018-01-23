@@ -28,7 +28,7 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_10">
+     <layout class="QHBoxLayout" name="toolbar_horizontalLayout">
       <property name="margin">
        <number>0</number>
       </property>

@@ -157,8 +157,8 @@ def setEnv(envVars):
 	os.environ['MAYADIR']             = osOps.absolutePath('$SHOTPATH/3D/maya')  # Currently needed by render submitter
 	os.environ['MAYASCENESDIR']       = osOps.absolutePath('$MAYADIR/scenes/$IC_USERNAME')  # Currently needed by render submitter
 	# os.environ['MAYASOURCEIMAGESDIR'] = osOps.absolutePath('$MAYADIR/sourceimages/$IC_USERNAME')
-	# os.environ['MAYARENDERSDIR']      = osOps.absolutePath('$MAYADIR/renders/$IC_USERNAME')
-	# os.environ['MAYAPLAYBLASTSDIR']   = osOps.absolutePath('$MAYADIR/playblasts/$IC_USERNAME')
+	os.environ['MAYARENDERSDIR']      = osOps.absolutePath('$MAYADIR/renders/$IC_USERNAME')  # Currently needed by daily publish
+	os.environ['MAYAPLAYBLASTSDIR']   = osOps.absolutePath('$MAYADIR/playblasts/$IC_USERNAME')  # Currently needed by daily publish
 	os.environ['MAYASHAREDRESOURCES'] = osOps.absolutePath('$FILESYSTEMROOT/_Library/3D/Maya')  # Store this in app settings / ic global prefs?
 
 	try:
@@ -231,7 +231,7 @@ def setEnv(envVars):
 	os.environ['NUKEDIR']         = osOps.absolutePath('$SHOTPATH/2D/nuke')  # Currently needed by render submitter
 	# os.environ['NUKEELEMENTSDIR'] = osOps.absolutePath('$NUKEDIR/elements/$IC_USERNAME')
 	os.environ['NUKESCRIPTSDIR']  = osOps.absolutePath('$NUKEDIR/scripts/$IC_USERNAME')  # Currently needed by render submitter
-	# os.environ['NUKERENDERSDIR']  = osOps.absolutePath('$NUKEDIR/renders/$IC_USERNAME')
+	os.environ['NUKERENDERSDIR']  = osOps.absolutePath('$NUKEDIR/renders/$IC_USERNAME')  # Currently needed by daily publish
 	os.environ['NUKE_PATH']       = osOps.absolutePath('$IC_BASEDIR/rsc/nuke')
 
 

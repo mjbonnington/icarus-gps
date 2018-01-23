@@ -3,7 +3,7 @@
 # [Icarus] edit_job.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2016-2017 Gramercy Park Studios
+# (c) 2016-2018 Gramercy Park Studios
 #
 # A dialog for editing job settings.
 
@@ -12,6 +12,7 @@ import os
 import sys
 
 from Qt import QtCompat, QtCore, QtGui, QtWidgets
+import ui_template as UI
 
 # Import custom modules
 import osOps
@@ -30,27 +31,25 @@ WINDOW_OBJECT = "editJobUI"
 UI_FILE = "edit_job_ui.ui"
 STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
 
+# Other options
+STORE_WINDOW_GEOMETRY = False
+
 
 # ----------------------------------------------------------------------------
 # Main dialog class
 # ----------------------------------------------------------------------------
 
-class dialog(QtWidgets.QDialog):
-	""" Main dialog class.
+class dialog(QtWidgets.QDialog, UI.TemplateUI):
+	""" Edit Job dialog class.
 	"""
 	def __init__(self, parent=None):
 		super(dialog, self).__init__(parent)
 
-		# Set object name and window title
-		self.setObjectName(WINDOW_OBJECT)
-		self.setWindowTitle(WINDOW_TITLE)
-
-		# Load UI & stylesheet
-		self.ui = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], UI_FILE))
-		if STYLESHEET is not None:
-			qss=os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
-			with open(qss, "r") as fh:
-				self.ui.setStyleSheet(fh.read())
+		self.setupUI(window_object=WINDOW_OBJECT, 
+		             window_title=WINDOW_TITLE, 
+		             ui_file=UI_FILE, 
+		             stylesheet=STYLESHEET, 
+		             store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
 
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Dialog)
@@ -60,7 +59,7 @@ class dialog(QtWidgets.QDialog):
 		self.ui.jobPath_lineEdit.textChanged.connect(self.updateUI)
 		self.ui.jobPathBrowse_toolButton.clicked.connect(self.browseDir)
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).clicked.connect(self.ok)
-		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.cancel)
+		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.reject)
 
 		# Set input validators
 		alphanumeric_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w\.-]+'), self.ui.jobName_lineEdit)
@@ -72,18 +71,19 @@ class dialog(QtWidgets.QDialog):
 	def display(self, jobName, jobPath, jobActive):
 		""" Display the dialog.
 		"""
-		self.returnValue = False
+		#self.returnValue = False
 
 		if jobName:
-			self.ui.setWindowTitle("%s: %s" %(WINDOW_TITLE, jobName))
+			self.setWindowTitle("%s: %s" %(WINDOW_TITLE, jobName))
 		else:
-			self.ui.setWindowTitle("Add New Job")
+			self.setWindowTitle("Add New Job")
 		self.ui.jobName_lineEdit.setText(jobName)
 		self.ui.jobPath_lineEdit.setText(jobPath)
 		self.ui.jobEnabled_checkBox.setChecked(jobActive)
 
-		self.ui.exec_()
-		return self.returnValue
+		# self.ui.exec_()
+		# return self.returnValue
+		return self.exec_()
 
 
 	def updateUI(self):
@@ -118,8 +118,9 @@ class dialog(QtWidgets.QDialog):
 		if dialogHome.endswith(':'):
 			dialogHome += '/'
 
-		dialogPath = QtWidgets.QFileDialog.getExistingDirectory(self, self.tr('Directory'), dialogHome, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
-		# dialog = QtWidgets.QFileDialog(self)
+		#dialogPath = QtWidgets.QFileDialog.getExistingDirectory(self, self.tr('Directory'), dialogHome, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
+		##dialog = QtWidgets.QFileDialog(self)
+		dialogPath = self.folderDialog(dialogHome)
 
 		if dialogPath:
 		# if dialog.exec_():
@@ -150,25 +151,40 @@ class dialog(QtWidgets.QDialog):
 				dialog.display(dialogMsg, dialogTitle, conf=True)
 
 		# return dialogPath
-		self.ui.raise_()  # Keep the dialog in front
+		#self.ui.raise_()  # Keep the dialog in front
 
 
 	def ok(self):
 		""" Dialog accept function.
 		"""
-		self.returnValue = True
+		#self.returnValue = True
 		self.jobName = self.ui.jobName_lineEdit.text()
 		self.jobPath = self.ui.jobPath_lineEdit.text()
 		if self.ui.jobEnabled_checkBox.checkState() == QtCore.Qt.Checked:
 			self.jobActive = True
 		else:
 			self.jobActive = False
-		self.ui.accept()
+		self.accept()
 
 
-	def cancel(self):
-		""" Dialog cancel function.
+	# def cancel(self):
+	# 	""" Dialog cancel function.
+	# 	"""
+	# 	#self.returnValue = False
+	# 	self.reject()
+
+
+	def keyPressEvent(self, event):
+		""" Override function to prevent Enter / Esc keypresses triggering
+			OK / Cancel buttons.
 		"""
-		self.returnValue = False
-		self.ui.reject()
+		# pass
+		if event.key() == QtCore.Qt.Key_Return or event.key() == QtCore.Qt.Key_Enter:
+			return
+
+
+	def hideEvent(self, event):
+		""" Event handler for when window is hidden.
+		"""
+		self.storeWindow()  # Store window geometry
 

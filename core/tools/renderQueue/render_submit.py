@@ -38,6 +38,9 @@ WINDOW_OBJECT = "renderSubmitUI"
 UI_FILE = "render_submit_ui.ui"
 STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
 
+# Other options
+STORE_WINDOW_GEOMETRY = True
+
 # Prevent spawned processes from opening a shell window
 CREATE_NO_WINDOW = 0x08000000
 
@@ -53,9 +56,14 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		super(RenderSubmitUI, self).__init__(parent)
 		self.parent = parent
 
-		# Load settings data
-		xd_load = self.xd.loadXML(os.path.join(os.environ['IC_USERPREFS'], 'icSubmissionData.xml'))
-		self.setupUI(WINDOW_OBJECT, WINDOW_TITLE, UI_FILE, STYLESHEET)
+		xml_data = os.path.join(os.environ['IC_USERPREFS'], 'icSubmissionData.xml')
+
+		self.setupUI(window_object=WINDOW_OBJECT, 
+		             window_title=WINDOW_TITLE, 
+		             ui_file=UI_FILE, 
+		             stylesheet=STYLESHEET, 
+		             xml_data=xml_data, 
+		             store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
 
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Tool)
@@ -91,7 +99,8 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		# self.ui.comment_lineEdit.textEdited.connect(self.storeLineEditValue)
 
 		self.ui.submit_pushButton.clicked.connect(self.submit)
-		self.ui.close_pushButton.clicked.connect(self.saveAndExit)
+		self.ui.close_pushButton.clicked.connect(self.close)
+		#self.ui.close_pushButton.clicked.connect(self.saveAndExit)
 
 		# Context menus
 		self.addContextMenu(self.ui.frameListOptions_toolButton, "Shot default", self.getFrameRangeFromShotSettings)
@@ -201,7 +210,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			# self.ui.flags_groupBox.setChecked(True)
 			self.ui.flags_lineEdit.setText(flags)
 
-		self.ui.show()
+		# self.ui.show()
 		self.show()
 		self.raise_()
 
@@ -827,6 +836,13 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.setJobTypeFromComboBox()
 		# self.getFrameRangeFromShotSettings()
 		self.display()
+
+
+	def closeEvent(self, event):
+		""" Event handler for when window is closed.
+		"""
+		self.save()  # Save settings
+		self.storeWindow()  # Store window geometry
 
 
 	# def save(self):

@@ -39,6 +39,7 @@ UI_FILE = "gpsPreview_ui.ui"
 STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
 
 # Other options
+STORE_WINDOW_GEOMETRY = True
 DOCK_WITH_MAYA_UI = False
 DOCK_WITH_NUKE_UI = False
 
@@ -47,20 +48,24 @@ DOCK_WITH_NUKE_UI = False
 # Main window class
 # ----------------------------------------------------------------------------
 
-class PreviewUI(UI.TemplateUI):
+class PreviewUI(QtWidgets.QMainWindow, UI.TemplateUI):
 	""" GPS Preview UI.
 	"""
 	def __init__(self, parent=None):
 		super(PreviewUI, self).__init__(parent)
 		self.parent = parent
 
+		xml_data = os.path.join(os.environ['IC_USERPREFS'], 'gpsPreview.xml')
+
+		self.setupUI(window_object=WINDOW_OBJECT, 
+		             window_title=WINDOW_TITLE, 
+		             ui_file=UI_FILE, 
+		             stylesheet=STYLESHEET, 
+		             xml_data=xml_data, 
+		             store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
+
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Tool)
-
-		# Load settings data
-		# xd_load = self.xd.loadXML(os.path.join(os.environ['IC_USERPREFS'], 'userPrefs.xml'))
-		xd_load = self.xd.loadXML(os.path.join(os.environ['IC_USERPREFS'], 'gpsPreview.xml'))
-		self.setupUI(WINDOW_OBJECT, WINDOW_TITLE, UI_FILE, STYLESHEET)
 
 		# Connect signals & slots
 		self.ui.name_lineEdit.textChanged.connect(self.checkFilename)
@@ -429,6 +434,7 @@ class PreviewUI(UI.TemplateUI):
 		""" Event handler for when window is closed.
 		"""
 		self.save()  # Save settings
+		self.storeWindow()  # Store window geometry
 
 # ----------------------------------------------------------------------------
 # End of main window class

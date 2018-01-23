@@ -1209,11 +1209,11 @@ QScrollBar:vertical {
 }
 
 QScrollBar::add-page, QScrollBar::sub-page {
-     background: #333;
+	background: #333;
 }
 
 QScrollBar::add-page:pressed, QScrollBar::sub-page:pressed {
-     background: #444;
+	background: #444;
 }
 
 QScrollBar::handle {
@@ -1435,12 +1435,12 @@ QProgressBar::chunk:disabled {
 
 
 QStatusBar {
-    background: #333;
+	background: #333;
 }
 
 /*QStatusBar::item {
-    border: 1px solid red;
-    border-radius: 3px;
+	border: 1px solid red;
+	border-radius: 3px;
 }*/
 
 /* End Status Bar */

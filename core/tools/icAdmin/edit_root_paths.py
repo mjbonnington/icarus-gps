@@ -3,7 +3,7 @@
 # [Icarus] edit_root_paths.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2016-2017 Gramercy Park Studios
+# (c) 2016-2018 Gramercy Park Studios
 #
 # A dialog for editing filesystem root paths.
 # This provides a mechanism for OS portability.
@@ -13,6 +13,7 @@ import os
 import sys
 
 from Qt import QtCompat, QtCore, QtWidgets
+import ui_template as UI
 
 # Import custom modules
 import osOps
@@ -30,27 +31,25 @@ WINDOW_OBJECT = "editRootPathsUI"
 UI_FILE = "edit_root_paths_ui.ui"
 STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
 
+# Other options
+STORE_WINDOW_GEOMETRY = False
+
 
 # ----------------------------------------------------------------------------
 # Main dialog class
 # ----------------------------------------------------------------------------
 
-class dialog(QtWidgets.QDialog):
-	""" Main dialog class.
+class dialog(QtWidgets.QDialog, UI.TemplateUI):
+	""" Edit Root Paths dialog class.
 	"""
 	def __init__(self, parent=None):
 		super(dialog, self).__init__(parent)
 
-		# Set object name and window title
-		self.setObjectName(WINDOW_OBJECT)
-		self.setWindowTitle(WINDOW_TITLE)
-
-		# Load UI & stylesheet
-		self.ui = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], UI_FILE))
-		if STYLESHEET is not None:
-			qss=os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
-			with open(qss, "r") as fh:
-				self.ui.setStyleSheet(fh.read())
+		self.setupUI(window_object=WINDOW_OBJECT, 
+		             window_title=WINDOW_TITLE, 
+		             ui_file=UI_FILE, 
+		             stylesheet=STYLESHEET, 
+		             store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
 
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Dialog)
@@ -60,13 +59,13 @@ class dialog(QtWidgets.QDialog):
 		self.ui.jobRootPathOSX_lineEdit.textChanged.connect(self.updateUI)
 		self.ui.jobRootPathLinux_lineEdit.textChanged.connect(self.updateUI)
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).clicked.connect(self.ok)
-		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.cancel)
+		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.reject)
 
 
 	def display(self, winPath, osxPath, linuxPath, jobsRelPath):
 		""" Display the dialog.
 		"""
-		self.returnValue = False
+		#self.returnValue = False
 
 		if winPath is not None:
 			self.ui.jobRootPathWin_lineEdit.setText(winPath)
@@ -77,8 +76,9 @@ class dialog(QtWidgets.QDialog):
 		if jobsRelPath is not None:
 			self.ui.jobsRelPath_lineEdit.setText(jobsRelPath)
 
-		self.ui.exec_()
-		return self.returnValue
+		# self.ui.exec_()
+		# return self.returnValue
+		return self.exec_()
 
 
 	def updateUI(self):
@@ -93,18 +93,33 @@ class dialog(QtWidgets.QDialog):
 	def ok(self):
 		""" Dialog accept function.
 		"""
-		self.returnValue = True
+		#self.returnValue = True
 		# Normalise paths and strip trailing slash
 		self.winPath = osOps.absolutePath(self.ui.jobRootPathWin_lineEdit.text(), stripTrailingSlash=True)
 		self.osxPath = osOps.absolutePath(self.ui.jobRootPathOSX_lineEdit.text(), stripTrailingSlash=True)
 		self.linuxPath = osOps.absolutePath(self.ui.jobRootPathLinux_lineEdit.text(), stripTrailingSlash=True)
 		self.jobsRelPath = self.ui.jobsRelPath_lineEdit.text()
-		self.ui.accept()
+		self.accept()
 
 
-	def cancel(self):
-		""" Dialog cancel function.
+	# def cancel(self):
+	# 	""" Dialog cancel function.
+	# 	"""
+	# 	#self.returnValue = False
+	# 	self.reject()
+
+
+	def keyPressEvent(self, event):
+		""" Override function to prevent Enter / Esc keypresses triggering
+			OK / Cancel buttons.
 		"""
-		self.returnValue = False
-		self.ui.reject()
+		# pass
+		if event.key() == QtCore.Qt.Key_Return or event.key() == QtCore.Qt.Key_Enter:
+			return
+
+
+	def hideEvent(self, event):
+		""" Event handler for when window is hidden.
+		"""
+		self.storeWindow()  # Store window geometry
 
