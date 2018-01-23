@@ -15,7 +15,7 @@ import os
 import subprocess
 import sys
 
-from Qt import QtCompat, QtCore, QtGui, QtWidgets
+from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
 
 # Import custom modules
@@ -57,7 +57,7 @@ class PreviewUI(UI.TemplateUI):
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Tool)
 
-		# Load XML data
+		# Load settings data
 		# xd_load = self.xd.loadXML(os.path.join(os.environ['IC_USERPREFS'], 'userPrefs.xml'))
 		xd_load = self.xd.loadXML(os.path.join(os.environ['IC_USERPREFS'], 'gpsPreview.xml'))
 		self.setupUI(WINDOW_OBJECT, WINDOW_TITLE, UI_FILE, STYLESHEET)
@@ -378,11 +378,11 @@ class PreviewUI(UI.TemplateUI):
 			previewOutput = previewSetup.appPreview()
 			if previewOutput[0]:
 				# print(previewOutput[1])
-				self.outputFilePath = previewOutput[1]
+				outputFilePath = previewOutput[1]
 				# if self.createQt:
 				# 	self.createQuickTime()
 				if self.viewer:
-					self.launchViewer()
+					self.launchViewer(outputFilePath)
 				# osOps.setPermissions(self.outputDir)
 				self.ui.message_plainTextEdit.hide()
 				# print(self.sizeHint())
@@ -414,15 +414,15 @@ class PreviewUI(UI.TemplateUI):
 	# 	djvOps.prcQt(input, output, startFrame, endFrame, inExt, name=self.outputFile, fps=os.environ['FPS'], resize=None)
 
 
-	def launchViewer(self):
+	def launchViewer(self, outputFilePath):
 		""" Launch viewer.
 		"""
 		import sequence
 		if self.format == "JPEG sequence":
-			self.outputFilePath = sequence.getFirst(self.outputFilePath)
+			outputFilePath = sequence.getFirst(outputFilePath)
 		elif self.format == "QuickTime":
-			self.outputFilePath += ".mov"
-		djvOps.viewer(self.outputFilePath)
+			outputFilePath += ".mov"
+		djvOps.viewer(outputFilePath)
 
 
 	def closeEvent(self, event):
@@ -459,39 +459,39 @@ def run_maya(showUI=True):
 	# 	               content=WINDOW_OBJECT, allowedArea=allowed_areas)
 
 
-def run_nuke(**kwargs):
-	""" Run in Nuke.
+# def run_nuke(**kwargs):
+# 	""" Run in Nuke. NOT YET IMPLEMENTED
 
-		Note:
-			If you want the UI to always stay on top, replace:
-			`previewApp.ui.setWindowFlags(QtCore.Qt.Tool)`
-			with:
-			`previewApp.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)`
+# 		Note:
+# 			If you want the UI to always stay on top, replace:
+# 			`previewApp.ui.setWindowFlags(QtCore.Qt.Tool)`
+# 			with:
+# 			`previewApp.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)`
 
-			If you want the UI to be modal:
-			`previewApp.ui.setWindowModality(QtCore.Qt.WindowModal)`
-	"""
-	UI._nuke_delete_ui(WINDOW_OBJECT, WINDOW_TITLE)  # Delete any already existing UI
+# 			If you want the UI to be modal:
+# 			`previewApp.ui.setWindowModality(QtCore.Qt.WindowModal)`
+# 	"""
+# 	UI._nuke_delete_ui(WINDOW_OBJECT, WINDOW_TITLE)  # Delete any already existing UI
 
-	if not DOCK_WITH_NUKE_UI:
-		previewApp = PreviewUI(parent=UI._nuke_main_window())
-		previewApp.setWindowFlags(QtCore.Qt.Tool)
-		previewApp.display(**kwargs)  # Show the UI
-	elif DOCK_WITH_NUKE_UI:
-		prefix = ''
-		basename = os.path.basename(__file__)
-		module_name = basename[: basename.rfind('.')]
-		if __name__ == module_name:
-			prefix = module_name + '.'
-		panel = nukescripts.panels.registerWidgetAsPanel(
-			widget=prefix + WINDOW_TITLE,  # module_name.Class_name
-			name=WINDOW_TITLE,
-			id='uk.co.thefoundry.' + WINDOW_TITLE,
-			create=True)
-		pane = nuke.getPaneFor('Properties.1')
-		panel.addToPane(pane)
-		previewApp = panel.customKnob.getObject().widget
-		UI._nuke_set_zero_margins(previewApp)
+# 	if not DOCK_WITH_NUKE_UI:
+# 		previewApp = PreviewUI(parent=UI._nuke_main_window())
+# 		previewApp.setWindowFlags(QtCore.Qt.Tool)
+# 		previewApp.display(**kwargs)  # Show the UI
+# 	elif DOCK_WITH_NUKE_UI:
+# 		prefix = ''
+# 		basename = os.path.basename(__file__)
+# 		module_name = basename[: basename.rfind('.')]
+# 		if __name__ == module_name:
+# 			prefix = module_name + '.'
+# 		panel = nukescripts.panels.registerWidgetAsPanel(
+# 			widget=prefix + WINDOW_TITLE,  # module_name.Class_name
+# 			name=WINDOW_TITLE,
+# 			id='uk.co.thefoundry.' + WINDOW_TITLE,
+# 			create=True)
+# 		pane = nuke.getPaneFor('Properties.1')
+# 		panel.addToPane(pane)
+# 		previewApp = panel.customKnob.getObject().widget
+# 		UI._nuke_set_zero_margins(previewApp)
 
 
 # Detect environment and run application

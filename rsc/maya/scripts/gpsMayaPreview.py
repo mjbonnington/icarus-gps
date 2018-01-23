@@ -35,7 +35,7 @@ class Preview():
 			self.sound = self.getActiveAudioNode()
 		self.activeView = activeView
 		self.camera = camera
-		self.res = res
+		self.res = (int(res[0]), int(res[1]))
 		self.frRange = (int(frRange[0]), int(frRange[1]))
 		self.offscreen = offscreen
 		self.noSelect = noSelect
