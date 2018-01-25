@@ -104,6 +104,14 @@ class TemplateUI(object):
 			elif os.environ['IC_ENV'] == 'NUKE':
 				pass
 
+		# else:
+		# 	# Move to centre of active screen
+		# 	desktop = QtWidgets.QApplication.desktop()
+		# 	screen = desktop.screenNumber(desktop.cursor().pos())
+		# 	self.move(desktop.screenGeometry(screen).center() - self.frameGeometry().center())
+		# 	# Move to centre of parent window
+		# 	self.move(self.parent.frameGeometry().center() - self.frameGeometry().center())
+
 
 	def fileDialog(self, startingDir, fileFilter='All files (*.*)'):
 		""" Opens a dialog from which to select a single file.

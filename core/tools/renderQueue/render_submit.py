@@ -69,7 +69,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.setWindowFlags(QtCore.Qt.Tool)
 
 		# Set other Qt attributes
-		self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
+		#self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
 		# Set up keyboard shortcuts
 		# self.shortcutReloadStyleSheet = QtWidgets.QShortcut(self)
@@ -833,12 +833,12 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			return
 
 
-	def showEvent(self, event):
-		""" Event handler for when window is shown.
-		"""
-		self.setJobTypeFromComboBox()
-		# self.getFrameRangeFromShotSettings()
-		self.display()
+	# def showEvent(self, event):
+	# 	""" Event handler for when window is shown.
+	# 	"""
+	# 	self.setJobTypeFromComboBox()
+	# 	# self.getFrameRangeFromShotSettings()
+	# 	self.display()
 
 
 	def closeEvent(self, event):

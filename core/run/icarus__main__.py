@@ -110,7 +110,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.setWindowFlags(QtCore.Qt.Window)
 
 		# Set other Qt attributes
-		self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
+		#self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
 		# Automatically set main tab to 'Launcher' - removes the requirement
 		# for the UI file to be saved with this as the current tab.
@@ -118,10 +118,6 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		# Hide main menu bar
 		self.ui.menubar.hide()
-
-		# Register status bar with the verbose module in order to print
-		# messages to it...
-		verbose.registerStatusBar(self.ui.statusbar)
 
 		# Instantiate jobs class
 		self.j = jobs.jobs()
@@ -204,6 +200,10 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		##########################
 
 		if os.environ['IC_ENV'] == 'STANDALONE':
+
+			# Register status bar with the verbose module in order to print
+			# messages to it...
+			verbose.registerStatusBar(self.ui.statusbar)
 
 			# Hide UI items relating to app environment(s)
 			uiHideLs = ['shotEnv_toolButton', 'appIcon_label']
@@ -642,7 +642,8 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			if dialog.display(dialogMsg, dialogTitle):
 				self.launchJobManagement()
 			else:
-				pass
+				self.unlockJobUI(refreshShots=False)
+
 
 
 	def populateShots(self, setLast=False):
@@ -1086,7 +1087,7 @@ Developers: %s
 
 
 	def launchRenderSubmit(self):
-		""" Launch Render Submitter window.
+		""" Open Render Submitter dialog window.
 		"""
 		import render_submit
 		try:
@@ -1104,7 +1105,7 @@ Developers: %s
 			self.renderQueueApp.show()
 			self.renderQueueApp.raise_()
 		except AttributeError:
-			self.renderQueueApp = render_queue__main__.renderQueueApp()
+			self.renderQueueApp = render_queue__main__.RenderQueueApp()
 			self.renderQueueApp.show()
 
 
@@ -1119,13 +1120,11 @@ Developers: %s
 		""" Launch Batch Rename tool.
 		"""
 		import rename__main__
-		# reload(rename__main__)  # Python 3 doesn't like this
-
 		try:
 			self.batchRenameApp.show()
 			self.batchRenameApp.raise_()
 		except AttributeError:
-			self.batchRenameApp = rename__main__.batchRenameApp(parent=self)
+			self.batchRenameApp = rename__main__.BatchRenameApp() #parent=self
 			self.batchRenameApp.show()
 
 
@@ -2037,10 +2036,11 @@ def run_standalone():
 	# Apply application style.
 	# On Windows best results are obtained when this is disabled.
 	# On Mac, best option is unclear due to inconsistent results.
+	# Linux has not been tested.
 	if os.environ['IC_RUNNING_OS'] == 'Darwin':
 		styles = QtWidgets.QStyleFactory.keys()
-		if 'Fusion' in styles:  # Qt5
-			app.setStyle('Fusion')
+		if 'Fusion' in styles:
+			app.setStyle('Fusion')  # Qt5
 		elif 'Plastique' in styles:
 			app.setStyle('Plastique')  # Qt4
 

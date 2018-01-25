@@ -5,7 +5,7 @@
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2015-2018 Gramercy Park Studios
 #
-# Pop-up 'About' dialog / splash screen
+# Pop-up 'About' dialog / splash screen.
 
 
 import os

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# [Icarus] pDialog.py
+# [Icarus] prompt_dialog.py
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
@@ -12,7 +12,7 @@
 import os
 import sys
 
-from Qt import QtCompat, QtCore, QtWidgets
+from Qt import QtCore, QtWidgets
 import ui_template as UI
 
 
@@ -41,6 +41,7 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 	"""
 	def __init__(self, parent=None):
 		super(dialog, self).__init__(parent)
+		self.parent = parent
 
 		self.setupUI(window_object=WINDOW_OBJECT, 
 		             window_title=WINDOW_TITLE, 
@@ -59,6 +60,9 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		# else:
 		# 	self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | 
 		# 	                    QtCore.Qt.WindowCloseButtonHint)
+
+		# Set other Qt attributes
+		self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
 		# Connect signals & slots
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).clicked.connect(self.accept)

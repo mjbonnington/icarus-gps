@@ -17,6 +17,9 @@
    <bool>true</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="margin">
+    <number>8</number>
+   </property>
    <item>
     <spacer name="verticalSpacer_3">
      <property name="orientation">
@@ -41,9 +44,15 @@
      <property name="title">
       <string>Applications and versions</string>
      </property>
-     <layout class="QFormLayout" name="formLayout_10">
+     <layout class="QFormLayout" name="appVer_formLayout">
       <property name="fieldGrowthPolicy">
        <enum>QFormLayout::ExpandingFieldsGrow</enum>
+      </property>
+      <property name="labelAlignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+      <property name="margin">
+       <number>8</number>
       </property>
       <item row="0" column="0">
        <widget class="QLabel" name="appName_label">
@@ -79,7 +88,7 @@
            <string>Remove this application</string>
           </property>
           <property name="text">
-           <string>...</string>
+           <string>Delete</string>
           </property>
           <property name="icon">
            <iconset resource="rsc.qrc">
@@ -91,6 +100,9 @@
             <width>15</width>
             <height>15</height>
            </size>
+          </property>
+          <property name="toolButtonStyle">
+           <enum>Qt::ToolButtonTextBesideIcon</enum>
           </property>
          </widget>
         </item>
@@ -130,7 +142,7 @@
            <string>Remove this version of the application</string>
           </property>
           <property name="text">
-           <string>...</string>
+           <string>Delete</string>
           </property>
           <property name="icon">
            <iconset resource="rsc.qrc">
@@ -142,6 +154,9 @@
             <width>15</width>
             <height>15</height>
            </size>
+          </property>
+          <property name="toolButtonStyle">
+           <enum>Qt::ToolButtonTextBesideIcon</enum>
           </property>
          </widget>
         </item>
@@ -174,9 +189,15 @@
      <property name="title">
       <string>Executable paths</string>
      </property>
-     <layout class="QFormLayout" name="formLayout_9">
+     <layout class="QFormLayout" name="execPaths_formLayout">
       <property name="fieldGrowthPolicy">
        <enum>QFormLayout::ExpandingFieldsGrow</enum>
+      </property>
+      <property name="labelAlignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+      <property name="margin">
+       <number>8</number>
       </property>
       <item row="1" column="0">
        <widget class="QLabel" name="osxPath_label">

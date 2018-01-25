@@ -35,7 +35,7 @@ UI_FILE = "settings_ui.ui"
 STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
 
 # Other options
-STORE_WINDOW_GEOMETRY = True
+STORE_WINDOW_GEOMETRY = False
 
 
 # ----------------------------------------------------------------------------

@@ -3,9 +3,10 @@
 # [Icarus] launch.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2017 Gramercy Park Studios
+# (c) 2017-2018 Gramercy Park Studios
 #
-# Initialises Icarus environment.
+# Initialises Icarus environment. before showing any UI.
+# ***WIP*** - look into using __init__.py for env initialisation
 
 
 import argparse
