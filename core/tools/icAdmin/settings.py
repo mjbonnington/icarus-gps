@@ -43,7 +43,6 @@ STORE_WINDOW_GEOMETRY = True
 # ----------------------------------------------------------------------------
 
 class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
-#class SettingsDialog(UI.Dialog, UI.TemplateUI):
 	""" Settings editor dialog class.
 	"""
 	def __init__(self, parent=None):
@@ -59,6 +58,9 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Dialog)
 
+		# Set other Qt attributes
+		self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
+
 		# Set up keyboard shortcuts
 		self.shortcutLock = QtWidgets.QShortcut(self)
 		self.shortcutLock.setKey('Ctrl+L')
@@ -66,32 +68,27 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 		# self.shortcutSave = QtWidgets.QShortcut(self)
 		# self.shortcutSave.setKey('Ctrl+S')
-		# self.shortcutSave.activated.connect(self.save)
+		# self.shortcutSave.activated.connect(self.saveAll)
 
 		# self.shortcutRemoveOverride = QtWidgets.QShortcut(self)
 		# self.shortcutRemoveOverride.setKey('Ctrl+R')
 		# self.shortcutRemoveOverride.activated.connect(self.removeOverrides)
 
-		# Connect signals & slots
-		self.accepted.connect(self.save)  # Save settings if dialog accepted
+		# Context menus
+		# self.addContextMenu(self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Reset), "Reset all settings", self.reset)
+		# self.addContextMenu(self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Reset), "Reset this page only", self.reset)
 
+		# Connect signals & slots
 		self.ui.categories_listWidget.currentItemChanged.connect(lambda current: self.openProperties(current.text()))
 		# self.ui.categories_listWidget.itemActivated.connect(lambda item: self.openProperties(current.text()))
 
-		# self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Reset).clicked.connect(self.reset)
-		# self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Save).clicked.connect(self.saveAndExit)
-		# self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.exit)
-		self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Save).clicked.connect(self.accept)
+		#self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Reset).clicked.connect(self.reset)
+		self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Save).clicked.connect(self.saveAllAndClose)
 		self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.reject)
 
 
-	def display(self, 
-		        settingsType="Generic", 
-		        categoryLs=[], 
-		        startPanel=None, 
-		        xmlData=None, 
-		        inherit=None, 
-		        autoFill=False):
+	def display(self, settingsType="Generic", categoryLs=[], startPanel=None, 
+	            xmlData=None, inherit=None, autoFill=False):
 		""" Display the dialog.
 			'settingsType' is the name given to the settings dialog.
 			'categoryLs' is a list of categories, should correspond to a page
@@ -118,7 +115,14 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.reset()
 		self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Reset).setEnabled(False)  # temporarily disable the reset button
 
-		self.setWindowTitle("%s %s" %(settingsType, WINDOW_TITLE))
+		# Set window title
+		if settingsType == "Job":
+			title_suffix = ": " + os.environ['JOB']
+		elif settingsType == "Shot":
+			title_suffix = ": " + os.environ['SHOT']
+		else:
+			title_suffix = ""
+		self.setWindowTitle("%s %s%s" %(settingsType, WINDOW_TITLE, title_suffix))
 
 		return self.exec_()
 
@@ -287,20 +291,36 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 	# 	self.openProperties(self.currentCategory, storeProperties=False)
 
 
-	# def save(self):
+	def saveAllAndClose(self):
+		""" Save data.
+		"""
+		# Store the values from widgets on all pages
+		for category in self.categoryLs:
+			self.openProperties(category, storeProperties=True)
+
+		# There's a bug where all property panel widgets become visible if a
+		# save fails. As a quick dodgy workaround we exit so we don't see it
+		# happen.
+		if self.save():
+			self.accept()
+		else:
+			self.close()
+
+
+	# def saveAll(self):
 	# 	""" Save data.
 	# 	"""
 	# 	# Store the values from widgets on all pages
 	# 	for category in self.categoryLs:
 	# 		self.openProperties(category, storeProperties=True)
 
-	# 	# Save XML file
-	# 	if self.xd.saveXML():
-	# 		verbose.message("%s settings saved." %self.settingsType)
-	# 		return True
+	# 	# There's a bug where all property panel widgets become visible if a
+	# 	# save fails. As a quick dodgy workaround we exit so we don't see it
+	# 	# happen.
+	# 	if self.save():
+	# 		self.accept()
 	# 	else:
-	# 		verbose.error("%s settings could not be saved." %self.settingsType)
-	# 		return False
+	# 		self.close()
 
 
 	# def saveAndExit(self):
@@ -332,7 +352,6 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		""" Override function to prevent Enter / Esc keypresses triggering
 			OK / Cancel buttons.
 		"""
-		# pass
 		if event.key() == QtCore.Qt.Key_Return or event.key() == QtCore.Qt.Key_Enter:
 			return
 
@@ -347,5 +366,5 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 	# 	""" Event handler for when window is closed.
 	# 	"""
 	# 	#self.save()  # Save settings
-	# 	self.storeWindow()  # Store window geometry
+	# 	#self.storeWindow()  # Store window geometry
 

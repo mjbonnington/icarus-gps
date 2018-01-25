@@ -3,7 +3,7 @@
 # [Icarus] edit_app_paths.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2017 Gramercy Park Studios
+# (c) 2015-2018 Gramercy Park Studios
 #
 # A UI for managing application versions and paths to executables for all
 # operating systems.
@@ -12,7 +12,8 @@
 import os
 import sys
 
-from Qt import QtCompat, QtCore, QtWidgets
+from Qt import QtCore, QtWidgets
+import ui_template as UI
 
 # Import custom modules
 import appPaths
@@ -31,30 +32,32 @@ WINDOW_OBJECT = "editAppPathsUI"
 UI_FILE = "edit_app_paths_ui.ui"
 STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
 
+# Other options
+STORE_WINDOW_GEOMETRY = False
+
 
 # ----------------------------------------------------------------------------
 # Main dialog class
 # ----------------------------------------------------------------------------
 
-class dialog(QtWidgets.QDialog):
-	""" Main dialog class.
+class dialog(QtWidgets.QDialog, UI.TemplateUI):
+	""" Edit App Paths dialog class.
 	"""
 	def __init__(self, parent=None):
 		super(dialog, self).__init__(parent)
+		self.parent = parent
 
-		# Set object name and window title
-		self.setObjectName(WINDOW_OBJECT)
-		self.setWindowTitle(WINDOW_TITLE)
-
-		# Load UI & stylesheet
-		self.ui = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], UI_FILE))
-		if STYLESHEET is not None:
-			qss=os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
-			with open(qss, "r") as fh:
-				self.ui.setStyleSheet(fh.read())
+		self.setupUI(window_object=WINDOW_OBJECT, 
+		             window_title=WINDOW_TITLE, 
+		             ui_file=UI_FILE, 
+		             stylesheet=STYLESHEET, 
+		             store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
 
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Dialog)
+
+		# Set other Qt attributes
+		self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
 		# Set up keyboard shortcuts
 		self.shortcut = QtWidgets.QShortcut(self)
@@ -73,20 +76,16 @@ class dialog(QtWidgets.QDialog):
 
 		#self.ui.appPaths_buttonBox.button(QtWidgets.QDialogButtonBox.Reset).clicked.connect(self.reset)
 		#self.ui.appPaths_buttonBox.button(QtWidgets.QDialogButtonBox.Apply).clicked.connect(self.saveAppPaths)
-		self.ui.appPaths_buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.exit)
+		self.ui.appPaths_buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.reject)
 		self.ui.appPaths_buttonBox.button(QtWidgets.QDialogButtonBox.Save).clicked.connect(self.saveAndExit)
 
 		# Instantiate jobs class and load data
 		self.ap = appPaths.appPaths()
 
-		# self.show()
-
 
 	def display(self):
 		""" Initialise or reset by reloading data.
 		"""
-		self.returnValue = False
-
 		# Load data from xml file
 		self.ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'))
 
@@ -95,17 +94,7 @@ class dialog(QtWidgets.QDialog):
 		self.populateAppVersions()
 		self.populateAppExecPaths()
 
-		self.ui.exec_()
-		return self.returnValue
-
-
-	# def keyPressEvent(self, event):
-	# 	""" Override function to prevent Enter / Esc keypresses triggering
-	# 		OK / Cancel buttons.
-	# 	"""
-	# 	pass
-	# 	# if event.key() == QtCore.Qt.Key_Return or event.key() == QtCore.Qt.Key_Enter:
-	# 	# 	return
+		return self.exec_()
 
 
 	def toggleAppVerDelButton(self):
@@ -251,15 +240,22 @@ class dialog(QtWidgets.QDialog):
 		""" Save data and exit.
 		"""
 		if self.saveAppPaths():
-			self.returnValue = True
-			self.ui.accept()
+			self.accept()
 
 
-	def exit(self):
-		""" Exit the dialog.
+	def keyPressEvent(self, event):
+		""" Override function to prevent Enter / Esc keypresses triggering
+			OK / Cancel buttons.
 		"""
-		self.returnValue = False
-		self.ui.reject()
+		if event.key() == QtCore.Qt.Key_Return or event.key() == QtCore.Qt.Key_Enter:
+			return
+
+
+	# def exit(self):
+	# 	""" Exit the dialog.
+	# 	"""
+	# 	self.returnValue = False
+	# 	self.reject()
 
 
 # if __name__ == "__main__":

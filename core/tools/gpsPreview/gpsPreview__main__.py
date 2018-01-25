@@ -67,6 +67,9 @@ class PreviewUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Tool)
 
+		# Set other Qt attributes
+		self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
+
 		# Connect signals & slots
 		self.ui.name_lineEdit.textChanged.connect(self.checkFilename)
 		#self.ui.nameUpdate_toolButton.clicked.connect(self.updateFilename)

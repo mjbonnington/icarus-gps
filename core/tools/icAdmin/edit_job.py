@@ -11,7 +11,7 @@
 import os
 import sys
 
-from Qt import QtCompat, QtCore, QtGui, QtWidgets
+from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
 
 # Import custom modules
@@ -44,6 +44,7 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 	"""
 	def __init__(self, parent=None):
 		super(dialog, self).__init__(parent)
+		self.parent = parent
 
 		self.setupUI(window_object=WINDOW_OBJECT, 
 		             window_title=WINDOW_TITLE, 
@@ -53,6 +54,9 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Dialog)
+
+		# Set other Qt attributes
+		self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
 		# Connect signals & slots
 		self.ui.jobName_lineEdit.textChanged.connect(self.updateUI)
@@ -71,8 +75,6 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 	def display(self, jobName, jobPath, jobActive):
 		""" Display the dialog.
 		"""
-		#self.returnValue = False
-
 		if jobName:
 			self.setWindowTitle("%s: %s" %(WINDOW_TITLE, jobName))
 		else:
@@ -81,8 +83,6 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.ui.jobPath_lineEdit.setText(jobPath)
 		self.ui.jobEnabled_checkBox.setChecked(jobActive)
 
-		# self.ui.exec_()
-		# return self.returnValue
 		return self.exec_()
 
 
@@ -157,7 +157,6 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 	def ok(self):
 		""" Dialog accept function.
 		"""
-		#self.returnValue = True
 		self.jobName = self.ui.jobName_lineEdit.text()
 		self.jobPath = self.ui.jobPath_lineEdit.text()
 		if self.ui.jobEnabled_checkBox.checkState() == QtCore.Qt.Checked:
@@ -167,18 +166,10 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.accept()
 
 
-	# def cancel(self):
-	# 	""" Dialog cancel function.
-	# 	"""
-	# 	#self.returnValue = False
-	# 	self.reject()
-
-
 	def keyPressEvent(self, event):
 		""" Override function to prevent Enter / Esc keypresses triggering
 			OK / Cancel buttons.
 		"""
-		# pass
 		if event.key() == QtCore.Qt.Key_Return or event.key() == QtCore.Qt.Key_Enter:
 			return
 

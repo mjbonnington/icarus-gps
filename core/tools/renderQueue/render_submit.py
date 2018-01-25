@@ -68,6 +68,9 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Tool)
 
+		# Set other Qt attributes
+		self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
+
 		# Set up keyboard shortcuts
 		# self.shortcutReloadStyleSheet = QtWidgets.QShortcut(self)
 		# self.shortcutReloadStyleSheet.setKey('Ctrl+R')
