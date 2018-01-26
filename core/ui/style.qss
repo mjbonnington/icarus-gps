@@ -1453,15 +1453,15 @@ QStatusBar {
 }
 
 *[warning="true"] { /* custom background colour for warning messages */
-	background: #dcce87;
+	background: #e6db74;
 	color: #222;
-	border-color: #dcce87;
+	border-color: #e6db74;
 }
 
 *[inheritedValue="true"] { /* custom colour for inherited attribute values */
 	/*background: #fdf5a9;*/
-	color: #e6db74;
-	border-color: #e6db74;
+	color: #a1efe4;
+	border-color: #a1efe4;
 }
 
 *[noBackground="true"] { /* no background colour */

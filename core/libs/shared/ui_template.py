@@ -220,7 +220,7 @@ class TemplateUI(object):
 
 							# widget.setProperty('xmlTag', None)
 							widget.setProperty('inheritedValue', True)
-							widget.setToolTip("This value is being inherited. Change the value to override the inherited value.")
+							# widget.setToolTip("This value is being inherited. Change the value to override the inherited value.")
 
 							# Apply pop-up menu to remove override - can't get to work here
 							# self.addContextMenu(widget, "Remove override", self.removeOverrides)
@@ -388,6 +388,19 @@ class TemplateUI(object):
 			return False
 
 
+	def getWidgetMeta(self, widget):
+		""" 
+		"""
+		widget.setProperty('inheritedValue', False)
+		# widget.setToolTip("")
+		widget.style().unpolish(widget)
+		widget.style().polish(widget)
+
+		category = widget.property('xmlCategory')
+		attr = widget.property('xmlTag')
+		return category, attr
+
+
 	# @QtCore.Slot()
 	def execPushButton(self):
 		""" Execute the function associated with a button.
@@ -400,8 +413,9 @@ class TemplateUI(object):
 	def storeSpinBoxValue(self):
 		""" Get the value from a Spin Box and store in XML data.
 		"""
-		category = self.sender().property('xmlCategory')
-		attr = self.sender().property('xmlTag')
+		# category = self.sender().property('xmlCategory')
+		# attr = self.sender().property('xmlTag')
+		category, attr = self.getWidgetMeta(self.sender())
 		value = self.sender().value()
 		self.storeValue(category, attr, value)
 
@@ -410,8 +424,9 @@ class TemplateUI(object):
 	def storeLineEditValue(self):
 		""" Get the value from a Line Edit and store in XML data.
 		"""
-		category = self.sender().property('xmlCategory')
-		attr = self.sender().property('xmlTag')
+		# category = self.sender().property('xmlCategory')
+		# attr = self.sender().property('xmlTag')
+		category, attr = self.getWidgetMeta(self.sender())
 		value = self.sender().text()
 		self.storeValue(category, attr, value)
 
@@ -420,8 +435,9 @@ class TemplateUI(object):
 	def storeTextEditValue(self):
 		""" Get the value from a Plain Text Edit and store in XML data.
 		"""
-		category = self.sender().property('xmlCategory')
-		attr = self.sender().property('xmlTag')
+		# category = self.sender().property('xmlCategory')
+		# attr = self.sender().property('xmlTag')
+		category, attr = self.getWidgetMeta(self.sender())
 		value = self.sender().toPlainText()
 		self.storeValue(category, attr, value)
 
@@ -430,8 +446,9 @@ class TemplateUI(object):
 	def storeCheckBoxValue(self):
 		""" Get the value from a Check Box and store in XML data.
 		"""
-		category = self.sender().property('xmlCategory')
-		attr = self.sender().property('xmlTag')
+		# category = self.sender().property('xmlCategory')
+		# attr = self.sender().property('xmlTag')
+		category, attr = self.getWidgetMeta(self.sender())
 		value = self.getCheckBoxValue(self.sender())
 		self.storeValue(category, attr, value)
 
@@ -441,8 +458,9 @@ class TemplateUI(object):
 		""" Get the value from a Radio Button group and store in XML data.
 		"""
 		if self.sender().isChecked():
-			category = self.sender().property('xmlCategory')
-			attr = self.sender().property('xmlTag')
+			# category = self.sender().property('xmlCategory')
+			# attr = self.sender().property('xmlTag')
+			category, attr = self.getWidgetMeta(self.sender())
 			value = self.sender().text()
 			self.storeValue(category, attr, value)
 
@@ -451,8 +469,9 @@ class TemplateUI(object):
 	def storeComboBoxValue(self):
 		""" Get the value from a Combo Box and store in XML data.
 		"""
-		category = self.sender().property('xmlCategory')
-		attr = self.sender().property('xmlTag')
+		# category = self.sender().property('xmlCategory')
+		# attr = self.sender().property('xmlTag')
+		category, attr = self.getWidgetMeta(self.sender())
 		value = self.sender().currentText()
 		self.storeValue(category, attr, value)
 
