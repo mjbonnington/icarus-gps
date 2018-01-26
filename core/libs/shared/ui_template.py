@@ -162,12 +162,18 @@ class TemplateUI(object):
 	# ------------------------------------------------------------------------
 	# Widget handlers
 
-	def setupWidgets(self, parentObject, forceCategory=None, 
-	                 storeProperties=True, updateOnly=False):
+	def setupWidgets(self, 
+		             parentObject, 
+		             forceCategory=None, 
+		             inherit=None, 
+		             storeProperties=True, 
+		             updateOnly=False):
 		""" Set up all the child widgets of the specified parent object.
 
 			If 'forceCategory' is specified, this will override the category
 			of all child widgets.
+			'inherit' specifies an alternative XML data source for widgets
+			to get their values from.
 			If 'storeProperties' is True, the values will be stored in the XML
 			data as well as applied to the widgets.
 			If 'updateOnly' is True, only the widgets' values will be updated.
@@ -203,7 +209,27 @@ class TemplateUI(object):
 					category = self.findCategory(widget)
 				if category:
 					widget.setProperty('xmlCategory', category)
-					value = self.xd.getValue(category, attr)
+					#value = self.xd.getValue(category, attr)
+
+					if inherit is None:
+						value = self.xd.getValue(category, attr)
+					else:
+						value = self.xd.getValue(category, attr)
+						if value == "":
+							value = inherit.getValue(category, attr)
+
+							# widget.setProperty('xmlTag', None)
+							widget.setProperty('inheritedValue', True)
+							widget.setToolTip("This value is being inherited. Change the value to override the inherited value.")
+
+							# Apply pop-up menu to remove override - can't get to work here
+							# self.addContextMenu(widget, "Remove override", self.removeOverrides)
+							# widget.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+
+							# actionRemoveOverride = QtWidgets.QAction("Remove override", None)
+							# actionRemoveOverride.triggered.connect(self.removeOverrides)
+							# widget.addAction(actionRemoveOverride)
+
 
 					# Spin boxes...
 					if isinstance(widget, QtWidgets.QSpinBox):
@@ -298,6 +324,32 @@ class TemplateUI(object):
 				return None
 			else:
 				return self.findCategory(widget.parent())
+
+
+	# def inheritFrom(self, category, attr):
+	# 	""" Tries to get a value from the current settings type, and if no
+	# 		value is found tries to inherit the value instead.
+	# 		Returns two values:
+	# 		'text' - the value of the requested attribute.
+	# 		'inherited' - a Boolean value which is true if the value was
+	# 		inherited.
+	# 	"""
+	# 	text = self.xd.getValue(category, attr)
+	# 	inherited = False
+
+	# 	if text is not "":
+	# 		pass
+
+	# 	# elif self.settingsType == 'Shot':
+	# 	elif self.inherit == 'Job':
+	# 		jd = settingsData.settingsData()
+	# 		jd.loadXML(os.path.join(os.environ['JOBDATA'], 'jobData.xml'))
+	# 		text = jd.getValue(category, attr)
+	# 		inherited = True
+	# 		verbose.print_('%s.%s = %s (inheriting value from job data)' %(category, attr, text), 4)
+
+	# 	# print("%s/%s: got value %s, inherited=%s" %(category, attr, text, inherited))
+	# 	return text, inherited
 
 
 	def addContextMenu(self, widget, name, command, icon=None):

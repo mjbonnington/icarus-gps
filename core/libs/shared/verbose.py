@@ -28,7 +28,7 @@ class bcolors:
 		ENDC = '\033[0m'
 		BOLD = '\033[1m'
 		UNDERLINE = '\033[4m'
-		DARK = '\033[30;1m'
+		DARK = '\033[38;5;241m'
 		INVERT = '\033[7m'
 		ICGREEN = '\033[38;5;106m'
 		INLINE = u'\u001b[1A\u001b[1000D\u001b[0K'

@@ -186,9 +186,6 @@
        <property name="text">
         <string>4 seconds @ 25 fps</string>
        </property>
-       <property name="xmlTag" stdset="0">
-        <string>fps</string>
-       </property>
       </widget>
      </item>
     </layout>

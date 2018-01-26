@@ -496,6 +496,9 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		if self.numList == False:
 			if not quiet:
 				verbose.warning("Invalid entry for frame range.")
+			self.ui.frames_lineEdit.setProperty("mandatoryField", True)
+			self.ui.frames_lineEdit.style().unpolish(self.ui.frames_lineEdit)
+			self.ui.frames_lineEdit.style().polish(self.ui.frames_lineEdit)
 			return False
 		else:
 			self.ui.frames_lineEdit.setText(sequence.numRange(self.numList))

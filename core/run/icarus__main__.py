@@ -991,7 +991,8 @@ Developers: %s
 		elif settingsType == "Shot":
 			categoryLs = ['shot', 'units', 'time', 'resolution', 'camera']
 			xmlData = os.path.join(os.environ['SHOTDATA'], 'shotData.xml')
-			inherit = "Job"
+			inherit = os.path.join(os.environ['JOBDATA'], 'jobData.xml')
+			#inherit = "Job"
 		elif settingsType == "User":
 			categoryLs = ['user', 'launcher']
 			# categoryLs = ['user', 'global', 'test', 'job', 'time', 'resolution', 'units', 'apps', 'other', 'camera']

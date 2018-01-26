@@ -10,7 +10,6 @@
 # with their own UI file and helper module (if required).
 
 
-import math
 import os
 import sys
 
@@ -18,7 +17,6 @@ from Qt import QtCompat, QtCore, QtWidgets
 import ui_template as UI
 
 # Import custom modules
-#import settingsData
 import verbose
 
 
@@ -61,10 +59,10 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		# Set other Qt attributes
 		self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
-		# Set up keyboard shortcuts
-		self.shortcutLock = QtWidgets.QShortcut(self)
-		self.shortcutLock.setKey('Ctrl+L')
-		self.shortcutLock.activated.connect(self.toggleLockUI)
+		# # Set up keyboard shortcuts
+		# self.shortcutLock = QtWidgets.QShortcut(self)
+		# self.shortcutLock.setKey('Ctrl+L')
+		# self.shortcutLock.activated.connect(self.toggleLockUI)
 
 		# self.shortcutSave = QtWidgets.QShortcut(self)
 		# self.shortcutSave.setKey('Ctrl+S')
@@ -83,6 +81,7 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		# self.ui.categories_listWidget.itemActivated.connect(lambda item: self.openProperties(current.text()))
 
 		#self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Reset).clicked.connect(self.reset)
+		#self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.RestoreDefaults).clicked.connect(self.reset)
 		self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Save).clicked.connect(self.saveAllAndClose)
 		self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.reject)
 
@@ -90,6 +89,7 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 	def display(self, settingsType="Generic", categoryLs=[], startPanel=None, 
 	            xmlData=None, inherit=None, autoFill=False):
 		""" Display the dialog.
+
 			'settingsType' is the name given to the settings dialog.
 			'categoryLs' is a list of categories, should correspond to a page
 			of properties defined by a .ui file.
@@ -110,7 +110,7 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.inherit = inherit
 		self.autoFill = autoFill
 
-		self.lockUI = True
+		# self.lockUI = False
 
 		self.reset()
 		self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Reset).setEnabled(False)  # temporarily disable the reset button
@@ -134,6 +134,12 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 		# Load data from xml file(s)
 		xd_load = self.xd.loadXML(self.xmlData)
+		if self.inherit:
+			import settingsData
+			self.id = settingsData.settingsData()
+			id_load = self.id.loadXML(self.inherit)
+		else:
+			self.id = None
 
 		# Populate categories
 		if self.categoryLs:
@@ -143,7 +149,7 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 				self.ui.categories_listWidget.addItem(cat)
 
 			# Set the maximum size of the list widget
-			self.ui.categories_listWidget.setMaximumWidth(self.ui.categories_listWidget.sizeHintForColumn(0) * 2)
+			self.ui.categories_listWidget.setMaximumWidth(self.ui.categories_listWidget.sizeHintForColumn(0)*2)
 
 			# Select the first item & show the appropriate settings panel
 			if self.currentCategory == "":
@@ -157,12 +163,17 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		# self.ui.categories_listWidget.blockSignals(False)
 
 
-	def toggleLockUI(self):
-		""" Lock/unlock UI for editing.
-		"""
-		self.lockUI = not self.lockUI
-		self.ui.settings_scrollArea.setEnabled(self.lockUI)  # Disable properties panel widgets
-		self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Save).setEnabled(self.lockUI)  # Disable save button
+	# def toggleLockUI(self):
+	# 	""" Lock/unlock UI for editing.
+	# 	"""
+	# 	self.lockUI = not self.lockUI
+	# 	lockable_objects = [self.ui.settings_scrollArea, 
+	# 	                    self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Reset), 
+	# 	                    self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.RestoreDefaults), 
+	# 	                    self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Save)]
+	# 	for item in lockable_objects:
+	# 		item.setEnabled(not self.lockUI)
+	# 	print(self.lockUI)
 
 
 	def loadPanel(self, category):
@@ -208,16 +219,19 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		verbose.print_("Category: " + self.currentCategory, 4)
 
 		if self.loadPanel(category):
-			inherited = False
-			inheritable = False
 			if (self.inherit is not None) and self.ui.settings_frame.property('inheritable'):
-				verbose.print_("(values inheritable from %s)" %self.inherit, 4)
-				inheritable = True
+				verbose.print_("(values inherited)")
 
-			# Load values into form widgets
-			self.setupWidgets(self.ui.settings_frame, 
-			                  forceCategory=category, 
-			                  storeProperties=storeProperties)
+				# Load values into form widgets
+				self.setupWidgets(self.ui.settings_frame, 
+				                  forceCategory=category, 
+				                  inherit=self.id, 
+				                  storeProperties=False)
+			else:
+				# Load values into form widgets
+				self.setupWidgets(self.ui.settings_frame, 
+				                  forceCategory=category, 
+				                  storeProperties=storeProperties)
 
 			# widgets = self.ui.settings_frame.children()
 
