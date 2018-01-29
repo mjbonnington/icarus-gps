@@ -59,29 +59,11 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		# Set other Qt attributes
 		self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
-		# # Set up keyboard shortcuts
-		# self.shortcutLock = QtWidgets.QShortcut(self)
-		# self.shortcutLock.setKey('Ctrl+L')
-		# self.shortcutLock.activated.connect(self.toggleLockUI)
-
-		# self.shortcutSave = QtWidgets.QShortcut(self)
-		# self.shortcutSave.setKey('Ctrl+S')
-		# self.shortcutSave.activated.connect(self.saveAll)
-
-		# self.shortcutRemoveOverride = QtWidgets.QShortcut(self)
-		# self.shortcutRemoveOverride.setKey('Ctrl+R')
-		# self.shortcutRemoveOverride.activated.connect(self.removeOverrides)
-
-		# Context menus
-		# self.addContextMenu(self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Reset), "Reset all settings", self.reset)
-		# self.addContextMenu(self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Reset), "Reset this page only", self.reset)
-
 		# Connect signals & slots
 		self.ui.categories_listWidget.currentItemChanged.connect(lambda current: self.openProperties(current.text()))
 		# self.ui.categories_listWidget.itemActivated.connect(lambda item: self.openProperties(current.text()))
 
-		#self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Reset).clicked.connect(self.reset)
-		#self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.RestoreDefaults).clicked.connect(self.reset)
+		self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Reset).clicked.connect(self.removeOverrides)
 		self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Save).clicked.connect(self.saveAllAndClose)
 		self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.reject)
 
@@ -95,7 +77,8 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 			of properties defined by a .ui file.
 			'startPanel' if set will jump straight to the named panel.
 			'xmlData' is the path to the XML file storing the settings.
-			'inherit' whether to inherit any values.
+			'inherit' whether to inherit any values. This should be in the
+			form of a path just like the 'xmlData' argument.
 			'autoFill' when true, attempt to fill some fields automatically.
 		"""
 		if startPanel:
@@ -110,10 +93,7 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.inherit = inherit
 		self.autoFill = autoFill
 
-		# self.lockUI = False
-
 		self.reset()
-		self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Reset).setEnabled(False)  # temporarily disable the reset button
 
 		# Set window title
 		if settingsType == "Job":
@@ -133,11 +113,11 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		# self.ui.categories_listWidget.blockSignals(True)
 
 		# Load data from xml file(s)
-		xd_load = self.xd.loadXML(self.xmlData)
+		self.xd.loadXML(self.xmlData)
 		if self.inherit:
 			import settingsData
 			self.id = settingsData.settingsData()
-			id_load = self.id.loadXML(self.inherit)
+			self.id.loadXML(self.inherit)
 		else:
 			self.id = None
 
@@ -163,24 +143,11 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		# self.ui.categories_listWidget.blockSignals(False)
 
 
-	# def toggleLockUI(self):
-	# 	""" Lock/unlock UI for editing.
-	# 	"""
-	# 	self.lockUI = not self.lockUI
-	# 	lockable_objects = [self.ui.settings_scrollArea, 
-	# 	                    self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Reset), 
-	# 	                    self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.RestoreDefaults), 
-	# 	                    self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Save)]
-	# 	for item in lockable_objects:
-	# 		item.setEnabled(not self.lockUI)
-	# 	print(self.lockUI)
-
-
 	def loadPanel(self, category):
 		""" Load the panel UI (and helper module if required).
-			The exec function is called here to avoid the error:
-			'unqualified exec is not allowed in function because it contains a
-			nested function with free variables' with Python 2.x.
+			The exec function is called here to avoid the error: 'unqualified
+			exec is not allowed in function because it contains a nested
+			function with free variables' with Python 2.x.
 		"""
 		ui_file = "settings_%s_ui.ui" %category
 		helper_module = 'settings_%s' %category
@@ -191,7 +158,6 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.ui.settings_frame.close()
 		try:
 			uifile = os.path.join(os.environ['IC_FORMSDIR'], ui_file)
-			#self.ui.settings_frame = QtCompat.load_ui(fname=uifile)
 			self.ui.settings_frame = QtCompat.loadUi(uifile)
 			self.ui.settings_verticalLayout.addWidget(self.ui.settings_frame)
 			panel_ui_loaded = True
@@ -216,97 +182,36 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 			file and sets up widgets.
 		"""
 		self.currentCategory = category
-		verbose.print_("Category: " + self.currentCategory, 4)
 
+		# Show panel & load values into form widgets
 		if self.loadPanel(category):
 			if (self.inherit is not None) and self.ui.settings_frame.property('inheritable'):
-				verbose.print_("(values inherited)")
-
-				# Load values into form widgets
+				verbose.print_("Category: %s (values inheritable)" %category)
 				self.setupWidgets(self.ui.settings_frame, 
 				                  forceCategory=category, 
 				                  inherit=self.id, 
 				                  storeProperties=False)
 			else:
-				# Load values into form widgets
+				verbose.print_("Category: %s" %category)
 				self.setupWidgets(self.ui.settings_frame, 
 				                  forceCategory=category, 
 				                  storeProperties=storeProperties)
 
-			# widgets = self.ui.settings_frame.children()
 
-			# for widget in widgets:
+	def removeOverrides(self):
+		""" Remove stored values and instead inherit defaults for widgets on
+			the current panel.
+		"""
+		for widget in self.ui.settings_frame.findChildren(QtWidgets.QWidget):
+			attr = widget.property('xmlTag')
+			if attr:
+				self.xd.removeElement(self.currentCategory, attr)
 
-			# 	# Set up handler for push button(s)...
-			# 	if widget.property('exec'):
-			# 		if isinstance(widget, QtWidgets.QPushButton):
-			# 			widget.clicked.connect(self.execPushButton)
-
-			# 	# Set up handlers for different widget types & apply values
-			# 	attr = widget.property('xmlTag')
-			# 	if attr:
-			# 		value = self.xd.getValue(category, attr)
-			# 		# if inheritable:
-			# 		# 	value = self.xd.getValue(category, attr)
-			# 		# else:
-			# 		# 	value, inherited = self.inheritFrom(category, attr)
-
-			# 		# if inherited:
-			# 		# 	widget.setProperty('xmlTag', None)
-			# 		# 	widget.setProperty('inheritedValue', True)
-			# 		# 	widget.setToolTip("This value is being inherited. Change the value to override the inherited value.")
-
-			# 		# 	# Apply pop-up menu to remove override - can't get to work here
-			# 		# 	#widget.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-
-			# 		# 	#actionRemoveOverride = QtWidgets.QAction("Remove override", None)
-			# 		# 	#actionRemoveOverride.triggered.connect(self.removeOverrides)
-			# 		# 	#widget.addAction(actionRemoveOverride)
-
-
-
-	# def inheritFrom(self, category, attr):
-	# 	""" Tries to get a value from the current settings type, and if no
-	# 		value is found tries to inherit the value instead.
-	# 		Returns two values:
-	# 		'text' - the value of the requested attribute.
-	# 		'inherited' - a Boolean value which is true if the value was
-	# 		inherited.
-	# 	"""
-	# 	text = self.xd.getValue(category, attr)
-	# 	inherited = False
-
-	# 	if text is not "":
-	# 		pass
-
-	# 	# elif self.settingsType == 'Shot':
-	# 	elif self.inherit == 'Job':
-	# 		jd = settingsData.settingsData()
-	# 		jd.loadXML(os.path.join(os.environ['JOBDATA'], 'jobData.xml'))
-	# 		text = jd.getValue(category, attr)
-	# 		inherited = True
-	# 		verbose.print_('%s.%s = %s (inheriting value from job data)' %(category, attr, text), 4)
-
-	# 	# print("%s/%s: got value %s, inherited=%s" %(category, attr, text, inherited))
-	# 	return text, inherited
-
-
-	# def removeOverrides(self):
-	# 	""" Remove overrides and instead inherit values for widgets on the
-	# 		current panel.
-	# 	"""
-	# 	widgets = self.ui.settings_frame.children()
-
-	# 	for widget in widgets:
-	# 		attr = widget.property('xmlTag')
-	# 		if attr:
-	# 			self.xd.removeElement(self.currentCategory, attr)
-
-	# 	self.openProperties(self.currentCategory, storeProperties=False)
+		self.openProperties(self.currentCategory, storeProperties=False)
 
 
 	def saveAllAndClose(self):
-		""" Save data.
+		""" Save settings and close the dialog.
 		"""
 		# Store the values from widgets on all pages
 		for category in self.categoryLs:
@@ -318,48 +223,8 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		if self.save():
 			self.accept()
 		else:
-			self.close()
-
-
-	# def saveAll(self):
-	# 	""" Save data.
-	# 	"""
-	# 	# Store the values from widgets on all pages
-	# 	for category in self.categoryLs:
-	# 		self.openProperties(category, storeProperties=True)
-
-	# 	# There's a bug where all property panel widgets become visible if a
-	# 	# save fails. As a quick dodgy workaround we exit so we don't see it
-	# 	# happen.
-	# 	if self.save():
-	# 		self.accept()
-	# 	else:
-	# 		self.close()
-
-
-	# def saveAndExit(self):
-	# 	""" Save data and exit dialog.
-	# 	"""
-	# 	if self.save():
-	# 		# self.ui.hide()
-	# 		self.returnValue = True
-	# 		self.ui.accept()
-	# 	else:
-	# 		self.exit()  # There's a bug where all property panel widgets become visible if a save fails. As a quick dodgy workaround we exit so we don't see it happen.
-
-
-	# def exit(self):
-	# 	""" Exit the dialog.
-	# 	"""
-	# 	# self.ui.hide()
-	# 	self.returnValue = False
-	# 	self.ui.reject()
-
-
-	# def closeEvent(self, event):
-	# 	""" Event handler for when window is closed.
-	# 	"""
-	# 	QtWidgets.QMainWindow.closeEvent(self, event)
+			# self.close()
+			self.reject()
 
 
 	def keyPressEvent(self, event):

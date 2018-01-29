@@ -220,7 +220,7 @@ class TemplateUI(object):
 
 							# widget.setProperty('xmlTag', None)
 							widget.setProperty('inheritedValue', True)
-							# widget.setToolTip("This value is being inherited. Change the value to override the inherited value.")
+							widget.setToolTip("This value is being inherited. Change the value to override the inherited value.")  # Rework this in case widgets already have a tooltip
 
 							# Apply pop-up menu to remove override - can't get to work here
 							# self.addContextMenu(widget, "Remove override", self.removeOverrides)
@@ -392,7 +392,7 @@ class TemplateUI(object):
 		""" 
 		"""
 		widget.setProperty('inheritedValue', False)
-		# widget.setToolTip("")
+		widget.setToolTip("")  # Rework this in case widgets already have a tooltip
 		widget.style().unpolish(widget)
 		widget.style().polish(widget)
 

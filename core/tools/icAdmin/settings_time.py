@@ -70,9 +70,11 @@ class helper():
 		"""
 		durationFrames = rangeEnd - rangeStart + 1
 
-		try:
-			fps = int(self.parent.xd.getValue('units', 'fps'))
-		except ValueError:
+		fps = self.parent.xd.getValue('units', 'fps', type='int')
+		if fps == "":
+			if self.parent.inherit:
+				fps = self.parent.id.getValue('units', 'fps', type='int')
+		if fps == "":
 			verbose.warning("Undefined FPS.")
 			return durationFrames, ""
 

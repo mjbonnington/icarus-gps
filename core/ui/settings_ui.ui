@@ -88,13 +88,15 @@
    <item>
     <widget class="QDialogButtonBox" name="settings_buttonBox">
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Reset|QDialogButtonBox::RestoreDefaults|QDialogButtonBox::Save</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Reset|QDialogButtonBox::Save</set>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
  <tabstops>
+  <tabstop>categories_listWidget</tabstop>
+  <tabstop>settings_scrollArea</tabstop>
   <tabstop>settings_buttonBox</tabstop>
  </tabstops>
  <resources/>
