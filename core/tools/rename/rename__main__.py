@@ -19,6 +19,11 @@ import sys
 # import env__init__
 # env__init__.setEnv()
 
+# Use NSURL as a workaround to Pyside/Qt4 behaviour for dragging and dropping
+# on OSX
+if os.environ['IC_RUNNING_OS'] == 'Darwin':
+	from Foundation import NSURL
+
 from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
 
@@ -59,11 +64,11 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		xml_data = os.path.join(os.environ['IC_USERPREFS'], 'batchRename.xml')
 
 		self.setupUI(window_object=WINDOW_OBJECT, 
-		             window_title=WINDOW_TITLE, 
-		             ui_file=UI_FILE, 
-		             stylesheet=STYLESHEET, 
-		             xml_data=xml_data, 
-		             store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
+					 window_title=WINDOW_TITLE, 
+					 ui_file=UI_FILE, 
+					 stylesheet=STYLESHEET, 
+					 xml_data=xml_data, 
+					 store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
 
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Tool)
@@ -72,8 +77,10 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		#self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
 		# Connect signals & slots
-		self.ui.find_lineEdit.textEdited.connect(self.updateTaskListView)
-		self.ui.replace_lineEdit.textEdited.connect(self.updateTaskListView)
+		# self.ui.find_lineEdit.textEdited.connect(self.updateTaskListView)
+		# self.ui.replace_lineEdit.textEdited.connect(self.updateTaskListView)
+		self.ui.find_comboBox.editTextChanged.connect(self.updateTaskListView)
+		self.ui.replace_comboBox.editTextChanged.connect(self.updateTaskListView)
 		self.ui.ignoreCase_checkBox.stateChanged.connect(self.updateTaskListView)
 		self.ui.regex_checkBox.stateChanged.connect(self.updateTaskListView)
 
@@ -83,20 +90,20 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.autoPadding_checkBox.stateChanged.connect(self.updateTaskListView)
 		self.ui.padding_spinBox.valueChanged.connect(self.updateTaskListView)
 
-		self.ui.addDir_pushButton.clicked.connect(self.addDirectory)
-		self.ui.add_pushButton.clicked.connect(self.addSequence)
-		self.ui.remove_pushButton.clicked.connect(self.removeSelection)
-		self.ui.clear_pushButton.clicked.connect(self.clearTaskList)
-		self.ui.rename_pushButton.clicked.connect(self.performFileRename)
-		self.ui.delete_pushButton.clicked.connect(self.performFileDelete)
+		self.ui.addDir_toolButton.clicked.connect(self.addDirectory)
+		self.ui.addSeq_toolButton.clicked.connect(self.addSequence)
+		self.ui.remove_toolButton.clicked.connect(self.removeSelection)
+		self.ui.clear_toolButton.clicked.connect(self.clearTaskList)
+		self.ui.rename_toolButton.clicked.connect(self.performFileRename)
+		# self.ui.delete_pushButton.clicked.connect(self.performFileDelete)
 
 		self.ui.taskList_treeWidget.itemDoubleClicked.connect(self.loadFindStr)
 
 		# Set input validators
-		alphanumeric_filename_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w\.-]+'), self.ui.replace_lineEdit)
-		self.ui.replace_lineEdit.setValidator(alphanumeric_filename_validator)
+		alphanumeric_filename_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w\.-]+'), self.ui.replace_comboBox)
+		self.ui.replace_comboBox.setValidator(alphanumeric_filename_validator)
 
-		self.ui.delete_pushButton.hide()  # Hide the delete button - too dangerous!
+		# self.ui.delete_pushButton.hide()  # Hide the delete button - too dangerous!
 
 		self.renameTaskLs = []
 		self.lastDir = None
@@ -213,8 +220,8 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		totalCount = 0
 
 		# Get find & replace options
-		findStr = self.ui.find_lineEdit.text()
-		replaceStr = self.ui.replace_lineEdit.text()
+		findStr = self.ui.find_comboBox.currentText()
+		replaceStr = self.ui.replace_comboBox.currentText()
 		ignoreCase = self.getCheckBoxValue(self.ui.ignoreCase_checkBox)
 		regex = self.getCheckBoxValue(self.ui.regex_checkBox)
 
@@ -246,7 +253,7 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 			if file == renamedFile: # set text colour to indicate status
 				taskItem.setForeground(2, QtGui.QBrush(QtGui.QColor("#666")))
-				#taskItem.setForeground(2, QtGui.QBrush(QtGui.QColor("#c33")))
+				#taskItem.setForeground(2, QtGui.QBrush(QtGui.QColor("#f92672")))
 			else:
 				renameCount += num_frames
 
@@ -268,18 +275,18 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		# Update button text
 		if renameCount:
-			self.ui.rename_pushButton.setText("Rename %d Files" %renameCount)
-			self.ui.rename_pushButton.setEnabled(True)
+			self.ui.rename_toolButton.setText("Rename %d Files" %renameCount)
+			self.ui.rename_toolButton.setEnabled(True)
 		else:
-			self.ui.rename_pushButton.setText("Rename")
-			self.ui.rename_pushButton.setEnabled(False)
+			self.ui.rename_toolButton.setText("Rename")
+			self.ui.rename_toolButton.setEnabled(False)
 
-		if totalCount:
-			self.ui.delete_pushButton.setText("Delete %d Files" %totalCount)
-			self.ui.delete_pushButton.setEnabled(True)
-		else:
-			self.ui.delete_pushButton.setText("Delete")
-			self.ui.delete_pushButton.setEnabled(False)
+		# if totalCount:
+		# 	self.ui.delete_pushButton.setText("Delete %d Files" %totalCount)
+		# 	self.ui.delete_pushButton.setEnabled(True)
+		# else:
+		# 	self.ui.delete_pushButton.setText("Delete")
+		# 	self.ui.delete_pushButton.setEnabled(False)
 
 
 	def checkConflicts(self):
@@ -296,9 +303,9 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			for item2 in children[i:]:
 				if (item1.text(2) == item2.text(2)) and (item1.text(3) == item2.text(3)):
 					verbose.warning("Rename conflict found. %s is not unique." %item1.text(2))
-					item1.setBackground(2, QtGui.QBrush(QtGui.QColor("#c33")))
+					item1.setBackground(2, QtGui.QBrush(QtGui.QColor("#f92672")))
 					item1.setForeground(2, QtGui.QBrush(QtGui.QColor("#fff")))
-					item2.setBackground(2, QtGui.QBrush(QtGui.QColor("#c33")))
+					item2.setBackground(2, QtGui.QBrush(QtGui.QColor("#f92672")))
 					item2.setForeground(2, QtGui.QBrush(QtGui.QColor("#fff")))
 
 
@@ -311,7 +318,10 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		#text = item.text(1)
 		text = self.renameTaskLs[index][1]
 
-		self.ui.find_lineEdit.setText(text)
+		# self.ui.find_lineEdit.setText(text)
+		if self.ui.find_comboBox.findText(text) == -1:
+			self.ui.find_comboBox.addItem(text)
+		self.ui.find_comboBox.setCurrentIndex(self.ui.find_comboBox.findText(text))
 		self.updateTaskListView()
 
 
@@ -386,9 +396,51 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.clearTaskList()
 
 
+	# The following three methods set up dragging and dropping for the app
+	def dragEnterEvent(self, e):
+		if e.mimeData().hasUrls:
+			e.accept()
+		else:
+			e.ignore()
+
+	def dragMoveEvent(self, e):
+		if e.mimeData().hasUrls:
+			e.accept()
+		else:
+			e.ignore()
+
+	def dropEvent(self, e):
+		"""
+		Drop files directly onto the widget
+
+		File locations are stored in fname
+		:param e:
+		:return:
+		"""
+		if e.mimeData().hasUrls:
+			e.setDropAction(QtCore.Qt.CopyAction)
+			e.accept()
+			# Workaround for OSX dragging and dropping
+			for url in e.mimeData().urls():
+				if os.environ['IC_RUNNING_OS'] == 'Darwin':
+					fname = str(NSURL.URLWithString_(str(url.toString())).filePathURL().path())
+				else:
+					fname = str(url.toLocalFile())
+
+			#self.fname = fname
+			verbose.print_("Dropped '%s' on to window." %fname)
+			if os.path.isdir(fname):
+				self.updateTaskListDir(fname)
+			elif os.path.isfile(fname):
+				self.updateTaskListFile(fname)
+		else:
+			e.ignore()
+
+
 	def hideEvent(self, event):
 		""" Event handler for when window is hidden.
 		"""
+		self.save()  # Save settings
 		self.storeWindow()  # Store window geometry
 
 # ----------------------------------------------------------------------------

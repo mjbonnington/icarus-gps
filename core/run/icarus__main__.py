@@ -152,7 +152,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		# Tools menu
 		self.ui.actionJob_Management.triggered.connect(self.launchJobManagement)
-		self.ui.actionShot_Creator.triggered.connect(self.launchShotCreator)
+		self.ui.actionShot_Management.triggered.connect(self.launchShotManagement)
 		self.ui.actionBatch_Rename.triggered.connect(self.launchBatchRename)
 		self.ui.actionRender_Queue.triggered.connect(self.launchRenderQueue)
 		self.ui.actionSubmit_render.triggered.connect(self.launchRenderSubmit)
@@ -694,7 +694,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			dialogMsg = "No shots were found for the job '%s'. Would you like to create some shots now?" %selJob
 			dialog = pDialog.dialog()
 			if dialog.display(dialogMsg, dialogTitle):
-				self.launchShotCreator()
+				self.launchShotManagement()
 			else:
 				pass
 
@@ -851,7 +851,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.actionJob_settings.setEnabled(True)
 		self.ui.actionShot_settings.setEnabled(True)
 		self.ui.actionJob_Management.setEnabled(False)
-		self.ui.actionShot_Creator.setEnabled(False)
+		self.ui.actionShot_Management.setEnabled(False)
 		self.ui.actionSubmit_render.setEnabled(True)
 
 		verbose.jobSet(self.job, self.shot)
@@ -878,7 +878,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.actionJob_settings.setEnabled(False)
 		self.ui.actionShot_settings.setEnabled(False)
 		self.ui.actionJob_Management.setEnabled(True)
-		self.ui.actionShot_Creator.setEnabled(True)
+		self.ui.actionShot_Management.setEnabled(True)
 		self.ui.actionSubmit_render.setEnabled(False)
 
 
@@ -1014,22 +1014,6 @@ Developers: %s
 			startPanel = None
 
 		import settings
-		# try:
-		# 	result = self.settingsEditor.display(settingsType=settingsType, 
-		# 	                                     categoryLs=categoryLs, 
-		# 	                                     startPanel=startPanel, 
-		# 	                                     xmlData=xmlData, 
-		# 	                                     inherit=inherit, 
-		# 	                                     autoFill=autoFill)
-		# except AttributeError:
-		# 	self.settingsEditor = settings.SettingsDialog(parent=self)
-		# 	result = self.settingsEditor.display(settingsType=settingsType, 
-		# 	                                     categoryLs=categoryLs, 
-		# 	                                     startPanel=startPanel, 
-		# 	                                     xmlData=xmlData, 
-		# 	                                     inherit=inherit, 
-		# 	                                     autoFill=autoFill)
-
 		self.settingsEditor = settings.SettingsDialog(parent=self)
 		result = self.settingsEditor.display(settingsType=settingsType, 
 		                                     categoryLs=categoryLs, 
@@ -1141,13 +1125,19 @@ Developers: %s
 			self.populateJobs()
 
 
-	def launchShotCreator(self):
-		""" Launch Shot Creator dialog.
+	def launchShotManagement(self):
+		""" Launch Shot Management dialog.
 		"""
 		import shot_creator__main__
 		shotCreatorDialog = shot_creator__main__.ShotCreatorDialog(parent=self)
 		shotCreatorDialog.display(job=self.ui.job_comboBox.currentText())
 		self.populateJobs()
+
+		# THIS IS THE NEW (WIP) SHOT MANAGEMENT EDITOR...
+		# import shot_management__main__
+		# shotManagementDialog = shot_management__main__.ShotManagementDialog(parent=self)
+		# shotManagementDialog.display(job=self.ui.job_comboBox.currentText())
+		# self.populateJobs()
 
 
 	# def launchGenericDialog(self, module_name, class_name, modal=True):
@@ -1277,6 +1267,7 @@ Developers: %s
 	def updateRenderPublishUI(self, current, previous):
 		""" Update the render publish UI based on the current selection.
 		"""
+		pass
 		# print self.sender()
 		# print current, previous
 
@@ -1938,27 +1929,12 @@ Developers: %s
 				nk_assetGather.gather(self.gatherPath)
 
 
-	# def closeEvent(self, event):
-	# 	""" Store window geometry and state when closing the app.
-	# 		(Save state may cause issues with PyQt5)
-	# 	"""
-	# 	print("X")
-	# 	try:
-	# 		self.settings.setValue("geometry", self.saveGeometry())
-	# 		# self.settings.setValue("windowState", self.saveState())
-	# 	except:
-	# 		pass
-
-	# 	QtWidgets.QMainWindow.closeEvent(self, event)
-
-
 	def closeEvent(self, event):
 		""" Event handler for when window is closed.
 		"""
 		#self.save()  # Save settings
 		self.storeWindow()  # Store window geometry
 		#QtWidgets.QMainWindow.closeEvent(self, event)
-
 
 # ----------------------------------------------------------------------------
 # End of main application class

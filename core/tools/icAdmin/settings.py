@@ -143,6 +143,27 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		# self.ui.categories_listWidget.blockSignals(False)
 
 
+	def openProperties(self, category, storeProperties=True):
+		""" Open properties panel for selected settings category. Loads UI
+			file and sets up widgets.
+		"""
+		self.currentCategory = category
+
+		# Show panel & load values into form widgets
+		if self.loadPanel(category):
+			if (self.inherit is not None) and self.ui.settings_frame.property('inheritable'):
+				verbose.print_("Category: %s (values inheritable)" %category)
+				self.setupWidgets(self.ui.settings_frame, 
+				                  forceCategory=category, 
+				                  inherit=self.id, 
+				                  storeProperties=False)
+			else:
+				verbose.print_("Category: %s" %category)
+				self.setupWidgets(self.ui.settings_frame, 
+				                  forceCategory=category, 
+				                  storeProperties=storeProperties)
+
+
 	def loadPanel(self, category):
 		""" Load the panel UI (and helper module if required).
 			The exec function is called here to avoid the error: 'unqualified
@@ -175,27 +196,6 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 			pass
 
 		return panel_ui_loaded
-
-
-	def openProperties(self, category, storeProperties=True):
-		""" Open properties panel for selected settings category. Loads UI
-			file and sets up widgets.
-		"""
-		self.currentCategory = category
-
-		# Show panel & load values into form widgets
-		if self.loadPanel(category):
-			if (self.inherit is not None) and self.ui.settings_frame.property('inheritable'):
-				verbose.print_("Category: %s (values inheritable)" %category)
-				self.setupWidgets(self.ui.settings_frame, 
-				                  forceCategory=category, 
-				                  inherit=self.id, 
-				                  storeProperties=False)
-			else:
-				verbose.print_("Category: %s" %category)
-				self.setupWidgets(self.ui.settings_frame, 
-				                  forceCategory=category, 
-				                  storeProperties=storeProperties)
 
 
 	def removeOverrides(self):

@@ -62,7 +62,7 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		# 	                    QtCore.Qt.WindowCloseButtonHint)
 
 		# Set other Qt attributes
-		self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
+		#self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
 		# Connect signals & slots
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).clicked.connect(self.accept)
