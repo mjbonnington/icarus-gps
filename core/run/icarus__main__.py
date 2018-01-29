@@ -467,6 +467,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.assetSubType_comboBox.addItem('mm')
 			self.ui.assetSubType_comboBox.addItem('previs')
 			self.ui.textures_checkBox.setEnabled(False)
+			self.ui.textures_checkBox.setChecked(False)
 			# self.lockPublishTo(lock=True)
 		elif assetType == 'geo':
 			self.ui.assetSubType_comboBox.addItem('abc')
@@ -479,8 +480,10 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.assetSubType_comboBox.addItem('vrmesh')
 			self.ui.assetSubType_comboBox.addItem('realflow')
 			self.ui.textures_checkBox.setEnabled(False)
+			self.ui.textures_checkBox.setChecked(False)
 		elif assetType == 'animation':
 			self.ui.textures_checkBox.setEnabled(False)
+			self.ui.textures_checkBox.setChecked(False)
 		elif assetType == 'scene':
 			self.ui.assetName_label.setEnabled(True)
 			self.ui.assetName_lineEdit.setEnabled(True)
