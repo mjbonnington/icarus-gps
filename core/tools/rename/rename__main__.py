@@ -51,6 +51,62 @@ STORE_WINDOW_GEOMETRY = True
 
 
 # ----------------------------------------------------------------------------
+# Worker thread class
+# ----------------------------------------------------------------------------
+
+class RenameThread(QtCore.QThread):
+
+	def __init__(self, tasks):
+		QtCore.QThread.__init__(self)
+		self.tasks = tasks
+
+
+	def __del__(self):
+		self.wait()
+
+
+	def _rename_task(self, item):
+		""" Perform the file rename operation(s).
+		"""
+		errors = 0
+
+		task_id = item.text(0)
+		src_fileLs = self.expandSeq(item.text(4), item.text(2))
+		dst_fileLs = self.expandSeq(item.text(4), item.text(3))
+
+		if item.text(2) == item.text(3):
+			verbose.print_("%s: Rename task skipped as it would not make any changes." %task_id)
+			return src_fileLs[0]
+
+		else:  # Only rename if the operation will make changes
+			verbose.message("%s: Rename '%s' to '%s'" %(task_id, item.text(2), item.text(3)))
+			verbose.message("Renaming 0%")
+
+			for j in range(len(src_fileLs)):
+				if osOps.rename(src_fileLs[j], dst_fileLs[j], quiet=True):
+				#if self.rename(src_fileLs[j], dst_fileLs[j]):
+					progress = (j/len(src_fileLs))*100
+					verbose.progress("Renaming %d%%" %progress)
+					self.files_processed += 1
+					# self.ui.rename_progressBar.setValue((self.files_processed/self.files_to_process)*100)
+				else:
+					errors += 1
+					if not self.getCheckBoxValue(self.ui.continueOnError_checkBox):
+						return None
+
+			if errors == 0:
+				verbose.progress("Renaming 100%")
+				return dst_fileLs[j]
+			else:
+				return src_fileLs[j]
+
+
+	def run(self):
+		for item in self.tasks:
+			new_task = self._rename_task(item)
+			#self.emit(SIGNAL('add_post(QString)'), new_task)
+
+# ----------------------------------------------------------------------------
 # Main application class
 # ----------------------------------------------------------------------------
 
@@ -101,7 +157,7 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.remove_toolButton.clicked.connect(self.removeSelection)
 		self.ui.clear_toolButton.clicked.connect(self.clearTaskList)
 		self.ui.rename_toolButton.clicked.connect(self.performFileRename)
-		self.ui.cancel_toolButton.clicked.connect(self.cancelRename)
+		# self.ui.cancel_toolButton.clicked.connect(self.cancelRename)
 		# self.ui.delete_pushButton.clicked.connect(self.performFileDelete)
 
 		# Context menus
@@ -348,7 +404,8 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Update button text
 		if renameCount:
 			self.ui.rename_toolButton.setText("Rename %d Files" %renameCount)
-			self.files_to_process = renameCount
+			# self.files_to_process = renameCount
+			self.ui.rename_progressBar.setMaximum(renameCount)
 		else:
 			self.ui.rename_toolButton.setText("Rename")
 
@@ -505,58 +562,68 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		self.ui.sidebarToolbar_frame.hide()
 		self.ui.sidebarStatusbar_frame.show()
+		self.ui.rename_progressBar.setValue(0)
 
+		taskItems = []
 		for i in range(child_count):
-			newTask = self.renameTask(root.child(i))
-			if newTask:
-				newTaskLs.append(newTask)
+			taskItems.append(root.child(i))
+		self.renameThread = RenameThread(taskItems)
+		# self.connect(self.renameThread, SIGNAL("add_post(QString)"), self.add_post)
+		self.renameThread.finished.connect(self.done)
+		self.renameThread.start()
+		self.ui.cancel_toolButton.clicked.connect(self.renameThread.terminate)
 
-		verbose.message("Batch rename job completed.")
+		# for i in range(child_count):
+		# 	newTask = self.renameTask(root.child(i))
+		# 	if newTask:
+		# 		newTaskLs.append(newTask)
 
-		self.ui.sidebarStatusbar_frame.hide()
-		self.ui.sidebarToolbar_frame.show()
+		# verbose.message("Batch rename job completed.")
 
-		self.clearTaskList()
+		# self.ui.sidebarStatusbar_frame.hide()
+		# self.ui.sidebarToolbar_frame.show()
 
-		# Update the task list to reflect the renamed files
-		for newTask in newTaskLs:
-			self.updateTaskListFile(newTask)
+		# self.clearTaskList()
+
+		# # Update the task list to reflect the renamed files
+		# for newTask in newTaskLs:
+		# 	self.updateTaskListFile(newTask)
 
 
-	def renameTask(self, item):
-		""" Perform the file rename operation(s).
-		"""
-		errors = 0
+	# def renameTask(self, item):
+	# 	""" Perform the file rename operation(s).
+	# 	"""
+	# 	errors = 0
 
-		task_id = item.text(self.header("Task"))
-		src_fileLs = self.expandSeq(item.text(self.header("Path")), item.text(self.header("Before")))
-		dst_fileLs = self.expandSeq(item.text(self.header("Path")), item.text(self.header("After")))
+	# 	task_id = item.text(self.header("Task"))
+	# 	src_fileLs = self.expandSeq(item.text(self.header("Path")), item.text(self.header("Before")))
+	# 	dst_fileLs = self.expandSeq(item.text(self.header("Path")), item.text(self.header("After")))
 
-		if item.text(self.header("Before")) == item.text(self.header("After")):
-			verbose.print_("%s: Rename task skipped as it would not make any changes." %task_id)
-			return src_fileLs[0]
+	# 	if item.text(self.header("Before")) == item.text(self.header("After")):
+	# 		verbose.print_("%s: Rename task skipped as it would not make any changes." %task_id)
+	# 		return src_fileLs[0]
 
-		else:  # Only rename if the operation will make changes
-			verbose.message("%s: Rename '%s' to '%s'" %(task_id, item.text(self.header("Before")), item.text(self.header("After"))))
-			verbose.message("Renaming 0%")
+	# 	else:  # Only rename if the operation will make changes
+	# 		verbose.message("%s: Rename '%s' to '%s'" %(task_id, item.text(self.header("Before")), item.text(self.header("After"))))
+	# 		verbose.message("Renaming 0%")
 
-			for j in range(len(src_fileLs)):
-				if osOps.rename(src_fileLs[j], dst_fileLs[j], quiet=True):
-				#if self.rename(src_fileLs[j], dst_fileLs[j]):
-					progress = (j/len(src_fileLs))*100
-					verbose.progress("Renaming %d%%" %progress)
-					self.files_processed += 1
-					self.ui.rename_progressBar.setValue((self.files_processed/self.files_to_process)*100)
-				else:
-					errors += 1
-					if not self.getCheckBoxValue(self.ui.continueOnError_checkBox):
-						return None
+	# 		for j in range(len(src_fileLs)):
+	# 			if osOps.rename(src_fileLs[j], dst_fileLs[j], quiet=True):
+	# 			#if self.rename(src_fileLs[j], dst_fileLs[j]):
+	# 				progress = (j/len(src_fileLs))*100
+	# 				verbose.progress("Renaming %d%%" %progress)
+	# 				self.files_processed += 1
+	# 				self.ui.rename_progressBar.setValue((self.files_processed/self.files_to_process)*100)
+	# 			else:
+	# 				errors += 1
+	# 				if not self.getCheckBoxValue(self.ui.continueOnError_checkBox):
+	# 					return None
 
-			if errors == 0:
-				verbose.progress("Renaming 100%")
-				return dst_fileLs[j]
-			else:
-				return src_fileLs[j]
+	# 		if errors == 0:
+	# 			verbose.progress("Renaming 100%")
+	# 			return dst_fileLs[j]
+	# 		else:
+	# 			return src_fileLs[j]
 
 
 	# def rename(self, source, destination):
@@ -600,18 +667,42 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 	# 	self.clearTaskList()
 
 
-	def cancelRename(self):
-		""" Stop the rename operation.
+	def add_post(self, post_text):
 		"""
-		verbose.message("Aborting rename job")
+		"""
+		print(post_text)
+		#self.list_submissions.addItem(post_text)
+		self.ui.rename_progressBar.setValue(self.ui.rename_progressBar.value()+1)
 
-		# self.renderTaskInterrupted = True
 
-		# if self.slaveStatus == "rendering":
-		# 	#self.renderProcess.terminate()
-		# 	self.renderProcess.kill()
-		# else:
-		# 	verbose.message("No render in progress.")
+	def done(self):
+		""" Function to ececute when the rename operation finishes.
+		"""
+		verbose.message("Batch rename job completed.")
+
+		self.ui.sidebarStatusbar_frame.hide()
+		self.ui.sidebarToolbar_frame.show()
+
+		self.clearTaskList()
+
+		# # Update the task list to reflect the renamed files
+		# for newTask in newTaskLs:
+		# 	self.updateTaskListFile(newTask)
+
+
+	# def cancelRename(self):
+	# 	""" Stop the rename operation.
+	# 	"""
+	# 	verbose.message("Aborting rename job")
+	# 	self.renameThread.terminate()
+
+	# 	# self.renderTaskInterrupted = True
+
+	# 	# if self.slaveStatus == "rendering":
+	# 	# 	#self.renderProcess.terminate()
+	# 	# 	self.renderProcess.kill()
+	# 	# else:
+	# 	# 	verbose.message("No render in progress.")
 
 
 	#-------------------------------------------------------------------------
