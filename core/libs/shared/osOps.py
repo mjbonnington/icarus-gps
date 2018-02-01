@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2017 Gramercy Park Studios
+# (c) 2013-2018 Gramercy Park Studios
 #
 # This module acts as a wrapper for low-level OS operations.
 
@@ -55,7 +55,7 @@ def setPermissions(path, mode='a+w'):
 		#os.chmod(path, 0777) # Python 2 octal syntax
 		#os.chmod(path, 0o777) # Python 3 octal syntax
 	else:
-		os.system('chmod -R %s %s' % (mode, path))
+		os.system('chmod -R %s %s' %(mode, path))
 
 	return path
 
@@ -72,12 +72,12 @@ def hardLink(source, destination, umask='000'):
 			dst = os.path.join(dst, filename)
 
 		if os.path.isfile(dst):  # delete the destination file if it already exists - this is to mimic the Unix behaviour and force creation of the hard link
-			os.system('del %s /f /q' % dst)
+			os.system('del %s /f /q' %dst)
 
-		#cmdStr = 'mklink /H %s %s' % (dst, src)  # this only works with local NTFS volumes
-		cmdStr = 'fsutil hardlink create %s %s >nul' % (dst, src)  # works over SMB network shares; suppressing output to null
+		#cmdStr = 'mklink /H %s %s' %(dst, src)  # this only works with local NTFS volumes
+		cmdStr = 'fsutil hardlink create %s %s >nul' %(dst, src)  # works over SMB network shares; suppressing output to null
 	else:
-		cmdStr = '%s; ln -f %s %s' % (setUmask(umask), src, dst)
+		cmdStr = '%s; ln -f %s %s' %(setUmask(umask), src, dst)
 
 	verbose.print_(cmdStr, 4)
 	os.system(cmdStr)
@@ -93,11 +93,11 @@ def recurseRemove(path):
 
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
 		if os.path.isdir(path):
-			cmdStr = 'rmdir %s /s /q' % path
+			cmdStr = 'rmdir %s /s /q' %path
 		else:
-			cmdStr = 'del %s /f /q' % path
+			cmdStr = 'del %s /f /q' %path
 	else:
-		cmdStr = 'rm -rf %s' % path
+		cmdStr = 'rm -rf %s' %path
 
 	verbose.print_(cmdStr, 4)
 	os.system(cmdStr)
@@ -105,19 +105,28 @@ def recurseRemove(path):
 	return path
 
 
-def rename(source, destination):
+def rename(source, destination, quiet=False):
 	""" Rename a file or folder.
 	"""
 	src = os.path.normpath(source)
 	dst = os.path.normpath(destination)
 
-	verbose.print_('rename "%s" "%s"' % (src, dst), 4)
-	os.rename(src, dst)
+	if not quiet:
+		verbose.print_('rename "%s" "%s"' %(src, dst), 4)
+	try:
+		os.rename(src, dst)
+		return True
+	except FileNotFoundError:
+		verbose.error("The source file does not exist: %s" %src)
+		return False
+	except FileExistsError:
+		verbose.error("The destination file already exists: %s" %dst)
+		return False
 
 	# if os.environ['IC_RUNNING_OS'] == 'Windows':
-	# 	cmdStr = 'ren "%s" "%s"' % (src, dst)
+	# 	cmdStr = 'ren "%s" "%s"' %(src, dst)
 	# else:
-	# 	cmdStr = 'mv "%s" "%s"' % (src, dst)
+	# 	cmdStr = 'mv "%s" "%s"' %(src, dst)
 
 	# verbose.print_(cmdStr, 4)
 	# os.system(cmdStr)
@@ -130,9 +139,9 @@ def copy(source, destination):
 	dst = os.path.normpath(destination)
 
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
-		cmdStr = 'copy /Y "%s" "%s"' % (src, dst)
+		cmdStr = 'copy /Y "%s" "%s"' %(src, dst)
 	else:
-		cmdStr = 'cp -rf "%s" "%s"' % (src, dst)
+		cmdStr = 'cp -rf "%s" "%s"' %(src, dst)
 
 	verbose.print_(cmdStr, 4)
 	os.system(cmdStr)
@@ -146,9 +155,9 @@ def copyDirContents(source, destination, umask='000'):
 	dst = os.path.normpath( destination )
 
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
-		cmdStr = 'copy /Y %s %s' % (src, dst)
+		cmdStr = 'copy /Y %s %s' %(src, dst)
 	else:
-		cmdStr = '%s; cp -rf %s %s' % (setUmask(umask), src, dst)
+		cmdStr = '%s; cp -rf %s %s' %(setUmask(umask), src, dst)
 
 	verbose.print_(cmdStr, 4)
 	os.system(cmdStr)
@@ -170,7 +179,7 @@ def setUmask(umask='000'):
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
 		return ""
 	else:
-		return 'umask %s' % umask
+		return 'umask %s' %umask
 
 
 def absolutePath(relPath, stripTrailingSlash=False):

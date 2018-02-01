@@ -1865,8 +1865,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>355</width>
-                    <height>296</height>
+                    <width>136</width>
+                    <height>70</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -2837,6 +2837,11 @@ QToolButton:pressed, QToolButton:checked:pressed {
    </property>
   </action>
   <action name="actionBatch_Rename">
+   <property name="icon">
+    <iconset resource="rsc.qrc">
+     <normaloff>:/rsc/rsc/icon_rename.png</normaloff>
+     <disabledoff>:/rsc/rsc/icon_rename_disabled.png</disabledoff>:/rsc/rsc/icon_rename.png</iconset>
+   </property>
    <property name="text">
     <string>Batch Rename...</string>
    </property>

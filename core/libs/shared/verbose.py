@@ -28,6 +28,7 @@ class bcolors:
 		ENDC = '\033[0m'
 		BOLD = '\033[1m'
 		UNDERLINE = '\033[4m'
+		BRIGHT = '\033[38;5;015m'
 		DARK = '\033[38;5;241m'
 		INVERT = '\033[7m'
 		ICGREEN = '\033[38;5;106m'
@@ -41,6 +42,7 @@ class bcolors:
 		ENDC = ''
 		BOLD = ''
 		UNDERLINE = ''
+		BRIGHT = ''
 		DARK = ''
 		INVERT = ''
 		ICGREEN = ''
@@ -48,6 +50,11 @@ class bcolors:
 
 statusBar = None
 
+
+def progress(message):
+	""" Print a progress message.
+	"""
+	print_(message, 3, inline=True)
 
 def message(message):
 	""" Print a message.
@@ -76,7 +83,7 @@ def print_(message, verbosityLevel=4, status=True, inline=False, log=False):
 		0 - Nothing is output
 		1 - Errors and messages requiring user action
 		2 - Errors and warning messages
-		3 - Info message (default)
+		3 - Info and progress messages (default)
 		4 - Detailed info messages
 	"""
 	global statusBar
@@ -96,7 +103,7 @@ def print_(message, verbosityLevel=4, status=True, inline=False, log=False):
 		if verbosityLevel == 4:
 			message = bcolors.DARK + message + bcolors.ENDC
 		elif verbosityLevel == 3:
-			message = bcolors.OKGREEN + message + bcolors.ENDC
+			message = bcolors.BRIGHT + message + bcolors.ENDC
 		elif verbosityLevel == 2:
 			message = bcolors.WARNING + message + bcolors.ENDC
 		elif verbosityLevel == 1:

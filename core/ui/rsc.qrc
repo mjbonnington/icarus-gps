@@ -1,5 +1,9 @@
 <RCC>
   <qresource prefix="rsc">
+    <file>rsc/icon_rename.png</file>
+    <file>rsc/icon_rename_disabled.png</file>
+    <file>rsc/icon_minus.png</file>
+    <file>rsc/icon_minus_disabled.png</file>
     <file>rsc/icon_locked.png</file>
     <file>rsc/icon_locked_disabled.png</file>
     <file>rsc/icon_unlocked.png</file>

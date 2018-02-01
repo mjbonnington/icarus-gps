@@ -8,6 +8,8 @@
 # Render Browser
 # A UI to browse render folders and provide at-a-glance review of layers,
 # passes/AOVs, sequences, etc.
+# TODO - expand this into its own class and remove duplicated code from
+# icarus__main__.py (see also: appLauncher.py)
 
 
 from PySide import QtCore, QtGui

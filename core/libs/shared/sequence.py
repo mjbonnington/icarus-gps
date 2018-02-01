@@ -124,7 +124,7 @@ def chunks(l, n):
 		yield l[i:i+n]
 
 
-def getBases(path):
+def getBases(path, delimiter="."):
 	""" Find file sequence bases in path.
 		Returns a list of bases (the first part of the filename, stripped of
 		frame number padding and extension).
@@ -149,14 +149,15 @@ def getBases(path):
 			# Extract file extension
 			root, ext = os.path.splitext(filename)
 
-			# Match file names which have a trailing number separated by a dot
-			seqRE = re.compile(r'\.\d+$')
+			# Match file names which have a trailing number separated by the
+			# delimiter character
+			seqRE = re.compile(r'%s\d+$' %re.escape(delimiter))
 			match = seqRE.search(root)
 
 			# Store filename prefix
 			if match is not None:
 				prefix = root[:root.rfind(match.group())]
-				all_bases.append('%s.#%s' % (prefix, ext))
+				all_bases.append('%s%s#%s' % (prefix, delimiter, ext))
 
 	# Remove duplicates & sort list
 	bases = list(set(all_bases))
@@ -175,22 +176,23 @@ def getFirst(path):
 	return filter_ls[0]
 
 
-def getSequence(path, pattern):
+def getSequence(path, pattern, **kwargs):
 	""" Looks for other frames in a sequence that fit a particular pattern.
 		Pass the first (lowest-numbered) frame in the sequence to the
 		detectSeq function and return its results.
 	"""
 	#filter_ls = glob.glob("%s*" %os.path.join(path, base))
 	pattern = pattern.replace('#', '*')
-	filter_ls = glob.glob( os.path.join(path, pattern) )
+	filter_ls = glob.glob(os.path.join(path, pattern))
 	filter_ls.sort()
 	#frame_ls = []
 
-	return detectSeq( filter_ls[0] )
+	return detectSeq(filter_ls[0], **kwargs)
 
 
-def detectSeq(filepath, contiguous=False, ignorePadding=False):
+def detectSeq(filepath, delimiter=".", ignorePadding=False, contiguous=False):
 	""" Detect file sequences based on the provided file path.
+
 		Returns a tuple containing 5 elements:
 		1. path - the directory path containing the file
 		2. prefix - the first part of the filename
@@ -198,19 +200,27 @@ def detectSeq(filepath, contiguous=False, ignorePadding=False):
 		   part of the filename, represented as a string
 		4. ext - the filename extension
 		5. num_frames - the number of frames in the sequence
-		If 'contiguous' flag is True, only return a contiguous sequence
-		(no gaps).
+
+		The 'delimiter' flag specifies a character used to separate the
+		numeric part of the filename.
 		If 'ignorePadding' flag is True, return sequence even if the number
 		of padding digits differ.
+		If 'contiguous' flag is True, only return a contiguous sequence
+		(no gaps).
 	"""
-	lsFrames = [] # Clear frame list
+	lsFrames = []  # Clear frame list
 
 	# Parse file path
 	filename = os.path.basename(filepath)
 	path = os.path.dirname(filepath)
 	base, ext = os.path.splitext(filename)
 	try:
-		prefix, framenumber = base.rsplit('.', 1)
+		if delimiter:
+			prefix, framenumber = base.rsplit(delimiter, 1)
+		else:
+			match = re.search(r"\d*$", base)
+			framenumber = match.group()
+			prefix = re.sub(r"\d*$", "", base)
 		padding = len(framenumber)
 		framenumber = int(framenumber)
 	except ValueError:
@@ -219,16 +229,23 @@ def detectSeq(filepath, contiguous=False, ignorePadding=False):
 
 	# Construct regular expression for matching files in the sequence
 	if ignorePadding:
-		re_seq_str = r"^%s\.\d+%s$" %( re.escape(prefix), re.escape(ext) )
+		re_seq_str = r"^%s%s\d+%s$" %(re.escape(prefix), re.escape(delimiter), re.escape(ext))
 	else:
-		re_seq_str = r"^%s\.\d{%d}%s$" %( re.escape(prefix), padding, re.escape(ext) )
+		re_seq_str = r"^%s%s\d{%d}%s$" %(re.escape(prefix), re.escape(delimiter), padding, re.escape(ext))
 	re_seq_pattern = re.compile(re_seq_str)
 
 	# Find other files in the sequence in the same directory
 	for item in os.listdir(path):
 		if re_seq_pattern.match(item) is not None:
-			#lsFrames.append(item) # whole filename
-			lsFrames.append( int(os.path.splitext(item)[0].rsplit('.', 1)[1]) ) # just the frame number
+			#lsFrames.append(item)  # whole filename
+			#lsFrames.append(int(os.path.splitext(item)[0].rsplit('.', 1)[1]))  # just the frame number
+			base = os.path.splitext(item)[0]
+			if delimiter:
+				framenumber = base.rsplit(delimiter, 1)[1]
+			else:
+				match = re.search(r"\d*$", base)
+				framenumber = match.group()
+			lsFrames.append(int(framenumber))  # just the frame number
 			numFrames = len(lsFrames)
 
 	if ignorePadding:
@@ -240,12 +257,12 @@ def detectSeq(filepath, contiguous=False, ignorePadding=False):
 		chunks = numRangeStr.split(', ')
 		if len(chunks) > 1:
 			for chunk in chunks:
-				contiguiousChunkLs = numList(chunk, quiet=True)
-				if framenumber in contiguiousChunkLs:
+				contiguousChunkLs = numList(chunk, quiet=True)
+				if framenumber in contiguousChunkLs:
 					numRangeStr = chunk
-					numFrames = len(contiguiousChunkLs)
+					numFrames = len(contiguousChunkLs)
 
-	verbose.message("%d frame sequence detected: %s" % (numFrames, numRangeStr))
+	verbose.print_("%d frame sequence detected: %s" %(numFrames, numRangeStr))
 
 	#return lsFrames
 	return (path, prefix, numRangeStr, ext, numFrames)
