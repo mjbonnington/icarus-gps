@@ -225,7 +225,7 @@ def detectSeq(filepath, delimiter=".", ignorePadding=False, contiguous=False):
 		framenumber = int(framenumber)
 	except ValueError:
 		verbose.error("Could not parse sequence.")
-		return # (path, base, '0', ext, 1)
+		return (path, base, None, ext, 1)
 
 	# Construct regular expression for matching files in the sequence
 	if ignorePadding:
@@ -267,3 +267,29 @@ def detectSeq(filepath, delimiter=".", ignorePadding=False, contiguous=False):
 	#return lsFrames
 	return (path, prefix, numRangeStr, ext, numFrames)
 
+
+def expandSeq(input_dir, input_file_seq):
+	""" Expand a filename sequence in the format 'name.[start-end].ext' to
+		a list of individual frames.
+		Return a list containing the full path to each file in the
+		sequence.
+	"""
+	filepath_list = []
+
+	# Split filename and separate sequence numbering
+	try:
+		prefix, fr_range, ext = re.split(r'[\[\]]', input_file_seq)
+		padding = len(re.split(r'[-,\s]', fr_range)[-1])  # Detect padding
+		num_list = numList(fr_range)
+
+		for i in num_list:
+			frame = str(i).zfill(padding)
+			file = "%s%s%s" %(prefix, frame, ext)
+			filepath = os.path.join(input_dir, file).replace("\\", "/")
+			filepath_list.append(filepath)
+
+	except ValueError:
+		filepath = os.path.join(input_dir, input_file_seq).replace("\\", "/")
+		filepath_list.append(filepath)
+
+	return filepath_list

@@ -117,10 +117,12 @@ def rename(source, destination, quiet=False):
 		os.rename(src, dst)
 		return True
 	except FileNotFoundError:
-		verbose.error("The source file does not exist: %s" %src)
+		if not quiet:
+			verbose.error("The source file does not exist: %s" %src)
 		return False
 	except FileExistsError:
-		verbose.error("The destination file already exists: %s" %dst)
+		if not quiet:
+			verbose.error("The destination file already exists: %s" %dst)
 		return False
 
 	# if os.environ['IC_RUNNING_OS'] == 'Windows':
