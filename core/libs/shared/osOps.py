@@ -115,15 +115,17 @@ def rename(source, destination, quiet=False):
 		verbose.print_('rename "%s" "%s"' %(src, dst), 4)
 	try:
 		os.rename(src, dst)
-		return True
+		return True, ""
 	except FileNotFoundError:
+		msg = "The source file does not exist: %s" %src
 		if not quiet:
-			verbose.error("The source file does not exist: %s" %src)
-		return False
+			verbose.error(msg)
+		return False, msg
 	except FileExistsError:
+		msg = "The destination file already exists: %s" %dst
 		if not quiet:
-			verbose.error("The destination file already exists: %s" %dst)
-		return False
+			verbose.error(msg)
+		return False, msg
 
 	# if os.environ['IC_RUNNING_OS'] == 'Windows':
 	# 	cmdStr = 'ren "%s" "%s"' %(src, dst)

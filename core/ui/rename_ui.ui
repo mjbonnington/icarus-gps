@@ -126,6 +126,21 @@
             <string>Path</string>
            </property>
           </column>
+          <column>
+           <property name="text">
+            <string>Prefix</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Frames</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Extension</string>
+           </property>
+          </column>
          </widget>
         </item>
         <item>
@@ -636,9 +651,9 @@ QToolButton:pressed, QToolButton:checked:pressed {
                 <number>8</number>
                </property>
                <item row="0" column="1">
-                <widget class="QCheckBox" name="continueOnError_checkBox">
+                <widget class="QCheckBox" name="ignoreErrors_checkBox">
                  <property name="text">
-                  <string>Continue on error</string>
+                  <string>Ignore errors</string>
                  </property>
                  <property name="checked">
                   <bool>true</bool>
@@ -753,7 +768,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
   <tabstop>step_spinBox</tabstop>
   <tabstop>autoPadding_checkBox</tabstop>
   <tabstop>padding_spinBox</tabstop>
-  <tabstop>continueOnError_checkBox</tabstop>
+  <tabstop>ignoreErrors_checkBox</tabstop>
   <tabstop>rename_pushButton</tabstop>
   <tabstop>cancel_pushButton</tabstop>
  </tabstops>

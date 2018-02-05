@@ -82,6 +82,11 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		except:
 			pass
 
+		# Set up keyboard shortcuts
+		self.shortcutExpertMode = QtWidgets.QShortcut(self)
+		self.shortcutExpertMode.setKey('Ctrl+E')
+		self.shortcutExpertMode.activated.connect(self.toggleHiddenColumns)
+
 		# Connect signals & slots
 		self.ui.taskList_treeWidget.itemSelectionChanged.connect(self.updateToolbarUI)
 		self.ui.taskList_treeWidget.itemDoubleClicked.connect(self.expandTask)
@@ -109,12 +114,22 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.addContextMenu(self.ui.fill_toolButton, "Copy filename prefix to 'Find' field", self.loadFindStr)
 		self.addContextMenu(self.ui.fill_toolButton, "Copy filename prefix to 'Replace' field", self.loadReplaceStr)
 
+		# Define status icons
+		self.okIcon = QtGui.QIcon()
+		self.okIcon.addPixmap(QtGui.QPixmap(osOps.absolutePath("$IC_FORMSDIR/rsc/status_icon_ok.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		self.readyIcon = QtGui.QIcon()
+		self.readyIcon.addPixmap(QtGui.QPixmap(osOps.absolutePath("$IC_FORMSDIR/rsc/status_icon_ready.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		self.nullIcon = QtGui.QIcon()
+		self.nullIcon.addPixmap(QtGui.QPixmap(osOps.absolutePath("$IC_FORMSDIR/rsc/status_icon_null.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		self.errorIcon = QtGui.QIcon()
+		self.errorIcon.addPixmap(QtGui.QPixmap(osOps.absolutePath("$IC_FORMSDIR/rsc/status_icon_error.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
 		# Set input validators
 		alphanumeric_filename_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w\.-]+'), self.ui.replace_comboBox)
 		self.ui.replace_comboBox.setValidator(alphanumeric_filename_validator)
 
-		self.renameTaskLs = []
 		self.lastDir = None
+		self.expertMode = False
 
 		# Get current dir in which to rename files, and update render layer
 		# tree view widget (but only when running as standalone app)
@@ -122,6 +137,7 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.updateTaskListDir(os.getcwd())
 
 		self.updateToolbarUI()
+		self.toggleHiddenColumns()
 		# self.getFindReplaceHistory()
 		self.ui.rename_pushButton.show()
 		self.ui.cancel_pushButton.hide()
@@ -143,6 +159,22 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		else:
 			self.ui.remove_toolButton.setEnabled(True)
 			self.ui.fill_toolButton.setEnabled(False)
+
+		# List is empty...
+		if self.getChildItems(self.ui.taskList_treeWidget):
+			self.ui.clear_toolButton.setEnabled(True)
+		else:
+			self.ui.clear_toolButton.setEnabled(False)
+
+
+	def toggleHiddenColumns(self):
+		""" Toggle visiblity of columns in the task list view.
+		"""
+		self.expertMode = not self.expertMode
+		self.ui.taskList_treeWidget.setColumnHidden(0, self.expertMode)
+		self.ui.taskList_treeWidget.setColumnHidden(6, self.expertMode)
+		self.ui.taskList_treeWidget.setColumnHidden(7, self.expertMode)
+		self.ui.taskList_treeWidget.setColumnHidden(8, self.expertMode)
 
 
 	# def getFindReplaceHistory(self):
@@ -199,6 +231,21 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		return -1
 
 
+	def getChildItems(self, widget):
+		""" Return all top-level child items of the specified widget.
+		"""
+		items = []
+		root = widget.invisibleRootItem()
+
+		for i in range(root.childCount()):
+			items.append(root.child(i))
+
+		if items:
+			return items
+		else:
+			return None
+
+
 	def getBrowseDir(self):
 		""" Decide which directory to start browsing from.
 		"""
@@ -219,7 +266,7 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		dirname = self.folderDialog(self.getBrowseDir())
 		if dirname:
 			dirname = osOps.absolutePath(dirname)
-			self.lastDir = os.path.dirname(dirname)
+			self.lastDir = dirname
 			self.updateTaskListDir(dirname)
 
 
@@ -227,34 +274,10 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		""" Open a dialog to select files to add.
 		"""
 		filename = self.fileDialog(self.getBrowseDir())
-		self.lastDir = os.path.dirname(filename)
-
-		self.updateTaskListFile(osOps.absolutePath(filename))
-
-
-	def removeSelection(self):
-		""" Removes selected items from the task list.
-		"""
-		indices = []
-
-		for item in self.ui.taskList_treeWidget.selectedItems():
-			indices.append(self.ui.taskList_treeWidget.indexOfTopLevelItem(item))
-			#self.ui.taskList_treeWidget.takeTopLevelItem(index)
-
-		indices.sort(reverse=True)  # Iterate over the list in reverse order to prevent the indices changing mid-operation
-
-		for index in indices:
-			verbose.print_("Deleting item at index %d" %index)
-			del self.renameTaskLs[index]
-
-		self.updateTaskListView(rebuild=True)
-
-
-	def clearTaskList(self):
-		""" Clears the task list.
-		"""
-		self.renameTaskLs = []
-		self.updateTaskListView(rebuild=True)
+		if filename:
+			filename = osOps.absolutePath(filename)
+			self.lastDir = os.path.dirname(filename)
+			self.updateTaskListFile(filename)
 
 
 	def updateTaskListDir(self, dirpath):
@@ -265,12 +288,10 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		for base in bases:
 			path, prefix, fr_range, ext, num_frames = sequence.getSequence(dirpath, base, delimiter="", ignorePadding=False)
-			#data = (path, prefix+'.', fr_range, ext, num_frames)
-			data = (path, prefix, fr_range, ext, num_frames)
-			if data not in self.renameTaskLs:
-				self.renameTaskLs.append(data)
+			self.createTaskItem(path, prefix, fr_range, ext, num_frames)
 
-		self.updateTaskListView(rebuild=False)
+		self.updateTaskListView()
+		self.updateToolbarUI()
 
 
 	def updateTaskListFile(self, filepath):
@@ -279,52 +300,61 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		"""
 		if os.path.isfile(filepath):
 			path, prefix, fr_range, ext, num_frames = sequence.detectSeq(filepath, delimiter="", ignorePadding=False)
-			#data = (path, prefix+'.', fr_range, ext, num_frames)
-			data = (path, prefix, fr_range, ext, num_frames)
-			if data not in self.renameTaskLs:
-				self.renameTaskLs.append(data)
-
-			self.updateTaskListView(rebuild=False)
+			self.createTaskItem(path, prefix, fr_range, ext, num_frames)
+			self.updateTaskListView()
+			self.updateToolbarUI()
 
 
-	# def editTaskListItem(self, item_id, status=None, count=None, before=None, after=None, path=None):
-	# 	""" TEMP BODGE
-	# 	"""
-	# 	item = taskList_treeWidget.child(item_id)
-
-	# 	if status:
-	# 		item.setText(self.header("Status"), status)
-	# 	if count:
-	# 		item.setText(self.header("Status"), count)
-	# 	if before:
-	# 		item.setText(self.header("Status"), before)
-	# 	if after:
-	# 		item.setText(self.header("Status"), after)
-	# 	if path:
-	# 		item.setText(self.header("Status"), path)
-
-
-	def getTaskItem(self, parent, item_id=None):
-		""" Return the list view item identified by 'item_id' belonging to
-			'parent'. If it doesn't exist, return a new item.
+	def removeSelection(self):
+		""" Removes selected items from the task list.
 		"""
-		child_count = parent.childCount()
+		for item in self.ui.taskList_treeWidget.selectedItems():
+			index = self.ui.taskList_treeWidget.indexOfTopLevelItem(item)
+			self.ui.taskList_treeWidget.takeTopLevelItem(index)
 
+		self.updateTaskListView()
+		self.updateToolbarUI()
+
+
+	def clearTaskList(self):
+		""" Clears the task list.
+		"""
+		self.ui.taskList_treeWidget.clear()
+		self.updateToolbarUI()
+
+
+	def createTaskItem(self, path, prefix, fr_range, ext, num_frames):
+		""" Create a new task item, but only if a matching item doesn't
+			already exist.
+		"""
+		root = self.ui.taskList_treeWidget.invisibleRootItem()
+		child_count = root.childCount()
+
+		# Check if matching item already exists
 		for i in range(child_count):
-			item = parent.child(i)
-			if int(item.text(self.header("Task"))) == item_id:
-				#print(item)
+			item = root.child(i)
+			if item.text(self.header("Path")) == path and \
+			   item.text(self.header("Prefix")) == prefix and \
+			   item.text(self.header("Frames")) == fr_range and \
+			   item.text(self.header("Extension")) == ext and \
+			   item.text(self.header("Count")) == str(num_frames):
+				verbose.print_("Task item already exists.")
 				return item
 
-		#print("new item")
-		return QtWidgets.QTreeWidgetItem(parent)
+		new_item = QtWidgets.QTreeWidgetItem(self.ui.taskList_treeWidget)
+		new_item.setText(self.header("Path"), path)
+		new_item.setText(self.header("Prefix"), prefix)
+		new_item.setText(self.header("Frames"), fr_range)
+		new_item.setText(self.header("Extension"), ext)
+		new_item.setText(self.header("Count"), str(num_frames))
+		return new_item
 
 
-	def updateTaskListView(self, rebuild=False):
+	def updateTaskListView(self):
 		""" Populates the rename list tree view widget with entries.
 		"""
-		renameCount = 0
-		totalCount = 0
+		rename_count = 0
+		total_count = 0
 
 		# Get find & replace options
 		findStr = self.ui.find_comboBox.currentText()
@@ -339,23 +369,25 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		preserve = self.getCheckBoxValue(self.ui.preserveNumbering_checkBox)
 		autopad = self.getCheckBoxValue(self.ui.autoPadding_checkBox)
 
-		if rebuild:
-			self.ui.taskList_treeWidget.clear()
+		root = self.ui.taskList_treeWidget.invisibleRootItem()
+		child_count = root.childCount()
 
-		for i, task in enumerate(self.renameTaskLs):
-			path, prefix, fr_range, ext, num_frames = task
+		for i in range(child_count):
+			item = root.child(i)
 
-			#taskItem = QtWidgets.QTreeWidgetItem(self.ui.taskList_treeWidget)
-			taskItem = self.getTaskItem(self.ui.taskList_treeWidget.invisibleRootItem(), i)
-			taskItem.setText(self.header("Task"), str(i))
-			taskItem.setText(self.header("Count"), str(num_frames))
+			prefix = item.text(self.header("Prefix"))
+			fr_range = item.text(self.header("Frames"))
+			ext = item.text(self.header("Extension"))
+			num_frames = int(item.text(self.header("Count")))
+
+			item.setText(self.header("Task"), str(i))
 
 			# Add entries
 			if fr_range:
 				file = "%s[%s]%s" %(prefix, fr_range, ext)
 			else:
 				file = "%s%s" %(prefix, ext)
-			taskItem.setText(self.header("Before"), file)
+			item.setText(self.header("Before"), file)
 
 			renamedPrefix = rename.replaceTextRE(prefix, findStr, replaceStr, ignoreCase, regex)
 			if fr_range:  # If sequence
@@ -365,41 +397,39 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				renamedFile = "%s[%s]%s" %(renamedPrefix, renumberedRange, ext)
 			else:
 				renamedFile = "%s%s" %(renamedPrefix, ext)
-			taskItem.setText(self.header("After"), renamedFile)
+			item.setText(self.header("After"), renamedFile)
 
 			if file == renamedFile:  # Set text colour to indicate status
-				taskItem.setText(self.header("Status"), "OK")
-				#taskItem.setForeground(self.header("After"), QtGui.QBrush(QtGui.QColor("#666")))
-				#taskItem.setForeground(self.header("After"), QtGui.QBrush(QtGui.QColor("#f92672")))
+				item.setText(self.header("Status"), "Nothing to change")
+				#item.setForeground(self.header("After"), QtGui.QBrush(QtGui.QColor("#666")))
+				#item.setForeground(self.header("After"), QtGui.QBrush(QtGui.QColor("#f92672")))
+				item.setIcon(self.header("Status"), self.nullIcon)
 			else:
-				taskItem.setText(self.header("Status"), "Ready")
-				renameCount += num_frames
+				item.setText(self.header("Status"), "Ready")
+				item.setIcon(self.header("Status"), self.readyIcon)
+				rename_count += num_frames
 
-			taskItem.setText(self.header("Path"), path)
+			#self.addContextMenu(item, "Copy to 'Find' field", self.loadFindStr)
+			#item.setExpanded(True)
 
-			#self.ui.taskList_treeWidget.addTopLevelItem(taskItem)
-
-			#self.addContextMenu(taskItem, "Copy to 'Find' field", self.loadFindStr)
-			#taskItem.setExpanded(True)
-
-			totalCount += num_frames
+			total_count += num_frames
 
 		# Resize columns
-		if self.renameTaskLs:
-			for col in range(self.ui.taskList_treeWidget.columnCount()):
-				self.ui.taskList_treeWidget.resizeColumnToContents(col)
+		# if self.renameTaskLs:
+		for col in range(self.ui.taskList_treeWidget.columnCount()):
+			self.ui.taskList_treeWidget.resizeColumnToContents(col)
 
 		conflicts = self.checkConflicts()
 
 		# Update button text
-		if renameCount:
-			self.ui.rename_pushButton.setText("Rename %d Files" %renameCount)
-			# self.files_to_process = renameCount
-			self.ui.rename_progressBar.setMaximum(renameCount)
+		if rename_count:
+			self.ui.rename_pushButton.setText("Rename %d Files" %rename_count)
+			self.ui.rename_progressBar.setMaximum(rename_count)
 		else:
 			self.ui.rename_pushButton.setText("Rename")
 
-		if renameCount and not conflicts:
+		# Enable or disable button
+		if rename_count and not conflicts:
 			self.ui.rename_pushButton.setEnabled(True)
 		else:
 			self.ui.rename_pushButton.setEnabled(False)
@@ -409,8 +439,6 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		""" Open a new view showing the individual frames in a sequence when
 			the item is double-clicked.
 		"""
-		#index = self.ui.taskList_treeWidget.indexOfTopLevelItem(item)
-
 		src_fileLs = sequence.expandSeq(item.text(self.header("Path")), item.text(self.header("Before")))
 		dst_fileLs = sequence.expandSeq(item.text(self.header("Path")), item.text(self.header("After")))
 
@@ -423,7 +451,7 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 
 	def checkConflicts(self):
-		""" Checks for conflicts in renamed files.
+		""" Checks for conflicts in renamed files. - REWRITE THIS
 		"""
 		children = []
 		outputs = []
@@ -441,18 +469,18 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		for item in children:
 			outpath = "%s/%s" %(item.text(self.header("Path")), item.text(self.header("After")))
 			if outpath.lower() in conflicts:
-				item.setText(self.header("Status"), "Warning")
-				item.setBackground(self.header("After"), QtGui.QBrush(QtGui.QColor("#f92672")))
-				item.setForeground(self.header("After"), QtGui.QBrush(QtGui.QColor("#fff")))
+				item.setText(self.header("Status"), "Conflict error")
+				item.setIcon(self.header("Status"), self.errorIcon)
 
-		# # Check for conflicts with existing files on disk
-		# for item in children:
-		# 	for file in sequence.expandSeq(item.text(self.header("Path")), item.text(self.header("After"))):
-		# 		if not item.text(self.header("Before")) == item.text(self.header("After")):  # Only rename if the operation will make any changes
-		# 			if os.path.isfile(file):
-		# 				item.setText(self.header("Status"), "Warning")
-		# 				item.setBackground(self.header("After"), QtGui.QBrush(QtGui.QColor("#fd971f")))
-		# 				item.setForeground(self.header("After"), QtGui.QBrush(QtGui.QColor("#fff")))
+		# Check for conflicts with existing files on disk
+		for item in children:
+			for file in sequence.expandSeq(item.text(self.header("Path")), item.text(self.header("After"))):
+				if not item.text(self.header("Before")) == item.text(self.header("After")):
+					if os.path.isfile(file):
+						item.setText(self.header("Status"), "File exists error")
+						item.setIcon(self.header("Status"), self.errorIcon)
+
+		self.ui.taskList_treeWidget.resizeColumnToContents(self.header("Status"))
 
 		if len(conflicts):
 			verbose.warning("%d rename %s found." %(len(conflicts), verbose.pluralise("conflict", len(conflicts))))
@@ -466,34 +494,26 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		if not item:
 			item = self.ui.taskList_treeWidget.selectedItems()[0]
 
-		index = self.ui.taskList_treeWidget.indexOfTopLevelItem(item)
-
-		#text = item.text(self.header("Before"))
-		text = self.renameTaskLs[index][1]
+		text = item.text(self.header("Prefix"))
 
 		if self.ui.find_comboBox.findText(text) == -1:
 			self.ui.find_comboBox.addItem(text)
 		self.ui.find_comboBox.setCurrentIndex(self.ui.find_comboBox.findText(text))
-		self.updateTaskListView(rebuild=False)
 
 
 	def loadReplaceStr(self, item=None, column=0):
 		""" Copies the selected file name prefix to the 'Replace' text field.
+			Non-alphanumeric characters will be replaced with underscores.
 		"""
 		if not item:
 			item = self.ui.taskList_treeWidget.selectedItems()[0]
 
-		index = self.ui.taskList_treeWidget.indexOfTopLevelItem(item)
-
-		#text = item.text(self.header("Before"))
-		text = self.renameTaskLs[index][1]
-
+		text = item.text(self.header("Prefix"))
 		text = osOps.sanitize(text, pattern=r'[^\w\.-]', replace='_')
 
 		if self.ui.replace_comboBox.findText(text) == -1:
 			self.ui.replace_comboBox.addItem(text)
 		self.ui.replace_comboBox.setCurrentIndex(self.ui.replace_comboBox.findText(text))
-		self.updateTaskListView(rebuild=True)
 
 
 	def performFileRename(self):
@@ -514,9 +534,11 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			taskItems.append(root.child(i))
 
 		# Initialise worker thread, connect signals & slots, start processing
-		self.workerThread = BatchRenameThread(taskItems)
-		self.workerThread.updateMessage.connect(verbose.message)
-		self.workerThread.updateProgress.connect(verbose.progress)
+		self.workerThread = BatchRenameThread(taskItems, 
+			ignore_errors=self.getCheckBoxValue(self.ui.ignoreErrors_checkBox))
+		self.workerThread.printError.connect(verbose.error)
+		self.workerThread.printMessage.connect(verbose.message)
+		self.workerThread.printProgress.connect(verbose.progress)
 		self.workerThread.updateProgressBar.connect(self.updateProgressBar)
 		self.workerThread.returnNewTask.connect(self.taskCompleted)
 		self.workerThread.finished.connect(self.renameCompleted)
@@ -636,14 +658,16 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 class BatchRenameThread(QtCore.QThread):
 	""" Worker thread class.
 	"""
-	updateMessage = QtCore.Signal(str)
-	updateProgress = QtCore.Signal(str)
+	printError = QtCore.Signal(str)
+	printMessage = QtCore.Signal(str)
+	printProgress = QtCore.Signal(str)
 	updateProgressBar = QtCore.Signal(int)
 	returnNewTask = QtCore.Signal(tuple)
 
-	def __init__(self, tasks):
+	def __init__(self, tasks, ignore_errors=True):
 		QtCore.QThread.__init__(self)
 		self.tasks = tasks
+		self.ignore_errors = ignore_errors
 		self.files_processed = 0
 
 
@@ -651,15 +675,14 @@ class BatchRenameThread(QtCore.QThread):
 		self.wait()
 
 
-	def _rename_task(self, item, continueOnError=True):
+	def _rename_task(self, item):
 		""" Perform the file rename operation(s).
 		"""
-		self.continueOnError = continueOnError
 		errors = 0
 
 		task_id = item.text(0)
-		task_status = item.text(1)
-		task_count = item.text(2)
+		# task_status = item.text(1)
+		# task_count = item.text(2)
 		task_before = item.text(3)
 		task_after = item.text(4)
 		task_path = item.text(5)
@@ -668,36 +691,40 @@ class BatchRenameThread(QtCore.QThread):
 		dst_fileLs = sequence.expandSeq(task_path, task_after)
 
 		if task_before == task_after:
-			self.updateMessage.emit("%s: Rename task skipped as it would not make any changes." %task_id)
+			self.printMessage.emit("%s: Rename task skipped as it would not make any changes." %task_id)
+			item.setText(1, "Nothing to change")
 			return "OK", src_fileLs[0]
 
 		else:  # Only rename if the operation will make changes
-			self.updateMessage.emit("%s: Rename '%s' to '%s'" %(task_id, task_before, task_after))
-			self.updateMessage.emit("Renaming 0%")
-			item.setText(1, "Renaming")
+			self.printMessage.emit("%s: Rename '%s' to '%s'" %(task_id, task_before, task_after))
+			self.printMessage.emit("Renaming 0%")
+			item.setText(1, "Processing")
 
 			for j in range(len(src_fileLs)):
-				if osOps.rename(src_fileLs[j], dst_fileLs[j], quiet=True):
-				#if self.rename(src_fileLs[j], dst_fileLs[j]):
+				success, msg = osOps.rename(src_fileLs[j], dst_fileLs[j], quiet=True)
+				if success:
 					progress = (j/len(src_fileLs))*100
-					self.updateProgress.emit("Renaming %d%%" %progress)
+					self.printProgress.emit("Renaming %d%%" %progress)
 					#item.setText(1, "Renaming %d%%" %progress)
-					self.files_processed += 1
-					self.updateProgressBar.emit(self.files_processed)
 				else:
 					errors += 1
-					if not self.continueOnError:
+					if not self.ignore_errors:
+						self.printError.emit(msg)
 						item.setText(1, "Incomplete")
 						return "Incomplete", src_fileLs[j]
+				self.files_processed += 1
+				self.updateProgressBar.emit(self.files_processed)
 
 			if errors == 0:
-				self.updateProgress.emit("Renaming 100%")
+				self.printProgress.emit("Renaming 100%")
 				item.setText(1, "Complete")
+				#item.setIcon(1, self.okIcon)
 				item.setText(3, task_after)
 				return "Complete", dst_fileLs[j]
 			else:
-				self.updateMessage.emit("Task generated %s errors." %errors)
+				self.printMessage.emit("Task generated %s errors." %errors)
 				item.setText(1, "%d errors" %errors)
+				#item.setIcon(1, self.errorIcon)
 				return "%d errors" %errors, src_fileLs[j]
 
 
