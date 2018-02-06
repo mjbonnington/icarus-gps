@@ -22,6 +22,6 @@ doskey clear=cls
 doskey ls=dir /w
 doskey ll=dir
 doskey lseq=%IC_BASEDIR%\core\libs\shared\sequenceLs.py
+doskey rseq=%IC_BASEDIR%\core\tools\rename\rename__main__.py
 rem doskey rb=%IC_BASEDIR%\core\tools\renderBrowser\rb__main__.py
-rem doskey br=%IC_BASEDIR%\core\tools\renderBrowser\rename__main__.py
 rem doskey submit=$IC_BASEDIR%\core\tools\gpsSubmit\submit__main__.py

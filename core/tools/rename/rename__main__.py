@@ -14,10 +14,11 @@ import os
 import re
 import sys
 
-# Initialise Icarus environment
-# sys.path.append(os.environ['IC_WORKINGDIR'])
-# import env__init__
-# env__init__.setEnv()
+# Initialise Icarus environment - TEMP BODGE TO ENABLE STANDALONE APP
+if __name__ == "__main__":
+	sys.path.append(os.environ['IC_WORKINGDIR'])
+	import env__init__
+	env__init__.setEnv()
 
 # Use NSURL as a workaround to PySide/Qt4 behaviour for dragging and dropping
 # on macOS (test with PySide/Qt4 as PyQt5 works fine)
@@ -91,16 +92,18 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.taskList_treeWidget.itemSelectionChanged.connect(self.updateToolbarUI)
 		self.ui.taskList_treeWidget.itemDoubleClicked.connect(self.expandTask)
 
-		self.ui.find_comboBox.editTextChanged.connect(self.updateTaskListView)
-		self.ui.replace_comboBox.editTextChanged.connect(self.updateTaskListView)
-		self.ui.ignoreCase_checkBox.stateChanged.connect(self.updateTaskListView)
-		self.ui.regex_checkBox.stateChanged.connect(self.updateTaskListView)
-
-		self.ui.preserveNumbering_checkBox.stateChanged.connect(self.updateTaskListView)
-		self.ui.start_spinBox.valueChanged.connect(self.updateTaskListView)
-		self.ui.step_spinBox.valueChanged.connect(self.updateTaskListView)
-		self.ui.autoPadding_checkBox.stateChanged.connect(self.updateTaskListView)
-		self.ui.padding_spinBox.valueChanged.connect(self.updateTaskListView)
+		updateTaskListViewStatus = lambda: self.updateTaskListView(updateStatus=True)  # Lambda function for PyQt5 compatibility, default keyword argument not supported
+		self.ui.find_comboBox.editTextChanged.connect(updateTaskListViewStatus)
+		self.ui.replace_comboBox.editTextChanged.connect(updateTaskListViewStatus)
+		self.ui.ignoreCase_checkBox.stateChanged.connect(updateTaskListViewStatus)
+		self.ui.regex_checkBox.stateChanged.connect(updateTaskListViewStatus)
+		self.ui.preserveNumbering_checkBox.stateChanged.connect(updateTaskListViewStatus)
+		self.ui.start_spinBox.valueChanged.connect(updateTaskListViewStatus)
+		self.ui.step_spinBox.valueChanged.connect(updateTaskListViewStatus)
+		self.ui.autoPadding_checkBox.stateChanged.connect(updateTaskListViewStatus)
+		self.ui.padding_spinBox.valueChanged.connect(updateTaskListViewStatus)
+		self.ui.ext_checkBox.stateChanged.connect(updateTaskListViewStatus)
+		self.ui.ext_lineEdit.textChanged.connect(updateTaskListViewStatus)
 
 		self.ui.remove_toolButton.clicked.connect(self.removeSelection)
 		self.ui.clear_toolButton.clicked.connect(self.clearTaskList)
@@ -115,18 +118,21 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.addContextMenu(self.ui.fill_toolButton, "Copy filename prefix to 'Replace' field", self.loadReplaceStr)
 
 		# Define status icons
-		self.okIcon = QtGui.QIcon()
-		self.okIcon.addPixmap(QtGui.QPixmap(osOps.absolutePath("$IC_FORMSDIR/rsc/status_icon_ok.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 		self.readyIcon = QtGui.QIcon()
 		self.readyIcon.addPixmap(QtGui.QPixmap(osOps.absolutePath("$IC_FORMSDIR/rsc/status_icon_ready.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 		self.nullIcon = QtGui.QIcon()
 		self.nullIcon.addPixmap(QtGui.QPixmap(osOps.absolutePath("$IC_FORMSDIR/rsc/status_icon_null.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		self.doneIcon = QtGui.QIcon()
+		self.doneIcon.addPixmap(QtGui.QPixmap(osOps.absolutePath("$IC_FORMSDIR/rsc/status_icon_done.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 		self.errorIcon = QtGui.QIcon()
 		self.errorIcon.addPixmap(QtGui.QPixmap(osOps.absolutePath("$IC_FORMSDIR/rsc/status_icon_error.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 
 		# Set input validators
 		alphanumeric_filename_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w\.-]+'), self.ui.replace_comboBox)
 		self.ui.replace_comboBox.setValidator(alphanumeric_filename_validator)
+
+		alphanumeric_ext_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w]+'), self.ui.ext_lineEdit)
+		self.ui.ext_lineEdit.setValidator(alphanumeric_ext_validator)
 
 		self.lastDir = None
 		self.expertMode = False
@@ -254,8 +260,7 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		elif os.environ.get('MAYARENDERSDIR') is not None:
 			browseDir = os.environ['MAYARENDERSDIR']
 		else:
-			browseDir = os.environ['FILESYSTEMROOT']
-			#browseDir = os.getcwd()
+			browseDir = os.environ.get('FILESYSTEMROOT', os.getcwd())
 
 		return browseDir
 
@@ -291,7 +296,6 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.createTaskItem(path, prefix, fr_range, ext, num_frames)
 
 		self.updateTaskListView()
-		self.updateToolbarUI()
 
 
 	def updateTaskListFile(self, filepath):
@@ -302,7 +306,6 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			path, prefix, fr_range, ext, num_frames = sequence.detectSeq(filepath, delimiter="", ignorePadding=False)
 			self.createTaskItem(path, prefix, fr_range, ext, num_frames)
 			self.updateTaskListView()
-			self.updateToolbarUI()
 
 
 	def removeSelection(self):
@@ -313,7 +316,6 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.taskList_treeWidget.takeTopLevelItem(index)
 
 		self.updateTaskListView()
-		self.updateToolbarUI()
 
 
 	def clearTaskList(self):
@@ -335,10 +337,13 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			item = root.child(i)
 			if item.text(self.header("Path")) == path and \
 			   item.text(self.header("Prefix")) == prefix and \
-			   item.text(self.header("Frames")) == fr_range and \
-			   item.text(self.header("Extension")) == ext and \
-			   item.text(self.header("Count")) == str(num_frames):
-				verbose.print_("Task item already exists.")
+			   item.text(self.header("Extension")) == ext:
+				if item.text(self.header("Frames")) == fr_range:
+					verbose.print_("Task item already exists.")
+				else:
+					verbose.print_("Task item already exists but frame ranges differ. Updating item with new frame range.")
+					item.setText(self.header("Frames"), fr_range)
+					item.setText(self.header("Count"), str(num_frames))
 				return item
 
 		new_item = QtWidgets.QTreeWidgetItem(self.ui.taskList_treeWidget)
@@ -350,7 +355,33 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		return new_item
 
 
-	def updateTaskListView(self):
+	def updateTaskItem(self, index, status, path, prefix, fr_range, ext, num_frames):
+		""" Update the task item at a given index.
+		"""
+		root = self.ui.taskList_treeWidget.invisibleRootItem()
+		child_count = root.childCount()
+		index = int(index)
+
+		# Check if matching item already exists
+		if index in list(range(child_count)):
+			item = root.child(index)
+			item.setText(self.header("Status"), status)
+			if status == "Complete":
+				item.setIcon(self.header("Status"), self.doneIcon)
+			else:
+				item.setIcon(self.header("Status"), self.errorIcon)
+			item.setText(self.header("Path"), path)
+			item.setText(self.header("Prefix"), prefix)
+			item.setText(self.header("Frames"), fr_range)
+			item.setText(self.header("Extension"), ext)
+			item.setText(self.header("Count"), str(num_frames))
+			return item
+
+		else:
+			return None
+
+
+	def updateTaskListView(self, updateStatus=True):
 		""" Populates the rename list tree view widget with entries.
 		"""
 		rename_count = 0
@@ -369,6 +400,8 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		preserve = self.getCheckBoxValue(self.ui.preserveNumbering_checkBox)
 		autopad = self.getCheckBoxValue(self.ui.autoPadding_checkBox)
 
+		# Get extension options
+		changeExt = self.getCheckBoxValue(self.ui.ext_checkBox)
 		root = self.ui.taskList_treeWidget.invisibleRootItem()
 		child_count = root.childCount()
 
@@ -389,25 +422,30 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				file = "%s%s" %(prefix, ext)
 			item.setText(self.header("Before"), file)
 
+			if changeExt and self.ui.ext_lineEdit.text():
+				newExt = ".%s" %self.ui.ext_lineEdit.text()
+			else:
+				newExt = ext
+
 			renamedPrefix = rename.replaceTextRE(prefix, findStr, replaceStr, ignoreCase, regex)
 			if fr_range:  # If sequence
 				numLs = sequence.numList(fr_range)
 				renumberedLs, padding = rename.renumber(numLs, start, step, padding, preserve, autopad)
 				renumberedRange = sequence.numRange(renumberedLs, padding)
-				renamedFile = "%s[%s]%s" %(renamedPrefix, renumberedRange, ext)
+				renamedFile = "%s[%s]%s" %(renamedPrefix, renumberedRange, newExt)
 			else:
-				renamedFile = "%s%s" %(renamedPrefix, ext)
+				renamedFile = "%s%s" %(renamedPrefix, newExt)
 			item.setText(self.header("After"), renamedFile)
 
-			if file == renamedFile:  # Set text colour to indicate status
-				item.setText(self.header("Status"), "Nothing to change")
-				#item.setForeground(self.header("After"), QtGui.QBrush(QtGui.QColor("#666")))
-				#item.setForeground(self.header("After"), QtGui.QBrush(QtGui.QColor("#f92672")))
-				item.setIcon(self.header("Status"), self.nullIcon)
-			else:
-				item.setText(self.header("Status"), "Ready")
-				item.setIcon(self.header("Status"), self.readyIcon)
-				rename_count += num_frames
+			# Set icon to indicate status
+			if updateStatus:
+				if file == renamedFile:
+					item.setText(self.header("Status"), "Nothing to change")
+					item.setIcon(self.header("Status"), self.nullIcon)
+				else:
+					item.setText(self.header("Status"), "Ready")
+					item.setIcon(self.header("Status"), self.readyIcon)
+					rename_count += num_frames
 
 			#self.addContextMenu(item, "Copy to 'Find' field", self.loadFindStr)
 			#item.setExpanded(True)
@@ -415,11 +453,14 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			total_count += num_frames
 
 		# Resize columns
-		# if self.renameTaskLs:
-		for col in range(self.ui.taskList_treeWidget.columnCount()):
-			self.ui.taskList_treeWidget.resizeColumnToContents(col)
+		#if self.renameTaskLs:
+		if child_count:
+			for col in range(self.ui.taskList_treeWidget.columnCount()):
+				self.ui.taskList_treeWidget.resizeColumnToContents(col)
 
 		conflicts = self.checkConflicts()
+
+		self.updateToolbarUI()  # Update UI
 
 		# Update button text
 		if rename_count:
@@ -451,13 +492,12 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 
 	def checkConflicts(self):
-		""" Checks for conflicts in renamed files. - REWRITE THIS
+		""" Checks for conflicts in renamed files. - REWRITE THIS?
 		"""
 		children = []
 		outputs = []
 		root = self.ui.taskList_treeWidget.invisibleRootItem()
-		child_count = root.childCount()
-		for i in range(child_count):
+		for i in range(root.childCount()):
 			children.append(root.child(i))
 			outpath = "%s/%s" %(root.child(i).text(self.header("Path")), root.child(i).text(self.header("After")))
 			outputs.append(outpath.lower())
@@ -469,16 +509,16 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		for item in children:
 			outpath = "%s/%s" %(item.text(self.header("Path")), item.text(self.header("After")))
 			if outpath.lower() in conflicts:
-				item.setText(self.header("Status"), "Conflict error")
+				item.setText(self.header("Status"), "Output filename conflict")
 				item.setIcon(self.header("Status"), self.errorIcon)
 
-		# Check for conflicts with existing files on disk
-		for item in children:
-			for file in sequence.expandSeq(item.text(self.header("Path")), item.text(self.header("After"))):
-				if not item.text(self.header("Before")) == item.text(self.header("After")):
-					if os.path.isfile(file):
-						item.setText(self.header("Status"), "File exists error")
-						item.setIcon(self.header("Status"), self.errorIcon)
+		# # Check for conflicts with existing files on disk
+		# for item in children:
+		# 	for file in sequence.expandSeq(item.text(self.header("Path")), item.text(self.header("After"))):
+		# 		if not item.text(self.header("Before")) == item.text(self.header("After")):
+		# 			if os.path.isfile(file):
+		# 				item.setText(self.header("Status"), "File exists error")
+		# 				item.setIcon(self.header("Status"), self.errorIcon)
 
 		self.ui.taskList_treeWidget.resizeColumnToContents(self.header("Status"))
 
@@ -519,8 +559,6 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 	def performFileRename(self):
 		""" Perform the file rename operation(s).
 		"""
-		# newTaskLs = []
-
 		root = self.ui.taskList_treeWidget.invisibleRootItem()
 		child_count = root.childCount()
 
@@ -529,47 +567,42 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.rename_progressBar.show()
 		self.ui.rename_progressBar.setValue(0)
 
-		taskItems = []
+		# Generate list of tasks for processing
+		items_to_process = []
 		for i in range(child_count):
-			taskItems.append(root.child(i))
+			item = root.child(i)
+			if item.text(self.header("Status")) == "Ready":
+				items_to_process.append(item)
 
 		# Initialise worker thread, connect signals & slots, start processing
-		self.workerThread = BatchRenameThread(taskItems, 
+		self.workerThread = BatchRenameThread(items_to_process, 
 			ignore_errors=self.getCheckBoxValue(self.ui.ignoreErrors_checkBox))
 		self.workerThread.printError.connect(verbose.error)
 		self.workerThread.printMessage.connect(verbose.message)
 		self.workerThread.printProgress.connect(verbose.progress)
 		self.workerThread.updateProgressBar.connect(self.updateProgressBar)
-		self.workerThread.returnNewTask.connect(self.taskCompleted)
+		self.workerThread.taskCompleted.connect(self.taskCompleted)
 		self.workerThread.finished.connect(self.renameCompleted)
 		self.workerThread.start()
-
-		# for i in range(child_count):
-		# 	newTask = self.renameTask(root.child(i))
-		# 	if newTask:
-		# 		newTaskLs.append(newTask)
-
-		# verbose.message("Batch rename job completed.")
-
-		# self.clearTaskList()
-
-		# # Update the task list to reflect the renamed files
-		# for newTask in newTaskLs:
-		# 	self.updateTaskListFile(newTask)
 
 
 	@QtCore.Slot(int)
 	def updateProgressBar(self, value):
+		""" Update progress bar.
+		"""
 		self.ui.rename_progressBar.setValue(value)
 
 
 	@QtCore.Slot(tuple)
 	def taskCompleted(self, new_task):
-		""" Update task in list view. TBC
+		""" Update task in list view.
 		"""
-		pass
 		#print(new_task)
-		#self.updateTaskListItem(new_task)
+		task_id, status, filepath = new_task
+		if os.path.isfile(filepath):
+			path, prefix, fr_range, ext, num_frames = sequence.detectSeq(filepath, delimiter="", ignorePadding=False)
+			self.updateTaskItem(task_id, status, path, prefix, fr_range, ext, num_frames)
+			self.updateTaskListView(updateStatus=False)
 
 
 	def renameCompleted(self):
@@ -581,26 +614,15 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.cancel_pushButton.hide()
 		self.ui.rename_progressBar.hide()
 
-		#self.clearTaskList()
-
-		# # Update the task list to reflect the renamed files
-		# for newTask in newTaskLs:
-		# 	self.updateTaskListFile(newTask)
-
 
 	def cancelRename(self):
 		""" Stop the rename operation.
+			TODO: Need to clean up incomplete tasks
 		"""
-		verbose.message("Aborting rename job")
+		verbose.message("Aborting rename job.")
 		self.workerThread.terminate()  # Enclose in try/except?
 
-		# self.renderTaskInterrupted = True
-
-		# if self.slaveStatus == "rendering":
-		# 	#self.renderProcess.terminate()
-		# 	self.renderProcess.kill()
-		# else:
-		# 	verbose.message("No render in progress.")
+		self.ui.taskList_treeWidget.resizeColumnToContents(self.header("Status"))
 
 
 	def dragEnterEvent(self, e):
@@ -662,7 +684,7 @@ class BatchRenameThread(QtCore.QThread):
 	printMessage = QtCore.Signal(str)
 	printProgress = QtCore.Signal(str)
 	updateProgressBar = QtCore.Signal(int)
-	returnNewTask = QtCore.Signal(tuple)
+	taskCompleted = QtCore.Signal(tuple)
 
 	def __init__(self, tasks, ignore_errors=True):
 		QtCore.QThread.__init__(self)
@@ -675,13 +697,25 @@ class BatchRenameThread(QtCore.QThread):
 		self.wait()
 
 
+	def run(self):
+		for item in self.tasks:
+			new_task = self._rename_task(item)
+			self.taskCompleted.emit(new_task)
+
+
 	def _rename_task(self, item):
 		""" Perform the file rename operation(s).
+
+			Return a tuple containing the following items:
+			- the index of the task being processed;
+			- the status of the task;
+			- a filename to be processed as a new task.
 		"""
 		errors = 0
+		last_index = 0
 
 		task_id = item.text(0)
-		# task_status = item.text(1)
+		task_status = item.text(1)
 		# task_count = item.text(2)
 		task_before = item.text(3)
 		task_after = item.text(4)
@@ -690,48 +724,42 @@ class BatchRenameThread(QtCore.QThread):
 		src_fileLs = sequence.expandSeq(task_path, task_before)
 		dst_fileLs = sequence.expandSeq(task_path, task_after)
 
-		if task_before == task_after:
-			self.printMessage.emit("%s: Rename task skipped as it would not make any changes." %task_id)
-			item.setText(1, "Nothing to change")
-			return "OK", src_fileLs[0]
+		# Only go ahead and rename if the operation will make changes
+		# if task_status == "Ready":
+		self.printMessage.emit("%s: Rename '%s' to '%s'" %(task_id, task_before, task_after))
+		self.printMessage.emit("Renaming 0%")
+		#item.setText(1, "Processing")  # causes problems
 
-		else:  # Only rename if the operation will make changes
-			self.printMessage.emit("%s: Rename '%s' to '%s'" %(task_id, task_before, task_after))
-			self.printMessage.emit("Renaming 0%")
-			item.setText(1, "Processing")
-
-			for j in range(len(src_fileLs)):
-				success, msg = osOps.rename(src_fileLs[j], dst_fileLs[j], quiet=True)
-				if success:
-					progress = (j/len(src_fileLs))*100
-					self.printProgress.emit("Renaming %d%%" %progress)
-					#item.setText(1, "Renaming %d%%" %progress)
-				else:
-					errors += 1
-					if not self.ignore_errors:
-						self.printError.emit(msg)
-						item.setText(1, "Incomplete")
-						return "Incomplete", src_fileLs[j]
-				self.files_processed += 1
-				self.updateProgressBar.emit(self.files_processed)
-
-			if errors == 0:
-				self.printProgress.emit("Renaming 100%")
-				item.setText(1, "Complete")
-				#item.setIcon(1, self.okIcon)
-				item.setText(3, task_after)
-				return "Complete", dst_fileLs[j]
+		for i in range(len(src_fileLs)):
+			success, msg = osOps.rename(src_fileLs[i], dst_fileLs[i], quiet=True)
+			if success:
+				last_index = i
+				progress = (i/len(src_fileLs))*100
+				self.printProgress.emit("Renaming %d%%" %progress)
 			else:
-				self.printMessage.emit("Task generated %s errors." %errors)
-				item.setText(1, "%d errors" %errors)
-				#item.setIcon(1, self.errorIcon)
-				return "%d errors" %errors, src_fileLs[j]
+				errors += 1
+				if not self.ignore_errors:  # Task stopped due to error
+					self.printError.emit(msg)
+					return task_id, "Interrupted", src_fileLs[-1]
 
+			self.files_processed += 1
+			self.updateProgressBar.emit(self.files_processed)
 
-	def run(self):
-		for item in self.tasks:
-			new_task = self._rename_task(item)
-			self.returnNewTask.emit(new_task)
+		if errors == 0:  # Task completed successfully
+			self.printProgress.emit("Renaming 100%")
+			return task_id, "Complete", dst_fileLs[i]
+
+		else:  # Task completed with errors, which were ignored
+			if errors == 1:
+				error_str = "1 error"
+			else:
+				error_str = "%d errors" %errors
+			self.printMessage.emit("Task generated %s." %error_str)
+			return task_id, error_str, dst_fileLs[last_index] #src_fileLs[-1]
+
+		# else:  # Task skipped
+		# 	self.printMessage.emit("%s: Rename task skipped." %task_id)
+		# 	return task_id, "Nothing to change", "" #src_fileLs[0]
 
 # ----------------------------------------------------------------------------
 # End worker thread class
@@ -742,28 +770,7 @@ class BatchRenameThread(QtCore.QThread):
 if __name__ == "__main__":
 	app = QtWidgets.QApplication(sys.argv)
 
-	# Initialise Icarus environment
-	sys.path.append(os.environ['IC_WORKINGDIR'])
-	import env__init__
-	env__init__.setEnv()
-
-	import rsc_rc
-
-	# Set UI style - you can also use a flag e.g. '-style plastique'
-	#app.setStyle('fusion')
-
-	# Apply UI style sheet
-	if STYLESHEET is not None:
-		qss = os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
-		with open(qss, "r") as fh:
-			app.setStyleSheet(fh.read())
-
 	myApp = BatchRenameApp()
 	myApp.show()
 	sys.exit(app.exec_())
-
-# else:
-# 	myApp = BatchRenameApp()
-# 	print(myApp)
-# 	myApp.show()
 

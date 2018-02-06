@@ -21,10 +21,10 @@ if os.environ['IC_ENV'] == 'STANDALONE':
 class bcolors:
 	if os.environ['IC_ENV'] == 'STANDALONE':
 		HEADER = '\033[95m'
-		OKBLUE = '\033[94m'
+		OKBLUE = '\033[38;5;081m' #'\033[94m'
 		OKGREEN = '\033[92m'
-		WARNING = '\033[93m'
-		FAIL = '\033[91m'
+		WARNING = '\033[38;5;186m' #'\033[93m'
+		FAIL = '\033[38;5;197m' #'\033[91m'
 		ENDC = '\033[0m'
 		BOLD = '\033[1m'
 		UNDERLINE = '\033[4m'
@@ -103,7 +103,7 @@ def print_(message, verbosityLevel=4, status=True, inline=False, log=False):
 		if verbosityLevel == 4:
 			message = bcolors.DARK + message + bcolors.ENDC
 		elif verbosityLevel == 3:
-			message = bcolors.BRIGHT + message + bcolors.ENDC
+			message = bcolors.OKBLUE + message + bcolors.ENDC
 		elif verbosityLevel == 2:
 			message = bcolors.WARNING + message + bcolors.ENDC
 		elif verbosityLevel == 1:

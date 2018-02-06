@@ -1128,16 +1128,16 @@ Developers: %s
 	def launchShotManagement(self):
 		""" Launch Shot Management dialog.
 		"""
-		# import shot_creator__main__
-		# shotCreatorDialog = shot_creator__main__.ShotCreatorDialog(parent=self)
-		# shotCreatorDialog.display(job=self.ui.job_comboBox.currentText())
-		# self.populateJobs()
-
-		# THIS IS THE NEW (WIP) SHOT MANAGEMENT EDITOR...
-		import shot_management__main__
-		shotManagementDialog = shot_management__main__.ShotManagementDialog(parent=self)
-		shotManagementDialog.display(job=self.ui.job_comboBox.currentText())
+		import shot_creator__main__
+		shotCreatorDialog = shot_creator__main__.ShotCreatorDialog(parent=self)
+		shotCreatorDialog.display(job=self.ui.job_comboBox.currentText())
 		self.populateJobs()
+
+		# # THIS IS THE NEW (WIP) SHOT MANAGEMENT EDITOR...
+		# import shot_management__main__
+		# shotManagementDialog = shot_management__main__.ShotManagementDialog(parent=self)
+		# shotManagementDialog.display(job=self.ui.job_comboBox.currentText())
+		# self.populateJobs()
 
 
 	# def launchGenericDialog(self, module_name, class_name, modal=True):

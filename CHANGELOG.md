@@ -2,6 +2,7 @@ v0.9.11 (--)
 -	[Icarus] Added Title and Notes fields to shot settings.
 -	[Icarus] Job management now performs check for non-alphanumeric characters in paths.
 -	[Icarus] Drag & drop enabled for Batch Rename tool - files and folders can now be dropped into the window for processing.
+-	[Icarus] File extensions can now be changed.
 -	[Icarus] Removed djv_view from distribution. Icarus will now use the executable specified in the job settings.
 -	[Maya] Publishing with textures checked now leaves your scene with its original texture paths.
 -	[Maya] GPS Preview can now output QuickTime movies with sound.

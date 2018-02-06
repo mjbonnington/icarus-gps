@@ -135,7 +135,7 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 						#       jobName = jobPath.split('/')[1]
 						# else:
 						#       jobName = jobPath.split('/')[-1]
-						jobName = jobPath.split('/')[1]
+						jobName = os.path.basename(jobPath)
 						self.ui.jobName_lineEdit.setText(jobName)
 					except IndexError:
 						pass

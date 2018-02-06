@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="rsc">
+    <file>rsc/status_icon_done.png</file>
     <file>rsc/status_icon_null.png</file>
     <file>rsc/status_icon_error.png</file>
     <file>rsc/icon_rename.png</file>

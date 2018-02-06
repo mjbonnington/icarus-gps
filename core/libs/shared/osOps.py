@@ -11,6 +11,8 @@
 
 import os
 import re
+import sys
+import traceback
 
 import verbose
 
@@ -116,24 +118,14 @@ def rename(source, destination, quiet=False):
 	try:
 		os.rename(src, dst)
 		return True, ""
-	except FileNotFoundError:
-		msg = "The source file does not exist: %s" %src
+	except:
+		exc_type, exc_value, exc_traceback = sys.exc_info()
+		#traceback.print_exception(exc_type, exc_value, exc_traceback)
+		msg = traceback.format_exception_only(exc_type, exc_value)[0]
+		#msg = "%s %s" %(str(exc_type), exc_value) #traceback.format_exc()
 		if not quiet:
 			verbose.error(msg)
 		return False, msg
-	except FileExistsError:
-		msg = "The destination file already exists: %s" %dst
-		if not quiet:
-			verbose.error(msg)
-		return False, msg
-
-	# if os.environ['IC_RUNNING_OS'] == 'Windows':
-	# 	cmdStr = 'ren "%s" "%s"' %(src, dst)
-	# else:
-	# 	cmdStr = 'mv "%s" "%s"' %(src, dst)
-
-	# verbose.print_(cmdStr, 4)
-	# os.system(cmdStr)
 
 
 def copy(source, destination):
