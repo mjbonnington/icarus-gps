@@ -575,7 +575,8 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				items_to_process.append(item)
 
 		# Initialise worker thread, connect signals & slots, start processing
-		self.workerThread = BatchRenameThread(items_to_process, 
+		self.workerThread = BatchRenameThread(
+			items_to_process, 
 			ignore_errors=self.getCheckBoxValue(self.ui.ignoreErrors_checkBox))
 		self.workerThread.printError.connect(verbose.error)
 		self.workerThread.printMessage.connect(verbose.message)

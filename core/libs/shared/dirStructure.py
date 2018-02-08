@@ -3,9 +3,9 @@
 # [Icarus] dirStructure.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2017 Gramercy Park Studios
+# (c) 2017-2018 Gramercy Park Studios
 #
-# Create folder structures as defined by XML files.
+# Represent directory structures as XML.
 
 
 import os
@@ -73,13 +73,23 @@ class DirStructure(xmlData.XMLData):
 			verbose.warning("Could not create project folders because the root folder was not specified.")
 
 
-	# def createXML(self, basedir, datafile=None):
-	# 	""" Create XML definition of folder structure.
-	# 	"""
-	# 	if datafile is not None:
-	# 		self.loadXML(datafile)
+	def createXML(self, basedir, datafile=None):
+		""" Create XML definition of folder structure.
+		"""
+		if datafile is not None:
+			self.loadXML(datafile)
 
-	# 	self.saveXML(datafile)
+		self.root.set("location", basedir) # need to add env vars
+
+		subdirs = next(os.walk(basedir))[1]
+		if subdirs:
+			subdirs.sort()
+			for subdir in subdirs:
+				dir_elem = ET.Element('dir')
+				dir_elem.set("name", subdir)
+				#dir_elem.set("env", env_var)
+
+		self.saveXML(datafile)
 
 
 	# def createDefault(self):

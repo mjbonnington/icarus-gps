@@ -76,6 +76,8 @@ def print_(message, verbosityLevel=4, status=True, inline=False, log=False):
 	""" Print the message to the console.
 		If 'status' is True, the message will be shown on the main UI status
 		bar.
+		If 'inline' is True, the message will overwrite the previous line
+		where allowed.
 		If 'log' is True, the message will be written to a logfile (not yet
 		implemented).
 
@@ -152,7 +154,10 @@ def pluralise(noun, count=None):
 		return noun + 's'
 
 
-# Messages follow in alphabetical order...
+# Specific messages follow in alphabetical order.
+# Note - Unless the message is generic and frequently re-used, it is
+# preferable to keep the message text within the outputting module, using the
+# progress(), message(), warning() and error() methods of this module.
 def appPaths_noApp(app):
 	warning("Application '%s' does not exist." %app)
 
