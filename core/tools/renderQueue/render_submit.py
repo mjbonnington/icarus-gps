@@ -247,7 +247,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		scene = self.makePathAbsolute(self.ui.scene_comboBox.currentText()).replace("\\", "/")
 		self.xmlData = self.getSettingsFile(scene, suffix="_icSubmissionData.xml")
 		if self.xmlData:
-			self.xd.loadXML(self.xmlData)
+			self.xd.loadXML(self.xmlData, use_template=False)
 			self.setupWidgets(self.ui, updateOnly=True)
 
 
@@ -622,7 +622,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		# Instantiate render queue class and load data
 		self.rq = renderQueue.renderQueue()
-		self.rq.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'renderQueue.xml'))
+		self.rq.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'renderQueue.xml'), use_template=False)
 
 		###################
 		# Generic options #

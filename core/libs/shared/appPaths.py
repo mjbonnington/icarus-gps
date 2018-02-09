@@ -3,7 +3,7 @@
 # [Icarus] appPaths.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2017 Gramercy Park Studios
+# (c) 2015-2018 Gramercy Park Studios
 #
 # Manipulate an XML database of application version paths.
 
@@ -15,7 +15,7 @@ import verbose
 import xmlData
 
 
-class appPaths(xmlData.XMLData):
+class AppPaths(xmlData.XMLData):
 	""" Manipulates XML database to store application version paths.
 		Inherits XMLData class.
 	"""
@@ -86,7 +86,7 @@ class appPaths(xmlData.XMLData):
 		try:
 			self.root.remove(appElem)
 		except ValueError:
-			verbose.appPaths_noApp(app)
+			verbose.warning("Application '%s' does not exist." %app)
 
 
 	def getVersions(self, app):
@@ -106,12 +106,12 @@ class appPaths(xmlData.XMLData):
 		try:
 			verElem = appElem.find("path[@version='%s']" %ver)
 		except AttributeError:
-			verbose.appPaths_noApp(app)
+			verbose.warning("Application '%s' does not exist." %app)
 
 		try:
 			appElem.remove(verElem)
 		except (AttributeError, ValueError):
-			verbose.appPaths_noVersion(app, ver)
+			verbose.warning("Application '%s' has no '%s' version." %(app, ver))
 
 
 	def getPath(self, app, ver, os):
@@ -130,7 +130,7 @@ class appPaths(xmlData.XMLData):
 		""" Set path. Create elements if they don't exist.
 		"""
 		if (ver == "") or (ver is None):
-			verbose.appPaths_enterVersion()
+			verbose.print_("Please enter a version.", 1)
 
 		else:
 			appElem = self.root.find("app[@name='%s']" %app)
@@ -161,7 +161,7 @@ class appPaths(xmlData.XMLData):
 			guessedPath = path.text.replace( "[ver]", ver )
 			guessedPath = guessedPath.replace( "[ver-major]", ver_major )
 		except AttributeError:
-			verbose.appPaths_guessPathFailed(os)
+			verbose.warning("Failed to guess %s path." %os)
 			guessedPath =  None
 
 		return guessedPath

@@ -92,7 +92,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		# Instantiate render queue class and load data
 		self.rq = renderQueue.renderQueue()
-		self.rq.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'renderQueue.xml'))
+		self.rq.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'renderQueue.xml'), use_template=False)
 
 		# Create a QProcess object to handle the rendering process
 		# asynchronously

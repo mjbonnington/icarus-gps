@@ -25,8 +25,8 @@ class helper():
 		self.parent = parent
 
 		self.jd = parent.xd
-		self.ap = appPaths.appPaths()
-		ap_load = self.ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'))
+		self.ap = appPaths.AppPaths()
+		ap_load = self.ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'), use_template=True)
 
 		self.setupAppVersions()
 

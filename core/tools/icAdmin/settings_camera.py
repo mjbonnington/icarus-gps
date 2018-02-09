@@ -3,7 +3,7 @@
 # [Icarus] settings_camera.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2017 Gramercy Park Studios
+# (c) 2015-2018 Gramercy Park Studios
 #
 # Camera settings handler.
 
@@ -20,8 +20,8 @@ class helper():
 		""" Setup camera properties panel.
 		"""
 		self.frame = frame
-		self.cp = camPresets.camPresets()
-		cp_load = self.cp.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'camPresets.xml'))
+		self.cp = camPresets.CamPresets()
+		cp_load = self.cp.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'camPresets.xml'), use_template=True)
 
 		# Populate combo box with presets
 		presets = self.cp.getPresets()

@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+	<camera name="Arri Alexa" active="True">
+		<sensor_w_mm>23.8</sensor_w_mm>
+		<sensor_h_mm>13.4</sensor_h_mm>
+	</camera>
+	<camera name="Arri Alexa XT Open Gate" active="True">
+		<sensor_w_mm>28.17</sensor_w_mm>
+		<sensor_h_mm>18.13</sensor_h_mm>
+	</camera>
+	<camera name="Blackmagic" active="False">
+		<sensor_w_mm>15.81</sensor_w_mm>
+		<sensor_h_mm>8.88</sensor_h_mm>
+	</camera>
+	<camera name="Canon 1D 4K" active="False">
+		<sensor_w_mm>27.9</sensor_w_mm>
+		<sensor_h_mm>15.7</sensor_h_mm>
+	</camera>
+	<camera name="Canon 1D CHD" active="False">
+		<sensor_w_mm>36.0</sensor_w_mm>
+		<sensor_h_mm>20.3</sensor_h_mm>
+	</camera>
+	<camera name="Canon 1D X" active="False">
+		<sensor_w_mm>36.0</sensor_w_mm>
+		<sensor_h_mm>20.3</sensor_h_mm>
+	</camera>
+	<camera name="Canon 1D M4" active="False">
+		<sensor_w_mm>27.9</sensor_w_mm>
+		<sensor_h_mm>15.7</sensor_h_mm>
+	</camera>
+	<camera name="Canon 5D" active="True">
+		<sensor_w_mm>36.0</sensor_w_mm>
+		<sensor_h_mm>24.0</sensor_h_mm>
+	</camera>
+	<camera name="Canon 7D" active="False">
+		<sensor_w_mm>22.3</sensor_w_mm>
+		<sensor_h_mm>12.5</sensor_h_mm>
+	</camera>
+	<camera name="Canon C100" active="False">
+		<sensor_w_mm>24.6</sensor_w_mm>
+		<sensor_h_mm>13.8</sensor_h_mm>
+	</camera>
+	<camera name="Canon C300" active="False">
+		<sensor_w_mm>24.6</sensor_w_mm>
+		<sensor_h_mm>13.8</sensor_h_mm>
+	</camera>
+	<camera name="Canon C500" active="False">
+		<sensor_w_mm>24.6</sensor_w_mm>
+		<sensor_h_mm>13.8</sensor_h_mm>
+	</camera>
+	<camera name="Canon C700" active="True">
+		<sensor_w_mm>24.89</sensor_w_mm>
+		<sensor_h_mm>18.66</sensor_h_mm>
+	</camera>
+	<camera name="Phantom Flex" active="True">
+		<sensor_w_mm>25.6</sensor_w_mm>
+		<sensor_h_mm>14.4</sensor_h_mm>
+	</camera>
+	<camera name="Phantom HD Gold" active="False">
+		<sensor_w_mm>25.6</sensor_w_mm>
+		<sensor_h_mm>14.4</sensor_h_mm>
+	</camera>
+	<camera name="Phantom V642" active="False">
+		<sensor_w_mm>25.6</sensor_w_mm>
+		<sensor_h_mm>14.4</sensor_h_mm>
+	</camera>
+	<camera name="Phase One XF IQ3 100MP" active="False">
+		<sensor_w_mm>53.7</sensor_w_mm>
+		<sensor_h_mm>40.4</sensor_h_mm>
+	</camera>
+	<camera name="Red Epic X" active="True">
+		<sensor_w_mm>25.9</sensor_w_mm>
+		<sensor_h_mm>14.5</sensor_h_mm>
+	</camera>
+	<camera name="Red One" active="True">
+		<sensor_w_mm>22.1</sensor_w_mm>
+		<sensor_h_mm>12.4</sensor_h_mm>
+	</camera>
+	<camera name="Red Weapon S35" active="True">
+		<sensor_w_mm>29.90</sensor_w_mm>
+		<sensor_h_mm>15.77</sensor_h_mm>
+	</camera>
+	<camera name="Sony F3" active="False">
+		<sensor_w_mm>23.6</sensor_w_mm>
+		<sensor_h_mm>13.3</sensor_h_mm>
+	</camera>
+	<camera name="Sony F5" active="False">
+		<sensor_w_mm>22.6</sensor_w_mm>
+		<sensor_h_mm>12.7</sensor_h_mm>
+	</camera>
+	<camera name="Sony F35" active="False">
+		<sensor_w_mm>23.6</sensor_w_mm>
+		<sensor_h_mm>13.3</sensor_h_mm>
+	</camera>
+	<camera name="Sony F55" active="True">
+		<sensor_w_mm>22.6</sensor_w_mm>
+		<sensor_h_mm>12.7</sensor_h_mm>
+	</camera>
+	<camera name="Sony F65" active="False">
+		<sensor_w_mm>23.3</sensor_w_mm>
+		<sensor_h_mm>13.1</sensor_h_mm>
+	</camera>
+	<camera name="Sony F900" active="False">
+		<sensor_w_mm>9.6</sensor_w_mm>
+		<sensor_h_mm>5.4</sensor_h_mm>
+	</camera>
+	<camera name="Sony F950" active="False">
+		<sensor_w_mm>9.6</sensor_w_mm>
+		<sensor_h_mm>5.4</sensor_h_mm>
+	</camera>
+	<camera name="Sony FS100" active="False">
+		<sensor_w_mm>23.6</sensor_w_mm>
+		<sensor_h_mm>13.3</sensor_h_mm>
+	</camera>
+	<camera name="Sony FS700" active="False">
+		<sensor_w_mm>23.6</sensor_w_mm>
+		<sensor_h_mm>13.3</sensor_h_mm>
+	</camera>
+	<camera name="Super 35mm" active="True">
+		<sensor_w_mm>24.89</sensor_w_mm>
+		<sensor_h_mm>18.66</sensor_h_mm>
+	</camera>
+	<camera name="35mm Film" active="False">
+		<sensor_w_mm>36</sensor_w_mm>
+		<sensor_h_mm>24</sensor_h_mm>
+	</camera>
+	<camera name="Generic APS-C" active="False">
+		<sensor_w_mm>23.6</sensor_w_mm>
+		<sensor_h_mm>15.8</sensor_h_mm>
+	</camera>
+</root>

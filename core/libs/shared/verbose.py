@@ -158,18 +158,6 @@ def pluralise(noun, count=None):
 # Note - Unless the message is generic and frequently re-used, it is
 # preferable to keep the message text within the outputting module, using the
 # progress(), message(), warning() and error() methods of this module.
-def appPaths_noApp(app):
-	warning("Application '%s' does not exist." %app)
-
-def appPaths_noVersion(app, ver):
-	warning("Application '%s' has no '%s' version." %(app, ver))
-
-def appPaths_enterVersion():
-	print_("Please enter a version.", 1)
-
-def appPaths_guessPathFailed(os):
-	warning("Failed to guess %s path." %os)
-
 def animRequires(asset):
 	print_("Requires %s" %asset, 1)
 

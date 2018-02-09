@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+	<resolution name="HD 1080p">
+		<width>1920</width>
+		<height>1080</height>
+		<par>1.0</par>
+	</resolution>
+	<resolution name="HD 720p">
+		<width>1280</width>
+		<height>720</height>
+		<par>1.0</par>
+	</resolution>
+	<resolution name="PAL 16:9 (square pixels)">
+		<width>1024</width>
+		<height>576</height>
+		<par>1.0</par>
+	</resolution>
+	<resolution name="PAL 4:3 (square pixels)">
+		<width>768</width>
+		<height>576</height>
+		<par>1.0</par>
+	</resolution>
+	<resolution name="2K Super 35 (full aperture)">
+		<width>2048</width>
+		<height>1556</height>
+		<par>1.0</par>
+	</resolution>
+	<resolution name="4K Super 35 (full aperture)">
+		<width>4096</width>
+		<height>3112</height>
+		<par>1.0</par>
+	</resolution>
+	<resolution name="2K 16:9">
+		<width>2048</width>
+		<height>1152</height>
+		<par>1.0</par>
+	</resolution>
+	<resolution name="4K 16:9">
+		<width>4096</width>
+		<height>2304</height>
+		<par>1.0</par>
+	</resolution>
+	<resolution name="2K DCP">
+		<width>2048</width>
+		<height>1080</height>
+		<par>1.0</par>
+	</resolution>
+	<resolution name="4K DCP">
+		<width>4096</width>
+		<height>2160</height>
+		<par>1.0</par>
+	</resolution>
+	<resolution name="ARRIRAW">
+		<width>2880</width>
+		<height>1620</height>
+		<par>1.0</par>
+	</resolution>
+	<resolution name="ARRIRAW Open Gate">
+		<width>3414</width>
+		<height>2198</height>
+		<par>1.0</par>
+	</resolution>
+	<resolution name="4K Ultra-HD 2160p">
+		<width>3840</width>
+		<height>2160</height>
+		<par>1.0</par>
+	</resolution>
+	<resolution name="5K 16:9">
+		<width>5120</width>
+		<height>2880</height>
+		<par>1.0</par>
+	</resolution>
+</root>

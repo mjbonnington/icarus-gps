@@ -122,12 +122,13 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.j.getRootPaths()
 
 		if (self.j.win_root is None) or (self.j.osx_root is None) or (self.j.linux_root is None):
-			dialogMsg = 'Paths to the root of the shared filesystem must be set for each OS to enable cross-platform portability. Please set the values in the next dialog.\n'
-			verbose.print_(dialogMsg, 1)
+			dialogMsg = "Paths to the root of the shared filesystem must be set for each OS to enable cross-platform portability. Please set the values in the next dialog."
+			#verbose.print_(dialogMsg, 1)
+			verbose.warning("Root filesystem path(s) not set.")
 
 			# Confirmation dialog
 			import pDialog
-			dialogTitle = 'Root paths not set'
+			dialogTitle = "Root Paths Not Set"
 			dialog = pDialog.dialog()
 			dialog.display(dialogMsg, dialogTitle, conf=True)
 

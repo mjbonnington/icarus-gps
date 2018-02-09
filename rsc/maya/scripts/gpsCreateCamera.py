@@ -22,8 +22,8 @@ class gpsCreateCamera():
 		self.winName = "gpsCreateCameraWindow"
 		#self.gMainProgressBar = mel.eval('$tmp = $gMainProgressBar')
 
-		self.cp = camPresets.camPresets()
-		self.cp.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'camPresets.xml'))
+		self.cp = camPresets.CamPresets()
+		self.cp.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'camPresets.xml'), use_template=True)
 
 
 	def UI(self):
@@ -112,7 +112,7 @@ class gpsCreateCamera():
 		if camera == os.environ['SHOT']:
 			import settingsData
 			sd = settingsData.settingsData()
-			shotDataLoaded = sd.loadXML( os.path.join(os.environ['SHOTDATA'], 'shotData.xml') )
+			shotDataLoaded = sd.loadXML(os.path.join(os.environ['SHOTDATA'], 'shotData.xml'), use_template=False)
 
 			mc.setAttr(camSh+'.horizontalFilmAperture', float(sd.getValue('camera', 'filmbackWidth')) / 25.4)
 			mc.setAttr(camSh+'.verticalFilmAperture', float(sd.getValue('camera', 'filmbackHeight')) / 25.4)

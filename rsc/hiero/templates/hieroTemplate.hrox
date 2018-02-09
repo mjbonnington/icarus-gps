@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hieroXML>
+<hieroXML version="9" revision="85561" release="v2" name="HieroPlayer" hash="0c497934-4c31-4edd-0364-b875eb16d706">
+ <Project editable="1" timedisplayformat="2" samplerate="48000/1" sixteenBitLut="sRGB" guid="{06a67a76-9303-400f-89b1-03ce47c5de4f}" logLut="sRGB" floatLut="sRGB" buildTrackName="VFX" nukeUseOCIO="0" framerate="25/1" redVideoDecodeMode="0" starttimecode="1001" name="hieroTemplate" thumbnailLut="sRGB" viewerLut="sRGB" eightBitLut="sRGB">
+  <items>
+   <RootBinProjectItem editable="1" guid="{39e84961-eb02-4b82-aed1-cc7cd4e94ffb}" name="Sequences">
+    <items>
+     <BinProjectItem editable="1" guid="{4b5cbde1-0fad-4a66-a501-226a0d01cee8}" name="Conform">
+      <items>
+       <SequenceProjectItemRoot editable="1" MasterVersion="" guid="{15b952b4-6da3-446b-8c82-c22874fd6c6d}" name="EDIT">
+        <items>
+         <SequenceProjectItemVersion editable="1" isHidden="0" guid="{ebfce628-aa64-456d-9d5c-ae30c8267b86}" name="EDIT">
+          <Sequence timeOffset="0" displayDropFrames="0" timecodeStart="1001" displayTimecode="0" objName="sequence" guid="{6684420f-42eb-42b0-93fe-3fe299ee2033}" isclip="0" timeDisplayFormat="2" name="EDIT" useSoftTrims="0">
+           <videotracks>
+            <VideoTrack guid="af27262e-6c81-4dfa-beab-01f8f220d2aa" collapsed="0" name="Edit">
+             <sets>
+              <Set title="Track" domainroot="foundry.track">
+               <values>
+                <BooleanValue default="1" value="Yes" name="foundry.track.enabled"/>
+                <BooleanValue default="1" value="No" name="foundry.track.locked"/>
+               </values>
+              </Set>
+              <Set title="edlName" domainroot="edlName">
+               <values>
+                <StringValue default="1" value="" name="edlName"/>
+               </values>
+              </Set>
+             </sets>
+            </VideoTrack>
+            <VideoTrack guid="8b7b093f-414b-4301-ad9f-87561c37ad81" collapsed="0" name="Previs">
+             <sets>
+              <Set title="Track" domainroot="foundry.track">
+               <values>
+                <BooleanValue default="1" value="Yes" name="foundry.track.enabled"/>
+               </values>
+              </Set>
+             </sets>
+            </VideoTrack>
+            <VideoTrack guid="2e6036d3-9924-4fb2-8ccf-aaf0647e8dfe" collapsed="0" name="Modeling">
+             <sets>
+              <Set title="Track" domainroot="foundry.track">
+               <values>
+                <BooleanValue default="1" value="Yes" name="foundry.track.enabled"/>
+                <BooleanValue default="1" value="No" name="foundry.track.locked"/>
+               </values>
+              </Set>
+             </sets>
+            </VideoTrack>
+            <VideoTrack guid="ee2804ac-353e-4ced-a3f3-583b517b476c" collapsed="0" name="Anim">
+             <sets>
+              <Set title="Track" domainroot="foundry.track">
+               <values>
+                <BooleanValue default="1" value="Yes" name="foundry.track.enabled"/>
+               </values>
+              </Set>
+             </sets>
+            </VideoTrack>
+            <VideoTrack guid="43f1de82-ab6f-4ef8-8555-6bf30b49cdae" collapsed="0" name="Fx">
+             <sets>
+              <Set title="Track" domainroot="foundry.track">
+               <values>
+                <BooleanValue default="1" value="Yes" name="foundry.track.enabled"/>
+                <BooleanValue default="1" value="No" name="foundry.track.locked"/>
+               </values>
+              </Set>
+             </sets>
+            </VideoTrack>
+            <VideoTrack guid="28d09cd3-bc6a-44fb-8691-6c2644018c57" collapsed="0" name="Lighting">
+             <sets>
+              <Set title="Track" domainroot="foundry.track">
+               <values>
+                <BooleanValue default="1" value="Yes" name="foundry.track.enabled"/>
+               </values>
+              </Set>
+             </sets>
+            </VideoTrack>
+            <VideoTrack guid="758071b3-95cf-4c13-897b-e1d026e94a14" collapsed="0" name="PreComp">
+             <sets>
+              <Set title="Track" domainroot="foundry.track">
+               <values>
+                <BooleanValue default="1" value="Yes" name="foundry.track.enabled"/>
+               </values>
+              </Set>
+             </sets>
+            </VideoTrack>
+           </videotracks>
+           <audiotracks>
+            <AudioTrack stereochannel="left" guid="278e06ab-1058-46e0-9076-a751e4970b10" collapsed="0" volume="1" name="Reference">
+             <sets>
+              <Set title="Track" domainroot="foundry.track">
+               <values>
+                <BooleanValue default="1" value="No" name="foundry.track.enabled"/>
+               </values>
+              </Set>
+              <Set title="User" domainroot="user">
+               <values>
+                <VectorValue name="user.tags"/>
+               </values>
+              </Set>
+             </sets>
+            </AudioTrack>
+           </audiotracks>
+           <sets>
+            <Set title="Timeline" domainroot="foundry.timeline">
+             <values>
+              <TimeBaseValue default="1" value="25/1" name="foundry.timeline.framerate"/>
+              <TimeBaseValue default="1" value="48000/1" name="foundry.timeline.samplerate"/>
+              <IntegerValue default="0" value="0" name="foundry.timeline.duration"/>
+              <MediaFormatValue default="1" value="1,[ 0, 0, 1920, 1080],[ 0, 0, 1920, 1080],HD 1080" name="foundry.timeline.outputformat"/>
+             </values>
+            </Set>
+           </sets>
+          </Sequence>
+         </SequenceProjectItemVersion>
+        </items>
+        <ActiveItemIndex>0</ActiveItemIndex>
+        <TimelineProjectItem editable="1" objName="Snapshots" name=""/>
+       </SequenceProjectItemRoot>
+      </items>
+      <BinViewType>2</BinViewType>
+      <BinViewZoom>70</BinViewZoom>
+     </BinProjectItem>
+     <BinProjectItem editable="1" guid="{72cf4a92-6900-4d3f-9fdc-e89fda1ad25d}" name="Flame">
+      <BinViewType>2</BinViewType>
+      <BinViewZoom>70</BinViewZoom>
+     </BinProjectItem>
+     <BinProjectItem editable="1" guid="{808e962e-1afc-4320-8daa-bc3d1fbcc97c}" name="Edit">
+      <BinViewType>2</BinViewType>
+      <BinViewZoom>70</BinViewZoom>
+     </BinProjectItem>
+     <BinProjectItem editable="1" guid="{c868a1f1-7576-4cc2-b61e-6db1089301e0}" name="AE">
+      <BinViewType>2</BinViewType>
+      <BinViewZoom>70</BinViewZoom>
+     </BinProjectItem>
+     <BinProjectItem editable="1" guid="{bc4f0ea1-bbcf-42d1-84b2-126451fd4fa0}" name="CG">
+      <BinViewType>2</BinViewType>
+      <BinViewZoom>70</BinViewZoom>
+     </BinProjectItem>
+    </items>
+    <BinViewType>2</BinViewType>
+    <BinViewZoom>90</BinViewZoom>
+    <AllowedItems>13</AllowedItems>
+   </RootBinProjectItem>
+   <RootBinProjectItem editable="1" guid="{13962414-d959-4f42-9b5a-81f47f25ea28}" name="Tags">
+    <BinViewType>2</BinViewType>
+    <BinViewZoom>70</BinViewZoom>
+    <AllowedItems>17</AllowedItems>
+   </RootBinProjectItem>
+  </items>
+  <BinViewType>2</BinViewType>
+  <BinViewZoom>70</BinViewZoom>
+  <AllowedItems>2</AllowedItems>
+  <RootBinProjectItem objName="sequencesBin" guid="{39e84961-eb02-4b82-aed1-cc7cd4e94ffb}" link="internal"/>
+  <RootBinProjectItem objName="tagsBin" guid="{13962414-d959-4f42-9b5a-81f47f25ea28}" link="internal"/>
+  <MediaFormatValue default="0" objName="outputformat" value="1,[ 0, 0, 1920, 1080],[ 0, 0, 1920, 1080],HD 1080" name=""/>
+ </Project>
+ <UIState>
+  <items>
+   <Viewer audioLatencyMs="0" mode="0" audioLevel="101" layout="0" audioMute="0" blend="1" time="0" objectname="uk.co.thefoundry.sequenceviewer.1">
+    <players>
+     <player scaleY="0.640741" channels="0" translateX="0" translateY="0" LUT="sRGB" playSpeed="1" displayGamma="1" displayGain="1" lod="-1" rotate="0" time="0" repeatMode="0" scaleX="0.640741" zoomMode="2">
+      <Sequence objName="timeline" guid="{6684420f-42eb-42b0-93fe-3fe299ee2033}" link="internal"/>
+     </player>
+     <player scaleY="0.337891" channels="0" translateX="0" translateY="0" LUT="sRGB" playSpeed="1" displayGamma="1" displayGain="1" lod="-1" rotate="0" time="0" repeatMode="0" scaleX="0.337891" zoomMode="2"/>
+    </players>
+   </Viewer>
+   <TimelineEditor firstVisibleTime="0" lastVisibleTime="99001" objectname="uk.co.thefoundry.timeline.1">
+    <SequenceProjectItemVersion objName="timeline" guid="{ebfce628-aa64-456d-9d5c-ae30c8267b86}" link="internal"/>
+    <Viewer objName="viewer" guid="{8181d362-6a2d-473d-b785-cf3c0fe67a6f}" link="internal"/>
+   </TimelineEditor>
+  </items>
+ </UIState>
+</hieroXML>

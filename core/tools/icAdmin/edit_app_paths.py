@@ -80,14 +80,14 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.ui.appPaths_buttonBox.button(QtWidgets.QDialogButtonBox.Save).clicked.connect(self.saveAndExit)
 
 		# Instantiate jobs class and load data
-		self.ap = appPaths.appPaths()
+		self.ap = appPaths.AppPaths()
 
 
 	def display(self):
 		""" Initialise or reset by reloading data.
 		"""
 		# Load data from xml file
-		self.ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'))
+		self.ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'), use_template=True)
 
 		# Populate fields
 		self.populateApps()

@@ -62,26 +62,28 @@ def setEnv(envVars):
 	jobData = settingsData.settingsData()
 	shotData = settingsData.settingsData()
 #	defaultData = settingsData.settingsData()
-	ap = appPaths.appPaths()
+	ap = appPaths.AppPaths()
 
-	jobDataLoaded = jobData.loadXML(os.path.join(jobDataPath, 'jobData.xml'))
-	shotDataLoaded = shotData.loadXML(os.path.join(shotDataPath, 'shotData.xml'))
+	jobDataLoaded = jobData.loadXML(os.path.join(jobDataPath, 'jobData.xml'), use_template=False)
+	shotDataLoaded = shotData.loadXML(os.path.join(shotDataPath, 'shotData.xml'), use_template=False)
 #	defaultData.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'defaultData.xml'))
-	ap.loadXML( os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml') )
+	ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'), use_template=True)
 
 	# ------------------------------------------------------------------------
 	# If XML files don't exist, create defaults, and attempt to convert data
 	# from Python data files
+	jobDataLegacy = False
 	if not jobDataLoaded:
 		import legacySettings
 
 		# Try to convert from jobData.py to XML (legacy jobs)
 		if legacySettings.convertJobData(jobDataPath, jobData, ap):
+			jobDataLegacy = True
 			jobData.loadXML()
 		else:
 			return False
 
-	if not shotDataLoaded:
+	if jobDataLegacy and not shotDataLoaded:
 		import legacySettings
 
 		# Try to convert from shotData.py to XML (legacy jobs)

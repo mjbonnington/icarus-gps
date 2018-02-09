@@ -73,7 +73,7 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 
 		# Instantiate XML data classes
 		self.assetData = settingsData.settingsData()
-		self.assetData.loadXML(os.path.join(self.assetRootDir, version, 'assetData.xml'), quiet=False)
+		self.assetData.loadXML(os.path.join(self.assetRootDir, version, 'assetData.xml'), use_template=False, quiet=False)
 
 		# Set asset label text
 		self.ui.asset_label.setText( self.assetData.getValue('asset', 'assetPblName') )
@@ -99,7 +99,7 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		selVersion = self.ui.assetVersion_listWidget.currentItem().text()
 		assetDir = os.path.join(self.assetRootDir, selVersion)
 
-		assetDataLoaded = self.assetData.loadXML(os.path.join(assetDir, 'assetData.xml'), quiet=False)
+		assetDataLoaded = self.assetData.loadXML(os.path.join(assetDir, 'assetData.xml'), use_template=False, quiet=False)
 
 		# --------------------------------------------------------------------
 		# If XML files don't exist, create defaults, and attempt to convert

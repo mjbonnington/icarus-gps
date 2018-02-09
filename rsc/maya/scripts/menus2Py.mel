@@ -64,7 +64,7 @@ global proc menus2Py.browseJob()
 global proc menus2Py.updatePresetCameraMenu(string $menu)
 {
 	// Get the list of cameras and store it in an array
-	python( "import camPresets, os; cp = camPresets.camPresets(); cp.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'camPresets.xml'))" );
+	python( "import camPresets, os; cp = camPresets.CamPresets(); cp.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'camPresets.xml'), use_template=True)" );
 	python( "shotCam = os.environ['SHOT']" );
 	string $camLs[] = python( "[shotCam] + cp.getPresets(activeOnly=True)" );
 

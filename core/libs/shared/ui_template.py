@@ -42,7 +42,8 @@ class TemplateUI(object):
 
 		Subclasses derived from this class need to also inherit QMainWindow or
 		QDialog. This class has no __init__ constructor as a fudge to get
-		around the idiosyncracies of multiple inheritance in Python 2 and 3.
+		around the idiosyncracies of multiple inheritance whilst retaining
+		compatibility with both Python 2 and 3.
 	"""
 	def setupUI(self, 
 		        window_object, 
@@ -53,7 +54,7 @@ class TemplateUI(object):
 	            store_window_geometry=True):
 		""" Setup the UI.
 		"""
-		info_str = "\nobject: %s\nparent: %s\n" %(self, self.parent)
+		info_str = "Window object: %s Parent: %s" %(self, self.parent)
 		verbose.print_(info_str)
 
 		# Define some global variables
@@ -324,32 +325,6 @@ class TemplateUI(object):
 				return None
 			else:
 				return self.findCategory(widget.parent())
-
-
-	# def inheritFrom(self, category, attr):
-	# 	""" Tries to get a value from the current settings type, and if no
-	# 		value is found tries to inherit the value instead.
-	# 		Returns two values:
-	# 		'text' - the value of the requested attribute.
-	# 		'inherited' - a Boolean value which is true if the value was
-	# 		inherited.
-	# 	"""
-	# 	text = self.xd.getValue(category, attr)
-	# 	inherited = False
-
-	# 	if text is not "":
-	# 		pass
-
-	# 	# elif self.settingsType == 'Shot':
-	# 	elif self.inherit == 'Job':
-	# 		jd = settingsData.settingsData()
-	# 		jd.loadXML(os.path.join(os.environ['JOBDATA'], 'jobData.xml'))
-	# 		text = jd.getValue(category, attr)
-	# 		inherited = True
-	# 		verbose.print_('%s.%s = %s (inheriting value from job data)' %(category, attr, text), 4)
-
-	# 	# print("%s/%s: got value %s, inherited=%s" %(category, attr, text, inherited))
-	# 	return text, inherited
 
 
 	def addContextMenu(self, widget, name, command, icon=None):

@@ -11,6 +11,7 @@
 
 import os
 import re
+import shutil
 import sys
 import traceback
 
@@ -69,19 +70,24 @@ def hardLink(source, destination, umask='000'):
 	dst = os.path.normpath(destination)
 
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
-		if os.path.isdir(dst):  # if destination is a folder, append the filename from the source
+		# If destination is a folder, append the filename from the source
+		if os.path.isdir(dst):
 			filename = os.path.basename(src)
 			dst = os.path.join(dst, filename)
 
-		if os.path.isfile(dst):  # delete the destination file if it already exists - this is to mimic the Unix behaviour and force creation of the hard link
-			os.system('del %s /f /q' %dst)
+		# Delete the destination file if it already exists - this is to mimic
+		# the Unix behaviour and force creation of the hard link
+		if os.path.isfile(dst):
+			os.system('del "%s" /f /q' %dst)
 
-		#cmdStr = 'mklink /H %s %s' %(dst, src)  # this only works with local NTFS volumes
-		cmdStr = 'fsutil hardlink create %s %s >nul' %(dst, src)  # works over SMB network shares; suppressing output to null
+		# Create the hardlink
+		#cmdStr = 'mklink /H "%s" "%s"' %(dst, src)  # This only works with local NTFS volumes
+		cmdStr = 'fsutil hardlink create "%s" "%s" >nul' %(dst, src)  # Works over SMB network shares; suppressing output to null
 	else:
-		cmdStr = '%s; ln -f %s %s' %(setUmask(umask), src, dst)
+		#cmdStr = '%s; ln -f %s %s' %(setUmask(umask), src, dst)
+		cmdStr = 'ln -f %s %s' %(src, dst)
 
-	verbose.print_(cmdStr, 4)
+	verbose.print_(cmdStr)
 	os.system(cmdStr)
 
 	return dst
@@ -114,33 +120,42 @@ def rename(source, destination, quiet=False):
 	dst = os.path.normpath(destination)
 
 	if not quiet:
-		verbose.print_('rename "%s" "%s"' %(src, dst), 4)
+		verbose.print_('rename "%s" -> "%s"' %(src, dst))
 	try:
 		os.rename(src, dst)
-		return True, ""
+		return True, dst
 	except:
 		exc_type, exc_value, exc_traceback = sys.exc_info()
-		#traceback.print_exception(exc_type, exc_value, exc_traceback)
 		msg = traceback.format_exception_only(exc_type, exc_value)[0]
-		#msg = "%s %s" %(str(exc_type), exc_value) #traceback.format_exc()
 		if not quiet:
 			verbose.error(msg)
 		return False, msg
 
 
-def copy(source, destination):
+def copy(source, destination, quiet=False):
 	""" Copy a file or folder.
 	"""
 	src = os.path.normpath(source)
 	dst = os.path.normpath(destination)
 
-	if os.environ['IC_RUNNING_OS'] == 'Windows':
-		cmdStr = 'copy /Y "%s" "%s"' %(src, dst)
-	else:
-		cmdStr = 'cp -rf "%s" "%s"' %(src, dst)
+	# if os.environ['IC_RUNNING_OS'] == 'Windows':
+	# 	cmdStr = 'copy /Y "%s" "%s"' %(src, dst)
+	# else:
+	# 	cmdStr = 'cp -rf "%s" "%s"' %(src, dst)
 
-	verbose.print_(cmdStr, 4)
-	os.system(cmdStr)
+	if not quiet:
+	#	verbose.print_(cmdStr)
+		verbose.print_('copy "%s" -> "%s"' %(src, dst))
+	try:
+	#	os.system(cmdStr)
+		shutil.copyfile(src, dst)
+		return True, dst
+	except:
+		exc_type, exc_value, exc_traceback = sys.exc_info()
+		msg = traceback.format_exception_only(exc_type, exc_value)[0]
+		if not quiet:
+			verbose.error(msg)
+		return False, msg
 
 
 def copyDirContents(source, destination, umask='000'):
@@ -151,9 +166,9 @@ def copyDirContents(source, destination, umask='000'):
 	dst = os.path.normpath( destination )
 
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
-		cmdStr = 'copy /Y %s %s' %(src, dst)
+		cmdStr = 'copy /Y "%s" "%s"' %(src, dst)
 	else:
-		cmdStr = '%s; cp -rf %s %s' %(setUmask(umask), src, dst)
+		cmdStr = '%s; cp -rf "%s" "%s"' %(setUmask(umask), src, dst)
 
 	verbose.print_(cmdStr, 4)
 	os.system(cmdStr)

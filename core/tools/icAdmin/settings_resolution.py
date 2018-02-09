@@ -29,8 +29,8 @@ class helper():
 		self.parent = parent
 		self.parent.aspectRatio = 1
 	
-		self.rp = resPresets.resPresets()
-		rp_load = self.rp.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'resPresets.xml'))
+		self.rp = resPresets.ResPresets()
+		rp_load = self.rp.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'resPresets.xml'), use_template=True)
 
 		# Populate combo box with presets
 		presets = self.rp.getPresets()

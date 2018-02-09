@@ -38,7 +38,7 @@ class AppLauncher(QtWidgets.QDialog):
 		self.parent = parent
 
 		# Instantiate data classes
-		self.ap = appPaths.appPaths()
+		self.ap = appPaths.AppPaths()
 		self.jd = settingsData.settingsData()
 		self.ds = dirStructure.DirStructure()
 
@@ -59,8 +59,8 @@ class AppLauncher(QtWidgets.QDialog):
 		verbose.print_("Populating app launcher icons...", 4)
 
 		if job is not None:
-			self.ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'))
-			self.jd.loadXML(os.path.join(os.environ['JOBDATA'], 'jobData.xml'))
+			self.ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'), use_template=True)
+			self.jd.loadXML(os.path.join(os.environ['JOBDATA'], 'jobData.xml'), use_template=False)
 
 		parentLayout = self.frame.findChildren(QtWidgets.QVBoxLayout, 'launchApp_verticalLayout')[0]
 

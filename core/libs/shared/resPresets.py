@@ -3,18 +3,18 @@
 # [Icarus] resPresets.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2017 Gramercy Park Studios
+# (c) 2015-2018 Gramercy Park Studios
 #
 # Manipulates resolution presets data stored in an XML database.
 
 
-import xml.etree.ElementTree as ET
+#import xml.etree.ElementTree as ET
 
 # Import custom modules
 import xmlData
 
 
-class resPresets(xmlData.XMLData):
+class ResPresets(xmlData.XMLData):
 	""" Manipulates XML database to store resolution presets.
 		Inherits XMLData class.
 	"""

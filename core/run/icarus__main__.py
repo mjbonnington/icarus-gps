@@ -630,7 +630,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# If no jobs found, disable all launcher / shot setup UI controls
 		else:
 			msg = "No active jobs found"
-			verbose.warning(msg)
+			verbose.warning(msg+".")
 			self.ui.job_comboBox.insertItem(0, '[%s]' %msg)
 			self.ui.shot_comboBox.clear()
 			self.ui.shot_comboBox.insertItem(0, '[None]')

@@ -1,10 +1,10 @@
 v0.9.11 (--)
 -	[Icarus] Added Title and Notes fields to shot settings.
 -	[Icarus] Job management now performs check for non-alphanumeric characters in paths.
--	[Icarus] Drag & drop enabled for Batch Rename tool - files and folders can now be dropped into the window for processing.
--	[Icarus] File extensions can now be changed.
+-	[Icarus] Batch Rename tool drag & drop enabled - files and folders can now be dropped into the window for processing.
+-	[Icarus] Batch Rename tool has the ability to change file extensions.
 -	[Icarus] Removed djv_view from distribution. Icarus will now use the executable specified in the job settings.
--	[Maya] Publishing with textures checked now leaves your scene with its original texture paths.
+-	[Maya] Publishing an asset with textures checked no longer changes the texture paths on the original file nodes.
 -	[Maya] GPS Preview can now output QuickTime movies with sound.
 -	[Maya] GPS Preview can now generate a playblast from either the active panel or a specific camera.
 -	[Maya] GPS Preview output filename field now accepts <Scene> and <Camera> tokens.
@@ -13,7 +13,7 @@ v0.9.11 (--)
 -	[Maya] Preferences for image viewer and Photoshop executables are now set automatically based on job settings.
 -	[Nuke] Added Cryptomatte gizmos.
 -	[Nuke] Updated Pixelfudger tools/gizmos.
--	[Render Queue] Render jobs can now be submitted to Deadline from the render submitter dialog.
+-	[Render Queue] Render jobs can now be submitted to Deadline from the Render Submitter dialog.
 
 v0.9.10 (2017-10-31)
 -	[Icarus] Updated application launcher. App icons can be added/removed/sorted dynamically depending on preference.
