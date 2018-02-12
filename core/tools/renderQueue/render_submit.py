@@ -19,6 +19,7 @@ import ui_template as UI
 
 # Import custom modules
 import osOps
+import render_submit_deadline as deadline
 import renderQueue
 import sequence
 # import settingsData
@@ -56,7 +57,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		super(RenderSubmitUI, self).__init__(parent)
 		self.parent = parent
 
-		xml_data = os.path.join(os.environ['IC_USERPREFS'], 'icSubmissionData.xml')
+		xml_data = os.path.join(os.environ['IC_USERPREFS'], 'renderSubmit.xml')
 
 		self.setupUI(window_object=WINDOW_OBJECT, 
 		             window_title=WINDOW_TITLE, 
@@ -96,8 +97,8 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		# # self.ui.group_comboBox.currentIndexChanged.connect(self.storeComboBoxValue)
 		# self.ui.pool_comboBox.editTextChanged.connect(self.storeComboBoxValue)
 		# self.ui.group_comboBox.editTextChanged.connect(self.storeComboBoxValue)
-		self.ui.getPools_toolButton.clicked.connect(self.getDeadlinePools)
-		self.ui.getGroups_toolButton.clicked.connect(self.getDeadlineGroups)
+		self.ui.getPools_toolButton.clicked.connect(self.getPools)
+		self.ui.getGroups_toolButton.clicked.connect(self.getGroups)
 		# self.ui.priority_spinBox.valueChanged.connect(self.storeSpinBoxValue)
 		# self.ui.comment_lineEdit.textEdited.connect(self.storeLineEditValue)
 
@@ -144,6 +145,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.submitTo_frame.show()
 		self.ui.submitTo_comboBox.setCurrentIndex(self.ui.submitTo_comboBox.findText(self.submitTo))
 		self.ui.submit_pushButton.setText("Submit to %s" %self.submitTo)
+		self.setQueueManagerFromComboBox()
 
 		# Set job type from Icarus environment when possible
 		if os.environ['IC_ENV'] == 'STANDALONE':
@@ -257,12 +259,18 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			combo box value is changed.
 		"""
 		self.submitTo = self.ui.submitTo_comboBox.currentText()
-		userPrefs.edit('rendersubmit', 'submitto', self.submitTo)
+		userPrefs.edit('rendersubmit', 'submitto', self.submitTo) # deprecated
 		self.ui.submit_pushButton.setText("Submit to %s" %self.submitTo)
 
-		self.ui.group_label.setEnabled(False)
-		self.ui.getGroups_toolButton.setEnabled(False)
-		self.ui.group_comboBox.setEnabled(False)
+		ui_hide_list = [self.ui.pool_label, self.ui.group_label, 
+		                self.ui.pool_comboBox, self.ui.group_comboBox, 
+		                self.ui.getPools_toolButton, self.ui.getGroups_toolButton]
+		if self.submitTo == "Deadline":
+			for item in ui_hide_list:
+				item.setEnabled(True)
+		else:
+			for item in ui_hide_list:
+				item.setEnabled(False)
 
 
 	# @QtCore.Slot()
@@ -452,24 +460,16 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		# 	self.ui.layers_groupBox.hide()
 
 
-	def getDeadlinePools(self):
+	def getPools(self):
 		""" Get Deadline pools & populate combo box.
 		"""
-		try:
-			pools = subprocess.check_output([os.environ['DEADLINECMDVERSION'], '-pools'], creationflags=CREATE_NO_WINDOW)
-			self.populateComboBox(self.ui.pool_comboBox, self.strToList(pools))
-		except:
-			verbose.warning("Could not retrieve Deadline pools.")
+		self.populateComboBox(self.ui.pool_comboBox, deadline.get_pools())
 
 
-	def getDeadlineGroups(self):
+	def getGroups(self):
 		""" Get Deadline groups & populate combo box.
 		"""
-		try:
-			groups = subprocess.check_output([os.environ['DEADLINECMDVERSION'], '-groups'], creationflags=CREATE_NO_WINDOW)
-			self.populateComboBox(self.ui.group_comboBox, self.strToList(groups))
-		except:
-			verbose.warning("Could not retrieve Deadline groups.")
+		self.populateComboBox(self.ui.group_comboBox, deadline.get_groups())
 
 
 	def getRenderers(self):
@@ -477,7 +477,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		"""
 		renderers = self.getRenderer()
 		rendererLs = [renderers]
-		# verbose.print_(rendererLs)
+		# print(rendererLs)
 		self.populateComboBox(self.ui.renderer_comboBox, rendererLs)
 
 
@@ -607,9 +607,11 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.save()  # Save settings
 
 		if self.submitTo == "Render Queue":
-			self.submitToRenderQueue()
+			pass
+			#self.submitToRenderQueue()
 		if self.submitTo == "Deadline":
-			self.submitToDeadline()
+			pass
+			#self.submitToDeadline()
 
 
 	def submitToRenderQueue(self):
@@ -851,33 +853,6 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.storeWindow()  # Store window geometry
 
 
-	# def save(self):
-	# 	""" Save data.
-	# 	"""
-	# 	if self.xd.saveXML():
-	# 		verbose.message("Submission settings saved.")
-	# 		return True
-	# 	else:
-	# 		verbose.error("Submission settings could not be saved.")
-	# 		return False
-
-
-	# def saveAndExit(self):
-	# 	""" Save data and exit dialog.
-	# 	"""
-	# 	if self.save():
-	# 		self.returnValue = True
-	# 		self.hide()
-	# 	else:
-	# 		self.exit()  # There's a bug where all property panel widgets become visible if a save fails. As a quick dodgy workaround we exit so we don't see it happen.
-
-
-	# def exit(self):
-	# 	""" Exit the dialog.
-	# 	"""
-	# 	self.returnValue = False
-	# 	self.hide()
-
 # ----------------------------------------------------------------------------
 # End of main window class
 # ----------------------------------------------------------------------------
@@ -887,7 +862,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 # 	# for key, value in kwargs.iteritems():
 # 	# 	print "%s = %s" % (key, value)
 # 	renderSubmitUI = RenderSubmitUI(**kwargs)
-# 	#renderSubmitUI.setAttribute( QtCore.Qt.WA_DeleteOnClose )
+# 	#renderSubmitUI.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 # 	print renderSubmitUI
 # 	renderSubmitUI.show()
 # 	#renderSubmitUI.raise_()

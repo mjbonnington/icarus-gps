@@ -88,6 +88,13 @@ def print_(message, verbosityLevel=4, status=True, inline=False, log=False):
 		3 - Info and progress messages (default)
 		4 - Detailed info messages
 	"""
+	# Avoid errors if the type of 'message' is not a string by bypassing the
+	# rest of this function and passing the 'message' directly to the builtin
+	# print function...
+	if type(message) is not str:
+		print(message)
+		return
+
 	global statusBar
 
 	try:

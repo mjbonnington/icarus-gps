@@ -503,16 +503,6 @@ class TemplateUI(object):
 	# ------------------------------------------------------------------------
 
 
-	def strToList(self, string):
-		""" Convert string to list by splitting into lines.
-			Encode bytes to string for Python 3.
-		"""
-		string = string.decode()
-		ls = string.splitlines()
-		#verbose.print_(ls)
-		return ls
-
-
 	def reloadStyleSheet(self, stylesheet):
 		""" Reload stylesheet.
 		"""

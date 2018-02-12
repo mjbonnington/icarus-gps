@@ -15,6 +15,9 @@
    <string>Submit Render</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="xmlCategory" stdset="0">
+    <string>rendersubmit</string>
+   </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <property name="spacing">
      <number>0</number>
