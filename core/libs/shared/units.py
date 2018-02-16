@@ -3,7 +3,7 @@
 # [Icarus] units.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015 Gramercy Park Studios
+# (c) 2015-2018 Gramercy Park Studios
 #
 # Look-up table for Maya's discrete unit preset values.
 
@@ -14,6 +14,11 @@ time = [('film',     'Film (24 fps)',       24),
         ('show',     'Show (48 fps)',       48), 
         ('palf',     'PAL Field (50 fps)',  50), 
         ('ntscf',    'NTSC Field (60 fps)', 60), 
+        ('23.976fps','24p',             23.976), 
+        ('29.97fps', 'NTSC',             29.97), 
+        ('29.97df',  'NTSC Drop-Frame',  29.97), 
+        ('47.952fps','48p',             47.952), 
+        ('59.94fps', 'NTSC Field',       59.94), 
         ('sec',      'seconds',              1), 
         ('2fps',     '2 fps',                2), 
         ('3fps',     '3 fps',                3), 
@@ -47,7 +52,9 @@ time = [('film',     'Film (24 fps)',       24),
         ('1500fps',  '1500 fps',          1500), 
         ('2000fps',  '2000 fps',          2000), 
         ('3000fps',  '3000 fps',          3000), 
-        ('6000fps',  '6000 fps',          6000)]
+        ('6000fps',  '6000 fps',          6000), 
+        ('44100fps', '44100 fps',        44100), 
+        ('48000fps', '48000 fps',        48000)]
 
 linear = [('mm', 'millimeter'), 
           ('cm', 'centimeter'), 

@@ -350,8 +350,8 @@ QPushButton::menu-indicator {
  */
 
 QToolButton { /* all types of tool button */
-	/*min-height: 3ex;*/
-	min-height: 16px;
+	/*min-height: 3ex;
+	min-height: 16px;*/
 	padding: 1px 2px 2px 1px;
 	background: #4c4c4c;
 	border: 2px solid transparent;

@@ -1,5 +1,6 @@
 v0.9.11 (--)
 -	[Icarus] Added Title and Notes fields to shot settings.
+-	[Icarus] Added support for non-integer frame rates (i.e. 23.976, 29.97, etc.)
 -	[Icarus] Job management now performs check for non-alphanumeric characters in paths.
 -	[Icarus] Batch Rename tool drag & drop enabled - files and folders can now be dropped into the window for processing.
 -	[Icarus] Batch Rename tool has the ability to change file extensions.

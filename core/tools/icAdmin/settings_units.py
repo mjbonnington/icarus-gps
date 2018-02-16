@@ -3,7 +3,7 @@
 # [Icarus] settings_units.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2017 Gramercy Park Studios
+# (c) 2015-2018 Gramercy Park Studios
 #
 # Units settings handler.
 
@@ -39,11 +39,11 @@ class helper():
 
 		# Connect signals & slots
 		self.frame.time_comboBox.currentIndexChanged.connect(lambda current: self.setFPS(current))
-		# self.frame.fps_spinBox.valueChanged.connect(lambda value: self.setTimeUnit(value))
+		# self.frame.fps_doubleSpinBox.valueChanged.connect(lambda value: self.setTimeUnit(value))
 
 
 	def setFPS(self, current=None):
 		""" Set FPS spin box value based on time unit combo box.
 		"""
-		self.frame.fps_spinBox.setValue(units.time[current][2])
+		self.frame.fps_doubleSpinBox.setValue(units.time[current][2])
 
