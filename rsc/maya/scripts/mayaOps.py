@@ -951,15 +951,28 @@ def update():
 	djvExecutable = os.getenv('DJVVERSION', '')
 
 	# Setting defaults for Maya startup
-	mc.optionVar(sv=('workingUnitLinear', unit))
-	mc.optionVar(sv=('workingUnitLinearDefault', unit))
-	# mc.optionVar(sv=('workingUnitLinearHold', unit))
-	mc.optionVar(sv=('workingUnitAngular', angle))
-	mc.optionVar(sv=('workingUnitAngularDefault', angle))
-	# mc.optionVar(sv=('workingUnitAngularHold', angle))
-	mc.optionVar(sv=('workingUnitTime', timeFormat))
-	mc.optionVar(sv=('workingUnitTimeDefault', timeFormat))
-	# mc.optionVar(sv=('workingUnitTimeHold', timeFormat))
+	#mc.currentUnit(l=unit, a=angle, t=timeFormat)
+	try:
+		mc.currentUnit(l=unit)
+		mc.optionVar(sv=('workingUnitLinear', unit))
+		mc.optionVar(sv=('workingUnitLinearDefault', unit))
+		# mc.optionVar(sv=('workingUnitLinearHold', unit))
+	except RuntimeError:
+		mc.warning("Unable to set linear unit.")
+	try:
+		mc.currentUnit(a=angle)
+		mc.optionVar(sv=('workingUnitAngular', angle))
+		mc.optionVar(sv=('workingUnitAngularDefault', angle))
+		# mc.optionVar(sv=('workingUnitAngularHold', angle))
+	except RuntimeError:
+		mc.warning("Unable to set angular unit.")
+	try:
+		mc.currentUnit(t=timeFormat)
+		mc.optionVar(sv=('workingUnitTime', timeFormat))
+		mc.optionVar(sv=('workingUnitTimeDefault', timeFormat))
+		# mc.optionVar(sv=('workingUnitTimeHold', timeFormat))
+	except RuntimeError:
+		mc.warning('Unable to set time unit.')
 
 	mc.optionVar(fv=('playbackMinRangeDefault', startFrame))
 	mc.optionVar(fv=('playbackMinDefault', inFrame))
@@ -967,10 +980,6 @@ def update():
 	mc.optionVar(fv=('playbackMaxDefault', outFrame))
 
 	mc.optionVar(sv=('upAxisDirection', 'y'))
-
-	# mc.optionVar(sv=('workingUnitLinear', unit))
-	# mc.optionVar(sv=('workingUnitAngular', angle))
-	# mc.optionVar(sv=('workingUnitTime', timeFormat))
 
 	mc.optionVar(sv=('EditImageDir', psExecutable))
 	mc.optionVar(sv=('PhotoshopDir', psExecutable))
@@ -980,7 +989,6 @@ def update():
 	mc.optionVar(sv=('ViewImageDir', djvExecutable))
 	mc.optionVar(sv=('ViewSequenceDir', djvExecutable))
 
-	mc.currentUnit(l=unit, a=angle, t=timeFormat)
 	mc.playbackOptions(animationStartTime=startFrame, 
 	                   minTime=inFrame, 
 	                   maxTime=outFrame, 

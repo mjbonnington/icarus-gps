@@ -89,19 +89,30 @@ def viewer(path=None):
 
 	# Export path to djv codec libraries according to OS
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
-		cmdStr += 'cd /d "%s" & ' % startupDir
+		cmdStr += 'cd /d "%s" & ' %startupDir
 	elif os.environ['IC_RUNNING_OS'] == 'Darwin':
 		cmdStr += "export DYLD_FALLBACK_LIBRARY_PATH=%s; " %os.environ['DJV_LIB']
-		cmdStr += "cd %s; " % startupDir
+		cmdStr += "cd %s; " %startupDir
 	else:
-		cmdStr += "export LD_LIBRARY_PATH=%s; export LIBQUICKTIME_PLUGIN_DIR=%s; " %(os.environ['DJV_LIB'], os.path.join(os.environ['DJV_LIB'],'libquicktime'))
-		cmdStr += "cd %s; " % startupDir
+		cmdStr += "export LD_LIBRARY_PATH=%s; export LIBQUICKTIME_PLUGIN_DIR=%s; " %(os.environ['DJV_LIB'], os.path.join(os.environ['DJV_LIB'], 'libquicktime'))
+		cmdStr += "cd %s; " %startupDir
+
+	# Process playback speed string from shot settings
+	playbackSpeed = float(os.environ.get('FPS', '25'))
+	if playbackSpeed == int(playbackSpeed):
+		playbackSpeed = int(playbackSpeed)  # Convert to integer
+	if playbackSpeed in [1, 3, 6, 12, 15, 16, 18, 23.976, 24, 25, 29.97, 30, 50, 59.94, 60, 120]:
+		playbackSpeedArg = "-playback_speed %s" %playbackSpeed
+		#print(type(playbackSpeed), playbackSpeed)
+	else:
+		playbackSpeedArg = ""
+		verbose.warning("The playback speed of %s fps is not supported by djv_view. Falling back to default setting." %playbackSpeed)
 
 	# Build the command based on whether path is a file or a directory
 	if pathIsFile:
-		cmdStr += '"%s" "%s"' %(os.environ['DJV_PLAY'], path)
+		cmdStr += '"%s" %s "%s"' %(os.environ['DJV_PLAY'], playbackSpeedArg, path)
 	else:
-		cmdStr += '"%s"' %os.environ['DJV_PLAY']
+		cmdStr += '"%s" %s' %(os.environ['DJV_PLAY'], playbackSpeedArg)
 
 	# Call command with subprocess in order to not lock the system while djv
 	# is running

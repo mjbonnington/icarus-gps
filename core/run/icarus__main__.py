@@ -73,7 +73,7 @@ import verbose
 
 VENDOR = "Gramercy Park Studios"
 COPYRIGHT = "(c) 2013-2018"
-DEVELOPERS = "Nuno Pereira, Mike Bonnington"
+DEVELOPERS = "Nuno Pereira, Mike Bonnington, Ben Parry"
 
 # Set window title and object names
 WINDOW_TITLE = "Icarus"
@@ -178,7 +178,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# self.ui.renderPblRevert_pushButton.clicked.connect(self.renderTableClear)
 		self.ui.renderPbl_treeWidget.currentItemChanged.connect(self.updateRenderPublishUI)
 		self.ui.renderPbl_treeWidget.itemDoubleClicked.connect(self.renderPreview)
-		# self.ui.dailyPbl_treeWidget.itemDoubleClicked.connect(self.renderPreview) # remove when preview is working correctly
+		self.ui.dailyPbl_treeWidget.itemDoubleClicked.connect(self.dailyPreview)
 		self.ui.dailyPblType_comboBox.currentIndexChanged.connect(self.setDailyType)
 		self.ui.dailyPblAdd_pushButton.clicked.connect(self.dailyTableAdd)
 		self.ui.publish_pushButton.clicked.connect(self.initPublish)
@@ -1276,7 +1276,14 @@ Developers: %s
 		""" Launches sequence viewer when entry is double-clicked.
 		"""
 		path = osOps.absolutePath(item.text(3))
-		self.preview( sequence.getFirst(path) )
+		self.preview(sequence.getFirst(path))
+
+
+	def dailyPreview(self, item, column):
+		""" Launches sequence viewer when entry is double-clicked.
+		"""
+		path = osOps.absolutePath(os.path.join(item.text(3), item.text(0)))
+		self.preview(sequence.getFirst(path))
 
 
 	def setLayerAsMain(self):

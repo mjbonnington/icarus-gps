@@ -1,10 +1,11 @@
 v0.9.11 (--)
 -	[Icarus] Added Title and Notes fields to shot settings.
--	[Icarus] Added support for non-integer frame rates (i.e. 23.976, 29.97, etc.)
 -	[Icarus] Job management now performs check for non-alphanumeric characters in paths.
 -	[Icarus] Batch Rename tool drag & drop enabled - files and folders can now be dropped into the window for processing.
 -	[Icarus] Batch Rename tool has the ability to change file extensions.
--	[Icarus] Removed djv_view from distribution. Icarus will now use the executable specified in the job settings.
+-	[Icarus] Added support for non-integer frame rates (i.e. 23.976, 29.97, etc.)
+-	[djv] Removed djv_view from distribution. Icarus will now use the executable specified in the job settings.
+-	[djv] Sequences will now playback at the correct frame rate (providing the frame rate is supported).
 -	[Maya] Publishing an asset with textures checked no longer changes the texture paths on the original file nodes.
 -	[Maya] GPS Preview can now output QuickTime movies with sound.
 -	[Maya] GPS Preview can now generate a playblast from either the active panel or a specific camera.

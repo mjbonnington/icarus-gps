@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>128</height>
+    <height>160</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -34,13 +34,13 @@
      <property name="text">
       <string>Linear:</string>
      </property>
+     <property name="buddy">
+      <cstring>linear_comboBox</cstring>
+     </property>
     </widget>
    </item>
    <item row="1" column="1">
     <widget class="QComboBox" name="linear_comboBox">
-     <property name="currentIndex">
-      <number>-1</number>
-     </property>
      <property name="xmlTag" stdset="0">
       <string>linear</string>
      </property>
@@ -51,6 +51,9 @@
      <property name="text">
       <string>Angle:</string>
      </property>
+     <property name="buddy">
+      <cstring>angle_comboBox</cstring>
+     </property>
     </widget>
    </item>
    <item row="2" column="1">
@@ -60,48 +63,22 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
+   <item row="4" column="0">
     <widget class="QLabel" name="time_label">
      <property name="text">
-      <string>Time:</string>
+      <string>Frame rate:</string>
+     </property>
+     <property name="buddy">
+      <cstring>fps_doubleSpinBox</cstring>
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
+   <item row="4" column="1">
     <layout class="QHBoxLayout" name="time_horizontalLayout">
-     <item>
-      <widget class="QComboBox" name="time_comboBox">
-       <property name="currentIndex">
-        <number>-1</number>
-       </property>
-       <property name="xmlTag" stdset="0">
-        <string>time</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="time_horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Preferred</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>12</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
      <item>
       <widget class="QDoubleSpinBox" name="fps_doubleSpinBox">
        <property name="readOnly">
-        <bool>true</bool>
-       </property>
-       <property name="buttonSymbols">
-        <enum>QAbstractSpinBox::NoButtons</enum>
+        <bool>false</bool>
        </property>
        <property name="suffix">
         <string> fps</string>
@@ -123,10 +100,84 @@
        </property>
       </widget>
      </item>
+     <item>
+      <spacer name="time_horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Preferred</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>12</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QComboBox" name="time_comboBox">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="xmlTag" stdset="0">
+        <string>time</string>
+       </property>
+      </widget>
+     </item>
     </layout>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="timePreset_label">
+     <property name="text">
+      <string>Time:</string>
+     </property>
+     <property name="buddy">
+      <cstring>timePreset_comboBox</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QComboBox" name="timePreset_comboBox">
+     <property name="xmlTag" stdset="0">
+      <string>timepreset</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QLabel" name="timeInfo_label">
+     <property name="text">
+      <string>Information</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>linear_comboBox</tabstop>
+  <tabstop>angle_comboBox</tabstop>
+  <tabstop>timePreset_comboBox</tabstop>
+  <tabstop>fps_doubleSpinBox</tabstop>
+  <tabstop>time_comboBox</tabstop>
+ </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>timePreset_comboBox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>time_comboBox</receiver>
+   <slot>setCurrentIndex(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>150</x>
+     <y>72</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>229</x>
+     <y>99</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

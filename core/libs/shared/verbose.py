@@ -89,11 +89,16 @@ def print_(message, verbosityLevel=4, status=True, inline=False, log=False):
 		4 - Detailed info messages
 	"""
 	# Avoid errors if the type of 'message' is not a string by bypassing the
-	# rest of this function and passing the 'message' directly to the builtin
+	# rest of this function and passing the message directly to the builtin
 	# print function...
-	if type(message) is not str:
-		print(message)
-		return
+	try:  # Python 2.x
+		if type(message) not in [str, unicode]:
+			print(message)
+			return
+	except NameError:  # Python 3.x
+		if type(message) is not str:
+			print(message)
+			return
 
 	global statusBar
 

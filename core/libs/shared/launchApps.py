@@ -59,6 +59,10 @@ def launch(app=None, executable=None, flags=None):
 		else:
 			cmdStr = '"%s"' %executable
 
+	elif app == 'djv_view':
+		djv()
+		return
+
 	###############
 	# Generic app #
 	###############

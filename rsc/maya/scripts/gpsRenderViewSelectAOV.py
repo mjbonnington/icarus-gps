@@ -1,8 +1,8 @@
 # [GPS] Render View Select AOV
-# v0.7.5
+# v0.7.6
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2017 Gramercy Park Studios
+# (c) 2015-2018 Gramercy Park Studios
 #
 # This script adds a combo box to the Render View toolbar which enables you to
 # view AOVs directly in the Render View.
@@ -14,13 +14,16 @@
 #
 # Currently supports the following renderers: Arnold, Redshift, MentalRay
 # (currently pre-Maya 2015 only).
-# (V-Ray support was removed as this functionality already exists in the V-Ray
-# Framebuffer).
+# V-Ray support was removed as this functionality already exists in the V-Ray
+# Framebuffer.
 # Multi-channel EXRs are not supported.
 
 
 import maya.cmds as mc
 import maya.mel as mel
+
+# Import custom modules
+import osOps
 
 
 class SelectAOV():
@@ -274,6 +277,7 @@ class SelectAOV():
 			else:
 				img = img_path[0].replace("<RenderPass>", aov)
 
+		img = osOps.absolutePath(img)
 		print(img)
 
 		# Load the image
