@@ -5,7 +5,7 @@ v0.9.11 (--)
 -	[Icarus] Batch Rename tool has the ability to change file extensions.
 -	[Icarus] Added support for non-integer frame rates (i.e. 23.976, 29.97, etc.)
 -	[djv] Removed djv_view from distribution. Icarus will now use the executable specified in the job settings.
--	[djv] Sequences will now playback at the correct frame rate (providing the frame rate is supported).
+-	[djv] The correct frame rate from the shot settings will be used for playback and encoding (providing the frame rate is supported by djv_view).
 -	[Maya] Publishing an asset with textures checked no longer changes the texture paths on the original file nodes.
 -	[Maya] GPS Preview can now output QuickTime movies with sound.
 -	[Maya] GPS Preview can now generate a playblast from either the active panel or a specific camera.
