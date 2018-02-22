@@ -29,8 +29,6 @@ import verbose
 # ----------------------------------------------------------------------------
 
 VENDOR = "Gramercy Park Studios"
-COPYRIGHT = "(c) 2013-2018"
-DEVELOPERS = "Nuno Pereira, Mike Bonnington, Ben Parry"
 
 
 # ----------------------------------------------------------------------------

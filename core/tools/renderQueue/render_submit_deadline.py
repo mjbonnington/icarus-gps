@@ -12,6 +12,7 @@
 import os
 import re
 import subprocess
+import sys
 
 # Import custom modules
 import osOps
@@ -58,7 +59,7 @@ def get_groups():
 		return None
 
 
-def settings_filename(self, scene, suffix=""):
+def settings_filename(scene, suffix=""):
 	""" Determine the path to the settings file based on the full path of the
 		scene file.
 	"""
@@ -77,41 +78,30 @@ def settings_filename(self, scene, suffix=""):
 		return False
 
 
-def generate_job_info_file(jobInfoFile, 
-						   scene, 
-						   renderLayer, 
-						   plugin, 
-						   jobName, 
-						   comment, 
-						   frames, 
-						   chunkSize, 
-						   pool, 
-						   group, 
-						   priority, 
-						   output):
+def generate_job_info_file(**kwargs):
 	""" Generate job submission info file.
 	"""
-	# if renderLayer:
-	# 	jobInfoFileSuffix = "%s_deadlineJobInfo.txt" %renderLayer
-	# else:
-	# 	jobInfoFileSuffix = "_deadlineJobInfo.txt"
-	# jobInfoFile = self.settings_filename(scene, suffix=jobInfoFileSuffix)
-	fh = open(jobInfoFile, 'w')
-	fh.write("Plugin=%s\n" %plugin)
-	if renderLayer:
-		fh.write("Name=%s - %s\n" %(jobName, renderLayer))
-		fh.write("BatchName=%s\n" %jobName)
+	if kwargs['renderLayer']:
+		jobInfoFileSuffix = "_%s_deadlineJobInfo.txt" %kwargs['renderLayer']
 	else:
-		fh.write("Name=%s\n" %jobName)
-	fh.write("Comment=%s\n" %comment)
-	fh.write("Frames=%s\n" %frames)
-	fh.write("ChunkSize=%s\n" %chunkSize)
-	fh.write("Pool=%s\n" %pool)
-	fh.write("Group=%s\n" %group)
-	fh.write("Priority=%s\n" %priority)
-	if priority == 0:
+		jobInfoFileSuffix = "_deadlineJobInfo.txt"
+	jobInfoFile = settings_filename(kwargs['scene'], suffix=jobInfoFileSuffix)
+	fh = open(jobInfoFile, 'w')
+	fh.write("Plugin=%s\n" %kwargs['plugin'])
+	if kwargs['renderLayer']:
+		fh.write("Name=%s - %s\n" %(kwargs['jobName'], kwargs['renderLayer']))
+		fh.write("BatchName=%s\n" %kwargs['jobName'])
+	else:
+		fh.write("Name=%s\n" %kwargs['jobName'])
+	fh.write("Comment=%s\n" %kwargs['comment'])
+	fh.write("Frames=%s\n" %kwargs['frames'])
+	fh.write("ChunkSize=%s\n" %kwargs['taskSize'])
+	fh.write("Pool=%s\n" %kwargs['pool'])
+	fh.write("Group=%s\n" %kwargs['group'])
+	fh.write("Priority=%s\n" %kwargs['priority'])
+	if kwargs['priority'] == 0:
 		fh.write("InitialStatus=Suspended\n")
-	for i, outputPath in enumerate(output):
+	for i, outputPath in enumerate(kwargs['output']):
 		fh.write("OutputDirectory%d=%s\n" %(i, outputPath[0]))
 		fh.write("OutputFilename%d=%s\n" %(i, outputPath[1]))
 	#fh.write("IncludeEnvironment=True\n")
@@ -122,44 +112,37 @@ def generate_job_info_file(jobInfoFile,
 	return jobInfoFile
 
 
-def generate_plugin_info_file(pluginInfoFile, 
-							  scene, 
-							  renderLayer, 
-							  version, 
-							  renderer, 
-							  projectPath, 
-							  outputFilePath, 
-							  outputFilePrefix):
+def generate_plugin_info_file(**kwargs):
 	""" Generate plugin submission info file.
 	"""
-	# if renderLayer:
-	# 	pluginInfoFileSuffix = "%s_deadlinePluginInfo.txt" %renderLayer
-	# else:
-	# 	pluginInfoFileSuffix = "_deadlinePluginInfo.txt"
-	# pluginInfoFile = self.settings_filename(scene, suffix=pluginInfoFileSuffix)
+	if kwargs['renderLayer']:
+		pluginInfoFileSuffix = "_%s_deadlinePluginInfo.txt" %kwargs['renderLayer']
+	else:
+		pluginInfoFileSuffix = "_deadlinePluginInfo.txt"
+	pluginInfoFile = settings_filename(kwargs['scene'], suffix=pluginInfoFileSuffix)
 	fh = open(pluginInfoFile, 'w')
-	fh.write("Version=%s\n" %version)
+	fh.write("Version=%s\n" %kwargs['version'])
 	fh.write("Build=64bit\n")
-	fh.write("Renderer=%s\n" %renderer)
+	fh.write("Renderer=%s\n" %kwargs['renderer'])
 	fh.write("StrictErrorChecking=1\n")
-	fh.write("ProjectPath=%s\n" %projectPath)
-	fh.write("OutputFilePath=%s\n" %outputFilePath)
-	fh.write("OutputFilePrefix=%s\n" %outputFilePrefix)
-	fh.write("SceneFile=%s\n" %scene)
-	if renderLayer:
+	fh.write("ProjectPath=%s\n" %kwargs['mayaProject'])
+	fh.write("OutputFilePath=%s\n" %kwargs['outputFilePath'])
+	fh.write("OutputFilePrefix=%s\n" %kwargs['outputFilePrefix'])
+	fh.write("SceneFile=%s\n" %kwargs['scene'])
+	if kwargs['renderLayer']:
 		fh.write("UsingRenderLayers=1\n")
 		fh.write("UseLegacyRenderLayers=1\n")
-		fh.write("RenderLayer=%s\n" %renderLayer)
+		fh.write("RenderLayer=%s\n" %kwargs['renderLayer'])
 	fh.close()
 
 	return pluginInfoFile
 
 
-def generate_batch_file(jobInfoFileList, pluginInfoFileList):
+def generate_batch_file(scene, jobInfoFileList, pluginInfoFileList):
 	""" Generate batch job submission file given corresponding lists of job
 		and plugin info files.
 	"""
-	batchSubmissionFile = self.settings_filename(scene, suffix="_args.txt")
+	batchSubmissionFile = settings_filename(scene, suffix="_deadlineBatchArgs.txt")
 	fh = open(batchSubmissionFile, 'w')
 	fh.write("-SubmitMultipleJobs\n")
 	for i in range(len(jobInfoFileList)):
@@ -171,43 +154,27 @@ def generate_batch_file(jobInfoFileList, pluginInfoFileList):
 	return batchSubmissionFile
 
 
-def submit_job(self, scene, renderLayer, **kwargs):
+def submit_job(**kwargs):
 	""" Submit job to Deadline.
 	"""
 	if kwargs is not None:
-		for key, value in kwargs.iteritems():
-			print("%s = %s" %(key, value))
+		for key, value in kwargs.items(): # iteritems(): for Python 2.x
+			print("%30s = %s" %(key, value))
 
 	try:
-		if usingRenderLayers:  # Batch submit ----------------------------
+		if kwargs['renderLayers']:  # Batch submit ---------------------------
 			# Generate submission info files
 			jobInfoFileList = []
 			pluginInfoFileList = []
-			for renderLayer in renderLayerList:
-				jobInfoFile = generate_job_info_file(scene, 
-													 renderLayer, 
-													 plugin, 
-													 jobName, 
-													 comment, 
-													 frames, 
-													 taskSize, 
-													 pool, 
-													 group, 
-													 priority, 
-													 output)
+			for renderLayer in kwargs['renderLayers'].split(", "): # use re for more versatility
+				kwargs['renderLayer'] = renderLayer
+				jobInfoFile = generate_job_info_file(**kwargs)
 				jobInfoFileList.append(jobInfoFile)
-
-				pluginInfoFile = generate_plugin_info_file(scene, 
-														   renderLayer, 
-														   version, 
-														   renderer, 
-														   mayaProject, 
-														   outputFilePath, 
-														   outputFilePrefix)
+				pluginInfoFile = generate_plugin_info_file(**kwargs)
 				pluginInfoFileList.append(pluginInfoFile)
 
 			# Generate batch file
-			batchSubmissionFile = generate_batch_file(jobInfoFileList, pluginInfoFileList)
+			batchSubmissionFile = generate_batch_file(kwargs['scene'], jobInfoFileList, pluginInfoFileList)
 
 			# Execute deadlinecommand
 			cmd_output = subprocess.check_output(
@@ -215,7 +182,7 @@ def submit_job(self, scene, renderLayer, **kwargs):
 				creationflags=CREATE_NO_WINDOW)
 			output_str = cmd_output.decode()
 
-			result_msg = "Successfully submitted job to Deadline."
+			result_msg = "Successfully submitted batch job to Deadline."
 			verbose.message(result_msg)
 
 			# # Delete submission info files - TEMPORARILY DISABLED FOR DEBUGGING PURPOSES
@@ -226,27 +193,11 @@ def submit_job(self, scene, renderLayer, **kwargs):
 			# osOps.recurseRemove(batchSubmissionFile)
 
 
-		else:  # Single job submit ---------------------------------------
+		else:  # Single job submit -------------------------------------------
 			# Generate submission info files
-			jobInfoFile = generate_job_info_file(scene, 
-												 None, 
-												 plugin, 
-												 jobName, 
-												 comment, 
-												 frames, 
-												 taskSize, 
-												 pool, 
-												 group, 
-												 priority, 
-												 output)
-
-			pluginInfoFile = generate_plugin_info_file(scene, 
-													   None, 
-													   version, 
-													   renderer, 
-													   mayaProject, 
-													   outputFilePath, 
-													   outputFilePrefix)
+			kwargs['renderLayer'] = None
+			jobInfoFile = generate_job_info_file(**kwargs)
+			pluginInfoFile = generate_plugin_info_file(**kwargs)
 
 			# Execute deadlinecommand
 			cmd_output = subprocess.check_output(
