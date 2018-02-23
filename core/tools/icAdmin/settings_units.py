@@ -88,6 +88,7 @@ class helper():
 	# @QtCore.Slot(int)
 	def checkFrameRateCompatibility(self, current):
 		""" Check compatibility of frame rate setting.
+			TODO: Update to reflect compatibility with apps other than Maya.
 		"""
 		message = ""
 

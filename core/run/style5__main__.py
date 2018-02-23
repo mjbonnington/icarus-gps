@@ -41,7 +41,7 @@ class TestApp(QtWidgets.QMainWindow):  # Replace 'TestApp' with the name of your
 		super(TestApp, self).__init__(parent)  # Replace 'TestApp' with the name of your app
 
 		# Load UI
-		self.ui = QtCompat.load_ui(fname=os.path.join(os.environ['IC_FORMSDIR'], UI_FILE))
+		self.ui = QtCompat.loadUi(os.path.join(os.environ['IC_FORMSDIR'], UI_FILE), self)
 		if STYLESHEET is not None:
 			qss=os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
 			with open(qss, "r") as fh:

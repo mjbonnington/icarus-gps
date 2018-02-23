@@ -13,6 +13,7 @@ import os
 import re
 import subprocess
 import sys
+import traceback
 
 # Import custom modules
 import osOps
@@ -23,13 +24,13 @@ import verbose
 CREATE_NO_WINDOW = 0x08000000
 
 
-def strToList(string):
-	""" Convert string to list by splitting into lines.
+def str_to_list(string):
+	""" Convert a string returned by deadlinecommand to a list by splitting
+		into lines.
 		Encode bytes to string for Python 3.
 	"""
 	string = string.decode()
 	ls = string.splitlines()
-	# print(ls)
 	return ls
 
 
@@ -40,7 +41,7 @@ def get_pools():
 		pools = subprocess.check_output(
 			[os.environ['DEADLINECMDVERSION'], '-pools'], 
 			creationflags=CREATE_NO_WINDOW)
-		return strToList(pools)
+		return str_to_list(pools)
 	except:
 		verbose.warning("Could not retrieve Deadline pools.")
 		return None
@@ -53,7 +54,7 @@ def get_groups():
 		groups = subprocess.check_output(
 			[os.environ['DEADLINECMDVERSION'], '-groups'], 
 			creationflags=CREATE_NO_WINDOW)
-		return strToList(groups)
+		return str_to_list(groups)
 	except:
 		verbose.warning("Could not retrieve Deadline groups.")
 		return None
@@ -61,7 +62,7 @@ def get_groups():
 
 def settings_filename(scene, suffix=""):
 	""" Determine the path to the settings file based on the full path of the
-		scene file.
+		scene file. N.B. This function is duplicated in render_submit.py
 	"""
 	if os.path.isfile(scene):
 		sceneDir, sceneFile = os.path.split(scene)
@@ -159,10 +160,10 @@ def submit_job(**kwargs):
 	"""
 	if kwargs is not None:
 		for key, value in kwargs.items(): # iteritems(): for Python 2.x
-			print("%30s = %s" %(key, value))
+			verbose.print_("%24s = %s" %(key, value))
 
 	try:
-		if kwargs['renderLayers']:  # Batch submit ---------------------------
+		if kwargs['renderLayers']:  # Batch submission -----------------------
 			# Generate submission info files
 			jobInfoFileList = []
 			pluginInfoFileList = []
@@ -180,20 +181,17 @@ def submit_job(**kwargs):
 			cmd_output = subprocess.check_output(
 				[os.environ['DEADLINECMDVERSION'], batchSubmissionFile], 
 				creationflags=CREATE_NO_WINDOW)
-			output_str = cmd_output.decode()
-
 			result_msg = "Successfully submitted batch job to Deadline."
-			verbose.message(result_msg)
 
-			# # Delete submission info files - TEMPORARILY DISABLED FOR DEBUGGING PURPOSES
-			# for jobInfoFile in jobInfoFileList:
-			# 	osOps.recurseRemove(jobInfoFile)
-			# for pluginInfoFile in pluginInfoFileList:
-			# 	osOps.recurseRemove(pluginInfoFile)
-			# osOps.recurseRemove(batchSubmissionFile)
+			# Delete submission info files
+			if os.environ['IC_VERBOSITY'] < 4:
+				for jobInfoFile in jobInfoFileList:
+					osOps.recurseRemove(jobInfoFile)
+				for pluginInfoFile in pluginInfoFileList:
+					osOps.recurseRemove(pluginInfoFile)
+				osOps.recurseRemove(batchSubmissionFile)
 
-
-		else:  # Single job submit -------------------------------------------
+		else:  # Single job submission ---------------------------------------
 			# Generate submission info files
 			kwargs['renderLayer'] = None
 			jobInfoFile = generate_job_info_file(**kwargs)
@@ -203,20 +201,25 @@ def submit_job(**kwargs):
 			cmd_output = subprocess.check_output(
 				[os.environ['DEADLINECMDVERSION'], jobInfoFile, pluginInfoFile], 
 				creationflags=CREATE_NO_WINDOW)
-			output_str = cmd_output.decode()
-
 			result_msg = "Successfully submitted job to Deadline."
-			verbose.message(result_msg)
 
-			# # Delete submission info files - TEMPORARILY DISABLED FOR DEBUGGING PURPOSES
-			# osOps.recurseRemove(jobInfoFile)
-			# osOps.recurseRemove(pluginInfoFile)
+			# Delete submission info files
+			if os.environ['IC_VERBOSITY'] < 4:
+				osOps.recurseRemove(jobInfoFile)
+				osOps.recurseRemove(pluginInfoFile)
 
-	except:
-		import traceback
+		result = True
+		verbose.message(result_msg)
+		output_str = cmd_output.decode()
+
+	except:  # Submission failed ---------------------------------------------
+		result = False
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		result_msg = "Failed to submit job to Deadline."
 		verbose.error(result_msg)
-		output_str = "Either the Deadline executable could not be found, or the submission info files could not be written." #\n\n%s" % traceback.format_exc()
+		#output_str = "Either the Deadline executable could not be found, or the submission info files could not be written."
+		output_str = traceback.format_exception_only(exc_type, exc_value)[0]
+
+	return result, result_msg, output_str
 

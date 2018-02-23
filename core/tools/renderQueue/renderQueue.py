@@ -18,10 +18,11 @@ class renderQueue(xmlData.XMLData):
 	"""
 
 	def newJob(self, genericOpts, renderOpts, tasks, user, submitTime, comment):
+	#def newJob(self, **kwargs):
 		""" Create a new render job on submission.
 		"""
 		self.loadXML(quiet=True) # reload XML data
-		jobID = self.getNextID()
+		jobID = self.getNextID() # generate UUID
 
 		jobName, jobType, frames, taskSize, priority = genericOpts
 		#print jobType
