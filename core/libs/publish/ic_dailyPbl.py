@@ -114,7 +114,7 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 		dailyDirResult = pblChk.success(os.path.join(dailyDatePath, dailyFile))
 		pblResult = 'SUCCESS'
 		if pblDirResult != pblResult or dailyDirResult != pblResult:
-			pblResult = 'FAIL'
+			pblResult = 'FAILED'
 			raise Exception(verbose.dailyFail())
 
 		verbose.pblFeed(end=True)
@@ -126,11 +126,11 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 		osOps.recurseRemove(pblDir)
 		osOps.recurseRemove(dailyDatePath)
 		pblResult = pblChk.success(pathToPblAsset)
-		pblResult += verbose.pblRollback()
+		pblResult += " - " + verbose.pblRollback()
 
 	# Show publish result dialog
 	dialogTitle = "Publish Report"
-	dialogMsg = "Render:\t%s\n\nVersion:\t%s\n\n\n%s" % (assetPblName, version, pblResult)
+	dialogMsg = "Render:\t%s\n\nVersion:\t%s\n\n%s" % (assetPblName, version, pblResult)
 	dialog = pDialog.dialog()
 	dialog.display(dialogMsg, dialogTitle, conf=True)
 

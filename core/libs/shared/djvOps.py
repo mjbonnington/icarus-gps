@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2017 Gramercy Park Studios
+# (c) 2013-2018 Gramercy Park Studios
 #
 # djv_view operations module.
 
@@ -19,54 +19,83 @@ def exportDjvLibs():
 	""" Export path to djv codec libraries according to OS.
 	"""
 	if os.environ['IC_RUNNING_OS'] == 'Darwin':
-		libsExport = 'export DYLD_FALLBACK_LIBRARY_PATH=%s; ' % os.environ['DJV_LIB']
+		libsExport = "export DYLD_FALLBACK_LIBRARY_PATH=%s; " %os.environ['DJV_LIB']
 	elif os.environ['IC_RUNNING_OS'] == 'Linux':
-		libsExport = 'export LD_LIBRARY_PATH=%s; export LIBQUICKTIME_PLUGIN_DIR=%s; ' % (os.environ['DJV_LIB'], os.path.join(os.environ['DJV_LIB'],'libquicktime'))
+		libsExport = "export LD_LIBRARY_PATH=%s; export LIBQUICKTIME_PLUGIN_DIR=%s; " %(os.environ['DJV_LIB'], os.path.join(os.environ['DJV_LIB'], "libquicktime"))
 	else:
-		libsExport = ''
+		libsExport = ""
 
 	return libsExport
 
 
-def prcImg(inBasename, outBasename, startFrame, endFrame, inExt, outExt='jpg', fps=os.environ['FPS'], resize=None):
+def processSpeed(arg, fps=None):
+	""" Process playback speed string.
+		'arg' is the name of the argument to pass to djv_view. This can be
+		"speed" or "playback_speed" depending on the command.
+		'fps' is a float value representing the frames per second. If not
+		specified, get value from shot settings.
+	"""
+	valid_fps = [1, 3, 6, 12, 15, 16, 18, 23.976, 24, 25, 29.97, 30, 50, 59.94, 60, 120]
+
+	if fps is None:
+		fps = float(os.environ.get('FPS', '25'))
+	if fps == int(fps):
+		fps = int(fps)  # Convert to integer if it can be represented as such
+	if fps in valid_fps:
+		#print(type(fps), fps)
+		actual_fps = fps
+	else:
+		actual_fps = min(valid_fps, key=lambda x:abs(x-fps))
+		verbose.warning("The playback speed of %s fps is not supported by djv_view.\nUsing the closest allowable value: %s fps." %(fps, actual_fps))
+
+	return "-%s %s" %(arg, actual_fps)
+
+
+def prcImg(inBasename, outBasename, startFrame, endFrame, inExt, outExt='jpg', fps=None, resize=None):
 	""" Processes image sequences.
 	"""
-	cmdInput = '%s.%s-%s.%s' % (inBasename, startFrame, endFrame, inExt)
-	cmdOutput = '%s.%s.%s' % (outBasename, startFrame, outExt)
+	cmdInput = '%s.%s-%s.%s' %(inBasename, startFrame, endFrame, inExt)
+	cmdOutput = '%s.%s.%s' %(outBasename, startFrame, outExt)
 
 	# Export path to djv codec libraries according to OS
-	djvCmd = exportDjvLibs()
+	cmdStr = exportDjvLibs()
+
+	# Process playback speed string
+	speedArg = processSpeed("speed", fps)
 
 	# Set up djv command
 	if resize:
-		djvCmd += '%s %s %s -resize %s %s -speed %s' % (os.environ['DJV_CONVERT'], cmdInput, cmdOutput, resize[0], resize[1], fps)
+		cmdStr += '"%s" %s %s -resize %s %s %s' %(os.environ['DJV_CONVERT'], cmdInput, cmdOutput, resize[0], resize[1], speedArg)
 	else:
-		djvCmd += '%s %s %s -speed %s' % (os.environ['DJV_CONVERT'], cmdInput, cmdOutput, fps)
+		cmdStr += '"%s" %s %s %s' %(os.environ['DJV_CONVERT'], cmdInput, cmdOutput, speedArg)
 
-	verbose.print_(djvCmd, 4)
-	os.system(djvCmd)
+	verbose.print_(cmdStr, 4)
+	os.system(cmdStr)
 
 
-def prcQt(inBasename, outBasename, startFrame, endFrame, inExt, name='preview', fps=os.environ['FPS'], resize=None):
+def prcQt(inBasename, outBasename, startFrame, endFrame, inExt, name='preview', fps=None, resize=None):
 	""" Processes QuickTime movies.
 	"""
-	cmdInput = '%s.%s-%s.%s' % (inBasename, startFrame, endFrame, inExt)
+	cmdInput = '%s.%s-%s.%s' %(inBasename, startFrame, endFrame, inExt)
 	if name:
-		cmdOutput = os.path.join(outBasename, '%s.mov' % name)
+		cmdOutput = os.path.join(outBasename, '%s.mov' %name)
 	else:
-		cmdOutput = '%s.mov' % outBasename
+		cmdOutput = '%s.mov' %outBasename
 
 	# Export path to djv codec libraries according to OS
-	djvCmd = exportDjvLibs()
+	cmdStr = exportDjvLibs()
+
+	# Process playback speed string
+	speedArg = processSpeed("speed", fps)
 
 	# Set djv command
 	if resize:
-		djvCmd += '%s %s %s -resize %s %s -speed %s' % (os.environ['DJV_CONVERT'], cmdInput, cmdOutput, resize[0], resize[1], fps)
+		cmdStr += '"%s" %s %s -resize %s %s %s' %(os.environ['DJV_CONVERT'], cmdInput, cmdOutput, resize[0], resize[1], speedArg)
 	else:
-		djvCmd += '%s %s %s -speed %s' % (os.environ['DJV_CONVERT'], cmdInput, cmdOutput, fps)
+		cmdStr += '"%s" %s %s %s' %(os.environ['DJV_CONVERT'], cmdInput, cmdOutput, speedArg)
 
-	verbose.print_(djvCmd, 4)
-	os.system(djvCmd)
+	verbose.print_(cmdStr, 4)
+	os.system(cmdStr)
 
 
 def viewer(path=None):
@@ -75,8 +104,6 @@ def viewer(path=None):
 		If path is a directory, start in that directory.
 		If path is not specified, use shot directory.
 	"""
-	cmdStr = ""
-
 	# Get starting directory
 	startupDir = os.environ['SHOTPATH']
 	pathIsFile = False
@@ -88,25 +115,14 @@ def viewer(path=None):
 			startupDir = path
 
 	# Export path to djv codec libraries according to OS
+	cmdStr = exportDjvLibs()
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
 		cmdStr += 'cd /d "%s" & ' %startupDir
-	elif os.environ['IC_RUNNING_OS'] == 'Darwin':
-		cmdStr += "export DYLD_FALLBACK_LIBRARY_PATH=%s; " %os.environ['DJV_LIB']
-		cmdStr += "cd %s; " %startupDir
 	else:
-		cmdStr += "export LD_LIBRARY_PATH=%s; export LIBQUICKTIME_PLUGIN_DIR=%s; " %(os.environ['DJV_LIB'], os.path.join(os.environ['DJV_LIB'], 'libquicktime'))
 		cmdStr += "cd %s; " %startupDir
 
-	# Process playback speed string from shot settings
-	playbackSpeed = float(os.environ.get('FPS', '25'))
-	if playbackSpeed == int(playbackSpeed):
-		playbackSpeed = int(playbackSpeed)  # Convert to integer
-	if playbackSpeed in [1, 3, 6, 12, 15, 16, 18, 23.976, 24, 25, 29.97, 30, 50, 59.94, 60, 120]:
-		playbackSpeedArg = "-playback_speed %s" %playbackSpeed
-		#print(type(playbackSpeed), playbackSpeed)
-	else:
-		playbackSpeedArg = ""
-		verbose.warning("The playback speed of %s fps is not supported by djv_view. Falling back to default setting." %playbackSpeed)
+	# Process playback speed string
+	playbackSpeedArg = processSpeed("playback_speed")
 
 	# Build the command based on whether path is a file or a directory
 	if pathIsFile:
