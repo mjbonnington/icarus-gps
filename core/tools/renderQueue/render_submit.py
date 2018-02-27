@@ -19,6 +19,7 @@ import ui_template as UI
 
 # Import custom modules
 import osOps
+import pDialog
 import render_submit_deadline as deadline
 import renderQueue
 import sequence
@@ -72,11 +73,6 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Set other Qt attributes
 		#self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
-		# Set up keyboard shortcuts
-		# self.shortcutReloadStyleSheet = QtWidgets.QShortcut(self)
-		# self.shortcutReloadStyleSheet.setKey('Ctrl+R')
-		# self.shortcutReloadStyleSheet.activated.connect(self.reloadStyleSheet)
-
 		# Connect signals & slots
 		self.ui.submitTo_comboBox.currentIndexChanged.connect(self.setQueueManagerFromComboBox)
 		self.ui.type_comboBox.currentIndexChanged.connect(self.setJobTypeFromComboBox)
@@ -110,7 +106,8 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.addContextMenu(self.ui.frameListOptions_toolButton, "Shot default", self.getFrameRangeFromShotSettings)
 		self.addContextMenu(self.ui.frameListOptions_toolButton, "Render settings", self.getFrameRangeFromRenderSettings)
 		self.addContextMenu(self.ui.frameListOptions_toolButton, "Sequential", self.setFrameListPreset)  #placeholder
-		self.addContextMenu(self.ui.frameListOptions_toolButton, "First, last, sequential", self.setFrameListPreset)  #placeholder
+		self.addContextMenu(self.ui.frameListOptions_toolButton, "Reverse order", self.setFrameListPreset)  #placeholder
+		self.addContextMenu(self.ui.frameListOptions_toolButton, "Render first and last frames before others", self.setFrameListPreset)  #placeholder
 
 		self.addContextMenu(self.ui.layerOptions_toolButton, "Current layer only", self.getCurrentRenderLayer)
 		self.addContextMenu(self.ui.layerOptions_toolButton, "All renderable layers", self.getRenderLayers)
@@ -500,9 +497,11 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		if self.numList == False:
 			if not quiet:
 				verbose.warning("Invalid entry for frame range.")
-			self.ui.frames_lineEdit.setProperty("mandatoryField", True)
-			self.ui.frames_lineEdit.style().unpolish(self.ui.frames_lineEdit)
-			self.ui.frames_lineEdit.style().polish(self.ui.frames_lineEdit)
+			# self.ui.frames_lineEdit.setProperty("mandatoryField", True)
+			# self.ui.frames_lineEdit.style().unpolish(self.ui.frames_lineEdit)
+			# self.ui.frames_lineEdit.style().polish(self.ui.frames_lineEdit)
+			self.numList = []
+			self.taskList = ["Unknown", ]
 			return False
 		else:
 			self.ui.frames_lineEdit.setText(sequence.numRange(self.numList))
@@ -589,7 +588,8 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		try:
 			path = mc.workspace(expandName=mc.workspace(fileRuleEntry="images"))
 		except:
-			path = ""
+			#path = ""
+			path = osOps.absolutePath("$MAYADIR/renders")
 
 		return path
 
@@ -600,7 +600,8 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		try:
 			prefix = mc.getAttr("defaultRenderGlobals.imageFilePrefix")
 		except:
-			prefix = ""
+			#prefix = ""
+			prefix = "%s/<Scene>/<RenderLayer>/%s_<RenderLayer>" %(os.environ['IC_USERNAME'], os.environ['SHOT'])
 
 		return prefix
 
@@ -614,18 +615,18 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		if submit_args:
 
 			job_info_msg = "Name:\t%s\nType:\t%s\nFrames:\t%s\nTask size:\t%s\nPriority:\t%s\n" %(submit_args['jobName'], self.jobType, submit_args['frames'], submit_args['taskSize'], submit_args['priority'])
-			frames_msg = ""
+			#frames_msg = submit_args['frames_msg']
 
 			# Confirmation dialog
-			import pDialog
 			dialog_title = "Submit to %s - %s" %(self.submitTo, submit_args['jobName'])
-			dialog_msg = job_info_msg + "\n" + frames_msg + "\nDo you want to continue?"
+			# dialog_msg = job_info_msg + "\n" + frames_msg + "Do you want to continue?"
+			dialog_msg = job_info_msg + "\nDo you want to continue?"
 			dialog = pDialog.dialog()
 
 			if dialog.display(dialog_msg, dialog_title):
 				if self.submitTo == "Render Queue":
-					#self.submitToRenderQueue()
-					result, result_msg, output_str = self.rq.submit_job(**submit_args)
+					result, result_msg, output_str = self.submitToRenderQueue(**submit_args)
+					#result, result_msg, output_str = self.rq.submit_job(**submit_args)
 				if self.submitTo == "Deadline":
 					result, result_msg, output_str = deadline.submit_job(**submit_args)
 
@@ -640,17 +641,30 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		"""
 		submit_args = {}
 
-		if not self.calcFrameList(quiet=False):
-			return None
+		if self.submitTo == "Render Queue":
+			self.calcFrameList(quiet=False)
+			# if not self.calcFrameList(quiet=False):
+			# 	return None
 
 		###################
 		# Generic options #
 		###################
 
-		submit_args['flags'] = self.ui.flags_lineEdit.text()  # Is this needed?
-
 		submit_args['frames'] = self.ui.frames_lineEdit.text()
 		submit_args['taskSize'] = self.ui.taskSize_spinBox.value()
+		# submit_args['frames_msg'] = ""
+
+		# if self.submitTo == "Render Queue":
+		# 	if submit_args['frames']:
+		# 		submit_args['taskSize'] = self.ui.taskSize_spinBox.value()
+		# 		submit_args['frames_msg'] = "%d %s to be rendered; %d %s to be submitted.\n" %(len(self.numList), verbose.pluralise("frame", len(self.numList)), len(self.taskList), verbose.pluralise("task", len(self.taskList)))
+		# 	else:
+		# 		submit_args['frames'] = "Unknown"
+		# 		submit_args['taskSize'] = "Unknown"
+		# 		self.numList = []
+		# 		self.taskList = [frames, ]
+		# 		submit_args['frames_msg'] = "The frame range was not specified so the job cannot be distributed into tasks. The job will be submitted as a single task and the frame range will be read from the scene at render time.\n"
+
 		submit_args['pool'] = self.ui.pool_comboBox.currentText()  # Deadline only
 		submit_args['group'] = self.ui.group_comboBox.currentText()  # Deadline only
 		submit_args['priority'] = self.ui.priority_spinBox.value()
@@ -660,27 +674,28 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Renderer-specific options #
 		#############################
 
-		if self.jobType == 'Maya':
-			submit_args['plugin'] = 'MayaBatch'  # Deadline only
-			submit_args['renderCmd'] = os.environ['MAYARENDERVERSION']  # RQ only
+		if self.jobType == "Maya":
+			submit_args['plugin'] = "MayaBatch"  # Deadline only
+			submit_args['renderCmdEnvVar'] = 'MAYARENDERVERSION'  # RQ only
+			submit_args['flags'] = self.ui.flags_lineEdit.text()  # RQ only
 			submit_args['version'] = os.environ['MAYA_VER']  #jobData.getAppVersion('Maya')
 			submit_args['renderer'] = self.ui.renderer_comboBox.currentText()  # Maya submit only
 			scene = self.makePathAbsolute(self.ui.scene_comboBox.currentText()).replace("\\", "/")
 			submit_args['scene'] = scene
-			submit_args['mayaProject'] = self.getMayaProject(scene)  # Maya submit only
+			submit_args['mayaProject'] = self.getMayaProject(scene)
 			submit_args['outputFilePath'] = self.getOutputFilePath()  # Maya submit only
 			submit_args['outputFilePrefix'] = self.getOutputFilePrefix()  # Maya submit only
 			submit_args['jobName'] = os.path.splitext(os.path.basename(scene))[0]
 			submit_args['renderLayers'] = self.ui.layers_lineEdit.text()
 			output = []  # Maya submit only
-			if os.environ['IC_ENV'] == 'MAYA':
+			if os.environ['IC_ENV'] == "MAYA":
 				for layer in self.getRenderableLayers():
 					output.append(os.path.split(self.getOutput(layer)))
 			submit_args['output'] = output
 
-		elif self.jobType == 'Nuke':
-			submit_args['plugin'] = 'Nuke'  # Deadline only
-			submit_args['renderCmd'] = os.environ['NUKEVERSION']  # RQ only
+		elif self.jobType == "Nuke":
+			submit_args['plugin'] = "Nuke"  # Deadline only
+			submit_args['renderCmdEnvVar'] = 'NUKEVERSION'  # RQ only
 			scene = self.makePathAbsolute(self.ui.scene_comboBox.currentText()).replace("\\", "/")
 			submit_args['scene'] = scene
 			submit_args['jobName'] = os.path.splitext(os.path.basename(scene))[0]
@@ -688,87 +703,55 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		return submit_args
 
 
-	def submitToRenderQueue(self):
+	# def generateConfirmationMessage(self, **kwargs):
+	# 	""" Generate message text for confirmation dialog.
+	# 	"""
+
+
+	def submitToRenderQueue(self, **kwargs):
 		""" Submit job to render queue.
 		"""
 		timeFormatStr = "%Y/%m/%d %H:%M:%S" # "%a, %d %b %Y %H:%M:%S"
-
-		# Instantiate render queue class and load data
-		self.rq = renderQueue.renderQueue()
-		self.rq.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'renderQueue.xml'), use_template=False)
 
 		###################
 		# Generic options #
 		###################
 
-		frames = self.ui.frames_lineEdit.text()
-		if frames:
-			taskSize = self.ui.taskSize_spinBox.value()
-			frames_msg = '%d %s to be rendered; %d %s to be submitted.\n' %(len(self.numList), verbose.pluralise("frame", len(self.numList)), len(self.taskList), verbose.pluralise("task", len(self.taskList)))
-		else:
-			frames = 'Unknown'
-			taskSize = 'Unknown'
-			self.numList = []
-			self.taskList = [frames, ]
-			frames_msg = 'The frame range was not specified so the job cannot be distributed into tasks. The job will be submitted as a single task and the frame range will be read from the scene at render time.\n'
-
-		flags = self.ui.flags_lineEdit.text()
-		priority = self.ui.priority_spinBox.value()
-		comment = self.ui.comment_lineEdit.text()
-
 		#############################
 		# Renderer-specific options #
 		#############################
 
-		if self.jobType == 'Maya':
-			renderCmdEnvVar = 'MAYARENDERVERSION'
-			mayaScene = self.makePathAbsolute(self.ui.scene_comboBox.currentText()).replace("\\", "/")  # Implicit if submitting from Maya UI
-			mayaProject = self.getMayaProject(mayaScene)
-			jobName = os.path.splitext(os.path.basename(mayaScene))[0]
-		elif self.jobType == 'Nuke':
-			renderCmdEnvVar = 'NUKEVERSION'
-			nukeScript = self.makePathAbsolute(self.ui.scene_comboBox.currentText()).replace("\\", "/")  # Implicit if submitting from Nuke UI
-			jobName = os.path.splitext(os.path.basename(nukeScript))[0]
+		# if self.jobType == "Maya":
+		# 	renderCmdEnvVar = 'MAYARENDERVERSION'
+		# 	mayaScene = self.makePathAbsolute(self.ui.scene_comboBox.currentText()).replace("\\", "/")  # Implicit if submitting from Maya UI
+		# 	mayaProject = self.getMayaProject(mayaScene)
+		# 	jobName = os.path.splitext(os.path.basename(mayaScene))[0]
+		# elif self.jobType == "Nuke":
+		# 	renderCmdEnvVar = 'NUKEVERSION'
+		# 	nukeScript = self.makePathAbsolute(self.ui.scene_comboBox.currentText()).replace("\\", "/")  # Implicit if submitting from Nuke UI
+		# 	jobName = os.path.splitext(os.path.basename(nukeScript))[0]
 
+		renderCmdEnvVar = kwargs['renderCmdEnvVar']
 		try:
 			renderCmd = os.environ[renderCmdEnvVar].replace("\\", "/")
 		except KeyError:
-			verbose.error("Path to %s render command executable not found. This can be set with the environment variable '%s'." %(self.jobType, renderCmdEnvVar))
+			error_msg = "Path to %s render command executable not found. This can be set with the environment variable '%s'." %(self.jobType, renderCmdEnvVar)
+			verbose.error(error_msg)
+			return False, "Failed to submit job.", error_msg
 
 		# Package option variables into tuples
-		genericOpts = jobName, self.jobType, frames, taskSize, priority
-		if self.jobType == 'Maya':
-			renderOpts = mayaScene, mayaProject, flags, renderCmd
-		elif self.jobType == 'Nuke':
-			renderOpts = nukeScript, flags, renderCmd
+		genericOpts = kwargs['jobName'], self.jobType, kwargs['frames'], kwargs['taskSize'], kwargs['priority']
+		if self.jobType == "Maya":
+			renderOpts = kwargs['scene'], kwargs['mayaProject'], kwargs['flags'], renderCmd
+		elif self.jobType == "Nuke":
+			renderOpts = kwargs['scene'], kwargs['flags'], renderCmd
 
-		self.rq.newJob(genericOpts, renderOpts, self.taskList, os.environ['IC_USERNAME'], time.strftime(timeFormatStr), comment)
+		# Instantiate render queue class, load data, and create new job
+		rq = renderQueue.renderQueue()
+		rq.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'renderQueue.xml'), use_template=False)
+		rq.newJob(genericOpts, renderOpts, self.taskList, os.environ['IC_USERNAME'], time.strftime(timeFormatStr), kwargs['comment'])
 
-		# # Confirmation dialog
-		# import pDialog
-
-		# dialog_title = 'Submit Render - %s' %jobName
-		# dialog_msg = ''
-		# dialog_msg += 'Name:\t%s\nType:\t%s\nFrames:\t%s\nTask size:\t%s\nPriority:\t%s\n\n' %genericOpts
-		# # if self.jobType == 'Maya':
-		# # 	dialog_msg += 'Scene:\t%s\nProject:\t%s\nFlags:\t%s\nCommand:\t%s\n\n' %renderOpts
-		# # elif self.jobType == 'Nuke':
-		# # 	dialog_msg += 'Script:\t%s\nFlags:\t%s\nCommand:\t%s\n\n' %renderOpts
-		# dialog_msg += frames_msg
-		# dialog_msg += 'Do you want to continue?'
-
-		# dialog = pDialog.dialog()
-		# if dialog.display(dialog_msg, dialog_title):
-		# 	self.rq.newJob(genericOpts, renderOpts, self.taskList, os.environ['IC_USERNAME'], time.strftime(timeFormatStr), comment)
-
-		# 	# Post-confirmation dialog
-		# 	dialog_title = 'Submission Results - %s' %jobName
-		# 	dialog_msg = ''
-		# 	dialog_msg += 'Name:\t%s\nType:\t%s\nFrames:\t%s\nTask size:\t%s\nPriority:\t%s\n\n' %genericOpts
-		# 	dialog_msg += 'Render job submitted succesfully.'
-		# 	dialog.display(dialog_msg, dialog_title, conf=True)
-		# else:
-		# 	return
+		return True, "Successfully submitted job.", ""
 
 
 	def closeEvent(self, event):

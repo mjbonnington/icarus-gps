@@ -111,6 +111,11 @@ class TemplateUI(object):
 		# 	# Move to centre of parent window
 		# 	self.move(self.parent.frameGeometry().center() - self.frameGeometry().center())
 
+		# Set up keyboard shortcuts
+		# self.shortcutReloadStyleSheet = QtWidgets.QShortcut(self)
+		# self.shortcutReloadStyleSheet.setKey('Ctrl+R')
+		# self.shortcutReloadStyleSheet.activated.connect(self.reloadStyleSheet)
+
 
 	def fileDialog(self, startingDir, fileFilter='All files (*.*)'):
 		""" Opens a dialog from which to select a single file.

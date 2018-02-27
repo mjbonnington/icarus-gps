@@ -255,7 +255,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			completedTaskCount = 0
 			inProgressTaskFrameCount = 0
 			completedTaskFrameCount = 0
-			if jobFrames == 'Unknown':
+			if not jobFrames or jobFrames == 'Unknown':
 				totalFrameCount = -1
 			else:
 				totalFrameCount = len(sequence.numList(jobFrames))

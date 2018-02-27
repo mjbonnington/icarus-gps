@@ -184,7 +184,7 @@ def submit_job(**kwargs):
 			result_msg = "Successfully submitted batch job to Deadline."
 
 			# Delete submission info files
-			if os.environ['IC_VERBOSITY'] < 4:
+			if int(os.environ['IC_VERBOSITY']) < 4:
 				for jobInfoFile in jobInfoFileList:
 					osOps.recurseRemove(jobInfoFile)
 				for pluginInfoFile in pluginInfoFileList:
@@ -204,7 +204,7 @@ def submit_job(**kwargs):
 			result_msg = "Successfully submitted job to Deadline."
 
 			# Delete submission info files
-			if os.environ['IC_VERBOSITY'] < 4:
+			if int(os.environ['IC_VERBOSITY']) < 4:
 				osOps.recurseRemove(jobInfoFile)
 				osOps.recurseRemove(pluginInfoFile)
 

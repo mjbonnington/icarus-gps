@@ -621,7 +621,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
              <item>
               <widget class="QLineEdit" name="frames_lineEdit">
                <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Specify the frames to be rendered. Individual frames should be separated with commas, and ranges can be specified using a hyphen, e.g. '1, 5-10'. If left blank, the start and end frames will be read from the scene file.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Specify the frames to be rendered. Individual frames should be separated with commas, and ranges can be specified using a hyphen, e.g. '1, 5-10'. If left blank, the frame range will be read from the scene file at render time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="text">
                 <string/>
