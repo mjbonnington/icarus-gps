@@ -87,6 +87,7 @@ def generate_job_info_file(**kwargs):
 	else:
 		jobInfoFileSuffix = "_deadlineJobInfo.txt"
 	jobInfoFile = settings_filename(kwargs['scene'], suffix=jobInfoFileSuffix)
+
 	fh = open(jobInfoFile, 'w')
 	fh.write("Plugin=%s\n" %kwargs['plugin'])
 	if kwargs['renderLayer']:
@@ -105,7 +106,14 @@ def generate_job_info_file(**kwargs):
 	for i, outputPath in enumerate(kwargs['output']):
 		fh.write("OutputDirectory%d=%s\n" %(i, outputPath[0]))
 		fh.write("OutputFilename%d=%s\n" %(i, outputPath[1]))
-	#fh.write("IncludeEnvironment=True\n")
+	# fh.write("IncludeEnvironment=True\n")
+	# fh.write("EnvironmentKeyValue0=USERNAME=\n")
+	# fh.write("EnvironmentKeyValue1=USERPROFILE=\n")
+	# fh.write("EnvironmentKeyValue2=LOCALAPPDATA=\n")
+	# fh.write("EnvironmentKeyValue3=TEMP=\n")
+	# fh.write("EnvironmentKeyValue3=TMP=\n")
+	for i, envVar in enumerate(kwargs['envVars']):
+		fh.write("EnvironmentKeyValue%d=%s=%s\n" %(i, envVar, os.environ[envVar]))
 	fh.write("ExtraInfo0=%s\n" %os.environ['JOB'])
 	fh.write("ExtraInfo1=%s\n" %os.environ['SHOT'])
 	fh.close()
@@ -122,18 +130,32 @@ def generate_plugin_info_file(**kwargs):
 		pluginInfoFileSuffix = "_deadlinePluginInfo.txt"
 	pluginInfoFile = settings_filename(kwargs['scene'], suffix=pluginInfoFileSuffix)
 	fh = open(pluginInfoFile, 'w')
-	fh.write("Version=%s\n" %kwargs['version'])
-	fh.write("Build=64bit\n")
-	fh.write("Renderer=%s\n" %kwargs['renderer'])
-	fh.write("StrictErrorChecking=1\n")
-	fh.write("ProjectPath=%s\n" %kwargs['mayaProject'])
-	fh.write("OutputFilePath=%s\n" %kwargs['outputFilePath'])
-	fh.write("OutputFilePrefix=%s\n" %kwargs['outputFilePrefix'])
-	fh.write("SceneFile=%s\n" %kwargs['scene'])
-	if kwargs['renderLayer']:
-		fh.write("UsingRenderLayers=1\n")
-		fh.write("UseLegacyRenderLayers=1\n")
-		fh.write("RenderLayer=%s\n" %kwargs['renderLayer'])
+
+	# Maya -------------------------------------------------------------------
+	if kwargs['plugin'] == "MayaBatch":
+		fh.write("Version=%s\n" %kwargs['version'])
+		fh.write("Build=64bit\n")
+		fh.write("Renderer=%s\n" %kwargs['renderer'])
+		fh.write("StrictErrorChecking=1\n")
+		fh.write("ProjectPath=%s\n" %kwargs['mayaProject'])
+		fh.write("OutputFilePath=%s\n" %kwargs['outputFilePath'])
+		fh.write("OutputFilePrefix=%s\n" %kwargs['outputFilePrefix'])
+		fh.write("SceneFile=%s\n" %kwargs['scene'])
+		if kwargs['renderLayer']:
+			fh.write("UsingRenderLayers=1\n")
+			fh.write("UseLegacyRenderLayers=1\n")
+			fh.write("RenderLayer=%s\n" %kwargs['renderLayer'])
+
+	# Nuke -------------------------------------------------------------------
+	elif kwargs['plugin'] == "Nuke":
+		fh.write("BatchMode=True\n")
+		fh.write("BatchModeIsMovie=%s\n" %kwargs['isMovie'])
+		fh.write("NukeX=%s\n" %kwargs['nukeX'])
+		fh.write("Version=%s\n" %kwargs['version'])
+		fh.write("SceneFile=%s\n" %kwargs['scene'])
+		if kwargs['renderLayers']:
+			fh.write("WriteNode=%s\n" %kwargs['renderLayer'])
+
 	fh.close()
 
 	return pluginInfoFile
@@ -165,14 +187,18 @@ def submit_job(**kwargs):
 	try:
 		if kwargs['renderLayers']:  # Batch submission -----------------------
 			# Generate submission info files
+			num_jobs = 0
 			jobInfoFileList = []
 			pluginInfoFileList = []
-			for renderLayer in kwargs['renderLayers'].split(", "): # use re for more versatility
+			#for renderLayer in kwargs['renderLayers'].split(", "):
+			for renderLayer in re.split(r',\s*', kwargs['renderLayers']): # use re for more versatility, or even better pass as list
 				kwargs['renderLayer'] = renderLayer
+				# kwargs['isMovie'] = False
 				jobInfoFile = generate_job_info_file(**kwargs)
 				jobInfoFileList.append(jobInfoFile)
 				pluginInfoFile = generate_plugin_info_file(**kwargs)
 				pluginInfoFileList.append(pluginInfoFile)
+				num_jobs += 1
 
 			# Generate batch file
 			batchSubmissionFile = generate_batch_file(kwargs['scene'], jobInfoFileList, pluginInfoFileList)
@@ -181,7 +207,7 @@ def submit_job(**kwargs):
 			cmd_output = subprocess.check_output(
 				[os.environ['DEADLINECMDVERSION'], batchSubmissionFile], 
 				creationflags=CREATE_NO_WINDOW)
-			result_msg = "Successfully submitted batch job to Deadline."
+			result_msg = "Successfully submitted %d %s to Deadline." %(num_jobs, verbose.pluralise("job", num_jobs))
 
 			# Delete submission info files
 			if int(os.environ['IC_VERBOSITY']) < 4:
@@ -209,8 +235,8 @@ def submit_job(**kwargs):
 				osOps.recurseRemove(pluginInfoFile)
 
 		result = True
+		print(cmd_output.decode())
 		verbose.message(result_msg)
-		output_str = cmd_output.decode()
 
 	except:  # Submission failed ---------------------------------------------
 		result = False
@@ -218,8 +244,9 @@ def submit_job(**kwargs):
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		result_msg = "Failed to submit job to Deadline."
 		verbose.error(result_msg)
+		result_msg += "\nCheck console output for details."
 		#output_str = "Either the Deadline executable could not be found, or the submission info files could not be written."
-		output_str = traceback.format_exception_only(exc_type, exc_value)[0]
+		#output_str = traceback.format_exception_only(exc_type, exc_value)[0]
 
-	return result, result_msg, output_str
+	return result, result_msg
 

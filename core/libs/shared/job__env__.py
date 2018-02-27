@@ -230,6 +230,7 @@ def setEnv(envVars):
 
 	# Nuke
 	os.environ['NUKEVERSION']     = getAppExecPath('Nuke')
+	os.environ['NUKE_VER']        = jobData.getAppVersion('Nuke')  # Temporary for Deadline submit
 	os.environ['NUKEDIR']         = osOps.absolutePath('$SHOTPATH/2D/nuke')  # Currently needed by render submitter
 	# os.environ['NUKEELEMENTSDIR'] = osOps.absolutePath('$NUKEDIR/elements/$IC_USERNAME')
 	os.environ['NUKESCRIPTSDIR']  = osOps.absolutePath('$NUKEDIR/scripts/$IC_USERNAME')  # Currently needed by render submitter

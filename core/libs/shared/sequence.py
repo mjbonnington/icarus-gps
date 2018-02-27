@@ -3,7 +3,7 @@
 # [Icarus] sequence.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2017 Gramercy Park Studios
+# (c) 2015-2018 Gramercy Park Studios
 #
 # These functions convert formatted sequences to lists and vice-versa.
 
@@ -12,18 +12,21 @@ import glob
 import os
 import re
 
+from collections import OrderedDict
+
+# Import custom modules
 import verbose
 
 
-def numList(num_range_str, quiet=False):
+def numList(num_range_str, sort=True, quiet=False):
 	""" Takes a formatted string describing a range of numbers and returns a
-		sorted integer list.
+		list of integers, with duplicates removed.
 		e.g. '1-5, 20, 24, 1001-1002'
 		returns [1, 2, 3, 4, 5, 20, 24, 1001, 1002]
 	"""
 	num_int_list = []
 	num_format = re.compile(r'^\d+$')
-	seq_format = re.compile(r'^\d+-\d+$')
+	seq_format = re.compile(r'^\d+-\d+(x\d+)?$')
 
 	# Split into groups of ranges separated by commas
 	grps = re.split(r',\s*', num_range_str)
@@ -35,15 +38,23 @@ def numList(num_range_str, quiet=False):
 
 		# 'grp' is a number sequence (e.g. 1-10)
 		elif seq_format.match(grp) is not None:
-			seq = re.split(r'-', grp)
-			first = int(seq[0])
-			last = int(seq[1])
-			if first > last:
-				if not quiet:
-					verbose.error("The last number (%d) in the sequence cannot be smaller than the first (%d)." %(last, first))
-				return False
+			if "x" in grp:
+				grp, step = re.split(r'x', grp)
+				step = int(step)
 			else:
-				int_list = list(range(first, last+1))
+				step = 1
+			first, last = re.split(r'-', grp)
+			first = int(first)
+			last = int(last)
+			if first > last:
+				# if not quiet:
+				# 	verbose.error("The last number (%d) in the sequence cannot be smaller than the first (%d)." %(last, first))
+				# return False
+				int_list = list(range(first, last-1, -step))
+				for num in int_list:
+					num_int_list.append(num)
+			else:
+				int_list = list(range(first, last+1, step))
 				for num in int_list:
 					num_int_list.append(num)
 
@@ -53,7 +64,10 @@ def numList(num_range_str, quiet=False):
 			return False
 
 	# Remove duplicates & sort list
-	return sorted(list(set(num_int_list)), key=int)
+	if sort:
+		return sorted(list(set(num_int_list)), key=int)
+	else:
+		return list(OrderedDict.fromkeys(num_int_list))
 
 
 def numRange(num_int_list, padding=0, quiet=False):

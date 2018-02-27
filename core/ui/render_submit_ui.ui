@@ -564,14 +564,28 @@ QToolButton:pressed, QToolButton:checked:pressed {
             </layout>
            </item>
            <item row="1" column="1">
-            <widget class="QCheckBox" name="interactiveLicense_checkBox">
-             <property name="text">
-              <string>Use interactive license</string>
-             </property>
-             <property name="xmlTag" stdset="0">
-              <string>useInteractiveLicense</string>
-             </property>
-            </widget>
+            <layout class="QGridLayout" name="nukeOptions_gridLayout">
+             <item row="0" column="1">
+              <widget class="QCheckBox" name="interactiveLicense_checkBox">
+               <property name="text">
+                <string>Use interactive license</string>
+               </property>
+               <property name="xmlTag" stdset="0">
+                <string>useInteractiveLicense</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QCheckBox" name="useNukeX_checkBox">
+               <property name="text">
+                <string>Render with NukeX</string>
+               </property>
+               <property name="xmlTag" stdset="0">
+                <string>nukex</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </widget>
@@ -1016,7 +1030,6 @@ QToolButton:pressed, QToolButton:checked:pressed {
   <tabstop>flags_lineEdit</tabstop>
   <tabstop>writeNodes_lineEdit</tabstop>
   <tabstop>writeNodeOptions_toolButton</tabstop>
-  <tabstop>interactiveLicense_checkBox</tabstop>
   <tabstop>frames_lineEdit</tabstop>
   <tabstop>frameListOptions_toolButton</tabstop>
   <tabstop>taskSize_spinBox</tabstop>
@@ -1043,11 +1056,11 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <hints>
     <hint type="sourcelabel">
      <x>96</x>
-     <y>497</y>
+     <y>518</y>
     </hint>
     <hint type="destinationlabel">
-     <x>261</x>
-     <y>496</y>
+     <x>357</x>
+     <y>519</y>
     </hint>
    </hints>
   </connection>
@@ -1058,12 +1071,12 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>329</x>
-     <y>496</y>
+     <x>425</x>
+     <y>519</y>
     </hint>
     <hint type="destinationlabel">
      <x>96</x>
-     <y>497</y>
+     <y>518</y>
     </hint>
    </hints>
   </connection>
@@ -1075,11 +1088,11 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <hints>
     <hint type="sourcelabel">
      <x>140</x>
-     <y>378</y>
+     <y>399</y>
     </hint>
     <hint type="destinationlabel">
-     <x>327</x>
-     <y>377</y>
+     <x>463</x>
+     <y>400</y>
     </hint>
    </hints>
   </connection>
@@ -1090,12 +1103,12 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>416</x>
-     <y>377</y>
+     <x>463</x>
+     <y>400</y>
     </hint>
     <hint type="destinationlabel">
      <x>140</x>
-     <y>378</y>
+     <y>399</y>
     </hint>
    </hints>
   </connection>

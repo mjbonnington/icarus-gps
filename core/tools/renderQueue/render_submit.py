@@ -73,6 +73,11 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Set other Qt attributes
 		#self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
+		# Set up keyboard shortcuts
+		self.shortcutExpertMode = QtWidgets.QShortcut(self)
+		self.shortcutExpertMode.setKey('Ctrl+E')
+		self.shortcutExpertMode.activated.connect(self.toggleExpertMode)
+
 		# Connect signals & slots
 		self.ui.submitTo_comboBox.currentIndexChanged.connect(self.setQueueManagerFromComboBox)
 		self.ui.type_comboBox.currentIndexChanged.connect(self.setJobTypeFromComboBox)
@@ -86,7 +91,8 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		# self.ui.renderer_comboBox.currentIndexChanged.connect(self.storeComboBoxValue)
 		# self.ui.layers_lineEdit.textEdited.connect(self.storeLineEditValue)
 
-		self.ui.frames_lineEdit.editingFinished.connect(self.calcFrameList)  # was textEdited
+		#self.ui.frames_lineEdit.editingFinished.connect(self.calcFrameList)
+		self.ui.frames_lineEdit.textChanged.connect(self.calcFrameList)
 		self.ui.taskSize_spinBox.valueChanged.connect(self.calcFrameList)
 
 		# # self.ui.pool_comboBox.currentIndexChanged.connect(self.storeComboBoxValue)
@@ -104,14 +110,17 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		# Context menus
 		self.addContextMenu(self.ui.frameListOptions_toolButton, "Shot default", self.getFrameRangeFromShotSettings)
-		self.addContextMenu(self.ui.frameListOptions_toolButton, "Render settings", self.getFrameRangeFromRenderSettings)
+		if os.environ['IC_ENV'] != "STANDALONE":
+			self.addContextMenu(self.ui.frameListOptions_toolButton, "Render settings", self.getFrameRangeFromRenderSettings)
 		self.addContextMenu(self.ui.frameListOptions_toolButton, "Sequential", self.setFrameListPreset)  #placeholder
-		self.addContextMenu(self.ui.frameListOptions_toolButton, "Reverse order", self.setFrameListPreset)  #placeholder
+		#self.addContextMenu(self.ui.frameListOptions_toolButton, "Reverse order", self.setFrameListPreset)  #placeholder
 		self.addContextMenu(self.ui.frameListOptions_toolButton, "Render first and last frames before others", self.setFrameListPreset)  #placeholder
 
+		#self.addContextMenu(self.ui.layerOptions_toolButton, "Clear", self.clearRenderLayers)
 		self.addContextMenu(self.ui.layerOptions_toolButton, "Current layer only", self.getCurrentRenderLayer)
 		self.addContextMenu(self.ui.layerOptions_toolButton, "All renderable layers", self.getRenderLayers)
 
+		#self.addContextMenu(self.ui.layerOptions_toolButton, "Clear", self.clearRenderLayers)
 		self.addContextMenu(self.ui.writeNodeOptions_toolButton, "Selected write node only", self.getCurrentRenderLayer)  #placeholder
 		self.addContextMenu(self.ui.writeNodeOptions_toolButton, "All write nodes", self.getRenderLayers)  #placeholder
 
@@ -119,8 +128,10 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		layer_list_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w, ]+'), self.ui.layers_lineEdit)
 		self.ui.layers_lineEdit.setValidator(layer_list_validator)
 
-		frame_list_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\d\-, ]+'), self.ui.frames_lineEdit)
+		frame_list_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\d\-x, ]+'), self.ui.frames_lineEdit)
 		self.ui.frames_lineEdit.setValidator(frame_list_validator)
+
+		self.expertMode = False
 
 
 	def display(self, frameRange=None, layers=None, flags=None):
@@ -145,14 +156,16 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.setQueueManagerFromComboBox()
 
 		# Set job type from Icarus environment when possible
-		if os.environ['IC_ENV'] == 'STANDALONE':
+		if os.environ['IC_ENV'] == "STANDALONE":
 			self.jobType = userPrefs.query('rendersubmit', 'lastrenderjobtype', default=self.ui.type_comboBox.currentText())
 			self.ui.type_comboBox.setCurrentIndex(self.ui.type_comboBox.findText(self.jobType))
+			self.ui.layerOptions_toolButton.setEnabled(False)
+			self.ui.writeNodeOptions_toolButton.setEnabled(False)
 			self.setJobType()
 			self.setSceneList()
 
-		elif os.environ['IC_ENV'] == 'MAYA':
-			self.jobType = 'Maya'
+		elif os.environ['IC_ENV'] == "MAYA":
+			self.jobType = "Maya"
 			self.ui.type_comboBox.setCurrentIndex(self.ui.type_comboBox.findText(self.jobType))
 			self.setJobType()
 
@@ -179,12 +192,12 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 				# self.ui.layers_groupBox.setChecked(True)
 				self.ui.layers_lineEdit.setText(layers)
 
-		elif os.environ['IC_ENV'] == 'NUKE':
-			self.jobType = 'Nuke'
+		elif os.environ['IC_ENV'] == "NUKE":
+			self.jobType = "Nuke"
 			self.ui.type_comboBox.setCurrentIndex(self.ui.type_comboBox.findText(self.jobType))
 			self.setJobType()
 
-			scriptName = nuke.value("root.name")
+			scriptName = nuke.value('root.name')
 			if scriptName:  # Check we're not working in an unsaved script
 				relPath = self.makePathRelative(osOps.absolutePath(scriptName))
 				if relPath:
@@ -217,6 +230,14 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.raise_()
 
 		return self.returnValue
+
+
+	def toggleExpertMode(self):
+		""" Toggle expert mode where additional UI items are visible.
+		"""
+		self.expertMode = not self.expertMode
+		self.ui.render_groupBox.setEnabled(self.expertMode)
+		self.ui.render_groupBox.setVisible(self.expertMode)
 
 
 	def getSettingsFile(self, scene, suffix=""):
@@ -282,7 +303,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.jobType = self.ui.type_comboBox.currentText()
 		userPrefs.edit('rendersubmit', 'lastrenderjobtype', self.jobType)
 		self.setJobType()
-		if os.environ['IC_ENV'] == 'STANDALONE':
+		if os.environ['IC_ENV'] == "STANDALONE":
 			self.setSceneList()
 
 
@@ -392,73 +413,47 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		"""
 		try:
 			self.ui.frames_lineEdit.setText("%d-%d" %(int(os.environ['STARTFRAME']), int(os.environ['ENDFRAME'])))
-			# self.ui.frames_groupBox.setChecked(True)
 		except KeyError:
 			self.ui.frames_lineEdit.setText("")
-			# self.ui.frames_groupBox.setChecked(False)
 
 
 	def getFrameRangeFromRenderSettings(self):
-		""" Get frame range from Maya render settings (only from Maya
-			environment).
+		""" Get frame range from Maya or Nuke render settings.
 		"""
-		if os.environ['IC_ENV'] == 'MAYA':
-			self.ui.frames_lineEdit.setText("%d-%d" %(int(mc.getAttr('defaultRenderGlobals.startFrame')), int(mc.getAttr('defaultRenderGlobals.endFrame'))))
-			# self.ui.frames_lineEdit.setText("%d-%d" %(int(mc.playbackOptions(min=True, q=True)), int(mc.playbackOptions(max=True, q=True))))
-			# self.ui.frames_groupBox.setChecked(True)
+		if os.environ['IC_ENV'] == "MAYA":
+			start_frame = int(mc.getAttr('defaultRenderGlobals.startFrame'))
+			end_frame = int(mc.getAttr('defaultRenderGlobals.endFrame'))
+
+		elif os.environ['IC_ENV'] == "NUKE":
+			start_frame = nuke.Root()['first_frame'].getValue()
+			end_frame = nuke.Root()['last_frame'].getValue()
+
+		self.ui.frames_lineEdit.setText("%d-%d" %(start_frame, end_frame))
 
 
 	def getCurrentRenderLayer(self):
-		""" Get current Maya render layer & populate widget (only from Maya
-			environment).
+		""" Get current Maya render layer or selected Nuke write nodes &
+			populate widget.
 		"""
-		if os.environ['IC_ENV'] == 'MAYA':
+		if os.environ['IC_ENV'] == "MAYA":
 			currentLayer = mc.editRenderLayerGlobals(query=True, currentRenderLayer=True)
 			self.ui.layers_lineEdit.setText(currentLayer)
 
+		elif os.environ['IC_ENV'] == "NUKE":
+			writeNodeStr = ", ".join(n for n in self.getWriteNodes(selected=True))
+			self.ui.writeNodes_lineEdit.setText(writeNodeStr)
+
 
 	def getRenderLayers(self):
-		""" Get Maya render layers & populate widget (only from Maya
-			environment).
+		""" Get Maya render layers or Nuke write nodes & populate widget.
 		"""
-		if os.environ['IC_ENV'] == 'MAYA':
+		if os.environ['IC_ENV'] == "MAYA":
 			layerStr = ", ".join(n for n in self.getRenderableLayers())
 			self.ui.layers_lineEdit.setText(layerStr)
-			# currentLayer = mc.editRenderLayerGlobals(query=True, currentRenderLayer=True)
-			# startFrame = int(mc.getAttr('defaultRenderGlobals.startFrame'))
-			# endFrame = int(mc.getAttr('defaultRenderGlobals.endFrame'))
-			# frames = "%d-%d" %(startFrame, endFrame)
 
-			# self.ui.layers_treeWidget.clear()
-
-			# for layer in layers:
-			# 	item = QtWidgets.QTreeWidgetItem(self.ui.layers_treeWidget)
-			# 	layerFrames = frames
-			# 	adjustments = mc.editRenderLayerAdjustment(layer, query=True, layer=True)
-			# 	# overrides = ['defaultRenderGlobals.startFrame', 'defaultRenderGlobals.endFrame']
-			# 	if adjustments:
-			# 		if 'defaultRenderGlobals.startFrame' in adjustments:
-			# 			startFrame = "*"
-			# 		if 'defaultRenderGlobals.endFrame' in adjustments:
-			# 			endFrame = "*"
-			# 		layerFrames = "%s-%s" %(startFrame, endFrame)
-			# 	# item.setText(0, mc.getAttr('renderLayerManager.renderLayerId[%d]'))
-			# 	item.setText(2, layer)
-			# 	item.setText(3, layerFrames)
-
-			# 	# Check renderable layers
-			# 	if mc.getAttr(layer+'.renderable'):
-			# 		item.setCheckState(1, QtCore.Qt.Checked)
-			# 	else:
-			# 		item.setCheckState(1, QtCore.Qt.Unchecked)
-
-			# # Resize columns
-			# self.ui.layers_treeWidget.resizeColumnToContents(0)
-			# self.ui.layers_treeWidget.resizeColumnToContents(1)
-			# self.ui.layers_treeWidget.resizeColumnToContents(2)
-
-		# else:
-		# 	self.ui.layers_groupBox.hide()
+		elif os.environ['IC_ENV'] == "NUKE":
+			writeNodeStr = ", ".join(n for n in self.getWriteNodes(selected=False))
+			self.ui.writeNodes_lineEdit.setText(writeNodeStr)
 
 
 	def getPools(self):
@@ -484,15 +479,28 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 	# @QtCore.Slot()
 	def setFrameListPreset(self):
-		""" Set frame list from preset - TEMPORARY FUNCTION
+		""" Modify frame list from preset menu.
 		"""
-		print(self.sender().text())
+		#print(self.sender().text())
+		if self.sender().text() == "Sequential":
+			num_list = sequence.numList(self.ui.frames_lineEdit.text(), sort=True, quiet=True)
+			self.ui.frames_lineEdit.setText(sequence.numRange(num_list))
+
+		elif self.sender().text() == "Reverse order":
+			pass
+
+		elif self.sender().text() == "Render first and last frames before others":
+			frames_str = self.ui.frames_lineEdit.text()
+			num_list = sequence.numList(frames_str, sort=True, quiet=True)
+			first = min(num_list)
+			last = max(num_list)
+			self.ui.frames_lineEdit.setText("%d, %d, %s" %(first, last, frames_str))
 
 
 	def calcFrameList(self, quiet=True):
 		""" Calculate list of frames to be rendered.
 		"""
-		self.numList = sequence.numList(self.ui.frames_lineEdit.text(), quiet=True)
+		self.numList = sequence.numList(self.ui.frames_lineEdit.text(), sort=False, quiet=True)
 		taskSize = self.ui.taskSize_spinBox.value()
 		if self.numList == False:
 			if not quiet:
@@ -504,7 +512,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.taskList = ["Unknown", ]
 			return False
 		else:
-			self.ui.frames_lineEdit.setText(sequence.numRange(self.numList))
+			#self.ui.frames_lineEdit.setText(sequence.numRange(self.numList))
 			nFrames = len(self.numList)
 			if taskSize < nFrames:
 				self.ui.taskSize_slider.setMaximum(nFrames)
@@ -514,6 +522,12 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 				self.ui.taskSize_slider.setMaximum(nFrames)
 				self.ui.taskSize_spinBox.setMaximum(nFrames)
 				self.ui.taskSize_spinBox.setValue(nFrames)
+			if nFrames == 1:
+				self.ui.taskSize_slider.setEnabled(False)
+				self.ui.taskSize_spinBox.setEnabled(False)
+			else:
+				self.ui.taskSize_slider.setEnabled(True)
+				self.ui.taskSize_spinBox.setEnabled(True)
 
 			# Generate task list for rendering
 			self.taskList = []
@@ -524,8 +538,10 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 					#self.taskList.append(list(sequence.seqRange(chunk))[0])
 					self.taskList.append(sequence.numRange(chunk))
 
+		# print(self.numList)
+		# print(self.taskList)
 		return True
-					
+
 
 	def getMayaProject(self, scene):
 		""" Get the Maya project. If the environment variable is not set, try
@@ -562,7 +578,24 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		return renderableLayers
 
 
-	def getOutput(self, layer=None):
+	def getWriteNodes(self, selected=True):
+		""" Get Nuke write nodes.
+			If 'selected' is True, only return selected nodes.
+		"""
+		writeNodes = []
+
+		if selected:
+			nodeLs = nuke.selectedNodes('Write')
+		else:
+			nodeLs = nuke.allNodes('Write')
+
+		for node in nodeLs:
+			writeNodes.append(node.name())
+
+		return writeNodes
+
+
+	def getMayaRenderOutput(self, layer=None):
 		""" Get the path of Maya's render output.
 		"""
 		try:
@@ -580,6 +613,20 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			path = ""
 
 		return path[0]
+
+
+	def getNukeRenderOutput(self, writeNode):
+		""" Get the output path from a Nuke write node.
+		"""
+		# try:
+		node = nuke.toNode(writeNode)
+		path = node.knob('file').evaluate()
+
+		#path = osOps.absolutePath(node.knob('file'))
+		# except:
+		# 	path = ""
+
+		return path
 
 
 	def getOutputFilePath(self):
@@ -614,25 +661,40 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		submit_args = self.getSubmissionOptions()
 		if submit_args:
 
+			# Generate confirmation message(s)
+			if self.submitTo == "Render Queue":
+				if submit_args['frames']:
+					submit_args['taskSize'] = self.ui.taskSize_spinBox.value()
+					frames_msg = "%d %s to be rendered; %d %s to be submitted.\n" %(len(self.numList), verbose.pluralise("frame", len(self.numList)), len(self.taskList), verbose.pluralise("task", len(self.taskList)))
+				else:
+					submit_args['frames'] = "Unknown"
+					submit_args['taskSize'] = "Unknown"
+					self.numList = []
+					self.taskList = [submit_args['frames'], ]
+					frames_msg = "The frame range was not specified so the job cannot be distributed into tasks. The job will be submitted as a single task and the frame range will be read from the scene at render time.\n"
+			else:
+				if submit_args['frames']:
+					frames_msg = ""
+				else:
+					submit_args['frames'] = "Unknown"
+					frames_msg = "No frame range specified.\n"
 			job_info_msg = "Name:\t%s\nType:\t%s\nFrames:\t%s\nTask size:\t%s\nPriority:\t%s\n" %(submit_args['jobName'], self.jobType, submit_args['frames'], submit_args['taskSize'], submit_args['priority'])
-			#frames_msg = submit_args['frames_msg']
 
-			# Confirmation dialog
+			# Show confirmation dialog
 			dialog_title = "Submit to %s - %s" %(self.submitTo, submit_args['jobName'])
-			# dialog_msg = job_info_msg + "\n" + frames_msg + "Do you want to continue?"
-			dialog_msg = job_info_msg + "\nDo you want to continue?"
+			dialog_msg = job_info_msg + "\n" + frames_msg + "Do you want to continue?"
 			dialog = pDialog.dialog()
 
 			if dialog.display(dialog_msg, dialog_title):
 				if self.submitTo == "Render Queue":
-					result, result_msg, output_str = self.submitToRenderQueue(**submit_args)
+					result, result_msg = self.submitToRenderQueue(**submit_args)
 					#result, result_msg, output_str = self.rq.submit_job(**submit_args)
 				if self.submitTo == "Deadline":
-					result, result_msg, output_str = deadline.submit_job(**submit_args)
+					result, result_msg = deadline.submit_job(**submit_args)
 
-				# Post-confirmation dialog
+				# Show post-confirmation dialog
 				dialog_title = "Submission Results - %s" %submit_args['jobName']
-				dialog_msg = job_info_msg + "\n" + result_msg + "\n" + output_str
+				dialog_msg = job_info_msg + "\n" + result_msg
 				dialog.display(dialog_msg, dialog_title, conf=True)
 
 
@@ -652,23 +714,12 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		submit_args['frames'] = self.ui.frames_lineEdit.text()
 		submit_args['taskSize'] = self.ui.taskSize_spinBox.value()
-		# submit_args['frames_msg'] = ""
-
-		# if self.submitTo == "Render Queue":
-		# 	if submit_args['frames']:
-		# 		submit_args['taskSize'] = self.ui.taskSize_spinBox.value()
-		# 		submit_args['frames_msg'] = "%d %s to be rendered; %d %s to be submitted.\n" %(len(self.numList), verbose.pluralise("frame", len(self.numList)), len(self.taskList), verbose.pluralise("task", len(self.taskList)))
-		# 	else:
-		# 		submit_args['frames'] = "Unknown"
-		# 		submit_args['taskSize'] = "Unknown"
-		# 		self.numList = []
-		# 		self.taskList = [frames, ]
-		# 		submit_args['frames_msg'] = "The frame range was not specified so the job cannot be distributed into tasks. The job will be submitted as a single task and the frame range will be read from the scene at render time.\n"
-
 		submit_args['pool'] = self.ui.pool_comboBox.currentText()  # Deadline only
 		submit_args['group'] = self.ui.group_comboBox.currentText()  # Deadline only
 		submit_args['priority'] = self.ui.priority_spinBox.value()
 		submit_args['comment'] = self.ui.comment_lineEdit.text()
+
+		submit_args['envVars'] = ['JOB', 'SHOT', 'JOBPATH', 'SHOTPATH']
 
 		#############################
 		# Renderer-specific options #
@@ -690,54 +741,47 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			output = []  # Maya submit only
 			if os.environ['IC_ENV'] == "MAYA":
 				for layer in self.getRenderableLayers():
-					output.append(os.path.split(self.getOutput(layer)))
+					output.append(os.path.split(self.getMayaRenderOutput(layer)))
 			submit_args['output'] = output
+
+			submit_args['envVars'] += ['MAYADIR', 'MAYASCENESDIR', 'MAYARENDERSDIR']
 
 		elif self.jobType == "Nuke":
 			submit_args['plugin'] = "Nuke"  # Deadline only
 			submit_args['renderCmdEnvVar'] = 'NUKEVERSION'  # RQ only
+			submit_args['flags'] = self.ui.flags_lineEdit.text()  # RQ only
+			submit_args['version'] = os.environ['NUKE_VER'].split('v')[0]  #jobData.getAppVersion('Nuke')
+			submit_args['nukeX'] = False  # Deadline only
+			submit_args['isMovie'] = False  # Deadline only - TO BE IMPLEMENTED
 			scene = self.makePathAbsolute(self.ui.scene_comboBox.currentText()).replace("\\", "/")
 			submit_args['scene'] = scene
 			submit_args['jobName'] = os.path.splitext(os.path.basename(scene))[0]
+			#submit_args['writeNodes'] = self.ui.writeNodes_lineEdit.text()
+			submit_args['renderLayers'] = self.ui.writeNodes_lineEdit.text()
+			output = []  # Nuke submit only
+			if os.environ['IC_ENV'] == "NUKE":
+				for writeNode in self.getWriteNodes(selected=False):
+					output.append(os.path.split(self.getNukeRenderOutput(writeNode)))
+			submit_args['output'] = output
+
+			submit_args['envVars'] += ['NUKEDIR', 'NUKESCRIPTSDIR', 'NUKERENDERSDIR']
 
 		return submit_args
-
-
-	# def generateConfirmationMessage(self, **kwargs):
-	# 	""" Generate message text for confirmation dialog.
-	# 	"""
 
 
 	def submitToRenderQueue(self, **kwargs):
 		""" Submit job to render queue.
 		"""
-		timeFormatStr = "%Y/%m/%d %H:%M:%S" # "%a, %d %b %Y %H:%M:%S"
+		timeFormatStr = "%Y/%m/%d %H:%M:%S" #"%a, %d %b %Y %H:%M:%S"
 
-		###################
-		# Generic options #
-		###################
-
-		#############################
-		# Renderer-specific options #
-		#############################
-
-		# if self.jobType == "Maya":
-		# 	renderCmdEnvVar = 'MAYARENDERVERSION'
-		# 	mayaScene = self.makePathAbsolute(self.ui.scene_comboBox.currentText()).replace("\\", "/")  # Implicit if submitting from Maya UI
-		# 	mayaProject = self.getMayaProject(mayaScene)
-		# 	jobName = os.path.splitext(os.path.basename(mayaScene))[0]
-		# elif self.jobType == "Nuke":
-		# 	renderCmdEnvVar = 'NUKEVERSION'
-		# 	nukeScript = self.makePathAbsolute(self.ui.scene_comboBox.currentText()).replace("\\", "/")  # Implicit if submitting from Nuke UI
-		# 	jobName = os.path.splitext(os.path.basename(nukeScript))[0]
-
+		# Check render command is valid
 		renderCmdEnvVar = kwargs['renderCmdEnvVar']
 		try:
 			renderCmd = os.environ[renderCmdEnvVar].replace("\\", "/")
 		except KeyError:
 			error_msg = "Path to %s render command executable not found. This can be set with the environment variable '%s'." %(self.jobType, renderCmdEnvVar)
 			verbose.error(error_msg)
-			return False, "Failed to submit job.", error_msg
+			return False, "Failed to submit job.\n%s" %error_msg
 
 		# Package option variables into tuples
 		genericOpts = kwargs['jobName'], self.jobType, kwargs['frames'], kwargs['taskSize'], kwargs['priority']
@@ -751,7 +795,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		rq.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'renderQueue.xml'), use_template=False)
 		rq.newJob(genericOpts, renderOpts, self.taskList, os.environ['IC_USERNAME'], time.strftime(timeFormatStr), kwargs['comment'])
 
-		return True, "Successfully submitted job.", ""
+		return True, "Successfully submitted job."
 
 
 	def closeEvent(self, event):
@@ -760,11 +804,11 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.save()  # Save settings
 		self.storeWindow()  # Store window geometry
 
-
 # ----------------------------------------------------------------------------
 # End of main window class
+# ============================================================================
+# Run functions
 # ----------------------------------------------------------------------------
-
 
 # def run_(**kwargs):
 # 	# for key, value in kwargs.iteritems():
@@ -777,14 +821,10 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 # 	#renderSubmitUI.exec_()
 
 
-# ----------------------------------------------------------------------------
-# Run functions - MOVE TO TEMPLATE MODULE?
-# ----------------------------------------------------------------------------
-
 def run_maya(**kwargs):
 	""" Run in Maya.
 	"""
-	UI._maya_delete_ui(WINDOW_OBJECT, WINDOW_TITLE)  # Delete any already existing UI
+	UI._maya_delete_ui(WINDOW_OBJECT, WINDOW_TITLE)  # Delete any existing UI
 	renderSubmitUI = RenderSubmitUI(parent=UI._maya_main_window())
 
 	renderSubmitUI.display(**kwargs)  # Show the UI
@@ -793,20 +833,20 @@ def run_maya(**kwargs):
 def run_nuke(**kwargs):
 	""" Run in Nuke.
 	"""
-	UI._nuke_delete_ui(WINDOW_OBJECT, WINDOW_TITLE)  # Delete any already existing UI
+	UI._nuke_delete_ui(WINDOW_OBJECT, WINDOW_TITLE)  # Delete any existing UI
 	renderSubmitUI = RenderSubmitUI(parent=UI._nuke_main_window())
 
 	renderSubmitUI.display(**kwargs)  # Show the UI
 
 
 # Detect environment and run application
-if os.environ['IC_ENV'] == 'STANDALONE':
+if os.environ['IC_ENV'] == "STANDALONE":
 	verbose.print_("[GPS] %s" %WINDOW_TITLE)
-elif os.environ['IC_ENV'] == 'MAYA':
+elif os.environ['IC_ENV'] == "MAYA":
 	import maya.cmds as mc
 	verbose.print_("[GPS] %s for Maya" %WINDOW_TITLE)
 	# run_maya()
-elif os.environ['IC_ENV'] == 'NUKE':
+elif os.environ['IC_ENV'] == "NUKE":
 	import nuke
 	import nukescripts
 	verbose.print_("[GPS] %s for Nuke" %WINDOW_TITLE)

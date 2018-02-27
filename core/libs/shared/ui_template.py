@@ -575,21 +575,7 @@ class TemplateUI(object):
 
 # ----------------------------------------------------------------------------
 # End of main window class
-# ----------------------------------------------------------------------------
-
-
-# def run_(**kwargs):
-# 	# for key, value in kwargs.iteritems():
-# 	# 	print "%s = %s" % (key, value)
-# 	customUI = TemplateUI(**kwargs)
-# 	#customUI.setAttribute( QtCore.Qt.WA_DeleteOnClose )
-# 	print customUI
-# 	customUI.show()
-# 	#customUI.raise_()
-# 	#customUI.exec_()
-
-
-# ----------------------------------------------------------------------------
+# ============================================================================
 # DCC application helper functions
 # ----------------------------------------------------------------------------
 
@@ -653,6 +639,17 @@ def _nuke_set_zero_margins(widget_object):
 # ----------------------------------------------------------------------------
 # Run functions
 # ----------------------------------------------------------------------------
+
+# def run_(**kwargs):
+# 	# for key, value in kwargs.iteritems():
+# 	# 	print "%s = %s" % (key, value)
+# 	customUI = TemplateUI(**kwargs)
+# 	#customUI.setAttribute( QtCore.Qt.WA_DeleteOnClose )
+# 	print customUI
+# 	customUI.show()
+# 	#customUI.raise_()
+# 	#customUI.exec_()
+
 
 # def run_maya(**kwargs):
 # 	""" Run in Maya.

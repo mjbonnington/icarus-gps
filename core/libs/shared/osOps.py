@@ -202,9 +202,9 @@ def absolutePath(relPath, stripTrailingSlash=False):
 	"""
 	if relPath:
 		if stripTrailingSlash:
-			return os.path.normpath( os.path.expandvars(relPath) ).replace("\\", "/").rstrip('/')
+			return os.path.normpath(os.path.expandvars(relPath)).replace("\\", "/").rstrip('/')
 		else:
-			return os.path.normpath( os.path.expandvars(relPath) ).replace("\\", "/")
+			return os.path.normpath(os.path.expandvars(relPath)).replace("\\", "/")
 	else:
 		return ""
 
@@ -213,10 +213,10 @@ def relativePath(absPath, token, tokenFormat='standard'):
 	""" Convert an absolute path to a relative path.
 		'token' is the name of an environment variable to replace.
 		'tokenFormat' specifies the environment variable format:
-			standard:  $VAR
-			bracketed: ${VAR}
-			windows:   %VAR%
-			nuke:      [getenv VAR]
+			standard:   $VAR
+			bracketed:  ${VAR}
+			windows:    %VAR%
+			nuke (TCL): [getenv VAR]
 	"""
 	try:
 		if tokenFormat == 'standard':
