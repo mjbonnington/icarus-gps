@@ -403,36 +403,6 @@ QToolButton:pressed, QToolButton:checked:pressed {
                  </property>
                 </widget>
                </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="replace_label">
-                 <property name="text">
-                  <string>Replace:</string>
-                 </property>
-                 <property name="buddy">
-                  <cstring>replace_comboBox</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QCheckBox" name="ignoreCase_checkBox">
-                 <property name="text">
-                  <string>Ignore case</string>
-                 </property>
-                 <property name="xmlTag" stdset="0">
-                  <string>ignorecase</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <widget class="QCheckBox" name="regex_checkBox">
-                 <property name="text">
-                  <string>Regular expression</string>
-                 </property>
-                 <property name="xmlTag" stdset="0">
-                  <string>regex</string>
-                 </property>
-                </widget>
-               </item>
                <item row="0" column="1">
                 <widget class="QComboBox" name="find_comboBox">
                  <property name="editable">
@@ -440,6 +410,16 @@ QToolButton:pressed, QToolButton:checked:pressed {
                  </property>
                  <property name="xmlTag" stdset="0">
                   <string>find</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="replace_label">
+                 <property name="text">
+                  <string>Replace:</string>
+                 </property>
+                 <property name="buddy">
+                  <cstring>replace_comboBox</cstring>
                  </property>
                 </widget>
                </item>
@@ -452,6 +432,30 @@ QToolButton:pressed, QToolButton:checked:pressed {
                   <string>replace</string>
                  </property>
                 </widget>
+               </item>
+               <item row="2" column="1">
+                <layout class="QHBoxLayout" name="findReplaceOptions_horizontalLayout">
+                 <item>
+                  <widget class="QCheckBox" name="ignoreCase_checkBox">
+                   <property name="text">
+                    <string>Ignore case</string>
+                   </property>
+                   <property name="xmlTag" stdset="0">
+                    <string>ignorecase</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="regex_checkBox">
+                   <property name="text">
+                    <string>Regular expression</string>
+                   </property>
+                   <property name="xmlTag" stdset="0">
+                    <string>regex</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
               </layout>
              </widget>
@@ -860,12 +864,12 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>550</x>
-     <y>251</y>
+     <x>572</x>
+     <y>230</y>
     </hint>
     <hint type="destinationlabel">
-     <x>505</x>
-     <y>277</y>
+     <x>527</x>
+     <y>256</y>
     </hint>
    </hints>
   </connection>
@@ -876,12 +880,12 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>620</x>
-     <y>176</y>
+     <x>642</x>
+     <y>155</y>
     </hint>
     <hint type="destinationlabel">
-     <x>457</x>
-     <y>202</y>
+     <x>479</x>
+     <y>181</y>
     </hint>
    </hints>
   </connection>
@@ -892,12 +896,12 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>620</x>
-     <y>176</y>
+     <x>642</x>
+     <y>155</y>
     </hint>
     <hint type="destinationlabel">
-     <x>538</x>
-     <y>202</y>
+     <x>560</x>
+     <y>181</y>
     </hint>
    </hints>
   </connection>
@@ -908,12 +912,12 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>620</x>
-     <y>176</y>
+     <x>642</x>
+     <y>155</y>
     </hint>
     <hint type="destinationlabel">
-     <x>457</x>
-     <y>228</y>
+     <x>479</x>
+     <y>207</y>
     </hint>
    </hints>
   </connection>
@@ -924,12 +928,12 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>620</x>
-     <y>176</y>
+     <x>642</x>
+     <y>155</y>
     </hint>
     <hint type="destinationlabel">
-     <x>538</x>
-     <y>228</y>
+     <x>560</x>
+     <y>207</y>
     </hint>
    </hints>
   </connection>
@@ -940,12 +944,12 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>550</x>
-     <y>251</y>
+     <x>572</x>
+     <y>230</y>
     </hint>
     <hint type="destinationlabel">
-     <x>457</x>
-     <y>277</y>
+     <x>479</x>
+     <y>256</y>
     </hint>
    </hints>
   </connection>
@@ -956,12 +960,12 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>600</x>
-     <y>321</y>
+     <x>636</x>
+     <y>310</y>
     </hint>
     <hint type="destinationlabel">
-     <x>599</x>
-     <y>357</y>
+     <x>781</x>
+     <y>336</y>
     </hint>
    </hints>
   </connection>
@@ -972,12 +976,12 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>561</x>
-     <y>322</y>
+     <x>636</x>
+     <y>310</y>
     </hint>
     <hint type="destinationlabel">
-     <x>449</x>
-     <y>344</y>
+     <x>477</x>
+     <y>336</y>
     </hint>
    </hints>
   </connection>
