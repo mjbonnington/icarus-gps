@@ -20,7 +20,7 @@ import settingsData
 import verbose
 
 
-def setEnv(envVars):
+def setEnv(job, shot, shotPath):
 	""" Set job and shot environment variables.
 	"""
 	def getInheritedValue(category, setting):
@@ -43,7 +43,6 @@ def setEnv(envVars):
 		return ap.getPath(app, getInheritedValue('apps', app), currentOS)
 
 
-	job, shot, shotPath = envVars
 	jobPath = os.path.split(shotPath)[0]
 	jobDataPath = os.path.join(jobPath, os.environ['DATAFILESRELATIVEDIR'])
 	shotDataPath = os.path.join(shotPath, os.environ['DATAFILESRELATIVEDIR'])

@@ -774,13 +774,13 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			return False
 
 
-	# @QtCore.Slot()
+	@QtCore.Slot(bool)
 	def setShot(self, checked):
 		""" Wrapper function to set/unset shot from the tool button.
 		"""
 		if checked:
 			if not self.setupJob():
-				# Set check state of button to off
+				# If job setup failed, reset check state of button to off
 				self.ui.setShot_toolButton.setChecked(False)
 		else:
 			self.unlockJobUI(refreshShots=True)
@@ -1454,8 +1454,11 @@ Developers: %s
 		else:
 			start_dir = shot_dir
 
-		if os.path.isdir(start_dir):
-			return self.fileDialog(start_dir)
+		#print(start_dir)
+		if not os.path.isdir(start_dir):
+			start_dir = shot_dir
+
+		return self.fileDialog(start_dir)
 
 
 	#################getting ui options################

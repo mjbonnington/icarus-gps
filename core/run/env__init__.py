@@ -18,7 +18,7 @@ def setEnv():
 	""" Set some environment variables for basic operation.
 	"""
 	# Set version string
-	os.environ['IC_VERSION'] = 'v0.9.11-20180303'
+	os.environ['IC_VERSION'] = 'v0.9.11-20180305'
 
 	# Standardise some environment variables across systems.
 	# Usernames will always be stored as lowercase for compatibility.
@@ -47,8 +47,8 @@ def setEnv():
 
 	# Hard-coded relative data directories required by Icarus
 	#os.environ['JOBSROOTRELATIVEDIR'] = 'Project_Media'  # Store in global settings? UPDATE: now stored in jobs.xml
-	os.environ['SHOTSROOTRELATIVEDIR'] = 'Vfx'  # Store in global / job settings?
-	os.environ['DATAFILESRELATIVEDIR'] = '.icarus'
+	os.environ['SHOTSROOTRELATIVEDIR'] = 'Vfx'  # Store in global / job settings, and rename with IC_ prefix?
+	os.environ['DATAFILESRELATIVEDIR'] = '.icarus'  # Rename to IC_METADATA or similar?
 
 	# Set up basic paths
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))

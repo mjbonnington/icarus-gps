@@ -36,10 +36,9 @@ class jobs(xmlData.XMLData):
 		"""
 		jobPath = self.getPath(jobName, translate=True)
 		shotPath = osOps.absolutePath("%s/$SHOTSROOTRELATIVEDIR/%s" %(jobPath, shotName))
-		envVars = jobName, shotName, shotPath
 
 		# Create environment variables
-		if job__env__.setEnv(envVars):
+		if job__env__.setEnv(jobName, shotName, shotPath):
 
 			# Create folder structure
 			self.createDirs()
