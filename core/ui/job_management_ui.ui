@@ -277,7 +277,8 @@
        </property>
        <property name="icon">
         <iconset resource="rsc.qrc">
-         <normaloff>:/rsc/rsc/icon_cross.png</normaloff>:/rsc/rsc/icon_cross.png</iconset>
+         <normaloff>:/rsc/rsc/icon_cross.png</normaloff>
+         <disabledoff>:/rsc/rsc/icon_cross_disabled.png</disabledoff>:/rsc/rsc/icon_cross.png</iconset>
        </property>
        <property name="iconSize">
         <size>

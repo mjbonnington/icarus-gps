@@ -12,10 +12,35 @@
 import os
 import re
 import shutil
+import subprocess
 import sys
 import traceback
 
+# Import custom modules
 import verbose
+
+
+# Prevent spawned processes from opening a shell window
+CREATE_NO_WINDOW = 0x08000000
+
+
+def execute(args):
+	""" Wrapper to execute a command using subprocess.check_output().
+	"""
+	verbose.print_(" ".join(arg for arg in args))
+
+	try:
+		if os.environ['IC_RUNNING_OS'] == 'Windows':
+			output = subprocess.check_output(args, creationflags=CREATE_NO_WINDOW)
+		else:
+			output = subprocess.check_output(args)
+		return True, output.decode()
+
+	except subprocess.CalledProcessError as e:
+		error_msg = e.output.decode()
+		# verbose.error(error_msg)
+		# raise RuntimeError(error_msg)
+		return False, error_msg
 
 
 def createDir(path):
@@ -24,7 +49,7 @@ def createDir(path):
 	path = os.path.normpath(path)
 
 	if os.path.isdir(path):
-		verbose.print_("Directory already exists: %s" %path, 4)
+		verbose.print_("Directory already exists: %s" %path)
 		pass
 
 	else:
@@ -37,7 +62,7 @@ def createDir(path):
 				if os.path.basename(path).startswith('.'):
 					setHidden(path)
 
-			verbose.print_('mkdir "%s"' %path, 4)  # This causes an error if user config dir doesn't exist
+			verbose.print_('mkdir "%s"' %path)  # This causes an error if user config dir doesn't exist
 			return path
 
 		except:

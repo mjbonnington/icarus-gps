@@ -42,11 +42,8 @@ class TestApp(QtWidgets.QMainWindow):  # Replace 'TestApp' with the name of your
 
 		# Load UI
 		self.ui = QtCompat.loadUi(os.path.join(os.environ['IC_FORMSDIR'], UI_FILE), self)
-		if STYLESHEET is not None:
-			qss=os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
-			with open(qss, "r") as fh:
-				self.ui.setStyleSheet(fh.read())
-		self.ui.show()
+		self.reloadStyleSheet()
+		self.show()
 
 		self.info()
 
@@ -73,9 +70,9 @@ class TestApp(QtWidgets.QMainWindow):  # Replace 'TestApp' with the name of your
 		""" Reload stylesheet.
 		"""
 		if STYLESHEET is not None:
-			qss=os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
+			qss = os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
 			with open(qss, "r") as fh:
-				self.ui.setStyleSheet(fh.read())
+				self.ui.setStyleSheet(fh.read()) #.replace("112, 158, 50", "0, 120, 215"))
 
 
 	def exit(self):
@@ -89,6 +86,9 @@ class TestApp(QtWidgets.QMainWindow):  # Replace 'TestApp' with the name of your
 
 if __name__ == "__main__":
 	app = QtWidgets.QApplication(sys.argv)
+
+	# Apply application style.
+	# app.setStyle('Fusion')  # Qt5
 
 	myApp = TestApp()  # Replace 'TestApp' with the name of your app
 	sys.exit(app.exec_())

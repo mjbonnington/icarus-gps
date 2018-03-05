@@ -8,7 +8,7 @@
     <x>0</x>
     <y>0</y>
     <width>480</width>
-    <height>600</height>
+    <height>512</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,7 +26,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QFrame" name="submitTo_frame">
+     <widget class="QFrame" name="header_frame">
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
       </property>
@@ -36,7 +36,7 @@
       <property name="lineWidth">
        <number>0</number>
       </property>
-      <layout class="QFormLayout" name="submitTo_formLayout">
+      <layout class="QGridLayout" name="gridLayout">
        <property name="leftMargin">
         <number>12</number>
        </property>
@@ -49,13 +49,13 @@
        <property name="bottomMargin">
         <number>6</number>
        </property>
-       <item row="0" column="0">
-        <widget class="QLabel" name="submitTo_label">
+       <item row="0" column="2">
+        <widget class="QLabel" name="jobType_label">
          <property name="text">
-          <string>Submit to:</string>
+          <string>Job type:</string>
          </property>
          <property name="buddy">
-          <cstring>submitTo_comboBox</cstring>
+          <cstring>jobType_comboBox</cstring>
          </property>
         </widget>
        </item>
@@ -78,6 +78,54 @@
           </property>
          </item>
         </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="submitTo_label">
+         <property name="text">
+          <string>Submit to:</string>
+         </property>
+         <property name="buddy">
+          <cstring>submitTo_comboBox</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <widget class="QComboBox" name="jobType_comboBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <item>
+          <property name="text">
+           <string>Generic</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Maya</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Nuke</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="0" column="4">
+        <spacer name="header_horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
@@ -106,42 +154,39 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>0</y>
-         <width>480</width>
-         <height>533</height>
+         <y>-119</y>
+         <width>463</width>
+         <height>564</height>
         </rect>
        </property>
        <property name="noBackground" stdset="0">
         <bool>true</bool>
        </property>
        <layout class="QVBoxLayout" name="settings_verticalLayout">
-        <property name="leftMargin">
+        <property name="spacing">
+         <number>4</number>
+        </property>
+        <property name="margin">
          <number>6</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>6</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
         </property>
         <item>
-         <widget class="QGroupBox" name="render_groupBox">
-          <property name="title">
-           <string>Render options</string>
+         <widget class="QGroupBox" name="generic_groupBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
-          <property name="flat">
-           <bool>false</bool>
+          <property name="title">
+           <string>Generic options</string>
           </property>
           <property name="expandable" stdset="0">
            <bool>true</bool>
           </property>
-          <layout class="QFormLayout" name="render_formLayout">
-           <property name="fieldGrowthPolicy">
-            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-           </property>
+          <property name="xmlCategory" stdset="0">
+           <string>generic</string>
+          </property>
+          <layout class="QFormLayout" name="generic_formLayout">
            <property name="labelAlignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -149,90 +194,32 @@
             <number>8</number>
            </property>
            <item row="0" column="0">
-            <widget class="QLabel" name="type_label">
+            <widget class="QLabel" name="command_label">
              <property name="text">
-              <string>Job type:</string>
+              <string>Command:</string>
              </property>
              <property name="buddy">
-              <cstring>type_comboBox</cstring>
+              <cstring>command_lineEdit</cstring>
              </property>
             </widget>
            </item>
            <item row="0" column="1">
-            <layout class="QHBoxLayout" name="type_horizontalLayout">
+            <layout class="QHBoxLayout" name="command_horizontalLayout">
              <item>
-              <widget class="QComboBox" name="type_comboBox">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
+              <widget class="QLineEdit" name="command_lineEdit">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Path to the command executable.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
-               <item>
-                <property name="text">
-                 <string>Maya</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Nuke</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Generic command</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-             <item>
-              <spacer name="type_horizontalSpacer">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
+               <property name="text">
+                <string/>
                </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="scene_label">
-             <property name="text">
-              <string>Scene:</string>
-             </property>
-             <property name="buddy">
-              <cstring>scene_comboBox</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <layout class="QHBoxLayout" name="scene_horizontalLayout">
-             <item>
-              <widget class="QComboBox" name="scene_comboBox">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="editable">
-                <bool>false</bool>
-               </property>
-               <property name="maxCount">
-                <number>10</number>
-               </property>
-               <property name="insertPolicy">
-                <enum>QComboBox::InsertAtTop</enum>
+               <property name="xmlTag" stdset="0">
+                <string>command</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="sceneBrowse_toolButton">
+              <widget class="QToolButton" name="commandBrowse_toolButton">
                <property name="text">
                 <string>...</string>
                </property>
@@ -251,6 +238,36 @@
                <property name="toolButtonStyle">
                 <enum>Qt::ToolButtonIconOnly</enum>
                </property>
+               <property name="noBackground" stdset="0">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="flags_label">
+             <property name="text">
+              <string>Flags:</string>
+             </property>
+             <property name="buddy">
+              <cstring>flags_lineEdit</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <layout class="QHBoxLayout" name="flags_horizontalLayout">
+             <item>
+              <widget class="QLineEdit" name="flags_lineEdit">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allows additional command-line flags to be specified.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="xmlTag" stdset="0">
+                <string>flags</string>
+               </property>
               </widget>
              </item>
             </layout>
@@ -259,15 +276,15 @@
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="mayaOptions_groupBox">
+         <widget class="QGroupBox" name="maya_groupBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="title">
            <string>Maya options</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
-          </property>
-          <property name="checkable">
-           <bool>false</bool>
           </property>
           <property name="checked">
            <bool>false</bool>
@@ -278,87 +295,14 @@
           <property name="xmlCategory" stdset="0">
            <string>maya</string>
           </property>
-          <layout class="QFormLayout" name="mayaOptions_formLayout">
-           <property name="fieldGrowthPolicy">
-            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-           </property>
+          <layout class="QFormLayout" name="maya_formLayout">
            <property name="labelAlignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
            <property name="margin">
             <number>8</number>
            </property>
-           <item row="1" column="0">
-            <widget class="QLabel" name="layers_label">
-             <property name="text">
-              <string>Render layers:</string>
-             </property>
-             <property name="buddy">
-              <cstring>layers_lineEdit</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <layout class="QHBoxLayout" name="layers_horizontalLayout">
-             <item>
-              <widget class="QLineEdit" name="layers_lineEdit">
-               <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Specify render layer(s) to be submitted individually. Multiple entries can be separated by commas. If left blank, the renderable layers will be read from the scene file and output for each task.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="xmlTag" stdset="0">
-                <string>renderLayers</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QToolButton" name="layerOptions_toolButton">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="toolTip">
-                <string>Render layer options</string>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">QToolButton {
-	padding: 1px 12px 2px 1px;
-}
-
-QToolButton:pressed, QToolButton:checked:pressed {
-	padding: 2px 11px 1px 2px;
-}
-</string>
-               </property>
-               <property name="text">
-                <string>Frame list options</string>
-               </property>
-               <property name="icon">
-                <iconset resource="rsc.qrc">
-                 <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
-                 <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>15</width>
-                 <height>15</height>
-                </size>
-               </property>
-               <property name="popupMode">
-                <enum>QToolButton::InstantPopup</enum>
-               </property>
-               <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonIconOnly</enum>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="0" column="0">
+           <item row="2" column="0">
             <widget class="QLabel" name="renderer_label">
              <property name="text">
               <string>Renderer:</string>
@@ -368,7 +312,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
+           <item row="2" column="1">
             <layout class="QHBoxLayout" name="renderer_horizontalLayout">
              <item>
               <widget class="QComboBox" name="renderer_comboBox">
@@ -381,6 +325,11 @@ QToolButton:pressed, QToolButton:checked:pressed {
                <property name="xmlTag" stdset="0">
                 <string>renderer</string>
                </property>
+               <item>
+                <property name="text">
+                 <string/>
+                </property>
+               </item>
                <item>
                 <property name="text">
                  <string>mayaSoftware</string>
@@ -433,28 +382,132 @@ QToolButton:pressed, QToolButton:checked:pressed {
              </item>
             </layout>
            </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="flags_label">
+           <item row="0" column="0">
+            <widget class="QLabel" name="scene_label">
              <property name="text">
-              <string>Additional flags:</string>
+              <string>Scene:</string>
              </property>
              <property name="buddy">
-              <cstring>flags_lineEdit</cstring>
+              <cstring>scene_comboBox</cstring>
              </property>
             </widget>
            </item>
-           <item row="2" column="1">
-            <layout class="QHBoxLayout" name="flags_horizontalLayout">
+           <item row="0" column="1">
+            <layout class="QHBoxLayout" name="scene_horizontalLayout">
              <item>
-              <widget class="QLineEdit" name="flags_lineEdit">
+              <widget class="QComboBox" name="scene_comboBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="editable">
+                <bool>false</bool>
+               </property>
+               <property name="maxCount">
+                <number>10</number>
+               </property>
+               <property name="insertPolicy">
+                <enum>QComboBox::InsertAtTop</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="sceneBrowse_toolButton">
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normalon>:/rsc/rsc/icon_folder.png</normalon>
+                 <disabledon>:/rsc/rsc/icon_folder_disabled.png</disabledon>
+                </iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>15</width>
+                 <height>15</height>
+                </size>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonIconOnly</enum>
+               </property>
+               <property name="noBackground" stdset="0">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="layers_label">
+             <property name="text">
+              <string>Render layers:</string>
+             </property>
+             <property name="buddy">
+              <cstring>layers_lineEdit</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <layout class="QHBoxLayout" name="layers_horizontalLayout">
+             <item>
+              <widget class="QLineEdit" name="layers_lineEdit">
                <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allows additional command-line flags to be specified.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Specify render layers to be rendered. Multiple entries can be separated by commas. Each entry will be submitted individually. If left blank, the renderable layers will be detected at render time and output per task.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="text">
                 <string/>
                </property>
                <property name="xmlTag" stdset="0">
-                <string>flags</string>
+                <string>renderLayers</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="layerOptions_toolButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string>Render layer options</string>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QToolButton {
+	padding: 1px 12px 2px 1px;
+}
+
+QToolButton:pressed, QToolButton:checked:pressed {
+	padding: 2px 11px 1px 2px;
+}
+</string>
+               </property>
+               <property name="text">
+                <string>Frame list options</string>
+               </property>
+               <property name="icon">
+                <iconset resource="rsc.qrc">
+                 <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
+                 <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>15</width>
+                 <height>15</height>
+                </size>
+               </property>
+               <property name="popupMode">
+                <enum>QToolButton::InstantPopup</enum>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonIconOnly</enum>
+               </property>
+               <property name="noBackground" stdset="0">
+                <bool>false</bool>
                </property>
               </widget>
              </item>
@@ -464,15 +517,15 @@ QToolButton:pressed, QToolButton:checked:pressed {
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="nukeOptions_groupBox">
+         <widget class="QGroupBox" name="nuke_groupBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="title">
            <string>Nuke options</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
-          </property>
-          <property name="checkable">
-           <bool>false</bool>
           </property>
           <property name="checked">
            <bool>false</bool>
@@ -483,17 +536,14 @@ QToolButton:pressed, QToolButton:checked:pressed {
           <property name="xmlCategory" stdset="0">
            <string>nuke</string>
           </property>
-          <layout class="QFormLayout" name="nukeOptions_formLayout">
-           <property name="fieldGrowthPolicy">
-            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-           </property>
+          <layout class="QFormLayout" name="nuke_formLayout">
            <property name="labelAlignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
            <property name="margin">
             <number>8</number>
            </property>
-           <item row="0" column="0">
+           <item row="1" column="0">
             <widget class="QLabel" name="writeNodes_label">
              <property name="text">
               <string>Write nodes:</string>
@@ -503,7 +553,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
+           <item row="1" column="1">
             <layout class="QHBoxLayout" name="writeNodes_horizontalLayout">
              <item>
               <widget class="QLineEdit" name="writeNodes_lineEdit">
@@ -559,11 +609,14 @@ QToolButton:pressed, QToolButton:checked:pressed {
                <property name="toolButtonStyle">
                 <enum>Qt::ToolButtonIconOnly</enum>
                </property>
+               <property name="noBackground" stdset="0">
+                <bool>false</bool>
+               </property>
               </widget>
              </item>
             </layout>
            </item>
-           <item row="1" column="1">
+           <item row="2" column="1">
             <layout class="QGridLayout" name="nukeOptions_gridLayout">
              <item row="0" column="1">
               <widget class="QCheckBox" name="interactiveLicense_checkBox">
@@ -581,7 +634,65 @@ QToolButton:pressed, QToolButton:checked:pressed {
                 <string>Render with NukeX</string>
                </property>
                <property name="xmlTag" stdset="0">
-                <string>nukex</string>
+                <string>renderWithNukeX</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="nukeScript_label">
+             <property name="text">
+              <string>Script:</string>
+             </property>
+             <property name="buddy">
+              <cstring>nukeScript_comboBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <layout class="QHBoxLayout" name="nukeScript_horizontalLayout">
+             <item>
+              <widget class="QComboBox" name="nukeScript_comboBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="editable">
+                <bool>false</bool>
+               </property>
+               <property name="maxCount">
+                <number>10</number>
+               </property>
+               <property name="insertPolicy">
+                <enum>QComboBox::InsertAtTop</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="nukeScriptBrowse_toolButton">
+               <property name="text">
+                <string>...</string>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normalon>:/rsc/rsc/icon_folder.png</normalon>
+                 <disabledon>:/rsc/rsc/icon_folder_disabled.png</disabledon>
+                </iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>15</width>
+                 <height>15</height>
+                </size>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonIconOnly</enum>
+               </property>
+               <property name="noBackground" stdset="0">
+                <bool>false</bool>
                </property>
               </widget>
              </item>
@@ -592,14 +703,14 @@ QToolButton:pressed, QToolButton:checked:pressed {
         </item>
         <item>
          <widget class="QGroupBox" name="frames_groupBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="title">
            <string>Frame range</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
-          </property>
-          <property name="checkable">
-           <bool>false</bool>
           </property>
           <property name="checked">
            <bool>false</bool>
@@ -611,9 +722,6 @@ QToolButton:pressed, QToolButton:checked:pressed {
            <string>frames</string>
           </property>
           <layout class="QFormLayout" name="frames_formLayout">
-           <property name="fieldGrowthPolicy">
-            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-           </property>
            <property name="labelAlignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -635,7 +743,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
              <item>
               <widget class="QLineEdit" name="frames_lineEdit">
                <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Specify the frames to be rendered. Individual frames should be separated with commas, and ranges can be specified using a hyphen, e.g. '1, 5-10'. If left blank, the frame range will be read from the scene file at render time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Specify the frames to be rendered. Individual frames should be separated with commas, and ranges can be specified using a hyphen (e.g. '1, 5-10'). Reversed ordering is supported (e.g. '10-1') and step values can be specified with an 'x' (e.g. '1-20x5' will render frames 1, 6, 11 and 16). Duplicates will be removed automatically. If left blank, depending on the options selected, the renderer will attempt to detect the frame range at render time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="text">
                 <string/>
@@ -685,6 +793,9 @@ QToolButton:pressed, QToolButton:checked:pressed {
                </property>
                <property name="toolButtonStyle">
                 <enum>Qt::ToolButtonIconOnly</enum>
+               </property>
+               <property name="noBackground" stdset="0">
+                <bool>false</bool>
                </property>
               </widget>
              </item>
@@ -752,12 +863,15 @@ QToolButton:pressed, QToolButton:checked:pressed {
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="submit_groupBox">
+         <widget class="QGroupBox" name="submission_groupBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="title">
            <string>Submission options</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
           </property>
           <property name="expandable" stdset="0">
            <bool>true</bool>
@@ -765,7 +879,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
           <property name="xmlCategory" stdset="0">
            <string>submission</string>
           </property>
-          <layout class="QFormLayout" name="submit_formLayout">
+          <layout class="QFormLayout" name="submission_formLayout">
            <property name="labelAlignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -917,6 +1031,9 @@ QToolButton:pressed, QToolButton:checked:pressed {
                <property name="toolButtonStyle">
                 <enum>Qt::ToolButtonIconOnly</enum>
                </property>
+               <property name="noBackground" stdset="0">
+                <bool>false</bool>
+               </property>
               </widget>
              </item>
             </layout>
@@ -960,6 +1077,9 @@ QToolButton:pressed, QToolButton:checked:pressed {
                </property>
                <property name="toolButtonStyle">
                 <enum>Qt::ToolButtonIconOnly</enum>
+               </property>
+               <property name="noBackground" stdset="0">
+                <bool>false</bool>
                </property>
               </widget>
              </item>
@@ -1020,16 +1140,22 @@ QToolButton:pressed, QToolButton:checked:pressed {
  </widget>
  <tabstops>
   <tabstop>submitTo_comboBox</tabstop>
+  <tabstop>jobType_comboBox</tabstop>
   <tabstop>submitOptions_scrollArea</tabstop>
-  <tabstop>type_comboBox</tabstop>
+  <tabstop>command_lineEdit</tabstop>
+  <tabstop>commandBrowse_toolButton</tabstop>
+  <tabstop>flags_lineEdit</tabstop>
   <tabstop>scene_comboBox</tabstop>
   <tabstop>sceneBrowse_toolButton</tabstop>
-  <tabstop>renderer_comboBox</tabstop>
   <tabstop>layers_lineEdit</tabstop>
   <tabstop>layerOptions_toolButton</tabstop>
-  <tabstop>flags_lineEdit</tabstop>
+  <tabstop>renderer_comboBox</tabstop>
+  <tabstop>nukeScript_comboBox</tabstop>
+  <tabstop>nukeScriptBrowse_toolButton</tabstop>
   <tabstop>writeNodes_lineEdit</tabstop>
   <tabstop>writeNodeOptions_toolButton</tabstop>
+  <tabstop>useNukeX_checkBox</tabstop>
+  <tabstop>interactiveLicense_checkBox</tabstop>
   <tabstop>frames_lineEdit</tabstop>
   <tabstop>frameListOptions_toolButton</tabstop>
   <tabstop>taskSize_spinBox</tabstop>
@@ -1056,11 +1182,11 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <hints>
     <hint type="sourcelabel">
      <x>96</x>
-     <y>518</y>
+     <y>585</y>
     </hint>
     <hint type="destinationlabel">
-     <x>357</x>
-     <y>519</y>
+     <x>446</x>
+     <y>585</y>
     </hint>
    </hints>
   </connection>
@@ -1071,12 +1197,12 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>425</x>
-     <y>519</y>
+     <x>446</x>
+     <y>585</y>
     </hint>
     <hint type="destinationlabel">
      <x>96</x>
-     <y>518</y>
+     <y>585</y>
     </hint>
    </hints>
   </connection>
@@ -1088,11 +1214,11 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <hints>
     <hint type="sourcelabel">
      <x>140</x>
-     <y>399</y>
+     <y>467</y>
     </hint>
     <hint type="destinationlabel">
-     <x>463</x>
-     <y>400</y>
+     <x>446</x>
+     <y>466</y>
     </hint>
    </hints>
   </connection>
@@ -1103,12 +1229,12 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>463</x>
-     <y>400</y>
+     <x>446</x>
+     <y>466</y>
     </hint>
     <hint type="destinationlabel">
      <x>140</x>
-     <y>399</y>
+     <y>467</y>
     </hint>
    </hints>
   </connection>

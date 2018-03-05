@@ -18,7 +18,7 @@ def setEnv():
 	""" Set some environment variables for basic operation.
 	"""
 	# Set version string
-	os.environ['IC_VERSION'] = 'v0.9.11-20180227'
+	os.environ['IC_VERSION'] = 'v0.9.11-20180303'
 
 	# Standardise some environment variables across systems.
 	# Usernames will always be stored as lowercase for compatibility.
@@ -66,6 +66,8 @@ def setEnv():
 
 def appendSysPaths():
 	""" Add paths for custom modules.
+		Perhaps in the future we should re-structure the modules into
+		packages to simplify this?
 	"""
 	libs = os.path.join(os.environ['IC_BASEDIR'], 'core', 'libs')
 	tools = os.path.join(os.environ['IC_BASEDIR'], 'core', 'tools')
@@ -79,7 +81,8 @@ def appendSysPaths():
 		subdirs = next(os.walk(path))[1]
 		if subdirs:
 			for subdir in subdirs:
-				if not subdir.startswith('.'):  # Ignore directories that start with a dot
+				# Ignore directories that start with a dot
+				if not subdir.startswith('.'):
 					pathsToAppend.append(os.path.join(path, subdir))
 
 	# Append paths

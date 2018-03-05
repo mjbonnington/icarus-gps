@@ -80,7 +80,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		# Connect signals & slots
 		self.ui.submitTo_comboBox.currentIndexChanged.connect(self.setQueueManagerFromComboBox)
-		self.ui.type_comboBox.currentIndexChanged.connect(self.setJobTypeFromComboBox)
+		self.ui.jobType_comboBox.currentIndexChanged.connect(self.setJobTypeFromComboBox)
 		self.ui.scene_comboBox.currentIndexChanged.connect(self.applySettings)
 		self.ui.sceneBrowse_toolButton.clicked.connect(self.sceneBrowse)
 
@@ -145,20 +145,24 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Set 'Submit to' option depending on the parent window, or user prefs
 		if self.parent.windowTitle() == "Render Queue":
 			self.submitTo = "Render Queue"
-			self.ui.submitTo_frame.setEnabled(False)
-			self.ui.submitTo_frame.hide()
+			# self.ui.header_frame.setEnabled(False)
+			# self.ui.header_frame.hide()
+			self.ui.submitTo_label.setEnabled(False)
+			self.ui.submitTo_comboBox.setEnabled(False)
 		else:
 			self.submitTo = userPrefs.query('rendersubmit', 'submitto', default=self.ui.submitTo_comboBox.currentText())
-			self.ui.submitTo_frame.setEnabled(True)
-			self.ui.submitTo_frame.show()
+			# self.ui.header_frame.setEnabled(True)
+			# self.ui.header_frame.show()
+			self.ui.submitTo_label.setEnabled(True)
+			self.ui.submitTo_comboBox.setEnabled(True)
 		self.ui.submitTo_comboBox.setCurrentIndex(self.ui.submitTo_comboBox.findText(self.submitTo))
 		self.ui.submit_pushButton.setText("Submit to %s" %self.submitTo)
 		self.setQueueManagerFromComboBox()
 
 		# Set job type from Icarus environment when possible
 		if os.environ['IC_ENV'] == "STANDALONE":
-			self.jobType = userPrefs.query('rendersubmit', 'lastrenderjobtype', default=self.ui.type_comboBox.currentText())
-			self.ui.type_comboBox.setCurrentIndex(self.ui.type_comboBox.findText(self.jobType))
+			self.jobType = userPrefs.query('rendersubmit', 'lastrenderjobtype', default=self.ui.jobType_comboBox.currentText())
+			self.ui.jobType_comboBox.setCurrentIndex(self.ui.jobType_comboBox.findText(self.jobType))
 			self.ui.layerOptions_toolButton.setEnabled(False)
 			self.ui.writeNodeOptions_toolButton.setEnabled(False)
 			self.setJobType()
@@ -166,7 +170,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		elif os.environ['IC_ENV'] == "MAYA":
 			self.jobType = "Maya"
-			self.ui.type_comboBox.setCurrentIndex(self.ui.type_comboBox.findText(self.jobType))
+			self.ui.jobType_comboBox.setCurrentIndex(self.ui.jobType_comboBox.findText(self.jobType))
 			self.setJobType()
 
 			sceneName = mc.file(query=True, sceneName=True)
@@ -182,7 +186,9 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 				self.ui.submit_pushButton.setToolTip(msg)
 				self.ui.submit_pushButton.setEnabled(False)
 
-			self.ui.render_groupBox.setEnabled(False)
+			# self.ui.render_groupBox.setEnabled(False)
+			self.ui.jobType_label.setEnabled(False)
+			self.ui.jobType_comboBox.setEnabled(False)
 			self.ui.sceneBrowse_toolButton.hide()
 
 			self.getRenderLayers()
@@ -194,7 +200,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		elif os.environ['IC_ENV'] == "NUKE":
 			self.jobType = "Nuke"
-			self.ui.type_comboBox.setCurrentIndex(self.ui.type_comboBox.findText(self.jobType))
+			self.ui.jobType_comboBox.setCurrentIndex(self.ui.jobType_comboBox.findText(self.jobType))
 			self.setJobType()
 
 			scriptName = nuke.value('root.name')
@@ -210,7 +216,9 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 				self.ui.submit_pushButton.setToolTip(msg)
 				self.ui.submit_pushButton.setEnabled(False)
 
-			self.ui.render_groupBox.setEnabled(False)
+			# self.ui.render_groupBox.setEnabled(False)
+			self.ui.jobType_label.setEnabled(False)
+			self.ui.jobType_comboBox.setEnabled(False)
 			self.ui.sceneBrowse_toolButton.hide()
 
 		self.numList = []
@@ -236,8 +244,8 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		""" Toggle expert mode where additional UI items are visible.
 		"""
 		self.expertMode = not self.expertMode
-		self.ui.render_groupBox.setEnabled(self.expertMode)
-		self.ui.render_groupBox.setVisible(self.expertMode)
+		# self.ui.render_groupBox.setEnabled(self.expertMode)
+		# self.ui.render_groupBox.setVisible(self.expertMode)
 
 
 	def getSettingsFile(self, scene, suffix=""):
@@ -280,16 +288,17 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		userPrefs.edit('rendersubmit', 'submitto', self.submitTo) # deprecated
 		self.ui.submit_pushButton.setText("Submit to %s" %self.submitTo)
 
-		rq_show_list = [self.ui.flags_label, self.ui.flags_lineEdit]
+		# rq_show_list = [self.ui.flags_label, self.ui.flags_lineEdit]
 		dl_show_list = [self.ui.pool_label, self.ui.group_label, 
 		                self.ui.pool_comboBox, self.ui.group_comboBox, 
 		                self.ui.getPools_toolButton, self.ui.getGroups_toolButton]
 
-		for item in rq_show_list + dl_show_list:
+		#for item in rq_show_list + dl_show_list:
+		for item in dl_show_list:
 			item.setEnabled(False)
-		if self.submitTo == "Render Queue":
-			for item in rq_show_list:
-				item.setEnabled(True)
+		# if self.submitTo == "Render Queue":
+		# 	for item in rq_show_list:
+		# 		item.setEnabled(True)
 		if self.submitTo == "Deadline":
 			for item in dl_show_list:
 				item.setEnabled(True)
@@ -300,7 +309,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		""" Set job type - called when the job type combo box value is
 			changed.
 		"""
-		self.jobType = self.ui.type_comboBox.currentText()
+		self.jobType = self.ui.jobType_comboBox.currentText()
 		userPrefs.edit('rendersubmit', 'lastrenderjobtype', self.jobType)
 		self.setJobType()
 		if os.environ['IC_ENV'] == "STANDALONE":
@@ -311,30 +320,30 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		""" Setup some global variables and UI elements depending on the job
 			type.
 		"""
-		if self.jobType == 'Generic command':
+		self.ui.generic_groupBox.hide()
+		self.ui.maya_groupBox.hide()
+		self.ui.nuke_groupBox.hide()
+		if self.jobType == "Generic":
 			# try:
 			# 	self.relativeScenesDir = osOps.absolutePath('%s/%s' %(os.environ['MAYADIR'], 'scenes'))
 			# except KeyError:
 			# 	self.relativeScenesDir = ""
-			self.ui.scene_label.setText("Command:")
-			self.ui.mayaOptions_groupBox.hide()
-			self.ui.nukeOptions_groupBox.hide()
-		elif self.jobType == 'Maya':
+			#self.ui.scene_label.setText("Command:")
+			self.ui.generic_groupBox.show()
+		elif self.jobType == "Maya":
 			try:
 				self.relativeScenesDir = osOps.absolutePath('%s/%s' %(os.environ['MAYADIR'], 'scenes'))
 			except KeyError:
 				self.relativeScenesDir = ""
-			self.ui.scene_label.setText("Scene:")
-			self.ui.mayaOptions_groupBox.show()
-			self.ui.nukeOptions_groupBox.hide()
-		elif self.jobType == 'Nuke':
+			#self.ui.scene_label.setText("Scene:")
+			self.ui.maya_groupBox.show()
+		elif self.jobType == "Nuke":
 			try:
 				self.relativeScenesDir = osOps.absolutePath('%s/%s' %(os.environ['NUKEDIR'], 'scripts'))
 			except KeyError:
 				self.relativeScenesDir = ""
-			self.ui.scene_label.setText("Script:")
-			self.ui.nukeOptions_groupBox.show()
-			self.ui.mayaOptions_groupBox.hide()
+			#self.ui.scene_label.setText("Script:")
+			self.ui.nuke_groupBox.show()
 
 		# Representative string to replace the path specified above
 		self.relativeScenesToken = '...'
@@ -459,13 +468,17 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 	def getPools(self):
 		""" Get Deadline pools & populate combo box.
 		"""
-		self.populateComboBox(self.ui.pool_comboBox, deadline.get_pools())
+		pools = deadline.get_pools()
+		if pools:
+			self.populateComboBox(self.ui.pool_comboBox, pools)
 
 
 	def getGroups(self):
 		""" Get Deadline groups & populate combo box.
 		"""
-		self.populateComboBox(self.ui.group_comboBox, deadline.get_groups())
+		groups = deadline.get_groups()
+		if groups:
+			self.populateComboBox(self.ui.group_comboBox, groups)
 
 
 	def getRenderers(self):
@@ -688,7 +701,6 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			if dialog.display(dialog_msg, dialog_title):
 				if self.submitTo == "Render Queue":
 					result, result_msg = self.submitToRenderQueue(**submit_args)
-					#result, result_msg, output_str = self.rq.submit_job(**submit_args)
 				if self.submitTo == "Deadline":
 					result, result_msg = deadline.submit_job(**submit_args)
 

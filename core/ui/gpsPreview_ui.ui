@@ -18,6 +18,9 @@
     <string>gpspreview</string>
    </property>
    <layout class="QVBoxLayout" name="main_verticalLayout">
+    <property name="spacing">
+     <number>4</number>
+    </property>
     <property name="margin">
      <number>6</number>
     </property>

@@ -11,17 +11,12 @@
 
 import os
 import re
-import subprocess
 import sys
 import traceback
 
 # Import custom modules
 import osOps
 import verbose
-
-
-# Prevent spawned processes from opening a shell window
-CREATE_NO_WINDOW = 0x08000000
 
 
 def str_to_list(string):
@@ -38,9 +33,7 @@ def get_pools():
 	""" Get Deadline pools and return in a list.
 	"""
 	try:
-		pools = subprocess.check_output(
-			[os.environ['DEADLINECMDVERSION'], '-pools'], 
-			creationflags=CREATE_NO_WINDOW)
+		pools = osOps.execute([os.environ['DEADLINECMDVERSION'], '-pools'])
 		return str_to_list(pools)
 	except:
 		verbose.warning("Could not retrieve Deadline pools.")
@@ -51,9 +44,7 @@ def get_groups():
 	""" Get Deadline groups and return in a list.
 	"""
 	try:
-		groups = subprocess.check_output(
-			[os.environ['DEADLINECMDVERSION'], '-groups'], 
-			creationflags=CREATE_NO_WINDOW)
+		groups = osOps.execute([os.environ['DEADLINECMDVERSION'], '-groups'])
 		return str_to_list(groups)
 	except:
 		verbose.warning("Could not retrieve Deadline groups.")
@@ -180,6 +171,9 @@ def generate_batch_file(scene, jobInfoFileList, pluginInfoFileList):
 def submit_job(**kwargs):
 	""" Submit job to Deadline.
 	"""
+	cmd_output = ""
+	result_msg = ""
+
 	if kwargs is not None:
 		for key, value in kwargs.items(): # iteritems(): for Python 2.x
 			verbose.print_("%24s = %s" %(key, value))
@@ -201,13 +195,15 @@ def submit_job(**kwargs):
 				num_jobs += 1
 
 			# Generate batch file
-			batchSubmissionFile = generate_batch_file(kwargs['scene'], jobInfoFileList, pluginInfoFileList)
+			batchSubmissionFile = generate_batch_file(
+				kwargs['scene'], 
+				jobInfoFileList, 
+				pluginInfoFileList)
 
 			# Execute deadlinecommand
-			cmd_output = subprocess.check_output(
-				[os.environ['DEADLINECMDVERSION'], batchSubmissionFile], 
-				creationflags=CREATE_NO_WINDOW)
-			result_msg = "Successfully submitted %d %s to Deadline." %(num_jobs, verbose.pluralise("job", num_jobs))
+			cmd_result, cmd_output = osOps.execute([os.environ['DEADLINECMDVERSION'], batchSubmissionFile])
+			if cmd_result:
+				result_msg = "Successfully submitted %d %s to Deadline." %(num_jobs, verbose.pluralise("job", num_jobs))
 
 			# Delete submission info files
 			if int(os.environ['IC_VERBOSITY']) < 4:
@@ -224,19 +220,21 @@ def submit_job(**kwargs):
 			pluginInfoFile = generate_plugin_info_file(**kwargs)
 
 			# Execute deadlinecommand
-			cmd_output = subprocess.check_output(
-				[os.environ['DEADLINECMDVERSION'], jobInfoFile, pluginInfoFile], 
-				creationflags=CREATE_NO_WINDOW)
-			result_msg = "Successfully submitted job to Deadline."
+			cmd_result, cmd_output = osOps.execute([os.environ['DEADLINECMDVERSION'], jobInfoFile, pluginInfoFile])
+			if cmd_result:
+				result_msg = "Successfully submitted job to Deadline."
 
 			# Delete submission info files
 			if int(os.environ['IC_VERBOSITY']) < 4:
 				osOps.recurseRemove(jobInfoFile)
 				osOps.recurseRemove(pluginInfoFile)
 
-		result = True
-		print(cmd_output.decode())
-		verbose.message(result_msg)
+		if cmd_result:
+			result = True
+			print(cmd_output) #.decode())
+			verbose.message(result_msg)
+		else:
+			raise RuntimeError(cmd_output)
 
 	except:  # Submission failed ---------------------------------------------
 		result = False
@@ -244,7 +242,10 @@ def submit_job(**kwargs):
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		result_msg = "Failed to submit job to Deadline."
 		verbose.error(result_msg)
-		result_msg += "\nCheck console output for details."
+		if (exc_type == RuntimeError) and cmd_output:
+			result_msg += "\n" + cmd_output
+		else:
+			result_msg += "\nCheck console output for details."
 		#output_str = "Either the Deadline executable could not be found, or the submission info files could not be written."
 		#output_str = traceback.format_exception_only(exc_type, exc_value)[0]
 

@@ -334,14 +334,16 @@ def setEnv(envVars):
 	os.environ['DJV_LIB']  = osOps.absolutePath('%s/../lib' %os.path.dirname(os.environ['DJVVERSION']))
 	if os.environ['IC_RUNNING_OS'] == 'Windows':
 		os.environ['DJV_CONVERT'] = osOps.absolutePath('%s/djv_convert.exe' %os.path.dirname(os.environ['DJVVERSION']))
-
-	else:  # Mac OS X and Linux...
+	else:  # Mac OS X and Linux
 		os.environ['DJV_CONVERT'] = osOps.absolutePath('%s/djv_convert' %os.path.dirname(os.environ['DJVVERSION']))
 
 
 	# Deadline Monitor / Slave
 	os.environ['DEADLINEVERSION'] = getAppExecPath('Deadline')
-	os.environ['DEADLINECMDVERSION']   = osOps.absolutePath('%s/deadlinecommand' %os.path.dirname(os.environ['DEADLINEVERSION']))
+	if os.environ['IC_RUNNING_OS'] == 'Darwin':
+		os.environ['DEADLINECMDVERSION']   = osOps.absolutePath('%s/../../../Resources/deadlinecommand' %os.path.dirname(os.environ['DEADLINEVERSION']))
+	else:  # Windows or Linux
+		os.environ['DEADLINECMDVERSION']   = osOps.absolutePath('%s/deadlinecommand' %os.path.dirname(os.environ['DEADLINEVERSION']))
 	# os.environ['DEADLINEMONITORVERSION'] = getAppExecPath('DeadlineMonitor')
 	# os.environ['DEADLINESLAVEVERSION']   = getAppExecPath('DeadlineSlave')
 

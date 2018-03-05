@@ -67,7 +67,8 @@ class TemplateUI(object):
 		if ui_file:
 			uifile = os.path.join(os.environ['IC_FORMSDIR'], ui_file)
 			self.ui = QtCompat.loadUi(uifile, self)
-		self.reloadStyleSheet(stylesheet)
+		self.stylesheet = stylesheet
+		self.reloadStyleSheet()
 
 		# Set window title
 		self.setObjectName(window_object)
@@ -112,9 +113,9 @@ class TemplateUI(object):
 		# 	self.move(self.parent.frameGeometry().center() - self.frameGeometry().center())
 
 		# Set up keyboard shortcuts
-		# self.shortcutReloadStyleSheet = QtWidgets.QShortcut(self)
-		# self.shortcutReloadStyleSheet.setKey('Ctrl+R')
-		# self.shortcutReloadStyleSheet.activated.connect(self.reloadStyleSheet)
+		self.shortcutReloadStyleSheet = QtWidgets.QShortcut(self)
+		self.shortcutReloadStyleSheet.setKey('Ctrl+Shift+R')
+		self.shortcutReloadStyleSheet.activated.connect(self.reloadStyleSheet)
 
 
 	def fileDialog(self, startingDir, fileFilter='All files (*.*)'):
@@ -481,19 +482,23 @@ class TemplateUI(object):
 		#self.setFixedHeight(self.sizeHint().height())  # Resize window
 
 
-	def populateComboBox(self, comboBox, contents_list):
-		""" Use a list (contents_list) to populate a combo box.
+	def populateComboBox(self, comboBox, contents, replace=True):
+		""" Use a list (contents) to populate a combo box.
+			If 'replace' is true, the existing items will be replaced,
+			otherwise the contents will be appended to the existing items.
 		"""
 		# Store current value
 		current = comboBox.currentText()
 
 		# Clear menu
-		comboBox.clear()
+		if replace:
+			comboBox.clear()
 
 		# Populate menu
-		for item in contents_list:
-			if item:
-				comboBox.addItem(item)
+		if contents:
+			for item in contents:
+				if item:
+					comboBox.addItem(item)
 
 		# Set to current value
 		index = comboBox.findText(current)
@@ -506,11 +511,11 @@ class TemplateUI(object):
 	# ------------------------------------------------------------------------
 
 
-	def reloadStyleSheet(self, stylesheet):
+	def reloadStyleSheet(self):
 		""" Reload stylesheet.
 		"""
-		if stylesheet:
-			qss = os.path.join(os.environ['IC_FORMSDIR'], stylesheet)
+		if self.stylesheet:
+			qss = os.path.join(os.environ['IC_FORMSDIR'], self.stylesheet)
 			with open(qss, "r") as fh:
 				self.setStyleSheet(fh.read())
 
