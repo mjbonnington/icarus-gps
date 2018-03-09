@@ -197,8 +197,7 @@ def setEnv(job, shot, shotPath):
 		#os.environ['VRAY_FOR_MAYA2014_PLUGINS_x64'] += os.pathsep + osOps.absolutePath('$IC_BASEDIR/rsc/maya/plugins')
 
 		if os.environ['IC_RUNNING_OS'] == 'Windows':  # Set up centralised deployment of Redshift plugin for Maya
-			# if getAppExecPath('Redshift') is not "":
-			if getAppExecPath('rs') is not "":
+			if getAppExecPath('Redshift') is not "":
 				os.environ['REDSHIFT_COREDATAPATH']         = getAppExecPath('Redshift')
 				os.environ['REDSHIFT_COMMON_ROOT']          = osOps.absolutePath('$REDSHIFT_COREDATAPATH/Plugins/Maya/Common')
 				os.environ['REDSHIFT_PLUG_IN_PATH']         = osOps.absolutePath('$REDSHIFT_COREDATAPATH/Plugins/Maya/%s/nt-x86-64' %maya_ver)
@@ -300,9 +299,12 @@ def setEnv(job, shot, shotPath):
 
 
 	# Cinema 4D
-	os.environ['C4DVERSION']   = getAppExecPath('Cinema4D')
-	# os.environ['C4DDIR']       = osOps.absolutePath('$SHOTPATH/3D/c4d')
-	# os.environ['C4DSCENESDIR'] = osOps.absolutePath('$C4DDIR/scenes/$IC_USERNAME')
+	c4d_ver = jobData.getAppVersion('Cinema4D')
+	os.environ['C4DVERSION']      = getAppExecPath('Cinema4D')
+	os.environ['C4DDIR']          = osOps.absolutePath('$SHOTPATH/3D/c4d') #temp
+	os.environ['C4DSCENESDIR']    = osOps.absolutePath('$C4DDIR/scenes/$IC_USERNAME') #temp
+	os.environ['C4D_PLUGINS_DIR'] = osOps.absolutePath('$FILESYSTEMROOT/_Library/3D/C4D/%s/plugins' %c4d_ver)
+	os.environ['C4D_SCRIPTS_DIR'] = osOps.absolutePath('$FILESYSTEMROOT/_Library/3D/C4D/%s/scripts' %c4d_ver)
 
 
 	# Clarisse

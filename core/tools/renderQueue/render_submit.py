@@ -62,6 +62,8 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		             xml_data=xml_data, 
 		             store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
 
+		self.conformFormLayoutLabels(self.ui.centralwidget)
+
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Tool)
 
