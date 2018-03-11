@@ -947,6 +947,10 @@ Angular units: %s
 		except KeyError:
 			print("Environment variable(s) not set.")
 
+		import envvars__main__
+		self.envVarsDialog = envvars__main__.EnvVarsDialog(parent=self)
+		self.envVarsDialog.show()
+
 
 	def about(self):
 		""" Show about dialog.

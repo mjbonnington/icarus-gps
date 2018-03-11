@@ -11,56 +11,12 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Shot Management</string>
-  </property>
-  <property name="modal">
-   <bool>true</bool>
+   <string>Environment Variables</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="margin">
     <number>8</number>
    </property>
-   <item>
-    <widget class="QFrame" name="jobSelector_frame">
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <layout class="QFormLayout" name="jobSelector_formLayout">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-      </property>
-      <property name="labelAlignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-      <property name="margin">
-       <number>0</number>
-      </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="job_label">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Job:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="job_comboBox">
-        <property name="editable">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
    <item>
     <widget class="QFrame" name="toolbar_frame">
      <property name="frameShape">
@@ -74,7 +30,7 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QToolButton" name="shotAdd_toolButton">
+       <widget class="QToolButton" name="reload_toolButton">
         <property name="minimumSize">
          <size>
           <width>64</width>
@@ -82,7 +38,37 @@
          </size>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Add shot(s)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Add one or more shots to the job.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Reload&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Reload environment variables. Any changes will be lost.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Reload</string>
+        </property>
+        <property name="icon">
+         <iconset resource="rsc.qrc">
+          <normaloff>:/rsc/rsc/icon_refresh.png</normaloff>
+          <disabledoff>:/rsc/rsc/icon_refresh_disabled.png</disabledoff>:/rsc/rsc/icon_refresh.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>32</width>
+          <height>32</height>
+         </size>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextUnderIcon</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="add_toolButton">
+        <property name="minimumSize">
+         <size>
+          <width>64</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Add&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Add a new environment variable.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Add</string>
@@ -104,7 +90,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="shotDelete_toolButton">
+       <widget class="QToolButton" name="remove_toolButton">
         <property name="minimumSize">
          <size>
           <width>64</width>
@@ -112,7 +98,7 @@
          </size>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Remove shot(s)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Remove the selected shots(s). Use with caution: the shot folder will be deleted from the disk and may not be recoverable.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Remove&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Remove the selected environment variable(s).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Remove</string>
@@ -134,7 +120,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="refresh_toolButton">
+       <widget class="QToolButton" name="edit_toolButton">
         <property name="minimumSize">
          <size>
           <width>64</width>
@@ -142,15 +128,15 @@
          </size>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Refresh&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Refresh the shots view.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Edit&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Modify the selected environment variable.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
-         <string>Refresh</string>
+         <string>Edit</string>
         </property>
         <property name="icon">
          <iconset resource="rsc.qrc">
-          <normaloff>:/rsc/rsc/icon_refresh.png</normaloff>
-          <disabledoff>:/rsc/rsc/icon_refresh_disabled.png</disabledoff>:/rsc/rsc/icon_refresh.png</iconset>
+          <normaloff>:/rsc/rsc/icon_editor.png</normaloff>
+          <disabledoff>:/rsc/rsc/icon_editor_disabled.png</disabledoff>:/rsc/rsc/icon_editor.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -164,37 +150,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="shotSettings_toolButton">
-        <property name="minimumSize">
-         <size>
-          <width>64</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Shot settings&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Modify the selected shot settings.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>Settings</string>
-        </property>
-        <property name="icon">
-         <iconset resource="rsc.qrc">
-          <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
-          <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>32</width>
-          <height>32</height>
-         </size>
-        </property>
-        <property name="toolButtonStyle">
-         <enum>Qt::ToolButtonTextUnderIcon</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer">
+       <spacer name="toolbar_horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -205,36 +161,6 @@
          </size>
         </property>
        </spacer>
-      </item>
-      <item>
-       <widget class="QToolButton" name="export_toolButton">
-        <property name="minimumSize">
-         <size>
-          <width>64</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Export shots&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Export the shot data as CSV format (compatible with Microsoft Excel etc.)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>Export</string>
-        </property>
-        <property name="icon">
-         <iconset resource="rsc.qrc">
-          <normaloff>:/rsc/rsc/icon_folder.png</normaloff>
-          <disabledoff>:/rsc/rsc/icon_folder_disabled.png</disabledoff>:/rsc/rsc/icon_folder.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>32</width>
-          <height>32</height>
-         </size>
-        </property>
-        <property name="toolButtonStyle">
-         <enum>Qt::ToolButtonTextUnderIcon</enum>
-        </property>
-       </widget>
       </item>
      </layout>
     </widget>
@@ -254,7 +180,7 @@
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Clear the search filter box&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
-        <string>...</string>
+        <string>Clear</string>
        </property>
        <property name="icon">
         <iconset resource="rsc.qrc">
@@ -267,62 +193,73 @@
          <height>15</height>
         </size>
        </property>
+       <property name="toolButtonStyle">
+        <enum>Qt::ToolButtonIconOnly</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="searchKeys_checkBox">
+       <property name="text">
+        <string>Keys</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="searchValues_checkBox">
+       <property name="text">
+        <string>Values</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
       </widget>
      </item>
     </layout>
    </item>
    <item>
-    <widget class="QTableWidget" name="shots_tableWidget">
+    <widget class="QTreeWidget" name="envVars_treeWidget">
      <property name="alternatingRowColors">
       <bool>true</bool>
      </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::ExtendedSelection</enum>
+     </property>
      <property name="verticalScrollMode">
-      <enum>QAbstractItemView::ScrollPerPixel</enum>
+      <enum>QAbstractItemView::ScrollPerItem</enum>
      </property>
      <property name="horizontalScrollMode">
       <enum>QAbstractItemView::ScrollPerPixel</enum>
      </property>
+     <property name="indentation">
+      <number>0</number>
+     </property>
+     <property name="uniformRowHeights">
+      <bool>true</bool>
+     </property>
+     <property name="itemsExpandable">
+      <bool>false</bool>
+     </property>
      <property name="sortingEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="allColumnsShowFocus">
+      <bool>true</bool>
+     </property>
+     <property name="expandsOnDoubleClick">
       <bool>false</bool>
      </property>
      <column>
       <property name="text">
-       <string>Frame range</string>
+       <string>Key</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>FPS</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Resolution</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Proxy</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Camera</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Filmback</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Focal length</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Notes</string>
+       <string>Value</string>
       </property>
      </column>
     </widget>
@@ -330,7 +267,7 @@
    <item>
     <widget class="QDialogButtonBox" name="main_buttonBox">
      <property name="standardButtons">
-      <set>QDialogButtonBox::Close</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
      </property>
     </widget>
    </item>
