@@ -1,0 +1,175 @@
+#!/usr/bin/python
+
+# [Icarus] edit_envvar.py
+#
+# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# (c) 2018 Gramercy Park Studios
+#
+# Environment Variables Editor
+# A dialog for editing an environment variable.
+
+
+import os
+import sys
+
+from Qt import QtCore, QtGui, QtWidgets
+import ui_template as UI
+
+# Import custom modules
+import osOps
+import verbose
+
+
+# ----------------------------------------------------------------------------
+# Configuration
+# ----------------------------------------------------------------------------
+
+# Set window title and object names
+WINDOW_TITLE = "Edit Environment Variable"
+WINDOW_OBJECT = "editEnvVarUI"
+
+# Set the UI and the stylesheet
+UI_FILE = "edit_envvar_ui.ui"
+STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
+
+# Other options
+STORE_WINDOW_GEOMETRY = False
+
+
+# ----------------------------------------------------------------------------
+# Main dialog class
+# ----------------------------------------------------------------------------
+
+class Dialog(QtWidgets.QDialog, UI.TemplateUI):
+	""" Edit Environment Variable dialog class.
+	"""
+	def __init__(self, parent=None):
+		super(Dialog, self).__init__(parent)
+		self.parent = parent
+
+		self.setupUI(window_object=WINDOW_OBJECT, 
+		             window_title=WINDOW_TITLE, 
+		             ui_file=UI_FILE, 
+		             stylesheet=STYLESHEET, 
+		             store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
+
+		# Set window flags
+		self.setWindowFlags(QtCore.Qt.Dialog)
+
+		# Set other Qt attributes
+		self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
+
+		# Connect signals & slots
+		self.ui.key_lineEdit.textChanged.connect(self.updateUI)
+		self.ui.value_lineEdit.textChanged.connect(self.updateUI)
+		self.ui.browse_toolButton.clicked.connect(self.browseDir)
+		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).clicked.connect(self.ok)
+		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.reject)
+
+		# # Context menus
+		self.addContextMenu(self.ui.browse_toolButton, "Browse directory...", self.browseDir) #, 'icon_folder')
+		self.addContextMenu(self.ui.browse_toolButton, "Browse file...", self.browseFile) #, 'icon_file')
+
+		# Set input validators
+		# alphanumeric_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w\.-]+'), self.ui.jobName_lineEdit)
+		# self.ui.jobName_lineEdit.setValidator(alphanumeric_validator)
+		# # path_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w\.-/\\\:\$\{\}]+'), self.ui.jobName_lineEdit)
+		# # self.ui.jobPath_lineEdit.setValidator(path_validator)
+
+
+	def display(self, key, value):
+		""" Display the dialog.
+		"""
+		if key:
+			self.setWindowTitle("%s: %s" %(WINDOW_TITLE, key))
+		else:
+			self.setWindowTitle("Add New Environment Variable")
+		self.ui.key_lineEdit.setText(key)
+		self.ui.value_lineEdit.setText(value)
+		if os.pathsep in value:
+			valueList = value.split(os.pathsep)
+			self.ui.valueList_listWidget.addItems(valueList)
+		self.updateUI()
+
+		return self.exec_()
+
+
+	def updateUI(self):
+		""" Disables the OK button if either of the text fields are empty or
+			invalid.
+		"""
+		enable = True
+		# jobPath = osOps.translatePath(self.ui.jobPath_lineEdit.text())
+
+		if self.ui.key_lineEdit.text() == "":
+			enable = False
+		if self.ui.value_lineEdit.text() == "":
+			enable = False
+		# if not osOps.checkIllegalChars(jobPath):
+		# 	verbose.illegalCharacters(jobPath)
+		# 	enable = False
+
+		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(enable)
+
+
+	def browseDir(self):
+		""" Opens a dialog from which to select a folder.
+		"""
+		startingDir = osOps.translatePath(self.ui.value_lineEdit.text())
+		if os.path.isdir(startingDir):
+			dialogHome = startingDir
+		else:
+			dialogHome = os.environ['JOBSROOT']
+
+		# Append slash to path if it's a Windows drive letter, otherwise file
+		# dialog won't open the correct location
+		if dialogHome.endswith(':'):
+			dialogHome += '/'
+
+		dialogPath = self.folderDialog(dialogHome)
+
+		if dialogPath:
+			self.ui.value_lineEdit.setText(dialogPath)
+
+
+	def browseFile(self):
+		""" Opens a dialog from which to select a file.
+		"""
+		startingDir = os.path.dirname(osOps.translatePath(self.ui.value_lineEdit.text()))
+		if os.path.isdir(startingDir):
+			dialogHome = startingDir
+		else:
+			dialogHome = os.environ['JOBSROOT']
+
+		# Append slash to path if it's a Windows drive letter, otherwise file
+		# dialog won't open the correct location
+		if dialogHome.endswith(':'):
+			dialogHome += '/'
+
+		dialogPath = self.fileDialog(dialogHome)
+
+		if dialogPath:
+			self.ui.value_lineEdit.setText(dialogPath)
+
+
+	def ok(self):
+		""" Dialog accept function.
+		"""
+		self.key = self.ui.key_lineEdit.text()
+		self.value = self.ui.value_lineEdit.text()
+		self.accept()
+
+
+	def keyPressEvent(self, event):
+		""" Override function to prevent Enter / Esc keypresses triggering
+			OK / Cancel buttons.
+		"""
+		if event.key() == QtCore.Qt.Key_Return or event.key() == QtCore.Qt.Key_Enter:
+			return
+
+
+	def hideEvent(self, event):
+		""" Event handler for when window is hidden.
+		"""
+		self.storeWindow()  # Store window geometry
+

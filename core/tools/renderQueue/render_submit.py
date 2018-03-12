@@ -10,8 +10,6 @@
 
 
 import os
-# import subprocess
-# import sys
 import time
 
 from Qt import QtCore, QtGui, QtWidgets
@@ -43,9 +41,6 @@ STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
 # Other options
 STORE_WINDOW_GEOMETRY = True
 
-# Prevent spawned processes from opening a shell window
-# CREATE_NO_WINDOW = 0x08000000
-
 
 # ----------------------------------------------------------------------------
 # Main window class
@@ -67,6 +62,8 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		             xml_data=xml_data, 
 		             store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
 
+		self.conformFormLayoutLabels(self.ui.centralwidget)
+
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Tool)
 
@@ -81,8 +78,12 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Connect signals & slots
 		self.ui.submitTo_comboBox.currentIndexChanged.connect(self.setQueueManagerFromComboBox)
 		self.ui.jobType_comboBox.currentIndexChanged.connect(self.setJobTypeFromComboBox)
-		self.ui.scene_comboBox.currentIndexChanged.connect(self.applySettings)
-		self.ui.sceneBrowse_toolButton.clicked.connect(self.sceneBrowse)
+
+		self.ui.commandBrowse_toolButton.clicked.connect(self.commandBrowse)
+		self.ui.mayaScene_comboBox.currentIndexChanged.connect(self.applySettings)
+		self.ui.mayaSceneBrowse_toolButton.clicked.connect(self.sceneBrowse)
+		self.ui.nukeScript_comboBox.currentIndexChanged.connect(self.applySettings)
+		self.ui.nukeScriptBrowse_toolButton.clicked.connect(self.sceneBrowse)
 
 		# self.ui.layers_groupBox.toggled.connect(self.getRenderLayers)
 		# self.ui.layers_lineEdit.editingFinished.connect(self.checkRenderLayers)
@@ -94,35 +95,27 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		#self.ui.frames_lineEdit.editingFinished.connect(self.calcFrameList)
 		self.ui.frames_lineEdit.textChanged.connect(self.calcFrameList)
 		self.ui.taskSize_spinBox.valueChanged.connect(self.calcFrameList)
-
-		# # self.ui.pool_comboBox.currentIndexChanged.connect(self.storeComboBoxValue)
-		# # self.ui.group_comboBox.currentIndexChanged.connect(self.storeComboBoxValue)
-		# self.ui.pool_comboBox.editTextChanged.connect(self.storeComboBoxValue)
-		# self.ui.group_comboBox.editTextChanged.connect(self.storeComboBoxValue)
 		self.ui.getPools_toolButton.clicked.connect(self.getPools)
 		self.ui.getGroups_toolButton.clicked.connect(self.getGroups)
-		# self.ui.priority_spinBox.valueChanged.connect(self.storeSpinBoxValue)
-		# self.ui.comment_lineEdit.textEdited.connect(self.storeLineEditValue)
 
 		self.ui.submit_pushButton.clicked.connect(self.submit)
 		self.ui.close_pushButton.clicked.connect(self.close)
-		#self.ui.close_pushButton.clicked.connect(self.saveAndExit)
 
 		# Context menus
 		self.addContextMenu(self.ui.frameListOptions_toolButton, "Shot default", self.getFrameRangeFromShotSettings)
 		if os.environ['IC_ENV'] != "STANDALONE":
 			self.addContextMenu(self.ui.frameListOptions_toolButton, "Render settings", self.getFrameRangeFromRenderSettings)
-		self.addContextMenu(self.ui.frameListOptions_toolButton, "Sequential", self.setFrameListPreset)  #placeholder
-		#self.addContextMenu(self.ui.frameListOptions_toolButton, "Reverse order", self.setFrameListPreset)  #placeholder
-		self.addContextMenu(self.ui.frameListOptions_toolButton, "Render first and last frames before others", self.setFrameListPreset)  #placeholder
+		self.addContextMenu(self.ui.frameListOptions_toolButton, "Sequential", self.setFrameListPreset)
+		#self.addContextMenu(self.ui.frameListOptions_toolButton, "Reverse order", self.setFrameListPreset)
+		self.addContextMenu(self.ui.frameListOptions_toolButton, "Render first and last frames before others", self.setFrameListPreset)
 
-		#self.addContextMenu(self.ui.layerOptions_toolButton, "Clear", self.clearRenderLayers)
+		#self.addContextMenu(self.ui.layerOptions_toolButton, "Clear", self.clearRenderLayers) # not yet implemented
 		self.addContextMenu(self.ui.layerOptions_toolButton, "Current layer only", self.getCurrentRenderLayer)
 		self.addContextMenu(self.ui.layerOptions_toolButton, "All renderable layers", self.getRenderLayers)
 
-		#self.addContextMenu(self.ui.layerOptions_toolButton, "Clear", self.clearRenderLayers)
-		self.addContextMenu(self.ui.writeNodeOptions_toolButton, "Selected write node only", self.getCurrentRenderLayer)  #placeholder
-		self.addContextMenu(self.ui.writeNodeOptions_toolButton, "All write nodes", self.getRenderLayers)  #placeholder
+		#self.addContextMenu(self.ui.writeNodeOptions_toolButton, "Clear", self.clearRenderLayers) # not yet implemented
+		self.addContextMenu(self.ui.writeNodeOptions_toolButton, "Selected write node only", self.getCurrentRenderLayer)
+		self.addContextMenu(self.ui.writeNodeOptions_toolButton, "All write nodes", self.getRenderLayers)
 
 		# Set input validators
 		layer_list_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w, ]+'), self.ui.layers_lineEdit)
@@ -145,14 +138,10 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Set 'Submit to' option depending on the parent window, or user prefs
 		if self.parent.windowTitle() == "Render Queue":
 			self.submitTo = "Render Queue"
-			# self.ui.header_frame.setEnabled(False)
-			# self.ui.header_frame.hide()
 			self.ui.submitTo_label.setEnabled(False)
 			self.ui.submitTo_comboBox.setEnabled(False)
 		else:
 			self.submitTo = userPrefs.query('rendersubmit', 'submitto', default=self.ui.submitTo_comboBox.currentText())
-			# self.ui.header_frame.setEnabled(True)
-			# self.ui.header_frame.show()
 			self.ui.submitTo_label.setEnabled(True)
 			self.ui.submitTo_comboBox.setEnabled(True)
 		self.ui.submitTo_comboBox.setCurrentIndex(self.ui.submitTo_comboBox.findText(self.submitTo))
@@ -177,25 +166,23 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			if sceneName:  # Check we're not working in an unsaved scene
 				relPath = self.makePathRelative(osOps.absolutePath(sceneName))
 				if relPath:
-					self.ui.scene_comboBox.addItem(relPath)
+					self.ui.mayaScene_comboBox.addItem(relPath)
 			else:
 				msg = "Scene must be saved before submitting render."
 				mc.warning(msg)
 				#mc.confirmDialog(title="Scene not saved", message=msg, icon="warning", button="Close")
-				self.ui.scene_comboBox.addItem(msg)
+				self.ui.mayaScene_comboBox.addItem(msg)
 				self.ui.submit_pushButton.setToolTip(msg)
 				self.ui.submit_pushButton.setEnabled(False)
 
-			# self.ui.render_groupBox.setEnabled(False)
 			self.ui.jobType_label.setEnabled(False)
 			self.ui.jobType_comboBox.setEnabled(False)
-			self.ui.sceneBrowse_toolButton.hide()
+			self.ui.mayaSceneBrowse_toolButton.hide()
 
 			self.getRenderLayers()
 			self.getRenderers()
 
 			if layers:
-				# self.ui.layers_groupBox.setChecked(True)
 				self.ui.layers_lineEdit.setText(layers)
 
 		elif os.environ['IC_ENV'] == "NUKE":
@@ -207,19 +194,18 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			if scriptName:  # Check we're not working in an unsaved script
 				relPath = self.makePathRelative(osOps.absolutePath(scriptName))
 				if relPath:
-					self.ui.scene_comboBox.addItem(relPath)
+					self.ui.nukeScript_comboBox.addItem(relPath)
 			else:
 				msg = "Script must be saved before submitting render."
 				nuke.warning(msg)
 				#nuke.message(msg)
-				self.ui.scene_comboBox.addItem(msg)
+				self.ui.nukeScript_comboBox.addItem(msg)
 				self.ui.submit_pushButton.setToolTip(msg)
 				self.ui.submit_pushButton.setEnabled(False)
 
-			# self.ui.render_groupBox.setEnabled(False)
 			self.ui.jobType_label.setEnabled(False)
 			self.ui.jobType_comboBox.setEnabled(False)
-			self.ui.sceneBrowse_toolButton.hide()
+			self.ui.nukeScriptBrowse_toolButton.hide()
 
 		self.numList = []
 		if frameRange:
@@ -230,10 +216,8 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.calcFrameList()
 
 		if flags:
-			# self.ui.flags_groupBox.setChecked(True)
 			self.ui.flags_lineEdit.setText(flags)
 
-		# self.ui.show()
 		self.show()
 		self.raise_()
 
@@ -272,7 +256,12 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 	def applySettings(self):
 		""" Apply the specific settings for the scene/script file.
 		"""
-		scene = self.makePathAbsolute(self.ui.scene_comboBox.currentText()).replace("\\", "/")
+		if self.jobType == "Maya":
+			comboBox = self.ui.mayaScene_comboBox
+		elif self.jobType == "Nuke":
+			comboBox = self.ui.nukeScript_comboBox
+		scene = self.makePathAbsolute(comboBox.currentText()).replace("\\", "/")
+
 		self.xmlData = self.getSettingsFile(scene, suffix="_icSubmissionData.xml")
 		if self.xmlData:
 			self.xd.loadXML(self.xmlData, use_template=False)
@@ -288,17 +277,18 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		userPrefs.edit('rendersubmit', 'submitto', self.submitTo) # deprecated
 		self.ui.submit_pushButton.setText("Submit to %s" %self.submitTo)
 
+		# Show/hide specific UI elements based on selected queue manager
 		# rq_show_list = [self.ui.flags_label, self.ui.flags_lineEdit]
+		rq_show_list = []
 		dl_show_list = [self.ui.pool_label, self.ui.group_label, 
 		                self.ui.pool_comboBox, self.ui.group_comboBox, 
 		                self.ui.getPools_toolButton, self.ui.getGroups_toolButton]
 
-		#for item in rq_show_list + dl_show_list:
-		for item in dl_show_list:
+		for item in rq_show_list + dl_show_list:
 			item.setEnabled(False)
-		# if self.submitTo == "Render Queue":
-		# 	for item in rq_show_list:
-		# 		item.setEnabled(True)
+		if self.submitTo == "Render Queue":
+			for item in rq_show_list:
+				item.setEnabled(True)
 		if self.submitTo == "Deadline":
 			for item in dl_show_list:
 				item.setEnabled(True)
@@ -324,11 +314,6 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.maya_groupBox.hide()
 		self.ui.nuke_groupBox.hide()
 		if self.jobType == "Generic":
-			# try:
-			# 	self.relativeScenesDir = osOps.absolutePath('%s/%s' %(os.environ['MAYADIR'], 'scenes'))
-			# except KeyError:
-			# 	self.relativeScenesDir = ""
-			#self.ui.scene_label.setText("Command:")
 			self.ui.generic_groupBox.show()
 		elif self.jobType == "Maya":
 			try:
@@ -350,18 +335,22 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 
 	def setSceneList(self):
-		""" Clear scene menu and populate from recent file list. Only used in
-			standalone mode.
+		""" Clear specified scene menu and populate from recent file list.
+			Only used in standalone mode.
 		"""
-		self.ui.scene_comboBox.clear()
-
 		try:
+			if self.jobType == "Maya":
+				comboBox = self.ui.mayaScene_comboBox
+			elif self.jobType == "Nuke":
+				comboBox = self.ui.nukeScript_comboBox
+			comboBox.clear()
+
 			import recentFiles
 			for filePath in recentFiles.getLs(self.jobType):
 				fullPath = osOps.absolutePath(os.environ['SHOTPATH'] + filePath)
 				relPath = self.makePathRelative(fullPath)
 				if relPath:
-					self.ui.scene_comboBox.addItem(relPath)
+					comboBox.addItem(relPath)
 		except:
 			pass
 
@@ -381,23 +370,45 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		return relPath.replace(self.relativeScenesToken, self.relativeScenesDir)
 
 
+	def commandBrowse(self):
+		""" Browse for a command.
+		"""
+		fileDir = os.environ.get('JOBPATH', '.')  # Go to current dir if env var is not set
+		fileFilter = "All files (*.*)"
+
+		currentDir = os.path.dirname(self.ui.command_lineEdit.text())
+		if os.path.exists(currentDir):
+			startingDir = currentDir
+		else:
+			startingDir = fileDir
+
+		# filePath = QtWidgets.QFileDialog.getOpenFileName(self, self.tr('Files'), startingDir, fileFilter)[0]
+		filePath = self.fileDialog(startingDir, fileFilter)
+
+		if filePath:
+			newEntry = osOps.absolutePath(filePath)
+			self.ui.command_lineEdit.setText(newEntry)
+
+
 	def sceneBrowse(self):
 		""" Browse for a scene/script file.
 		"""
-		if self.jobType == 'Maya':
+		if self.jobType == "Maya":
+			comboBox = self.ui.mayaScene_comboBox
 			fileDir = os.environ.get('MAYASCENESDIR', '.')  # Go to current dir if env var is not set
-			fileFilter = 'Maya files (*.ma *.mb)'
-			fileTerminology = 'scenes'
-		elif self.jobType == 'Nuke':
+			fileFilter = "Maya files (*.ma *.mb)"
+			fileTerminology = "scenes"
+		elif self.jobType == "Nuke":
+			comboBox = self.ui.nukeScript_comboBox
 			fileDir = os.environ.get('NUKESCRIPTSDIR', '.')  # Go to current dir if env var is not set
-			fileFilter = 'Nuke files (*.nk)'
-			fileTerminology = 'scripts'
-		else:
-			fileDir = os.environ.get('JOBPATH', '.')  # Go to current dir if env var is not set
-			fileFilter = 'All files (*.*)'
-			fileTerminology = 'commands'
+			fileFilter = "Nuke files (*.nk)"
+			fileTerminology = "scripts"
+		# else:
+		# 	fileDir = os.environ.get('JOBPATH', '.')  # Go to current dir if env var is not set
+		# 	fileFilter = "All files (*.*)"
+		# 	fileTerminology = "commands"
 
-		currentDir = os.path.dirname(self.makePathAbsolute(self.ui.scene_comboBox.currentText()))
+		currentDir = os.path.dirname(self.makePathAbsolute(comboBox.currentText()))
 		if os.path.exists(currentDir):
 			startingDir = currentDir
 		else:
@@ -410,9 +421,9 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			newEntry = self.makePathRelative(osOps.absolutePath(filePath))
 			#newEntry = osOps.absolutePath(filePath)
 			if newEntry:
-				self.ui.scene_comboBox.removeItem(self.ui.scene_comboBox.findText(newEntry))  # If the entry already exists in the list, delete it
-				self.ui.scene_comboBox.insertItem(0, newEntry)
-				self.ui.scene_comboBox.setCurrentIndex(0)  # Always insert the new entry at the top of the list and select it
+				comboBox.removeItem(comboBox.findText(newEntry))  # If the entry already exists in the list, delete it
+				comboBox.insertItem(0, newEntry)
+				comboBox.setCurrentIndex(0)  # Always insert the new entry at the top of the list and select it
 			else:
 				verbose.warning("Only %s belonging to the current shot can be submitted." %fileTerminology)
 
@@ -720,9 +731,9 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			# if not self.calcFrameList(quiet=False):
 			# 	return None
 
-		###################
-		# Generic options #
-		###################
+		##################
+		# Common options #
+		##################
 
 		submit_args['frames'] = self.ui.frames_lineEdit.text()
 		submit_args['taskSize'] = self.ui.taskSize_spinBox.value()
@@ -737,13 +748,20 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Renderer-specific options #
 		#############################
 
-		if self.jobType == "Maya":
+		if self.jobType == "Generic":
+			submit_args['plugin'] = "CommandLine"  # Deadline only
+			command = self.ui.command_lineEdit.text()
+			submit_args['jobName'] = os.path.splitext(os.path.basename(command))[0]
+			submit_args['executable'] = command
+			submit_args['flags'] = self.ui.flags_lineEdit.text()
+			submit_args['renderLayers'] = None
+		elif self.jobType == "Maya":
 			submit_args['plugin'] = "MayaBatch"  # Deadline only
 			submit_args['renderCmdEnvVar'] = 'MAYARENDERVERSION'  # RQ only
 			submit_args['flags'] = self.ui.flags_lineEdit.text()  # RQ only
 			submit_args['version'] = os.environ['MAYA_VER']  #jobData.getAppVersion('Maya')
 			submit_args['renderer'] = self.ui.renderer_comboBox.currentText()  # Maya submit only
-			scene = self.makePathAbsolute(self.ui.scene_comboBox.currentText()).replace("\\", "/")
+			scene = self.makePathAbsolute(self.ui.mayaScene_comboBox.currentText()).replace("\\", "/")
 			submit_args['scene'] = scene
 			submit_args['mayaProject'] = self.getMayaProject(scene)
 			submit_args['outputFilePath'] = self.getOutputFilePath()  # Maya submit only
@@ -765,7 +783,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			submit_args['version'] = os.environ['NUKE_VER'].split('v')[0]  #jobData.getAppVersion('Nuke')
 			submit_args['nukeX'] = False  # Deadline only
 			submit_args['isMovie'] = False  # Deadline only - TO BE IMPLEMENTED
-			scene = self.makePathAbsolute(self.ui.scene_comboBox.currentText()).replace("\\", "/")
+			scene = self.makePathAbsolute(self.ui.nukeScript_comboBox.currentText()).replace("\\", "/")
 			submit_args['scene'] = scene
 			submit_args['jobName'] = os.path.splitext(os.path.basename(scene))[0]
 			#submit_args['writeNodes'] = self.ui.writeNodes_lineEdit.text()

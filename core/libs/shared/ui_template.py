@@ -315,6 +315,37 @@ class TemplateUI(object):
 								widget.currentIndexChanged.connect(self.storeComboBoxValue)
 
 
+	def conformFormLayoutLabels(self, parentObject):
+		""" Conform the widths of all labels in formLayouts under the
+			specified parentObject for a more coherent appearance.
+		"""
+		labels = []
+		labelWidths = []
+
+		# Find all labels
+		for layout in parentObject.findChildren(QtWidgets.QFormLayout):
+			# print(layout.objectName())
+			items = (layout.itemAt(i) for i in range(layout.count()))
+			for item in items:
+				widget = item.widget()
+				if isinstance(widget, QtWidgets.QLabel):
+					# print("\t" + widget.objectName())
+					labels.append(widget)
+
+		# Find label widths
+		for label in labels:
+			fontMetrics = QtGui.QFontMetrics(label.font())
+			width = fontMetrics.width(label.text())
+			labelWidths.append(width)
+
+		# Get widest label & set all labels widths to match
+		if labelWidths:
+			maxWidth = max(labelWidths)
+			for label in labels:
+				label.setFixedWidth(maxWidth)
+				label.setAlignment(QtCore.Qt.AlignVCenter|QtCore.Qt.AlignRight)
+
+
 	def findCategory(self, widget):
 		""" Recursively check the parents of the given widget until a custom
 			property 'xmlCategory' is found.

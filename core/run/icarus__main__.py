@@ -32,12 +32,14 @@ try:
 except ImportError:
 	pass
 
+userOverride = False
 if os.environ['IC_ENV'] == "STANDALONE":
 	# Parse command-line arguments
 	parser = argparse.ArgumentParser()
 	parser.add_argument("-u", "--user", help="override username")
 	args = parser.parse_args()
 	if args.user:
+		userOverride = True
 		os.environ['IC_USERNAME'] = args.user.lower()
 
 	# Initialise Icarus environment and add libs to sys path
@@ -2069,12 +2071,13 @@ userPrefs.read()
 os.environ['IC_VERBOSITY'] = userPrefs.query('main', 'verbosity', datatype='str', default="3", create=True)
 os.environ['IC_NUMRECENTFILES'] = userPrefs.query('recent', 'numrecentfiles', datatype='str', default="10", create=True)
 
-# Version message
-verbose.icarusLaunch(WINDOW_TITLE.upper(),
-					 os.environ['IC_VERSION'],
-					 "%s %s" %(COPYRIGHT, VENDOR),
-					 os.environ['IC_BASEDIR'],
-					 os.environ['IC_USERNAME'])
+# Print launch initialisation message
+verbose.icarusLaunch(WINDOW_TITLE.upper(), 
+                     os.environ['IC_VERSION'], 
+                     "%s %s" %(COPYRIGHT, VENDOR), 
+                     os.environ['IC_BASEDIR'], 
+                     os.environ['IC_USERNAME'], 
+                     userOverride)
 
 # Python version check
 try:

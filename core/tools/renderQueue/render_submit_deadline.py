@@ -19,22 +19,12 @@ import osOps
 import verbose
 
 
-def str_to_list(string):
-	""" Convert a string returned by deadlinecommand to a list by splitting
-		into lines.
-		Encode bytes to string for Python 3.
-	"""
-	string = string.decode()
-	ls = string.splitlines()
-	return ls
-
-
 def get_pools():
 	""" Get Deadline pools and return in a list.
 	"""
 	try:
-		pools = osOps.execute([os.environ['DEADLINECMDVERSION'], '-pools'])
-		return str_to_list(pools)
+		pools = osOps.execute([os.environ['DEADLINECMDVERSION'], '-pools'])[1]
+		return pools.splitlines()
 	except:
 		verbose.warning("Could not retrieve Deadline pools.")
 		return None
@@ -44,8 +34,8 @@ def get_groups():
 	""" Get Deadline groups and return in a list.
 	"""
 	try:
-		groups = osOps.execute([os.environ['DEADLINECMDVERSION'], '-groups'])
-		return str_to_list(groups)
+		groups = osOps.execute([os.environ['DEADLINECMDVERSION'], '-groups'])[1]
+		return groups.splitlines()
 	except:
 		verbose.warning("Could not retrieve Deadline groups.")
 		return None
@@ -122,8 +112,17 @@ def generate_plugin_info_file(**kwargs):
 	pluginInfoFile = settings_filename(kwargs['scene'], suffix=pluginInfoFileSuffix)
 	fh = open(pluginInfoFile, 'w')
 
+	# Command Line -----------------------------------------------------------
+	if kwargs['plugin'] == "CommandLine":
+		pass
+		# fh.write("Executable=%s\n" %kwargs['executable'])
+		# fh.write("Arguments=%s\n" %kwargs['flags'])
+		# fh.write("Shell=Default\n")
+		# fh.write("ShellExecute=False\n")
+		# fh.write("StartupDirectory=%s\n" %kwargs['startupDir'])
+
 	# Maya -------------------------------------------------------------------
-	if kwargs['plugin'] == "MayaBatch":
+	elif kwargs['plugin'] == "MayaBatch":
 		fh.write("Version=%s\n" %kwargs['version'])
 		fh.write("Build=64bit\n")
 		fh.write("Renderer=%s\n" %kwargs['renderer'])

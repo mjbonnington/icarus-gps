@@ -18,23 +18,23 @@ def setEnv():
 	""" Set some environment variables for basic operation.
 	"""
 	# Set version string
-	os.environ['IC_VERSION'] = 'v0.9.11-20180311'
+	os.environ['IC_VERSION'] = "v0.9.11-20180312"
 
 	# Standardise some environment variables across systems.
 	# Usernames will always be stored as lowercase for compatibility.
-	if platform.system() == 'Windows':  # Windows
-		os.environ['IC_RUNNING_OS'] = 'Windows'
+	if platform.system() == "Windows":  # Windows
+		os.environ['IC_RUNNING_OS'] = "Windows"
 		if not 'IC_USERNAME' in os.environ:
 			os.environ['IC_USERNAME'] = os.environ['USERNAME'].lower()
 		#os.environ['IC_USERHOME'] = os.path.join(os.environ['HOMEDRIVE'], os.environ['HOMEPATH'])
 		os.environ['IC_USERHOME'] = os.environ['USERPROFILE']
-	elif platform.system() == 'Darwin':  # Mac OS
-		os.environ['IC_RUNNING_OS'] = 'Darwin'
+	elif platform.system() == "Darwin":  # Mac OS
+		os.environ['IC_RUNNING_OS'] = "Darwin"
 		if not 'IC_USERNAME' in os.environ:
 			os.environ['IC_USERNAME'] = os.environ['USER'].lower()
 		os.environ['IC_USERHOME'] = os.environ['HOME']
 	else:  # Linux
-		os.environ['IC_RUNNING_OS'] = 'Linux'
+		os.environ['IC_RUNNING_OS'] = "Linux"
 		if not 'IC_USERNAME' in os.environ:
 			os.environ['IC_USERNAME'] = os.environ['USERNAME'].lower()
 		os.environ['IC_USERHOME'] = os.environ['HOME']
@@ -43,12 +43,12 @@ def setEnv():
 	try:
 		os.environ['IC_ENV']
 	except KeyError:
-		os.environ['IC_ENV'] = 'STANDALONE'
+		os.environ['IC_ENV'] = "STANDALONE"
 
 	# Hard-coded relative data directories required by Icarus
 	#os.environ['JOBSROOTRELATIVEDIR'] = 'Project_Media'  # Store in global settings? UPDATE: now stored in jobs.xml
-	os.environ['SHOTSROOTRELATIVEDIR'] = 'Vfx'  # Store in global / job settings, and rename with IC_ prefix?
-	os.environ['DATAFILESRELATIVEDIR'] = '.icarus'  # Rename to IC_METADATA or similar?
+	os.environ['SHOTSROOTRELATIVEDIR'] = "Vfx"  # Store in global / job settings, and rename with IC_ prefix?
+	os.environ['DATAFILESRELATIVEDIR'] = ".icarus"  # Rename to IC_METADATA or similar?
 
 	# Set up basic paths
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))

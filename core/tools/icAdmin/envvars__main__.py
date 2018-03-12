@@ -10,7 +10,6 @@
 
 
 import os
-import re
 import sys
 
 # Initialise Icarus environment - TEMP BODGE TO ENABLE STANDALONE APP
@@ -23,9 +22,8 @@ from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
 
 # Import custom modules
-import osOps
-import rename
-import sequence
+import edit_envvar
+import pDialog
 import verbose
 
 
@@ -81,9 +79,11 @@ class EnvVarsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.ui.edit_toolButton.clicked.connect(self.editEnvVar)
 		self.ui.reload_toolButton.clicked.connect(self.reloadEnvVars)
 
-		self.ui.searchFilter_lineEdit.textChanged.connect(lambda text: self.populateEnvVarList(searchFilter=text))
+		#self.ui.searchFilter_lineEdit.textChanged.connect(lambda text: self.populateEnvVarList(searchFilter=text))
+		self.ui.searchFilter_lineEdit.textChanged.connect(lambda: self.populateEnvVarList())
 		self.ui.searchFilterClear_toolButton.clicked.connect(self.clearFilter)
-		self.ui.searchKeys_checkBox.toggled.connect(lambda: self.populateEnvVarList(searchFilter=text))
+		self.ui.searchKeys_checkBox.toggled.connect(lambda: self.populateEnvVarList())
+		self.ui.searchValues_checkBox.toggled.connect(lambda: self.populateEnvVarList())
 
 		self.ui.envVars_treeWidget.itemSelectionChanged.connect(self.updateToolbarUI)
 		self.ui.envVars_treeWidget.itemDoubleClicked.connect(self.editEnvVar)
@@ -134,13 +134,15 @@ class EnvVarsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.populateEnvVarList()
 
 
-	def populateEnvVarList(self, selectItem=None, searchFilter=""):
+	def populateEnvVarList(self, selectItem=None): #, searchFilter=""):
 		""" Populate the environment variables list view.
 
 			'selectItem' specifies an item by name that will be selected
 			automatically.
 			'searchFilter' is a search string to filter the list.
 		"""
+		searchFilter = self.ui.searchFilter_lineEdit.text()
+
 		# Stop the widget from emitting signals
 		self.ui.envVars_treeWidget.blockSignals(True)
 
@@ -194,52 +196,48 @@ class EnvVarsDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 
 	def addEnvVar(self):
-		""" Open the edit job dialog to add a new job.
+		""" Open the edit environment variable dialog to add a new environment
+			variable.
 		"""
-		print("ADD")
-		# import edit_envvar
-		# editEnvVarDialog = edit_envvar.dialog(parent=self)
-		# if editEnvVarDialog.display('', '$JOBSROOT', True):
-		# 	if self.j.addJob(editEnvVarDialog.jobName, editEnvVarDialog.jobPath, editEnvVarDialog.jobActive):
-		# 		self.reloadJobs(reloadDatabase=False, selectItem=editEnvVarDialog.jobName)
-		# 	else:
-		# 		errorMsg = "Could not create job as a job with the name '%s' already exists." %editEnvVarDialog.jobName
-		# 		dialogMsg = errorMsg + "\nWould you like to create a job with a different name?"
-		# 		verbose.error(errorMsg)
+		editEnvVarDialog = edit_envvar.Dialog(parent=self)
+		if editEnvVarDialog.display("", ""):
+			if editEnvVarDialog.key not in self.environ:
+				self.environ[editEnvVarDialog.key] = editEnvVarDialog.value
+				self.populateEnvVarList(selectItem=editEnvVarDialog.key)
+			else:
+				errorMsg = "Operation failed: The environment variable '%s' already exists." %editEnvVarDialog.key
+				dialogMsg = errorMsg + "\nWould you like to create an environment variable with a different name?"
+				verbose.error(errorMsg)
 
-		# 		# Confirmation dialog
-		# 		import pDialog
-		# 		dialogTitle = 'Job Not Created'
-		# 		dialog = pDialog.dialog()
-		# 		if dialog.display(dialogMsg, dialogTitle):
-		# 			self.addJob()
+				# Confirmation dialog
+				dialogTitle = "New Environment Variable"
+				dialog = pDialog.dialog()
+				if dialog.display(dialogMsg, dialogTitle):
+					self.addEnvVar()
 
 
 	def editEnvVar(self):
-		""" Open edit job dialog.
+		""" Open edit environment variable dialog.
 		"""
-		print("EDIT")
-		# item = self.ui.envVars_treeWidget.selectedItems()[0]
-		# jobName = item.text()
+		item = self.ui.envVars_treeWidget.selectedItems()[0]
+		key = item.text(0)
+		value = item.text(1)
 
-		# import edit_envvar
-		# editEnvVarDialog = edit_envvar.dialog(parent=self)
-		# if editEnvVarDialog.display(jobName, self.j.getPath(jobName), self.j.getEnabled(jobName)):
-		# 	self.j.enableJob(jobName, editEnvVarDialog.jobActive)
-		# 	self.j.setPath(jobName, editEnvVarDialog.jobPath)
-		# 	if self.j.renameJob(jobName, editEnvVarDialog.jobName):  # Do this last as jobs are referenced by name
-		# 		self.reloadJobs(reloadDatabase=False, selectItem=editEnvVarDialog.jobName)
-		# 	else:
-		# 		errorMsg = "Could not rename job as a job with the name '%s' already exists." %editEnvVarDialog.jobName
-		# 		dialogMsg = errorMsg + "\nWould you still like to edit the job '%s'?" %jobName
-		# 		verbose.error(errorMsg)
+		editEnvVarDialog = edit_envvar.Dialog(parent=self)
+		if editEnvVarDialog.display(key, value):
+			# if (editEnvVarDialog.key != key) and (editEnvVarDialog.key not in self.environ):
+			self.environ[editEnvVarDialog.key] = editEnvVarDialog.value
+			self.populateEnvVarList(selectItem=editEnvVarDialog.key)
+			# else:
+			# 	errorMsg = "Operation failed: The environment variable '%s' already exists." %editEnvVarDialog.key
+			# 	dialogMsg = errorMsg + "\nWould you still like to edit the environment variable '%s'?" %key
+			# 	verbose.error(errorMsg)
 
-		# 		# Confirmation dialog
-		# 		import pDialog
-		# 		dialogTitle = 'Job Not Created'
-		# 		dialog = pDialog.dialog()
-		# 		if dialog.display(dialogMsg, dialogTitle):
-		# 			self.editJob()
+			# 	# Confirmation dialog
+			# 	dialogTitle = "Edit Environment Variable"
+			# 	dialog = pDialog.dialog()
+			# 	if dialog.display(dialogMsg, dialogTitle):
+			# 		self.editEnvVar()
 
 
 	def removeEnvVars(self):
