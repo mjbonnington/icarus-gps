@@ -1,5 +1,9 @@
 <RCC>
   <qresource prefix="rsc">
+    <file>rsc/icon_arrow_down.png</file>
+    <file>rsc/icon_arrow_down_disabled.png</file>
+    <file>rsc/icon_arrow_up.png</file>
+    <file>rsc/icon_arrow_up_disabled.png</file>
     <file>rsc/status_icon_done.png</file>
     <file>rsc/status_icon_null.png</file>
     <file>rsc/status_icon_error.png</file>

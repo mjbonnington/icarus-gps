@@ -1,12 +1,16 @@
 <?xml version='1.0' encoding='utf-8'?>
 <root>
 	<camera name="Arri Alexa" active="True">
-		<sensor_w_mm>23.8</sensor_w_mm>
-		<sensor_h_mm>13.4</sensor_h_mm>
+		<sensor_w_mm>23.76</sensor_w_mm>
+		<sensor_h_mm>13.37</sensor_h_mm>
 	</camera>
-	<camera name="Arri Alexa XT Open Gate" active="True">
-		<sensor_w_mm>28.17</sensor_w_mm>
-		<sensor_h_mm>18.13</sensor_h_mm>
+	<camera name="Arri Alexa XT (Open Gate)" active="True">
+		<sensor_w_mm>28.25</sensor_w_mm>
+		<sensor_h_mm>18.17</sensor_h_mm>
+	</camera>
+	<camera name="Arri Alexa Mini (3.2K)" active="True">
+		<sensor_w_mm>26.4</sensor_w_mm>
+		<sensor_h_mm>14.85</sensor_h_mm>
 	</camera>
 	<camera name="Blackmagic" active="False">
 		<sensor_w_mm>15.81</sensor_w_mm>

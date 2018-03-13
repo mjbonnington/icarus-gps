@@ -53,6 +53,8 @@ class Dialog(QtWidgets.QDialog, UI.TemplateUI):
 		             stylesheet=STYLESHEET, 
 		             store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
 
+		self.conformFormLayoutLabels(self.ui)
+
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Dialog)
 
@@ -63,18 +65,19 @@ class Dialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.ui.key_lineEdit.textChanged.connect(self.updateUI)
 		self.ui.value_lineEdit.textChanged.connect(self.updateUI)
 		self.ui.browse_toolButton.clicked.connect(self.browseDir)
+
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).clicked.connect(self.ok)
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.reject)
 
 		# # Context menus
 		self.addContextMenu(self.ui.browse_toolButton, "Browse directory...", self.browseDir) #, 'icon_folder')
 		self.addContextMenu(self.ui.browse_toolButton, "Browse file...", self.browseFile) #, 'icon_file')
+		# self.addContextMenu(self.ui.browseList_toolButton, "Browse directory...", self.browseDir) #, 'icon_folder')
+		# self.addContextMenu(self.ui.browseList_toolButton, "Browse file...", self.browseFile) #, 'icon_file')
 
 		# Set input validators
-		# alphanumeric_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w\.-]+'), self.ui.jobName_lineEdit)
-		# self.ui.jobName_lineEdit.setValidator(alphanumeric_validator)
-		# # path_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w\.-/\\\:\$\{\}]+'), self.ui.jobName_lineEdit)
-		# # self.ui.jobPath_lineEdit.setValidator(path_validator)
+		alphanumeric_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[a-zA-Z_][a-zA-Z0-9_]*'), self.ui.key_lineEdit)
+		self.ui.key_lineEdit.setValidator(alphanumeric_validator)
 
 
 	def display(self, key, value):
@@ -82,16 +85,37 @@ class Dialog(QtWidgets.QDialog, UI.TemplateUI):
 		"""
 		if key:
 			self.setWindowTitle("%s: %s" %(WINDOW_TITLE, key))
+			self.ui.key_lineEdit.setReadOnly(True)
 		else:
 			self.setWindowTitle("Add New Environment Variable")
+
 		self.ui.key_lineEdit.setText(key)
 		self.ui.value_lineEdit.setText(value)
+
+		# Set up list view if value contains multiple paths
 		if os.pathsep in value:
-			valueList = value.split(os.pathsep)
-			self.ui.valueList_listWidget.addItems(valueList)
+			self.updateValueList(value)
+			self.ui.value_lineEdit.textEdited.connect(self.updateValueList)
+			self.ui.valueList_frame.show()
+			self.ui.toolbar_frame.hide() # temporary until implemented fully
+		else:
+			self.ui.valueList_frame.hide()
+			self.setFixedHeight(self.minimumSizeHint().height())
+
 		self.updateUI()
 
 		return self.exec_()
+
+
+	def updateValueList(self, value):
+		""" Update the value list view.
+		"""
+		valueList = value.split(os.pathsep)
+		self.ui.valueList_listWidget.clear()
+		self.ui.valueList_listWidget.addItems(valueList)
+		# for index in range(self.ui.valueList_listWidget.count()):
+		# 	item = self.ui.valueList_listWidget.item(index)
+		# 	item.setFlags(item.flags() | QtCore.Qt.ItemIsEditable)
 
 
 	def updateUI(self):
@@ -99,17 +123,15 @@ class Dialog(QtWidgets.QDialog, UI.TemplateUI):
 			invalid.
 		"""
 		enable = True
-		# jobPath = osOps.translatePath(self.ui.jobPath_lineEdit.text())
-
 		if self.ui.key_lineEdit.text() == "":
 			enable = False
 		if self.ui.value_lineEdit.text() == "":
 			enable = False
-		# if not osOps.checkIllegalChars(jobPath):
-		# 	verbose.illegalCharacters(jobPath)
-		# 	enable = False
 
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(enable)
+
+		# Change key text to uppercase
+		self.ui.key_lineEdit.setText(self.ui.key_lineEdit.text().upper())
 
 
 	def browseDir(self):
@@ -119,7 +141,7 @@ class Dialog(QtWidgets.QDialog, UI.TemplateUI):
 		if os.path.isdir(startingDir):
 			dialogHome = startingDir
 		else:
-			dialogHome = os.environ['JOBSROOT']
+			dialogHome = os.environ['JOB']
 
 		# Append slash to path if it's a Windows drive letter, otherwise file
 		# dialog won't open the correct location
@@ -139,7 +161,7 @@ class Dialog(QtWidgets.QDialog, UI.TemplateUI):
 		if os.path.isdir(startingDir):
 			dialogHome = startingDir
 		else:
-			dialogHome = os.environ['JOBSROOT']
+			dialogHome = os.environ['JOB']
 
 		# Append slash to path if it's a Windows drive letter, otherwise file
 		# dialog won't open the correct location

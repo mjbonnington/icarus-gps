@@ -50,14 +50,29 @@
 		<height>2160</height>
 		<par>1.0</par>
 	</resolution>
-	<resolution name="ARRIRAW">
+	<resolution name="2.8K 16:9">
 		<width>2880</width>
 		<height>1620</height>
+		<par>1.0</par>
+	</resolution>
+	<resolution name="2.8K 4:3">
+		<width>2880</width>
+		<height>2160</height>
+		<par>1.0</par>
+	</resolution>
+	<resolution name="3.2K 16:9">
+		<width>3200</width>
+		<height>1800</height>
 		<par>1.0</par>
 	</resolution>
 	<resolution name="ARRIRAW Open Gate">
 		<width>3414</width>
 		<height>2198</height>
+		<par>1.0</par>
+	</resolution>
+	<resolution name="3.4K Open Gate">
+		<width>3424</width>
+		<height>2202</height>
 		<par>1.0</par>
 	</resolution>
 	<resolution name="4K Ultra-HD 2160p">

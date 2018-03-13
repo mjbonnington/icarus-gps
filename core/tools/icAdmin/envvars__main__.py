@@ -98,8 +98,7 @@ class EnvVarsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		# Sort by key column
 		self.ui.envVars_treeWidget.sortByColumn(0, QtCore.Qt.AscendingOrder)
 
-		self.environ = dict(os.environ)
-		self.populateEnvVarList()
+		self.reloadEnvVars()
 		#self.updateToolbarUI()
 
 
@@ -118,12 +117,6 @@ class EnvVarsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		else:
 			self.ui.remove_toolButton.setEnabled(True)
 			self.ui.edit_toolButton.setEnabled(False)
-
-
-	def clearFilter(self):
-		""" Clear the search filter field.
-		"""
-		self.ui.searchFilter_lineEdit.clear()
 
 
 	def reloadEnvVars(self):
@@ -149,8 +142,6 @@ class EnvVarsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		# Clear tree widget
 		self.ui.envVars_treeWidget.clear()
 
-		# for key in os.environ.keys():
-		# 	value = os.environ[key]
 		for key in self.environ.keys():
 			value = self.environ[key]
 
@@ -205,15 +196,15 @@ class EnvVarsDialog(QtWidgets.QDialog, UI.TemplateUI):
 				self.environ[editEnvVarDialog.key] = editEnvVarDialog.value
 				self.populateEnvVarList(selectItem=editEnvVarDialog.key)
 			else:
-				errorMsg = "Operation failed: The environment variable '%s' already exists." %editEnvVarDialog.key
+				errorMsg = "The environment variable '%s' already exists." %editEnvVarDialog.key
 				dialogMsg = errorMsg + "\nWould you like to create an environment variable with a different name?"
 				verbose.error(errorMsg)
 
 				# Confirmation dialog
-				dialogTitle = "New Environment Variable"
+				dialogTitle = "Environment Variable Not Created"
 				dialog = pDialog.dialog()
 				if dialog.display(dialogMsg, dialogTitle):
-					self.addEnvVar()
+					self.addEnvVar()  # Should pass in value from previous dialog?
 
 
 	def editEnvVar(self):
@@ -225,19 +216,8 @@ class EnvVarsDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 		editEnvVarDialog = edit_envvar.Dialog(parent=self)
 		if editEnvVarDialog.display(key, value):
-			# if (editEnvVarDialog.key != key) and (editEnvVarDialog.key not in self.environ):
 			self.environ[editEnvVarDialog.key] = editEnvVarDialog.value
 			self.populateEnvVarList(selectItem=editEnvVarDialog.key)
-			# else:
-			# 	errorMsg = "Operation failed: The environment variable '%s' already exists." %editEnvVarDialog.key
-			# 	dialogMsg = errorMsg + "\nWould you still like to edit the environment variable '%s'?" %key
-			# 	verbose.error(errorMsg)
-
-			# 	# Confirmation dialog
-			# 	dialogTitle = "Edit Environment Variable"
-			# 	dialog = pDialog.dialog()
-			# 	if dialog.display(dialogMsg, dialogTitle):
-			# 		self.editEnvVar()
 
 
 	def removeEnvVars(self):
@@ -247,6 +227,12 @@ class EnvVarsDialog(QtWidgets.QDialog, UI.TemplateUI):
 			self.environ.pop(item.text(0), None)
 			index = self.ui.envVars_treeWidget.indexOfTopLevelItem(item)
 			self.ui.envVars_treeWidget.takeTopLevelItem(index)
+
+
+	def clearFilter(self):
+		""" Clear the search filter field.
+		"""
+		self.ui.searchFilter_lineEdit.clear()
 
 
 	def save(self):

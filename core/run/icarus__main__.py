@@ -133,9 +133,9 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.shortcutEnvVars.setKey('Ctrl+E')
 		self.shortcutEnvVars.activated.connect(self.printEnvVars)
 
-		self.shortcutEnvVarsAll = QtWidgets.QShortcut(self)
-		self.shortcutEnvVarsAll.setKey('Ctrl+Shift+E')
-		self.shortcutEnvVarsAll.activated.connect(lambda: self.printEnvVars(allvars=True))
+		# self.shortcutEnvVarsAll = QtWidgets.QShortcut(self)
+		# self.shortcutEnvVarsAll.setKey('Ctrl+Shift+E')
+		# self.shortcutEnvVarsAll.activated.connect(lambda: self.printEnvVars(allvars=True))
 
 		self.shortcutToggleMenu = QtWidgets.QShortcut(self)
 		self.shortcutToggleMenu.setKey('Alt+M')
@@ -313,6 +313,9 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 			# Setup app launch icons
 			self.al.setupIconGrid(sortBy=self.sortAppsBy)
+
+			# Store env vars
+			self.environ = dict(os.environ)
 
 
 		####################
@@ -787,6 +790,9 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		else:
 			self.unlockJobUI(refreshShots=True)
 
+			# Restore env vars
+			os.environ = dict(self.environ)
+
 
 	# @QtCore.Slot()
 	def setupRecentJob(self):
@@ -939,15 +945,16 @@ Angular units: %s
 
 	def printEnvVars(self, allvars=False):
 		""" Print Icarus environment variables - used for debugging.
+			Open Icarus environment variables dialog.
 		"""
-		try:
-			for key in os.environ.keys():
-				if allvars:
-					print("%30s = %s" %(key, os.environ[key]))
-				elif key.startswith("IC"):
-					print("%30s = %s" %(key, os.environ[key]))
-		except KeyError:
-			print("Environment variable(s) not set.")
+		# try:
+		# 	for key in os.environ.keys():
+		# 		if allvars:
+		# 			print("%30s = %s" %(key, os.environ[key]))
+		# 		elif key.startswith("IC"):
+		# 			print("%30s = %s" %(key, os.environ[key]))
+		# except KeyError:
+		# 	print("Environment variable(s) not set.")
 
 		import envvars__main__
 		self.envVarsDialog = envvars__main__.EnvVarsDialog(parent=self)
