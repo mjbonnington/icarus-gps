@@ -237,8 +237,12 @@ class EnvVarsDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 	def save(self):
 		""" Save data by writing to the os.environ dictionary.
+			Existing environment variables will be cleared first.
 		"""
-		os.environ = dict(self.environ)
+		# os.environ = dict(self.environ) # this doesn't actially set the env vars
+		os.environ.clear()
+		for key in self.environ.keys():
+			os.environ[key] = self.environ[key]
 
 
 	def keyPressEvent(self, event):
