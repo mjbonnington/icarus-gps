@@ -23,16 +23,22 @@
    <bool>true</bool>
   </property>
   <layout class="QVBoxLayout" name="main_verticalLayout">
+   <property name="spacing">
+    <number>6</number>
+   </property>
    <property name="margin">
     <number>8</number>
    </property>
    <item>
     <widget class="QFrame" name="key_frame">
      <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
+      <enum>QFrame::NoFrame</enum>
      </property>
      <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
      </property>
      <layout class="QFormLayout" name="key_formLayout">
       <property name="fieldGrowthPolicy">
@@ -71,10 +77,13 @@
    <item>
     <widget class="QFrame" name="value_frame">
      <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
+      <enum>QFrame::NoFrame</enum>
      </property>
      <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
      </property>
      <layout class="QFormLayout" name="value_formLayout">
       <property name="fieldGrowthPolicy">

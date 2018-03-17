@@ -791,7 +791,11 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.unlockJobUI(refreshShots=True)
 
 			# Restore env vars
-			os.environ = dict(self.environ)
+			# os.environ = dict(self.environ) # this doesn't actially set the env vars
+			os.environ.clear()
+			for key in self.environ.keys():
+				#os.environ.pop[key]
+				os.environ[key] = self.environ[key]
 
 
 	# @QtCore.Slot()
