@@ -621,12 +621,6 @@ QToolButton:pressed, QToolButton:checked:pressed {
       <property name="text">
        <string>Preview</string>
       </property>
-      <property name="icon">
-       <iconset>
-        <normalon>:/rsc/rsc/icon_review.png</normalon>
-        <disabledon>:/rsc/rsc/icon_review_disabled.png</disabledon>
-       </iconset>
-      </property>
       <property name="iconSize">
        <size>
         <width>11</width>
@@ -634,7 +628,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
        </size>
       </property>
       <property name="flat">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
      </widget>
     </item>

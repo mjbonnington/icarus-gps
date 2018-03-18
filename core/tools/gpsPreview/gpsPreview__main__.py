@@ -113,6 +113,7 @@ class PreviewUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.activeView = self.xd.getValue('gpspreview', 'activeview')
 		# self.ui.activeView_lineEdit.hide()
 		self.ui.message_plainTextEdit.hide()
+		self.setFixedHeight(self.minimumSizeHint().height())
 
 		if not self.ui.name_lineEdit.text():
 			self.updateFilename()
@@ -264,15 +265,17 @@ class PreviewUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		if filename and filename == osOps.sanitize(filename): # and camera:
 			verbose.print_("Filename preview: '%s'" %filename)
-			self.ui.message_plainTextEdit.hide()
 			self.ui.preview_pushButton.setEnabled(True)
+			self.ui.message_plainTextEdit.hide()
+			self.setFixedHeight(self.minimumSizeHint().height())
 			return filename
 		else:
 			msg = "Invalid output name."
 			verbose.warning(msg)
+			self.ui.preview_pushButton.setEnabled(False)
 			self.ui.message_plainTextEdit.setPlainText(msg)
 			self.ui.message_plainTextEdit.show()
-			self.ui.preview_pushButton.setEnabled(False)
+			self.setFixedHeight(self.minimumSizeHint().height())
 			return False
 
 
@@ -395,13 +398,11 @@ class PreviewUI(QtWidgets.QMainWindow, UI.TemplateUI):
 					self.launchViewer(outputFilePath)
 				# osOps.setPermissions(self.outputDir)
 				self.ui.message_plainTextEdit.hide()
-				# print(self.sizeHint())
-				# self.setFixedHeight(self.sizeHint().height())
+				self.setFixedHeight(self.minimumSizeHint().height())
 			else:
 				self.ui.message_plainTextEdit.setPlainText(previewOutput[1])
 				self.ui.message_plainTextEdit.show()
-				# print(self.sizeHint())
-				# self.setFixedHeight(self.sizeHint().height())
+				self.setFixedHeight(self.minimumSizeHint().height())
 
 			# Restore window
 			if not self.offscreen and showUI:
