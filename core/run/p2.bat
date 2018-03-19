@@ -1,2 +1,2 @@
 @echo off
-"C:\Python27\python.exe" %1
+"C:\Python27\python.exe" %*

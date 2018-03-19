@@ -2694,6 +2694,9 @@ QToolButton:pressed, QToolButton:checked:pressed {
      <height>21</height>
     </rect>
    </property>
+   <property name="expert" stdset="0">
+    <bool>true</bool>
+   </property>
    <widget class="QMenu" name="menuOptions">
     <property name="title">
      <string>Options</string>
@@ -2720,6 +2723,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
     </property>
     <addaction name="actionJob_Management"/>
     <addaction name="actionShot_Management"/>
+    <addaction name="actionShot_Creator"/>
+    <addaction name="actionEnvironment_Variables"/>
     <addaction name="actionBatch_Rename"/>
     <addaction name="actionRender_Queue"/>
     <addaction name="actionSubmit_render"/>
@@ -2835,6 +2840,9 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <property name="text">
     <string>Shot Management...</string>
    </property>
+   <property name="expert" stdset="0">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionBatch_Rename">
    <property name="icon">
@@ -2875,6 +2883,9 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <property name="text">
     <string>User settings...</string>
    </property>
+   <property name="expert" stdset="0">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionGlobal_settings">
    <property name="icon">
@@ -2884,6 +2895,9 @@ QToolButton:pressed, QToolButton:checked:pressed {
    </property>
    <property name="text">
     <string>Global settings...</string>
+   </property>
+   <property name="expert" stdset="0">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionSet_recent_shot">
@@ -2899,6 +2913,19 @@ QToolButton:pressed, QToolButton:checked:pressed {
    </property>
    <property name="text">
     <string>Submit render...</string>
+   </property>
+  </action>
+  <action name="actionShot_Creator">
+   <property name="text">
+    <string>Shot Creator...</string>
+   </property>
+  </action>
+  <action name="actionEnvironment_Variables">
+   <property name="text">
+    <string>Environment Variables...</string>
+   </property>
+   <property name="expert" stdset="0">
+    <bool>true</bool>
    </property>
   </action>
  </widget>

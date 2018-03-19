@@ -72,7 +72,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		# Set up keyboard shortcuts
 		self.shortcutExpertMode = QtWidgets.QShortcut(self)
-		self.shortcutExpertMode.setKey('Ctrl+E')
+		self.shortcutExpertMode.setKey('Ctrl+Shift+E')
 		self.shortcutExpertMode.activated.connect(self.toggleExpertMode)
 
 		# Connect signals & slots
@@ -741,6 +741,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		submit_args['group'] = self.ui.group_comboBox.currentText()  # Deadline only
 		submit_args['priority'] = self.ui.priority_spinBox.value()
 		submit_args['comment'] = self.ui.comment_lineEdit.text()
+		submit_args['username'] = os.environ['IC_USERNAME']
 
 		submit_args['envVars'] = ['JOB', 'SHOT', 'JOBPATH', 'SHOTPATH']
 
@@ -781,8 +782,10 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			submit_args['renderCmdEnvVar'] = 'NUKEVERSION'  # RQ only
 			submit_args['flags'] = self.ui.flags_lineEdit.text()  # RQ only
 			submit_args['version'] = os.environ['NUKE_VER'].split('v')[0]  #jobData.getAppVersion('Nuke')
-			submit_args['nukeX'] = False  # Deadline only
-			submit_args['isMovie'] = False  # Deadline only - TO BE IMPLEMENTED
+			submit_args['nukeX'] = self.getCheckBoxValue(self.ui.useNukeX_checkBox)
+			submit_args['isMovie'] = self.getCheckBoxValue(self.ui.isMovie_checkBox)
+			if submit_args['isMovie']:  # Override task size if output is movie
+				submit_args['taskSize'] = len(self.numList)
 			scene = self.makePathAbsolute(self.ui.nukeScript_comboBox.currentText()).replace("\\", "/")
 			submit_args['scene'] = scene
 			submit_args['jobName'] = os.path.splitext(os.path.basename(scene))[0]

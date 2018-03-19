@@ -119,27 +119,19 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.main_tabWidget.setCurrentIndex(0)
 
 		# Hide main menu bar
-		self.ui.menubar.hide()
+		self.toggleExpertWidgets(False, self.ui)  # TODO: enable start in expert mode with command-line argument
 
 		# Instantiate jobs class
 		self.j = jobs.jobs()
 
 		# Set up keyboard shortcuts
-		self.shortcutShotInfo = QtWidgets.QShortcut(self)
-		self.shortcutShotInfo.setKey('Ctrl+I')
-		self.shortcutShotInfo.activated.connect(self.printShotInfo)
+		self.shortcutExpertMode = QtWidgets.QShortcut(self)
+		self.shortcutExpertMode.setKey('Ctrl+Shift+E')
+		self.shortcutExpertMode.activated.connect(self.toggleExpertMode)
 
 		self.shortcutEnvVars = QtWidgets.QShortcut(self)
 		self.shortcutEnvVars.setKey('Ctrl+E')
 		self.shortcutEnvVars.activated.connect(self.printEnvVars)
-
-		# self.shortcutEnvVarsAll = QtWidgets.QShortcut(self)
-		# self.shortcutEnvVarsAll.setKey('Ctrl+Shift+E')
-		# self.shortcutEnvVarsAll.activated.connect(lambda: self.printEnvVars(allvars=True))
-
-		self.shortcutToggleMenu = QtWidgets.QShortcut(self)
-		self.shortcutToggleMenu.setKey('Alt+M')
-		self.shortcutToggleMenu.activated.connect(self.toggleMenuBar)
 
 		# --------------------------------------------------------------------
 		# Connect signals & slots
@@ -155,6 +147,8 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Tools menu
 		self.ui.actionJob_Management.triggered.connect(self.launchJobManagement)
 		self.ui.actionShot_Management.triggered.connect(self.launchShotManagement)
+		self.ui.actionShot_Creator.triggered.connect(self.launchShotCreator)
+		self.ui.actionEnvironment_Variables.triggered.connect(self.printEnvVars)
 		self.ui.actionBatch_Rename.triggered.connect(self.launchBatchRename)
 		self.ui.actionRender_Queue.triggered.connect(self.launchRenderQueue)
 		self.ui.actionSubmit_render.triggered.connect(self.launchRenderSubmit)
@@ -420,13 +414,16 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.assetVersion_listWidget.itemClicked.connect(self.updateImgPreview)
 
 
-	def toggleMenuBar(self):
-		""" Toggle visibility of main menu bar.
+	def toggleExpertMode(self):
+		""" Toggle expert mode where additional UI items are visible.
 		"""
-		if self.ui.menubar.isVisible():
-			self.ui.menubar.hide()
-		else:
-			self.ui.menubar.show()
+		try:
+			self.expertMode = not self.expertMode
+		except AttributeError:
+			self.expertMode = True
+
+		verbose.message("Expert mode: %s" %self.expertMode)
+		self.toggleExpertWidgets(self.expertMode, self.ui)
 
 
 	def getCurrentTab(self, tabWidget):
@@ -699,7 +696,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			dialogMsg = "No shots were found for the job '%s'. Would you like to create some shots now?" %selJob
 			dialog = pDialog.dialog()
 			if dialog.display(dialogMsg, dialogTitle):
-				self.launchShotManagement()
+				self.launchShotCreator()
 			else:
 				pass
 
@@ -864,6 +861,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.actionShot_settings.setEnabled(True)
 		self.ui.actionJob_Management.setEnabled(False)
 		self.ui.actionShot_Management.setEnabled(False)
+		self.ui.actionShot_Creator.setEnabled(False)
 		self.ui.actionSubmit_render.setEnabled(True)
 
 		verbose.jobSet(self.job, self.shot)
@@ -891,6 +889,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.actionShot_settings.setEnabled(False)
 		self.ui.actionJob_Management.setEnabled(True)
 		self.ui.actionShot_Management.setEnabled(True)
+		self.ui.actionShot_Creator.setEnabled(True)
 		self.ui.actionSubmit_render.setEnabled(False)
 
 
@@ -917,34 +916,6 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.al.setupIconGrid(job=self.job, sortBy=value)
 		self.sortAppsBy = value
 		userPrefs.edit('main', 'sortappsby', value)
-
-
-	def printShotInfo(self):
-		""" Print job / shot information stored in environment variables -
-			used for debugging.
-		"""
-		try:
-			print("""
-     Job/Shot: %s - %s
-
-  Frame range: %s
-
-   Resolution: %sx%s (full)
-               %sx%s (proxy)
-
- Linear units: %s
-Angular units: %s
-   Time units: %s (%s fps)
-""" %(os.environ['JOB'], os.environ['SHOT'], 
-      os.environ['FRAMERANGE'], 
-      os.environ['RESOLUTIONX'], os.environ['RESOLUTIONY'], 
-      os.environ['PROXY_RESOLUTIONX'], os.environ['PROXY_RESOLUTIONY'], 
-      os.environ['UNIT'], 
-      os.environ['ANGLE'], 
-      os.environ['TIMEFORMAT'], os.environ['FPS']))
-
-		except KeyError:
-			print("Environment variable(s) not set.")
 
 
 	def printEnvVars(self, allvars=False):
@@ -1144,17 +1115,21 @@ Developers: %s
 
 	def launchShotManagement(self):
 		""" Launch Shot Management dialog.
+			THIS IS THE NEW (WIP) SHOT MANAGEMENT EDITOR...
+		"""
+		import shot_management__main__
+		shotManagementDialog = shot_management__main__.ShotManagementDialog(parent=self)
+		shotManagementDialog.display(job=self.ui.job_comboBox.currentText())
+		self.populateJobs()
+
+
+	def launchShotCreator(self):
+		""" Launch Shot Creator dialog. (deprecated)
 		"""
 		import shot_creator__main__
 		shotCreatorDialog = shot_creator__main__.ShotCreatorDialog(parent=self)
 		shotCreatorDialog.display(job=self.ui.job_comboBox.currentText())
 		self.populateJobs()
-
-		# # THIS IS THE NEW (WIP) SHOT MANAGEMENT EDITOR...
-		# import shot_management__main__
-		# shotManagementDialog = shot_management__main__.ShotManagementDialog(parent=self)
-		# shotManagementDialog.display(job=self.ui.job_comboBox.currentText())
-		# self.populateJobs()
 
 
 	# def launchGenericDialog(self, module_name, class_name, modal=True):

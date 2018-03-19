@@ -82,6 +82,7 @@ def generate_job_info_file(**kwargs):
 	fh.write("Pool=%s\n" %kwargs['pool'])
 	fh.write("Group=%s\n" %kwargs['group'])
 	fh.write("Priority=%s\n" %kwargs['priority'])
+	fh.write("UserName=%s\n" %kwargs['username'])
 	if kwargs['priority'] == 0:
 		fh.write("InitialStatus=Suspended\n")
 	for i, outputPath in enumerate(kwargs['output']):
@@ -139,12 +140,13 @@ def generate_plugin_info_file(**kwargs):
 	# Nuke -------------------------------------------------------------------
 	elif kwargs['plugin'] == "Nuke":
 		fh.write("BatchMode=True\n")
-		fh.write("BatchModeIsMovie=%s\n" %kwargs['isMovie'])
+		# fh.write("BatchModeIsMovie=%s\n" %kwargs['isMovie'])
 		fh.write("NukeX=%s\n" %kwargs['nukeX'])
 		fh.write("Version=%s\n" %kwargs['version'])
 		fh.write("SceneFile=%s\n" %kwargs['scene'])
 		if kwargs['renderLayers']:
 			fh.write("WriteNode=%s\n" %kwargs['renderLayer'])
+			fh.write("BatchModeIsMovie=%s\n" %kwargs['isMovie'])
 
 	fh.close()
 

@@ -315,37 +315,6 @@ class TemplateUI(object):
 								widget.currentIndexChanged.connect(self.storeComboBoxValue)
 
 
-	def conformFormLayoutLabels(self, parentObject):
-		""" Conform the widths of all labels in formLayouts under the
-			specified parentObject for a more coherent appearance.
-		"""
-		labels = []
-		labelWidths = []
-
-		# Find all labels
-		for layout in parentObject.findChildren(QtWidgets.QFormLayout):
-			# print(layout.objectName())
-			items = (layout.itemAt(i) for i in range(layout.count()))
-			for item in items:
-				widget = item.widget()
-				if isinstance(widget, QtWidgets.QLabel):
-					# print("\t" + widget.objectName())
-					labels.append(widget)
-
-		# Find label widths
-		for label in labels:
-			fontMetrics = QtGui.QFontMetrics(label.font())
-			width = fontMetrics.width(label.text())
-			labelWidths.append(width)
-
-		# Get widest label & set all labels widths to match
-		if labelWidths:
-			maxWidth = max(labelWidths)
-			for label in labels:
-				label.setFixedWidth(maxWidth)
-				label.setAlignment(QtCore.Qt.AlignVCenter|QtCore.Qt.AlignRight)
-
-
 	def findCategory(self, widget):
 		""" Recursively check the parents of the given widget until a custom
 			property 'xmlCategory' is found.
@@ -387,6 +356,64 @@ class TemplateUI(object):
 		# (won't work without it for some reason)
 		exec_str = "self.%s = action" %actionName
 		exec(exec_str)
+
+
+	def toggleExpertWidgets(self, isExpertMode, parentObject):
+		""" Show/hide all widgets with the custom property 'expert' under
+			the specified parentObject.
+		"""
+		types = (
+			QtWidgets.QMenu, 
+			QtWidgets.QMenuBar, 
+			QtWidgets.QAction, 
+			)
+
+		try:
+			for item in parentObject.findChildren(types):
+				if item.property('expert'):
+					item.setVisible(isExpertMode)
+
+		# Fix for Qt4 where findChildren signature doesn't suport a tuple for
+		# an argument...
+		except TypeError:
+			expert_items = []
+			for widget_type in types:
+				for item in parentObject.findChildren(widget_type):
+					if item.property('expert'):
+						expert_items.append(item)
+			for item in expert_items:
+				item.setVisible(isExpertMode)
+
+
+	def conformFormLayoutLabels(self, parentObject):
+		""" Conform the widths of all labels in formLayouts under the
+			specified parentObject for a more coherent appearance.
+		"""
+		labels = []
+		labelWidths = []
+
+		# Find all labels
+		for layout in parentObject.findChildren(QtWidgets.QFormLayout):
+			# print(layout.objectName())
+			items = (layout.itemAt(i) for i in range(layout.count()))
+			for item in items:
+				widget = item.widget()
+				if isinstance(widget, QtWidgets.QLabel):
+					# print("\t" + widget.objectName())
+					labels.append(widget)
+
+		# Find label widths
+		for label in labels:
+			fontMetrics = QtGui.QFontMetrics(label.font())
+			width = fontMetrics.width(label.text())
+			labelWidths.append(width)
+
+		# Get widest label & set all labels widths to match
+		if labelWidths:
+			maxWidth = max(labelWidths)
+			for label in labels:
+				label.setFixedWidth(maxWidth)
+				label.setAlignment(QtCore.Qt.AlignVCenter|QtCore.Qt.AlignRight)
 
 
 	def getCheckBoxValue(self, checkBox):
