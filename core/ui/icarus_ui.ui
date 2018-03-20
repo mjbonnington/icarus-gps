@@ -87,7 +87,16 @@ QPushButton:default, QToolButton:default {
        <enum>QFrame::NoFrame</enum>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <item>
@@ -284,7 +293,16 @@ QToolButton:disabled {
         <string>Launcher</string>
        </attribute>
        <layout class="QVBoxLayout" name="launchTab_verticalLayout">
-        <property name="margin">
+        <property name="leftMargin">
+         <number>8</number>
+        </property>
+        <property name="topMargin">
+         <number>8</number>
+        </property>
+        <property name="rightMargin">
+         <number>8</number>
+        </property>
+        <property name="bottomMargin">
          <number>8</number>
         </property>
         <item>
@@ -302,7 +320,16 @@ QToolButton:disabled {
            <string>Shot Setup</string>
           </property>
           <layout class="QHBoxLayout" name="shotSetup_horizontalLayout">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>8</number>
+           </property>
+           <property name="topMargin">
+            <number>8</number>
+           </property>
+           <property name="rightMargin">
+            <number>8</number>
+           </property>
+           <property name="bottomMargin">
             <number>8</number>
            </property>
            <item>
@@ -311,7 +338,16 @@ QToolButton:disabled {
               <bool>true</bool>
              </property>
              <layout class="QHBoxLayout" name="horizontalLayout">
-              <property name="margin">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
                <number>0</number>
               </property>
               <item>
@@ -405,7 +441,16 @@ QToolButton:disabled {
               </sizepolicy>
              </property>
              <layout class="QHBoxLayout" name="horizontalLayout_4">
-              <property name="margin">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
                <number>0</number>
               </property>
               <item>
@@ -467,21 +512,33 @@ QToolButton:pressed, QToolButton:checked:pressed {
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="launchApp_groupBox">
+         <widget class="QFrame" name="launchApp_frame">
           <property name="enabled">
            <bool>false</bool>
           </property>
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Launch applications to work within the job environment.&lt;/p&gt;&lt;p&gt;This section becomes available once the job and shot environment is set.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
-          <property name="title">
-           <string/>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
           </property>
-          <property name="flat">
-           <bool>true</bool>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
           </property>
-          <layout class="QVBoxLayout" name="launchApp_groupBox_verticalLayout">
-           <property name="margin">
+          <property name="lineWidth">
+           <number>0</number>
+          </property>
+          <layout class="QVBoxLayout" name="launchApp_frame_verticalLayout">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
@@ -506,7 +563,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>760</width>
+                <width>762</width>
                 <height>176</height>
                </rect>
               </property>
@@ -520,7 +577,16 @@ QToolButton:pressed, QToolButton:checked:pressed {
                <bool>true</bool>
               </property>
               <layout class="QVBoxLayout" name="launchApp_verticalLayout">
-               <property name="margin">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
                 <number>0</number>
                </property>
                <item>
@@ -796,11 +862,20 @@ QToolButton:pressed, QToolButton:checked:pressed {
         <string>Publish</string>
        </attribute>
        <layout class="QVBoxLayout" name="publishTab_verticalLayout">
-        <property name="margin">
+        <property name="leftMargin">
+         <number>8</number>
+        </property>
+        <property name="topMargin">
+         <number>8</number>
+        </property>
+        <property name="rightMargin">
+         <number>8</number>
+        </property>
+        <property name="bottomMargin">
          <number>8</number>
         </property>
         <item>
-         <widget class="QFrame" name="frame">
+         <widget class="QFrame" name="publishAssetTop_frame">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
             <horstretch>0</horstretch>
@@ -811,107 +886,105 @@ QToolButton:pressed, QToolButton:checked:pressed {
            <enum>QFrame::NoFrame</enum>
           </property>
           <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
+           <enum>QFrame::Plain</enum>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_8">
-           <property name="margin">
+          <property name="lineWidth">
+           <number>0</number>
+          </property>
+          <layout class="QHBoxLayout" name="publishAssetTop_horizontalLayout">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
-            <widget class="QGroupBox" name="publishTo_groupBox">
+            <widget class="QLabel" name="publishTo_label">
+             <property name="text">
+              <string>Publish to:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="publishToLibrary_radioButton">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Publish to the global asset library location specified in the main Icarus settings. Published assets will be available to all jobs.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Library</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+             <property name="autoExclusive">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="publishToJob_radioButton">
              <property name="enabled">
               <bool>true</bool>
              </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Publish to the assets directory for the current job. Published assets will be available to all shots belonging to this job.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Job</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+             <property name="autoExclusive">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="publishToShot_radioButton">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Publish to the assets folder for the specified shot. Published assets will be available to this shot only.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Shot</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+             <property name="autoExclusive">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="publishToShot_comboBox">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <property name="title">
-              <string>Publish to:</string>
-             </property>
-             <layout class="QHBoxLayout" name="publishTo_horizontalLayout">
-              <property name="margin">
-               <number>8</number>
-              </property>
-              <item>
-               <widget class="QRadioButton" name="publishToLibrary_radioButton">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Publish to the global asset library location specified in the main Icarus settings. Published assets will be available to all jobs.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="autoFillBackground">
-                 <bool>false</bool>
-                </property>
-                <property name="text">
-                 <string>Library</string>
-                </property>
-                <property name="checked">
-                 <bool>false</bool>
-                </property>
-                <property name="autoExclusive">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QRadioButton" name="publishToJob_radioButton">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Publish to the assets directory for the current job. Published assets will be available to all shots belonging to this job.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="autoFillBackground">
-                 <bool>false</bool>
-                </property>
-                <property name="text">
-                 <string>Job</string>
-                </property>
-                <property name="checked">
-                 <bool>false</bool>
-                </property>
-                <property name="autoExclusive">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QRadioButton" name="publishToShot_radioButton">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Publish to the assets folder for the specified shot. Published assets will be available to this shot only.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="autoFillBackground">
-                 <bool>false</bool>
-                </property>
-                <property name="text">
-                 <string>Shot</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
-                <property name="autoExclusive">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QComboBox" name="publishToShot_comboBox">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-               </widget>
-              </item>
-             </layout>
             </widget>
            </item>
            <item>
@@ -962,7 +1035,16 @@ QToolButton:pressed, QToolButton:checked:pressed {
                <number>0</number>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_5">
-               <property name="margin">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
                 <number>0</number>
                </property>
                <item>
@@ -1396,7 +1478,16 @@ QToolButton:pressed, QToolButton:checked:pressed {
                <bool>false</bool>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_10">
-               <property name="margin">
+               <property name="leftMargin">
+                <number>3</number>
+               </property>
+               <property name="topMargin">
+                <number>3</number>
+               </property>
+               <property name="rightMargin">
+                <number>3</number>
+               </property>
+               <property name="bottomMargin">
                 <number>3</number>
                </property>
                <item>
@@ -1434,11 +1525,20 @@ QToolButton:pressed, QToolButton:checked:pressed {
                     <x>0</x>
                     <y>0</y>
                     <width>355</width>
-                    <height>295</height>
+                    <height>326</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_3">
-                   <property name="margin">
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
                     <number>0</number>
                    </property>
                    <item>
@@ -1589,7 +1689,16 @@ QToolButton:pressed, QToolButton:checked:pressed {
                <number>0</number>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_7">
-               <property name="margin">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
                 <number>0</number>
                </property>
                <item>
@@ -1870,7 +1979,16 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_8">
-                   <property name="margin">
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
                     <number>0</number>
                    </property>
                    <item>
@@ -2119,6 +2237,9 @@ QToolButton:pressed, QToolButton:checked:pressed {
               <property name="animated">
                <bool>true</bool>
               </property>
+              <property name="allColumnsShowFocus">
+               <bool>true</bool>
+              </property>
               <property name="headerHidden">
                <bool>false</bool>
               </property>
@@ -2273,6 +2394,9 @@ QToolButton:pressed, QToolButton:checked:pressed {
               <property name="animated">
                <bool>true</bool>
               </property>
+              <property name="allColumnsShowFocus">
+               <bool>true</bool>
+              </property>
               <property name="headerHidden">
                <bool>false</bool>
               </property>
@@ -2323,7 +2447,16 @@ QToolButton:pressed, QToolButton:checked:pressed {
            <bool>true</bool>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_7">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
@@ -2364,7 +2497,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
         </item>
        </layout>
        <zorder>publishType_tabWidget</zorder>
-       <zorder>frame</zorder>
+       <zorder>publishAssetTop_frame</zorder>
        <zorder>notes_groupBox</zorder>
       </widget>
       <widget class="QWidget" name="gather_tab">
@@ -2372,7 +2505,16 @@ QToolButton:pressed, QToolButton:checked:pressed {
         <string>Gather</string>
        </attribute>
        <layout class="QVBoxLayout" name="gatherTab_verticalLayout">
-        <property name="margin">
+        <property name="leftMargin">
+         <number>8</number>
+        </property>
+        <property name="topMargin">
+         <number>8</number>
+        </property>
+        <property name="rightMargin">
+         <number>8</number>
+        </property>
+        <property name="bottomMargin">
          <number>8</number>
         </property>
         <item>
@@ -2387,92 +2529,90 @@ QToolButton:pressed, QToolButton:checked:pressed {
            <enum>QFrame::NoFrame</enum>
           </property>
           <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
+           <enum>QFrame::Plain</enum>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_14">
-           <property name="margin">
+          <property name="lineWidth">
+           <number>0</number>
+          </property>
+          <layout class="QHBoxLayout" name="gatherAssetTop_horizontalLayout">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
-            <widget class="QGroupBox" name="gatherFrom_groupBox">
+            <widget class="QLabel" name="gatherFrom_label">
+             <property name="text">
+              <string>Source:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="gatherFromLibrary_radioButton">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Library</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+             <property name="autoExclusive">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="gatherFromJob_radioButton">
              <property name="enabled">
               <bool>true</bool>
              </property>
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
+             <property name="autoFillBackground">
+              <bool>false</bool>
              </property>
-             <property name="title">
-              <string>Source:</string>
+             <property name="text">
+              <string>Job</string>
              </property>
-             <layout class="QHBoxLayout" name="gatherFrom_horizontalLayout">
-              <property name="margin">
-               <number>8</number>
-              </property>
-              <item>
-               <widget class="QRadioButton" name="gatherFromLibrary_radioButton">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="autoFillBackground">
-                 <bool>false</bool>
-                </property>
-                <property name="text">
-                 <string>Library</string>
-                </property>
-                <property name="checked">
-                 <bool>false</bool>
-                </property>
-                <property name="autoExclusive">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QRadioButton" name="gatherFromJob_radioButton">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="autoFillBackground">
-                 <bool>false</bool>
-                </property>
-                <property name="text">
-                 <string>Job</string>
-                </property>
-                <property name="checked">
-                 <bool>false</bool>
-                </property>
-                <property name="autoExclusive">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QRadioButton" name="gatherFromShot_radioButton">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="autoFillBackground">
-                 <bool>false</bool>
-                </property>
-                <property name="text">
-                 <string>Shot</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
-                <property name="autoExclusive">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QComboBox" name="gatherFromShot_comboBox"/>
-              </item>
-             </layout>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+             <property name="autoExclusive">
+              <bool>true</bool>
+             </property>
             </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="gatherFromShot_radioButton">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Shot</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+             <property name="autoExclusive">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="gatherFromShot_comboBox"/>
            </item>
            <item>
             <spacer name="gatherTop_horizontalSpacer">
@@ -2495,11 +2635,29 @@ QToolButton:pressed, QToolButton:checked:pressed {
           <property name="enabled">
            <bool>true</bool>
           </property>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="lineWidth">
+           <number>0</number>
+          </property>
           <layout class="QHBoxLayout" name="assetBrowser_columnView_horizontalLayout">
            <property name="spacing">
             <number>4</number>
            </property>
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
@@ -2550,8 +2708,26 @@ QToolButton:pressed, QToolButton:checked:pressed {
         </item>
         <item>
          <widget class="QFrame" name="assetInfo_frame">
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="lineWidth">
+           <number>0</number>
+          </property>
           <layout class="QHBoxLayout" name="assetInfo_horizontalLayout">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
@@ -2638,7 +2814,16 @@ QToolButton:pressed, QToolButton:checked:pressed {
            <bool>true</bool>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_18">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
@@ -2940,12 +3125,12 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>154</x>
-     <y>117</y>
+     <x>276</x>
+     <y>101</y>
     </hint>
     <hint type="destinationlabel">
-     <x>199</x>
-     <y>121</y>
+     <x>321</x>
+     <y>104</y>
     </hint>
    </hints>
   </connection>
@@ -2956,12 +3141,12 @@ QToolButton:pressed, QToolButton:checked:pressed {
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>169</x>
-     <y>120</y>
+     <x>203</x>
+     <y>98</y>
     </hint>
     <hint type="destinationlabel">
-     <x>225</x>
-     <y>122</y>
+     <x>259</x>
+     <y>100</y>
     </hint>
    </hints>
   </connection>

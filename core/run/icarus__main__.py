@@ -37,10 +37,13 @@ if os.environ['IC_ENV'] == "STANDALONE":
 	# Parse command-line arguments
 	parser = argparse.ArgumentParser()
 	parser.add_argument("-u", "--user", help="override username")
+	# parser.add_argument("-e", "--expert", help="start in expert mode")
 	args = parser.parse_args()
 	if args.user:
 		userOverride = True
 		os.environ['IC_USERNAME'] = args.user.lower()
+	# if args.expert:
+	# 	os.environ['IC_EXPERTMODE'] = args.expert.lower()
 
 	# Initialise Icarus environment and add libs to sys path
 	import env__init__
@@ -850,7 +853,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		self.ui.shotSetup_groupBox.setEnabled(False)
 		self.ui.refreshJobs_toolButton.setEnabled(False)
-		self.ui.launchApp_groupBox.setEnabled(True)
+		self.ui.launchApp_frame.setEnabled(True)
 		self.ui.main_tabWidget.insertTab(1, self.publishTab, 'Publish')
 		self.ui.main_tabWidget.insertTab(2, self.gatherTab, 'Assets')
 		self.ui.gather_groupBox.hide()
@@ -877,7 +880,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		self.ui.shotSetup_groupBox.setEnabled(True)
 		self.ui.refreshJobs_toolButton.setEnabled(True)
-		self.ui.launchApp_groupBox.setEnabled(False)
+		self.ui.launchApp_frame.setEnabled(False)
 		self.ui.main_tabWidget.removeTab(1)  # Remove publish & assets tab
 		self.ui.main_tabWidget.removeTab(1)  # Remove publish & assets tab
 		self.ui.renderPbl_treeWidget.clear() # Clear the render layer tree view widget
@@ -1361,7 +1364,7 @@ Developers: %s
 						renderPassItem.setText(0, prefix)
 						renderPassItem.setText(1, fr_range)
 						if not fr_range == os.environ['FRAMERANGE']: # set red text for sequence mismatch
-							renderPassItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#c33")))
+							renderPassItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#f92672")))
 						renderPassItem.setText(2, ext.split('.', 1)[1])
 						renderPassItem.setText(3, osOps.relativePath(os.path.join(renderPath, renderLayerDir, renderPass), 'SHOTPATH'))
 
@@ -1395,7 +1398,7 @@ Developers: %s
 				dailyItem.setText(0, '%s%s%s' % (prefix, padding, ext)) # dailyItem.setText(0, '%s.[%s]%s' % (prefix, fr_range, ext))
 				dailyItem.setText(1, fr_range)
 				if not fr_range == os.environ['FRAMERANGE']: # set red text for sequence mismatch
-					dailyItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#c33")))
+					dailyItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#f92672")))
 				dailyItem.setText(2, self.dailyType)
 				dailyItem.setText(3, osOps.relativePath(path, 'SHOTPATH'))
 				self.ui.dailyPbl_treeWidget.addTopLevelItem(dailyItem)
