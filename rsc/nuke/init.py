@@ -46,6 +46,8 @@ os.environ['IC_ENV'] = 'NUKE'
 # Third-party initializations go here
 import cryptomatte_utilities
 cryptomatte_utilities.setup_cryptomatte()
+import collectFiles
+import multiEdit
 
 # Shot directories
 try:
