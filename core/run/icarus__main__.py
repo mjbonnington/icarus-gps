@@ -127,6 +127,8 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Instantiate jobs class
 		self.j = jobs.jobs()
 
+		self.expertMode = False  # TODO: enable start in expert mode with command-line argument
+
 		# Set up keyboard shortcuts
 		self.shortcutExpertMode = QtWidgets.QShortcut(self)
 		self.shortcutExpertMode.setKey('Ctrl+Shift+E')
@@ -425,8 +427,14 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		except AttributeError:
 			self.expertMode = True
 
+		if self.expertMode:
+			os.environ['IC_VERBOSITY'] = "4"
+		else:
+			os.environ['IC_VERBOSITY'] = userPrefs.query('main', 'verbosity', datatype='str', default="3", create=True)
+
 		verbose.message("Expert mode: %s" %self.expertMode)
 		self.toggleExpertWidgets(self.expertMode, self.ui)
+		# self.populateJobs()
 
 
 	def getCurrentTab(self, tabWidget):
@@ -613,7 +621,10 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.j.loadXML()
 
 		# Populate combo box with list of jobs
-		jobLs = sorted(self.j.getActiveJobs())
+		if self.expertMode:
+			jobLs = sorted(self.j.getAllJobs())
+		else:
+			jobLs = sorted(self.j.getActiveJobs())
 		if jobLs:
 			self.ui.job_comboBox.insertItems(0, jobLs)
 

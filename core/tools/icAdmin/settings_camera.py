@@ -46,7 +46,7 @@ class helper():
 		""" Update filmback settings when a preset is chosen.
 		"""
 		camera = self.frame.camera_comboBox.currentText()
-		if camera != 'Custom':
+		if (camera in self.cp.getPresets()) and (camera != 'Custom'):
 			sensorWidth, sensorHeight = self.cp.getFilmback(camera)
 
 			# Stop the other widgets from emitting signals

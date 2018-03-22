@@ -183,6 +183,17 @@ class jobs(xmlData.XMLData):
 		return jobLs
 
 
+	def getAllJobs(self):
+		""" Return all jobs as a list.
+		"""
+		jobLs = []
+		for jobElement in self.root.findall("./job"):
+			jobName = jobElement.find('name').text
+			jobLs.append(jobName)
+
+		return jobLs
+
+
 	def getJobs(self):
 		""" Return all jobs as elements.
 		"""

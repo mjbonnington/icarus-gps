@@ -39,8 +39,12 @@ class CamPresets(xmlData.XMLData):
 		""" Get the filmback (as a tuple) for the specified camera.
 			Units in millimetres unless 'inches' is True.
 		"""
-		sensor_w = float(self.root.find("./camera[@name='%s']/sensor_w_mm" %camera).text)
-		sensor_h = float(self.root.find("./camera[@name='%s']/sensor_h_mm" %camera).text)
+		try:
+			sensor_w = float(self.root.find("./camera[@name='%s']/sensor_w_mm" %camera).text)
+			sensor_h = float(self.root.find("./camera[@name='%s']/sensor_h_mm" %camera).text)
+		except AttributeError:  # Defaults
+			sensor_w = 36
+			sensor_h = 24
 
 		if(inches):
 			sensor_w = sensor_w / 25.4
