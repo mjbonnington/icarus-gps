@@ -59,7 +59,7 @@ class TemplateUI(object):
 		self.currentAttrStr = ""
 
 		# Instantiate XML data class
-		self.xd = settingsData.settingsData()
+		self.xd = settingsData.SettingsData()
 		if xml_data:
 			xd_load = self.xd.loadXML(xml_data)
 

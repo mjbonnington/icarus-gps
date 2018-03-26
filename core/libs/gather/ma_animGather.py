@@ -19,7 +19,7 @@ def gather(gatherPath):
 	gatherPath = os.path.expandvars(gatherPath)
 
 	# Instantiate XML data classes
-	assetData = settingsData.settingsData()
+	assetData = settingsData.SettingsData()
 	assetData.loadXML(os.path.join(gatherPath, 'assetData.xml'), quiet=True)
 
 	try:

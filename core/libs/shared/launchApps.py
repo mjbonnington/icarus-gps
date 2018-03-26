@@ -7,6 +7,7 @@
 # (c) 2013-2017 Gramercy Park Studios
 #
 # Launches software applications.
+# This module will be deprecated soon.
 
 
 import os

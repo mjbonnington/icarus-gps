@@ -28,7 +28,7 @@ def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, not
 	username = os.environ['IC_USERNAME']
 
 	# Instantiate XML data classes
-	assetData = settingsData.settingsData()
+	assetData = settingsData.SettingsData()
 	assetData.loadXML(os.path.join(pblDir, 'assetData.xml'), quiet=True)
 
 	# Parse asset file path, make relative

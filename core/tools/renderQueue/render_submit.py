@@ -238,7 +238,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		"""
 		if os.path.isfile(scene):
 			sceneDir, sceneFile = os.path.split(scene)
-			settingsDir = os.path.join(sceneDir, os.environ['DATAFILESRELATIVEDIR'])
+			settingsDir = os.path.join(sceneDir, os.environ['IC_METADATA'])
 			#settingsFile = os.path.splitext(sceneFile)[0] + suffix
 			settingsFile = osOps.sanitize(sceneFile, replace='_') + suffix
 

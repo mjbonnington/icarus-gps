@@ -39,7 +39,7 @@ class AppLauncher(QtWidgets.QDialog):
 
 		# Instantiate data classes
 		self.ap = appPaths.AppPaths()
-		self.jd = settingsData.settingsData()
+		self.jd = settingsData.SettingsData()
 		self.ds = dirStructure.DirStructure()
 
 		# Set OS identifier strings to get correct app executable paths

@@ -125,7 +125,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.toggleExpertWidgets(False, self.ui)  # TODO: enable start in expert mode with command-line argument
 
 		# Instantiate jobs class
-		self.j = jobs.jobs()
+		self.j = jobs.Jobs()
 
 		self.expertMode = False  # TODO: enable start in expert mode with command-line argument
 
@@ -1031,7 +1031,6 @@ Developers: %s
 		""" Open job settings dialog wrapper function.
 		"""
 		if self.openSettings("Job", startPanel=startPanel):
-			#self.j.setup(self.job, self.shot)  # Set up environment variables
 			self.setupJob()
 
 
@@ -1039,7 +1038,6 @@ Developers: %s
 		""" Open shot settings dialog wrapper function.
 		"""
 		if self.openSettings("Shot"):
-			#self.j.setup(self.job, self.shot)  # Set up environment variables
 			self.setupJob()
 
 
@@ -1055,6 +1053,7 @@ Developers: %s
 		"""
 		if self.openSettings("Global"):
 			pass
+			# Add dialog prompt to restart Icarus for changes to take effect
 
 
 	def appSettings(self):
@@ -1890,7 +1889,7 @@ Developers: %s
 
 		import settingsData
 		# Instantiate XML data classes
-		assetData = settingsData.settingsData()
+		assetData = settingsData.SettingsData()
 		assetDataLoaded = assetData.loadXML(os.path.join(self.gatherPath, 'assetData.xml'))
 
 		# --------------------------------------------------------------------

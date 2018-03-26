@@ -116,7 +116,7 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.xd.loadXML(self.xmlData)
 		if self.inherit:
 			import settingsData
-			self.id = settingsData.settingsData()
+			self.id = settingsData.SettingsData()
 			self.id.loadXML(self.inherit)
 		else:
 			self.id = None

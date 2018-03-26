@@ -81,7 +81,7 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.ui.main_buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.reject)
 
 		# Instantiate jobs class and load data
-		self.j = jobs.jobs()
+		self.j = jobs.Jobs()
 
 
 	def display(self):

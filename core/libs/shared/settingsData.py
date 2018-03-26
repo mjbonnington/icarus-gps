@@ -3,7 +3,7 @@
 # [Icarus] settingsData.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2017 Gramercy Park Studios
+# (c) 2015-2018 Gramercy Park Studios
 #
 # Manipulates settings data stored in an XML database.
 # This class is also used to manage asset metadata.
@@ -16,7 +16,7 @@ import xml.etree.ElementTree as ET
 import xmlData
 
 
-class settingsData(xmlData.XMLData):
+class SettingsData(xmlData.XMLData):
 	""" Manipulates XML database to store job settings.
 		Inherits XMLData class.
 	"""

@@ -19,7 +19,7 @@ def alembic(ICSet, updatePath):
 	updatePath = os.path.expandvars(updatePath)
 
 	# Instantiate XML data classes
-	assetData = settingsData.settingsData()
+	assetData = settingsData.SettingsData()
 	assetData.loadXML(os.path.join(updatePath, 'assetData.xml'), quiet=True)
 
 	assetPblName = assetData.getValue('asset', 'assetPblName')

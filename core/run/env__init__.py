@@ -18,7 +18,7 @@ def setEnv():
 	""" Set some environment variables for basic operation.
 	"""
 	# Set version string
-	os.environ['IC_VERSION'] = "v0.9.11-20180322"
+	os.environ['IC_VERSION'] = "v0.9.11-20180326"
 
 	# Standardise some environment variables across systems.
 	# Usernames will always be stored as lowercase for compatibility.
@@ -46,9 +46,8 @@ def setEnv():
 		os.environ['IC_ENV'] = "STANDALONE"
 
 	# Hard-coded relative data directories required by Icarus
-	#os.environ['JOBSROOTRELATIVEDIR'] = 'Project_Media'  # Store in global settings? UPDATE: now stored in jobs.xml
-	os.environ['SHOTSROOTRELATIVEDIR'] = "Vfx"  # Store in global / job settings, and rename with IC_ prefix?
-	os.environ['DATAFILESRELATIVEDIR'] = ".icarus"  # Rename to IC_METADATA or similar?
+	os.environ['IC_SHOTSDIR'] = "Vfx"  # Store in global / job settings
+	os.environ['IC_METADATA'] = ".icarus"
 
 	# Set up basic paths
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
@@ -58,7 +57,7 @@ def setEnv():
 	os.environ['IC_FORMSDIR'] = os.path.join(os.environ['IC_BASEDIR'], 'core', 'ui')
 	os.environ['IC_CONFIGDIR'] = os.path.join(os.environ['IC_BASEDIR'], 'core', 'config')
 	os.environ['IC_USERPREFS'] = os.path.join(os.environ['IC_CONFIGDIR'], 'users', os.environ['IC_USERNAME'])  # User prefs stored on server
-	#os.environ['IC_USERPREFS'] = os.path.join(os.environ['IC_USERHOME'], os.environ['DATAFILESRELATIVEDIR'])  # User prefs stored in user home folder
+	#os.environ['IC_USERPREFS'] = os.path.join(os.environ['IC_USERHOME'], os.environ['IC_METADATA'])  # User prefs stored in user home folder
 	os.environ['IC_RECENTFILESDIR'] = os.path.join(os.environ['IC_USERPREFS'], 'recentFiles')
 
 	appendSysPaths()

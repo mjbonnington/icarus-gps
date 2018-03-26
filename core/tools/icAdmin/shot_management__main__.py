@@ -84,7 +84,7 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		# self.ui.main_buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.reject)
 
 		# Instantiate jobs class and load data
-		self.j = jobs.jobs()
+		self.j = jobs.Jobs()
 
 
 	def display(self, job=None):
@@ -176,8 +176,8 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 				newRowHeaderItem = QtWidgets.QTableWidgetItem(shotName)
 				newItem = QtWidgets.QTableWidgetItem(shotName)
 				self.ui.shots_tableWidget.setVerticalHeaderItem(row, newRowHeaderItem)
-				shotDataPath = osOps.absolutePath("%s/$SHOTSROOTRELATIVEDIR/%s/$DATAFILESRELATIVEDIR/shotData.xml" %(jobPath, shotName))
-				shotData = settingsData.settingsData()
+				shotDataPath = osOps.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA/shotData.xml" %(jobPath, shotName))
+				shotData = settingsData.SettingsData()
 				shotData.loadXML(shotDataPath)
 
 				text = "%s-%s" %(shotData.getValue('time', 'rangeStart'), shotData.getValue('time', 'rangeEnd'))

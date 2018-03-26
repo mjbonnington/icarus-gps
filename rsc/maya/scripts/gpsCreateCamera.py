@@ -111,7 +111,7 @@ class gpsCreateCamera():
 		# If the camera to be created is the shot camera, read shot data and apply values
 		if camera == os.environ['SHOT']:
 			import settingsData
-			sd = settingsData.settingsData()
+			sd = settingsData.SettingsData()
 			shotDataLoaded = sd.loadXML(os.path.join(os.environ['SHOTDATA'], 'shotData.xml'), use_template=False)
 
 			mc.setAttr(camSh+'.horizontalFilmAperture', float(sd.getValue('camera', 'filmbackWidth')) / 25.4)

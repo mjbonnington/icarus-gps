@@ -72,7 +72,7 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.assetRootDir = os.path.expandvars(assetRootDir)
 
 		# Instantiate XML data classes
-		self.assetData = settingsData.settingsData()
+		self.assetData = settingsData.SettingsData()
 		self.assetData.loadXML(os.path.join(self.assetRootDir, version, 'assetData.xml'), use_template=False, quiet=False)
 
 		# Set asset label text

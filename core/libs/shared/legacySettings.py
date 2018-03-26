@@ -19,7 +19,7 @@ import jobs
 import osOps
 import verbose
 
-j = jobs.jobs()
+j = jobs.Jobs()
 
 try:
 	os.environ['PIPELINE'] = os.environ['IC_BASEDIR']
@@ -303,9 +303,9 @@ def setJob_getPath(job, shot=False):
 	jobpath = j.getPath(job, translate=True)
 
 	if shot:
-		path = osOps.absolutePath("%s/$SHOTSROOTRELATIVEDIR/%s" %(jobpath, shot))
+		path = osOps.absolutePath("%s/$IC_SHOTSDIR/%s" %(jobpath, shot))
 	else:
-		path = osOps.absolutePath("%s/$SHOTSROOTRELATIVEDIR" %jobpath)
+		path = osOps.absolutePath("%s/$IC_SHOTSDIR" %jobpath)
 
 	return path
 
@@ -351,8 +351,8 @@ def setJob_checkShot(shotPath):
 	valid = True
 
 	jobPath = os.path.split(shotPath)[0]
-	#jobDataDir = os.path.join(jobPath, os.environ['DATAFILESRELATIVEDIR'])
-	shotDataDir = os.path.join(shotPath, os.environ['DATAFILESRELATIVEDIR'])
+	#jobDataDir = os.path.join(jobPath, os.environ['IC_METADATA'])
+	shotDataDir = os.path.join(shotPath, os.environ['IC_METADATA'])
 
 	# if not os.path.isdir(jobDataDir):
 	# 	valid = False

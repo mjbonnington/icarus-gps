@@ -44,8 +44,8 @@ def setEnv(job, shot, shotPath):
 
 
 	jobPath = os.path.split(shotPath)[0]
-	jobDataPath = os.path.join(jobPath, os.environ['DATAFILESRELATIVEDIR'])
-	shotDataPath = os.path.join(shotPath, os.environ['DATAFILESRELATIVEDIR'])
+	jobDataPath = os.path.join(jobPath, os.environ['IC_METADATA'])
+	shotDataPath = os.path.join(shotPath, os.environ['IC_METADATA'])
 
 	# Set basic environment variables
 	os.environ['JOB'] = job
@@ -58,9 +58,9 @@ def setEnv(job, shot, shotPath):
 	osOps.createDir(os.environ['JOBDATA'])
 
 	# Instantiate job / shot settings classes
-	jobData = settingsData.settingsData()
-	shotData = settingsData.settingsData()
-#	defaultData = settingsData.settingsData()
+	jobData = settingsData.SettingsData()
+	shotData = settingsData.SettingsData()
+#	defaultData = settingsData.SettingsData()
 	ap = appPaths.AppPaths()
 
 	jobDataLoaded = jobData.loadXML(os.path.join(jobDataPath, 'jobData.xml'), use_template=False)
@@ -163,7 +163,7 @@ def setEnv(job, shot, shotPath):
 	os.environ['MAYASHAREDRESOURCES'] = osOps.absolutePath('$FILESYSTEMROOT/_Library/3D/Maya')  # Store this in app settings / ic global prefs?
 
 	try:
-		maya_ver = jobData.getAppVersion('Maya')
+		maya_ver = str(jobData.getAppVersion('Maya'))
 		os.environ['MAYA_VER'] = maya_ver
 
 		os.environ['MAYA_DEBUG_ENABLE_CRASH_REPORTING'] = '0'
@@ -228,7 +228,7 @@ def setEnv(job, shot, shotPath):
 
 	# Nuke
 	os.environ['NUKEVERSION']     = getAppExecPath('Nuke')
-	os.environ['NUKE_VER']        = jobData.getAppVersion('Nuke')  # Temporary for Deadline submit
+	os.environ['NUKE_VER']        = str(jobData.getAppVersion('Nuke'))  # Temporary for Deadline submit
 	os.environ['NUKEDIR']         = osOps.absolutePath('$SHOTPATH/2D/nuke')  # Currently needed by render submitter
 	# os.environ['NUKEELEMENTSDIR'] = osOps.absolutePath('$NUKEDIR/elements/$IC_USERNAME')
 	os.environ['NUKESCRIPTSDIR']  = osOps.absolutePath('$NUKEDIR/scripts/$IC_USERNAME')  # Currently needed by render submitter
@@ -299,7 +299,7 @@ def setEnv(job, shot, shotPath):
 
 
 	# Cinema 4D
-	c4d_ver = jobData.getAppVersion('Cinema4D')
+	c4d_ver = str(jobData.getAppVersion('Cinema4D'))
 	os.environ['C4DVERSION']      = getAppExecPath('Cinema4D')
 	os.environ['C4DDIR']          = osOps.absolutePath('$SHOTPATH/3D/c4d') #temp
 	os.environ['C4DSCENESDIR']    = osOps.absolutePath('$C4DDIR/scenes/$IC_USERNAME') #temp
@@ -313,7 +313,7 @@ def setEnv(job, shot, shotPath):
 
 	# djv_view
 	os.environ['DJVVERSION'] = getAppExecPath('djv_view')
-	# djv_ver = jobData.getAppVersion('djv_view')
+	# djv_ver = str(jobData.getAppVersion('djv_view'))
 	# djv_embedded_ver = '1.1.0'
 	# if os.environ['IC_RUNNING_OS'] == 'Windows':
 	# 	#os.environ['DJV_CONVERT'] = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-1.0.5-Windows-32/bin/djv_convert.exe')  # Latest 32-bit version

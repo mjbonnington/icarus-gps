@@ -85,8 +85,8 @@ class ShotCreatorDialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.ui.suffix_lineEdit.setValidator(alphanumeric_validator)
 
 		# Instantiate jobs class and load data
-		self.j = jobs.jobs()
-		self.sd = settingsData.settingsData()
+		self.j = jobs.Jobs()
+		self.sd = settingsData.SettingsData()
 
 
 	def display(self, job=None):
@@ -185,7 +185,7 @@ class ShotCreatorDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 		jobPath = self.j.getPath(self.ui.job_comboBox.currentText(), translate=True)
 		for shot in self.shotLs:
-			path = osOps.absolutePath("%s/$SHOTSROOTRELATIVEDIR/%s/$DATAFILESRELATIVEDIR" %(jobPath, shot))
+			path = osOps.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA" %(jobPath, shot))
 			osOps.createDir(path)
 			shotData = os.path.join(path, "shotData.xml")
 			# sd.createXML()

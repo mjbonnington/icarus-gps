@@ -18,7 +18,7 @@ import verbose
 import xmlData
 
 
-class jobs(xmlData.XMLData):
+class Jobs(xmlData.XMLData):
 	""" Manipulates XML database for storing jobs.
 		Add and remove jobs, make jobs active or inactive, modify job
 		properties.
@@ -35,7 +35,7 @@ class jobs(xmlData.XMLData):
 		""" Set job.
 		"""
 		jobPath = self.getPath(jobName, translate=True)
-		shotPath = osOps.absolutePath("%s/$SHOTSROOTRELATIVEDIR/%s" %(jobPath, shotName))
+		shotPath = osOps.absolutePath("%s/$IC_SHOTSDIR/%s" %(jobPath, shotName))
 
 		# Create environment variables
 		if job__env__.setEnv(jobName, shotName, shotPath):
@@ -60,7 +60,7 @@ class jobs(xmlData.XMLData):
 		""" Check if shot path exists.
 		"""
 		jobPath = self.getPath(jobName, translate=True)
-		shotPath = osOps.absolutePath("%s/$SHOTSROOTRELATIVEDIR/%s" %(jobPath, shotName))
+		shotPath = osOps.absolutePath("%s/$IC_SHOTSDIR/%s" %(jobPath, shotName))
 		if os.path.isdir(shotPath):
 			return True
 		else:
@@ -130,7 +130,6 @@ class jobs(xmlData.XMLData):
 		else:
 			os.environ['FILESYSTEMROOT'] = str(self.linux_root)
 
-		#os.environ['JOBSROOT'] = osOps.absolutePath('$FILESYSTEMROOT/$JOBSROOTRELATIVEDIR', stripTrailingSlash=True)
 		os.environ['JOBSROOT'] = osOps.absolutePath('$FILESYSTEMROOT/%s' %self.jobs_path, stripTrailingSlash=True)
 
 
@@ -307,7 +306,7 @@ class jobs(xmlData.XMLData):
 			job.
 		"""
 		jobPath = self.getPath(jobName, translate=True)
-		shotsPath = osOps.absolutePath("%s/$SHOTSROOTRELATIVEDIR" %jobPath)
+		shotsPath = osOps.absolutePath("%s/$IC_SHOTSDIR" %jobPath)
 
 		# Check shot path exists before proceeding...
 		if os.path.exists(shotsPath):
@@ -320,7 +319,7 @@ class jobs(xmlData.XMLData):
 				if item.startswith('SH') or item.startswith('PC'):
 					# Check that the directory is a valid shot by checking for
 					# the existence of the '.icarus' subdirectory
-					if os.path.isdir(osOps.absolutePath("%s/%s/$DATAFILESRELATIVEDIR" %(shotsPath, item))):
+					if os.path.isdir(osOps.absolutePath("%s/%s/$IC_METADATA" %(shotsPath, item))):
 						shotLs.append(item)
 
 			if len(shotLs):

@@ -47,7 +47,7 @@ def settings_filename(scene, suffix=""):
 	"""
 	if os.path.isfile(scene):
 		sceneDir, sceneFile = os.path.split(scene)
-		settingsDir = os.path.join(sceneDir, os.environ['DATAFILESRELATIVEDIR'])
+		settingsDir = os.path.join(sceneDir, os.environ['IC_METADATA'])
 		settingsFile = osOps.sanitize(sceneFile, replace='_') + suffix
 
 		# Create settings directory if it doesn't exist
