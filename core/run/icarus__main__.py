@@ -1481,11 +1481,11 @@ Developers: %s
 			if self.slShot == os.environ['SHOT']: # publish to current shot
 				self.pblTo = os.environ['SHOTPUBLISHDIR']
 			else: # publish to user-specified shot
-				self.pblTo = os.path.join(os.environ['JOBPATH'], self.slShot, os.environ["PUBLISHRELATIVEDIR"])
+				self.pblTo = os.path.join(os.environ['JOBPATH'], self.slShot, os.environ['IC_ASSETDIR'])
 		elif self.ui.publishToJob_radioButton.isChecked() == 1: # publish to job
-			self.pblTo = os.environ["JOBPUBLISHDIR"]
+			self.pblTo = os.environ['JOBPUBLISHDIR']
 		elif self.ui.publishToLibrary_radioButton.isChecked() == 1: # publish to library
-			self.pblTo = os.environ["GLOBALPUBLISHDIR"]
+			self.pblTo = os.environ['GLOBALPUBLISHDIR']
 
 	#	if self.ui.approved_checkBox.checkState() == 2:
 	#		self.approved = True
@@ -1737,11 +1737,11 @@ Developers: %s
 			if slShot == os.environ['SHOT']: # gather from current shot
 				self.gatherFrom = os.environ['SHOTPUBLISHDIR']
 			else: # gather from user-specified shot
-				self.gatherFrom = os.path.join(os.environ['JOBPATH'], slShot, os.environ["PUBLISHRELATIVEDIR"])
+				self.gatherFrom = os.path.join(os.environ['JOBPATH'], slShot, os.environ['IC_ASSETDIR'])
 		elif self.ui.gatherFromJob_radioButton.isChecked() == 1: # gather from job
 			self.gatherFrom = os.environ['JOBPUBLISHDIR']
 		elif self.ui.gatherFromLibrary_radioButton.isChecked() == 1: # gather from library
-			self.gatherFrom = os.environ["GLOBALPUBLISHDIR"]
+			self.gatherFrom = os.environ['GLOBALPUBLISHDIR']
 
 
 	###################columns system, info and preview img update##################

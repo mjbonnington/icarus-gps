@@ -60,12 +60,12 @@ def setEnv(job, shot, shotPath):
 	# Instantiate job / shot settings classes
 	jobData = settingsData.SettingsData()
 	shotData = settingsData.SettingsData()
-#	defaultData = settingsData.SettingsData()
+	#defaultData = settingsData.SettingsData()
 	ap = appPaths.AppPaths()
 
 	jobDataLoaded = jobData.loadXML(os.path.join(jobDataPath, 'jobData.xml'), use_template=False)
 	shotDataLoaded = shotData.loadXML(os.path.join(shotDataPath, 'shotData.xml'), use_template=False)
-#	defaultData.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'defaultData.xml'))
+	#defaultData.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'defaultData.xml'))
 	ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'), use_template=True)
 
 	# ------------------------------------------------------------------------
@@ -93,7 +93,7 @@ def setEnv(job, shot, shotPath):
 	# Check if the job is using the old hidden asset publish directory
 	assetDir = jobData.getValue('meta', 'assetDir')
 	if assetDir:
-		os.environ['PUBLISHRELATIVEDIR'] = assetDir
+		os.environ['IC_ASSETDIR'] = assetDir
 	else:
 		import legacySettings
 
@@ -105,7 +105,7 @@ def setEnv(job, shot, shotPath):
 
 		jobData.setValue('meta', 'assetDir', assetDir)
 		jobData.saveXML()
-		os.environ['PUBLISHRELATIVEDIR'] = assetDir
+		os.environ['IC_ASSETDIR'] = assetDir
 	# ------------------------------------------------------------------------
 
 
@@ -126,9 +126,9 @@ def setEnv(job, shot, shotPath):
 
 
 	# Job / shot env
-#	os.environ['GLOBALPUBLISHDIR']  = osOps.absolutePath(getInheritedValue('other', 'assetlib'))  # Path needs to be translated for OS portability
-	os.environ['JOBPUBLISHDIR']     = osOps.absolutePath('$JOBPATH/$PUBLISHRELATIVEDIR')
-	os.environ['SHOTPUBLISHDIR']    = osOps.absolutePath('$SHOTPATH/$PUBLISHRELATIVEDIR')
+	#os.environ['GLOBALPUBLISHDIR']  = osOps.absolutePath(getInheritedValue('other', 'assetlib'))  # Path needs to be translated for OS portability
+	os.environ['JOBPUBLISHDIR']     = osOps.absolutePath('$JOBPATH/$IC_ASSETDIR')
+	os.environ['SHOTPUBLISHDIR']    = osOps.absolutePath('$SHOTPATH/$IC_ASSETDIR')
 	os.environ['WIPSDIR']           = osOps.absolutePath('$JOBPATH/../Deliverables/WIPS')  # Perhaps this shouldn't be hard-coded?
 	os.environ['ELEMENTSLIBRARY']   = osOps.absolutePath(getInheritedValue('other', 'elementslib'))  # Path needs to be translated for OS portability
 	os.environ['PRODBOARD']         = getInheritedValue('other', 'prodboard')
@@ -136,7 +136,6 @@ def setEnv(job, shot, shotPath):
 	os.environ['ANGLE']             = getInheritedValue('units', 'angle')
 	os.environ['TIMEFORMAT']        = getInheritedValue('units', 'time')
 	os.environ['FPS']               = getInheritedValue('units', 'fps')
-#	os.environ['HANDLES']           = getInheritedValue('time', 'handles')  # Using INFRAME & OUTFRAME instead - although not implemented
 	os.environ['STARTFRAME']        = getInheritedValue('time', 'rangeStart')
 	os.environ['ENDFRAME']          = getInheritedValue('time', 'rangeEnd')
 	os.environ['INFRAME']           = getInheritedValue('time', 'inFrame')
