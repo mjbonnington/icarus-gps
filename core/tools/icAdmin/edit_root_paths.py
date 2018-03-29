@@ -52,6 +52,8 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		             stylesheet=STYLESHEET, 
 		             store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
 
+		self.conformFormLayoutLabels(self.ui)
+
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Dialog)
 

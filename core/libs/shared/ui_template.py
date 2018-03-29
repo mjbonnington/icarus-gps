@@ -385,9 +385,11 @@ class TemplateUI(object):
 				item.setVisible(isExpertMode)
 
 
-	def conformFormLayoutLabels(self, parentObject):
+	def conformFormLayoutLabels(self, parentObject, padding=8):
 		""" Conform the widths of all labels in formLayouts under the
 			specified parentObject for a more coherent appearance.
+
+			'padding' is an amount in pixels to add to the max width.
 		"""
 		labels = []
 		labelWidths = []
@@ -399,20 +401,21 @@ class TemplateUI(object):
 			for item in items:
 				widget = item.widget()
 				if isinstance(widget, QtWidgets.QLabel):
-					# print("\t" + widget.objectName())
 					labels.append(widget)
 
 		# Find label widths
 		for label in labels:
 			fontMetrics = QtGui.QFontMetrics(label.font())
 			width = fontMetrics.width(label.text())
+			#print('Width of "%s": %d px' %(label.text(), width))
 			labelWidths.append(width)
 
 		# Get widest label & set all labels widths to match
 		if labelWidths:
 			maxWidth = max(labelWidths)
+			#print("Max label width : %d px (%d inc padding)" %(maxWidth, maxWidth+padding))
 			for label in labels:
-				label.setFixedWidth(maxWidth)
+				label.setFixedWidth(maxWidth+padding)
 				label.setAlignment(QtCore.Qt.AlignVCenter|QtCore.Qt.AlignRight)
 
 
