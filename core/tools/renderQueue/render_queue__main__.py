@@ -492,6 +492,12 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			line = str(self.renderProcess.readAllStandardOutput(), 'utf-8')
 		except TypeError:  # Python 2.x compatibility
 			line = str(self.renderProcess.readAllStandardOutput())
+
+		# # Parse output
+		# if renderer == 'redshift':
+		# 	if "Frame done" in line:
+		# 		pass # update progress message
+
 		self.renderOutput += line
 		self.ui.output_textEdit.setPlainText(self.renderOutput)
 		self.ui.output_textEdit.moveCursor(QtGui.QTextCursor.End)

@@ -1,4 +1,4 @@
-v0.9.11 (--)
+v0.9.11 (2018-04-03)
 -	[Icarus] Added Title and Notes fields to shot settings.
 -	[Icarus] Job management now performs check for non-alphanumeric characters in paths.
 -	[Icarus] Batch Rename tool drag & drop enabled - files and folders can now be dropped into the window for processing.

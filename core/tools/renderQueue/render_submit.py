@@ -819,7 +819,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Package option variables into tuples
 		genericOpts = kwargs['jobName'], self.jobType, kwargs['frames'], kwargs['taskSize'], kwargs['priority']
 		if self.jobType == "Maya":
-			renderOpts = kwargs['scene'], kwargs['mayaProject'], kwargs['flags'], renderCmd
+			renderOpts = kwargs['scene'], kwargs['mayaProject'], kwargs['flags'], kwargs['renderer'], renderCmd
 		elif self.jobType == "Nuke":
 			renderOpts = kwargs['scene'], kwargs['flags'], renderCmd
 

@@ -28,7 +28,7 @@ class renderQueue(xmlData.XMLData):
 		#print jobType
 		if jobType == 'Maya':
 			#print "a"
-			mayaScene, mayaProject, mayaFlags, mayaRenderCmd = renderOpts
+			mayaScene, mayaProject, mayaFlags, renderer, mayaRenderCmd = renderOpts
 		elif jobType == 'Nuke':
 			#print "b"
 			nukeScript, nukeFlags, nukeRenderCmd = renderOpts
@@ -224,6 +224,17 @@ class renderQueue(xmlData.XMLData):
 
 		else:
 			return False, False
+
+
+	def updateTaskStatus(self, jobID, taskID, progress):
+		""" Update task progress.
+		"""
+		self.loadXML(quiet=True) # reload XML data
+		element = self.root.find("./job[@id='%s']/task[@id='%s']" %(jobID, taskID)) # get the <task> element
+		if element is not None:
+			if "In Progress" in element.find('status').text: # only update progress for in progress tasks
+				element.find('status').text = "[%d%%] In Progress" %progress
+				self.saveXML()
 
 
 	def completeTask(self, jobID, taskID, hostID=None, taskTime=0):
