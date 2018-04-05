@@ -1,3 +1,6 @@
+v0.9.12 (YYYY-MM_DD)
+-	[Icarus] Modified Redshift centralised deployment to use Maya modules.
+
 v0.9.11 (2018-04-03)
 -	[Icarus] Added Title and Notes fields to shot settings.
 -	[Icarus] Job management now performs check for non-alphanumeric characters in paths.

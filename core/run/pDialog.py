@@ -53,7 +53,7 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.setWindowFlags(QtCore.Qt.Dialog)
 		self.setWindowFlags(QtCore.Qt.CustomizeWindowHint | 
 		                    QtCore.Qt.WindowTitleHint)
-		# if os.environ['IC_RUNNING_OS'] == 'Darwin':
+		# if os.environ['IC_RUNNING_OS'] == "MacOS":
 		# 	self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | 
 		# 	                    QtCore.Qt.X11BypassWindowManagerHint | 
 		# 	                    QtCore.Qt.WindowCloseButtonHint)

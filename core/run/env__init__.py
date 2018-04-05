@@ -18,7 +18,7 @@ def setEnv():
 	""" Set some environment variables for basic operation.
 	"""
 	# Set version string
-	os.environ['IC_VERSION'] = "v0.9.11-20180403"
+	os.environ['IC_VERSION'] = "v0.9.11-20180405"
 
 	# Standardise some environment variables across systems.
 	# Usernames will always be stored as lowercase for compatibility.
@@ -29,7 +29,7 @@ def setEnv():
 		#os.environ['IC_USERHOME'] = os.path.join(os.environ['HOMEDRIVE'], os.environ['HOMEPATH'])
 		os.environ['IC_USERHOME'] = os.environ['USERPROFILE']
 	elif platform.system() == "Darwin":  # Mac OS
-		os.environ['IC_RUNNING_OS'] = "Darwin"
+		os.environ['IC_RUNNING_OS'] = "MacOS"
 		if not 'IC_USERNAME' in os.environ:
 			os.environ['IC_USERNAME'] = os.environ['USER'].lower()
 		os.environ['IC_USERHOME'] = os.environ['HOME']

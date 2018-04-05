@@ -307,3 +307,25 @@ def expandSeq(input_dir, input_file_seq):
 		filepath_list.append(filepath)
 
 	return filepath_list
+
+
+def check(fr_range):
+	""" Check if the given fr_range (in the format STARTFRAME-ENDFRAME)
+		matches the shot environment variables.
+	"""
+	try:
+		start_frame, end_frame = fr_range.split("-")
+	except ValueError:
+		start_frame = fr_range
+		end_frame = fr_range
+	start_frame = int(start_frame)
+	end_frame = int(end_frame)
+
+	shot_env_start_frame = int(os.environ['STARTFRAME'])
+	shot_env_end_frame = int(os.environ['ENDFRAME'])
+
+	if (start_frame == shot_env_start_frame) and (end_frame == shot_env_end_frame):
+		return True
+	else:
+		return False
+

@@ -107,7 +107,7 @@ def djv():
 def terminal():
 	""" Launch the terminal / command prompt.
 	"""
-	if os.environ['IC_RUNNING_OS'] == 'Windows':
+	if os.environ['IC_RUNNING_OS'] == "Windows":
 		# subprocess.Popen("cmd /k %s" % os.environ['IC_SHELL_RC'], shell=True)
 		subprocess.Popen("start cmd /k %s" %os.environ['IC_SHELL_RC'], shell=True)
 	else:
@@ -118,9 +118,9 @@ def prodBoard():
 	""" Launch the production board URL in a web browser.
 	"""
 	# webbrowser.open(os.environ['PRODBOARD'], new=2, autoraise=True)
-	if os.environ['IC_RUNNING_OS'] == 'Windows':
+	if os.environ['IC_RUNNING_OS'] == "Windows":
 		subprocess.Popen('explorer "%s"' %os.environ['PRODBOARD'], shell=True)
-	elif os.environ['IC_RUNNING_OS'] == 'Darwin':
+	elif os.environ['IC_RUNNING_OS'] == "MacOS":
 		subprocess.Popen('open "%s"' %os.environ['PRODBOARD'], shell=True)
 	else:
 		subprocess.Popen('xdg-open "%s"' %os.environ['PRODBOARD'], shell=True)

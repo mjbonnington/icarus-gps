@@ -43,12 +43,12 @@ class AppLauncher(QtWidgets.QDialog):
 		self.ds = dirStructure.DirStructure()
 
 		# Set OS identifier strings to get correct app executable paths
-		if os.environ['IC_RUNNING_OS'] == 'Windows':
-			self.currentOS = 'win'
-		elif os.environ['IC_RUNNING_OS'] == 'Darwin':
-			self.currentOS = 'osx'
-		elif os.environ['IC_RUNNING_OS'] == 'Linux':
-			self.currentOS = 'linux'
+		if os.environ['IC_RUNNING_OS'] == "Windows":
+			self.currentOS = "win"
+		elif os.environ['IC_RUNNING_OS'] == "MacOS":
+			self.currentOS = "osx"
+		elif os.environ['IC_RUNNING_OS'] == "Linux":
+			self.currentOS = "linux"
 
 		# self.setupIconGrid()
 

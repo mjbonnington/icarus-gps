@@ -18,9 +18,9 @@ import verbose
 def exportDjvLibs():
 	""" Export path to djv codec libraries according to OS.
 	"""
-	if os.environ['IC_RUNNING_OS'] == 'Darwin':
+	if os.environ['IC_RUNNING_OS'] == "MacOS":
 		libsExport = "export DYLD_FALLBACK_LIBRARY_PATH=%s; " %os.environ['DJV_LIB']
-	elif os.environ['IC_RUNNING_OS'] == 'Linux':
+	elif os.environ['IC_RUNNING_OS'] == "Linux":
 		libsExport = "export LD_LIBRARY_PATH=%s; export LIBQUICKTIME_PLUGIN_DIR=%s; " %(os.environ['DJV_LIB'], os.path.join(os.environ['DJV_LIB'], "libquicktime"))
 	else:
 		libsExport = ""
@@ -116,7 +116,7 @@ def viewer(path=None):
 
 	# Export path to djv codec libraries according to OS
 	cmdStr = exportDjvLibs()
-	if os.environ['IC_RUNNING_OS'] == 'Windows':
+	if os.environ['IC_RUNNING_OS'] == "Windows":
 		cmdStr += 'cd /d "%s" & ' %startupDir
 	else:
 		cmdStr += "cd %s; " %startupDir

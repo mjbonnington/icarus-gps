@@ -110,16 +110,16 @@ def setEnv(job, shot, shotPath):
 
 
 	# Set OS identifier strings to get correct app executable paths
-	if os.environ['IC_RUNNING_OS'] == 'Windows':
-		currentOS = 'win'
-	elif os.environ['IC_RUNNING_OS'] == 'Darwin':
-		currentOS = 'osx'
-	elif os.environ['IC_RUNNING_OS'] == 'Linux':
-		currentOS = 'linux'
+	if os.environ['IC_RUNNING_OS'] == "Windows":
+		currentOS = "win"
+	elif os.environ['IC_RUNNING_OS'] == "MacOS":
+		currentOS = "osx"
+	elif os.environ['IC_RUNNING_OS'] == "Linux":
+		currentOS = "linux"
 
 
 	# Terminal / Command Prompt
-	if os.environ['IC_RUNNING_OS'] == 'Windows':
+	if os.environ['IC_RUNNING_OS'] == "Windows":
 		os.environ['IC_SHELL_RC'] = osOps.absolutePath('$IC_WORKINGDIR/shell_cmd.bat')
 	else:
 		os.environ['IC_SHELL_RC'] = osOps.absolutePath('$IC_WORKINGDIR/shell_rc')
@@ -140,7 +140,6 @@ def setEnv(job, shot, shotPath):
 	os.environ['ENDFRAME']          = getInheritedValue('time', 'rangeEnd')
 	os.environ['INFRAME']           = getInheritedValue('time', 'inFrame')
 	os.environ['OUTFRAME']          = getInheritedValue('time', 'outFrame')
-	os.environ['FRAMERANGE']        = '%s-%s' % (os.environ['STARTFRAME'], os.environ['ENDFRAME'])
 	os.environ['POSTERFRAME']       = getInheritedValue('time', 'posterFrame')
 	os.environ['RESOLUTIONX']       = getInheritedValue('resolution', 'fullWidth')
 	os.environ['RESOLUTIONY']       = getInheritedValue('resolution', 'fullHeight')
@@ -151,12 +150,24 @@ def setEnv(job, shot, shotPath):
 
 	# Application specific environment variables...
 
+	# Redshift centralised deployment
+	if getAppExecPath('Redshift') is not "":
+		# os.environ['redshift_LICENSE'] = "port@hostname"
+		os.environ['REDSHIFT_COREDATAPATH'] = getAppExecPath('Redshift')
+	elif os.environ['IC_RUNNING_OS'] == "Windows":
+		os.environ['REDSHIFT_COREDATAPATH'] = "C:/ProgramData/Redshift"
+	elif os.environ['IC_RUNNING_OS'] == "MacOS":
+		os.environ['REDSHIFT_COREDATAPATH'] = "/usr/redshift"
+	elif os.environ['IC_RUNNING_OS'] == "Linux":
+		os.environ['REDSHIFT_COREDATAPATH'] = "/Applications/redshift"
+
+
 	# Maya
 	os.environ['MAYAVERSION']         = getAppExecPath('Maya')
 	os.environ['MAYARENDERVERSION']   = osOps.absolutePath('%s/Render' %os.path.dirname(os.environ['MAYAVERSION']))
 	os.environ['MAYADIR']             = osOps.absolutePath('$SHOTPATH/3D/maya')  # Currently needed by render submitter
 	os.environ['MAYASCENESDIR']       = osOps.absolutePath('$MAYADIR/scenes/$IC_USERNAME')  # Currently needed by render submitter
-	# os.environ['MAYASOURCEIMAGESDIR'] = osOps.absolutePath('$MAYADIR/sourceimages/$IC_USERNAME')
+	os.environ['MAYASOURCEIMAGESDIR'] = osOps.absolutePath('$MAYADIR/sourceimages/$IC_USERNAME')  # Currently needed by openDirs
 	os.environ['MAYARENDERSDIR']      = osOps.absolutePath('$MAYADIR/renders/$IC_USERNAME')  # Currently needed by daily publish
 	os.environ['MAYAPLAYBLASTSDIR']   = osOps.absolutePath('$MAYADIR/playblasts/$IC_USERNAME')  # Currently needed by daily publish
 	os.environ['MAYASHAREDRESOURCES'] = osOps.absolutePath('$FILESYSTEMROOT/_Library/3D/Maya')  # Store this in app settings / ic global prefs?
@@ -165,10 +176,10 @@ def setEnv(job, shot, shotPath):
 		maya_ver = str(jobData.getAppVersion('Maya'))
 		os.environ['MAYA_VER'] = maya_ver
 
-		os.environ['MAYA_DEBUG_ENABLE_CRASH_REPORTING'] = '0'
-		os.environ['MAYA_FORCE_PANEL_FOCUS'] = '0'  # This should prevent panel stealing focus from Qt window on keypress.
-		os.environ['MAYA_DISABLE_CLIC_IPM'] = '1'  # Disable the In Product Messaging button (should improve Maya startup & shutdown time).
-		os.environ['MAYA_DISABLE_CIP'] = '1'  # Disable the Customer Involvement Program (should improve Maya startup & shutdown time).
+		os.environ['MAYA_DEBUG_ENABLE_CRASH_REPORTING'] = "0"
+		os.environ['MAYA_FORCE_PANEL_FOCUS'] = "0"  # This should prevent panel stealing focus from Qt window on keypress.
+		os.environ['MAYA_DISABLE_CLIC_IPM'] = "1"  # Disable the In Product Messaging button (should improve Maya startup & shutdown time).
+		os.environ['MAYA_DISABLE_CIP'] = "1"  # Disable the Customer Involvement Program (should improve Maya startup & shutdown time).
 
 		pluginsPath = osOps.absolutePath('$IC_BASEDIR/rsc/maya/plugins') + os.pathsep \
 					+ osOps.absolutePath('$MAYASHAREDRESOURCES/%s/plug-ins' %maya_ver)
@@ -179,7 +190,7 @@ def setEnv(job, shot, shotPath):
 					+ osOps.absolutePath('$SHOTPUBLISHDIR/scripts') + os.pathsep \
 					+ osOps.absolutePath('$MAYASHAREDRESOURCES/scripts') + os.pathsep \
 					+ osOps.absolutePath('$MAYASHAREDRESOURCES/%s/scripts' %maya_ver)
-		if os.environ['IC_RUNNING_OS'] == 'Linux':  # Append the '%B' bitmap placeholder token required for Linux
+		if os.environ['IC_RUNNING_OS'] == "Linux":  # Append the '%B' bitmap placeholder token required for Linux
 			iconsPath = osOps.absolutePath('$IC_BASEDIR/rsc/maya/icons/%B') + os.pathsep \
 					  + osOps.absolutePath('$JOBPUBLISHDIR/icons/%B') + os.pathsep \
 					  + osOps.absolutePath('$MAYASHAREDRESOURCES/%s/icons/%B' %maya_ver)
@@ -195,26 +206,6 @@ def setEnv(job, shot, shotPath):
 		#os.environ['VRAY_FOR_MAYA_SHADERS'] = osOps.absolutePath('$IC_BASEDIR/rsc/maya/shaders')
 		#os.environ['VRAY_FOR_MAYA2014_PLUGINS_x64'] += os.pathsep + osOps.absolutePath('$IC_BASEDIR/rsc/maya/plugins')
 
-		if os.environ['IC_RUNNING_OS'] == 'Windows':  # Set up centralised deployment of Redshift plugin for Maya
-			if getAppExecPath('Redshift') is not "":
-				os.environ['REDSHIFT_COREDATAPATH']         = getAppExecPath('Redshift')
-				os.environ['REDSHIFT_COMMON_ROOT']          = osOps.absolutePath('$REDSHIFT_COREDATAPATH/Plugins/Maya/Common')
-				os.environ['REDSHIFT_PLUG_IN_PATH']         = osOps.absolutePath('$REDSHIFT_COREDATAPATH/Plugins/Maya/%s/nt-x86-64' %maya_ver)
-				os.environ['REDSHIFT_SCRIPT_PATH']          = osOps.absolutePath('$REDSHIFT_COMMON_ROOT/scripts')
-				os.environ['REDSHIFT_XBMLANGPATH']          = osOps.absolutePath('$REDSHIFT_COMMON_ROOT/icons')
-				os.environ['REDSHIFT_RENDER_DESC_PATH']     = osOps.absolutePath('$REDSHIFT_COMMON_ROOT/rendererDesc')
-				os.environ['REDSHIFT_CUSTOM_TEMPLATE_PATH'] = osOps.absolutePath('$REDSHIFT_COMMON_ROOT/scripts/NETemplates')
-				os.environ['REDSHIFT_MAYAEXTENSIONSPATH']   = osOps.absolutePath('$REDSHIFT_PLUG_IN_PATH/extensions')
-				os.environ['REDSHIFT_PROCEDURALSPATH']      = osOps.absolutePath('$REDSHIFT_COREDATAPATH/Procedurals')
-				pluginsPath += os.pathsep + os.environ['REDSHIFT_PLUG_IN_PATH']
-				scriptsPath += os.pathsep + os.environ['REDSHIFT_SCRIPT_PATH']
-				iconsPath   += os.pathsep + os.environ['REDSHIFT_XBMLANGPATH']
-				os.environ['MAYA_RENDER_DESC_PATH'] = os.environ['REDSHIFT_RENDER_DESC_PATH']
-				# os.environ['PATH'] += os.pathsep + os.environ['REDSHIFT_PLUG_IN_PATH']
-				os.environ['PATH'] += os.pathsep + os.environ['REDSHIFT_PLUG_IN_PATH'] + os.pathsep + osOps.absolutePath('$REDSHIFT_COREDATAPATH/bin')
-				os.environ['MAYA_CUSTOM_TEMPLATE_PATH'] = os.environ['REDSHIFT_CUSTOM_TEMPLATE_PATH']
-			os.environ['redshift_LICENSE'] = "62843@10.105.11.11"
-
 		os.environ['MAYA_SHELF_PATH'] = osOps.absolutePath('$JOBPUBLISHDIR/ma_shelves')
 		os.environ['MAYA_PLUG_IN_PATH'] = pluginsPath
 		os.environ['MAYA_SCRIPT_PATH'] = scriptsPath
@@ -229,7 +220,7 @@ def setEnv(job, shot, shotPath):
 	os.environ['NUKEVERSION']     = getAppExecPath('Nuke')
 	os.environ['NUKE_VER']        = str(jobData.getAppVersion('Nuke'))  # Temporary for Deadline submit
 	os.environ['NUKEDIR']         = osOps.absolutePath('$SHOTPATH/2D/nuke')  # Currently needed by render submitter
-	# os.environ['NUKEELEMENTSDIR'] = osOps.absolutePath('$NUKEDIR/elements/$IC_USERNAME')
+	os.environ['NUKEELEMENTSDIR'] = osOps.absolutePath('$NUKEDIR/elements/$IC_USERNAME')  # Currently needed by openDirs
 	os.environ['NUKESCRIPTSDIR']  = osOps.absolutePath('$NUKEDIR/scripts/$IC_USERNAME')  # Currently needed by render submitter
 	os.environ['NUKERENDERSDIR']  = osOps.absolutePath('$NUKEDIR/renders/$IC_USERNAME')  # Currently needed by daily publish
 	os.environ['NUKE_PATH']       = osOps.absolutePath('$IC_BASEDIR/rsc/nuke')
@@ -289,7 +280,7 @@ def setEnv(job, shot, shotPath):
 	# RealFlow (2013)
 	os.environ['REALFLOWVERSION']                    = getAppExecPath('RealFlow')
 	# os.environ['REALFLOWDIR']                        = osOps.absolutePath('$SHOTPATH/3D/realflow')
-	# os.environ['REALFLOWSCENESDIR']                  = osOps.absolutePath('$REALFLOWDIR/$IC_USERNAME')
+	# os.environ['REALFLOWSCENESDIR']                  = osOps.absolutePath('$REALFLOWDIR/$IC_USERNAME')  # Currently needed by openDirs
 	# os.environ['RFDEFAULTPROJECT']                   = osOps.absolutePath('$REALFLOWSCENESDIR/${JOB}_${SHOT}')  # Curly brackets required for correct variable expansion
 	# os.environ['RF_COMMANDS_ORGANIZER_FILE_PATH']    = osOps.absolutePath('$REALFLOWSCENESDIR/.cmdsOrg/commandsOrganizer.dat')
 	os.environ['RF_RSC']                             = osOps.absolutePath('$IC_BASEDIR/rsc/realflow')
@@ -314,12 +305,12 @@ def setEnv(job, shot, shotPath):
 	os.environ['DJVVERSION'] = getAppExecPath('djv_view')
 	# djv_ver = str(jobData.getAppVersion('djv_view'))
 	# djv_embedded_ver = '1.1.0'
-	# if os.environ['IC_RUNNING_OS'] == 'Windows':
-	# 	#os.environ['DJV_CONVERT'] = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-1.0.5-Windows-32/bin/djv_convert.exe')  # Latest 32-bit version
+	# if os.environ['IC_RUNNING_OS'] == "Windows":
+	# 	# os.environ['DJV_CONVERT'] = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-1.0.5-Windows-32/bin/djv_convert.exe')  # Latest 32-bit version
 	# 	os.environ['DJV_CONVERT'] = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-Windows-64/bin/djv_convert.exe' %djv_embedded_ver)
 	# 	os.environ['DJV_PLAY']    = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-Windows-64/bin/djv_view.exe' %djv_embedded_ver)
 
-	# elif os.environ['IC_RUNNING_OS'] == 'Darwin':
+	# elif os.environ['IC_RUNNING_OS'] == "MacOS":
 	# 	os.environ['DJV_LIB']     = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-OSX-64.app/Contents/Resources/lib' %djv_embedded_ver)
 	# 	os.environ['DJV_CONVERT'] = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-OSX-64.app/Contents/Resources/bin/djv_convert' %djv_embedded_ver)
 	# 	os.environ['DJV_PLAY']    = osOps.absolutePath('$IC_BASEDIR/external_apps/djv/djv-%s-OSX-64.app/Contents/Resources/bin/djv_view.sh' %djv_embedded_ver)
@@ -332,7 +323,7 @@ def setEnv(job, shot, shotPath):
 
 	os.environ['DJV_PLAY'] = os.environ['DJVVERSION']
 	os.environ['DJV_LIB']  = osOps.absolutePath('%s/../lib' %os.path.dirname(os.environ['DJVVERSION']))
-	if os.environ['IC_RUNNING_OS'] == 'Windows':
+	if os.environ['IC_RUNNING_OS'] == "Windows":
 		os.environ['DJV_CONVERT'] = osOps.absolutePath('%s/djv_convert.exe' %os.path.dirname(os.environ['DJVVERSION']))
 	else:  # Mac OS X and Linux
 		os.environ['DJV_CONVERT'] = osOps.absolutePath('%s/djv_convert' %os.path.dirname(os.environ['DJVVERSION']))
@@ -340,7 +331,7 @@ def setEnv(job, shot, shotPath):
 
 	# Deadline Monitor / Slave
 	os.environ['DEADLINEVERSION'] = getAppExecPath('Deadline')
-	if os.environ['IC_RUNNING_OS'] == 'Darwin':
+	if os.environ['IC_RUNNING_OS'] == "MacOS":
 		os.environ['DEADLINECMDVERSION']   = osOps.absolutePath('%s/../../../Resources/deadlinecommand' %os.path.dirname(os.environ['DEADLINEVERSION']))
 	else:  # Windows or Linux
 		os.environ['DEADLINECMDVERSION']   = osOps.absolutePath('%s/deadlinecommand' %os.path.dirname(os.environ['DEADLINEVERSION']))

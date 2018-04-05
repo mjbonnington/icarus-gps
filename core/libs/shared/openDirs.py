@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2017 Gramercy Park Studios
+# (c) 2013-2018 Gramercy Park Studios
 #
 # Contains functions to open certain directories in the system's file explorer
 # application.
@@ -14,12 +14,12 @@ import os
 
 
 # Set correct command for operating system's file explorer
-if os.environ['IC_RUNNING_OS'] == 'Windows':
-	sysCommand = 'explorer'  # 'start'
-elif os.environ['IC_RUNNING_OS'] == 'Darwin':
-	sysCommand = 'open'
+if os.environ['IC_RUNNING_OS'] == "Windows":
+	sysCommand = "explorer"  # "start"
+elif os.environ['IC_RUNNING_OS'] == "MacOS":
+	sysCommand = "open"
 else:  # Linux
-	sysCommand = 'nautilus'
+	sysCommand = "nautilus"
 
 
 def open_(path_):
@@ -27,50 +27,50 @@ def open_(path_):
 	"""
 	path_ = os.path.normpath(path_)
 	if os.path.isdir(path_):
-		if os.environ['IC_RUNNING_OS'] == 'Windows':
+		if os.environ['IC_RUNNING_OS'] == "Windows":
 			os.startfile(path_)
 		else:
-			os.system( '%s %s' %(sysCommand, path_) )
+			os.system('%s %s' %(sysCommand, path_))
 	return
 
 
 # Preset functions...
 def openShot():
-	open_( os.environ['SHOTPATH'] )
+	open_(os.environ['SHOTPATH'])
 
 def openJob():
-	open_( os.path.split(os.environ['JOBPATH'])[0] )
+	open_(os.path.split(os.environ['JOBPATH'])[0])
 
 def openElementsLib():
-	open_( os.environ['ELEMENTSLIBRARY'] )
+	open_(os.environ['ELEMENTSLIBRARY'])
 
 def openMaya():
-	open_( os.environ['MAYADIR'] )
+	open_(os.environ['MAYADIR'])
 
 def openMayaScenes():
-	open_( os.environ["MAYASCENESDIR"] )
+	open_(os.environ['MAYASCENESDIR'])
 
 def openMayaSourceimages():
-	open_( os.environ["MAYASOURCEIMAGESDIR"] )
+	open_(os.environ['MAYASOURCEIMAGESDIR'])
 
 def openMayaRenders():
-	open_( os.environ["MAYARENDERSDIR"] )
+	open_(os.environ['MAYARENDERSDIR'])
 
 def openMayaPlayblasts():
-	open_( os.environ["MAYAPLAYBLASTSDIR"] )
+	open_(os.environ['MAYAPLAYBLASTSDIR'])
 
 def openNuke():
-	open_( os.environ['NUKEDIR'] )
+	open_(os.environ['NUKEDIR'])
 
 def openNukeScripts():
-	open_( os.environ['NUKESCRIPTSDIR'] )
+	open_(os.environ['NUKESCRIPTSDIR'])
 
 def openNukeElements():
-	open_( os.environ['NUKEELEMENTSDIR'] )
+	open_(os.environ['NUKEELEMENTSDIR'])
 
 def openNukeRenders():
-	open_( os.environ['NUKERENDERSDIR'] )
+	open_(os.environ['NUKERENDERSDIR'])
 
 def openRealflowScenes():
-	open_( os.environ['REALFLOWSCENESDIR'] )
+	open_(os.environ['REALFLOWSCENESDIR'])
 

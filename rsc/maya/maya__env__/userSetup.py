@@ -29,8 +29,10 @@ batchMode = mc.about(batch=True)
 # Deploy custom tool shelves
 if not batchMode:
 	mayaShelvesDir = os.path.join(mc.about(preferences=True), 'prefs', 'shelves')
+	# mayaModulesDir = os.path.join(mc.about(preferences=True), 'modules')
 	try:
 		osOps.copyDirContents(os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'maya', 'shelves'), mayaShelvesDir)
+		# osOps.copyDirContents(os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'maya', 'modules'), mayaModulesDir)
 		# osOps.copyDirContents(os.path.join(os.environ['JOBPUBLISHDIR'], 'ma_shelves'), mayaShelvesDir)
 		verbose.gpsToolDeploy('OK')
 	except:

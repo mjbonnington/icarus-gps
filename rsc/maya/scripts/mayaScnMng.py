@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
-# [GPS] Maya Scene Management
+# [GPS] mayaScnMng.py
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2018 Gramercy Park Studios
 #
 # Maya scene management module.
 # These are wrapper functions for the main code which is in mayaOps.py
@@ -23,7 +23,7 @@ def newMayaScene():
 def openMayaScene():
 	""" Open a saved scene.
 	"""
-	mayaOps.openScene(os.environ["MAYASCENESDIR"], "Maya Files (*.ma *.mb)")
+	mayaOps.openScene(os.environ['MAYASCENESDIR'], "Maya Files (*.ma *.mb)")
 
 
 def openMayaRecentScene(recentFilePath):
@@ -37,7 +37,7 @@ def saveMayaScene():
 	"""
 	sceneName = mayaOps.getScene()
 	if sceneName:
-		ext = os.path.splitext(sceneName)[1][1:] # get the extension without a leading dot
+		ext = os.path.splitext(sceneName)[1][1:]  # Get the extension without leading dot
 		mayaOps.saveFile(ext)
 	else:
 		saveMayaSceneAs()
@@ -46,22 +46,22 @@ def saveMayaScene():
 def saveMayaSceneAs():
 	""" Save the scene under a new name.
 	"""
-	mayaOps.saveFileAs(os.environ["MAYASCENESDIR"], "Maya Files (*.ma *.mb)")
+	mayaOps.saveFileAs(os.environ['MAYASCENESDIR'], "Maya Files (*.ma *.mb)")
 
 
 # def mayaUpdate():
 # 	""" NOTE - this function doesn't appear to be called from anywhere. Could be redundant? Compare with mayaOps.update()
 # 	"""
 # 	import sys
-# 	shotDataPath = os.environ["SHOTDATA"]
+# 	shotDataPath = os.environ['SHOTDATA']
 # 	sys.path.append(shotDataPath)
 # 	import shotData, mayaOps
 # 	reload(shotData)
 # 	os.environ['STARTFRAME'], os.environ['ENDFRAME'] = shotData.frRange
 # 	os.environ['STARTFRAME'], os.environ['ENDFRAME'] = shotData.frRange
-# 	os.environ["FRAMERANGE"] = "%s-%s" % (shotData.frRange[0], shotData.frRange[1])
-# 	os.environ["RESOLUTIONX"] = shotData.res[0]
-# 	os.environ["RESOLUTIONY"] = shotData.res[1]
-# 	os.environ["RESOLUTION"] = "%sx%s" % (shotData.res[0], shotData.res[1])
+# 	#os.environ['FRAMERANGE'] = "%s-%s" % (shotData.frRange[0], shotData.frRange[1])
+# 	os.environ['RESOLUTIONX'] = shotData.res[0]
+# 	os.environ['RESOLUTIONY'] = shotData.res[1]
+# 	#os.environ['RESOLUTION'] = "%sx%s" % (shotData.res[0], shotData.res[1])
 # 	mayaOps.update()
 

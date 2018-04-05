@@ -1373,7 +1373,7 @@ Developers: %s
 
 						renderPassItem.setText(0, prefix)
 						renderPassItem.setText(1, fr_range)
-						if not fr_range == os.environ['FRAMERANGE']: # set red text for sequence mismatch
+						if not sequence.check(fr_range):  # Set red text for sequence mismatch
 							renderPassItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#f92672")))
 						renderPassItem.setText(2, ext.split('.', 1)[1])
 						renderPassItem.setText(3, osOps.relativePath(os.path.join(renderPath, renderLayerDir, renderPass), 'SHOTPATH'))
@@ -1407,7 +1407,7 @@ Developers: %s
 				dailyItem = QtWidgets.QTreeWidgetItem(self.ui.dailyPbl_treeWidget)
 				dailyItem.setText(0, '%s%s%s' % (prefix, padding, ext)) # dailyItem.setText(0, '%s.[%s]%s' % (prefix, fr_range, ext))
 				dailyItem.setText(1, fr_range)
-				if not fr_range == os.environ['FRAMERANGE']: # set red text for sequence mismatch
+				if not sequence.check(fr_range):  # Set red text for sequence mismatch
 					dailyItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#f92672")))
 				dailyItem.setText(2, self.dailyType)
 				dailyItem.setText(3, osOps.relativePath(path, 'SHOTPATH'))
@@ -2032,7 +2032,7 @@ def run_standalone():
 	# On Windows best results are obtained when this is disabled.
 	# On Mac, best option is unclear due to inconsistent results.
 	# Linux has not been tested.
-	if os.environ['IC_RUNNING_OS'] == 'Darwin':
+	if os.environ['IC_RUNNING_OS'] == "MacOS":
 		styles = QtWidgets.QStyleFactory.keys()
 		if 'Fusion' in styles:
 			app.setStyle('Fusion')  # Qt5
@@ -2046,7 +2046,7 @@ def run_standalone():
 			app.setStyleSheet(fh.read())
 
 	# Set application icon
-	app.setWindowIcon(QtGui.QIcon(os.path.join(os.environ['IC_FORMSDIR'], "rsc", "icarus.png")))
+	app.setWindowIcon(QtGui.QIcon(os.path.join(os.environ['IC_FORMSDIR'], 'rsc', 'icarus.png')))
 
 	# Instantiate main application class
 	icApp = IcarusApp()

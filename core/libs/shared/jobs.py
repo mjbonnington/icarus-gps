@@ -123,9 +123,9 @@ class Jobs(xmlData.XMLData):
 		os.environ['FILESYSTEMROOTOSX'] = str(self.osx_root)
 		os.environ['FILESYSTEMROOTLINUX'] = str(self.linux_root)
 
-		if os.environ['IC_RUNNING_OS'] == 'Windows':
+		if os.environ['IC_RUNNING_OS'] == "Windows":
 			os.environ['FILESYSTEMROOT'] = str(self.win_root)
-		elif os.environ['IC_RUNNING_OS'] == 'Darwin':
+		elif os.environ['IC_RUNNING_OS'] == "MacOS":
 			os.environ['FILESYSTEMROOT'] = str(self.osx_root)
 		else:
 			os.environ['FILESYSTEMROOT'] = str(self.linux_root)

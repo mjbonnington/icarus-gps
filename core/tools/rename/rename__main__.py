@@ -22,7 +22,7 @@ if __name__ == "__main__":
 
 # Use NSURL as a workaround to PySide/Qt4 behaviour for dragging and dropping
 # on macOS (test with PySide/Qt4 as PyQt5 works fine)
-# if os.environ['IC_RUNNING_OS'] == 'Darwin':
+# if os.environ['IC_RUNNING_OS'] == "MacOS":
 # 	from Foundation import NSURL
 
 from Qt import QtCore, QtGui, QtWidgets
@@ -648,7 +648,7 @@ class BatchRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			e.accept()
 			for url in e.mimeData().urls():
 				# # Workaround for macOS dragging and dropping
-				# if os.environ['IC_RUNNING_OS'] == 'Darwin':
+				# if os.environ['IC_RUNNING_OS'] == "MacOS":
 				# 	fname = str(NSURL.URLWithString_(str(url.toString())).filePathURL().path())
 				# else:
 				# 	fname = str(url.toLocalFile())

@@ -128,11 +128,11 @@ class TemplateUI(object):
 		"""
 		envOverride = ['MAYA', 'NUKE']
 		if os.environ['IC_ENV'] in envOverride:
-			if os.environ['IC_RUNNING_OS'] == 'Darwin':
+			if os.environ['IC_RUNNING_OS'] == "MacOS":
 				self.setWindowFlags(QtCore.Qt.WindowStaysOnBottomHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
 				self.show()
 			dialog = QtWidgets.QFileDialog.getOpenFileName(self, self.tr('Files'), startingDir, fileFilter)
-			if os.environ['IC_RUNNING_OS'] == 'Darwin':
+			if os.environ['IC_RUNNING_OS'] == "MacOS":
 				self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
 				self.show()
 		else:
@@ -151,11 +151,11 @@ class TemplateUI(object):
 		"""
 		envOverride = ['MAYA', 'NUKE']
 		if os.environ['IC_ENV'] in envOverride:
-			if os.environ['IC_RUNNING_OS'] == 'Darwin':
+			if os.environ['IC_RUNNING_OS'] == "MacOS":
 				self.setWindowFlags(QtCore.Qt.WindowStaysOnBottomHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
 				self.show()
 			dialog = QtWidgets.QFileDialog.getExistingDirectory(self, self.tr('Directory'), startingDir, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
-			if os.environ['IC_RUNNING_OS'] == 'Darwin':
+			if os.environ['IC_RUNNING_OS'] == "MacOS":
 				self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
 				self.show()
 		else:

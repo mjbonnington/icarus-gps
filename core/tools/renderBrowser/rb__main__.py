@@ -125,8 +125,8 @@ class renderBrowserApp(QtGui.QMainWindow):
 						#print iconPath
 						renderPassItem.setIcon(0, QtGui.QIcon(iconPath))
 						renderPassItem.setText(1, fr_range)
-						if not fr_range == os.environ['FRAMERANGE']: # set red text for sequence mismatch
-							renderPassItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#c33")))
+						if not seq.check(fr_range):  # Set red text for sequence mismatch
+							renderPassItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#f92672")))
 						renderPassItem.setText(2, ext.split('.', 1)[1])
 						#renderPassItem.setText(3, path)
 						renderPassItem.setText(3, osOps.relativePath(os.path.join(renderPath, renderLayerDir, renderPass), 'SHOTPATH'))
