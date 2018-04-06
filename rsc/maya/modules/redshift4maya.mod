@@ -1,4 +1,4 @@
-+ MAYAVERSION:2018 redshift4maya any %REDSHIFT_COREDATAPATH%
++ MAYAVERSION:2018 redshift4maya any ${REDSHIFT_COREDATAPATH}
 scripts: Plugins/Maya/Common/scripts
 icons: Plugins/Maya/Common/icons
 plug-ins: Plugins/Maya/2018/nt-x86-64
