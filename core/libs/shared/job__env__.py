@@ -149,6 +149,7 @@ def setEnv(job, shot, shotPath):
 
 
 	# Application specific environment variables...
+	# TODO: move out to individual modules
 
 	# Redshift centralised deployment
 	if getAppExecPath('Redshift') is not "":
