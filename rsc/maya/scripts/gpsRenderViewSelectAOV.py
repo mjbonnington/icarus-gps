@@ -1,5 +1,5 @@
 # [GPS] Render View Select AOV
-# v0.7.6
+# v0.7.7
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2015-2018 Gramercy Park Studios
@@ -23,7 +23,7 @@ import maya.cmds as mc
 import maya.mel as mel
 
 # Import custom modules
-import osOps
+#import osOps
 
 
 class SelectAOV():
@@ -46,9 +46,10 @@ class SelectAOV():
 		# Set up common render settings
 		pass
 
-		# --------------------------------------------------------------------
+		# ====================================================================
 		# Set up renderer-specific render settings
 
+		# --------------------------------------------------------------------
 		# Arnold...
 		if self.renderer == "arnold":
 			# Set output file type to exr
@@ -82,10 +83,13 @@ class SelectAOV():
 			mc.setAttr("defaultRenderGlobals.preMel", 'python("gpsRenderViewSelectAOV.SelectAOV().pre_render()")', type="string")
 			mc.setAttr("defaultRenderGlobals.postMel", 'python("gpsRenderViewSelectAOV.SelectAOV().post_render()")', type="string")
 
+		# --------------------------------------------------------------------
 		# Redshift...
 		elif self.renderer == "redshift":
 			# Set output file type to exr
 			mc.setAttr("redshiftOptions.imageFormat", 1)
+			mc.setAttr("redshiftOptions.exrForceMultilayer", 0)
+			mc.setAttr("redshiftOptions.noSaveImage", 0)
 
 			# Set file name prefix options
 			imageFilePrefix = mc.getAttr("defaultRenderGlobals.imageFilePrefix")
@@ -107,6 +111,7 @@ class SelectAOV():
 			mc.setAttr("redshiftOptions.preRenderMel", 'python("gpsRenderViewSelectAOV.SelectAOV().pre_render()")', type="string")
 			mc.setAttr("redshiftOptions.postRenderMel", 'python("gpsRenderViewSelectAOV.SelectAOV().post_render()")', type="string")
 
+		# --------------------------------------------------------------------
 		# MentalRay...
 		elif self.renderer == "mentalRay":
 			# Set output file type to exr
@@ -136,7 +141,7 @@ class SelectAOV():
 		else:
 			mc.error("The renderer '%s' is not supported" %self.renderer)
 
-		# --------------------------------------------------------------------
+		# ====================================================================
 
 		# Set up Maya Render View for 32-bit float / linear colour space
 		# (disable for Maya 2016 and later with Color Management enabled)
@@ -277,7 +282,8 @@ class SelectAOV():
 			else:
 				img = img_path[0].replace("<RenderPass>", aov)
 
-		img = osOps.absolutePath(img)
+		#img = os.path.normpath(os.path.expandvars(img)).replace("\\", "/")
+		#img = osOps.absolutePath(img)
 		print(img)
 
 		# Load the image
