@@ -109,11 +109,11 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		#self.addContextMenu(self.ui.frameListOptions_toolButton, "Reverse order", self.setFrameListPreset)
 		self.addContextMenu(self.ui.frameListOptions_toolButton, "Render first and last frames before others", self.setFrameListPreset)
 
-		#self.addContextMenu(self.ui.layerOptions_toolButton, "Clear", self.clearRenderLayers) # not yet implemented
+		self.addContextMenu(self.ui.layerOptions_toolButton, "Clear (from scene)", self.ui.layers_lineEdit.clear)
 		self.addContextMenu(self.ui.layerOptions_toolButton, "Current layer only", self.getCurrentRenderLayer)
 		self.addContextMenu(self.ui.layerOptions_toolButton, "All renderable layers", self.getRenderLayers)
 
-		#self.addContextMenu(self.ui.writeNodeOptions_toolButton, "Clear", self.clearRenderLayers) # not yet implemented
+		self.addContextMenu(self.ui.writeNodeOptions_toolButton, "Clear (all)", self.ui.writeNodes_lineEdit.clear)
 		self.addContextMenu(self.ui.writeNodeOptions_toolButton, "Selected write node only", self.getCurrentRenderLayer)
 		self.addContextMenu(self.ui.writeNodeOptions_toolButton, "All write nodes", self.getRenderLayers)
 
@@ -743,6 +743,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		submit_args['comment'] = self.ui.comment_lineEdit.text()
 		submit_args['username'] = os.environ['IC_USERNAME']
 
+		# Environment variables...
 		submit_args['envVars'] = ['JOB', 'SHOT', 'JOBPATH', 'SHOTPATH']
 
 		#############################
@@ -769,13 +770,19 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			submit_args['outputFilePrefix'] = self.getOutputFilePrefix()  # Maya submit only
 			submit_args['jobName'] = os.path.splitext(os.path.basename(scene))[0]
 			submit_args['renderLayers'] = self.ui.layers_lineEdit.text()
-			output = []  # Maya submit only
+
+			# File ouptut location(s)... (Maya submit only)
+			output = {}
 			if os.environ['IC_ENV'] == "MAYA":
 				for layer in self.getRenderableLayers():
-					output.append(os.path.split(self.getMayaRenderOutput(layer)))
+					# output.append(os.path.split(self.getMayaRenderOutput(layer)))
+					output[layer] = os.path.split(self.getMayaRenderOutput(layer))
 			submit_args['output'] = output
 
+			# Environment variables...
 			submit_args['envVars'] += ['MAYADIR', 'MAYASCENESDIR', 'MAYARENDERSDIR']
+			if submit_args['renderer'] == "redshift":
+				submit_args['envVars'] += ['REDSHIFT_COREDATAPATH']
 
 		elif self.jobType == "Nuke":
 			submit_args['plugin'] = "Nuke"  # Deadline only
@@ -791,12 +798,16 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			submit_args['jobName'] = os.path.splitext(os.path.basename(scene))[0]
 			#submit_args['writeNodes'] = self.ui.writeNodes_lineEdit.text()
 			submit_args['renderLayers'] = self.ui.writeNodes_lineEdit.text()
-			output = []  # Nuke submit only
+
+			# File ouptut location(s)... (Nuke submit only)
+			output = {}
 			if os.environ['IC_ENV'] == "NUKE":
 				for writeNode in self.getWriteNodes(selected=False):
-					output.append(os.path.split(self.getNukeRenderOutput(writeNode)))
+					# output.append(os.path.split(self.getNukeRenderOutput(writeNode)))
+					output[layer] = os.path.split(self.getNukeRenderOutput(writeNode))
 			submit_args['output'] = output
 
+			# Environment variables...
 			submit_args['envVars'] += ['NUKEDIR', 'NUKESCRIPTSDIR', 'NUKERENDERSDIR']
 
 		return submit_args

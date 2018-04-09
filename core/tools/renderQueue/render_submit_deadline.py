@@ -85,9 +85,15 @@ def generate_job_info_file(**kwargs):
 	fh.write("UserName=%s\n" %kwargs['username'])
 	if kwargs['priority'] == 0:
 		fh.write("InitialStatus=Suspended\n")
-	for i, outputPath in enumerate(kwargs['output']):
-		fh.write("OutputDirectory%d=%s\n" %(i, outputPath[0]))
-		fh.write("OutputFilename%d=%s\n" %(i, outputPath[1]))
+	if kwargs['renderLayer']:
+		outputPath = kwargs['output'][kwargs['renderLayer']]
+		fh.write("OutputDirectory0=%s\n" %outputPath[0])
+		fh.write("OutputFilename0=%s\n" %outputPath[1])
+	else:
+		for i, layer in enumerate(kwargs['output']):
+			outputPath = kwargs['output'][layer]
+			fh.write("OutputDirectory%d=%s\n" %(i, outputPath[0]))
+			fh.write("OutputFilename%d=%s\n" %(i, outputPath[1]))
 	# fh.write("IncludeEnvironment=True\n")
 	# fh.write("EnvironmentKeyValue0=USERNAME=\n")
 	# fh.write("EnvironmentKeyValue1=USERPROFILE=\n")

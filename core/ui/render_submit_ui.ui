@@ -7,7 +7,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>480</width>
+    <width>548</width>
     <height>512</height>
    </rect>
   </property>
@@ -22,7 +22,16 @@
     <property name="spacing">
      <number>0</number>
     </property>
-    <property name="margin">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
     <item>
@@ -154,9 +163,9 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>0</y>
-         <width>463</width>
-         <height>585</height>
+         <y>-301</y>
+         <width>639</width>
+         <height>848</height>
         </rect>
        </property>
        <property name="noBackground" stdset="0">
@@ -166,7 +175,16 @@
         <property name="spacing">
          <number>4</number>
         </property>
-        <property name="margin">
+        <property name="leftMargin">
+         <number>6</number>
+        </property>
+        <property name="topMargin">
+         <number>6</number>
+        </property>
+        <property name="rightMargin">
+         <number>6</number>
+        </property>
+        <property name="bottomMargin">
          <number>6</number>
         </property>
         <item>
@@ -190,7 +208,16 @@
            <property name="labelAlignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="margin">
+           <property name="leftMargin">
+            <number>8</number>
+           </property>
+           <property name="topMargin">
+            <number>8</number>
+           </property>
+           <property name="rightMargin">
+            <number>8</number>
+           </property>
+           <property name="bottomMargin">
             <number>8</number>
            </property>
            <item row="0" column="0">
@@ -299,7 +326,16 @@
            <property name="labelAlignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="margin">
+           <property name="leftMargin">
+            <number>8</number>
+           </property>
+           <property name="topMargin">
+            <number>8</number>
+           </property>
+           <property name="rightMargin">
+            <number>8</number>
+           </property>
+           <property name="bottomMargin">
             <number>8</number>
            </property>
            <item row="2" column="0">
@@ -460,6 +496,9 @@
                <property name="text">
                 <string/>
                </property>
+               <property name="placeholderText">
+                <string>&lt;From Scene&gt;</string>
+               </property>
                <property name="xmlTag" stdset="0">
                 <string>renderLayers</string>
                </property>
@@ -540,7 +579,16 @@ QToolButton:pressed, QToolButton:checked:pressed {
            <property name="labelAlignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="margin">
+           <property name="leftMargin">
+            <number>8</number>
+           </property>
+           <property name="topMargin">
+            <number>8</number>
+           </property>
+           <property name="rightMargin">
+            <number>8</number>
+           </property>
+           <property name="bottomMargin">
             <number>8</number>
            </property>
            <item row="1" column="0">
@@ -562,6 +610,9 @@ QToolButton:pressed, QToolButton:checked:pressed {
                </property>
                <property name="text">
                 <string/>
+               </property>
+               <property name="placeholderText">
+                <string>&lt;All&gt;</string>
                </property>
                <property name="xmlTag" stdset="0">
                 <string>writeNodes</string>
@@ -741,7 +792,16 @@ QToolButton:pressed, QToolButton:checked:pressed {
            <property name="labelAlignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="margin">
+           <property name="leftMargin">
+            <number>8</number>
+           </property>
+           <property name="topMargin">
+            <number>8</number>
+           </property>
+           <property name="rightMargin">
+            <number>8</number>
+           </property>
+           <property name="bottomMargin">
             <number>8</number>
            </property>
            <item row="0" column="0">
@@ -763,6 +823,9 @@ QToolButton:pressed, QToolButton:checked:pressed {
                </property>
                <property name="text">
                 <string/>
+               </property>
+               <property name="placeholderText">
+                <string>&lt;Auto Detect&gt;</string>
                </property>
                <property name="xmlTag" stdset="0">
                 <string>frames</string>
@@ -899,7 +962,16 @@ QToolButton:pressed, QToolButton:checked:pressed {
            <property name="labelAlignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
-           <property name="margin">
+           <property name="leftMargin">
+            <number>8</number>
+           </property>
+           <property name="topMargin">
+            <number>8</number>
+           </property>
+           <property name="rightMargin">
+            <number>8</number>
+           </property>
+           <property name="bottomMargin">
             <number>8</number>
            </property>
            <item row="2" column="0">
@@ -1126,7 +1198,16 @@ QToolButton:pressed, QToolButton:checked:pressed {
       <property name="spacing">
        <number>2</number>
       </property>
-      <property name="margin">
+      <property name="leftMargin">
+       <number>6</number>
+      </property>
+      <property name="topMargin">
+       <number>6</number>
+      </property>
+      <property name="rightMargin">
+       <number>6</number>
+      </property>
+      <property name="bottomMargin">
        <number>6</number>
       </property>
       <item>
