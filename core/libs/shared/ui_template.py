@@ -543,7 +543,7 @@ class TemplateUI(object):
 		#self.setFixedHeight(self.sizeHint().height())  # Resize window
 
 
-	def populateComboBox(self, comboBox, contents, replace=True):
+	def populateComboBox(self, comboBox, contents, replace=True, addEmptyItems=False):
 		""" Use a list (contents) to populate a combo box.
 			If 'replace' is true, the existing items will be replaced,
 			otherwise the contents will be appended to the existing items.
@@ -558,8 +558,11 @@ class TemplateUI(object):
 		# Populate menu
 		if contents:
 			for item in contents:
-				if item:
+				if addEmptyItems:
 					comboBox.addItem(item)
+				else:
+					if item:
+						comboBox.addItem(item)
 
 		# Set to current value
 		index = comboBox.findText(current)

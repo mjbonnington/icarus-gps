@@ -80,6 +80,7 @@
     <file>rsc/icon_productionBoard.png</file>
   </qresource>
   <qresource>
+    <file>images/popup_indicator.png</file>
     <file>images/branch-end.png</file>
     <file>images/branch-more.png</file>
     <file>images/vline.png</file>

@@ -385,7 +385,7 @@ QToolButton::menu-button {
 }*/
 
 QToolButton::menu-indicator {
-	image: url(:/images/arrow_down.png);
+	image: url(:/images/popup_indicator.png);
 	subcontrol-position: right bottom;
 	subcontrol-origin: padding;
 	top: -2px;
@@ -393,7 +393,7 @@ QToolButton::menu-indicator {
 }
 
 QToolButton::menu-indicator:disabled {
-	image: url(:/images/arrow_down_disabled.png);
+	image: url(:/images/popup_indicator_disabled.png);
 }
 
 /* End Tool Button */

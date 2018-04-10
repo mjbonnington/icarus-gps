@@ -85,6 +85,8 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.nukeScript_comboBox.currentIndexChanged.connect(self.applySettings)
 		self.ui.nukeScriptBrowse_toolButton.clicked.connect(self.sceneBrowse)
 
+		self.ui.getCameras_toolButton.clicked.connect(self.getCameras)
+
 		# self.ui.layers_groupBox.toggled.connect(self.getRenderLayers)
 		# self.ui.layers_lineEdit.editingFinished.connect(self.checkRenderLayers)
 
@@ -109,7 +111,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		#self.addContextMenu(self.ui.frameListOptions_toolButton, "Reverse order", self.setFrameListPreset)
 		self.addContextMenu(self.ui.frameListOptions_toolButton, "Render first and last frames before others", self.setFrameListPreset)
 
-		self.addContextMenu(self.ui.layerOptions_toolButton, "Clear (from scene)", self.ui.layers_lineEdit.clear)
+		self.addContextMenu(self.ui.layerOptions_toolButton, "Clear (auto-detect from scene at render time)", self.ui.layers_lineEdit.clear)
 		self.addContextMenu(self.ui.layerOptions_toolButton, "Current layer only", self.getCurrentRenderLayer)
 		self.addContextMenu(self.ui.layerOptions_toolButton, "All renderable layers", self.getRenderLayers)
 
@@ -152,6 +154,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		if os.environ['IC_ENV'] == "STANDALONE":
 			self.jobType = userPrefs.query('rendersubmit', 'lastrenderjobtype', default=self.ui.jobType_comboBox.currentText())
 			self.ui.jobType_comboBox.setCurrentIndex(self.ui.jobType_comboBox.findText(self.jobType))
+			self.ui.getCameras_toolButton.setEnabled(False)
 			self.ui.layerOptions_toolButton.setEnabled(False)
 			self.ui.writeNodeOptions_toolButton.setEnabled(False)
 			self.setJobType()
@@ -177,8 +180,11 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 			self.ui.jobType_label.setEnabled(False)
 			self.ui.jobType_comboBox.setEnabled(False)
-			self.ui.mayaSceneBrowse_toolButton.hide()
+			self.ui.mayaScene_label.setEnabled(False)
+			self.ui.mayaScene_comboBox.setEnabled(False)
+			self.ui.mayaSceneBrowse_toolButton.setEnabled(False)
 
+			self.getCameras()
 			self.getRenderLayers()
 			self.getRenderers()
 
@@ -451,6 +457,27 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.frames_lineEdit.setText("%d-%d" %(start_frame, end_frame))
 
 
+	def getRenderableCameras(self):
+		""" Returns list of renderable cameras in the scene.
+		"""
+		if os.environ['IC_ENV'] == "MAYA":
+			noSelectText = ""
+			camera_list = [noSelectText, ]
+			#cameras = mc.ls(cameras=True)
+			persp_cameras = mc.listCameras(perspective=True)
+			ortho_cameras = mc.listCameras(orthographic=True)
+			cameras = camera_list + persp_cameras + ortho_cameras
+			return cameras
+
+			# for camera in cameras:
+			# 	if mc.getAttr(camera+'.renderable'):
+			# 		camera_list.insert(0, camera)
+			# 	else:
+			# 		camera_list.append(camera)
+
+			# return camera_list
+
+
 	def getCurrentRenderLayer(self):
 		""" Get current Maya render layer or selected Nuke write nodes &
 			populate widget.
@@ -499,6 +526,13 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		rendererLs = [renderers]
 		# print(rendererLs)
 		self.populateComboBox(self.ui.renderer_comboBox, rendererLs)
+
+
+	def getCameras(self):
+		""" Get Maya cameras & populate combo box.
+		"""
+		cameras = self.getRenderableCameras()
+		self.populateComboBox(self.ui.camera_comboBox, cameras, addEmptyItems=True)
 
 
 	# @QtCore.Slot()
@@ -763,6 +797,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			submit_args['flags'] = self.ui.flags_lineEdit.text()  # RQ only
 			submit_args['version'] = os.environ['MAYA_VER']  #jobData.getAppVersion('Maya')
 			submit_args['renderer'] = self.ui.renderer_comboBox.currentText()  # Maya submit only
+			submit_args['camera'] = self.ui.camera_comboBox.currentText()
 			scene = self.makePathAbsolute(self.ui.mayaScene_comboBox.currentText()).replace("\\", "/")
 			submit_args['scene'] = scene
 			submit_args['mayaProject'] = self.getMayaProject(scene)

@@ -16,10 +16,11 @@ import socket
 import sys
 import time
 
-# Initialise Icarus environment
-# sys.path.append(os.environ['IC_WORKINGDIR'])
-# import env__init__
-# env__init__.setEnv()
+# Initialise Icarus environment - TEMP BODGE TO ENABLE STANDALONE APP
+if __name__ == "__main__":
+	sys.path.append(os.environ['IC_WORKINGDIR'])
+	import env__init__
+	env__init__.setEnv()
 
 from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
@@ -33,10 +34,6 @@ import verbose
 # ----------------------------------------------------------------------------
 # Configuration
 # ----------------------------------------------------------------------------
-
-VENDOR = "Gramercy Park Studios"
-COPYRIGHT = "(c) 2016-2018"
-DEVELOPERS = "Mike Bonnington"
 
 # Set window title and object names
 WINDOW_TITLE = "Render Queue"

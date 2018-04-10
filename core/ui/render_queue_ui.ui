@@ -15,7 +15,16 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_5">
-    <property name="margin">
+    <property name="leftMargin">
+     <number>8</number>
+    </property>
+    <property name="topMargin">
+     <number>8</number>
+    </property>
+    <property name="rightMargin">
+     <number>8</number>
+    </property>
+    <property name="bottomMargin">
      <number>8</number>
     </property>
     <item>
@@ -27,13 +36,25 @@
        <enum>QFrame::Raised</enum>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_10">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <item>
         <widget class="QGroupBox" name="view_groupBox">
          <property name="title">
           <string>Queue</string>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <property name="leftMargin">
@@ -115,6 +136,9 @@
         <widget class="QGroupBox" name="job_groupBox">
          <property name="title">
           <string>Job</string>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <property name="leftMargin">
@@ -347,6 +371,9 @@
          <property name="title">
           <string>Task</string>
          </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <property name="leftMargin">
            <number>6</number>
@@ -450,6 +477,9 @@
        <property name="animated">
         <bool>true</bool>
        </property>
+       <property name="allColumnsShowFocus">
+        <bool>true</bool>
+       </property>
        <property name="headerHidden">
         <bool>false</bool>
        </property>
@@ -524,7 +554,16 @@
          <string>Slave Info</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_4">
-         <property name="margin">
+         <property name="leftMargin">
+          <number>6</number>
+         </property>
+         <property name="topMargin">
+          <number>6</number>
+         </property>
+         <property name="rightMargin">
+          <number>6</number>
+         </property>
+         <property name="bottomMargin">
           <number>6</number>
          </property>
          <item>

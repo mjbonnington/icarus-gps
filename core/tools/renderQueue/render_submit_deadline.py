@@ -132,6 +132,7 @@ def generate_plugin_info_file(**kwargs):
 	elif kwargs['plugin'] == "MayaBatch":
 		fh.write("Version=%s\n" %kwargs['version'])
 		fh.write("Build=64bit\n")
+		fh.write("Camera=%s\n" %kwargs['camera'])
 		fh.write("Renderer=%s\n" %kwargs['renderer'])
 		fh.write("StrictErrorChecking=1\n")
 		fh.write("ProjectPath=%s\n" %kwargs['mayaProject'])
