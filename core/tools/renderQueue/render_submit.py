@@ -183,6 +183,9 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.mayaScene_label.setEnabled(False)
 			self.ui.mayaScene_comboBox.setEnabled(False)
 			self.ui.mayaSceneBrowse_toolButton.setEnabled(False)
+			self.ui.renderer_label.setEnabled(False)
+			self.ui.renderer_comboBox.setEnabled(False)
+			self.ui.useRenderSetup_checkBox.setEnabled(False)
 
 			self.getCameras()
 			self.getRenderLayers()
@@ -498,6 +501,11 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			layerStr = ", ".join(n for n in self.getRenderableLayers())
 			self.ui.layers_lineEdit.setText(layerStr)
 
+			# Set Render Setup / Legacy Render Layers option
+			checkBox = self.ui.useRenderSetup_checkBox
+			checkBox.setChecked(not self.getCheckBoxValue(checkBox))  # Toggle value to force update
+			checkBox.setChecked(mc.optionVar(query="renderSetupEnable"))
+
 		elif os.environ['IC_ENV'] == "NUKE":
 			writeNodeStr = ", ".join(n for n in self.getWriteNodes(selected=False))
 			self.ui.writeNodes_lineEdit.setText(writeNodeStr)
@@ -624,16 +632,22 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		return renderer
 
 
-	def getRenderableLayers(self):
+	def getRenderableLayers(self, allLayers=False):
 		""" Get Maya render layers that are enabled (renderable).
+			If 'allLayers' is True, return all (not just renderable) layers.
 		"""
 		layers = mc.ls(type='renderLayer')
-		renderableLayers = []
-		for layer in layers:
-			if mc.getAttr(layer+'.renderable'):
-				renderableLayers.append(layer)
 
-		return renderableLayers
+		if(allLayers):
+			return layers
+
+		else:
+			renderableLayers = []
+			for layer in layers:
+				if mc.getAttr(layer+'.renderable'):
+					renderableLayers.append(layer)
+
+			return renderableLayers
 
 
 	def getWriteNodes(self, selected=True):
@@ -692,7 +706,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		"""
 		try:
 			path = mc.workspace(expandName=mc.workspace(fileRuleEntry="images"))
-		except:
+		except:  # Make a guess
 			#path = ""
 			path = osOps.absolutePath("$MAYADIR/renders")
 
@@ -704,11 +718,59 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		"""
 		try:
 			prefix = mc.getAttr("defaultRenderGlobals.imageFilePrefix")
-		except:
+		except:  # Make a guess
 			#prefix = ""
 			prefix = "%s/<Scene>/<RenderLayer>/%s_<RenderLayer>" %(os.environ['IC_USERNAME'], os.environ['SHOT'])
 
 		return prefix
+
+
+	def guessOutputs(self, path, prefix, scene=None, camera=None, layers=[], 
+		             useRenderSetup=False):
+		""" Parse Maya's output file prefix and return a full path.
+			This is a bit nasty tbh.
+		"""
+		outputs = {}
+
+		for layer in layers:
+			prefix2 = prefix
+
+			if useRenderSetup:
+				if layer.startswith('rs_'):
+					layer2 = layer.replace('rs_', '', 1)
+			else:
+				layer2 = layer
+
+			# Replace tokens...
+			if scene:
+				prefix2 = prefix2.replace('<Scene>', scene)
+			if layer2:
+				prefix2 = prefix2.replace('<RenderLayer>', layer2)
+			if camera:
+				prefix2 = prefix2.replace('<Camera>', camera)
+
+			filepath = osOps.absolutePath("%s/%s.####.exr" %(path, prefix2))
+			outputs[layer] = os.path.split(filepath)
+
+		return outputs
+
+
+	def getOutputs(self):
+		""" Get the file output(s) from a render. Return as a dictionary with
+			the render layer / write node name as the key, and the value as a
+			tuple containing the dirname and basename.
+		"""
+		outputs = {}
+
+		if os.environ['IC_ENV'] == "MAYA":
+			for entry in self.getRenderableLayers(allLayers=True):
+				outputs[entry] = os.path.split(self.getMayaRenderOutput(entry))
+
+		elif os.environ['IC_ENV'] == "NUKE":
+			for entry in self.getWriteNodes(selected=False):
+				outputs[entry] = os.path.split(self.getNukeRenderOutput(entry))
+
+		return outputs
 
 
 	def submit(self):
@@ -735,7 +797,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 					frames_msg = ""
 				else:
 					submit_args['frames'] = "Unknown"
-					frames_msg = "No frame range specified.\n"
+					frames_msg = "Warning: No frame range specified.\n"
 			job_info_msg = "Name:\t%s\nType:\t%s\nFrames:\t%s\nTask size:\t%s\nPriority:\t%s\n" %(submit_args['jobName'], self.jobType, submit_args['frames'], submit_args['taskSize'], submit_args['priority'])
 
 			# Show confirmation dialog
@@ -780,9 +842,9 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Environment variables...
 		submit_args['envVars'] = ['JOB', 'SHOT', 'JOBPATH', 'SHOTPATH']
 
-		#############################
-		# Renderer-specific options #
-		#############################
+		################################
+		# Application-specific options #
+		################################
 
 		if self.jobType == "Generic":
 			submit_args['plugin'] = "CommandLine"  # Deadline only
@@ -791,6 +853,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			submit_args['executable'] = command
 			submit_args['flags'] = self.ui.flags_lineEdit.text()
 			submit_args['renderLayers'] = None
+
 		elif self.jobType == "Maya":
 			submit_args['plugin'] = "MayaBatch"  # Deadline only
 			submit_args['renderCmdEnvVar'] = 'MAYARENDERVERSION'  # RQ only
@@ -804,15 +867,20 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			submit_args['outputFilePath'] = self.getOutputFilePath()  # Maya submit only
 			submit_args['outputFilePrefix'] = self.getOutputFilePrefix()  # Maya submit only
 			submit_args['jobName'] = os.path.splitext(os.path.basename(scene))[0]
+			submit_args['useRenderSetup'] = self.getCheckBoxValue(self.ui.useRenderSetup_checkBox)
 			submit_args['renderLayers'] = self.ui.layers_lineEdit.text()
 
-			# File ouptut location(s)... (Maya submit only)
-			output = {}
-			if os.environ['IC_ENV'] == "MAYA":
-				for layer in self.getRenderableLayers():
-					# output.append(os.path.split(self.getMayaRenderOutput(layer)))
-					output[layer] = os.path.split(self.getMayaRenderOutput(layer))
-			submit_args['output'] = output
+			# File output location(s)... (Maya submit only)
+			if os.environ['IC_ENV'] == "STANDALONE":
+				submit_args['output'] = self.guessOutputs(
+					submit_args['outputFilePath'], 
+					submit_args['outputFilePrefix'], 
+					submit_args['jobName'], 
+					submit_args['camera'], 
+					submit_args['renderLayers'].split(", "), 
+					submit_args['useRenderSetup'])
+			else:
+				submit_args['output'] = self.getOutputs()
 
 			# Environment variables...
 			submit_args['envVars'] += ['MAYADIR', 'MAYASCENESDIR', 'MAYARENDERSDIR']
@@ -834,13 +902,8 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			#submit_args['writeNodes'] = self.ui.writeNodes_lineEdit.text()
 			submit_args['renderLayers'] = self.ui.writeNodes_lineEdit.text()
 
-			# File ouptut location(s)... (Nuke submit only)
-			output = {}
-			if os.environ['IC_ENV'] == "NUKE":
-				for writeNode in self.getWriteNodes(selected=False):
-					# output.append(os.path.split(self.getNukeRenderOutput(writeNode)))
-					output[layer] = os.path.split(self.getNukeRenderOutput(writeNode))
-			submit_args['output'] = output
+			# File output location(s)... (Nuke submit only)
+			submit_args['output'] = self.getOutputs()
 
 			# Environment variables...
 			submit_args['envVars'] += ['NUKEDIR', 'NUKESCRIPTSDIR', 'NUKERENDERSDIR']

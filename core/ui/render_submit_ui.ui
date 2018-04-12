@@ -7,7 +7,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>548</width>
+    <width>400</width>
     <height>512</height>
    </rect>
   </property>
@@ -45,7 +45,7 @@
       <property name="lineWidth">
        <number>0</number>
       </property>
-      <layout class="QGridLayout" name="gridLayout">
+      <layout class="QGridLayout" name="header_gridLayout">
        <property name="leftMargin">
         <number>12</number>
        </property>
@@ -164,8 +164,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>531</width>
-         <height>608</height>
+         <width>383</width>
+         <height>596</height>
         </rect>
        </property>
        <property name="noBackground" stdset="0">
@@ -179,13 +179,13 @@
          <number>6</number>
         </property>
         <property name="topMargin">
-         <number>6</number>
+         <number>0</number>
         </property>
         <property name="rightMargin">
          <number>6</number>
         </property>
         <property name="bottomMargin">
-         <number>6</number>
+         <number>0</number>
         </property>
         <item>
          <widget class="QGroupBox" name="generic_groupBox">
@@ -396,6 +396,66 @@
              </item>
             </layout>
            </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="camera_label">
+             <property name="text">
+              <string>Camera:</string>
+             </property>
+             <property name="buddy">
+              <cstring>camera_comboBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <layout class="QHBoxLayout" name="camera_horizontalLayout">
+             <item>
+              <widget class="QComboBox" name="camera_comboBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="editable">
+                <bool>false</bool>
+               </property>
+               <property name="insertPolicy">
+                <enum>QComboBox::InsertAtTop</enum>
+               </property>
+               <property name="xmlTag" stdset="0">
+                <string>camera</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="getCameras_toolButton">
+               <property name="toolTip">
+                <string>Get camaras from Maya</string>
+               </property>
+               <property name="text">
+                <string>Get Cameras</string>
+               </property>
+               <property name="icon">
+                <iconset resource="rsc.qrc">
+                 <normaloff>:/rsc/rsc/icon_refresh.png</normaloff>
+                 <disabledoff>:/rsc/rsc/icon_refresh_disabled.png</disabledoff>:/rsc/rsc/icon_refresh.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>15</width>
+                 <height>15</height>
+                </size>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonIconOnly</enum>
+               </property>
+               <property name="noBackground" stdset="0">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
            <item row="2" column="0">
             <widget class="QLabel" name="layers_label">
              <property name="text">
@@ -476,12 +536,6 @@
             <layout class="QHBoxLayout" name="renderer_horizontalLayout">
              <item>
               <widget class="QComboBox" name="renderer_comboBox">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
                <property name="xmlTag" stdset="0">
                 <string>renderer</string>
                </property>
@@ -528,75 +582,15 @@
               </widget>
              </item>
              <item>
-              <spacer name="renderer_horizontalSpacer">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="camera_label">
-             <property name="text">
-              <string>Camera:</string>
-             </property>
-             <property name="buddy">
-              <cstring>camera_comboBox</cstring>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <layout class="QHBoxLayout" name="camera_horizontalLayout">
-             <item>
-              <widget class="QComboBox" name="camera_comboBox">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="editable">
-                <bool>false</bool>
-               </property>
-               <property name="insertPolicy">
-                <enum>QComboBox::InsertAtTop</enum>
-               </property>
-               <property name="xmlTag" stdset="0">
-                <string>camera</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QToolButton" name="getCameras_toolButton">
+              <widget class="QCheckBox" name="useRenderSetup_checkBox">
                <property name="toolTip">
-                <string>Get camaras from Maya</string>
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use the new Render Setup system introduced in Maya 2016 Extension 2. Uncheck to use the legacy Render Layer system.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="text">
-                <string>Get Cameras</string>
+                <string>Use Render Setup</string>
                </property>
-               <property name="icon">
-                <iconset resource="rsc.qrc">
-                 <normaloff>:/rsc/rsc/icon_refresh.png</normaloff>
-                 <disabledoff>:/rsc/rsc/icon_refresh_disabled.png</disabledoff>:/rsc/rsc/icon_refresh.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>15</width>
-                 <height>15</height>
-                </size>
-               </property>
-               <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonIconOnly</enum>
-               </property>
-               <property name="noBackground" stdset="0">
-                <bool>false</bool>
+               <property name="xmlTag" stdset="0">
+                <string>useRenderSetup</string>
                </property>
               </widget>
              </item>
@@ -1282,7 +1276,6 @@
   <tabstop>mayaSceneBrowse_toolButton</tabstop>
   <tabstop>layers_lineEdit</tabstop>
   <tabstop>layerOptions_toolButton</tabstop>
-  <tabstop>renderer_comboBox</tabstop>
   <tabstop>nukeScript_comboBox</tabstop>
   <tabstop>nukeScriptBrowse_toolButton</tabstop>
   <tabstop>writeNodes_lineEdit</tabstop>
@@ -1314,10 +1307,10 @@
    <hints>
     <hint type="sourcelabel">
      <x>96</x>
-     <y>585</y>
+     <y>579</y>
     </hint>
     <hint type="destinationlabel">
-     <x>446</x>
+     <x>366</x>
      <y>585</y>
     </hint>
    </hints>
@@ -1329,12 +1322,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>446</x>
+     <x>366</x>
      <y>585</y>
     </hint>
     <hint type="destinationlabel">
      <x>96</x>
-     <y>585</y>
+     <y>579</y>
     </hint>
    </hints>
   </connection>
@@ -1349,8 +1342,8 @@
      <y>467</y>
     </hint>
     <hint type="destinationlabel">
-     <x>446</x>
-     <y>466</y>
+     <x>366</x>
+     <y>468</y>
     </hint>
    </hints>
   </connection>
@@ -1361,8 +1354,8 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>446</x>
-     <y>466</y>
+     <x>366</x>
+     <y>468</y>
     </hint>
     <hint type="destinationlabel">
      <x>140</x>

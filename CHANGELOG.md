@@ -1,6 +1,7 @@
-v0.9.12 (YYYY-MM_DD)
+v0.9.12 (YYYY-MM-DD)
 -	[Icarus] Modified Redshift centralised deployment to use Maya modules.
 -	[Maya] Added a simple script to list all attribute overrides on the current render layer.
+-	[Render Queue] Added support for the new Render Setup system introduced in Maya 2016 Extension 2.
 -	[Render Queue] Added camera option to unified render submitter dialog.
 
 v0.9.11 (2018-04-03)

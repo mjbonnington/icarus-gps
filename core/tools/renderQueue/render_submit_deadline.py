@@ -139,9 +139,9 @@ def generate_plugin_info_file(**kwargs):
 		fh.write("OutputFilePath=%s\n" %kwargs['outputFilePath'])
 		fh.write("OutputFilePrefix=%s\n" %kwargs['outputFilePrefix'])
 		fh.write("SceneFile=%s\n" %kwargs['scene'])
+		fh.write("UseLegacyRenderLayers=%s\n" %(not kwargs['useRenderSetup']))
 		if kwargs['renderLayer']:
 			fh.write("UsingRenderLayers=1\n")
-			fh.write("UseLegacyRenderLayers=1\n")
 			fh.write("RenderLayer=%s\n" %kwargs['renderLayer'])
 
 	# Nuke -------------------------------------------------------------------

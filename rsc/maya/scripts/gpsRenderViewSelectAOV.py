@@ -88,8 +88,11 @@ class SelectAOV():
 		elif self.renderer == "redshift":
 			# Set output file type to exr
 			mc.setAttr("redshiftOptions.imageFormat", 1)
-			mc.setAttr("redshiftOptions.exrForceMultilayer", 0)
 			mc.setAttr("redshiftOptions.noSaveImage", 0)
+			try:
+				mc.setAttr("redshiftOptions.exrForceMultilayer", 0)
+			except:
+				print("Force multichannel EXR setting not supported by this version of Redshift.")
 
 			# Set file name prefix options
 			imageFilePrefix = mc.getAttr("defaultRenderGlobals.imageFilePrefix")
