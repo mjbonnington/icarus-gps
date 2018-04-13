@@ -16,6 +16,7 @@ import traceback
 
 # Import custom modules
 import osOps
+import render_common
 import verbose
 
 
@@ -41,25 +42,6 @@ def get_groups():
 		return None
 
 
-def settings_filename(scene, suffix=""):
-	""" Determine the path to the settings file based on the full path of the
-		scene file. N.B. This function is duplicated in render_submit.py
-	"""
-	if os.path.isfile(scene):
-		sceneDir, sceneFile = os.path.split(scene)
-		settingsDir = os.path.join(sceneDir, os.environ['IC_METADATA'])
-		settingsFile = osOps.sanitize(sceneFile, replace='_') + suffix
-
-		# Create settings directory if it doesn't exist
-		if not os.path.isdir(settingsDir):
-			osOps.createDir(settingsDir)
-
-		return os.path.join(settingsDir, settingsFile)
-
-	else:
-		return False
-
-
 def generate_job_info_file(**kwargs):
 	""" Generate job submission info file.
 	"""
@@ -67,44 +49,43 @@ def generate_job_info_file(**kwargs):
 		jobInfoFileSuffix = "_%s_deadlineJobInfo.txt" %kwargs['renderLayer']
 	else:
 		jobInfoFileSuffix = "_deadlineJobInfo.txt"
-	jobInfoFile = settings_filename(kwargs['scene'], suffix=jobInfoFileSuffix)
+	jobInfoFile = render_common.settings_file(kwargs['scene'], suffix=jobInfoFileSuffix)
 
-	fh = open(jobInfoFile, 'w')
-	fh.write("Plugin=%s\n" %kwargs['plugin'])
-	if kwargs['renderLayer']:
-		fh.write("Name=%s - %s\n" %(kwargs['jobName'], kwargs['renderLayer']))
-		fh.write("BatchName=%s\n" %kwargs['jobName'])
-	else:
-		fh.write("Name=%s\n" %kwargs['jobName'])
-	fh.write("Comment=%s\n" %kwargs['comment'])
-	fh.write("Frames=%s\n" %kwargs['frames'])
-	fh.write("ChunkSize=%s\n" %kwargs['taskSize'])
-	fh.write("Pool=%s\n" %kwargs['pool'])
-	fh.write("Group=%s\n" %kwargs['group'])
-	fh.write("Priority=%s\n" %kwargs['priority'])
-	fh.write("UserName=%s\n" %kwargs['username'])
-	if kwargs['priority'] == 0:
-		fh.write("InitialStatus=Suspended\n")
-	if kwargs['renderLayer']:
-		outputPath = kwargs['output'][kwargs['renderLayer']]
-		fh.write("OutputDirectory0=%s\n" %outputPath[0])
-		fh.write("OutputFilename0=%s\n" %outputPath[1])
-	else:
-		for i, layer in enumerate(kwargs['output']):
-			outputPath = kwargs['output'][layer]
-			fh.write("OutputDirectory%d=%s\n" %(i, outputPath[0]))
-			fh.write("OutputFilename%d=%s\n" %(i, outputPath[1]))
-	# fh.write("IncludeEnvironment=True\n")
-	# fh.write("EnvironmentKeyValue0=USERNAME=\n")
-	# fh.write("EnvironmentKeyValue1=USERPROFILE=\n")
-	# fh.write("EnvironmentKeyValue2=LOCALAPPDATA=\n")
-	# fh.write("EnvironmentKeyValue3=TEMP=\n")
-	# fh.write("EnvironmentKeyValue3=TMP=\n")
-	for i, envVar in enumerate(kwargs['envVars']):
-		fh.write("EnvironmentKeyValue%d=%s=%s\n" %(i, envVar, os.environ[envVar]))
-	fh.write("ExtraInfo0=%s\n" %os.environ['JOB'])
-	fh.write("ExtraInfo1=%s\n" %os.environ['SHOT'])
-	fh.close()
+	with open(jobInfoFile, 'w') as fh:
+		fh.write("Plugin=%s\n" %kwargs['plugin'])
+		if kwargs['renderLayer']:
+			fh.write("Name=%s - %s\n" %(kwargs['jobName'], kwargs['renderLayer']))
+			fh.write("BatchName=%s\n" %kwargs['jobName'])
+		else:
+			fh.write("Name=%s\n" %kwargs['jobName'])
+		fh.write("Comment=%s\n" %kwargs['comment'])
+		fh.write("Frames=%s\n" %kwargs['frames'])
+		fh.write("ChunkSize=%s\n" %kwargs['taskSize'])
+		fh.write("Pool=%s\n" %kwargs['pool'])
+		fh.write("Group=%s\n" %kwargs['group'])
+		fh.write("Priority=%s\n" %kwargs['priority'])
+		fh.write("UserName=%s\n" %kwargs['username'])
+		if kwargs['priority'] == 0:
+			fh.write("InitialStatus=Suspended\n")
+		if kwargs['renderLayer']:
+			outputPath = kwargs['output'][kwargs['renderLayer']]
+			fh.write("OutputDirectory0=%s\n" %outputPath[0])
+			fh.write("OutputFilename0=%s\n" %outputPath[1])
+		else:
+			for i, layer in enumerate(kwargs['output']):
+				outputPath = kwargs['output'][layer]
+				fh.write("OutputDirectory%d=%s\n" %(i, outputPath[0]))
+				fh.write("OutputFilename%d=%s\n" %(i, outputPath[1]))
+		# fh.write("IncludeEnvironment=True\n")
+		# fh.write("EnvironmentKeyValue0=USERNAME=\n")
+		# fh.write("EnvironmentKeyValue1=USERPROFILE=\n")
+		# fh.write("EnvironmentKeyValue2=LOCALAPPDATA=\n")
+		# fh.write("EnvironmentKeyValue3=TEMP=\n")
+		# fh.write("EnvironmentKeyValue3=TMP=\n")
+		for i, envVar in enumerate(kwargs['envVars']):
+			fh.write("EnvironmentKeyValue%d=%s=%s\n" %(i, envVar, os.environ[envVar]))
+		fh.write("ExtraInfo0=%s\n" %os.environ['JOB'])
+		fh.write("ExtraInfo1=%s\n" %os.environ['SHOT'])
 
 	return jobInfoFile
 
@@ -116,46 +97,45 @@ def generate_plugin_info_file(**kwargs):
 		pluginInfoFileSuffix = "_%s_deadlinePluginInfo.txt" %kwargs['renderLayer']
 	else:
 		pluginInfoFileSuffix = "_deadlinePluginInfo.txt"
-	pluginInfoFile = settings_filename(kwargs['scene'], suffix=pluginInfoFileSuffix)
-	fh = open(pluginInfoFile, 'w')
 
-	# Command Line -----------------------------------------------------------
-	if kwargs['plugin'] == "CommandLine":
-		pass
-		# fh.write("Executable=%s\n" %kwargs['executable'])
-		# fh.write("Arguments=%s\n" %kwargs['flags'])
-		# fh.write("Shell=Default\n")
-		# fh.write("ShellExecute=False\n")
-		# fh.write("StartupDirectory=%s\n" %kwargs['startupDir'])
+	pluginInfoFile = render_common.settings_file(kwargs['scene'], suffix=pluginInfoFileSuffix)
+	with open(pluginInfoFile, 'w') as fh:
 
-	# Maya -------------------------------------------------------------------
-	elif kwargs['plugin'] == "MayaBatch":
-		fh.write("Version=%s\n" %kwargs['version'])
-		fh.write("Build=64bit\n")
-		fh.write("Camera=%s\n" %kwargs['camera'])
-		fh.write("Renderer=%s\n" %kwargs['renderer'])
-		fh.write("StrictErrorChecking=1\n")
-		fh.write("ProjectPath=%s\n" %kwargs['mayaProject'])
-		fh.write("OutputFilePath=%s\n" %kwargs['outputFilePath'])
-		fh.write("OutputFilePrefix=%s\n" %kwargs['outputFilePrefix'])
-		fh.write("SceneFile=%s\n" %kwargs['scene'])
-		fh.write("UseLegacyRenderLayers=%s\n" %(not kwargs['useRenderSetup']))
-		if kwargs['renderLayer']:
-			fh.write("UsingRenderLayers=1\n")
-			fh.write("RenderLayer=%s\n" %kwargs['renderLayer'])
+		# Command Line -------------------------------------------------------
+		if kwargs['plugin'] == "CommandLine":
+			pass
+			# fh.write("Executable=%s\n" %kwargs['executable'])
+			# fh.write("Arguments=%s\n" %kwargs['flags'])
+			# fh.write("Shell=Default\n")
+			# fh.write("ShellExecute=False\n")
+			# fh.write("StartupDirectory=%s\n" %kwargs['startupDir'])
 
-	# Nuke -------------------------------------------------------------------
-	elif kwargs['plugin'] == "Nuke":
-		fh.write("BatchMode=True\n")
-		# fh.write("BatchModeIsMovie=%s\n" %kwargs['isMovie'])
-		fh.write("NukeX=%s\n" %kwargs['nukeX'])
-		fh.write("Version=%s\n" %kwargs['version'])
-		fh.write("SceneFile=%s\n" %kwargs['scene'])
-		if kwargs['renderLayers']:
-			fh.write("WriteNode=%s\n" %kwargs['renderLayer'])
-			fh.write("BatchModeIsMovie=%s\n" %kwargs['isMovie'])
+		# Maya ---------------------------------------------------------------
+		elif kwargs['plugin'] == "MayaBatch":
+			fh.write("Version=%s\n" %kwargs['version'])
+			fh.write("Build=64bit\n")
+			fh.write("Camera=%s\n" %kwargs['camera'])
+			fh.write("Renderer=%s\n" %kwargs['renderer'])
+			fh.write("StrictErrorChecking=1\n")
+			fh.write("ProjectPath=%s\n" %kwargs['mayaProject'])
+			fh.write("OutputFilePath=%s\n" %kwargs['outputFilePath'])
+			fh.write("OutputFilePrefix=%s\n" %kwargs['outputFilePrefix'])
+			fh.write("SceneFile=%s\n" %kwargs['scene'])
+			fh.write("UseLegacyRenderLayers=%s\n" %(not kwargs['useRenderSetup']))
+			if kwargs['renderLayer']:
+				fh.write("UsingRenderLayers=1\n")
+				fh.write("RenderLayer=%s\n" %kwargs['renderLayer'])
 
-	fh.close()
+		# Nuke ---------------------------------------------------------------
+		elif kwargs['plugin'] == "Nuke":
+			fh.write("BatchMode=True\n")
+			# fh.write("BatchModeIsMovie=%s\n" %kwargs['isMovie'])
+			fh.write("NukeX=%s\n" %kwargs['nukeX'])
+			fh.write("Version=%s\n" %kwargs['version'])
+			fh.write("SceneFile=%s\n" %kwargs['scene'])
+			if kwargs['renderLayers']:
+				fh.write("WriteNode=%s\n" %kwargs['renderLayer'])
+				fh.write("BatchModeIsMovie=%s\n" %kwargs['isMovie'])
 
 	return pluginInfoFile
 
@@ -164,14 +144,13 @@ def generate_batch_file(scene, jobInfoFileList, pluginInfoFileList):
 	""" Generate batch job submission file given corresponding lists of job
 		and plugin info files.
 	"""
-	batchSubmissionFile = settings_filename(scene, suffix="_deadlineBatchArgs.txt")
-	fh = open(batchSubmissionFile, 'w')
-	fh.write("-SubmitMultipleJobs\n")
-	for i in range(len(jobInfoFileList)):
-		fh.write("-job\n")
-		fh.write("%s\n" %jobInfoFileList[i])
-		fh.write("%s\n" %pluginInfoFileList[i])
-	fh.close()
+	batchSubmissionFile = render_common.settings_file(scene, suffix="_deadlineBatchArgs.txt")
+	with open(batchSubmissionFile, 'w') as fh:
+		fh.write("-SubmitMultipleJobs\n")
+		for i in range(len(jobInfoFileList)):
+			fh.write("-job\n")
+			fh.write("%s\n" %jobInfoFileList[i])
+			fh.write("%s\n" %pluginInfoFileList[i])
 
 	return batchSubmissionFile
 

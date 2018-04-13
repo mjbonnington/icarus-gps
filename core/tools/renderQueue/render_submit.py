@@ -18,6 +18,7 @@ import ui_template as UI
 # Import custom modules
 import osOps
 import pDialog
+import render_common
 import render_submit_deadline as deadline
 import renderQueue
 import sequence
@@ -62,7 +63,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		             xml_data=xml_data, 
 		             store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
 
-		self.conformFormLayoutLabels(self.ui.centralwidget)
+		self.conformFormLayoutLabels(self.ui)
 
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Tool)
@@ -154,6 +155,8 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		if os.environ['IC_ENV'] == "STANDALONE":
 			self.jobType = userPrefs.query('rendersubmit', 'lastrenderjobtype', default=self.ui.jobType_comboBox.currentText())
 			self.ui.jobType_comboBox.setCurrentIndex(self.ui.jobType_comboBox.findText(self.jobType))
+			self.ui.camera_label.setEnabled(False)
+			self.ui.camera_comboBox.setEnabled(False)
 			self.ui.getCameras_toolButton.setEnabled(False)
 			self.ui.layerOptions_toolButton.setEnabled(False)
 			self.ui.writeNodeOptions_toolButton.setEnabled(False)
@@ -234,31 +237,11 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 
 	def toggleExpertMode(self):
-		""" Toggle expert mode where additional UI items are visible.
+		""" Toggle expert mode where all UI items are visible.
 		"""
 		self.expertMode = not self.expertMode
 		# self.ui.render_groupBox.setEnabled(self.expertMode)
 		# self.ui.render_groupBox.setVisible(self.expertMode)
-
-
-	def getSettingsFile(self, scene, suffix=""):
-		""" Determine the path to the settings file based on the full path of
-			the scene file.
-		"""
-		if os.path.isfile(scene):
-			sceneDir, sceneFile = os.path.split(scene)
-			settingsDir = os.path.join(sceneDir, os.environ['IC_METADATA'])
-			#settingsFile = os.path.splitext(sceneFile)[0] + suffix
-			settingsFile = osOps.sanitize(sceneFile, replace='_') + suffix
-
-			# Create settings directory if it doesn't exist
-			if not os.path.isdir(settingsDir):
-				osOps.createDir(settingsDir)
-
-			return os.path.join(settingsDir, settingsFile)
-
-		else:
-			return False
 
 
 	# @QtCore.Slot()
@@ -271,7 +254,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			comboBox = self.ui.nukeScript_comboBox
 		scene = self.makePathAbsolute(comboBox.currentText()).replace("\\", "/")
 
-		self.xmlData = self.getSettingsFile(scene, suffix="_icSubmissionData.xml")
+		self.xmlData = render_common.settings_file(scene, suffix="_icSubmissionData.xml")
 		if self.xmlData:
 			self.xd.loadXML(self.xmlData, use_template=False)
 			self.setupWidgets(self.ui, updateOnly=True)
@@ -322,22 +305,23 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.generic_groupBox.hide()
 		self.ui.maya_groupBox.hide()
 		self.ui.nuke_groupBox.hide()
+
 		if self.jobType == "Generic":
 			self.ui.generic_groupBox.show()
+
 		elif self.jobType == "Maya":
+			self.ui.maya_groupBox.show()
 			try:
 				self.relativeScenesDir = osOps.absolutePath('%s/%s' %(os.environ['MAYADIR'], 'scenes'))
 			except KeyError:
 				self.relativeScenesDir = ""
-			#self.ui.scene_label.setText("Scene:")
-			self.ui.maya_groupBox.show()
+
 		elif self.jobType == "Nuke":
+			self.ui.nuke_groupBox.show()
 			try:
 				self.relativeScenesDir = osOps.absolutePath('%s/%s' %(os.environ['NUKEDIR'], 'scripts'))
 			except KeyError:
 				self.relativeScenesDir = ""
-			#self.ui.scene_label.setText("Script:")
-			self.ui.nuke_groupBox.show()
 
 		# Representative string to replace the path specified above
 		self.relativeScenesToken = '...'
@@ -462,15 +446,19 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 	def getRenderableCameras(self):
 		""" Returns list of renderable cameras in the scene.
+			MAYA-SPECIFIC
 		"""
+		noSelectText = ""
+		camera_list = [noSelectText, ]
+
 		if os.environ['IC_ENV'] == "MAYA":
-			noSelectText = ""
-			camera_list = [noSelectText, ]
 			#cameras = mc.ls(cameras=True)
 			persp_cameras = mc.listCameras(perspective=True)
 			ortho_cameras = mc.listCameras(orthographic=True)
-			cameras = camera_list + persp_cameras + ortho_cameras
-			return cameras
+			return camera_list + persp_cameras + ortho_cameras
+
+		else:
+			return camera_list
 
 			# for camera in cameras:
 			# 	if mc.getAttr(camera+'.renderable'):
@@ -529,6 +517,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 	def getRenderers(self):
 		""" Get Maya renderers & populate combo box.
+			MAYA-SPECIFIC
 		"""
 		renderers = self.getRenderer()
 		rendererLs = [renderers]
@@ -538,6 +527,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 	def getCameras(self):
 		""" Get Maya cameras & populate combo box.
+			MAYA-SPECIFIC
 		"""
 		cameras = self.getRenderableCameras()
 		self.populateComboBox(self.ui.camera_comboBox, cameras, addEmptyItems=True)
@@ -550,7 +540,10 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		#print(self.sender().text())
 		if self.sender().text() == "Sequential":
 			num_list = sequence.numList(self.ui.frames_lineEdit.text(), sort=True, quiet=True)
-			self.ui.frames_lineEdit.setText(sequence.numRange(num_list))
+			if self.numList:
+				self.ui.frames_lineEdit.setText(sequence.numRange(num_list))
+			else:
+				pass
 
 		elif self.sender().text() == "Reverse order":
 			pass
@@ -558,60 +551,110 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		elif self.sender().text() == "Render first and last frames before others":
 			frames_str = self.ui.frames_lineEdit.text()
 			num_list = sequence.numList(frames_str, sort=True, quiet=True)
-			first = min(num_list)
-			last = max(num_list)
-			self.ui.frames_lineEdit.setText("%d, %d, %s" %(first, last, frames_str))
+			if self.numList:
+				first = min(num_list)
+				last = max(num_list)
+				frames_str_prefix = "%d, %d" %(first, last)
+				if not frames_str.startswith(frames_str_prefix):
+					self.ui.frames_lineEdit.setText("%s, %s" %(frames_str_prefix, frames_str))
+			else:
+				pass
 
 
 	def calcFrameList(self, quiet=True):
 		""" Calculate list of frames to be rendered.
 		"""
-		self.numList = sequence.numList(self.ui.frames_lineEdit.text(), sort=False, quiet=True)
-		taskSize = self.ui.taskSize_spinBox.value()
-		if self.numList == False:
-			if not quiet:
-				verbose.warning("Invalid entry for frame range.")
-			# self.ui.frames_lineEdit.setProperty("mandatoryField", True)
-			# self.ui.frames_lineEdit.style().unpolish(self.ui.frames_lineEdit)
-			# self.ui.frames_lineEdit.style().polish(self.ui.frames_lineEdit)
-			self.numList = []
-			self.taskList = ["Unknown", ]
+		try:
+			self.numList = sequence.numList(self.ui.frames_lineEdit.text(), sort=False, quiet=quiet)
+			if self.numList is False:
+				#raise RuntimeError("Invalid entry for frame range.")
+				if not quiet:
+					verbose.warning("Invalid entry for frame range.")
+				# self.ui.frames_lineEdit.setProperty("mandatoryField", True)
+				# self.ui.frames_lineEdit.style().unpolish(self.ui.frames_lineEdit)
+				# self.ui.frames_lineEdit.style().polish(self.ui.frames_lineEdit)
+				self.numList = []
+				self.taskList = ["Unknown", ]
+
+				# msg = "Invalid entry for frame range."
+				# #mc.warning(msg)
+				# #mc.confirmDialog(title="Scene not saved", message=msg, icon="warning", button="Close")
+				# self.ui.submit_pushButton.setToolTip(msg)
+				# self.ui.submit_pushButton.setEnabled(False)
+
+				return False
+
+			elif self.numList is None:
+				#raise RuntimeError("No frame range specified.")
+				if not quiet:
+					verbose.warning("No frame range specified.")
+				# self.ui.frames_lineEdit.setProperty("mandatoryField", True)
+				# self.ui.frames_lineEdit.style().unpolish(self.ui.frames_lineEdit)
+				# self.ui.frames_lineEdit.style().polish(self.ui.frames_lineEdit)
+				self.numList = []
+				self.taskList = ["Unknown", ]
+
+				# msg = "No frame range specified."
+				# #mc.warning(msg)
+				# #mc.confirmDialog(title="Scene not saved", message=msg, icon="warning", button="Close")
+				# self.ui.submit_pushButton.setToolTip(msg)
+				# self.ui.submit_pushButton.setEnabled(False)
+
+				return False
+
+			else:
+				# Update task size slider
+				#self.ui.frames_lineEdit.setText(sequence.numRange(self.numList))
+				taskSize = self.ui.taskSize_spinBox.value()
+				nFrames = len(self.numList)
+				if taskSize < nFrames:
+					self.ui.taskSize_slider.setMaximum(nFrames)
+					self.ui.taskSize_spinBox.setMaximum(nFrames)
+					self.ui.taskSize_spinBox.setValue(taskSize)
+				else:
+					self.ui.taskSize_slider.setMaximum(nFrames)
+					self.ui.taskSize_spinBox.setMaximum(nFrames)
+					self.ui.taskSize_spinBox.setValue(nFrames)
+				if nFrames == 1:
+					self.ui.taskSize_slider.setEnabled(False)
+					self.ui.taskSize_spinBox.setEnabled(False)
+				else:
+					self.ui.taskSize_slider.setEnabled(True)
+					self.ui.taskSize_spinBox.setEnabled(True)
+
+				# Generate task list for rendering
+				self.taskList = []
+				sequences = list(sequence.seqRange(self.numList, gen_range=True))
+				for seq in sequences:
+					chunks = list(sequence.chunks(seq, taskSize))
+					for chunk in chunks:
+						#self.taskList.append(list(sequence.seqRange(chunk))[0])
+						self.taskList.append(sequence.numRange(chunk))
+
+				return True
+
+		except (MemoryError, OverflowError):
+			verbose.warning("Specified frame range value(s) too large to process.")
 			return False
-		else:
-			#self.ui.frames_lineEdit.setText(sequence.numRange(self.numList))
-			nFrames = len(self.numList)
-			if taskSize < nFrames:
-				self.ui.taskSize_slider.setMaximum(nFrames)
-				self.ui.taskSize_spinBox.setMaximum(nFrames)
-				self.ui.taskSize_spinBox.setValue(taskSize)
-			else:
-				self.ui.taskSize_slider.setMaximum(nFrames)
-				self.ui.taskSize_spinBox.setMaximum(nFrames)
-				self.ui.taskSize_spinBox.setValue(nFrames)
-			if nFrames == 1:
-				self.ui.taskSize_slider.setEnabled(False)
-				self.ui.taskSize_spinBox.setEnabled(False)
-			else:
-				self.ui.taskSize_slider.setEnabled(True)
-				self.ui.taskSize_spinBox.setEnabled(True)
 
-			# Generate task list for rendering
-			self.taskList = []
-			sequences = list(sequence.seqRange(self.numList, gen_range=True))
-			for seq in sequences:
-				chunks = list(sequence.chunks(seq, taskSize))
-				for chunk in chunks:
-					#self.taskList.append(list(sequence.seqRange(chunk))[0])
-					self.taskList.append(sequence.numRange(chunk))
+		# except RuntimeError:
+		# 	if not quiet:
+		# 		verbose.warning("Invalid entry for frame range.")
+		# 	# self.ui.frames_lineEdit.setProperty("mandatoryField", True)
+		# 	# self.ui.frames_lineEdit.style().unpolish(self.ui.frames_lineEdit)
+		# 	# self.ui.frames_lineEdit.style().polish(self.ui.frames_lineEdit)
+		# 	self.numList = []
+		# 	self.taskList = ["Unknown", ]
+		# 	return False
 
-		# print(self.numList)
-		# print(self.taskList)
-		return True
+		# finally:
+		# 	pass
 
 
 	def getMayaProject(self, scene):
 		""" Get the Maya project. If the environment variable is not set, try
 			to guess the Maya project directory based on the scene name.
+			MAYA-SPECIFIC
 		"""
 		try:  # Project is implicit if job is set
 			mayaProject = os.environ['MAYADIR'].replace("\\", "/")
@@ -623,6 +666,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 	def getRenderer(self):
 		""" Get the current Maya renderer.
+			MAYA-SPECIFIC
 		"""
 		try:
 			renderer = mc.getAttr("defaultRenderGlobals.currentRenderer")
@@ -635,6 +679,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 	def getRenderableLayers(self, allLayers=False):
 		""" Get Maya render layers that are enabled (renderable).
 			If 'allLayers' is True, return all (not just renderable) layers.
+			MAYA-SPECIFIC
 		"""
 		layers = mc.ls(type='renderLayer')
 
@@ -653,6 +698,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 	def getWriteNodes(self, selected=True):
 		""" Get Nuke write nodes.
 			If 'selected' is True, only return selected nodes.
+			NUKE-SPECIFIC
 		"""
 		writeNodes = []
 
@@ -669,6 +715,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 	def getMayaRenderOutput(self, layer=None):
 		""" Get the path of Maya's render output.
+			MAYA-SPECIFIC
 		"""
 		try:
 			padding = "#" * mc.getAttr("defaultRenderGlobals.extensionPadding")
@@ -689,6 +736,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 	def getNukeRenderOutput(self, writeNode):
 		""" Get the output path from a Nuke write node.
+			NUKE-SPECIFIC
 		"""
 		# try:
 		node = nuke.toNode(writeNode)
@@ -703,6 +751,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 	def getOutputFilePath(self):
 		""" Get Maya's render output file path from the Maya project.
+			MAYA-SPECIFIC
 		"""
 		try:
 			path = mc.workspace(expandName=mc.workspace(fileRuleEntry="images"))
@@ -715,6 +764,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 	def getOutputFilePrefix(self):
 		""" Get Maya's output file prefix from the render settings.
+			MAYA-SPECIFIC
 		"""
 		try:
 			prefix = mc.getAttr("defaultRenderGlobals.imageFilePrefix")
@@ -777,6 +827,8 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		""" Submit job.
 		"""
 		self.save()  # Save settings
+
+		#if not self.checkSubmissionOptions():
 
 		submit_args = self.getSubmissionOptions()
 		if submit_args:

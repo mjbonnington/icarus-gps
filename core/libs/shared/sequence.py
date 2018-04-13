@@ -24,6 +24,11 @@ def numList(num_range_str, sort=True, quiet=False):
 		e.g. '1-5, 20, 24, 1001-1002'
 		returns [1, 2, 3, 4, 5, 20, 24, 1001, 1002]
 	"""
+	if num_range_str == "":
+		if not quiet:
+			verbose.warning("No frame range specified.")
+		return None
+
 	num_int_list = []
 	num_format = re.compile(r'^\d+$')
 	seq_format = re.compile(r'^\d+-\d+(x\d+)?$')
