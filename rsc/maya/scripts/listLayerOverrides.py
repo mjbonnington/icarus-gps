@@ -27,6 +27,43 @@ class RenderLayerOverrides():
 		self.currentLayer = mc.editRenderLayerGlobals(query=True, currentRenderLayer=True)
 
 
+	def close(self, *args, **kwargs):
+		mc.deleteUI(self.winName)
+
+
+	def reloadLayers(self, *args, **kwargs):
+		""" 
+		"""
+		self.renderLayers = mc.ls(type='renderLayer')
+		self.currentLayer = mc.editRenderLayerGlobals(query=True, currentRenderLayer=True)
+
+
+	def listOverrides(self, layer):
+		""" Return layer overrides for 'layer'.
+		"""
+		results = []
+		adjLs = mc.editRenderLayerAdjustment(layer, query=True, layer=True)
+
+		if adjLs:
+			for adj in adjLs:
+				results.append("%s = %s" %(adj, mc.getAttr(adj)))
+
+		return results
+
+
+	def listOverrides(self, layer):
+		""" Return layer overrides for 'layer'.
+		"""
+		results = []
+		adjLs = mc.editRenderLayerAdjustment(layer, query=True, layer=True)
+
+		if adjLs:
+			for adj in adjLs:
+				results.append("%s = %s" %(adj, mc.getAttr(adj)))
+
+		return results
+
+
 	def UI(self):
 		""" Create UI.
 		"""
@@ -40,60 +77,28 @@ class RenderLayerOverrides():
 
 		# Build UI
 		# except:
-		btns = CSS(None, margin=(4,4), spacing=(2,0))
+		layer_style = CSS(None, margin=(6,6), spacing=(4,4))
+		button_style = CSS(None, margin=(0,0), spacing=(2,0))
 
 		with Window(self.winName, title=self.winTitle) as window:
-			with VerticalThreePane() as vertical_layout1:
-				with HorizontalForm(css=btns) as layer_layout1:
-					with HorizontalExpandForm() as layer_layout2:
-						layer_label = Text(label="Layer: ")
-						layer_comboBox = OptionMenu()
-					reloadLayers_button = SymbolButton(image="refresh.png", width=26, height=26)
+			with VerticalThreePane(css=layer_style) as vertical_layout1:
+				with HorizontalThreePane() as layer_layout1:
+					layer_label = Text(label="Layer: ")
+					layer_comboBox = OptionMenu()
+					for item in self.renderLayers:
+						menu_item = MenuItem(label=item)
+						#menu_item.command += self.listOverrides(self.currentLayer)
+					reloadLayers_button = SymbolButton(image="refresh.png", width=20, height=20)
+					reloadLayers_button.command += self.reloadLayers
 				text_scroll = TextScrollList()
-				with HorizontalStretchForm(css=btns) as buttonBox:
-					# yes_button = Button('Yes')
-					# no_button = Button('No')
+				text_scroll.append = self.listOverrides(self.currentLayer)
+				with HorizontalStretchForm(css=button_style) as buttonBox:
+					editOverride_button = Button('Edit Layer Override')
+					removeOverride_button = Button('Delete Layer Override')
 					close_button = Button('Close')
 					close_button.command += self.close
 
 		window.show()
-
-
-	def close(self, *args, **kwargs):
-		mc.deleteUI(self.winName)
-
-
-	# def fileUI(self, name, parent, collapse=False):
-	# 	""" Create panel UI controls.
-	# 	"""
-	# 	mc.frameLayout(width=400, collapsable=True, cl=collapse, label="Options")
-	# 	mc.columnLayout(name)
-
-	# 	mc.separator(height=4, style="none")
-	# 	mc.optionMenuGrp("renderLayer", label="Layer: ")
-	# 	for item in self.renderLayers:
-	# 		mc.menuItem(label=item)
-	# 	mc.symbolButton(image="reload.png", width=26, height=26, command=lambda *args: self.reloadLayers(self.currentLayer))
-	# 	mc.setParent(name)
-
-	# 	mc.separator(height=4, style="none")
-	# 	mc.rowLayout(numberOfColumns=1, columnAttach1="left", columnAlign1="both", columnOffset1=4)
-	# 	mc.text("labelOverrides", label="Overrides:", wordWrap=True, align="left", width=392, enable=False)
-	# 	mc.setParent(name)
-
-	# 	mc.separator(height=2, style="none")
-	# 	mc.rowLayout(numberOfColumns=2, columnAttach2=["left", "left"], columnAlign2=["both", "both"], columnOffset2=[4, 0])
-	# 	mc.iconTextScrollList("txList", width=360, height=108, allowMultiSelection=True, enable=False)
-	# 	mc.symbolButton(image="reload.png", width=26, height=26, command=lambda *args: self.reloadLayers(self.currentLayer))
-	# 	mc.separator(height=8, style="none")
-	# 	mc.setParent(parent)
-
-
-	def reloadLayers(layer):
-		""" Return layer overrides for 'layer'.
-		"""
-		self.renderLayers = mc.ls(type='renderLayer')
-		self.currentLayer = mc.editRenderLayerGlobals(query=True, currentRenderLayer=True)
 
 
 def list():

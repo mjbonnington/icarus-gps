@@ -91,35 +91,36 @@ def saveAs(pathToPblAsset):
 	return nuke.scriptSaveAs(pathToPblAsset)
 
 
-def submitRender():
-	""" Launches GPS Render Submitter window.
-		The -i flag tells Nuke to use an interactive license rather than a
-		render license.
+def submitRender(**kwargs):
+	""" Launches GPS Render Submitter dialog.
 	"""
 	import render_submit
-	render_submit.run_nuke(flags='-i')
-	# renderSubmitDialog = render_submit.renderSubmitDialog()
-	# renderSubmitDialog.display(flags='-i')
+	render_submit.run_nuke(**kwargs)
+	# render_submit.run_nuke(flags='-i')
+	# # renderSubmitDialog = render_submit.renderSubmitDialog()
+	# # renderSubmitDialog.display(flags='-i')
 
 
-def submitRenderSelected():
-	""" Launches GPS Render Submitter window, for rendering the currently
-		selected write nodes only.
-	"""
-	writeNodes = ''
-	selectedNodes = nuke.selectedNodes()
-	for selectedNode in selectedNodes:
-		if selectedNode.Class() == 'Write':
-			writeNodes = '-X %s ' %selectedNode.name()
+# def submitRenderSelected():
+# 	""" Launches GPS Render Submitter dialog, for rendering the currently
+# 		selected write nodes only.
+		# The -i flag tells Nuke to use an interactive license rather than a
+		# render license.
+# 	"""
+# 	writeNodes = ''
+# 	selectedNodes = nuke.selectedNodes()
+# 	for selectedNode in selectedNodes:
+# 		if selectedNode.Class() == 'Write':
+# 			writeNodes = '-X %s ' %selectedNode.name()
 
-	# selectedNode = nuke.selectedNode()
-	# if selectedNode.Class() == 'Write':
-	# 	writeNodes = '-X %s ' %selectedNode.name()
+# 	# selectedNode = nuke.selectedNode()
+# 	# if selectedNode.Class() == 'Write':
+# 	# 	writeNodes = '-X %s ' %selectedNode.name()
 
-	import render_submit
-	render_submit.run_nuke(flags='-i %s' %writeNodes)
-	# renderSubmitDialog = render_submit.renderSubmitDialog()
-	# renderSubmitDialog.display(flags='-i %s' %writeNodes)
+# 	import render_submit
+# 	render_submit.run_nuke(flags='-i %s' %writeNodes)
+# 	# renderSubmitDialog = render_submit.renderSubmitDialog()
+# 	# renderSubmitDialog.display(flags='-i %s' %writeNodes)
 
 
 def viewerSnapshot(pblPath):

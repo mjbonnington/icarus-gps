@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>192</height>
+    <height>224</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,16 @@
    <bool>true</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>8</number>
+   </property>
+   <property name="topMargin">
+    <number>8</number>
+   </property>
+   <property name="rightMargin">
+    <number>8</number>
+   </property>
+   <property name="bottomMargin">
     <number>8</number>
    </property>
    <item>
@@ -38,13 +47,25 @@
       <property name="labelAlignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
-      <property name="margin">
+      <property name="leftMargin">
+       <number>8</number>
+      </property>
+      <property name="topMargin">
+       <number>8</number>
+      </property>
+      <property name="rightMargin">
+       <number>8</number>
+      </property>
+      <property name="bottomMargin">
        <number>8</number>
       </property>
       <item row="0" column="0">
        <widget class="QLabel" name="jobName_label">
         <property name="text">
          <string>Job name:</string>
+        </property>
+        <property name="buddy">
+         <cstring>jobName_lineEdit</cstring>
         </property>
        </widget>
       </item>
@@ -63,6 +84,9 @@
        <widget class="QLabel" name="jobPath_label">
         <property name="text">
          <string>Job path:</string>
+        </property>
+        <property name="buddy">
+         <cstring>jobPath_lineEdit</cstring>
         </property>
        </widget>
       </item>
@@ -92,7 +116,7 @@
            </size>
           </property>
           <property name="toolButtonStyle">
-           <enum>Qt::ToolButtonTextOnly</enum>
+           <enum>Qt::ToolButtonIconOnly</enum>
           </property>
          </widget>
         </item>
@@ -107,6 +131,64 @@
          <bool>true</bool>
         </property>
        </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="private_groupBox">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If a job is set as private, only the owner can see the job in the Shot Setup section of the main UI.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="title">
+      <string>Private job</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="owner_label">
+        <property name="text">
+         <string>Owner:</string>
+        </property>
+        <property name="buddy">
+         <cstring>owner_lineEdit</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <layout class="QHBoxLayout" name="owner_horizontalLayout">
+        <item>
+         <widget class="QLineEdit" name="owner_lineEdit">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="takeOwnership_toolButton">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the owner of the job to the current user.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Take Ownership</string>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>15</width>
+            <height>15</height>
+           </size>
+          </property>
+          <property name="toolButtonStyle">
+           <enum>Qt::ToolButtonTextOnly</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>
@@ -136,6 +218,14 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>jobEnabled_checkBox</tabstop>
+  <tabstop>jobPathBrowse_toolButton</tabstop>
+  <tabstop>jobPath_lineEdit</tabstop>
+  <tabstop>jobName_lineEdit</tabstop>
+  <tabstop>private_groupBox</tabstop>
+  <tabstop>owner_lineEdit</tabstop>
+ </tabstops>
  <resources>
   <include location="rsc.qrc"/>
  </resources>
@@ -147,12 +237,12 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>256</x>
+     <y>215</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
-     <y>274</y>
+     <y>223</y>
     </hint>
    </hints>
   </connection>
@@ -163,12 +253,12 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>324</x>
+     <y>215</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
-     <y>274</y>
+     <y>223</y>
     </hint>
    </hints>
   </connection>

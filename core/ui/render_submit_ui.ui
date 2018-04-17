@@ -58,6 +58,9 @@
        <property name="bottomMargin">
         <number>6</number>
        </property>
+       <property name="spacing">
+        <number>4</number>
+       </property>
        <item row="0" column="2">
         <widget class="QLabel" name="jobType_label">
          <property name="text">
@@ -208,6 +211,12 @@
            <property name="labelAlignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
+           <property name="horizontalSpacing">
+            <number>4</number>
+           </property>
+           <property name="verticalSpacing">
+            <number>6</number>
+           </property>
            <property name="leftMargin">
             <number>8</number>
            </property>
@@ -325,6 +334,12 @@
           <layout class="QFormLayout" name="maya_formLayout">
            <property name="labelAlignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="horizontalSpacing">
+            <number>4</number>
+           </property>
+           <property name="verticalSpacing">
+            <number>6</number>
            </property>
            <property name="leftMargin">
             <number>8</number>
@@ -623,6 +638,12 @@
            <property name="labelAlignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
+           <property name="horizontalSpacing">
+            <number>4</number>
+           </property>
+           <property name="verticalSpacing">
+            <number>6</number>
+           </property>
            <property name="leftMargin">
             <number>8</number>
            </property>
@@ -703,6 +724,18 @@
            </item>
            <item row="2" column="1">
             <layout class="QGridLayout" name="nukeOptions_gridLayout">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
              <property name="spacing">
               <number>4</number>
              </property>
@@ -825,6 +858,12 @@
           <layout class="QFormLayout" name="frames_formLayout">
            <property name="labelAlignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="horizontalSpacing">
+            <number>4</number>
+           </property>
+           <property name="verticalSpacing">
+            <number>6</number>
            </property>
            <property name="leftMargin">
             <number>8</number>
@@ -985,6 +1024,12 @@
           <layout class="QFormLayout" name="submission_formLayout">
            <property name="labelAlignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="horizontalSpacing">
+            <number>4</number>
+           </property>
+           <property name="verticalSpacing">
+            <number>6</number>
            </property>
            <property name="leftMargin">
             <number>8</number>
@@ -1226,7 +1271,7 @@
     <item>
      <layout class="QHBoxLayout" name="buttonBox_horizontalLayout">
       <property name="spacing">
-       <number>2</number>
+       <number>4</number>
       </property>
       <property name="leftMargin">
        <number>6</number>

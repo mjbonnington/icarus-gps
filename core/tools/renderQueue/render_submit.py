@@ -217,7 +217,12 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 			self.ui.jobType_label.setEnabled(False)
 			self.ui.jobType_comboBox.setEnabled(False)
-			self.ui.nukeScriptBrowse_toolButton.hide()
+			self.ui.nukeScript_label.setEnabled(False)
+			self.ui.nukeScript_comboBox.setEnabled(False)
+			self.ui.nukeScriptBrowse_toolButton.setEnabled(False)
+
+			if layers:
+				self.ui.writeNodes_lineEdit.setText(layers)
 
 		self.numList = []
 		if frameRange:

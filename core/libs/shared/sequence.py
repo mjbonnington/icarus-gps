@@ -40,15 +40,15 @@ def numList(num_range_str, sort=True, quiet=False):
         num_range_str += ","
     grps = [x[:-1] for x in num_range_str.split()]
 
-    # try and except startements used instead of if statements for speed up.
+    # try and except statements used instead of if statements for speed up.
 
     for grp in grps:
-        # try to see if 'grp' is a single number (e.g. 10)
+        # Try to see if 'grp' is a single number (e.g. 10)
         try:
             num_int_list.append(int(grp))
 
         except ValueError:
-            # check if 'grp' is a number sequence (e.g. 1-10)
+            # Check if 'grp' is a number sequence (e.g. 1-10)
             if seq_format.match(grp) is not None:
                 step = 1
                 first, last = grp.split('-')
@@ -62,11 +62,6 @@ def numList(num_range_str, sort=True, quiet=False):
                     step = int(step)
 
                 if first > last:
-                    # if not quiet:
-                    #     verbose.error("The last number (%d) in the sequence"
-                    #                   " cannot be smaller than the first "
-                    #                   "(%d)." % (last, first))
-                    # return False
                     num_int_list += list(range(first, last - 1, -step))
                 else:
                     num_int_list += list(range(first, last + 1, step))

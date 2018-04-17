@@ -52,6 +52,8 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		             stylesheet=STYLESHEET, 
 		             store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
 
+		self.conformFormLayoutLabels(self.ui)
+
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Dialog)
 
@@ -62,6 +64,7 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.ui.jobName_lineEdit.textChanged.connect(self.updateUI)
 		self.ui.jobPath_lineEdit.textChanged.connect(self.updateUI)
 		self.ui.jobPathBrowse_toolButton.clicked.connect(self.browseDir)
+		self.ui.takeOwnership_toolButton.clicked.connect(self.takeOwnership)
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).clicked.connect(self.ok)
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.reject)
 
@@ -82,6 +85,8 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.ui.jobName_lineEdit.setText(jobName)
 		self.ui.jobPath_lineEdit.setText(jobPath)
 		self.ui.jobEnabled_checkBox.setChecked(jobActive)
+
+		self.ui.private_groupBox.hide()  # Private jobs not yet implemented
 
 		return self.exec_()
 
@@ -152,6 +157,12 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 
 		# return dialogPath
 		#self.ui.raise_()  # Keep the dialog in front
+
+
+	def takeOwnership(self):
+		""" Sets the owner of the job to the current user.
+		"""
+		self.ui.owner_lineEdit.setText(os.environ['IC_USERNAME'])
 
 
 	def ok(self):

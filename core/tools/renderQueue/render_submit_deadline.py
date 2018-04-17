@@ -53,11 +53,13 @@ def generate_job_info_file(**kwargs):
 
 	with open(jobInfoFile, 'w') as fh:
 		fh.write("Plugin=%s\n" %kwargs['plugin'])
+
 		if kwargs['renderLayer']:
 			fh.write("Name=%s - %s\n" %(kwargs['jobName'], kwargs['renderLayer']))
 			fh.write("BatchName=%s\n" %kwargs['jobName'])
 		else:
 			fh.write("Name=%s\n" %kwargs['jobName'])
+
 		fh.write("Comment=%s\n" %kwargs['comment'])
 		fh.write("Frames=%s\n" %kwargs['frames'])
 		fh.write("ChunkSize=%s\n" %kwargs['taskSize'])
@@ -65,25 +67,26 @@ def generate_job_info_file(**kwargs):
 		fh.write("Group=%s\n" %kwargs['group'])
 		fh.write("Priority=%s\n" %kwargs['priority'])
 		fh.write("UserName=%s\n" %kwargs['username'])
+
 		if kwargs['priority'] == 0:
 			fh.write("InitialStatus=Suspended\n")
-		if kwargs['renderLayer']:
-			outputPath = kwargs['output'][kwargs['renderLayer']]
-			fh.write("OutputDirectory0=%s\n" %outputPath[0])
-			fh.write("OutputFilename0=%s\n" %outputPath[1])
-		else:
-			for i, layer in enumerate(kwargs['output']):
-				outputPath = kwargs['output'][layer]
-				fh.write("OutputDirectory%d=%s\n" %(i, outputPath[0]))
-				fh.write("OutputFilename%d=%s\n" %(i, outputPath[1]))
-		# fh.write("IncludeEnvironment=True\n")
-		# fh.write("EnvironmentKeyValue0=USERNAME=\n")
-		# fh.write("EnvironmentKeyValue1=USERPROFILE=\n")
-		# fh.write("EnvironmentKeyValue2=LOCALAPPDATA=\n")
-		# fh.write("EnvironmentKeyValue3=TEMP=\n")
-		# fh.write("EnvironmentKeyValue3=TMP=\n")
+
+		try:
+			if kwargs['renderLayer']:  # Single layer output
+				outputPath = kwargs['output'][kwargs['renderLayer']]
+				fh.write("OutputDirectory0=%s\n" %outputPath[0])
+				fh.write("OutputFilename0=%s\n" %outputPath[1])
+			else:  # Multiple layer outputs
+				for i, layer in enumerate(kwargs['output']):
+					outputPath = kwargs['output'][layer]
+					fh.write("OutputDirectory%d=%s\n" %(i, outputPath[0]))
+					fh.write("OutputFilename%d=%s\n" %(i, outputPath[1]))
+		except:
+			verbose.warning("Could not determine render output path(s).")
+
 		for i, envVar in enumerate(kwargs['envVars']):
 			fh.write("EnvironmentKeyValue%d=%s=%s\n" %(i, envVar, os.environ[envVar]))
+
 		fh.write("ExtraInfo0=%s\n" %os.environ['JOB'])
 		fh.write("ExtraInfo1=%s\n" %os.environ['SHOT'])
 

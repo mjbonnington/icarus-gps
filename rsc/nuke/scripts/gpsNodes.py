@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2018 Gramercy Park Studios
 #
 # GPS custom nodes.
 
@@ -65,8 +65,17 @@ def write_create():
 	writeNode.addKnob(gps_write_presets)
 	writeNode['knobChanged'].setValue('gpsNodes.w_presets_callback()')
 	writeNode.knob('write_presets').setValue('Precomp')
-	writeNode.knob('beforeRender').setValue('gpsNodes.w_create_dir()')
-	writeNode.knob('afterRender').setValue('gpsNodes.w_openPermissions()')
+
+	try:
+		writeNode.knob('create_directories').setValue('True')
+	# Create directories option added in Nuke 10.5x makes this redundant...
+	except:
+		writeNode.knob('beforeRender').setValue('gpsNodes.w_create_dir()')
+		# writeNode.knob('afterRender').setValue('gpsNodes.w_openPermissions()')
+
+	renderSubmit_button = nuke.PyScript_Knob('renderSubmit_button', 'Submit to Render Queue', 'gpsNodes.w_render_submit()')
+	renderSubmit_button.setFlag(nuke.STARTLINE)
+	writeNode.addKnob(renderSubmit_button)
 
 	return writeNode
 
@@ -130,7 +139,7 @@ def w_path_preset(writeNode, presetType='Precomp'):
 		fullPath = os.path.join(os.environ['NUKERENDERSDIR'], presetType)
 
 	version = vCtrl.version(fullPath)
-	filePath = osOps.absolutePath( os.path.join(filePath, version) )
+	filePath = osOps.absolutePath(os.path.join(filePath, version))
 
 	return filePath
 
@@ -139,12 +148,12 @@ def w_fileName_preset(writeNode, filePath, presetType, ext, proxy=True):
 	""" Sets the fileName presets.
 	"""
 	fileName = '%s_%s.%s.%s' % (os.environ['SHOT'], presetType, r'%04d', ext)
-#	fullPath = os.path.join(filePath, 'full', fileName)
-#	fileName = '$SHOT_%s.%04d.%s' % (presetType, ext)
+	# fullPath = os.path.join(filePath, 'full', fileName)
+	# fileName = '$SHOT_%s.%04d.%s' % (presetType, ext)
 	fullPath = osOps.absolutePath('%s/full/%s' %(filePath, fileName))
 	writeNode.knob('file').setValue(fullPath)
 	if proxy:
-#		proxyPath = os.path.join(filePath, 'proxy', fileName)
+		# proxyPath = os.path.join(filePath, 'proxy', fileName)
 		proxyPath = osOps.absolutePath('%s/proxy/%s' %(filePath, fileName))
 		writeNode.knob('proxy').setValue(proxyPath)
 
@@ -174,4 +183,22 @@ def w_jpg_preset(writeNode):
 	writeNode.knob('file_type').setValue('jpeg')
 	writeNode.knob('_jpeg_quality').setValue(0.75)
 	writeNode.knob('colorspace').setValue('sRGB')
+
+
+def w_render_submit():
+	""" Launches GPS Render Submitter dialog.
+	"""
+	writeNode = nuke.thisNode()
+
+	if writeNode.knob('use_limit').value():
+		first = int(writeNode.knob('first').value())
+		last = int(writeNode.knob('last').value())
+		frameRange = "%s-%s" %(first, last)
+	else:
+		frameRange = None
+
+	import render_submit
+	render_submit.run_nuke(
+		layers=writeNode.name(),
+		frameRange=frameRange)
 

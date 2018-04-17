@@ -867,7 +867,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.launchApp_frame.setEnabled(True)
 		self.ui.main_tabWidget.insertTab(1, self.publishTab, 'Publish')
 		self.ui.main_tabWidget.insertTab(2, self.gatherTab, 'Assets')
-		self.ui.gather_groupBox.hide()
+		self.ui.gather_frame.hide()
 		self.ui.setShot_toolButton.setChecked(True)
 		self.ui.shotEnv_toolButton.show()
 		self.ui.menuLauncher.setEnabled(True)

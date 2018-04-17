@@ -60,7 +60,7 @@ versionUp = 'import switchVersion; switchVersion.versionUp()'
 versionDown = 'import switchVersion; switchVersion.versionDown()'
 versionLatest = 'import switchVersion; switchVersion.versionLatest()'
 submitRender = 'import nukeOps; nukeOps.submitRender()'
-submitRenderSelected = 'import nukeOps; nukeOps.submitRenderSelected()'
+#submitRenderSelected = 'import nukeOps; nukeOps.submitRenderSelected()'
 
 
 # NUKE MENU
@@ -95,9 +95,10 @@ switchVersionMenu.addCommand('Version to Latest', versionLatest, 'alt+shift+up',
 switchVersionMenu.addCommand('Version Up', versionUp, 'alt+up', icon='versionUp.png')
 switchVersionMenu.addCommand('Version Down', versionDown, 'alt+down', icon='versionDown.png')
 # submit render
-submitRenderMenu = nodesMenu.addMenu('Submit to Render Queue', icon='submitRenderPopup.png')
-submitRenderMenu.addCommand('Submit render job', submitRender, icon='submitRender.png')
-submitRenderMenu.addCommand('Submit render job (selected write node only)', submitRenderSelected, icon='submitRender.png')
+#submitRenderMenu = nodesMenu.addMenu('Submit to Render Queue', icon='submitRenderPopup.png')
+#submitRenderMenu.addCommand('Submit render job', submitRender, icon='submitRender.png')
+#submitRenderMenu.addCommand('Submit render job (selected write node only)', submitRenderSelected, icon='submitRender.png')
+nodesMenu.addCommand('Submit render job', submitRender, icon='submitRender.png')
 # review
 nodesMenu.addCommand('Review read or write node', launchDjv, icon='review.png')
 # reviewMenu = nodesMenu.addMenu('Review', icon='reviewPopup.png')
@@ -154,7 +155,7 @@ imageMenu.addCommand('[GPS] Write', writeNode, 'w', icon='newScript.png', index=
 # RENDER MENU
 imageMenu = nukeMenu.menu('Render')
 imageMenu.addCommand('[GPS] Submit render job...', submitRender, icon='submitRender.png', index=4)
-imageMenu.addCommand('[GPS] Submit render job (selected write node only)...', submitRenderSelected, icon='submitRender.png', index=5)
+#imageMenu.addCommand('[GPS] Submit render job (selected write node only)...', submitRenderSelected, icon='submitRender.png', index=5)
 
 
 # FILE MENU
