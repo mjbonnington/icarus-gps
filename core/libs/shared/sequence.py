@@ -40,6 +40,8 @@ def numList(num_range_str, sort=True, quiet=False):
         num_range_str += ","
     grps = [x[:-1] for x in num_range_str.split()]
 
+    # try and except startements used instead of if statements for speed up.
+
     for grp in grps:
         # try to see if 'grp' is a single number (e.g. 10)
         try:
