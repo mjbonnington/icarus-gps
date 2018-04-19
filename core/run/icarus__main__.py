@@ -420,7 +420,8 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 
 	def toggleExpertMode(self):
-		""" Toggle expert mode where additional UI items are visible.
+		""" Toggle expert mode where additional UI items are visible, and
+			enable debug-level verbosity for output messages.
 		"""
 		try:
 			self.expertMode = not self.expertMode
@@ -625,6 +626,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			jobLs = sorted(self.j.getAllJobs())
 		else:
 			jobLs = sorted(self.j.getActiveJobs())
+
 		if jobLs:
 			self.ui.job_comboBox.insertItems(0, jobLs)
 
@@ -636,6 +638,10 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 			self.ui.shotSetup_groupBox.setEnabled(True)
 			self.ui.shotSetupButtons_groupBox.setEnabled(True)
+
+			# # Disable Shot Management menu item(s)
+			# self.ui.actionShot_Management.setEnabled(True)
+			# self.ui.actionShot_Creator.setEnabled(True)
 
 			# Re-enable signals so that shot list gets repopulated
 			self.ui.job_comboBox.blockSignals(False)
@@ -652,6 +658,10 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.shot_comboBox.insertItem(0, '[None]')
 			self.ui.shotSetup_groupBox.setEnabled(False)
 			self.ui.shotSetupButtons_groupBox.setEnabled(False)
+
+			# # Disable Shot Management menu item(s)
+			# self.ui.actionShot_Management.setEnabled(False)
+			# self.ui.actionShot_Creator.setEnabled(False)
 
 			# Warning dialog
 			import pDialog

@@ -87,6 +87,7 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.ui.jobEnabled_checkBox.setChecked(jobActive)
 
 		self.ui.private_groupBox.hide()  # Private jobs not yet implemented
+		self.setFixedHeight(self.minimumSizeHint().height())
 
 		return self.exec_()
 
