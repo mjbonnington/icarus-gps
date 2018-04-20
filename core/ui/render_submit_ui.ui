@@ -36,12 +36,6 @@
     </property>
     <item>
      <widget class="QFrame" name="header_frame">
-      <property name="frameShape">
-       <enum>QFrame::NoFrame</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Plain</enum>
-      </property>
       <property name="lineWidth">
        <number>0</number>
       </property>
@@ -61,16 +55,6 @@
        <property name="spacing">
         <number>4</number>
        </property>
-       <item row="0" column="2">
-        <widget class="QLabel" name="jobType_label">
-         <property name="text">
-          <string>Job type:</string>
-         </property>
-         <property name="buddy">
-          <cstring>jobType_comboBox</cstring>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="1">
         <widget class="QComboBox" name="submitTo_comboBox">
          <property name="sizePolicy">
@@ -91,6 +75,16 @@
          </item>
         </widget>
        </item>
+       <item row="0" column="3">
+        <widget class="QLabel" name="jobType_label">
+         <property name="text">
+          <string>Job type:</string>
+         </property>
+         <property name="buddy">
+          <cstring>jobType_comboBox</cstring>
+         </property>
+        </widget>
+       </item>
        <item row="0" column="0">
         <widget class="QLabel" name="submitTo_label">
          <property name="text">
@@ -101,7 +95,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="3">
+       <item row="0" column="4">
         <widget class="QComboBox" name="jobType_comboBox">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -126,8 +120,8 @@
          </item>
         </widget>
        </item>
-       <item row="0" column="4">
-        <spacer name="header_horizontalSpacer">
+       <item row="0" column="5">
+        <spacer name="header_horizontalSpacer2">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -139,11 +133,27 @@
          </property>
         </spacer>
        </item>
+       <item row="0" column="2">
+        <spacer name="header_horizontalSpacer1">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>12</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
     </item>
     <item>
-     <widget class="QScrollArea" name="submitOptions_scrollArea">
+     <widget class="QScrollArea" name="settings_scrollArea">
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
       </property>
@@ -162,13 +172,13 @@
       <property name="noBackground" stdset="0">
        <bool>true</bool>
       </property>
-      <widget class="QWidget" name="submitOptions_scrollAreaWidgetContents">
+      <widget class="QWidget" name="settings_scrollAreaWidgetContents">
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>0</y>
+         <y>-101</y>
          <width>383</width>
-         <height>596</height>
+         <height>546</height>
         </rect>
        </property>
        <property name="noBackground" stdset="0">
@@ -215,7 +225,7 @@
             <number>4</number>
            </property>
            <property name="verticalSpacing">
-            <number>6</number>
+            <number>4</number>
            </property>
            <property name="leftMargin">
             <number>8</number>
@@ -234,79 +244,112 @@
              <property name="text">
               <string>Command:</string>
              </property>
-             <property name="buddy">
-              <cstring>command_lineEdit</cstring>
-             </property>
             </widget>
-           </item>
-           <item row="0" column="1">
-            <layout class="QHBoxLayout" name="command_horizontalLayout">
-             <item>
-              <widget class="QLineEdit" name="command_lineEdit">
-               <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Path to the command executable.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="xmlTag" stdset="0">
-                <string>command</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QToolButton" name="commandBrowse_toolButton">
-               <property name="text">
-                <string>...</string>
-               </property>
-               <property name="icon">
-                <iconset>
-                 <normalon>:/rsc/rsc/icon_folder.png</normalon>
-                 <disabledon>:/rsc/rsc/icon_folder_disabled.png</disabledon>
-                </iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>15</width>
-                 <height>15</height>
-                </size>
-               </property>
-               <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonIconOnly</enum>
-               </property>
-               <property name="noBackground" stdset="0">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
            </item>
            <item row="1" column="0">
             <widget class="QLabel" name="flags_label">
              <property name="text">
               <string>Flags:</string>
              </property>
-             <property name="buddy">
-              <cstring>flags_lineEdit</cstring>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QFrame" name="command_frame">
+             <property name="lineWidth">
+              <number>0</number>
              </property>
+             <layout class="QHBoxLayout" name="command_horizontalLayout">
+              <property name="spacing">
+               <number>2</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLineEdit" name="command_lineEdit">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Path to the command executable.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="xmlTag" stdset="0">
+                 <string>command</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="commandBrowse_toolButton">
+                <property name="text">
+                 <string>...</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="rsc.qrc">
+                  <normaloff>:/rsc/rsc/icon_folder.png</normaloff>
+                  <disabledoff>:/rsc/rsc/icon_folder_disabled.png</disabledoff>:/rsc/rsc/icon_folder.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>15</width>
+                  <height>15</height>
+                 </size>
+                </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonIconOnly</enum>
+                </property>
+                <property name="noBackground" stdset="0">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
            <item row="1" column="1">
-            <layout class="QHBoxLayout" name="flags_horizontalLayout">
-             <item>
-              <widget class="QLineEdit" name="flags_lineEdit">
-               <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allows additional command-line flags to be specified.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="xmlTag" stdset="0">
-                <string>flags</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QFrame" name="flags_frame">
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <layout class="QHBoxLayout" name="flags_horizontalLayout">
+              <property name="spacing">
+               <number>2</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLineEdit" name="flags_lineEdit">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allows additional command-line flags to be specified.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="xmlTag" stdset="0">
+                 <string>flags</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -339,7 +382,7 @@
             <number>4</number>
            </property>
            <property name="verticalSpacing">
-            <number>6</number>
+            <number>4</number>
            </property>
            <property name="leftMargin">
             <number>8</number>
@@ -358,258 +401,325 @@
              <property name="text">
               <string>Scene:</string>
              </property>
-             <property name="buddy">
-              <cstring>mayaScene_comboBox</cstring>
-             </property>
             </widget>
-           </item>
-           <item row="0" column="1">
-            <layout class="QHBoxLayout" name="mayaScene_horizontalLayout">
-             <item>
-              <widget class="QComboBox" name="mayaScene_comboBox">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="editable">
-                <bool>false</bool>
-               </property>
-               <property name="maxCount">
-                <number>10</number>
-               </property>
-               <property name="insertPolicy">
-                <enum>QComboBox::InsertAtTop</enum>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QToolButton" name="mayaSceneBrowse_toolButton">
-               <property name="text">
-                <string>...</string>
-               </property>
-               <property name="icon">
-                <iconset>
-                 <normalon>:/rsc/rsc/icon_folder.png</normalon>
-                 <disabledon>:/rsc/rsc/icon_folder_disabled.png</disabledon>
-                </iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>15</width>
-                 <height>15</height>
-                </size>
-               </property>
-               <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonIconOnly</enum>
-               </property>
-               <property name="noBackground" stdset="0">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
            </item>
            <item row="1" column="0">
             <widget class="QLabel" name="camera_label">
              <property name="text">
               <string>Camera:</string>
              </property>
-             <property name="buddy">
-              <cstring>camera_comboBox</cstring>
-             </property>
             </widget>
-           </item>
-           <item row="1" column="1">
-            <layout class="QHBoxLayout" name="camera_horizontalLayout">
-             <item>
-              <widget class="QComboBox" name="camera_comboBox">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="editable">
-                <bool>false</bool>
-               </property>
-               <property name="insertPolicy">
-                <enum>QComboBox::InsertAtTop</enum>
-               </property>
-               <property name="xmlTag" stdset="0">
-                <string>camera</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QToolButton" name="getCameras_toolButton">
-               <property name="toolTip">
-                <string>Get camaras from Maya</string>
-               </property>
-               <property name="text">
-                <string>Get Cameras</string>
-               </property>
-               <property name="icon">
-                <iconset resource="rsc.qrc">
-                 <normaloff>:/rsc/rsc/icon_refresh.png</normaloff>
-                 <disabledoff>:/rsc/rsc/icon_refresh_disabled.png</disabledoff>:/rsc/rsc/icon_refresh.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>15</width>
-                 <height>15</height>
-                </size>
-               </property>
-               <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonIconOnly</enum>
-               </property>
-               <property name="noBackground" stdset="0">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
            </item>
            <item row="2" column="0">
             <widget class="QLabel" name="layers_label">
              <property name="text">
               <string>Render layers:</string>
              </property>
-             <property name="buddy">
-              <cstring>layers_lineEdit</cstring>
-             </property>
             </widget>
-           </item>
-           <item row="2" column="1">
-            <layout class="QHBoxLayout" name="layers_horizontalLayout">
-             <item>
-              <widget class="QLineEdit" name="layers_lineEdit">
-               <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Specify render layers to be rendered. Multiple entries can be separated by commas. Each entry will be submitted individually. If left blank, the renderable layers will be detected at render time and output per task.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="placeholderText">
-                <string>&lt;From Scene&gt;</string>
-               </property>
-               <property name="xmlTag" stdset="0">
-                <string>renderLayers</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QToolButton" name="layerOptions_toolButton">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="toolTip">
-                <string>Render layer options</string>
-               </property>
-               <property name="text">
-                <string>Frame list options</string>
-               </property>
-               <property name="icon">
-                <iconset resource="rsc.qrc">
-                 <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
-                 <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>15</width>
-                 <height>15</height>
-                </size>
-               </property>
-               <property name="popupMode">
-                <enum>QToolButton::InstantPopup</enum>
-               </property>
-               <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonIconOnly</enum>
-               </property>
-               <property name="noBackground" stdset="0">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
            </item>
            <item row="3" column="0">
             <widget class="QLabel" name="renderer_label">
              <property name="text">
               <string>Renderer:</string>
              </property>
-             <property name="buddy">
-              <cstring>renderer_comboBox</cstring>
-             </property>
             </widget>
            </item>
-           <item row="3" column="1">
-            <layout class="QHBoxLayout" name="renderer_horizontalLayout">
-             <item>
-              <widget class="QComboBox" name="renderer_comboBox">
-               <property name="xmlTag" stdset="0">
-                <string>renderer</string>
-               </property>
-               <item>
+           <item row="0" column="1">
+            <widget class="QFrame" name="mayaScene_frame">
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <layout class="QHBoxLayout" name="mayaScene_horizontalLayout">
+              <property name="spacing">
+               <number>2</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QComboBox" name="mayaScene_comboBox">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="editable">
+                 <bool>false</bool>
+                </property>
+                <property name="maxCount">
+                 <number>10</number>
+                </property>
+                <property name="insertPolicy">
+                 <enum>QComboBox::InsertAtTop</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="mayaSceneBrowse_toolButton">
+                <property name="text">
+                 <string>...</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="rsc.qrc">
+                  <normaloff>:/rsc/rsc/icon_folder.png</normaloff>
+                  <disabledoff>:/rsc/rsc/icon_folder_disabled.png</disabledoff>:/rsc/rsc/icon_folder.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>15</width>
+                  <height>15</height>
+                 </size>
+                </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonIconOnly</enum>
+                </property>
+                <property name="noBackground" stdset="0">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QFrame" name="camera_frame">
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <layout class="QHBoxLayout" name="camera_horizontalLayout">
+              <property name="spacing">
+               <number>2</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QComboBox" name="camera_comboBox">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="editable">
+                 <bool>false</bool>
+                </property>
+                <property name="insertPolicy">
+                 <enum>QComboBox::InsertAtTop</enum>
+                </property>
+                <property name="xmlTag" stdset="0">
+                 <string>camera</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="getCameras_toolButton">
+                <property name="toolTip">
+                 <string>Get camaras from Maya</string>
+                </property>
+                <property name="text">
+                 <string>Get Cameras</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="rsc.qrc">
+                  <normaloff>:/rsc/rsc/icon_refresh.png</normaloff>
+                  <disabledoff>:/rsc/rsc/icon_refresh_disabled.png</disabledoff>:/rsc/rsc/icon_refresh.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>15</width>
+                  <height>15</height>
+                 </size>
+                </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonIconOnly</enum>
+                </property>
+                <property name="noBackground" stdset="0">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QFrame" name="layers_frame">
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <layout class="QHBoxLayout" name="layers_horizontalLayout">
+              <property name="spacing">
+               <number>2</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLineEdit" name="layers_lineEdit">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Specify render layers to be rendered. Multiple entries can be separated by commas. Each entry will be submitted individually. If left blank, the renderable layers will be detected at render time and output per task.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
                 <property name="text">
                  <string/>
                 </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>mayaSoftware</string>
+                <property name="placeholderText">
+                 <string>&lt;From Scene&gt;</string>
                 </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>mayaHardware</string>
+                <property name="xmlTag" stdset="0">
+                 <string>renderLayers</string>
                 </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>mayaHardware2</string>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="layerOptions_toolButton">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
                 </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>mentalRay</string>
+                <property name="toolTip">
+                 <string>Render layer options</string>
                 </property>
-               </item>
-               <item>
                 <property name="text">
-                 <string>arnold</string>
+                 <string>Frame list options</string>
                 </property>
-               </item>
-               <item>
+                <property name="icon">
+                 <iconset resource="rsc.qrc">
+                  <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
+                  <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>15</width>
+                  <height>15</height>
+                 </size>
+                </property>
+                <property name="popupMode">
+                 <enum>QToolButton::InstantPopup</enum>
+                </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonIconOnly</enum>
+                </property>
+                <property name="noBackground" stdset="0">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QFrame" name="renderer_frame">
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <layout class="QHBoxLayout" name="renderer_horizontalLayout">
+              <property name="spacing">
+               <number>12</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QComboBox" name="renderer_comboBox">
+                <property name="xmlTag" stdset="0">
+                 <string>renderer</string>
+                </property>
+                <item>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>mayaSoftware</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>mayaHardware</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>mayaHardware2</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>mentalRay</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>arnold</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>vray</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>redshift</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="useRenderSetup_checkBox">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use the new Render Setup system introduced in Maya 2016 Extension 2. Uncheck to use the legacy Render Layer system.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
                 <property name="text">
-                 <string>vray</string>
+                 <string>Use Render Setup</string>
                 </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>redshift</string>
+                <property name="xmlTag" stdset="0">
+                 <string>useRenderSetup</string>
                 </property>
-               </item>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="useRenderSetup_checkBox">
-               <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use the new Render Setup system introduced in Maya 2016 Extension 2. Uncheck to use the legacy Render Layer system.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-               <property name="text">
-                <string>Use Render Setup</string>
-               </property>
-               <property name="xmlTag" stdset="0">
-                <string>useRenderSetup</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -642,7 +752,7 @@
             <number>4</number>
            </property>
            <property name="verticalSpacing">
-            <number>6</number>
+            <number>4</number>
            </property>
            <property name="leftMargin">
             <number>8</number>
@@ -661,176 +771,220 @@
              <property name="text">
               <string>Write nodes:</string>
              </property>
-             <property name="buddy">
-              <cstring>writeNodes_lineEdit</cstring>
-             </property>
             </widget>
-           </item>
-           <item row="1" column="1">
-            <layout class="QHBoxLayout" name="writeNodes_horizontalLayout">
-             <item>
-              <widget class="QLineEdit" name="writeNodes_lineEdit">
-               <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Specify which write node(s) are to be rendered. Multiple entries can be separated by commas and will be submitted individually. If left blank, all the write nodes in the script will be rendered for each task.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="placeholderText">
-                <string>&lt;All&gt;</string>
-               </property>
-               <property name="xmlTag" stdset="0">
-                <string>writeNodes</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QToolButton" name="writeNodeOptions_toolButton">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="toolTip">
-                <string>Write node options</string>
-               </property>
-               <property name="text">
-                <string>Options</string>
-               </property>
-               <property name="icon">
-                <iconset resource="rsc.qrc">
-                 <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
-                 <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>15</width>
-                 <height>15</height>
-                </size>
-               </property>
-               <property name="popupMode">
-                <enum>QToolButton::InstantPopup</enum>
-               </property>
-               <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonIconOnly</enum>
-               </property>
-               <property name="noBackground" stdset="0">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="2" column="1">
-            <layout class="QGridLayout" name="nukeOptions_gridLayout">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <property name="spacing">
-              <number>4</number>
-             </property>
-             <item row="0" column="1">
-              <widget class="QCheckBox" name="useNukeX_checkBox">
-               <property name="text">
-                <string>Render with NukeX</string>
-               </property>
-               <property name="xmlTag" stdset="0">
-                <string>renderWithNukeX</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QCheckBox" name="isMovie_checkBox">
-               <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Check if the output is a movie file rather than a frame sequence, and treat the render job as a single task.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-               <property name="text">
-                <string>Output is movie file</string>
-               </property>
-               <property name="xmlTag" stdset="0">
-                <string>isMovie</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QCheckBox" name="interactiveLicense_checkBox">
-               <property name="text">
-                <string>Use interactive license</string>
-               </property>
-               <property name="xmlTag" stdset="0">
-                <string>useInteractiveLicense</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
            </item>
            <item row="0" column="0">
             <widget class="QLabel" name="nukeScript_label">
              <property name="text">
               <string>Script:</string>
              </property>
-             <property name="buddy">
-              <cstring>nukeScript_comboBox</cstring>
-             </property>
             </widget>
            </item>
            <item row="0" column="1">
-            <layout class="QHBoxLayout" name="nukeScript_horizontalLayout">
-             <item>
-              <widget class="QComboBox" name="nukeScript_comboBox">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="editable">
-                <bool>false</bool>
-               </property>
-               <property name="maxCount">
-                <number>10</number>
-               </property>
-               <property name="insertPolicy">
-                <enum>QComboBox::InsertAtTop</enum>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QToolButton" name="nukeScriptBrowse_toolButton">
-               <property name="text">
-                <string>...</string>
-               </property>
-               <property name="icon">
-                <iconset>
-                 <normalon>:/rsc/rsc/icon_folder.png</normalon>
-                 <disabledon>:/rsc/rsc/icon_folder_disabled.png</disabledon>
-                </iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>15</width>
-                 <height>15</height>
-                </size>
-               </property>
-               <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonIconOnly</enum>
-               </property>
-               <property name="noBackground" stdset="0">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QFrame" name="nukeScript_frame">
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <layout class="QHBoxLayout" name="nukeScript_horizontalLayout">
+              <property name="spacing">
+               <number>2</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QComboBox" name="nukeScript_comboBox">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="editable">
+                 <bool>false</bool>
+                </property>
+                <property name="maxCount">
+                 <number>10</number>
+                </property>
+                <property name="insertPolicy">
+                 <enum>QComboBox::InsertAtTop</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="nukeScriptBrowse_toolButton">
+                <property name="text">
+                 <string>...</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="rsc.qrc">
+                  <normaloff>:/rsc/rsc/icon_folder.png</normaloff>
+                  <disabledoff>:/rsc/rsc/icon_folder_disabled.png</disabledoff>:/rsc/rsc/icon_folder.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>15</width>
+                  <height>15</height>
+                 </size>
+                </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonIconOnly</enum>
+                </property>
+                <property name="noBackground" stdset="0">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QFrame" name="writeNodes_frame">
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <layout class="QHBoxLayout" name="writeNodes_horizontalLayout">
+              <property name="spacing">
+               <number>2</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLineEdit" name="writeNodes_lineEdit">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Specify which write node(s) are to be rendered. Multiple entries can be separated by commas and will be submitted individually. If left blank, all the write nodes in the script will be rendered for each task.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="placeholderText">
+                 <string>&lt;All&gt;</string>
+                </property>
+                <property name="xmlTag" stdset="0">
+                 <string>writeNodes</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="writeNodeOptions_toolButton">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="toolTip">
+                 <string>Write node options</string>
+                </property>
+                <property name="text">
+                 <string>Options</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="rsc.qrc">
+                  <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
+                  <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>15</width>
+                  <height>15</height>
+                 </size>
+                </property>
+                <property name="popupMode">
+                 <enum>QToolButton::InstantPopup</enum>
+                </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonIconOnly</enum>
+                </property>
+                <property name="noBackground" stdset="0">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QFrame" name="nukeOptions_frame">
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <layout class="QGridLayout" name="nukeOptions_gridLayout">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <property name="horizontalSpacing">
+               <number>12</number>
+              </property>
+              <property name="verticalSpacing">
+               <number>4</number>
+              </property>
+              <item row="0" column="1">
+               <widget class="QCheckBox" name="useNukeX_checkBox">
+                <property name="text">
+                 <string>Render with NukeX</string>
+                </property>
+                <property name="xmlTag" stdset="0">
+                 <string>renderWithNukeX</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QCheckBox" name="isMovie_checkBox">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Check if the output is a movie file rather than a frame sequence, and treat the render job as a single task.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="text">
+                 <string>Output is movie file</string>
+                </property>
+                <property name="tristate">
+                 <bool>false</bool>
+                </property>
+                <property name="xmlTag" stdset="0">
+                 <string>isMovie</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QCheckBox" name="interactiveLicense_checkBox">
+                <property name="text">
+                 <string>Use interactive license</string>
+                </property>
+                <property name="xmlTag" stdset="0">
+                 <string>useInteractiveLicense</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -863,7 +1017,7 @@
             <number>4</number>
            </property>
            <property name="verticalSpacing">
-            <number>6</number>
+            <number>4</number>
            </property>
            <property name="leftMargin">
             <number>8</number>
@@ -882,124 +1036,158 @@
              <property name="text">
               <string>Frames:</string>
              </property>
-             <property name="buddy">
-              <cstring>frames_lineEdit</cstring>
-             </property>
             </widget>
-           </item>
-           <item row="0" column="1">
-            <layout class="QHBoxLayout" name="frames_horizontalLayout">
-             <item>
-              <widget class="QLineEdit" name="frames_lineEdit">
-               <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Specify the frames to be rendered. Individual frames should be separated with commas, and ranges can be specified using a hyphen (e.g. '1, 5-10'). Reversed ordering is supported (e.g. '10-1') and step values can be specified with an 'x' (e.g. '1-20x5' will render frames 1, 6, 11 and 16). Duplicates will be removed automatically. If left blank, depending on the options selected, the renderer will attempt to detect the frame range at render time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="placeholderText">
-                <string>&lt;Auto Detect&gt;</string>
-               </property>
-               <property name="xmlTag" stdset="0">
-                <string>frames</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QToolButton" name="frameListOptions_toolButton">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="toolTip">
-                <string>Frame list options</string>
-               </property>
-               <property name="text">
-                <string>Options</string>
-               </property>
-               <property name="icon">
-                <iconset resource="rsc.qrc">
-                 <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
-                 <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>15</width>
-                 <height>15</height>
-                </size>
-               </property>
-               <property name="popupMode">
-                <enum>QToolButton::InstantPopup</enum>
-               </property>
-               <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonIconOnly</enum>
-               </property>
-               <property name="noBackground" stdset="0">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
            </item>
            <item row="1" column="0">
             <widget class="QLabel" name="taskSize_label">
              <property name="text">
               <string>Task size:</string>
              </property>
-             <property name="buddy">
-              <cstring>taskSize_spinBox</cstring>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QFrame" name="frames_frame">
+             <property name="lineWidth">
+              <number>0</number>
              </property>
+             <layout class="QHBoxLayout" name="frames_horizontalLayout">
+              <property name="spacing">
+               <number>2</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLineEdit" name="frames_lineEdit">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Specify the frames to be rendered. Individual frames should be separated with commas, and ranges can be specified using a hyphen (e.g. '1, 5-10'). Reversed ordering is supported (e.g. '10-1') and step values can be specified with an 'x' (e.g. '1-20x5' will render frames 1, 6, 11 and 16). Duplicates will be removed automatically. If left blank, depending on the options selected, the renderer will attempt to detect the frame range at render time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="placeholderText">
+                 <string>&lt;Auto Detect&gt;</string>
+                </property>
+                <property name="xmlTag" stdset="0">
+                 <string>frames</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="frameListOptions_toolButton">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="toolTip">
+                 <string>Frame list options</string>
+                </property>
+                <property name="text">
+                 <string>Options</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="rsc.qrc">
+                  <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
+                  <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>15</width>
+                  <height>15</height>
+                 </size>
+                </property>
+                <property name="popupMode">
+                 <enum>QToolButton::InstantPopup</enum>
+                </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonIconOnly</enum>
+                </property>
+                <property name="noBackground" stdset="0">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
            <item row="1" column="1">
-            <layout class="QHBoxLayout" name="taskSize_horizontalLayout">
-             <item>
-              <widget class="QSpinBox" name="taskSize_spinBox">
-               <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;In order to distribute the render job, it will be divided into tasks. Specify the number of frames that will be rendered for each task.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-               <property name="buttonSymbols">
-                <enum>QAbstractSpinBox::NoButtons</enum>
-               </property>
-               <property name="suffix">
-                <string> frame(s)</string>
-               </property>
-               <property name="minimum">
-                <number>1</number>
-               </property>
-               <property name="maximum">
-                <number>9999</number>
-               </property>
-               <property name="xmlTag" stdset="0">
-                <string>taskSize</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSlider" name="taskSize_slider">
-               <property name="minimum">
-                <number>1</number>
-               </property>
-               <property name="maximum">
-                <number>100</number>
-               </property>
-               <property name="value">
-                <number>1</number>
-               </property>
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="tickPosition">
-                <enum>QSlider::NoTicks</enum>
-               </property>
-               <property name="tickInterval">
-                <number>10</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QFrame" name="taskSize_frame">
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <layout class="QHBoxLayout" name="taskSize_horizontalLayout">
+              <property name="spacing">
+               <number>6</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QSpinBox" name="taskSize_spinBox">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;In order to distribute the render job, it will be divided into tasks. Specify the number of frames that will be rendered for each task.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="buttonSymbols">
+                 <enum>QAbstractSpinBox::NoButtons</enum>
+                </property>
+                <property name="suffix">
+                 <string> frame(s)</string>
+                </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>9999</number>
+                </property>
+                <property name="xmlTag" stdset="0">
+                 <string>taskSize</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="taskSize_slider">
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>1</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="tickPosition">
+                 <enum>QSlider::NoTicks</enum>
+                </property>
+                <property name="tickInterval">
+                 <number>10</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -1029,7 +1217,7 @@
             <number>4</number>
            </property>
            <property name="verticalSpacing">
-            <number>6</number>
+            <number>4</number>
            </property>
            <property name="leftMargin">
             <number>8</number>
@@ -1048,93 +1236,19 @@
              <property name="text">
               <string>Priority:</string>
              </property>
-             <property name="buddy">
-              <cstring>priority_spinBox</cstring>
-             </property>
             </widget>
-           </item>
-           <item row="2" column="1">
-            <layout class="QHBoxLayout" name="priority_horizontalLayout">
-             <item>
-              <widget class="QSpinBox" name="priority_spinBox">
-               <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the priority for this render job. Higher priority jobs will be rendered first. Setting the priority to zero will submit the job as paused.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-               <property name="buttonSymbols">
-                <enum>QAbstractSpinBox::NoButtons</enum>
-               </property>
-               <property name="minimum">
-                <number>0</number>
-               </property>
-               <property name="maximum">
-                <number>100</number>
-               </property>
-               <property name="value">
-                <number>50</number>
-               </property>
-               <property name="xmlTag" stdset="0">
-                <string>priority</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSlider" name="priority_slider">
-               <property name="minimum">
-                <number>0</number>
-               </property>
-               <property name="maximum">
-                <number>100</number>
-               </property>
-               <property name="value">
-                <number>50</number>
-               </property>
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="tickPosition">
-                <enum>QSlider::NoTicks</enum>
-               </property>
-               <property name="tickInterval">
-                <number>10</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
            </item>
            <item row="3" column="0">
             <widget class="QLabel" name="comment_label">
              <property name="text">
               <string>Comment:</string>
              </property>
-             <property name="buddy">
-              <cstring>comment_lineEdit</cstring>
-             </property>
             </widget>
-           </item>
-           <item row="3" column="1">
-            <layout class="QHBoxLayout" name="comment_horizontalLayout">
-             <item>
-              <widget class="QLineEdit" name="comment_lineEdit">
-               <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add notes about this render job (optional).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="xmlTag" stdset="0">
-                <string>comment</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
            </item>
            <item row="0" column="0">
             <widget class="QLabel" name="pool_label">
              <property name="text">
               <string>Pool:</string>
-             </property>
-             <property name="buddy">
-              <cstring>pool_comboBox</cstring>
              </property>
             </widget>
            </item>
@@ -1143,110 +1257,252 @@
              <property name="text">
               <string>Group:</string>
              </property>
-             <property name="buddy">
-              <cstring>group_comboBox</cstring>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QFrame" name="priority_frame">
+             <property name="lineWidth">
+              <number>0</number>
              </property>
+             <layout class="QHBoxLayout" name="priority_horizontalLayout">
+              <property name="spacing">
+               <number>6</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QSpinBox" name="priority_spinBox">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the priority for this render job. Higher priority jobs will be rendered first. Setting the priority to zero will submit the job as paused.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="buttonSymbols">
+                 <enum>QAbstractSpinBox::NoButtons</enum>
+                </property>
+                <property name="minimum">
+                 <number>0</number>
+                </property>
+                <property name="maximum">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>50</number>
+                </property>
+                <property name="xmlTag" stdset="0">
+                 <string>priority</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="priority_slider">
+                <property name="minimum">
+                 <number>0</number>
+                </property>
+                <property name="maximum">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>50</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="tickPosition">
+                 <enum>QSlider::NoTicks</enum>
+                </property>
+                <property name="tickInterval">
+                 <number>10</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QFrame" name="comment_frame">
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <layout class="QHBoxLayout" name="comment_horizontalLayout">
+              <property name="spacing">
+               <number>2</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLineEdit" name="comment_lineEdit">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add notes about this render job (optional).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="xmlTag" stdset="0">
+                 <string>comment</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
            <item row="0" column="1">
-            <layout class="QHBoxLayout" name="pool_horizontalLayout">
-             <item>
-              <widget class="QComboBox" name="pool_comboBox">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="editable">
-                <bool>true</bool>
-               </property>
-               <property name="insertPolicy">
-                <enum>QComboBox::InsertAtTop</enum>
-               </property>
-               <property name="xmlTag" stdset="0">
-                <string>pool</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QToolButton" name="getPools_toolButton">
-               <property name="toolTip">
-                <string>Get pools from Deadline</string>
-               </property>
-               <property name="text">
-                <string>Get Pools</string>
-               </property>
-               <property name="icon">
-                <iconset resource="rsc.qrc">
-                 <normaloff>:/rsc/rsc/icon_refresh.png</normaloff>
-                 <disabledoff>:/rsc/rsc/icon_refresh_disabled.png</disabledoff>:/rsc/rsc/icon_refresh.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>15</width>
-                 <height>15</height>
-                </size>
-               </property>
-               <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonIconOnly</enum>
-               </property>
-               <property name="noBackground" stdset="0">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QFrame" name="pool_frame">
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <layout class="QHBoxLayout" name="pool_horizontalLayout">
+              <property name="spacing">
+               <number>2</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QComboBox" name="pool_comboBox">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="editable">
+                 <bool>true</bool>
+                </property>
+                <property name="insertPolicy">
+                 <enum>QComboBox::InsertAtTop</enum>
+                </property>
+                <property name="xmlTag" stdset="0">
+                 <string>pool</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="getPools_toolButton">
+                <property name="toolTip">
+                 <string>Get pools from Deadline</string>
+                </property>
+                <property name="text">
+                 <string>Get Pools</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="rsc.qrc">
+                  <normaloff>:/rsc/rsc/icon_refresh.png</normaloff>
+                  <disabledoff>:/rsc/rsc/icon_refresh_disabled.png</disabledoff>:/rsc/rsc/icon_refresh.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>15</width>
+                  <height>15</height>
+                 </size>
+                </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonIconOnly</enum>
+                </property>
+                <property name="noBackground" stdset="0">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </item>
            <item row="1" column="1">
-            <layout class="QHBoxLayout" name="group_horizontalLayout">
-             <item>
-              <widget class="QComboBox" name="group_comboBox">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="editable">
-                <bool>true</bool>
-               </property>
-               <property name="insertPolicy">
-                <enum>QComboBox::InsertAtTop</enum>
-               </property>
-               <property name="xmlTag" stdset="0">
-                <string>group</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QToolButton" name="getGroups_toolButton">
-               <property name="toolTip">
-                <string>Get groups from Deadline</string>
-               </property>
-               <property name="text">
-                <string>Get Groups</string>
-               </property>
-               <property name="icon">
-                <iconset resource="rsc.qrc">
-                 <normaloff>:/rsc/rsc/icon_refresh.png</normaloff>
-                 <disabledoff>:/rsc/rsc/icon_refresh_disabled.png</disabledoff>:/rsc/rsc/icon_refresh.png</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>15</width>
-                 <height>15</height>
-                </size>
-               </property>
-               <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonIconOnly</enum>
-               </property>
-               <property name="noBackground" stdset="0">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QFrame" name="group_frame">
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <layout class="QHBoxLayout" name="group_horizontalLayout">
+              <property name="spacing">
+               <number>2</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QComboBox" name="group_comboBox">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="editable">
+                 <bool>true</bool>
+                </property>
+                <property name="insertPolicy">
+                 <enum>QComboBox::InsertAtTop</enum>
+                </property>
+                <property name="xmlTag" stdset="0">
+                 <string>group</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="getGroups_toolButton">
+                <property name="toolTip">
+                 <string>Get groups from Deadline</string>
+                </property>
+                <property name="text">
+                 <string>Get Groups</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="rsc.qrc">
+                  <normaloff>:/rsc/rsc/icon_refresh.png</normaloff>
+                  <disabledoff>:/rsc/rsc/icon_refresh_disabled.png</disabledoff>:/rsc/rsc/icon_refresh.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>15</width>
+                  <height>15</height>
+                 </size>
+                </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonIconOnly</enum>
+                </property>
+                <property name="noBackground" stdset="0">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -1269,43 +1525,48 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="buttonBox_horizontalLayout">
-      <property name="spacing">
-       <number>4</number>
+     <widget class="QFrame" name="buttonBox_frame">
+      <property name="lineWidth">
+       <number>0</number>
       </property>
-      <property name="leftMargin">
-       <number>6</number>
-      </property>
-      <property name="topMargin">
-       <number>6</number>
-      </property>
-      <property name="rightMargin">
-       <number>6</number>
-      </property>
-      <property name="bottomMargin">
-       <number>6</number>
-      </property>
-      <item>
-       <widget class="QPushButton" name="submit_pushButton">
-        <property name="text">
-         <string>Submit</string>
-        </property>
-        <property name="autoDefault">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="close_pushButton">
-        <property name="text">
-         <string>Close</string>
-        </property>
-        <property name="autoDefault">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
+      <layout class="QHBoxLayout" name="buttonBox_horizontalLayout">
+       <property name="spacing">
+        <number>2</number>
+       </property>
+       <property name="leftMargin">
+        <number>6</number>
+       </property>
+       <property name="topMargin">
+        <number>6</number>
+       </property>
+       <property name="rightMargin">
+        <number>6</number>
+       </property>
+       <property name="bottomMargin">
+        <number>6</number>
+       </property>
+       <item>
+        <widget class="QPushButton" name="submit_pushButton">
+         <property name="text">
+          <string>Submit</string>
+         </property>
+         <property name="autoDefault">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="close_pushButton">
+         <property name="text">
+          <string>Close</string>
+         </property>
+         <property name="autoDefault">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -1313,7 +1574,7 @@
  <tabstops>
   <tabstop>submitTo_comboBox</tabstop>
   <tabstop>jobType_comboBox</tabstop>
-  <tabstop>submitOptions_scrollArea</tabstop>
+  <tabstop>settings_scrollArea</tabstop>
   <tabstop>command_lineEdit</tabstop>
   <tabstop>commandBrowse_toolButton</tabstop>
   <tabstop>flags_lineEdit</tabstop>
@@ -1345,50 +1606,18 @@
  </resources>
  <connections>
   <connection>
-   <sender>priority_spinBox</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>priority_slider</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>96</x>
-     <y>579</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>366</x>
-     <y>585</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>priority_slider</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>priority_spinBox</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>366</x>
-     <y>585</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>96</x>
-     <y>579</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>taskSize_spinBox</sender>
    <signal>valueChanged(int)</signal>
    <receiver>taskSize_slider</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>140</x>
-     <y>467</y>
+     <x>148</x>
+     <y>307</y>
     </hint>
     <hint type="destinationlabel">
-     <x>366</x>
-     <y>468</y>
+     <x>195</x>
+     <y>306</y>
     </hint>
    </hints>
   </connection>
@@ -1399,12 +1628,44 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>366</x>
-     <y>468</y>
+     <x>197</x>
+     <y>321</y>
     </hint>
     <hint type="destinationlabel">
-     <x>140</x>
-     <y>467</y>
+     <x>115</x>
+     <y>323</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>priority_spinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>priority_slider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>100</x>
+     <y>421</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>147</x>
+     <y>418</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>priority_slider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>priority_spinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>208</x>
+     <y>433</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>71</x>
+     <y>436</y>
     </hint>
    </hints>
   </connection>

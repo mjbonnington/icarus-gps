@@ -91,7 +91,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		# self.ui.layers_groupBox.toggled.connect(self.getRenderLayers)
 		# self.ui.layers_lineEdit.editingFinished.connect(self.checkRenderLayers)
 
-		# self.setupWidgets(self.ui.submitOptions_scrollAreaWidgetContents)
+		# self.setupWidgets(self.ui.settings_scrollAreaWidgetContents)
 		# self.ui.renderer_comboBox.currentIndexChanged.connect(self.storeComboBoxValue)
 		# self.ui.layers_lineEdit.textEdited.connect(self.storeLineEditValue)
 
@@ -276,10 +276,9 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		# Show/hide specific UI elements based on selected queue manager
 		# rq_show_list = [self.ui.flags_label, self.ui.flags_lineEdit]
-		rq_show_list = []
-		dl_show_list = [self.ui.pool_label, self.ui.group_label, 
-		                self.ui.pool_comboBox, self.ui.group_comboBox, 
-		                self.ui.getPools_toolButton, self.ui.getGroups_toolButton]
+		rq_show_list = [self.ui.interactiveLicense_checkBox]
+		dl_show_list = [self.ui.pool_label, self.ui.pool_frame, 
+		                self.ui.group_label, self.ui.group_frame]
 
 		for item in rq_show_list + dl_show_list:
 			item.setEnabled(False)
@@ -734,7 +733,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 				                         leaveUnmatchedTokens=True, 
 				                         genericFrameImageName=padding)
 		except:
-			path = ""
+			path = [""]
 
 		return path[0]
 
@@ -743,13 +742,14 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		""" Get the output path from a Nuke write node.
 			NUKE-SPECIFIC
 		"""
-		# try:
 		node = nuke.toNode(writeNode)
-		path = node.knob('file').evaluate()
 
-		#path = osOps.absolutePath(node.knob('file'))
-		# except:
-		# 	path = ""
+		try:
+			#path = node.knob('file').value()  # Gets the unprocessed output file path string
+			path = node.knob('file').evaluate()  # Evaluates the path as a Nuke TCL expression
+			#path = osOps.absolutePath(node.knob('file'))  # Preserves padding but doesn't expand environment variables
+		except:
+			path = ""
 
 		return path
 
