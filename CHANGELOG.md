@@ -1,4 +1,4 @@
-v0.9.12 (YYYY-MM-DD)
+v0.9.12 (2018-04-27)
 -	[Icarus] Started to write some proper documentation.
 -	[Icarus] Modified Redshift centralised deployment to use Maya modules.
 -	[Maya] Added a simple script to list all attribute overrides on the current render layer.

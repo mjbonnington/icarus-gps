@@ -88,7 +88,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.colError         = QtGui.QColor("#bc0000")  # red
 
 		# Instantiate render queue class and load data
-		self.rq = renderQueue.renderQueue()
+		self.rq = renderQueue.RenderQueue()
 		self.rq.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'renderQueue.xml'), use_template=False)
 
 		# Create a QProcess object to handle the rendering process

@@ -3,7 +3,7 @@
 # [Icarus] renderQueue.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2016-2017 Gramercy Park Studios
+# (c) 2016-2018 Gramercy Park Studios
 #
 # Manages the Render Queue XML database.
 
@@ -12,7 +12,7 @@ import xml.etree.ElementTree as ET
 import xmlData
 
 
-class renderQueue(xmlData.XMLData):
+class RenderQueue(xmlData.XMLData):
 	""" Class to hold the render queue database.
 		Inherits XMLData class
 	"""

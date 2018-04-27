@@ -10,7 +10,10 @@
 
 
 import os
+import re
+import sys
 import time
+import traceback
 
 from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
@@ -863,6 +866,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			dialog = pDialog.dialog()
 
 			if dialog.display(dialog_msg, dialog_title):
+				# Actually submit the job
 				if self.submitTo == "Render Queue":
 					result, result_msg = self.submitToRenderQueue(**submit_args)
 				if self.submitTo == "Deadline":
@@ -914,7 +918,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		elif self.jobType == "Maya":
 			submit_args['plugin'] = "MayaBatch"  # Deadline only
 			submit_args['renderCmdEnvVar'] = 'MAYARENDERVERSION'  # RQ only
-			submit_args['flags'] = self.ui.flags_lineEdit.text()  # RQ only
+			submit_args['flags'] = ""  # RQ only
 			submit_args['version'] = os.environ['MAYA_VER']  #jobData.getAppVersion('Maya')
 			submit_args['renderer'] = self.ui.renderer_comboBox.currentText()  # Maya submit only
 			submit_args['camera'] = self.ui.camera_comboBox.currentText()
@@ -947,10 +951,11 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		elif self.jobType == "Nuke":
 			submit_args['plugin'] = "Nuke"  # Deadline only
 			submit_args['renderCmdEnvVar'] = 'NUKEVERSION'  # RQ only
-			submit_args['flags'] = self.ui.flags_lineEdit.text()  # RQ only
+			submit_args['flags'] = ""  # RQ only
 			submit_args['version'] = os.environ['NUKE_VER'].split('v')[0]  #jobData.getAppVersion('Nuke')
-			submit_args['nukeX'] = self.getCheckBoxValue(self.ui.useNukeX_checkBox)
 			submit_args['isMovie'] = self.getCheckBoxValue(self.ui.isMovie_checkBox)
+			submit_args['nukeX'] = self.getCheckBoxValue(self.ui.useNukeX_checkBox)
+			submit_args['interactiveLicense'] = self.getCheckBoxValue(self.ui.interactiveLicense_checkBox)
 			if submit_args['isMovie']:  # Override task size if output is movie
 				submit_args['taskSize'] = len(self.numList)
 			scene = self.makePathAbsolute(self.ui.nukeScript_comboBox.currentText()).replace("\\", "/")
@@ -971,7 +976,13 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 	def submitToRenderQueue(self, **kwargs):
 		""" Submit job to render queue.
 		"""
-		timeFormatStr = "%Y/%m/%d %H:%M:%S" #"%a, %d %b %Y %H:%M:%S"
+		time_format_str = "%Y/%m/%d %H:%M:%S" #"%a, %d %b %Y %H:%M:%S"
+		cmd_output = ""
+		result_msg = ""
+
+		if kwargs is not None:
+			for key, value in kwargs.items(): # iteritems(): for Python 2.x
+				verbose.print_("%24s = %s" %(key, value))
 
 		# Check render command is valid
 		renderCmdEnvVar = kwargs['renderCmdEnvVar']
@@ -982,19 +993,62 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			verbose.error(error_msg)
 			return False, "Failed to submit job.\n%s" %error_msg
 
-		# Package option variables into tuples
-		genericOpts = kwargs['jobName'], self.jobType, kwargs['frames'], kwargs['taskSize'], kwargs['priority']
-		if self.jobType == "Maya":
-			renderOpts = kwargs['scene'], kwargs['mayaProject'], kwargs['flags'], kwargs['renderer'], renderCmd
-		elif self.jobType == "Nuke":
-			renderOpts = kwargs['scene'], kwargs['flags'], renderCmd
-
 		# Instantiate render queue class, load data, and create new job
-		rq = renderQueue.renderQueue()
+		rq = renderQueue.RenderQueue()
 		rq.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'renderQueue.xml'), use_template=False)
-		rq.newJob(genericOpts, renderOpts, self.taskList, os.environ['IC_USERNAME'], time.strftime(timeFormatStr), kwargs['comment'])
 
-		return True, "Successfully submitted job."
+		try:
+			# Set up Nuke command-line flags
+			if self.jobType == "Nuke":
+				if kwargs['nukeX']:
+					kwargs['flags'] += "--nukex "
+				if kwargs['interactiveLicense']:
+					kwargs['flags'] += "-i "
+
+			if kwargs['renderLayers']:  # Batch submission -----------------------
+				# Generate submission info files
+				num_jobs = 0
+				for renderLayer in re.split(r',\s*', kwargs['renderLayers']): # use re for more versatility, or even better pass as list
+					kwargs['renderLayer'] = renderLayer
+
+					# Package option variables into tuples
+					jobName = "%s - %s" %(kwargs['jobName'], renderLayer)
+					genericOpts = jobName, self.jobType, kwargs['frames'], kwargs['taskSize'], kwargs['priority']
+					if self.jobType == "Maya":
+						mayaFlags = "-rl %s" %renderLayer
+						renderOpts = kwargs['scene'], kwargs['mayaProject'], mayaFlags, kwargs['renderer'], renderCmd
+					elif self.jobType == "Nuke":
+						nukeFlags = "%s -X %s" %(kwargs['flags'], renderLayer)
+						renderOpts = kwargs['scene'], nukeFlags, renderCmd
+
+					rq.newJob(genericOpts, renderOpts, self.taskList, os.environ['IC_USERNAME'], time.strftime(time_format_str), kwargs['comment'])
+					num_jobs += 1
+
+				result = True
+				result_msg = "Successfully submitted %d %s." %(num_jobs, verbose.pluralise("job", num_jobs))
+
+			else:  # Single job submission ---------------------------------------
+				# Package option variables into tuples
+				genericOpts = kwargs['jobName'], self.jobType, kwargs['frames'], kwargs['taskSize'], kwargs['priority']
+				if self.jobType == "Maya":
+					renderOpts = kwargs['scene'], kwargs['mayaProject'], kwargs['flags'], kwargs['renderer'], renderCmd
+				elif self.jobType == "Nuke":
+					renderOpts = kwargs['scene'], kwargs['flags'], renderCmd
+
+				rq.newJob(genericOpts, renderOpts, self.taskList, os.environ['IC_USERNAME'], time.strftime(time_format_str), kwargs['comment'])
+
+				result = True
+				result_msg = "Successfully submitted job."
+
+		except:  # Submission failed ---------------------------------------------
+			result = False
+			exc_type, exc_value, exc_traceback = sys.exc_info()
+			traceback.print_exception(exc_type, exc_value, exc_traceback)
+			result_msg = "Failed to submit job."
+			verbose.error(result_msg)
+			result_msg += "\nCheck console output for details."
+
+		return result, result_msg
 
 
 	def closeEvent(self, event):
