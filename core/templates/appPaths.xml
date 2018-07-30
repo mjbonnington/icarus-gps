@@ -8,7 +8,7 @@
 			<var>MAYA_DEBUG_ENABLE_CRASH_REPORTING=0</var>
 			<var>MAYA_FORCE_PANEL_FOCUS=0</var>
 		</env-vars>
-		<flags>-hideConsole</flags>
+		<flagsX>-proj $MAYADIR</flagsX>
 		<path version="[template]">
 			<osx>/Applications/Autodesk/maya[ver]/Maya.app/Contents/MacOS/Maya</osx>
 			<linux>/usr/autodesk/maya[ver]-x64/bin/maya[ver]</linux>
@@ -142,6 +142,16 @@
 			<linux>/usr/local/Nuke10.5v4/Nuke10.5</linux>
 			<win>C:/Program Files/Nuke10.5v4/Nuke10.5.exe</win>
 		</path>
+		<path version="11.0v2">
+			<osx>/Applications/Nuke11.0v2/Nuke11.0v2.app/Contents/MacOS/Nuke11.0v2</osx>
+			<linux>/usr/local/Nuke11.0v2/Nuke11.0</linux>
+			<win>C:/Program Files/Nuke11.0v2/Nuke11.0.exe</win>
+		</path>
+		<path version="11.2v1">
+			<osx>/Applications/Nuke11.2v1/Nuke11.2v1.app/Contents/MacOS/Nuke11.2v1</osx>
+			<linux>/usr/local/Nuke11.2v1/Nuke11.2</linux>
+			<win>C:/Program Files/Nuke11.2v1/Nuke11.2.exe</win>
+		</path>
 	</app>
 	<app id="hieroplayer" name="HieroPlayer" projectFolders="False" visible="True">
 		<vendor>Foundry</vendor>
@@ -168,20 +178,10 @@
 		<vendor>Foundry</vendor>
 		<category>3D, DCC</category>
 		<icon />
-		<path version="[template]">
-			<osx />
-			<linux />
-			<win>C:/Program Files/Luxology/modo/[ver]/modo.exe</win>
-		</path>
 		<path version="11.0v1">
 			<osx />
 			<linux />
 			<win>C:/Program Files/Luxology/modo/11.0v1/modo.exe</win>
-		</path>
-		<path version="11.2v2">
-			<osx />
-			<linux />
-			<win>C:/Program Files/Luxology/modo/11.2v2/modo.exe</win>
 		</path>
 	</app>
 	<app id="mari" name="Mari" projectFolders="True" visible="True">
@@ -324,30 +324,36 @@
 		<category>3D, DCC</category>
 		<icon />
 		<submenu name="Houdini Core" visible="True">
-			<flags />
-			<modifier />
+			<flags>-core</flags>
 		</submenu>
 		<submenu name="Houdini FX" visible="True">
 			<flags />
-			<modifier />
 		</submenu>
 		<submenu name="Houdini Apprentice" visible="True">
-			<flags />
-			<modifier />
+			<flags>-apprentice</flags>
 		</submenu>
 		<submenu name="Houdini Indie" visible="True">
-			<flags />
-			<modifier />
+			<flags>-indie</flags>
 		</submenu>
+		<path version="[template]">
+			<osx>/Library/Frameworks/Houdini.framework/Versions/[ver]/Resources/bin/houdini</osx>
+			<linux>/usr/local/Houdini/bin/houdini</linux>
+			<win>C:/Program Files/Side Effects Software/Houdini [ver]/bin/houdini.exe</win>
+		</path>
 		<path version="15.0.475">
 			<osx />
 			<linux />
-			<win>C:/Program Files/Side Effects Software/Houdini 15.0.475/bin/hescape.exe</win>
+			<win>C:/Program Files/Side Effects Software/Houdini 15.0.475/bin/houdini.exe</win>
 		</path>
 		<path version="16.0.557">
 			<osx />
 			<linux />
-			<win>C:/Program Files/Side Effects Software/Houdini 16.0.557/bin/houdinicore.exe</win>
+			<win>C:/Program Files/Side Effects Software/Houdini 16.0.557/bin/houdini.exe</win>
+		</path>
+		<path version="16.5.496">
+			<osx />
+			<linux />
+			<win>C:/Program Files/Side Effects Software/Houdini 16.5.496/bin/houdini.exe</win>
 		</path>
 	</app>
 	<app id="pftrack" name="PFTrack" projectFolders="True" visible="True">
@@ -418,7 +424,7 @@
 			<win>C:/Program Files/Thinkbox/Deadline8/bin/deadlinelauncher.exe</win>
 		</path>
 		<path version="10">
-			<osx />
+			<osx>/Applications/Thinkbox/Deadline10/DeadlineLauncher10.app/Contents/MacOS/DeadlineLauncher10</osx>
 			<linux />
 			<win>C:/Program Files/Thinkbox/Deadline10/bin/deadlinelauncher.exe</win>
 		</path>
@@ -436,6 +442,46 @@
 			<osx>/Applications/djv-1.1.0-OSX-64.app/Contents/Resources/bin/djv_view.sh</osx>
 			<linux />
 			<win>C:/Program Files/djv-1.1.0-Windows-64/bin/djv_view.exe</win>
+		</path>
+	</app>
+	<app id="rs" name="Redshift" projectFolders="False" visible="False">
+		<path version="[template]">
+			<osx />
+			<linux />
+			<win>Z:/_Library/3D/Redshift/[ver]</win>
+		</path>
+		<path version="1.3.13">
+			<osx />
+			<linux />
+			<win>Z:/_Library/3D/Redshift/1.3.13</win>
+		</path>
+		<path version="2.0.58">
+			<osx />
+			<linux />
+			<win>Z:/_Library/3D/Redshift/2.0.58</win>
+		</path>
+		<path version="2.0.78">
+			<osx />
+			<linux />
+			<win>Z:/_Library/3D/Redshift/2.0.78</win>
+		</path>
+		<path version="2.5.27">
+			<osx />
+			<linux />
+			<win>Z:/_Library/3D/Redshift/2.5.27</win>
+		</path>
+	</app>
+	<app id="sublime" name="SublimeText" projectFolders="False" visible="False">
+		<category>Text Editor</category>
+		<path version="[template]">
+			<osx />
+			<linux />
+			<win />
+		</path>
+		<path version="3.1.1">
+			<osx>/Applications/Sublime Text.app/Contents/MacOS/Sublime Text</osx>
+			<linux />
+			<win>C:/Program Files/Sublime Text 3/sublime_text.exe</win>
 		</path>
 	</app>
 </root>

@@ -1,6 +1,19 @@
 <?xml version='1.0' encoding='utf-8'?>
 <root location="$SHOTPATH/3D">
 	<dir name="houdini">
-		<dir name="$IC_USERNAME" env="HOUDINIDIR" />
+		<dir name="$IC_USERNAME" env="HIP">
+			<dir name="abc" />
+			<dir name="audio" />
+			<dir name="comp" />
+			<dir name="desk" />
+			<dir name="flip" />
+			<dir name="geo" />
+			<dir name="hda" />
+			<dir name="render" env="HOUDINIRENDERSDIR" />
+			<dir name="scripts" />
+			<dir name="sim" />
+			<dir name="tex" env="HOUDINITEXTURESDIR" />
+			<dir name="video" />
+		</dir>
 	</dir>
 </root>

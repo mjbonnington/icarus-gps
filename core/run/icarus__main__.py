@@ -26,6 +26,12 @@ except ImportError:
 	pass
 
 try:
+	import hou
+	os.environ['IC_ENV'] = "HOUDINI"
+except ImportError:
+	pass
+
+try:
 	import nuke
 	import nukescripts
 	os.environ['IC_ENV'] = "NUKE"
@@ -349,6 +355,41 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 							toolButton.setChecked(True)
 			except:
 				verbose.print_("Could not select %s asset type." %assetType)
+
+
+		#######################
+		# Houdini environment #
+		#######################
+
+		elif os.environ['IC_ENV'] == 'HOUDINI':
+			pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_houdini_disabled.png")
+			self.ui.appIcon_label.setPixmap(pixmap)
+
+			# Hide certain UI items
+			uiHideLs = ['assetSubType_listWidget', 'toolMenu_toolButton']
+			for uiItem in uiHideLs:
+				hideProc = 'self.ui.%s.hide()' %uiItem
+				eval(hideProc)
+
+			self.connectNewSignalsSlots()
+			self.populateShotLs(self.ui.publishToShot_comboBox)
+			self.populateShotLs(self.ui.gatherFromShot_comboBox)
+			self.updateJobLabel()
+			self.ui.main_tabWidget.removeTab(0) # Remove 'Launcher' tab
+			self.ui.publishType_tabWidget.removeTab(1) # Remove 'nk Asset' tab
+			self.ui.publishType_tabWidget.removeTab(0) # Remove 'ma Asset' tab
+
+			# # Attempt to set the publish asset type button to remember the
+			# # last selection - 'self.connectNewSignalsSlots()' must be called
+			# # already.
+			# try:
+			# 	assetType = userPrefs.query('main', 'lastpublishma')
+			# 	for toolButton in self.ui.ma_assetType_frame.children():
+			# 		if isinstance(toolButton, QtWidgets.QToolButton):
+			# 			if toolButton.text() == assetType:
+			# 				toolButton.setChecked(True)
+			# except:
+			# 	verbose.print_("Could not select %s asset type." %assetType)
 
 
 		####################
@@ -1980,6 +2021,15 @@ def run_maya():
 	elif DOCK_WITH_MAYA_UI:
 		allowed_areas = ['right', 'left']
 		mc.dockControl(WINDOW_TITLE, label=WINDOW_TITLE, area='left', content=WINDOW_OBJECT, allowedArea=allowed_areas)
+
+
+def run_houdini():
+	""" Run in Houdini.
+	"""
+	# UI._houdini_delete_ui(WINDOW_OBJECT, WINDOW_TITLE)  # Delete any already existing UI
+	# icApp = IcarusApp(parent=UI._houdini_main_window())
+	icApp = IcarusApp(parent=hou.qt.mainWindow())
+	icApp.show()  # Show the UI
 
 
 def run_nuke():

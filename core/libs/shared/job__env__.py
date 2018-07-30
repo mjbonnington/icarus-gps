@@ -146,6 +146,7 @@ def setEnv(job, shot, shotPath):
 	os.environ['PROXY_RESOLUTIONX'] = getInheritedValue('resolution', 'proxyWidth')
 	os.environ['PROXY_RESOLUTIONY'] = getInheritedValue('resolution', 'proxyHeight')
 	os.environ['ASPECTRATIO']       = str(float(os.environ['RESOLUTIONX']) / float(os.environ['RESOLUTIONY']))
+	os.environ['EDITOR']            = getAppExecPath('SublimeText')  # Make dynamic 
 
 
 	# Application specific environment variables...

@@ -1,3 +1,6 @@
+v0.9.13 (--)
+-	[Icarus] Added preliminary support for Houdini.
+
 v0.9.12 (2018-04-27)
 -	[Icarus] Started to write some proper documentation.
 -	[Icarus] Modified Redshift centralised deployment to use Maya modules.

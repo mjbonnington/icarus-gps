@@ -137,7 +137,7 @@
       <bool>false</bool>
      </property>
      <property name="text">
-      <string>Vfx</string>
+      <string>vfx</string>
      </property>
      <property name="xmlTag" stdset="0">
       <string>shotsRelDir</string>

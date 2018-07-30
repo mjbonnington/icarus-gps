@@ -657,6 +657,12 @@ def _maya_delete_ui(window_object, window_title):
 		mc.deleteUI('MayaWindow|' + window_title)  # Delete docked window
 
 
+# def _houdini_delete_ui(window_object, window_title):
+# 	""" Delete existing UI in Houdini.
+# 	"""
+# 	pass
+
+
 def _nuke_delete_ui(window_object, window_title):
 	""" Delete existing UI in Nuke.
 	"""
@@ -672,6 +678,13 @@ def _maya_main_window():
 		if obj.objectName() == 'MayaWindow':
 			return obj
 	raise RuntimeError("Could not find MayaWindow instance")
+
+
+# def _houdini_main_window():
+# 	""" Return Houdini's main window.
+# 	"""
+# 	return hou.qt.mainWindow()
+# 	raise RuntimeError("Could not find Houdini's main window instance")
 
 
 def _nuke_main_window():
