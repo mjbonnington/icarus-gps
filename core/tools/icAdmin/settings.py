@@ -97,7 +97,7 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 		# Set window title
 		if settingsType == "Job":
-			title_suffix = ": " + os.environ['JOB']
+			title_suffix = ": " + os.environ['SHOW']
 		elif settingsType == "Shot":
 			title_suffix = ": " + os.environ['SHOT']
 		else:

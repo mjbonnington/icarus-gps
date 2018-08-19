@@ -5,7 +5,7 @@
 			<dir name=".cmdsOrg">
 				<file name="commandsOrganizer.dat" env="RF_COMMANDS_ORGANIZER_FILE_PATH" />
 			</dir>
-			<dir name="${JOB}_${SHOT}" env="RFDEFAULTPROJECT" />
+			<dir name="${SHOW}_${SHOT}" env="RFDEFAULTPROJECT" />
 		</dir>
 	</dir>
 </root>

@@ -15,7 +15,7 @@ import pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, djvOps, in
 
 def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes):
 
-	job = os.environ['JOB']
+	job = os.environ['SHOW']
 	assetType = 'render'
 	prefix = ''
 	convention = ''

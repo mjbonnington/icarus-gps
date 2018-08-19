@@ -1,6 +1,6 @@
 @echo off
 
-set prompt=$p$_[%IC_USERNAME%$s%JOB%-%SHOT%]$s$g
+set prompt=$p$_[%IC_USERNAME%$s%SHOW%-%SHOT%]$s$g
 color 08
 
 rem cd into shot dir

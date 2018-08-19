@@ -176,18 +176,18 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Header toolbar
 		self.ui.about_toolButton.clicked.connect(self.about)
 
-		# Publishing UI
+		# # Publishing UI
+		# # self.ui.renderPblAdd_pushButton.clicked.connect(self.renderTableAdd)
+		# # self.ui.renderPblRemove_pushButton.clicked.connect(self.renderTableRm)
+		# self.ui.renderPblSetMain_pushButton.clicked.connect(self.setLayerAsMain) # remove when render publishing works properly
 		# self.ui.renderPblAdd_pushButton.clicked.connect(self.renderTableAdd)
-		# self.ui.renderPblRemove_pushButton.clicked.connect(self.renderTableRm)
-		self.ui.renderPblSetMain_pushButton.clicked.connect(self.setLayerAsMain) # remove when render publishing works properly
-		self.ui.renderPblAdd_pushButton.clicked.connect(self.renderTableAdd)
-		self.ui.renderPblRemove_pushButton.clicked.connect(self.renderTableRemove)
-		# self.ui.renderPblRevert_pushButton.clicked.connect(self.renderTableClear)
-		self.ui.renderPbl_treeWidget.currentItemChanged.connect(self.updateRenderPublishUI)
-		self.ui.renderPbl_treeWidget.itemDoubleClicked.connect(self.renderPreview)
-		self.ui.dailyPbl_treeWidget.itemDoubleClicked.connect(self.dailyPreview)
-		self.ui.dailyPblType_comboBox.currentIndexChanged.connect(self.setDailyType)
-		self.ui.dailyPblAdd_pushButton.clicked.connect(self.dailyTableAdd)
+		# self.ui.renderPblRemove_pushButton.clicked.connect(self.renderTableRemove)
+		# # self.ui.renderPblRevert_pushButton.clicked.connect(self.renderTableClear)
+		# self.ui.renderPbl_treeWidget.currentItemChanged.connect(self.updateRenderPublishUI)
+		# self.ui.renderPbl_treeWidget.itemDoubleClicked.connect(self.renderPreview)
+		# self.ui.dailyPbl_treeWidget.itemDoubleClicked.connect(self.dailyPreview)
+		# self.ui.dailyPblType_comboBox.currentIndexChanged.connect(self.setDailyType)
+		# self.ui.dailyPblAdd_pushButton.clicked.connect(self.dailyTableAdd)
 		self.ui.publish_pushButton.clicked.connect(self.initPublish)
 
 
@@ -198,8 +198,8 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.launchTab = self.ui.main_tabWidget.widget(0)
 		self.publishTab = self.ui.main_tabWidget.widget(1)
 		self.gatherTab = self.ui.main_tabWidget.widget(2)
-		self.publishAssetTab = self.ui.publishType_tabWidget.widget(0)
-		self.publishRenderTab = self.ui.publishType_tabWidget.widget(1)
+		# self.publishAssetTab = self.ui.publishType_tabWidget.widget(0)
+		# self.publishRenderTab = self.ui.publishType_tabWidget.widget(1)
 
 
 		##########################
@@ -213,7 +213,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			verbose.registerStatusBar(self.ui.statusbar)
 
 			# Hide UI items relating to app environment(s)
-			uiHideLs = ['shotEnv_toolButton', 'appIcon_label']
+			uiHideLs = ['shotEnv_toolButton', 'appIcon_label', 'seq_label', 'seq_comboBox']
 			for uiItem in uiHideLs:
 				hideProc = 'self.ui.%s.hide()' %uiItem
 				eval(hideProc)
@@ -226,9 +226,9 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			for i in range(0, self.ui.main_tabWidget.count()-1):
 				self.ui.main_tabWidget.removeTab(1)
 
-			# Delete 'ma_asset', 'nk_asset', 'Publish' tabs
-			for i in range(0, 2):
-				self.ui.publishType_tabWidget.removeTab(0)
+			# # Delete 'ma_asset', 'nk_asset', 'Publish' tabs
+			# for i in range(0, 2):
+			# 	self.ui.publishType_tabWidget.removeTab(0)
 
 			# Initialise app launch icons
 			self.al = appLauncher.AppLauncher(self, self.ui.launchApp_scrollAreaWidgetContents)
@@ -342,7 +342,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.populateShotLs(self.ui.gatherFromShot_comboBox)
 			self.updateJobLabel()
 			self.ui.main_tabWidget.removeTab(0) # Remove 'Launcher' tab
-			self.ui.publishType_tabWidget.removeTab(1) # Remove 'nk Asset' tab
+			# self.ui.publishType_tabWidget.removeTab(1) # Remove 'nk Asset' tab
 
 			# Attempt to set the publish asset type button to remember the
 			# last selection - 'self.connectNewSignalsSlots()' must be called
@@ -376,8 +376,8 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.populateShotLs(self.ui.gatherFromShot_comboBox)
 			self.updateJobLabel()
 			self.ui.main_tabWidget.removeTab(0) # Remove 'Launcher' tab
-			self.ui.publishType_tabWidget.removeTab(1) # Remove 'nk Asset' tab
-			self.ui.publishType_tabWidget.removeTab(0) # Remove 'ma Asset' tab
+			# self.ui.publishType_tabWidget.removeTab(1) # Remove 'nk Asset' tab
+			# self.ui.publishType_tabWidget.removeTab(0) # Remove 'ma Asset' tab
 
 			# # Attempt to set the publish asset type button to remember the
 			# # last selection - 'self.connectNewSignalsSlots()' must be called
@@ -411,7 +411,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.populateShotLs(self.ui.gatherFromShot_comboBox)
 			self.updateJobLabel()
 			self.ui.main_tabWidget.removeTab(0) # Remove 'Launcher' tab
-			self.ui.publishType_tabWidget.removeTab(0) # Remove 'ma Asset' tab
+			# self.ui.publishType_tabWidget.removeTab(0) # Remove 'ma Asset' tab
 
 			# Attempt to set the publish asset type button to remember the
 			# last selection - 'self.connectNewSignalsSlots()' must be called
@@ -435,18 +435,18 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 	def connectNewSignalsSlots(self):
 		""" Connects new signals and slots after job and shot env is set.
 		"""
-		self.ui.publishType_tabWidget.currentChanged.connect(self.adjustPblTypeUI)
+		# self.ui.publishType_tabWidget.currentChanged.connect(self.adjustPblTypeUI)
 
-		for toolButton in self.ui.ma_assetType_frame.children():
-			if isinstance(toolButton, QtWidgets.QToolButton):
-				toolButton.toggled.connect(self.adjustPublishOptsMayaUI)
-		for toolButton in self.ui.nk_assetType_frame.children():
-			if isinstance(toolButton, QtWidgets.QToolButton):
-				toolButton.toggled.connect(self.adjustPublishOptsNukeUI)
+		# for toolButton in self.ui.ma_assetType_frame.children():
+		# 	if isinstance(toolButton, QtWidgets.QToolButton):
+		# 		toolButton.toggled.connect(self.adjustPublishOptsMayaUI)
+		# for toolButton in self.ui.nk_assetType_frame.children():
+		# 	if isinstance(toolButton, QtWidgets.QToolButton):
+		# 		toolButton.toggled.connect(self.adjustPublishOptsNukeUI)
 
-		# self.ui.animation_toolButton.clicked.connect(self.setDropDownToShotEnv)
-		# self.ui.shot_toolButton.clicked.connect(self.setDropDownToShotEnv)
-		# self.ui.comp_toolButton.clicked.connect(self.setDropDownToShotEnv) #self.adjustPblTypeUI
+		# # self.ui.animation_toolButton.clicked.connect(self.setDropDownToShotEnv)
+		# # self.ui.shot_toolButton.clicked.connect(self.setDropDownToShotEnv)
+		# # self.ui.comp_toolButton.clicked.connect(self.setDropDownToShotEnv) #self.adjustPblTypeUI
 
 		self.ui.gatherFromShot_radioButton.clicked.connect(self.adjustMainUI)
 		self.ui.gatherFromShot_comboBox.currentIndexChanged.connect(self.adjustMainUI)
@@ -745,7 +745,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.setComboBox(self.ui.shot_comboBox, last_item)
 
 			self.ui.shot_comboBox.setEnabled(True)
-			self.ui.setShot_label.setEnabled(True)
+			self.ui.shot_label.setEnabled(True)
 
 			return True
 
@@ -753,7 +753,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		else:
 			self.ui.shot_comboBox.insertItem(0, '[None]')
 			self.ui.shot_comboBox.setEnabled(False)
-			self.ui.setShot_label.setEnabled(False)
+			self.ui.shot_label.setEnabled(False)
 
 			# Warning dialog
 			import pDialog
@@ -772,7 +772,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		""" Populate specified combo box with shot list.
 		"""
 		comboBox.clear()
-		shotLs = self.j.listShots(os.environ['JOB'])
+		shotLs = self.j.listShots(os.environ['SHOW'])
 		if shotLs:
 			comboBox.insertItems(0, shotLs)
 			comboBox.setCurrentIndex(comboBox.findText(os.environ['SHOT']))
@@ -812,7 +812,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		if self.j.checkShotExists(self.job, self.shot):
 
 			if self.j.setup(self.job, self.shot):
-				self.adjustPblTypeUI()
+				#self.adjustPblTypeUI()
 				self.populateShotLs(self.ui.publishToShot_comboBox)
 				self.populateShotLs(self.ui.gatherFromShot_comboBox)
 				self.connectNewSignalsSlots()
@@ -945,8 +945,8 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.launchApp_frame.setEnabled(False)
 		self.ui.main_tabWidget.removeTab(1)  # Remove publish & assets tab
 		self.ui.main_tabWidget.removeTab(1)  # Remove publish & assets tab
-		self.ui.renderPbl_treeWidget.clear() # Clear the render layer tree view widget
-		self.ui.dailyPbl_treeWidget.clear()  # Clear the dailies tree view widget
+		# self.ui.renderPbl_treeWidget.clear() # Clear the render layer tree view widget
+		# self.ui.dailyPbl_treeWidget.clear()  # Clear the dailies tree view widget
 		self.ui.shotEnv_toolButton.setText('')
 		self.ui.shotEnv_toolButton.hide()
 		self.ui.menuLauncher.setEnabled(False)
@@ -962,7 +962,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		""" Updates job label tool button with the current job and shot.
 		"""
 		if os.environ['IC_ENV'] != 'STANDALONE':
-			self.job = os.environ['JOB']
+			self.job = os.environ['SHOW']
 			self.shot = os.environ['SHOT']
 
 		self.ui.shotEnv_toolButton.setText('%s - %s' %(self.job, self.shot))

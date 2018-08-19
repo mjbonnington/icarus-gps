@@ -21,7 +21,7 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 	nameBody, padding_, extension = dailySeq.rsplit('.', 2)
 	padding = len(padding_)
 
-	job = os.environ['JOB']
+	job = os.environ['SHOW']
 	assetType = 'dailies'
 	prefix = ''
 	convention = ''

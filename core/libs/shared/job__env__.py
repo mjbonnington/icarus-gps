@@ -48,7 +48,7 @@ def setEnv(job, shot, shotPath):
 	shotDataPath = os.path.join(shotPath, os.environ['IC_METADATA'])
 
 	# Set basic environment variables
-	os.environ['JOB'] = job
+	os.environ['SHOW'] = job
 	os.environ['SHOT'] = shot
 	os.environ['JOBPATH'] = osOps.absolutePath(jobPath)
 	os.environ['SHOTPATH'] = osOps.absolutePath(shotPath)
@@ -283,7 +283,7 @@ def setEnv(job, shot, shotPath):
 	os.environ['REALFLOWVERSION']                    = getAppExecPath('RealFlow')
 	# os.environ['REALFLOWDIR']                        = osOps.absolutePath('$SHOTPATH/3D/realflow')
 	# os.environ['REALFLOWSCENESDIR']                  = osOps.absolutePath('$REALFLOWDIR/$IC_USERNAME')  # Currently needed by openDirs
-	# os.environ['RFDEFAULTPROJECT']                   = osOps.absolutePath('$REALFLOWSCENESDIR/${JOB}_${SHOT}')  # Curly brackets required for correct variable expansion
+	# os.environ['RFDEFAULTPROJECT']                   = osOps.absolutePath('$REALFLOWSCENESDIR/${SHOW}_${SHOT}')  # Curly brackets required for correct variable expansion
 	# os.environ['RF_COMMANDS_ORGANIZER_FILE_PATH']    = osOps.absolutePath('$REALFLOWSCENESDIR/.cmdsOrg/commandsOrganizer.dat')
 	os.environ['RF_RSC']                             = osOps.absolutePath('$IC_BASEDIR/rsc/realflow')
 	os.environ['RF_STARTUP_PYTHON_SCRIPT_FILE_PATH'] = osOps.absolutePath('$IC_BASEDIR/rsc/realflow/scripts/startup.rfs')

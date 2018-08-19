@@ -901,7 +901,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		submit_args['username'] = os.environ['IC_USERNAME']
 
 		# Environment variables...
-		submit_args['envVars'] = ['JOB', 'SHOT', 'JOBPATH', 'SHOTPATH']
+		submit_args['envVars'] = ['SHOW', 'SHOT', 'JOBPATH', 'SHOTPATH']
 
 		################################
 		# Application-specific options #

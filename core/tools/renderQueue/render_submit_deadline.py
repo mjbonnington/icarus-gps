@@ -87,7 +87,7 @@ def generate_job_info_file(**kwargs):
 		for i, envVar in enumerate(kwargs['envVars']):
 			fh.write("EnvironmentKeyValue%d=%s=%s\n" %(i, envVar, os.environ[envVar]))
 
-		fh.write("ExtraInfo0=%s\n" %os.environ['JOB'])
+		fh.write("ExtraInfo0=%s\n" %os.environ['SHOW'])
 		fh.write("ExtraInfo1=%s\n" %os.environ['SHOT'])
 
 	return jobInfoFile

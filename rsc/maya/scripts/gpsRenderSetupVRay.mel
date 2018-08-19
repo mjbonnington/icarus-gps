@@ -47,7 +47,7 @@ global proc gpsRenderSetupVRay.loadSettings()
 	// Setup frame stamp burn-in
 	setAttr "vraySettings.stamp_on" 1;
 	vray vfbControl -stamp true;
-	//string $job=`getenv JOB`;
+	//string $job=`getenv SHOW`;
 	//string $shot=`getenv SHOT`;
 	//string $user=`getenv IC_USERNAME`;
 	//string $stamp="Frame: %frame Render time: %rendertime Camera: %camera Job: " + $job + " - " + $shot;

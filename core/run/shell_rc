@@ -24,8 +24,8 @@ NO_COLOUR="\[\033[0m\]"
 function EXT_COLOR () { echo -ne "\[\033[38;5;$1m\]"; }
 
 ##echoing shot info##
-clear; echo -e "GRAMERCY PARK STUDIOS - $JOB | $SHOT"; echo
-PS1="`EXT_COLOR 64`[\u $JOB-$SHOT \W]\$ ${NO_COLOUR}"
+clear; echo -e "GRAMERCY PARK STUDIOS - $SHOW | $SHOT"; echo
+PS1="`EXT_COLOR 64`[\u $SHOW-$SHOT \W]\$ ${NO_COLOUR}"
 #PS1="\[\033[38;5;64m\][\u@\h \W]\$\[\033[0m\] "
 
 ##cd into shot dir##
