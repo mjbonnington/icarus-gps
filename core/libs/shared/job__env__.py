@@ -192,14 +192,14 @@ def setEnv(job, shot, shotPath):
 					+ osOps.absolutePath('$SHOTPUBLISHDIR/scripts') + os.pathsep \
 					+ osOps.absolutePath('$MAYASHAREDRESOURCES/scripts') + os.pathsep \
 					+ osOps.absolutePath('$MAYASHAREDRESOURCES/%s/scripts' %maya_ver)
+		iconsPath = osOps.absolutePath('$IC_BASEDIR/rsc/maya/icons') + os.pathsep \
+				  + osOps.absolutePath('$JOBPUBLISHDIR/icons') + os.pathsep \
+				  + osOps.absolutePath('$MAYASHAREDRESOURCES/%s/icons' %maya_ver)
 		if os.environ['IC_RUNNING_OS'] == "Linux":  # Append the '%B' bitmap placeholder token required for Linux
-			iconsPath = osOps.absolutePath('$IC_BASEDIR/rsc/maya/icons/%B') + os.pathsep \
-					  + osOps.absolutePath('$JOBPUBLISHDIR/icons/%B') + os.pathsep \
-					  + osOps.absolutePath('$MAYASHAREDRESOURCES/%s/icons/%B' %maya_ver)
-		else:
-			iconsPath = osOps.absolutePath('$IC_BASEDIR/rsc/maya/icons') + os.pathsep \
-					  + osOps.absolutePath('$JOBPUBLISHDIR/icons') + os.pathsep \
-					  + osOps.absolutePath('$MAYASHAREDRESOURCES/%s/icons' %maya_ver)
+			iconsPathsModified = []
+			for path in iconsPath.split(os.pathsep):
+				iconsPathsModified.append(path + r"/%B")
+			iconsPath = os.pathsep.join(n for n in iconsPathsModified)
 
 		#os.environ['MAYA_MODULE_PATH'] = 
 		#os.environ['MAYA_PRESET_PATH'] = osOps.absolutePath('$IC_BASEDIR/rsc/maya/presets')

@@ -1,5 +1,6 @@
 v0.9.13 (--)
 -	[Icarus] Added preliminary support for Houdini.
+-	[Icarus] Improved Linux compatibility.
 
 v0.9.12 (2018-04-27)
 -	[Icarus] Started to write some proper documentation.

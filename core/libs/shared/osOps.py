@@ -192,6 +192,8 @@ def copyDirContents(source, destination, umask='000'):
 
 	if os.environ['IC_RUNNING_OS'] == "Windows":
 		cmdStr = 'copy /Y "%s" "%s"' %(src, dst)
+	elif os.environ['IC_RUNNING_OS'] == "Linux":  # Quick bodge
+		cmdStr = '%s; cp -rf %s %s' %(setUmask(umask), src, dst)
 	else:
 		cmdStr = '%s; cp -rf "%s" "%s"' %(setUmask(umask), src, dst)
 

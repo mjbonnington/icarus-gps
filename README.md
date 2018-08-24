@@ -1,5 +1,5 @@
 # icarus
-Icarus is the GPS CG pipeline for integrated VFX shot and asset management.
+Icarus is a CG pipeline for integrated VFX shot and asset management.
 
 # authors
 Nuno Pereira <nuno.pereira@gps-ldn.com>

@@ -18,7 +18,7 @@ def setEnv():
 	""" Set some environment variables for basic operation.
 	"""
 	# Set version string
-	os.environ['IC_VERSION'] = "v0.9.13-20180730"
+	os.environ['IC_VERSION'] = "v0.9.13-20180820"
 
 	# Standardise some environment variables across systems.
 	# Usernames will always be stored as lowercase for compatibility.
@@ -35,7 +35,7 @@ def setEnv():
 	else:  # Linux
 		os.environ['IC_RUNNING_OS'] = "Linux"
 		if not 'IC_USERNAME' in os.environ:
-			os.environ['IC_USERNAME'] = os.environ['USERNAME'].lower()
+			os.environ['IC_USERNAME'] = os.environ['USER'].lower()
 		os.environ['IC_USERHOME'] = os.environ['HOME']
 
 	# Check for environment awareness
