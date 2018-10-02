@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-# [Icarus] envvars__main__.py
+# envvars__main__.py
 #
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2018 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2018
 #
 # Environment Variables Editor
 # A tool for viewing and editing environment variables.
@@ -12,7 +12,7 @@
 import os
 import sys
 
-# Initialise Icarus environment - TEMP BODGE TO ENABLE STANDALONE APP
+# Initialise pipeline environment - TEMP BODGE TO ENABLE STANDALONE APP
 if __name__ == "__main__":
 	sys.path.append(os.environ['IC_WORKINGDIR'])
 	import env__init__
@@ -239,7 +239,7 @@ class EnvVarsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		""" Save data by writing to the os.environ dictionary.
 			Existing environment variables will be cleared first.
 		"""
-		# os.environ = dict(self.environ) # this doesn't actially set the env vars
+		# os.environ = dict(self.environ) # this doesn't actually set the env vars
 		os.environ.clear()
 		for key in self.environ.keys():
 			os.environ[key] = self.environ[key]

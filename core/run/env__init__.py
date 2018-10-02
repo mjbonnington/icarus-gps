@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
-# [Icarus] env__init__.py
+# env__init__.py
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2018 Gramercy Park Studios
+# (c) 2013-2018
 #
 # Initialises main pipeline environment.
 
@@ -18,7 +18,7 @@ def setEnv():
 	""" Set some environment variables for basic operation.
 	"""
 	# Set version string
-	os.environ['IC_VERSION'] = "v0.9.13-20180820"
+	os.environ['IC_VERSION'] = "v0.9.13-20180912"
 
 	# Standardise some environment variables across systems.
 	# Usernames will always be stored as lowercase for compatibility.

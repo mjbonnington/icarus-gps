@@ -289,7 +289,7 @@ def translatePath(jobPath):
 		#print("Performing path translation:\n%s\n%s\n" %(jobPath, absolutePath(jobPathTr)))
 		return absolutePath(jobPathTr)
 
-	except TypeError:
+	except (KeyError, TypeError):
 		return jobPath
 
 

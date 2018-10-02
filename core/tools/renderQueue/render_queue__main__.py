@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-# [Icarus] render_queue__main__.py
+# render_queue__main__.py
 #
-# Mike Bonnington <mike.Bonnington@gps-ldn.com>
-# (c) 2016-2018 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2016-2018
 #
 # Batch Render Queue Manager
 # A UI for managing the render queue, as well as executing render jobs.
@@ -26,6 +26,7 @@ from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
 
 # Import custom modules
+import osOps
 import renderQueue
 import sequence
 import verbose
@@ -75,17 +76,30 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.localhost = socket.gethostname()
 		self.selection = []
 		self.renderOutput = ""
-		#verbose.registerStatusBar(self.ui.statusbar)
+		verbose.registerStatusBar(self.ui.statusBar)
 
 		# Define standard UI colours
 		self.colBlack         = QtGui.QColor("#000000")  # black
 		self.colWhite         = QtGui.QColor("#ffffff")  # white
 		self.colBorder        = QtGui.QColor("#222222")  # dark grey
 		self.colInactive      = QtGui.QColor("#666666")  # grey
-		self.colActive        = QtGui.QColor("#00b2ee")  # bright blue
-		self.colCompleted     = QtGui.QColor("#709e32")  # green
-		self.colCompletedDark = QtGui.QColor("#577927")  # dark green
+		self.colNormal        = QtGui.QColor("#cccccc")  # light grey
+		self.colActive        = QtGui.QColor("#709e32")  # green
+		self.colCompleted     = QtGui.QColor("#00b2ee")  # mid blue
+		self.colCompletedDark = QtGui.QColor("#65d9ee")  # bright blue
 		self.colError         = QtGui.QColor("#bc0000")  # red
+
+		# Define status icons
+		self.readyIcon = QtGui.QIcon()
+		self.readyIcon.addPixmap(QtGui.QPixmap(osOps.absolutePath("$IC_FORMSDIR/rsc/status_icon_ready.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		self.nullIcon = QtGui.QIcon()
+		self.nullIcon.addPixmap(QtGui.QPixmap(osOps.absolutePath("$IC_FORMSDIR/rsc/status_icon_null.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		self.doneIcon = QtGui.QIcon()
+		self.doneIcon.addPixmap(QtGui.QPixmap(osOps.absolutePath("$IC_FORMSDIR/rsc/status_icon_done.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		self.waitingIcon = QtGui.QIcon()
+		self.waitingIcon.addPixmap(QtGui.QPixmap(osOps.absolutePath("$IC_FORMSDIR/rsc/status_icon_waiting.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		self.errorIcon = QtGui.QIcon()
+		self.errorIcon.addPixmap(QtGui.QPixmap(osOps.absolutePath("$IC_FORMSDIR/rsc/status_icon_error.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 
 		# Instantiate render queue class and load data
 		self.rq = renderQueue.RenderQueue()
@@ -95,7 +109,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# asynchronously
 		self.renderProcess = QtCore.QProcess(self)
 		self.renderProcess.finished.connect(self.renderComplete)
-		self.renderProcess.readyReadStandardOutput.connect(self.updateSlaveView)
+		self.renderProcess.readyReadStandardOutput.connect(self.updateWorkerView)
 
 		# Connect signals & slots
 		self.ui.renderQueue_treeWidget.itemSelectionChanged.connect(self.updateToolbarUI)
@@ -135,39 +149,39 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# self.ui.jobSubmit_toolButton.addAction(self.actionSubmitNuke)
 		# #self.actionSubmitNuke.setEnabled(False)
 
-		# Add context menu items to slave control tool button
-		self.ui.slaveControl_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+		# Add context menu items to worker control tool button
+		self.ui.workerControl_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 
-		self.actionSlaveStart = QtWidgets.QAction("Start Slave", None)
-		self.actionSlaveStart.triggered.connect(self.toggleSlave)
-		self.ui.slaveControl_toolButton.addAction(self.actionSlaveStart)
+		self.actionWorkerStart = QtWidgets.QAction("Start Worker", None)
+		self.actionWorkerStart.triggered.connect(self.toggleWorker)
+		self.ui.workerControl_toolButton.addAction(self.actionWorkerStart)
 
-		self.actionSlaveStop = QtWidgets.QAction("Stop Slave", None)
-		self.actionSlaveStop.triggered.connect(self.toggleSlave)
-		self.ui.slaveControl_toolButton.addAction(self.actionSlaveStop)
+		self.actionWorkerStop = QtWidgets.QAction("Stop Worker", None)
+		self.actionWorkerStop.triggered.connect(self.toggleWorker)
+		self.ui.workerControl_toolButton.addAction(self.actionWorkerStop)
 
-		self.actionKillTask = QtWidgets.QAction("Stop Slave Immediately and Kill Current Task", None)
+		self.actionKillTask = QtWidgets.QAction("Stop Worker Immediately and Kill Current Task", None)
 		self.actionKillTask.triggered.connect(self.killRenderProcess)
-		self.ui.slaveControl_toolButton.addAction(self.actionKillTask)
+		self.ui.workerControl_toolButton.addAction(self.actionKillTask)
 
-		self.actionSlaveContinueAfterTask = QtWidgets.QAction("Continue After Current Task Completion", None)
-		self.actionSlaveContinueAfterTask.setCheckable(True)
-		self.ui.slaveControl_toolButton.addAction(self.actionSlaveContinueAfterTask)
+		self.actionWorkerContinueAfterTask = QtWidgets.QAction("Continue After Current Task Completion", None)
+		self.actionWorkerContinueAfterTask.setCheckable(True)
+		self.ui.workerControl_toolButton.addAction(self.actionWorkerContinueAfterTask)
 
-		self.actionSlaveStopAfterTask = QtWidgets.QAction("Stop Slave After Current Task Completion", None)
-		self.actionSlaveStopAfterTask.setCheckable(True)
-		self.ui.slaveControl_toolButton.addAction(self.actionSlaveStopAfterTask)
+		self.actionWorkerStopAfterTask = QtWidgets.QAction("Stop Worker After Current Task Completion", None)
+		self.actionWorkerStopAfterTask.setCheckable(True)
+		self.ui.workerControl_toolButton.addAction(self.actionWorkerStopAfterTask)
 
-		slaveControlAfterTaskGroup = QtWidgets.QActionGroup(self)
-		slaveControlAfterTaskGroup.addAction(self.actionSlaveContinueAfterTask)
-		slaveControlAfterTaskGroup.addAction(self.actionSlaveStopAfterTask)
-		self.actionSlaveContinueAfterTask.setChecked(True)
+		workerControlAfterTaskGroup = QtWidgets.QActionGroup(self)
+		workerControlAfterTaskGroup.addAction(self.actionWorkerContinueAfterTask)
+		workerControlAfterTaskGroup.addAction(self.actionWorkerStopAfterTask)
+		self.actionWorkerContinueAfterTask.setChecked(True)
 
-		# Set local slave as disabled initially
-		self.setSlaveStatus("disabled")  # Store this as a preference or something
+		# Set local worker as disabled initially
+		self.setWorkerStatus("disabled")  # Store this as a preference or something
 
 		self.rebuildRenderQueueView()  # Move these to show() event hander function?
-		self.updateSlaveView()
+		self.updateWorkerView()
 		self.updateToolbarUI()
 
 
@@ -197,12 +211,12 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.renderQueue_treeWidget.resizeColumnToContents(i)
 
 		# Hide ID column
-		self.ui.renderQueue_treeWidget.setColumnHidden(1, True)
+		#self.ui.renderQueue_treeWidget.setColumnHidden(1, True)
 
 		# Sort by submit time column - move this somewhere else?
 		self.ui.renderQueue_treeWidget.sortByColumn(7, QtCore.Qt.DescendingOrder)
 
-		#self.updateSlaveView()
+		#self.updateWorkerView()
 
 
 	def updateRenderQueueView(self, reloadDatabase=True):
@@ -266,7 +280,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				taskFrames = self.rq.getValue(taskElement, 'frames')
 				taskStatus = self.rq.getValue(taskElement, 'status')
 				taskTotalTime = self.rq.getValue(taskElement, 'totalTime')
-				taskSlave = self.rq.getValue(taskElement, 'slave')
+				taskWorker = self.rq.getValue(taskElement, 'worker')
 
 				# Get the render task item or create it if it doesn't exist
 				renderTaskItem = self.getQueueItem(renderJobItem, taskID)
@@ -279,7 +293,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 				# Calculate progress
 				if taskFrames == 'Unknown':
-					if taskStatus == "In Progress":
+					if taskStatus == "Working":
 						inProgressTaskCount += 1
 						inProgressTaskFrameCount = -1
 					if taskStatus == "Done":
@@ -287,7 +301,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 						completedTaskFrameCount = -1
 				else:
 					taskFrameCount = len(sequence.numList(taskFrames))
-					if taskStatus == "In Progress":
+					if taskStatus == "Working":
 						inProgressTaskCount += 1
 						inProgressTaskFrameCount += taskFrameCount
 					if taskStatus == "Done":
@@ -295,10 +309,17 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 						completedTaskFrameCount += taskFrameCount
 
 				# Colour the status text
-				# if taskStatus == "In Progress": # and taskSlave == self.localhost:
-				# 	renderTaskItem.setForeground(4, QtGui.QBrush(self.colActive))
-				# elif taskStatus == "Done": # and taskSlave == self.localhost:
-				# 	renderTaskItem.setForeground(4, QtGui.QBrush(self.colCompleted))
+				for col in range(self.ui.renderQueue_treeWidget.columnCount()):
+					renderTaskItem.setForeground(col, QtGui.QBrush(self.colInactive))
+				if taskStatus == "Queued": # and taskWorker == self.localhost:
+					#renderTaskItem.setForeground(4, QtGui.QBrush(self.colCompleted))
+					renderTaskItem.setIcon(4, self.waitingIcon)
+				elif taskStatus == "Working": # and taskWorker == self.localhost:
+					#renderTaskItem.setForeground(4, QtGui.QBrush(self.colActive))
+					renderTaskItem.setIcon(4, self.readyIcon)
+				elif taskStatus == "Done": # and taskWorker == self.localhost:
+					#renderTaskItem.setForeground(4, QtGui.QBrush(self.colCompleted))
+					renderTaskItem.setIcon(4, self.doneIcon)
 
 				# Update timers
 				try:
@@ -309,24 +330,26 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 					totalTime = None
 
 				renderTaskItem.setText(8, totalTime)
-				renderTaskItem.setText(9, taskSlave)
+				renderTaskItem.setText(9, taskWorker)
 
 			# Calculate job progress and update status
 			colProgress = self.colCompletedDark
+			renderJobItem.setForeground(4, QtGui.QBrush(self.colWhite))
 			if completedTaskFrameCount == 0:
 				if inProgressTaskFrameCount == 0:
 					jobStatus = "Queued"
 				else:
-					jobStatus = "[0%] In Progress"
+					jobStatus = "[0%] Working"
 			elif completedTaskFrameCount == totalFrameCount:
 				jobStatus = "Done"
+				renderJobItem.setForeground(4, QtGui.QBrush(self.colBorder))
 			else:
 				percentComplete = (float(completedTaskFrameCount) / float(totalFrameCount)) * 100
 				if inProgressTaskFrameCount == 0:
 					jobStatus = "[%d%%] Waiting" %percentComplete
 					colProgress = self.colInactive
 				else:
-					jobStatus = "[%d%%] In Progress" %percentComplete
+					jobStatus = "[%d%%] Working" %percentComplete
 					colProgress = self.colCompleted
 
 			self.drawJobProgressIndicator(renderJobItem, completedTaskFrameCount, inProgressTaskFrameCount, totalFrameCount, colProgress)
@@ -341,7 +364,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				jobTotalTime = None
 
 			renderJobItem.setText(8, str(jobTotalTime))
-			renderJobItem.setText(9, "%d %s rendering" %(inProgressTaskCount, verbose.pluralise("slave", inProgressTaskCount)))
+			renderJobItem.setText(9, "%d %s rendering" %(inProgressTaskCount, verbose.pluralise("worker", inProgressTaskCount)))
 			renderJobItem.setText(10, jobComment)
 
 		# Re-enable signals
@@ -373,8 +396,8 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 
 	def drawJobProgressIndicator(self, renderJobItem, completedTaskFrameCount,
-								 inProgressTaskFrameCount, totalFrameCount,
-								 colProgress):
+	                             inProgressTaskFrameCount, totalFrameCount,
+	                             colProgress):
 		""" Draw a pixmap to represent the progress of a job.
 		"""
 		border = 1
@@ -406,7 +429,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		# renderJobItem.setBackground(4, image)  # PyQt5 doesn't like this
 		renderJobItem.setBackground(4, QtGui.QBrush(image))  # Test with Qt4/PySide
-		renderJobItem.setForeground(4, QtGui.QBrush(self.colWhite))
+		#renderJobItem.setForeground(4, QtGui.QBrush(self.colWhite))
 
 
 	def updateColumn(self, logicalIndex, oldSize, newSize):
@@ -442,11 +465,12 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				else:
 					selectionType = "Task"
 					self.ui.renderQueue_treeWidget.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
-					jobTaskID = int(item.parent().text(1)), int(item.text(1))
-					#print "Task selected: %s %s" %jobTaskID
+					jobTaskID = item.parent().text(1), int(item.text(1))
 					self.selection.append(jobTaskID)
 					self.ui.job_groupBox.setEnabled(False)
 					self.ui.task_groupBox.setEnabled(True)
+					self.ui.menuJob.setEnabled(False)
+					self.ui.menuTask.setEnabled(True)
 			else:  # Job is selected
 				currentItem = self.ui.renderQueue_treeWidget.currentItem()
 				if selectionType == "Task":
@@ -457,16 +481,24 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				else:
 					selectionType = "Job"
 					self.ui.renderQueue_treeWidget.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
-					jobTaskID = int(item.text(1)), -1
-					#print "Job selected: %s %s" %jobTaskID
+					jobTaskID = item.text(1), -1
 					self.selection.append(jobTaskID)
 					self.ui.job_groupBox.setEnabled(True)
 					self.ui.task_groupBox.setEnabled(False)
+					self.ui.menuJob.setEnabled(True)
+					self.ui.menuTask.setEnabled(False)
 
 		if not self.selection:  # Nothing is selected
-			#print "Nothing selected."
 			self.ui.job_groupBox.setEnabled(False)
 			self.ui.task_groupBox.setEnabled(False)
+			self.ui.menuJob.setEnabled(False)
+			self.ui.menuTask.setEnabled(False)
+			verbose.message("Nothing selected.")
+
+		else:
+			#print self.selection
+			count = len(self.selection)
+			verbose.message("%d %s selected." %(count, verbose.pluralise(selectionType, count).lower()))
 
 		# Disable submit button if shot is not set (temporary)
 		try:
@@ -475,15 +507,13 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		except KeyError:
 			self.ui.jobSubmit_toolButton.setEnabled(False)
 
-		#print self.selection
 
-
-	def updateSlaveView(self):
-		""" Update the information in the slave info area.
+	def updateWorkerView(self):
+		""" Update the information in the worker info area.
 			This function is also called by the render process signal in order
 			to capture its output and display in the UI widget.
 		"""
-		self.ui.slaveControl_toolButton.setText("%s (%s)" %(self.localhost, self.slaveStatus))
+		self.ui.workerControl_toolButton.setText("%s (%s)" %(self.localhost, self.workerStatus))
 
 		try:
 			line = str(self.renderProcess.readAllStandardOutput(), 'utf-8')
@@ -508,7 +538,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		root = self.ui.renderQueue_treeWidget.invisibleRootItem()
 		for j in range(root.childCount()):
 			jobItem = root.child(j)
-			jobID = int(jobItem.text(1))
+			jobID = jobItem.text(1)
 			jobTaskID = jobID, -1
 			if jobTaskID in self.selection:
 				jobItem.setSelected(True)
@@ -517,7 +547,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				taskItem = jobItem.child(t)
 				taskID = int(taskItem.text(1))
 				jobTaskID = jobID, taskID
-				#jobTaskID = int(taskItem.parent().text(1)), int(taskItem.text(1))
+				#jobTaskID = taskItem.parent().text(1), int(taskItem.text(1))
 				if jobTaskID in self.selection:
 					taskItem.setSelected(True)
 
@@ -531,11 +561,11 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				# If item has no parent then it must be a top level item, and
 				# therefore also a job
 				if not item.parent():
-					jobID = int(item.text(1))
+					jobID = item.text(1)
 
 					# Remove item from view
 					if self.rq.deleteJob(jobID):
-						self.ui.renderQueue_treeWidget.takeTopLevelItem( self.ui.renderQueue_treeWidget.indexOfTopLevelItem(item) )
+						self.ui.renderQueue_treeWidget.takeTopLevelItem(self.ui.renderQueue_treeWidget.indexOfTopLevelItem(item))
 						verbose.message("Job ID %s deleted." %jobID)
 					else:
 						verbose.warning("Job ID %s cannot be deleted while in progress." %jobID)
@@ -560,14 +590,14 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				# If item has no parent then it must be a top level item, and
 				# therefore also a job
 				if not item.parent():
-					index = int(item.text(1))
+					jobID = item.text(1)
 					minPriority = 0
 					maxPriority = 100
 
 					if absolute:
 						newPriority = amount
 					else:
-						currentPriority = self.rq.getPriority(index)
+						currentPriority = self.rq.getPriority(jobID)
 						newPriority = currentPriority+amount
 
 					if newPriority <= minPriority:
@@ -595,9 +625,9 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				# If item has no parent then it must be a top level item, and
 				# therefore also a job
 				if not item.parent():
-					index = int(item.text(1))
+					jobID = item.text(1)
 					priority = int(item.text(5))
-					self.rq.setPriority(index, priority)
+					self.rq.setPriority(jobID, priority)
 
 			self.updateRenderQueueView()
 
@@ -647,12 +677,12 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				# If item has parent then it must be a subitem, and therefore
 				# also a task
 				if item.parent():
-					jobTaskID = int(item.parent().text(1)), int(item.text(1))
+					jobTaskID = item.parent().text(1), int(item.text(1))
 					jobTaskIDs.append(jobTaskID)
 
 			for jobTaskID in jobTaskIDs:
 				self.rq.completeTask(jobTaskID[0], jobTaskID[1], taskTime=0)
-				verbose.message("Job ID %d: task ID %d marked as Done." %jobTaskID)
+				verbose.message("Job ID %s: task ID %d marked as Done." %jobTaskID)
 
 			self.updateRenderQueueView()
 
@@ -670,12 +700,12 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				# If item has parent then it must be a subitem, and therefore
 				# also a task
 				if item.parent():
-					jobTaskID = int(item.parent().text(1)), int(item.text(1))
+					jobTaskID = item.parent().text(1), int(item.text(1))
 					jobTaskIDs.append(jobTaskID)
 
 			for jobTaskID in jobTaskIDs:
 				self.rq.requeueTask(jobTaskID[0], jobTaskID[1])
-				verbose.message("Job ID %d: task ID %d requeued." %jobTaskID)
+				verbose.message("Job ID %s: task ID %d requeued." %jobTaskID)
 
 			self.updateRenderQueueView()
 
@@ -683,74 +713,74 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			pass
 
 
-	def toggleSlave(self):
-		""" Enable or disable the local slave.
+	def toggleWorker(self):
+		""" Enable or disable the local worker.
 		"""
-		if self.slaveStatus == "disabled":
-			self.setSlaveStatus("idle")
+		if self.workerStatus == "disabled":
+			self.setWorkerStatus("idle")
 		else:
-			self.setSlaveStatus("disabled")
+			self.setWorkerStatus("disabled")
 
-		self.updateSlaveView()
+		self.updateWorkerView()
 
 
-	def setSlaveStatus(self, status):
-		""" Set the local slave status, and update the tool button and menu.
+	def setWorkerStatus(self, status):
+		""" Set the local worker status, and update the tool button and menu.
 		"""
 		statusIcon = QtGui.QIcon()
-		self.slaveStatus = status
+		self.workerStatus = status
 
 		if status == "disabled":
-			self.ui.slaveControl_toolButton.setChecked(False)
+			self.ui.workerControl_toolButton.setChecked(False)
 			statusIcon.addPixmap(QtGui.QPixmap(":/rsc/rsc/status_icon_stopped.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-			self.actionSlaveStart.setVisible(True)
-			self.actionSlaveStop.setVisible(False)
+			self.actionWorkerStart.setVisible(True)
+			self.actionWorkerStop.setVisible(False)
 			self.actionKillTask.setVisible(False)
-			self.actionSlaveContinueAfterTask.setVisible(False)
-			self.actionSlaveStopAfterTask.setVisible(False)
-			self.actionSlaveContinueAfterTask.setChecked(True)  # Reset this option for the next time the slave is enabled
+			self.actionWorkerContinueAfterTask.setVisible(False)
+			self.actionWorkerStopAfterTask.setVisible(False)
+			self.actionWorkerContinueAfterTask.setChecked(True)  # Reset this option for the next time the worker is enabled
 
 			self.ui.taskInfo_label.setText("")
 			self.ui.runningTime_label.setText("")
 
 		elif status == "idle":
-			self.ui.slaveControl_toolButton.setChecked(True)
+			self.ui.workerControl_toolButton.setChecked(True)
 			statusIcon.addPixmap(QtGui.QPixmap(":/rsc/rsc/status_icon_ready.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-			self.actionSlaveStart.setVisible(False)
-			self.actionSlaveStop.setVisible(True)
+			self.actionWorkerStart.setVisible(False)
+			self.actionWorkerStop.setVisible(True)
 			self.actionKillTask.setVisible(False)
-			self.actionSlaveContinueAfterTask.setVisible(False)
-			self.actionSlaveStopAfterTask.setVisible(False)
+			self.actionWorkerContinueAfterTask.setVisible(False)
+			self.actionWorkerStopAfterTask.setVisible(False)
 
 			self.ui.taskInfo_label.setText("")
 			self.ui.runningTime_label.setText("")
 
 		elif status == "rendering":
-			self.ui.slaveControl_toolButton.setChecked(True)
+			self.ui.workerControl_toolButton.setChecked(True)
 			statusIcon.addPixmap(QtGui.QPixmap(":/rsc/rsc/status_icon_ok.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-			self.actionSlaveStart.setVisible(False)
-			self.actionSlaveStop.setVisible(False)
+			self.actionWorkerStart.setVisible(False)
+			self.actionWorkerStop.setVisible(False)
 			self.actionKillTask.setVisible(True)
-			self.actionSlaveContinueAfterTask.setVisible(True)
-			self.actionSlaveStopAfterTask.setVisible(True)
+			self.actionWorkerContinueAfterTask.setVisible(True)
+			self.actionWorkerStopAfterTask.setVisible(True)
 
 			# self.ui.taskInfo_label.setText("Rendering %s %s from '%s'" %(verbose.pluralise("frame", len(frameList)), frames, self.rq.getValue(jobElement, 'name')))
 			# self.ui.runningTime_label.setText(startTime)  # change this to display the task running time
 
-		verbose.message("[%s] Local slave %s." %(self.localhost, self.slaveStatus))
-		self.ui.slaveControl_toolButton.setText("%s (%s)" %(self.localhost, self.slaveStatus))
-		self.ui.slaveControl_toolButton.setIcon(statusIcon)
+		verbose.message("[%s] Local worker %s." %(self.localhost, self.workerStatus))
+		self.ui.workerControl_toolButton.setText("%s (%s)" %(self.localhost, self.workerStatus))
+		self.ui.workerControl_toolButton.setIcon(statusIcon)
 
-		#self.updateSlaveView()
+		#self.updateWorkerView()
 
 
 	def dequeue(self):
 		""" Dequeue a render task from the queue and start rendering.
 			THIS IS ALL A BIT ROPEY ATM
 		"""
-		if self.slaveStatus != "idle":
+		if self.workerStatus != "idle":
 			return False
-		#elif self.slaveStatus != "rendering":
+		#elif self.workerStatus != "rendering":
 
 		self.renderTaskInterrupted = False
 		self.renderOutput = ""
@@ -795,7 +825,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			# 	return False
 
 			sceneName = self.rq.getValue(jobElement, 'mayaScene')
-			# if not os.path.isfile(sceneName): # check scene exists - disabled for now as could cause slave to get stuck in a loop
+			# if not os.path.isfile(sceneName): # check scene exists - disabled for now as could cause worker to get stuck in a loop
 			# 	print "ERROR: Scene not found: %s" %sceneName
 			# 	self.rq.requeueTask(self.renderJobID, self.renderTaskID)
 			# 	#self.rq.setStatus(self.renderJobID, "Failed")
@@ -840,7 +870,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		#self.ui.runningTime_label.setText(startTime)  # change this to display the task running time
 		self.ui.runningTime_label.setText( str(datetime.timedelta(seconds=0)) )
 
-		self.setSlaveStatus("rendering")
+		self.setWorkerStatus("rendering")
 		self.renderProcess.start(cmdStr)
 		self.updateRenderQueueView()
 
@@ -848,7 +878,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 	def updateTimers(self):
 		""" Calculate elapsed time and update relevant UI fields.
 		"""
-		if self.slaveStatus == "rendering":
+		if self.workerStatus == "rendering":
 			elapsedTimeSec = time.time() - self.startTimeSec
 			self.ui.runningTime_label.setText( str(datetime.timedelta(seconds=int(elapsedTimeSec))) )
 			# this could also update the appropriate render queue tree widget item, if I can figure out how to do that
@@ -867,25 +897,25 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		else:
 			self.rq.completeTask(self.renderJobID, self.renderTaskID, self.localhost, taskTime=totalTimeSec)
 
-		# Set slave status based on user option
-		if self.actionSlaveStopAfterTask.isChecked():
-			self.setSlaveStatus("disabled")
+		# Set worker status based on user option
+		if self.actionWorkerStopAfterTask.isChecked():
+			self.setWorkerStatus("disabled")
 		else:
-			self.setSlaveStatus("idle")
+			self.setWorkerStatus("idle")
 			self.dequeue()  # Dequeue next task immediately to prevent wait for next polling interval
 
 		self.updateRenderQueueView()
 
 
 	def killRenderProcess(self):
-		""" Kill the rendering process. This will also stop the local slave.
+		""" Kill the rendering process. This will also stop the local worker.
 		"""
 		verbose.message("Attempting to kill process %s" %self.renderProcess)
 
-		self.actionSlaveStopAfterTask.setChecked(True)  # This is a fudge to prevent the renderComplete function from re-enabling the slave after rendering task was killed by user
+		self.actionWorkerStopAfterTask.setChecked(True)  # This is a fudge to prevent the renderComplete function from re-enabling the worker after rendering task was killed by user
 		self.renderTaskInterrupted = True
 
-		if self.slaveStatus == "rendering":
+		if self.workerStatus == "rendering":
 			#self.renderProcess.terminate()
 			self.renderProcess.kill()
 		else:
@@ -898,7 +928,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		#self.rq.completeTask(self.renderJobID, self.renderTaskID)
 		#self.rq.requeueTask(self.renderJobID, self.renderTaskID)  # perhaps set a special status to indicate render was killed, allowing the user to requeue manually?
 
-		#self.setSlaveStatus("disabled")
+		#self.setWorkerStatus("disabled")
 
 		#self.updateRenderQueueView()
 
@@ -914,7 +944,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		self.timerDequeue = QtCore.QTimer(self)
 		self.timerDequeue.timeout.connect(self.dequeue)
-		self.timerDequeue.start(5000)  # Should only happen when slave is enabled
+		self.timerDequeue.start(5000)  # Should only happen when worker is enabled
 
 		self.timerUpdateTimer = QtCore.QTimer(self)
 		self.timerUpdateTimer.timeout.connect(self.updateTimers)
@@ -930,12 +960,12 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		"""
 
 		# Confirmation dialog
-		if self.slaveStatus == "rendering":
+		if self.workerStatus == "rendering":
 			import pDialog
 
 			dialogTitle = 'Render in progress'
 			dialogMsg = ''
-			dialogMsg += 'There is currently a render in progress on the local slave. Closing the Render Queue window will also kill the render.\n'
+			dialogMsg += 'There is currently a render in progress on the local worker. Closing the Render Queue window will also kill the render.\n'
 			dialogMsg += 'Are you sure you want to quit?'
 
 			dialog = pDialog.dialog()
@@ -945,7 +975,11 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				event.ignore()
 				return
 
+		# Kill the rendering process
 		self.killRenderProcess()
+
+		# Requeue the task that's currently rendering
+		#self.rq.requeueTask(jobTaskID[0], jobTaskID[1])
 
 		# Stop timers
 		self.timerUpdateView.stop()
@@ -960,6 +994,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# 	self.settings.setValue("windowState", self.saveState())
 		# except:
 		# 	pass
+		self.settings.setValue("splitterSizes", self.ui.splitter.saveState())
 
 		QtWidgets.QMainWindow.closeEvent(self, event)
 

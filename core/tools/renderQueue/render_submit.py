@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-# [Icarus] render_submit.py
+# render_submit.py
 #
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2018 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2016-2018
 #
 # Batch Render Submitter
 # A UI for creating render jobs to send to a render queue manager.

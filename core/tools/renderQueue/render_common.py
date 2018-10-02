@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-# [Icarus] render_common.py
+# render_common.py
 #
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2018 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2016-2018
 #
 # This module contains some common functions for the rendering modules.
 

@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-# [Icarus] ui_template.py
+# ui_template.py
 #
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2018 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2018
 #
 # UI Template - a custom class to act as a template for all windows and
 # dialogs.
@@ -28,7 +28,7 @@ import verbose
 # Configuration
 # ----------------------------------------------------------------------------
 
-VENDOR = "Gramercy Park Studios"
+VENDOR = ""
 
 
 # ----------------------------------------------------------------------------
@@ -138,7 +138,10 @@ class TemplateUI(object):
 		else:
 			dialog = QtWidgets.QFileDialog.getOpenFileName(self, self.tr('Files'), startingDir, fileFilter)
 
-		return dialog[0]
+		try:
+			return dialog[0]
+		except IndexError:
+			return None
 
 
 	def folderDialog(self, startingDir):

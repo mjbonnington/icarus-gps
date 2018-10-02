@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-# [Icarus] render_submit_deadline.py
+# render_submit_deadline.py
 #
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2018 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2016-2018
 #
 # Batch Render Submitter
 # This module contains functions specifically for submitting jobs to Deadline.

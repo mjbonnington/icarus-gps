@@ -82,7 +82,7 @@ import verbose
 # Configuration
 # ----------------------------------------------------------------------------
 
-VENDOR = "Gramercy Park Studios"
+VENDOR = ""
 COPYRIGHT = "(c) 2013-2018"
 DEVELOPERS = "Nuno Pereira, Mike Bonnington, Ben Parry"
 

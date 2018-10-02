@@ -62,8 +62,8 @@ global proc AEICSetTemplate ( string $nodeName )
 		editorTemplate -addControl "icAssetCompatibility";
 		editorTemplate -addControl "Notes";
 		editorTemplate -addSeparator;
-		editorTemplate -addControl "overrideComponentDisplay";
-		editorTemplate -callCustom "forceOverrideDisplayButton" "updateOverrideDisplayButton" $nodeName;
+		//editorTemplate -addControl "overrideComponentDisplay";
+		//editorTemplate -callCustom "forceOverrideDisplayButton" "updateOverrideDisplayButton" $nodeName;
 		editorTemplate -addControl "icAssetDisplay";
 			
 	editorTemplate -endLayout;

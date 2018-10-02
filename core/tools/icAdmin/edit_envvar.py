@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-# [Icarus] edit_envvar.py
+# edit_envvar.py
 #
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2018 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2018
 #
 # Environment Variables Editor
 # A dialog for editing an environment variable.
@@ -97,6 +97,7 @@ class Dialog(QtWidgets.QDialog, UI.TemplateUI):
 			self.updateValueList(value)
 			self.ui.value_lineEdit.textEdited.connect(self.updateValueList)
 			self.ui.valueList_frame.show()
+			self.ui.browse_toolButton.hide() # ideally move to toolbar
 			self.ui.toolbar_frame.hide() # temporary until implemented fully
 		else:
 			self.ui.valueList_frame.hide()
@@ -131,7 +132,7 @@ class Dialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(enable)
 
 		# Change key text to uppercase
-		self.ui.key_lineEdit.setText(self.ui.key_lineEdit.text().upper())
+		#self.ui.key_lineEdit.setText(self.ui.key_lineEdit.text().upper())
 
 
 	def browseDir(self):
@@ -141,7 +142,7 @@ class Dialog(QtWidgets.QDialog, UI.TemplateUI):
 		if os.path.isdir(startingDir):
 			dialogHome = startingDir
 		else:
-			dialogHome = os.environ['JOB']
+			dialogHome = os.environ.get('JOB', os.getcwd())
 
 		# Append slash to path if it's a Windows drive letter, otherwise file
 		# dialog won't open the correct location
@@ -161,7 +162,7 @@ class Dialog(QtWidgets.QDialog, UI.TemplateUI):
 		if os.path.isdir(startingDir):
 			dialogHome = startingDir
 		else:
-			dialogHome = os.environ['JOB']
+			dialogHome = os.environ.get('JOB', os.getcwd())
 
 		# Append slash to path if it's a Windows drive letter, otherwise file
 		# dialog won't open the correct location

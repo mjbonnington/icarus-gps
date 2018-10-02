@@ -1,13 +1,14 @@
 #!/usr/bin/python
 
-# [Icarus] renderQueue.py
+# renderQueue.py
 #
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2016-2018 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2016-2018
 #
 # Manages the Render Queue XML database.
 
 
+import uuid
 import xml.etree.ElementTree as ET
 import xmlData
 
@@ -22,15 +23,13 @@ class RenderQueue(xmlData.XMLData):
 		""" Create a new render job on submission.
 		"""
 		self.loadXML(quiet=True) # reload XML data
-		jobID = self.getNextID() # generate UUID
+		jobID = uuid.uuid4().hex # generate UUID
 
 		jobName, jobType, frames, taskSize, priority = genericOpts
 		#print jobType
 		if jobType == 'Maya':
-			#print "a"
 			mayaScene, mayaProject, mayaFlags, renderer, mayaRenderCmd = renderOpts
 		elif jobType == 'Nuke':
-			#print "b"
 			nukeScript, nukeFlags, nukeRenderCmd = renderOpts
 
 		jobElement = self.root.find("job[@id='%s']" %jobID)
@@ -106,7 +105,7 @@ class RenderQueue(xmlData.XMLData):
 				taskTotalTimeElement = ET.SubElement(taskElement, 'totalTime')
 				#taskTotalTimeElement.text = "0"
 
-				taskSlaveElement = ET.SubElement(taskElement, 'slave')
+				taskWorkerElement = ET.SubElement(taskElement, 'worker')
 
 				# commandElement = ET.SubElement(taskElement, 'command')
 				# commandElement.text = str(taskCmds[i].replace("\\", "/"))
@@ -120,7 +119,7 @@ class RenderQueue(xmlData.XMLData):
 		self.loadXML(quiet=True) # reload XML data
 		for element in self.root.findall('./job'):
 			if int(element.get('id')) == jobID:
-				if "In Progress" in element.find('status').text:
+				if "Working" in element.find('status').text:
 					return False # ignore in-progress jobs
 				else:
 					self.root.remove(element)
@@ -144,20 +143,6 @@ class RenderQueue(xmlData.XMLData):
 	# 			return text
 
 	# 	#return "" # return an empty string, not None, so value can be stored in an environment variable without raising an error
-
-
-	def getNextID(self):
-		""" Return the next unused job ID integer.
-		"""
-		try:
-			elements = self.root.findall("./job")
-			jobIDs = []
-			for element in elements:
-				jobIDs.append( int(element.get('id')) )
-			return max(jobIDs)+1
-
-		except ValueError:
-			return 0
 
 
 	def getPriority(self, jobID):
@@ -191,7 +176,8 @@ class RenderQueue(xmlData.XMLData):
 
 
 	def dequeueJob(self):
-		""" Find a job with the highest priority that isn't paused or completed.
+		""" Find a job with the highest priority that isn't paused or
+			completed.
 		"""
 		self.loadXML(quiet=True) # reload XML data
 
@@ -210,15 +196,17 @@ class RenderQueue(xmlData.XMLData):
 
 
 	def dequeueTask(self, jobID, hostID):
-		""" Dequeue the next queued task belonging to the specified job, mark it as 'In Progress', and return the task ID and the frame range.
+		""" Dequeue the next queued task belonging to the specified job, mark
+			it as 'Working' (in-progress), and return the task ID and the
+			frame range.
 		"""
 		self.loadXML(quiet=True) # reload XML data
 		element = self.root.find("./job[@id='%s']/task/[status='Queued']" %jobID) # get the first <task> element with 'Queued' status
 		#element = self.root.find("./job[@id='%s']/task" %jobID) # get the first <task> element
 		if element is not None:
 			#if element.find('status').text is not "Done":
-			element.find('status').text = "In Progress"
-			element.find('slave').text = str(hostID)
+			element.find('status').text = "Working"
+			element.find('worker').text = str(hostID)
 			self.saveXML()
 			return element.get('id'), element.find('frames').text
 
@@ -232,8 +220,8 @@ class RenderQueue(xmlData.XMLData):
 		self.loadXML(quiet=True) # reload XML data
 		element = self.root.find("./job[@id='%s']/task[@id='%s']" %(jobID, taskID)) # get the <task> element
 		if element is not None:
-			if "In Progress" in element.find('status').text: # only update progress for in progress tasks
-				element.find('status').text = "[%d%%] In Progress" %progress
+			if "Working" in element.find('status').text: # only update progress for in-progress tasks
+				element.find('status').text = "[%d%%] Working" %progress
 				self.saveXML()
 
 
@@ -245,11 +233,11 @@ class RenderQueue(xmlData.XMLData):
 		if element is not None:
 			if element.find('status').text == "Done": # do nothing if status is 'Done'
 				return
-			# elif element.find('status').text == "In Progress": # do nothing if status is 'In Progress'
+			# elif element.find('status').text == "Working": # do nothing if status is 'Working'
 			# 	return
 			else:
 				element.find('status').text = "Done"
-				element.find('slave').text = str(hostID)
+				element.find('worker').text = str(hostID)
 				element.find('totalTime').text = str(taskTime)
 				self.saveXML()
 
@@ -261,11 +249,11 @@ class RenderQueue(xmlData.XMLData):
 		element = self.root.find("./job[@id='%s']/task[@id='%s']" %(jobID, taskID)) # get the <task> element
 		if element.find('status').text == "Queued": # do nothing if status is 'Queued'
 			return
-		# elif element.find('status').text == "In Progress": # do nothing if status is 'In Progress'
+		# elif element.find('status').text == "Working": # do nothing if status is 'Working'
 		# 	return
 		else:
 			element.find('status').text = "Queued"
 			element.find('totalTime').text = ""
-			element.find('slave').text = ""
+			element.find('worker').text = ""
 			self.saveXML()
 

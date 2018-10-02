@@ -56,6 +56,9 @@
          <property name="flat">
           <bool>true</bool>
          </property>
+         <property name="expandable" stdset="0">
+          <bool>false</bool>
+         </property>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <property name="leftMargin">
            <number>6</number>
@@ -79,6 +82,9 @@
             </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Submit a new render job&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Maya and Nuke render jobs are supported.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="statusTip">
+             <string>Submit a new render job.</string>
             </property>
             <property name="text">
              <string>Submit</string>
@@ -110,6 +116,9 @@
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Refresh the render queue view&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Force reload the render queue database and update the view. Note the view is automatically updated every 5 seconds.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
+            <property name="statusTip">
+             <string>Refresh the render queue view.</string>
+            </property>
             <property name="text">
              <string>Refresh</string>
             </property>
@@ -140,6 +149,9 @@
          <property name="flat">
           <bool>true</bool>
          </property>
+         <property name="expandable" stdset="0">
+          <bool>false</bool>
+         </property>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <property name="leftMargin">
            <number>6</number>
@@ -163,6 +175,9 @@
             </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pause the selected render job(s)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;This is the same as setting the priority to zero. Tasks currently in progress will continue normally, but no more tasks will be rendered until the priority is increased.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="statusTip">
+             <string>Pause the selected render job(s).</string>
             </property>
             <property name="text">
              <string>Pause</string>
@@ -197,6 +212,9 @@
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Kill the selected render job(s)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;All rendering tasks will be stopped immediately.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
+            <property name="statusTip">
+             <string>Kill the selected render job(s).</string>
+            </property>
             <property name="text">
              <string>Kill</string>
             </property>
@@ -226,6 +244,9 @@
             </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Delete the selected render job(s)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;The job(s) will be removed from the render queue database. This can be used to clean up old render jobs and improve responsiveness.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="statusTip">
+             <string>Delete the selected render job(s).</string>
             </property>
             <property name="text">
              <string>Delete</string>
@@ -260,6 +281,9 @@
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Resubmit the selected render job(s)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;For each job selected, a new job will be created with the same settings and added to the queue.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
+            <property name="statusTip">
+             <string>Resubmit the selected render job(s).</string>
+            </property>
             <property name="text">
              <string>Resubmit</string>
             </property>
@@ -280,7 +304,7 @@
            </widget>
           </item>
           <item>
-           <spacer name="horizontalSpacer">
+           <spacer name="jobGroup_horizontalSpacer1">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -297,8 +321,17 @@
           </item>
           <item>
            <widget class="QFrame" name="jobPriorityWidget_frame">
+            <property name="maximumSize">
+             <size>
+              <width>256</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Adjust the priority for the selected render job(s)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Drag the slider to change the priority value relatively. Higher priority jobs will render first.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="statusTip">
+             <string>Adjust the priority for the selected render job(s).</string>
             </property>
             <property name="frameShape">
              <enum>QFrame::NoFrame</enum>
@@ -329,6 +362,9 @@
                  <width>100</width>
                  <height>0</height>
                 </size>
+               </property>
+               <property name="statusTip">
+                <string/>
                </property>
                <property name="minimum">
                 <number>-100</number>
@@ -363,6 +399,19 @@
             </layout>
            </widget>
           </item>
+          <item>
+           <spacer name="jobGroup_horizontalSpacer2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
          </layout>
         </widget>
        </item>
@@ -373,6 +422,9 @@
          </property>
          <property name="flat">
           <bool>true</bool>
+         </property>
+         <property name="expandable" stdset="0">
+          <bool>false</bool>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <property name="leftMargin">
@@ -397,6 +449,9 @@
             </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Complete the selected task(s)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Tasks marked as 'Done' will not be queued for rendering.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="statusTip">
+             <string>Complete the selected task(s).</string>
             </property>
             <property name="text">
              <string>Complete</string>
@@ -427,6 +482,9 @@
             </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Requeue the selected task(s)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;These tasks will be marked as 'Queued'. This can be used to re-render failed tasks.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="statusTip">
+             <string>Requeue the selected task(s).</string>
             </property>
             <property name="text">
              <string>Requeue</string>
@@ -536,7 +594,7 @@
        </column>
        <column>
         <property name="text">
-         <string>Slave</string>
+         <string>Worker</string>
         </property>
        </column>
        <column>
@@ -545,13 +603,13 @@
         </property>
        </column>
       </widget>
-      <widget class="QTabWidget" name="slave_tabWidget">
+      <widget class="QTabWidget" name="worker_tabWidget">
        <property name="currentIndex">
         <number>0</number>
        </property>
-       <widget class="QWidget" name="slaveInfo_tab">
+       <widget class="QWidget" name="workerInfo_tab">
         <attribute name="title">
-         <string>Slave Info</string>
+         <string>Worker Info</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_4">
          <property name="leftMargin">
@@ -567,9 +625,9 @@
           <number>6</number>
          </property>
          <item>
-          <layout class="QHBoxLayout" name="slaveInfo_horizontalLayout">
+          <layout class="QHBoxLayout" name="workerInfo_horizontalLayout">
            <item>
-            <widget class="QToolButton" name="slaveControl_toolButton">
+            <widget class="QToolButton" name="workerControl_toolButton">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -669,6 +727,187 @@ QToolButton:disabled {
     </item>
    </layout>
   </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1024</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuJob">
+    <property name="title">
+     <string>Job</string>
+    </property>
+    <addaction name="actionEdit"/>
+    <addaction name="actionPause"/>
+    <addaction name="actionResume"/>
+    <addaction name="actionKill"/>
+    <addaction name="actionDelete"/>
+    <addaction name="actionResubmit"/>
+   </widget>
+   <widget class="QMenu" name="menuTask">
+    <property name="title">
+     <string>Task</string>
+    </property>
+    <addaction name="actionMark_as_Complete"/>
+    <addaction name="actionRequeue"/>
+    <addaction name="actionCombine_tasks"/>
+    <addaction name="actionSplit_task"/>
+   </widget>
+   <widget class="QMenu" name="menuWorker">
+    <property name="title">
+     <string>Worker</string>
+    </property>
+    <addaction name="actionStart"/>
+    <addaction name="actionStop_immediately_and_kill_render_task"/>
+    <addaction name="actionStop_when_current_task_is_complete"/>
+    <addaction name="actionStop"/>
+   </widget>
+   <widget class="QMenu" name="menuQueue">
+    <property name="title">
+     <string>Queue</string>
+    </property>
+    <addaction name="actionSubmit_new_job"/>
+    <addaction name="actionRefresh_queue"/>
+   </widget>
+   <addaction name="menuQueue"/>
+   <addaction name="menuJob"/>
+   <addaction name="menuTask"/>
+   <addaction name="menuWorker"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionPause">
+   <property name="icon">
+    <iconset resource="rsc.qrc">
+     <normaloff>:/rsc/rsc/icon_pause.png</normaloff>
+     <disabledoff>:/rsc/rsc/icon_pause_disabled.png</disabledoff>:/rsc/rsc/icon_pause.png</iconset>
+   </property>
+   <property name="text">
+    <string>Pause</string>
+   </property>
+  </action>
+  <action name="actionResume">
+   <property name="text">
+    <string>Resume</string>
+   </property>
+  </action>
+  <action name="actionKill">
+   <property name="icon">
+    <iconset resource="rsc.qrc">
+     <normaloff>:/rsc/rsc/icon_cross.png</normaloff>
+     <disabledoff>:/rsc/rsc/icon_cross_disabled.png</disabledoff>:/rsc/rsc/icon_cross.png</iconset>
+   </property>
+   <property name="text">
+    <string>Kill</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="icon">
+    <iconset resource="rsc.qrc">
+     <normaloff>:/rsc/rsc/icon_delete.png</normaloff>
+     <disabledoff>:/rsc/rsc/icon_delete_disabled.png</disabledoff>:/rsc/rsc/icon_delete.png</iconset>
+   </property>
+   <property name="text">
+    <string>Delete</string>
+   </property>
+  </action>
+  <action name="actionResubmit">
+   <property name="icon">
+    <iconset resource="rsc.qrc">
+     <normaloff>:/rsc/rsc/icon_resubmit.png</normaloff>
+     <disabledoff>:/rsc/rsc/icon_resubmit_disabled.png</disabledoff>:/rsc/rsc/icon_resubmit.png</iconset>
+   </property>
+   <property name="text">
+    <string>Resubmit</string>
+   </property>
+  </action>
+  <action name="actionSubmit">
+   <property name="text">
+    <string>Submit</string>
+   </property>
+  </action>
+  <action name="actionEdit">
+   <property name="icon">
+    <iconset resource="rsc.qrc">
+     <normaloff>:/rsc/rsc/icon_editor.png</normaloff>
+     <disabledoff>:/rsc/rsc/icon_editor_disabled.png</disabledoff>:/rsc/rsc/icon_editor.png</iconset>
+   </property>
+   <property name="text">
+    <string>Edit</string>
+   </property>
+  </action>
+  <action name="actionMark_as_Complete">
+   <property name="icon">
+    <iconset resource="rsc.qrc">
+     <normaloff>:/rsc/rsc/icon_tick.png</normaloff>
+     <disabledoff>:/rsc/rsc/icon_tick_disabled.png</disabledoff>:/rsc/rsc/icon_tick.png</iconset>
+   </property>
+   <property name="text">
+    <string>Mark as Complete</string>
+   </property>
+  </action>
+  <action name="actionRequeue">
+   <property name="icon">
+    <iconset resource="rsc.qrc">
+     <normaloff>:/rsc/rsc/icon_resubmit.png</normaloff>
+     <disabledoff>:/rsc/rsc/icon_resubmit_disabled.png</disabledoff>:/rsc/rsc/icon_resubmit.png</iconset>
+   </property>
+   <property name="text">
+    <string>Requeue</string>
+   </property>
+  </action>
+  <action name="actionCombine_tasks">
+   <property name="text">
+    <string>Combine tasks</string>
+   </property>
+  </action>
+  <action name="actionSplit_task">
+   <property name="text">
+    <string>Split task</string>
+   </property>
+  </action>
+  <action name="actionStart">
+   <property name="text">
+    <string>Start</string>
+   </property>
+  </action>
+  <action name="actionStop_immediately_and_kill_render_task">
+   <property name="text">
+    <string>Stop immediately and kill current task</string>
+   </property>
+  </action>
+  <action name="actionStop_when_current_task_is_complete">
+   <property name="text">
+    <string>Stop when current task is complete</string>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="text">
+    <string>Stop</string>
+   </property>
+  </action>
+  <action name="actionSubmit_new_job">
+   <property name="icon">
+    <iconset resource="rsc.qrc">
+     <normaloff>:/rsc/rsc/icon_render.png</normaloff>
+     <disabledoff>:/rsc/rsc/icon_render_disabled.png</disabledoff>:/rsc/rsc/icon_render.png</iconset>
+   </property>
+   <property name="text">
+    <string>Submit new job...</string>
+   </property>
+  </action>
+  <action name="actionRefresh_queue">
+   <property name="icon">
+    <iconset resource="rsc.qrc">
+     <normaloff>:/rsc/rsc/icon_refresh.png</normaloff>
+     <disabledoff>:/rsc/rsc/icon_refresh_disabled.png</disabledoff>:/rsc/rsc/icon_refresh.png</iconset>
+   </property>
+   <property name="text">
+    <string>Refresh</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="rsc.qrc"/>

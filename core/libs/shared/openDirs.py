@@ -19,7 +19,7 @@ if os.environ['IC_RUNNING_OS'] == "Windows":
 elif os.environ['IC_RUNNING_OS'] == "MacOS":
 	sysCommand = "open"
 else:  # Linux
-	sysCommand = "nautilus"
+	sysCommand = "xdg-open"  # Generic command - should work in all desktop environments
 
 
 def open_(path_):

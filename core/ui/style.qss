@@ -690,6 +690,8 @@ QGroupBox::indicator {
 
 QGroupBox:flat {
 	border: none;
+	/*border-top: 1px solid #333;*/
+	/*background: #404040;*/
 }
 
 QGroupBox[expandable="true"] {

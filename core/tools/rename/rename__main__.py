@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-# [Icarus] rename__main__.py
+# rename__main__.py
 #
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2016-2018 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2016-2018
 #
 # Batch Rename Tool
 # A UI for batch renaming and renumbering sequences of files.
@@ -14,7 +14,7 @@ import os
 import re
 import sys
 
-# Initialise Icarus environment - TEMP BODGE TO ENABLE STANDALONE APP
+# Initialise pipeline environment - TEMP BODGE TO ENABLE STANDALONE APP
 if __name__ == "__main__":
 	sys.path.append(os.environ['IC_WORKINGDIR'])
 	import env__init__
