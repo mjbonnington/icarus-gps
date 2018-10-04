@@ -28,7 +28,8 @@ import verbose
 # Configuration
 # ----------------------------------------------------------------------------
 
-VENDOR = ""
+# The vendor string must be set in order to store window geometry
+VENDOR = "Icarus"
 
 
 # ----------------------------------------------------------------------------

@@ -16,7 +16,7 @@ import socket
 import sys
 import time
 
-# Initialise Icarus environment - TEMP BODGE TO ENABLE STANDALONE APP
+# Initialise pipeline environment - TEMP BODGE TO ENABLE STANDALONE APP
 if __name__ == "__main__":
 	sys.path.append(os.environ['IC_WORKINGDIR'])
 	import env__init__
@@ -49,7 +49,7 @@ STORE_WINDOW_GEOMETRY = True
 
 
 # ----------------------------------------------------------------------------
-# Main application class
+# Begin main application class
 # ----------------------------------------------------------------------------
 
 class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
@@ -60,10 +60,10 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.parent = parent
 
 		self.setupUI(window_object=WINDOW_OBJECT, 
-		             window_title=WINDOW_TITLE, 
-		             ui_file=UI_FILE, 
-		             stylesheet=STYLESHEET, 
-		             store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
+					 window_title=WINDOW_TITLE, 
+					 ui_file=UI_FILE, 
+					 stylesheet=STYLESHEET, 
+					 store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
 
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Window)
@@ -71,12 +71,18 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Set other Qt attributes
 		#self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
+		# Restore splitter size state
+		try:
+			self.ui.splitter.restoreState(self.settings.value("splitterSizes")) #.toByteArray())
+		except:
+			pass
+
 		# Define global variables
 		self.timeFormatStr = "%Y/%m/%d %H:%M:%S"
 		self.localhost = socket.gethostname()
 		self.selection = []
 		self.renderOutput = ""
-		verbose.registerStatusBar(self.ui.statusBar)
+		verbose.registerStatusBar(self.ui.statusBar)  # only in standalone?
 
 		# Define standard UI colours
 		self.colBlack         = QtGui.QColor("#000000")  # black
@@ -111,13 +117,27 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.renderProcess.finished.connect(self.renderComplete)
 		self.renderProcess.readyReadStandardOutput.connect(self.updateWorkerView)
 
+		# --------------------------------------------------------------------
 		# Connect signals & slots
+		# --------------------------------------------------------------------
+
 		self.ui.renderQueue_treeWidget.itemSelectionChanged.connect(self.updateToolbarUI)
 		self.ui.renderQueue_treeWidget.header().sectionResized.connect(lambda logicalIndex, oldSize, newSize: self.updateColumn(logicalIndex, oldSize, newSize))  # Resize progress indicator
 
+		# Queue menu & toolbar
+		self.ui.actionSubmit_new_job.triggered.connect(self.launchRenderSubmit)
+		self.ui.actionRefresh_queue.triggered.connect(self.rebuildRenderQueueView)
+		#self.ui.actionExit(self.close)
 		self.ui.jobSubmit_toolButton.clicked.connect(self.launchRenderSubmit)
 		self.ui.refresh_toolButton.clicked.connect(self.rebuildRenderQueueView)
 
+		# Job menu & toolbar
+		#self.ui.actionEdit.triggered.connect(self.editJob)  # not yet implemented
+		self.ui.actionPause.triggered.connect(lambda *args: self.changePriority(0, absolute=True))  # this lambda function is what's causing the multiple windows issue, no idea why though
+		#self.ui.actionResume.triggered.connect(lambda *args: self.changePriority(0, absolute=True))  # this lambda function is what's causing the multiple windows issue, no idea why though
+		#self.ui.actionKill.triggered.connect(self.killJob)  # not yet implemented
+		self.ui.actionDelete.triggered.connect(self.deleteJob)
+		#self.ui.actionResubmit.triggered.connect(self.resubmitJob)  # not yet implemented
 		self.ui.jobPause_toolButton.clicked.connect(lambda *args: self.changePriority(0, absolute=True))  # this lambda function is what's causing the multiple windows issue, no idea why though
 		#self.ui.jobKill_toolButton.clicked.connect(self.killJob)  # not yet implemented
 		self.ui.jobDelete_toolButton.clicked.connect(self.deleteJob)
@@ -125,29 +145,17 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.jobPriority_slider.sliderMoved.connect(lambda value: self.changePriority(value)) # this lambda function is what's causing the multiple windows issue, no idea why though
 		self.ui.jobPriority_slider.sliderReleased.connect(self.updatePriority)
 
+		# Task menu & toolbar
+		self.ui.actionMark_as_Complete.triggered.connect(self.completeTask)
+		self.ui.actionRequeue.triggered.connect(self.requeueTask)
+		#self.ui.actionCombine_tasks.triggered.connect(self.combineTasks)  # not yet implemented
+		#self.ui.actionSplit_task.triggered.connect(self.splitTasks)  # not yet implemented
 		self.ui.taskComplete_toolButton.clicked.connect(self.completeTask)
 		self.ui.taskRequeue_toolButton.clicked.connect(self.requeueTask)
 
-		# Add context menu items to job submit tool button
-		# self.ui.jobSubmit_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-
-		# self.actionSubmitMaya = QtWidgets.QAction("Maya...", None)
-		# mayaIcon = QtGui.QIcon()
-		# mayaIcon.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_maya.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-		# mayaIcon.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_maya_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-		# self.actionSubmitMaya.setIcon(mayaIcon)
-		# self.actionSubmitMaya.triggered.connect(self.launchRenderSubmit)
-		# self.ui.jobSubmit_toolButton.addAction(self.actionSubmitMaya)
-		# #self.actionSubmitMaya.setEnabled(False)
-
-		# self.actionSubmitNuke = QtWidgets.QAction("Nuke...", None)
-		# nukeIcon = QtGui.QIcon()
-		# nukeIcon.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_nuke.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-		# nukeIcon.addPixmap(QtGui.QPixmap(":/rsc/rsc/app_icon_nuke_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-		# self.actionSubmitNuke.setIcon(nukeIcon)
-		# self.actionSubmitNuke.triggered.connect(self.launchRenderSubmit)
-		# self.ui.jobSubmit_toolButton.addAction(self.actionSubmitNuke)
-		# #self.actionSubmitNuke.setEnabled(False)
+		# Set up context menus for render queue tree widget
+		self.ui.renderQueue_treeWidget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+		self.ui.renderQueue_treeWidget.customContextMenuRequested.connect(self.openContextMenu)
 
 		# Add context menu items to worker control tool button
 		self.ui.workerControl_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
@@ -194,6 +202,26 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		except AttributeError:
 			self.renderSubmitUI = render_submit.RenderSubmitUI(parent=self)
 			self.renderSubmitUI.display()
+
+
+	def openContextMenu(self, position):
+		""" Display right-click context menu for items in render queue tree
+			view widget.
+		"""
+		indices = self.ui.renderQueue_treeWidget.selectedIndexes()
+		if len(indices) > 0:
+			level = 0
+			index = indices[0]
+			while index.parent().isValid():
+				index = index.parent()
+				level += 1
+
+		if level == 0:  # Job
+			menu = self.ui.menuJob
+		elif level == 1:  # Task
+			menu = self.ui.menuTask
+
+		menu.exec_(self.ui.renderQueue_treeWidget.viewport().mapToGlobal(position))
 
 
 	def rebuildRenderQueueView(self):
@@ -396,8 +424,8 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 
 	def drawJobProgressIndicator(self, renderJobItem, completedTaskFrameCount,
-	                             inProgressTaskFrameCount, totalFrameCount,
-	                             colProgress):
+								 inProgressTaskFrameCount, totalFrameCount,
+								 colProgress):
 		""" Draw a pixmap to represent the progress of a job.
 		"""
 		border = 1
@@ -467,8 +495,8 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 					self.ui.renderQueue_treeWidget.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
 					jobTaskID = item.parent().text(1), int(item.text(1))
 					self.selection.append(jobTaskID)
-					self.ui.job_groupBox.setEnabled(False)
-					self.ui.task_groupBox.setEnabled(True)
+					self.ui.job_frame.setEnabled(False)
+					self.ui.task_frame.setEnabled(True)
 					self.ui.menuJob.setEnabled(False)
 					self.ui.menuTask.setEnabled(True)
 			else:  # Job is selected
@@ -483,14 +511,14 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 					self.ui.renderQueue_treeWidget.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
 					jobTaskID = item.text(1), -1
 					self.selection.append(jobTaskID)
-					self.ui.job_groupBox.setEnabled(True)
-					self.ui.task_groupBox.setEnabled(False)
+					self.ui.job_frame.setEnabled(True)
+					self.ui.task_frame.setEnabled(False)
 					self.ui.menuJob.setEnabled(True)
 					self.ui.menuTask.setEnabled(False)
 
 		if not self.selection:  # Nothing is selected
-			self.ui.job_groupBox.setEnabled(False)
-			self.ui.task_groupBox.setEnabled(False)
+			self.ui.job_frame.setEnabled(False)
+			self.ui.task_frame.setEnabled(False)
 			self.ui.menuJob.setEnabled(False)
 			self.ui.menuTask.setEnabled(False)
 			verbose.message("Nothing selected.")
@@ -999,35 +1027,32 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		QtWidgets.QMainWindow.closeEvent(self, event)
 
 # ----------------------------------------------------------------------------
-# End of main application class
-# ----------------------------------------------------------------------------
-
-
-# ----------------------------------------------------------------------------
+# End main application class
+# ============================================================================
 # Run as standalone app
 # ----------------------------------------------------------------------------
 
 if __name__ == "__main__":
 	app = QtWidgets.QApplication(sys.argv)
 
-	# Apply application style
-	styles = QtWidgets.QStyleFactory.keys()
-	if 'Fusion' in styles:  # Qt5
-		app.setStyle('Fusion')
-	elif 'Plastique' in styles:
-		app.setStyle('Plastique')  # Qt4
+	# # Apply application style
+	# styles = QtWidgets.QStyleFactory.keys()
+	# if 'Fusion' in styles:  # Qt5
+	# 	app.setStyle('Fusion')
+	# elif 'Plastique' in styles:
+	# 	app.setStyle('Plastique')  # Qt4
 
-	# Apply UI style sheet
-	if STYLESHEET is not None:
-		qss=os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
-		with open(qss, "r") as fh:
-			app.setStyleSheet(fh.read())
+	# # Apply UI style sheet
+	# if STYLESHEET is not None:
+	# 	qss=os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
+	# 	with open(qss, "r") as fh:
+	# 		app.setStyleSheet(fh.read())
 
 	# Instantiate main application class
 	rqApp = RenderQueueApp()
 
 	# Set Window flags
-	rqApp.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint)
+	#rqApp.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint)
 
 	# Show the application UI
 	rqApp.show()

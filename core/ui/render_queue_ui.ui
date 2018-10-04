@@ -15,62 +15,29 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_5">
-    <property name="leftMargin">
-     <number>8</number>
-    </property>
-    <property name="topMargin">
-     <number>8</number>
-    </property>
-    <property name="rightMargin">
-     <number>8</number>
-    </property>
-    <property name="bottomMargin">
+    <property name="margin">
      <number>8</number>
     </property>
     <item>
      <widget class="QFrame" name="renderQueueToolbar_frame">
-      <property name="frameShape">
-       <enum>QFrame::NoFrame</enum>
+      <property name="lineWidth">
+       <number>0</number>
       </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_10">
-       <property name="leftMargin">
-        <number>0</number>
+      <layout class="QHBoxLayout" name="toolbar_horizontalLayout">
+       <property name="spacing">
+        <number>18</number>
        </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
+       <property name="margin">
         <number>0</number>
        </property>
        <item>
-        <widget class="QGroupBox" name="view_groupBox">
-         <property name="title">
-          <string>Queue</string>
+        <widget class="QFrame" name="view_frame">
+         <property name="lineWidth">
+          <number>0</number>
          </property>
-         <property name="flat">
-          <bool>true</bool>
-         </property>
-         <property name="expandable" stdset="0">
-          <bool>false</bool>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
-          <property name="leftMargin">
-           <number>6</number>
-          </property>
-          <property name="topMargin">
-           <number>4</number>
-          </property>
-          <property name="rightMargin">
-           <number>6</number>
-          </property>
-          <property name="bottomMargin">
-           <number>4</number>
+         <layout class="QHBoxLayout" name="view_horizontalLayout">
+          <property name="margin">
+           <number>0</number>
           </property>
           <item>
            <widget class="QToolButton" name="jobSubmit_toolButton">
@@ -142,28 +109,13 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="job_groupBox">
-         <property name="title">
-          <string>Job</string>
+        <widget class="QFrame" name="job_frame">
+         <property name="lineWidth">
+          <number>0</number>
          </property>
-         <property name="flat">
-          <bool>true</bool>
-         </property>
-         <property name="expandable" stdset="0">
-          <bool>false</bool>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <property name="leftMargin">
-           <number>6</number>
-          </property>
-          <property name="topMargin">
-           <number>4</number>
-          </property>
-          <property name="rightMargin">
-           <number>6</number>
-          </property>
-          <property name="bottomMargin">
-           <number>4</number>
+         <layout class="QHBoxLayout" name="job_horizontalLayout">
+          <property name="margin">
+           <number>0</number>
           </property>
           <item>
            <widget class="QToolButton" name="jobPause_toolButton">
@@ -200,9 +152,6 @@
           </item>
           <item>
            <widget class="QToolButton" name="jobKill_toolButton">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
             <property name="minimumSize">
              <size>
               <width>64</width>
@@ -269,9 +218,6 @@
           </item>
           <item>
            <widget class="QToolButton" name="jobResubmit_toolButton">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
             <property name="minimumSize">
              <size>
               <width>64</width>
@@ -333,13 +279,10 @@
             <property name="statusTip">
              <string>Adjust the priority for the selected render job(s).</string>
             </property>
-            <property name="frameShape">
-             <enum>QFrame::NoFrame</enum>
+            <property name="lineWidth">
+             <number>0</number>
             </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_2">
+            <layout class="QVBoxLayout" name="priority_verticalLayout">
              <property name="spacing">
               <number>3</number>
              </property>
@@ -416,28 +359,13 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="task_groupBox">
-         <property name="title">
-          <string>Task</string>
+        <widget class="QFrame" name="task_frame">
+         <property name="lineWidth">
+          <number>0</number>
          </property>
-         <property name="flat">
-          <bool>true</bool>
-         </property>
-         <property name="expandable" stdset="0">
-          <bool>false</bool>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_5">
-          <property name="leftMargin">
-           <number>6</number>
-          </property>
-          <property name="topMargin">
-           <number>4</number>
-          </property>
-          <property name="rightMargin">
-           <number>6</number>
-          </property>
-          <property name="bottomMargin">
-           <number>4</number>
+         <layout class="QHBoxLayout" name="task_horizontalLayout">
+          <property name="margin">
+           <number>0</number>
           </property>
           <item>
            <widget class="QToolButton" name="taskComplete_toolButton">
@@ -612,16 +540,7 @@
          <string>Worker Info</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_4">
-         <property name="leftMargin">
-          <number>6</number>
-         </property>
-         <property name="topMargin">
-          <number>6</number>
-         </property>
-         <property name="rightMargin">
-          <number>6</number>
-         </property>
-         <property name="bottomMargin">
+         <property name="margin">
           <number>6</number>
          </property>
          <item>
@@ -733,7 +652,7 @@ QToolButton:disabled {
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>19</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuJob">
@@ -771,6 +690,7 @@ QToolButton:disabled {
     </property>
     <addaction name="actionSubmit_new_job"/>
     <addaction name="actionRefresh_queue"/>
+    <addaction name="actionExit"/>
    </widget>
    <addaction name="menuQueue"/>
    <addaction name="menuJob"/>
@@ -906,6 +826,11 @@ QToolButton:disabled {
    </property>
    <property name="text">
     <string>Refresh</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
    </property>
   </action>
  </widget>
