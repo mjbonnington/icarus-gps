@@ -10,6 +10,7 @@
 
 
 import datetime
+import logging
 import math
 import os
 import socket
@@ -59,6 +60,11 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		super(RenderQueueApp, self).__init__(parent)
 		self.parent = parent
 
+		# Set up logging (TEST)
+		task_log_path = osOps.absolutePath('$IC_CONFIGDIR/renderqueue/test.log')
+		logging.basicConfig(level=logging.DEBUG, filename=task_log_path, filemode="a+",
+		                    format="%(asctime)-15s %(levelname)-8s %(message)s")
+
 		self.setupUI(window_object=WINDOW_OBJECT, 
 					 window_title=WINDOW_TITLE, 
 					 ui_file=UI_FILE, 
@@ -71,9 +77,10 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Set other Qt attributes
 		#self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
-		# Restore splitter size state
+		# Restore widget state
 		try:
 			self.ui.splitter.restoreState(self.settings.value("splitterSizes")) #.toByteArray())
+			self.ui.renderQueue_treeWidget.header().restoreState(self.settings.value("renderQueueView")) #.toByteArray())
 		except:
 			pass
 
@@ -127,6 +134,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Queue menu & toolbar
 		self.ui.actionSubmit_new_job.triggered.connect(self.launchRenderSubmit)
 		self.ui.actionRefresh_queue.triggered.connect(self.rebuildRenderQueueView)
+		self.ui.actionResize_columns.triggered.connect(self.resizeColumns)
 		#self.ui.actionExit(self.close)
 		self.ui.jobSubmit_toolButton.clicked.connect(self.launchRenderSubmit)
 		self.ui.refresh_toolButton.clicked.connect(self.rebuildRenderQueueView)
@@ -188,7 +196,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Set local worker as disabled initially
 		self.setWorkerStatus("disabled")  # Store this as a preference or something
 
-		self.rebuildRenderQueueView()  # Move these to show() event hander function?
+		#self.rebuildRenderQueueView()  # Move these to show() event hander function?
 		self.updateWorkerView()
 		self.updateToolbarUI()
 
@@ -224,6 +232,14 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		menu.exec_(self.ui.renderQueue_treeWidget.viewport().mapToGlobal(position))
 
 
+	def resizeColumns(self):
+		""" Resize all columns of the specified widget to fit content.
+		"""
+		widget = self.ui.renderQueue_treeWidget
+		for i in range(0, widget.columnCount()):
+			widget.resizeColumnToContents(i)
+
+
 	def rebuildRenderQueueView(self):
 		""" Clears and rebuilds the render queue tree view widget, populating
 			it with entries for render jobs and tasks.
@@ -234,15 +250,11 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Populate tree widget with render jobs and tasks
 		self.updateRenderQueueView()
 
-		# Resize all columns to fit content
-		for i in range(0, self.ui.renderQueue_treeWidget.columnCount()):
-			self.ui.renderQueue_treeWidget.resizeColumnToContents(i)
-
 		# Hide ID column
 		#self.ui.renderQueue_treeWidget.setColumnHidden(1, True)
 
 		# Sort by submit time column - move this somewhere else?
-		self.ui.renderQueue_treeWidget.sortByColumn(7, QtCore.Qt.DescendingOrder)
+		#self.ui.renderQueue_treeWidget.sortByColumn(7, QtCore.Qt.DescendingOrder)
 
 		#self.updateWorkerView()
 
@@ -341,7 +353,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 					renderTaskItem.setForeground(col, QtGui.QBrush(self.colInactive))
 				if taskStatus == "Queued": # and taskWorker == self.localhost:
 					#renderTaskItem.setForeground(4, QtGui.QBrush(self.colCompleted))
-					renderTaskItem.setIcon(4, self.waitingIcon)
+					renderTaskItem.setIcon(4, self.nullIcon)
 				elif taskStatus == "Working": # and taskWorker == self.localhost:
 					#renderTaskItem.setForeground(4, QtGui.QBrush(self.colActive))
 					renderTaskItem.setIcon(4, self.readyIcon)
@@ -547,6 +559,12 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			line = str(self.renderProcess.readAllStandardOutput(), 'utf-8')
 		except TypeError:  # Python 2.x compatibility
 			line = str(self.renderProcess.readAllStandardOutput())
+
+		# task_log_path = osOps.absolutePath('$IC_CONFIGDIR/renderqueue/test.log')
+		# with open(task_log_path, 'a') as fh:
+		# 	fh.write(line)
+		# 	#print(line, file=fh)
+		logging.info(line)
 
 		# # Parse output
 		# if renderer == 'redshift':
@@ -773,7 +791,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		elif status == "idle":
 			self.ui.workerControl_toolButton.setChecked(True)
-			statusIcon.addPixmap(QtGui.QPixmap(":/rsc/rsc/status_icon_ready.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+			statusIcon.addPixmap(QtGui.QPixmap(":/rsc/rsc/status_icon_null.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 			self.actionWorkerStart.setVisible(False)
 			self.actionWorkerStop.setVisible(True)
 			self.actionKillTask.setVisible(False)
@@ -1014,15 +1032,10 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.timerDequeue.stop()
 		self.timerUpdateTimer.stop()
 
-		# Store window geometry and state
-		self.storeWindow()  # Store window geometry
-		# # (Save state may cause issues with PyQt5)
-		# try:
-		# 	self.settings.setValue("geometry", self.saveGeometry())
-		# 	self.settings.setValue("windowState", self.saveState())
-		# except:
-		# 	pass
+		# Store window geometry and state of certain widgets
+		self.storeWindow()
 		self.settings.setValue("splitterSizes", self.ui.splitter.saveState())
+		self.settings.setValue("renderQueueView", self.ui.renderQueue_treeWidget.header().saveState())
 
 		QtWidgets.QMainWindow.closeEvent(self, event)
 

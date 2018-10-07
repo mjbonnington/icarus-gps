@@ -581,7 +581,9 @@ QToolButton:disabled {
              </property>
              <property name="icon">
               <iconset resource="rsc.qrc">
-               <normaloff>:/rsc/rsc/status_icon_ready.png</normaloff>:/rsc/rsc/status_icon_ready.png</iconset>
+               <normaloff>:/rsc/rsc/status_icon_null.png</normaloff>
+               <disabledoff>:/rsc/rsc/status_icon_stopped.png</disabledoff>
+               <activeoff>:/rsc/rsc/status_icon_ready.png</activeoff>:/rsc/rsc/status_icon_null.png</iconset>
              </property>
              <property name="iconSize">
               <size>
@@ -665,6 +667,7 @@ QToolButton:disabled {
     <addaction name="actionKill"/>
     <addaction name="actionDelete"/>
     <addaction name="actionResubmit"/>
+    <addaction name="actionViewJobLog"/>
    </widget>
    <widget class="QMenu" name="menuTask">
     <property name="title">
@@ -672,8 +675,9 @@ QToolButton:disabled {
     </property>
     <addaction name="actionMark_as_Complete"/>
     <addaction name="actionRequeue"/>
-    <addaction name="actionCombine_tasks"/>
-    <addaction name="actionSplit_task"/>
+    <addaction name="actionCombine"/>
+    <addaction name="actionSplit"/>
+    <addaction name="actionViewTaskLog"/>
    </widget>
    <widget class="QMenu" name="menuWorker">
     <property name="title">
@@ -690,6 +694,8 @@ QToolButton:disabled {
     </property>
     <addaction name="actionSubmit_new_job"/>
     <addaction name="actionRefresh_queue"/>
+    <addaction name="actionReset_view"/>
+    <addaction name="actionResize_columns"/>
     <addaction name="actionExit"/>
    </widget>
    <addaction name="menuQueue"/>
@@ -755,7 +761,7 @@ QToolButton:disabled {
      <disabledoff>:/rsc/rsc/icon_editor_disabled.png</disabledoff>:/rsc/rsc/icon_editor.png</iconset>
    </property>
    <property name="text">
-    <string>Edit</string>
+    <string>Edit...</string>
    </property>
   </action>
   <action name="actionMark_as_Complete">
@@ -778,14 +784,14 @@ QToolButton:disabled {
     <string>Requeue</string>
    </property>
   </action>
-  <action name="actionCombine_tasks">
+  <action name="actionCombine">
    <property name="text">
-    <string>Combine tasks</string>
+    <string>Combine</string>
    </property>
   </action>
-  <action name="actionSplit_task">
+  <action name="actionSplit">
    <property name="text">
-    <string>Split task</string>
+    <string>Split</string>
    </property>
   </action>
   <action name="actionStart">
@@ -831,6 +837,26 @@ QToolButton:disabled {
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionResize_columns">
+   <property name="text">
+    <string>Resize all columns</string>
+   </property>
+  </action>
+  <action name="actionReset_view">
+   <property name="text">
+    <string>Reset view</string>
+   </property>
+  </action>
+  <action name="actionViewJobLog">
+   <property name="text">
+    <string>View job log...</string>
+   </property>
+  </action>
+  <action name="actionViewTaskLog">
+   <property name="text">
+    <string>View task log...</string>
    </property>
   </action>
  </widget>

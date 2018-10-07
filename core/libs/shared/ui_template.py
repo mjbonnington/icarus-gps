@@ -585,7 +585,7 @@ class TemplateUI(object):
 		if self.stylesheet:
 			qss = os.path.join(os.environ['IC_FORMSDIR'], self.stylesheet)
 			with open(qss, "r") as fh:
-				self.setStyleSheet(fh.read())
+				self.setStyleSheet(fh.read()) #.replace("112, 158, 50", "0, 120, 215"))
 
 
 	def storeWindow(self):
