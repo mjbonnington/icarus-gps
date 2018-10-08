@@ -555,16 +555,21 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		"""
 		self.ui.workerControl_toolButton.setText("%s (%s)" %(self.localhost, self.workerStatus))
 
-		try:
-			line = str(self.renderProcess.readAllStandardOutput(), 'utf-8')
-		except TypeError:  # Python 2.x compatibility
-			line = str(self.renderProcess.readAllStandardOutput())
+		# try:
+		# 	line = str(self.renderProcess.readAllStandardOutput(), 'utf-8')
+		# except TypeError:  # Python 2.x compatibility
+		# 	line = str(self.renderProcess.readAllStandardOutput())
 
-		# task_log_path = osOps.absolutePath('$IC_CONFIGDIR/renderqueue/test.log')
-		# with open(task_log_path, 'a') as fh:
-		# 	fh.write(line)
-		# 	#print(line, file=fh)
-		logging.info(line)
+		if int(sys.version[0]) <= 2:  # Python 2.x compatibility
+			line = str(self.renderProcess.readAllStandardOutput())
+		else:
+			line = str(self.renderProcess.readAllStandardOutput(), 'utf-8')
+
+		task_log_path = osOps.absolutePath('$IC_CONFIGDIR/renderqueue/%s.log' %self.localhost)
+		with open(task_log_path, 'a') as fh:
+			fh.write(line)
+			#print(line, file=fh)
+		#logging.info(line)
 
 		# # Parse output
 		# if renderer == 'redshift':
