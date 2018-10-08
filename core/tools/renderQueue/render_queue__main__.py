@@ -360,6 +360,9 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				elif taskStatus == "Done": # and taskWorker == self.localhost:
 					#renderTaskItem.setForeground(4, QtGui.QBrush(self.colCompleted))
 					renderTaskItem.setIcon(4, self.doneIcon)
+				elif taskStatus == "Failed": # and taskWorker == self.localhost:
+					#renderTaskItem.setForeground(4, QtGui.QBrush(self.colCompleted))
+					renderTaskItem.setIcon(4, self.errorIcon)
 
 				# Update timers
 				try:
@@ -571,7 +574,11 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			#print(line, file=fh)
 		#logging.info(line)
 
-		# # Parse output
+		# Parse output
+		#if self.jobType == 'Maya':
+		if "Fatal Error" in line:
+			verbose.error(line)
+			self.renderTaskErrors += 1
 		# if renderer == 'redshift':
 		# 	if "Frame done" in line:
 		# 		pass # update progress message
@@ -834,6 +841,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		#elif self.workerStatus != "rendering":
 
 		self.renderTaskInterrupted = False
+		self.renderTaskErrors = 0
 		self.renderOutput = ""
 		self.startTimeSec = time.time()  # Used for measuring the time spent rendering
 		startTime = time.strftime(self.timeFormatStr)
@@ -945,6 +953,8 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# self.ui.runningTime_label.setText("")
 		if self.renderTaskInterrupted:
 			self.rq.requeueTask(self.renderJobID, self.renderTaskID)  # perhaps set a special status to indicate render was killed, allowing the user to requeue manually?
+		elif self.renderTaskErrors:
+			self.rq.failTask(self.renderJobID, self.renderTaskID, self.localhost)
 		else:
 			self.rq.completeTask(self.renderJobID, self.renderTaskID, self.localhost, taskTime=totalTimeSec)
 

@@ -242,6 +242,23 @@ class RenderQueue(xmlData.XMLData):
 				self.saveXML()
 
 
+	def failTask(self, jobID, taskID, hostID=None, taskTime=0):
+		""" Mark the specified task as 'Failed'.
+		"""
+		self.loadXML(quiet=True) # reload XML data
+		element = self.root.find("./job[@id='%s']/task[@id='%s']" %(jobID, taskID)) # get the <task> element
+		if element is not None:
+			if element.find('status').text == "Done": # do nothing if status is 'Done'
+				return
+			# elif element.find('status').text == "Working": # do nothing if status is 'Working'
+			# 	return
+			else:
+				element.find('status').text = "Failed"
+				element.find('worker').text = str(hostID)
+				element.find('totalTime').text = str(taskTime)
+				self.saveXML()
+
+
 	def requeueTask(self, jobID, taskID):
 		""" Requeue the specified task, mark it as 'Queued'.
 		"""
