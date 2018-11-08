@@ -29,6 +29,7 @@ import ui_template as UI
 # Import custom modules
 import osOps
 import renderQueue
+import render_output_parser
 import sequence
 import verbose
 
@@ -575,13 +576,9 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		#logging.info(line)
 
 		# Parse output
-		#if self.jobType == 'Maya':
-		if "Fatal Error" in line:
+		if render_output_parser.parse(line, 'Maya'):
 			verbose.error(line)
 			self.renderTaskErrors += 1
-		# if renderer == 'redshift':
-		# 	if "Frame done" in line:
-		# 		pass # update progress message
 
 		self.renderOutput += line
 		self.ui.output_textEdit.setPlainText(self.renderOutput)
@@ -779,7 +776,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		else:
 			self.setWorkerStatus("disabled")
 
-		self.updateWorkerView()
+		#self.updateWorkerView()
 
 
 	def setWorkerStatus(self, status):
@@ -954,7 +951,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		if self.renderTaskInterrupted:
 			self.rq.requeueTask(self.renderJobID, self.renderTaskID)  # perhaps set a special status to indicate render was killed, allowing the user to requeue manually?
 		elif self.renderTaskErrors:
-			self.rq.failTask(self.renderJobID, self.renderTaskID, self.localhost)
+			self.rq.failTask(self.renderJobID, self.renderTaskID, self.localhost, taskTime=totalTimeSec)
 		else:
 			self.rq.completeTask(self.renderJobID, self.renderTaskID, self.localhost, taskTime=totalTimeSec)
 

@@ -248,7 +248,7 @@ class RenderQueue(xmlData.XMLData):
 		self.loadXML(quiet=True) # reload XML data
 		element = self.root.find("./job[@id='%s']/task[@id='%s']" %(jobID, taskID)) # get the <task> element
 		if element is not None:
-			if element.find('status').text == "Done": # do nothing if status is 'Done'
+			if element.find('status').text == "Failed": # do nothing if status is 'Failed'
 				return
 			# elif element.find('status').text == "Working": # do nothing if status is 'Working'
 			# 	return
