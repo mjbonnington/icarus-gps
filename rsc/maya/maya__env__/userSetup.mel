@@ -1,11 +1,14 @@
 // [GPS] User Setup
 //
 // Nuno Pereira <nuno.pereira@gps-ldn.com>
-// Mike Bonnington <mike.bonnington@gps-ldn.com>
-// (c) 2013-2017 Gramercy Park Studios
+// Mike Bonnington <mjbonnington@gmail.com>
+// (c) 2013-2019 Gramercy Park Studios
 //
 // Commands to execute at Maya startup.
 
+// Set up path remapping for cross-platform support
+python("import os, sys; sys.path.append(os.environ['IC_BASEDIR'])");
+python("from core.app_session import *");
 
 // Set up path remapping for cross-platform support
 string $root = `getenv FILESYSTEMROOT`;
@@ -57,6 +60,9 @@ if (!$batchMode)
 	nameCommand "GPSSaveIncremental" -ann "[GPS] Save Scene Incrementally" -c "source menus2Py; menus2Py.incrementalSave()";
 	hotkey -cmd -alt -k "s" -n "GPSSaveIncremental";
 	hotkey -ctl -alt -k "s" -n "GPSSaveIncremental";
+
+	// Instance Icarus UI
+	python("from core import icarus; session.icarus = icarus.app(); #session.icarus.setAppEnv('maya')");
 
 	// Update Maya scene defaults at startup
 	python ("import mayaOps; mayaOps.update()");

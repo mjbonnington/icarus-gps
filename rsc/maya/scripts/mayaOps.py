@@ -5,7 +5,7 @@
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # Benjamin Parry <ben.parry@gps-ldn.com>
-# (c) 2013-2018 Gramercy Park Studios
+# (c) 2013-2019 Gramercy Park Studios
 #
 # Maya operations module.
 
@@ -16,8 +16,8 @@ import shutil
 import maya.cmds as mc
 import maya.mel as mel
 
-import osOps
-import recentFiles
+from shared import osOps
+from shared import recentFiles
 
 
 def applyTransforms(obj, objT, objR, objS):
@@ -913,10 +913,10 @@ def submitRender():
 	"""
 	frameRange = "%s-%s" %(int(mc.getAttr('defaultRenderGlobals.startFrame')), int(mc.getAttr('defaultRenderGlobals.endFrame')))
 
-	import render_submit
+	from tools.renderQueue import render_submit
 	render_submit.run_maya(frameRange=frameRange)
 
-	# import render_submit
+	# from tools.renderQueue import render_submit
 	# try:
 	# 	renderSubmitUI.display()
 	# except (AttributeError, UnboundLocalError):
@@ -930,7 +930,7 @@ def submitRenderLayer():
 	frameRange = "%s-%s" %(int(mc.getAttr('defaultRenderGlobals.startFrame')), int(mc.getAttr('defaultRenderGlobals.endFrame')))
 	currentLayer = mc.editRenderLayerGlobals(query=True, currentRenderLayer=True)
 
-	import render_submit
+	from tools.renderQueue import render_submit
 	# render_submit.run_maya(frameRange=frameRange, flags='-rl %s' %currentLayer)
 	render_submit.run_maya(frameRange=frameRange, layers=currentLayer)
 	# renderSubmitDialog = render_submit.renderSubmitDialog()

@@ -12,7 +12,7 @@ import os
 import maya.cmds as mc
 import maya.mel as mel
 
-import camPresets
+from shared import camPresets
 
 
 class gpsCreateCamera():
@@ -110,7 +110,7 @@ class gpsCreateCamera():
 
 		# If the camera to be created is the shot camera, read shot data and apply values
 		if camera == os.environ['SHOT']:
-			import settingsData
+			from shared import settingsData
 			sd = settingsData.SettingsData()
 			shotDataLoaded = sd.loadXML(os.path.join(os.environ['SHOTDATA'], 'shotData.xml'), use_template=False)
 

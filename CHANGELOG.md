@@ -1,6 +1,10 @@
-v0.9.13 (--)
+v0.10.0 (--)
 -	[Icarus] Added preliminary support for Houdini.
+-	[Icarus] Restructured code into Python packages.
 -	[Icarus] Improved Linux compatibility.
+-	[Preview] Added ability to output TIFF images (with alpha channel).
+-	[Preview] Revised burn-in HUD.
+-	[Preview] Enabled dailies publishing.
 
 v0.9.12 (2018-04-27)
 -	[Icarus] Started to write some proper documentation.

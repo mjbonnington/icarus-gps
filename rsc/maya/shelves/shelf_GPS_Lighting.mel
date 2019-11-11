@@ -308,8 +308,9 @@ global proc shelf_GPS_Lighting () {
 		-style "iconOnly" 
 		-marginWidth 1
 		-marginHeight 1
-		-command "import listLayerOverrides; listLayerOverrides.list()" 
+		-command "import mjbLayerOverrides\nmjbLayerOverrides.LayerOverrides().UI()" 
 		-sourceType "python" 
+		-doubleClickCommand "import mjbLayerOverrides\nreload(mjbLayerOverrides)" 
 		-commandRepeatable 1
 		-flat 1
 	;

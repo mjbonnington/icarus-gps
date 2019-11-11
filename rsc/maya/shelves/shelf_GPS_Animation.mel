@@ -28,13 +28,13 @@ global proc shelf_GPS_Animation () {
         -style "iconOnly" 
         -marginWidth 1
         -marginHeight 1
-        -command "import gpsPreview__main__; gpsPreview__main__.run_maya(showUI=False)"
+        -command "from tools.preview import preview; preview.run_maya(session, showUI=False)"
         -sourceType "python" 
         -commandRepeatable 1
         -flat 1
-        -mi "GPS Preview Options" ( "import gpsPreview__main__; gpsPreview__main__.run_maya()" )
+        -mi "GPS Preview Options" ( "from tools.preview import preview; preview.run_maya(session, showUI=True)" )
         -mip 0
-        -mi "Change HUD Colour" ( "import gpsColourPicker; reload(gpsColourPicker); gpsColourPicker.gpsColourPicker().UI()" )
+        -mi "Change HUD Colour" ( "from tools.preview import colourPicker; reload(colourPicker); colourPicker.ColourPicker().UI()" )
         -mip 1
     ;
 

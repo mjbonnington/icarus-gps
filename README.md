@@ -7,4 +7,4 @@ Mike Bonnington <mike.bonnington@gps-ldn.com>
 Ben Parry <ben.parry@gps-ldn.com>
 Peter Bartfay <peter.bartfay@gps-ldn.com>
 
-(c) 2013-2018 Gramercy Park Studios
+(c) 2013-2019 Gramercy Park Studios

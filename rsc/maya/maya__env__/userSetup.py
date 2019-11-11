@@ -3,8 +3,8 @@
 # [GPS] userSetup.py
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2017 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2013-2019 Gramercy Park Studios
 #
 # Commands to execute at Maya startup.
 
@@ -12,16 +12,16 @@
 import os
 import sys
 
-sys.path.append(os.environ['IC_WORKINGDIR'])
-import env__init__
+sys.path.append(os.environ['IC_BASEDIR'])
+from core import env__init__
 env__init__.appendSysPaths()
 
 import maya.cmds as mc
 os.environ['IC_ENV'] = 'MAYA'
 
-import mayaOps
-import osOps
-import verbose
+from rsc.maya.scripts import mayaOps
+from shared import osOps
+from shared import verbose
 
 
 batchMode = mc.about(batch=True)
@@ -48,4 +48,3 @@ ma_pluginLs = ['AbcExport',
 
 for ma_plugin in ma_pluginLs:
 	mc.loadPlugin(ma_plugin, quiet=True)
-

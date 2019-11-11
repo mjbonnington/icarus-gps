@@ -2,7 +2,7 @@
 //
 // Nuno Pereira <nuno.pereira@gps-ldn.com>
 // Mike Bonnington <mike.bonnington@gps-ldn.com>
-// (c) 2015-2018 Gramercy Park Studios
+// (c) 2015-2019 Gramercy Park Studios
 //
 // Dynamically modifies Maya's menus without the need to edit Maya's UI MEL
 // scripts directly.
@@ -17,7 +17,7 @@ global proc checkGPSFileMenu()
 	$enable = true;
 
 	// Get the recent file list and store it in an array
-	python( "import recentFiles" );
+	python( "from shared import recentFiles" );
 	string $fileLs[] = python( "recentFiles.getLs()" );
 
 	// If recent file list contains no entries, disable menu

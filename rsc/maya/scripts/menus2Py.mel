@@ -2,20 +2,22 @@
 //
 // Nuno Pereira <nuno.pereira@gps-ldn.com>
 // Mike Bonnington <mike.bonnington@gps-ldn.com>
-// (c) 2013-2018 Gramercy Park Studios
+// (c) 2013-2019 Gramercy Park Studios
 //
-// This module makes mel menus in maya communicate with custom python scripts.
+// This module wraps python commands up in MEL so they can be called from Maya
+// UI scripts with slightly less pain.
 
 
 global proc menus2Py.launchIcarus()
 {
-	python("import icarus__main__; icarus__main__.run_maya()");
+	// python("import icarus__main__; icarus__main__.run_maya()");
+	python("session.icarus.show()");
 }
 
 
 global proc menus2Py.launchProdBoard()
 {
-	python("import launchApps; launchApps.prodBoard()");
+	python("from shared import launchApps; launchApps.prodBoard()");
 }
 
 
@@ -27,44 +29,44 @@ global proc menus2Py.projectTools()
 
 global proc menus2Py.browseScenes()
 {
-	python("import openDirs; openDirs.openMayaScenes()");
+	python("from shared import openDirs; openDirs.openMayaScenes()");
 }
 
 
 global proc menus2Py.browsePlayblasts()
 {
-	python("import openDirs; openDirs.openMayaPlayblasts()");
+	python("from shared import openDirs; openDirs.openMayaPlayblasts()");
 }
 
 
 global proc menus2Py.browseRenders()
 {
-	python("import openDirs; openDirs.openMayaRenders()");
+	python("from shared import openDirs; openDirs.openMayaRenders()");
 }
 
 
 global proc menus2Py.browseSourceimages()
 {
-	python("import openDirs; openDirs.openMayaSourceimages()");
+	python("from shared import openDirs; openDirs.openMayaSourceimages()");
 }
 
 
 global proc menus2Py.browseShot()
 {
-	python("import openDirs; openDirs.openShot()");
+	python("from shared import openDirs; openDirs.openShot()");
 }
 
 
 global proc menus2Py.browseJob()
 {
-	python("import openDirs; openDirs.openJob()");
+	python("from shared import openDirs; openDirs.openJob()");
 }
 
 
 global proc menus2Py.updatePresetCameraMenu(string $menu)
 {
 	// Get the list of cameras and store it in an array
-	python( "import camPresets, os; cp = camPresets.CamPresets(); cp.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'camPresets.xml'), use_template=True)" );
+	python( "from shared import camPresets, os; cp = camPresets.CamPresets(); cp.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'camPresets.xml'), use_template=True)" );
 	python( "shotCam = os.environ['SHOT']" );
 	string $camLs[] = python( "[shotCam] + cp.getPresets(activeOnly=True)" );
 
@@ -140,7 +142,7 @@ global proc menus2Py.openRecent(string $menuSel)
 global proc menus2Py.updateRecentFilesMenu(string $menu)
 {
 	// Get the recent file list and store it in an array
-	python( "import recentFiles" );
+	python( "from shared import recentFiles" );
 	string $fileLs[] = python( "recentFiles.getLs()" );
 
 	// Delete all items in the pop-up menu
@@ -180,7 +182,7 @@ global proc menus2Py.launchVersionManager(string $nodeName)
 	// Maya retrieves the node name in the format [currentNodeName].[originalNodeName].
 	// We only need the current nodeName so everything after the '.' needs to be removed.
 	python "icSetNodeName = mel.eval('$temp=$icSetNodeName'); icSetNodeName=icSetNodeName.split('.')[0]";
-	python("import ma_versionUpdate; ma_versionUpdate.update(ICSet=icSetNodeName)");
+	python("from publish import ma_versionUpdate; ma_versionUpdate.update(ICSet=icSetNodeName)");
 }
 
 
@@ -204,31 +206,29 @@ global proc menus2Py.bulkRename()
 
 global proc menus2Py.gpsPreview()
 {
-	//python("import gpsPreviewLauncher; gpsPreviewLauncher.launch(env='MAYA')");
-	python("import gpsPreview__main__; gpsPreview__main__.run_maya()");
+	python("from tools.preview import preview; preview.run_maya(session, showUI=True)");
 }
 
 
 global proc menus2Py.gpsPreviewNoUI()
 {
-	python("import gpsPreview__main__; gpsPreview__main__.run_maya(showUI=False)");
+	python("from tools.preview import preview; preview.run_maya(session, showUI=False)");
 }
 
 
 global proc menus2Py.submitRender()
 {
-	python("import render_submit; render_submit.run_maya()");
+	python("from tools.renderQueue import render_submit; render_submit.run_maya()");
 }
 
 
 global proc menus2Py.launchDjv()
 {
-	python("import launchApps; launchApps.djv()");
+	python("from shared import launchApps; launchApps.djv()");
 }
 
 
 global proc menus2Py.launchHieroPlayer()
 {
-	python("import launchApps; launchApps.launch('HieroPlayer')");
+	python("from shared import launchApps; launchApps.launch('HieroPlayer')");
 }
-
