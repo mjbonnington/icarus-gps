@@ -3,7 +3,7 @@
 # [Icarus] xmlData.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2018 Gramercy Park Studios
+# (c) 2015-2019 Gramercy Park Studios
 #
 # Class for handling generic XML data files via ElementTree.
 # Classes written to handle specific data files should inherit this class.
@@ -46,7 +46,7 @@ class XMLData():
 		# If datafile doesn't exist, try to copy it from templates
 		if use_template and not os.path.isfile(self.datafile):
 			xml_file = os.path.basename(self.datafile)
-			template_file = os.path.join(os.environ['IC_BASEDIR'], 'core', 'templates', xml_file)
+			template_file = os.path.join(os.environ['IC_BASEDIR'], 'templates', xml_file)
 			success, msg = os_wrapper.copy(template_file, self.datafile, quiet=quiet)
 			if not quiet:
 				if success:

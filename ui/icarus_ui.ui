@@ -2460,6 +2460,33 @@ QToolButton:pressed, QToolButton:checked:pressed {
              </property>
             </spacer>
            </item>
+           <item>
+            <widget class="QToolButton" name="assetRefresh_toolButton">
+             <property name="toolTip">
+              <string>Get camaras from Maya</string>
+             </property>
+             <property name="text">
+              <string>Refresh</string>
+             </property>
+             <property name="icon">
+              <iconset resource="rsc.qrc">
+               <normaloff>:/rsc/rsc/icon_refresh.png</normaloff>
+               <disabledoff>:/rsc/rsc/icon_refresh_disabled.png</disabledoff>:/rsc/rsc/icon_refresh.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>15</width>
+               <height>15</height>
+              </size>
+             </property>
+             <property name="toolButtonStyle">
+              <enum>Qt::ToolButtonTextBesideIcon</enum>
+             </property>
+             <property name="noBackground" stdset="0">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>

@@ -3,7 +3,7 @@
 # [Icarus] appPaths.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2018 Gramercy Park Studios
+# (c) 2015-2019 Gramercy Park Studios
 #
 # Manipulate an XML database of application version paths.
 

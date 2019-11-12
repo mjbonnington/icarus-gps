@@ -6,7 +6,7 @@
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2013-2019 Gramercy Park Studios
 #
-# Launches and controls the main Icarus UI.
+# The main Icarus UI.
 
 
 import argparse
@@ -146,6 +146,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# --------------------------------------------------------------------
 
 		self.ui.main_tabWidget.currentChanged.connect(self.adjustMainUI)
+		self.ui.assetRefresh_toolButton.clicked.connect(self.assetRefresh)
 
 		# Shot menu
 		self.ui.menuRecent_shots.aboutToShow.connect(self.updateRecentShotsMenu)
@@ -486,7 +487,17 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 	def adjustMainUI(self):
 		""" Makes UI adjustments and connections based on which tab is
-			currently selected.
+			currently selected. TODO: improve!
+		"""
+		mainTabName = self.getCurrentTab(self.ui.main_tabWidget)[1]
+		if mainTabName == 'Gather' or mainTabName == 'Assets':
+			self.defineColumns()
+			#self.updateAssetTypeCol()
+
+
+	def assetRefresh(self):
+		""" Allows state of asset browser to be preserved even if the current
+			tab changes. TODO: improve!
 		"""
 		mainTabName = self.getCurrentTab(self.ui.main_tabWidget)[1]
 		if mainTabName == 'Gather' or mainTabName == 'Assets':
@@ -1791,8 +1802,10 @@ Developers: %s
 
 
 	###################columns system, info and preview img update##################
-	#defines columns to shorten name
+
 	def defineColumns(self):
+		""" Define short names for asset browser columns.
+		"""
 		self.aTypeCol = self.ui.assetType_listWidget
 		self.aNameCol = self.ui.assetName_listWidget
 		self.aSubTypeCol = self.ui.assetSubType_listWidget
