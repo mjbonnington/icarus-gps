@@ -4,14 +4,19 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2019 Gramercy Park Studios
 #
 # Update a published alembit geo cache asset.
 
 
-import os, sys
-import settingsData, mayaOps, verbose
+import os
+import sys
+
 import maya.cmds as mc
+
+from rsc.maya.scripts import mayaOps
+from shared import settingsData
+from shared import verbose
 
 
 def alembic(ICSet, updatePath):

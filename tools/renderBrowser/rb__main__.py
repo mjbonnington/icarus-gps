@@ -23,7 +23,7 @@ env__init__.setEnv()
 #env__init__.appendSysPaths()
 
 import sequence as seq
-import djvOps, osOps
+import djvOps, os_wrapper
 
 
 class renderBrowserApp(QtGui.QMainWindow):
@@ -52,7 +52,7 @@ class renderBrowserApp(QtGui.QMainWindow):
 		outFile = '%s.%s.jpg' % (outPrefix, posterFrame)
 		if not os.path.isfile(outFile):
 			print("Generating thumbnails...")
-			osOps.createDir( os.path.join(imagePath, '.icThumbs') )
+			os_wrapper.createDir( os.path.join(imagePath, '.icThumbs') )
 			djvOps.prcImg(inPrefix, outPrefix, posterFrame, posterFrame, extension.split('.', 1)[1], outExt='jpg', resize=(512,288))
 		return outFile
 
@@ -61,7 +61,7 @@ class renderBrowserApp(QtGui.QMainWindow):
 		""" Launches sequence viewer when entry is double-clicked.
 		"""
 		#print item.text(column), column
-		path = seq.getFirst( osOps.absolutePath(item.text(3)) )
+		path = seq.getFirst( os_wrapper.absolutePath(item.text(3)) )
 		#print path
 		djvOps.viewer(path)
 
@@ -112,7 +112,7 @@ class renderBrowserApp(QtGui.QMainWindow):
 					renderLayerItem.setText(0, '%s (%d)' % (renderLayerDir, len(renderPasses)))
 					renderLayerItem.setText(2, 'layer')
 					#renderLayerItem.setText(3, os.path.join(renderPath, renderLayerDir))
-					renderLayerItem.setText(3, osOps.relativePath(os.path.join(renderPath, renderLayerDir), 'SHOTPATH'))
+					renderLayerItem.setText(3, os_wrapper.relativePath(os.path.join(renderPath, renderLayerDir), 'SHOTPATH'))
 					self.ui.renderPbl_treeWidget.addTopLevelItem(renderLayerItem)
 					renderLayerItem.setExpanded(True)
 
@@ -129,7 +129,7 @@ class renderBrowserApp(QtGui.QMainWindow):
 							renderPassItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#f92672")))
 						renderPassItem.setText(2, ext.split('.', 1)[1])
 						#renderPassItem.setText(3, path)
-						renderPassItem.setText(3, osOps.relativePath(os.path.join(renderPath, renderLayerDir, renderPass), 'SHOTPATH'))
+						renderPassItem.setText(3, os_wrapper.relativePath(os.path.join(renderPath, renderLayerDir, renderPass), 'SHOTPATH'))
 						self.ui.renderPbl_treeWidget.addTopLevelItem(renderPassItem)
 
 			# Resize columns

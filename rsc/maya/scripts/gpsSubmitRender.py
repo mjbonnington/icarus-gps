@@ -13,7 +13,7 @@
 
 import os, signal, subprocess
 import maya.cmds as mc
-import sequence as seq
+from shared import sequence as seq
 
 
 class gpsSubmitRender():

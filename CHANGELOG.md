@@ -2,6 +2,7 @@ v0.10.0 (--)
 -	[Icarus] Added preliminary support for Houdini.
 -	[Icarus] Restructured code into Python packages.
 -	[Icarus] Improved Linux compatibility.
+-	[Icarus] Added fallback for systems that do not support hardlinks: the file(s) will be copied instead. This fixes an issue that could potentially break the publishing system.
 -	[Preview] Added ability to output TIFF images (with alpha channel).
 -	[Preview] Revised burn-in HUD.
 -	[Preview] Enabled dailies publishing.

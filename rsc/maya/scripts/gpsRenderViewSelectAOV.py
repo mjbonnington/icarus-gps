@@ -23,7 +23,7 @@ import maya.cmds as mc
 import maya.mel as mel
 
 # Import custom modules
-#import osOps
+#from shared import os_wrapper
 
 
 class SelectAOV():
@@ -286,7 +286,7 @@ class SelectAOV():
 				img = img_path[0].replace("<RenderPass>", aov)
 
 		#img = os.path.normpath(os.path.expandvars(img)).replace("\\", "/")
-		#img = osOps.absolutePath(img)
+		#img = os_wrapper.absolutePath(img)
 		print(img)
 
 		# Load the image

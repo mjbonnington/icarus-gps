@@ -4,14 +4,26 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2019 Gramercy Park Studios
 #
 # Publish an asset of the type ma_geoCache.
 
 
-import os, sys, traceback
+import os
+import sys
+import traceback
+
 import maya.cmds as mc
-import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, inProgress
+
+from . import pblChk
+from . import pblOptsPrc
+from . import inProgress
+from rsc.maya.scripts import mayaOps
+from shared import icPblData
+from shared import os_wrapper
+from shared import pDialog
+from shared import vCtrl
+from shared import verbose
 
 
 def publish(pblTo, slShot, subtype, pblNotes):
@@ -40,7 +52,7 @@ def publish(pblTo, slShot, subtype, pblNotes):
 		extension = 'abc'
 
 	# Check for illegal characters
-	cleanObj = osOps.sanitize(convention)
+	cleanObj = os_wrapper.sanitize(convention)
 	if cleanObj != convention:
 		verbose.illegalCharacters(convention)
 		return
@@ -93,7 +105,7 @@ def publish(pblTo, slShot, subtype, pblNotes):
 		verbose.pblFeed(begin=True)
 
 		# Create publish directories
-		pblDir = osOps.createDir(os.path.join(pblDir, version))
+		pblDir = os_wrapper.createDir(os.path.join(pblDir, version))
 
 		# Create in-progress tmp file
 		inProgress.start(pblDir)
@@ -125,7 +137,7 @@ def publish(pblTo, slShot, subtype, pblNotes):
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		pathToPblAsset = ''
-		osOps.recurseRemove(pblDir)
+		os_wrapper.recurseRemove(pblDir)
 		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += verbose.pblRollback()
 

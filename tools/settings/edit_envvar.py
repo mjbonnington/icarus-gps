@@ -16,8 +16,8 @@ from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
 
 # Import custom modules
-import osOps
-import verbose
+from shared import os_wrapper
+from shared import verbose
 
 
 # ----------------------------------------------------------------------------
@@ -137,7 +137,7 @@ class Dialog(QtWidgets.QDialog, UI.TemplateUI):
 	def browseDir(self):
 		""" Opens a dialog from which to select a folder.
 		"""
-		startingDir = osOps.translatePath(self.ui.value_lineEdit.text())
+		startingDir = os_wrapper.translatePath(self.ui.value_lineEdit.text())
 		if os.path.isdir(startingDir):
 			dialogHome = startingDir
 		else:
@@ -157,7 +157,7 @@ class Dialog(QtWidgets.QDialog, UI.TemplateUI):
 	def browseFile(self):
 		""" Opens a dialog from which to select a file.
 		"""
-		startingDir = os.path.dirname(osOps.translatePath(self.ui.value_lineEdit.text()))
+		startingDir = os.path.dirname(os_wrapper.translatePath(self.ui.value_lineEdit.text()))
 		if os.path.isdir(startingDir):
 			dialogHome = startingDir
 		else:

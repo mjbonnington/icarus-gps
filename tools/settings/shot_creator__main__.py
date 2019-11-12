@@ -22,7 +22,7 @@ import ui_template as UI
 
 # Import custom modules
 from shared import jobs
-from shared import osOps
+from shared import os_wrapper
 from shared import pDialog
 from shared import settingsData
 from shared import verbose
@@ -186,8 +186,8 @@ class ShotCreatorDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 		jobPath = self.j.getPath(self.ui.job_comboBox.currentText(), translate=True)
 		for shot in self.shotLs:
-			path = osOps.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA" %(jobPath, shot))
-			osOps.createDir(path)
+			path = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA" %(jobPath, shot))
+			os_wrapper.createDir(path)
 			shotData = os.path.join(path, "shotData.xml")
 			# sd.createXML()
 			# sd.saveXML()

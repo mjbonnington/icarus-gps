@@ -14,7 +14,7 @@ import random, time
 import maya.cmds as mc
 import maya.mel as mel
 from maya.OpenMaya import MVector
-import gpsCommon as gps
+from . import gpsCommon as gps
 
 
 class gpsRandomiseVertices():

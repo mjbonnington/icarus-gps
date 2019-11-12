@@ -4,14 +4,16 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2019 Gramercy Park Studios
 #
 # Updates asset.
 
 
 import os
-import ma_assetGather
+
 import maya.cmds as mc
+
+from . import ma_assetGather
 
 
 def update(ICSet, updatePath):

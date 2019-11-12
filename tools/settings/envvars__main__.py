@@ -22,9 +22,9 @@ from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
 
 # Import custom modules
-import edit_envvar
-import pDialog
-import verbose
+from . import edit_envvar
+from shared import pDialog
+from shared import verbose
 
 
 # ----------------------------------------------------------------------------

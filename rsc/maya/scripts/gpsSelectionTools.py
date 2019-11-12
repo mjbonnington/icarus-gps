@@ -6,7 +6,7 @@
 
 import maya.cmds as mc
 import random
-import gpsSelectionSort
+from . import gpsSelectionSort
 
 
 class gpsSelectionTools():

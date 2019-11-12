@@ -4,14 +4,21 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2019 Gramercy Park Studios
 #
 # Gather an asset of type 'ic_geo' or 'ic_pointCloud'.
 
 
-import os, sys, traceback
-import settingsData, nukeOps, pDialog, verbose
+import os
+import sys
+import traceback
+
 import nuke
+
+from rsc.nuke.scripts import nukeOps
+from shared import pDialog
+from shared import settingsData
+from shared import verbose
 
 
 def gather(gatherPath):

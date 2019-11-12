@@ -16,7 +16,7 @@ from Qt import QtCore, QtWidgets
 import ui_template as UI
 
 # Import custom modules
-from shared import osOps
+from shared import os_wrapper
 
 
 # ----------------------------------------------------------------------------
@@ -96,9 +96,9 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		""" Dialog accept function.
 		"""
 		# Normalise paths and strip trailing slash
-		self.winPath = osOps.absolutePath(self.ui.jobRootPathWin_lineEdit.text(), stripTrailingSlash=True)
-		self.osxPath = osOps.absolutePath(self.ui.jobRootPathOSX_lineEdit.text(), stripTrailingSlash=True)
-		self.linuxPath = osOps.absolutePath(self.ui.jobRootPathLinux_lineEdit.text(), stripTrailingSlash=True)
+		self.winPath = os_wrapper.absolutePath(self.ui.jobRootPathWin_lineEdit.text(), stripTrailingSlash=True)
+		self.osxPath = os_wrapper.absolutePath(self.ui.jobRootPathOSX_lineEdit.text(), stripTrailingSlash=True)
+		self.linuxPath = os_wrapper.absolutePath(self.ui.jobRootPathLinux_lineEdit.text(), stripTrailingSlash=True)
 		self.jobsRelPath = self.ui.jobsRelPath_lineEdit.text()
 		self.accept()
 

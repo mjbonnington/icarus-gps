@@ -11,8 +11,8 @@
 import xml.etree.ElementTree as ET
 
 # Import custom modules
-import verbose
-import xmlData
+from . import verbose
+from . import xmlData
 
 
 class AppPaths(xmlData.XMLData):
@@ -39,7 +39,7 @@ class AppPaths(xmlData.XMLData):
 		return elem.findtext('vendor').lower()
 
 	def sortByMostUsed(self, elem):
-		import userPrefs
+		from . import userPrefs
 		return userPrefs.query('launchcounter', elem.get('id'), datatype='int', default=0)
 	# ------------------------------------------------------------------------
 

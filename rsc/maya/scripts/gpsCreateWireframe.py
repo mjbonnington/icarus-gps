@@ -10,7 +10,7 @@
 import time, re
 import maya.cmds as mc
 import maya.mel as mel
-import gpsCommon as gps
+from . import gpsCommon as gps
 
 
 class gpsCreateWireframe():

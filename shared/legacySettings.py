@@ -15,9 +15,9 @@
 import os
 import sys
 
-import jobs
-import osOps
-import verbose
+from . import jobs
+from . import os_wrapper
+from . import verbose
 
 j = jobs.Jobs()
 
@@ -303,9 +303,9 @@ def setJob_getPath(job, shot=False):
 	jobpath = j.getPath(job, translate=True)
 
 	if shot:
-		path = osOps.absolutePath("%s/$IC_SHOTSDIR/%s" %(jobpath, shot))
+		path = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s" %(jobpath, shot))
 	else:
-		path = osOps.absolutePath("%s/$IC_SHOTSDIR" %jobpath)
+		path = os_wrapper.absolutePath("%s/$IC_SHOTSDIR" %jobpath)
 
 	return path
 

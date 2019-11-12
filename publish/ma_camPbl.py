@@ -4,14 +4,26 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2019 Gramercy Park Studios
 #
 # Publish an asset of the type ic_camera.
 
 
-import os, sys, traceback
+import os
+import sys
+import traceback
+
 import maya.cmds as mc
-import mayaOps, pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, inProgress
+
+from . import pblChk
+from . import pblOptsPrc
+from . import inProgress
+from rsc.maya.scripts import mayaOps
+from shared import icPblData
+from shared import os_wrapper
+from shared import pDialog
+from shared import vCtrl
+from shared import verbose
 
 
 def publish(pblTo, slShot, subtype, pblNotes):
@@ -72,7 +84,7 @@ def publish(pblTo, slShot, subtype, pblNotes):
 		verbose.pblFeed(begin=True)
 
 		# Create publish directories
-		pblDir = osOps.createDir(os.path.join(pblDir, version))
+		pblDir = os_wrapper.createDir(os.path.join(pblDir, version))
 
 		# Create in-progress tmp file
 		inProgress.start(pblDir)
@@ -95,7 +107,7 @@ def publish(pblTo, slShot, subtype, pblNotes):
 		mayaOps.exportSelection(pathToPblAsset, fileType)
 		mayaOps.nkCameraExport(objLs, pblDir, assetPblName, version)
 		mayaOps.exportGeo(objLs, 'fbx', pathToPblAsset)
-	#	osOps.setPermissions(os.path.join(pblDir, '*'))
+	#	os_wrapper.setPermissions(os.path.join(pblDir, '*'))
 
 		# Delete in-progress tmp file
 		inProgress.end(pblDir)
@@ -109,7 +121,7 @@ def publish(pblTo, slShot, subtype, pblNotes):
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		pathToPblAsset = ''
-		osOps.recurseRemove(pblDir)
+		os_wrapper.recurseRemove(pblDir)
 		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += verbose.pblRollback()
 

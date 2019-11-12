@@ -13,8 +13,8 @@ import os
 from Qt import QtWidgets
 
 # Import custom modules
+from . import edit_app_paths
 from shared import appPaths
-import edit_app_paths
 
 
 class helper():

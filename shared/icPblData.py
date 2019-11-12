@@ -12,9 +12,9 @@
 import os
 import time
 
-import settingsData
-import osOps
-import verbose
+from . import settingsData
+from . import os_wrapper
+from . import verbose
 
 
 def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, notes, assetSrc=None, requires=None, compatible=None):
@@ -32,11 +32,11 @@ def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, not
 	assetData.loadXML(os.path.join(pblDir, 'assetData.xml'), quiet=True)
 
 	# Parse asset file path, make relative
-	assetRootDir = osOps.relativePath(os.path.split(pblDir)[0], 'JOBPATH')
+	assetRootDir = os_wrapper.relativePath(os.path.split(pblDir)[0], 'JOBPATH')
 
 	# Parse source scene file path, make relative
 	if assetSrc:
-		assetSource = osOps.relativePath(assetSrc, 'JOBPATH')
+		assetSource = os_wrapper.relativePath(assetSrc, 'JOBPATH')
 	else:
 		assetSource = None
 

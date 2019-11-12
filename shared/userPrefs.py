@@ -16,8 +16,8 @@ except ModuleNotFoundError:  # Python 3 compatibility
 
 import os
 
-import osOps
-import verbose
+from . import os_wrapper
+from . import verbose
 
 
 userPrefsDir = os.environ['IC_USERPREFS']
@@ -53,7 +53,7 @@ def create():
 	""" Create config file if it doesn't exist.
 	"""
 	if not os.path.exists(userPrefsDir):
-		osOps.createDir(userPrefsDir)
+		os_wrapper.createDir(userPrefsDir)
 
 	write()
 

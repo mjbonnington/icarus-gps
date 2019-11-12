@@ -16,25 +16,25 @@ import hiero.core as hc
 # Just like Nuke, Hiero seems to ditch the main root environment where it has
 # been called from so the path needs to be appended again.
 sys.path.append(os.path.join(os.environ['IC_BASEDIR'], 'core', 'run'))
-import env__init__
+from core import env__init__
 env__init__.appendSysPaths()
 
-import osOps
-# import verbose
+from shared import os_wrapper
+# from shared import verbose
 
 
 # def removeAutoSave():
 # 	""" Remove autosave of project if it exists.
 # 	"""
-# 	autosave_filename = osOps.absolutePath("$HIEROEDITORIALPATH/$JOB.hrox.autosave")
+# 	autosave_filename = os_wrapper.absolutePath("$HIEROEDITORIALPATH/$JOB.hrox.autosave")
 # 	if os.path.isfile(autosave_filename):
-# 		osOps.recurseRemove(autosave_filename)
+# 		os_wrapper.recurseRemove(autosave_filename)
 
 
 def loadDailies(dailies_categories=['CGI', 'Flame', 'Edit']):
 	"""	Load or create project and import dailies.
 	"""
-	filename = osOps.absolutePath("$HIEROEDITORIALPATH/$JOB.hrox")
+	filename = os_wrapper.absolutePath("$HIEROEDITORIALPATH/$JOB.hrox")
 
 	if os.path.isfile(filename):
 		hiero_project = hc.openProject(filename)
@@ -79,7 +79,7 @@ def loadItems(path, _bin, emptyBin=True):
 				print "Imported %s" %itemPath
 
 	else:
-		osOps.createDir(path)
+		os_wrapper.createDir(path)
 
 
 # removeAutoSave()

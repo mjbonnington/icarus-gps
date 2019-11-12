@@ -61,10 +61,10 @@ if (!$batchMode)
 	hotkey -cmd -alt -k "s" -n "GPSSaveIncremental";
 	hotkey -ctl -alt -k "s" -n "GPSSaveIncremental";
 
-	// Instance Icarus UI
-	python("from core import icarus; session.icarus = icarus.app(); #session.icarus.setAppEnv('maya')");
+	// Instance the Icarus UI
+	python("from core import icarus; session.icarus = icarus.app(app='maya'); #session.icarus.setAppEnv('maya')");
 
 	// Update Maya scene defaults at startup
-	python ("import mayaOps; mayaOps.update()");
+	python ("from rsc.maya.scripts import mayaOps; mayaOps.update()");
 	//source gpsRenderSetup.mel; gpsRenderSetup.setCommonOptions()
 }

@@ -13,9 +13,9 @@ import re
 import xml.etree.ElementTree as ET
 
 # Import custom modules
-import osOps
-import verbose
-import xmlData
+from . import os_wrapper
+from . import verbose
+from . import xmlData
 
 
 class DirStructure(xmlData.XMLData):
@@ -32,10 +32,10 @@ class DirStructure(xmlData.XMLData):
 
 			# if self.checkIllegalChars(name):
 			# newdir = os.path.join(basedir, name)
-			newdir = osOps.absolutePath('%s/%s' %(basedir, name))
+			newdir = os_wrapper.absolutePath('%s/%s' %(basedir, name))
 			if self.createDirs:
 				if not os.path.isdir(newdir):
-					osOps.createDir(newdir)
+					os_wrapper.createDir(newdir)
 
 			# Set environment variables
 			if self.createEnvVars:
@@ -49,11 +49,11 @@ class DirStructure(xmlData.XMLData):
 			name = file.get('name')
 			env = file.get('env')
 
-			newfile = osOps.absolutePath('%s/%s' %(basedir, name))
+			newfile = os_wrapper.absolutePath('%s/%s' %(basedir, name))
 			if self.createFiles:
 				if not os.path.isfile(newfile):
-					src = osOps.absolutePath('%s/%s' %(os.path.dirname(self.datafile), name))
-					osOps.copy(src, newfile)
+					src = os_wrapper.absolutePath('%s/%s' %(os.path.dirname(self.datafile), name))
+					os_wrapper.copy(src, newfile)
 
 			# Set environment variables
 			if self.createEnvVars:

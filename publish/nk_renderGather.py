@@ -4,14 +4,14 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2019 Gramercy Park Studios
 #
 # Gather an asset of type 'render'.
 
 
 import os
-import osOps
 import nuke
+from shared import os_wrapper
 
 
 def gather(gatherPath):
@@ -30,7 +30,7 @@ def gather(gatherPath):
 				fileName = 'GPS_Render_Read'
 
 			# Make file path relative
-			# filePath = osOps.relativePath(filePath, 'SHOTPUBLISHDIR', tokenFormat='nuke')
+			# filePath = os_wrapper.relativePath(filePath, 'SHOTPUBLISHDIR', tokenFormat='nuke')
 
 			readNode = nuke.createNode('Read', 'name %s' % fileName)
 			readNode.knob('file').setValue(filePath)

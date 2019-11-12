@@ -10,7 +10,7 @@
 
 import re
 
-import verbose
+from . import verbose
 
 
 def replaceTextRE(origName, findStr, replaceStr, ignoreCase=False, regex=True, quiet=True):

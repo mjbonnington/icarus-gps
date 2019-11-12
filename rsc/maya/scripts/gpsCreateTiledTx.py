@@ -8,7 +8,7 @@ import re, os
 import maya.cmds as mc
 import maya.mel as mel
 #from pymel.core import *
-#import gpsCommon as gps
+#from . import gpsCommon as gps
 
 
 class gpsCreateTiledTx():

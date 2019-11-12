@@ -15,13 +15,12 @@ import re
 import sys
 
 from Qt import QtCore, QtGui, QtWidgets
+import ui_template as UI
 
 # Import custom modules
-import oswrapper
-import rename
-import sequence
-
-import ui_template as UI
+from . import oswrapper
+from . import rename
+from . import sequence
 
 
 # ----------------------------------------------------------------------------
@@ -457,7 +456,7 @@ class SequenceRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 	def about(self):
 		""" Show about dialog.
 		"""
-		import about
+		from . import about
 
 		info_ls = []
 		sep = " | "
@@ -491,7 +490,7 @@ Developer: Mike Bonnington
 		src_fileLs = sequence.expandSeq(item.text(self.header("Path")), item.text(self.header("Before")))
 		dst_fileLs = sequence.expandSeq(item.text(self.header("Path")), item.text(self.header("After")))
 
-		import rename_frame_view
+		from . import rename_frame_view
 		try:
 			self.taskFrameViewUI.display(src_fileLs, dst_fileLs)
 		except AttributeError:

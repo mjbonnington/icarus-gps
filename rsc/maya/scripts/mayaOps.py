@@ -16,7 +16,7 @@ import shutil
 import maya.cmds as mc
 import maya.mel as mel
 
-from shared import osOps
+from shared import os_wrapper
 from shared import recentFiles
 
 
@@ -841,7 +841,7 @@ def saveFile(fileType, updateRecentFiles=True):
 	filename = mc.file(options='v=0', force=True, save=True, type=fileType)
 	if updateRecentFiles:
 		recentFiles.updateLs(filename)
-	osOps.setPermissions(filename)
+	os_wrapper.setPermissions(filename)
 	print "\nScene saved: %s" %filename, # print confirmation - the trailing comma make the message visible in Maya's command line output field
 
 
@@ -1109,7 +1109,7 @@ def nkFileNodeExport(objLs, nodeType, fileName, pblDir, visiblePblDir, assetPblN
 	filePath = os.path.join(visiblePblDir, 'tx', fileName)
 
 	# Make file path relative
-	filePath = osOps.relativePath(filePath, 'SHOTPUBLISHDIR', tokenFormat='nuke')
+	filePath = os_wrapper.relativePath(filePath, 'SHOTPUBLISHDIR', tokenFormat='nuke')
 
 	nkFile = open(pathtoPblAsset, 'w')
 	nkFile.write('''Read {

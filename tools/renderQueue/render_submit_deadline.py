@@ -15,9 +15,9 @@ import sys
 import traceback
 
 # Import custom modules
-import render_common
+from . import render_common
 
-from shared import osOps
+from shared import os_wrapper
 from shared import verbose
 
 
@@ -25,7 +25,7 @@ def get_pools():
 	""" Get Deadline pools and return in a list.
 	"""
 	try:
-		pools = osOps.execute([os.environ['DEADLINECMDVERSION'], '-pools'])[1]
+		pools = os_wrapper.execute([os.environ['DEADLINECMDVERSION'], '-pools'])[1]
 		return pools.splitlines()
 	except:
 		verbose.warning("Could not retrieve Deadline pools.")
@@ -36,7 +36,7 @@ def get_groups():
 	""" Get Deadline groups and return in a list.
 	"""
 	try:
-		groups = osOps.execute([os.environ['DEADLINECMDVERSION'], '-groups'])[1]
+		groups = os_wrapper.execute([os.environ['DEADLINECMDVERSION'], '-groups'])[1]
 		return groups.splitlines()
 	except:
 		verbose.warning("Could not retrieve Deadline groups.")
@@ -192,17 +192,17 @@ def submit_job(**kwargs):
 				pluginInfoFileList)
 
 			# Execute deadlinecommand
-			cmd_result, cmd_output = osOps.execute([os.environ['DEADLINECMDVERSION'], batchSubmissionFile])
+			cmd_result, cmd_output = os_wrapper.execute([os.environ['DEADLINECMDVERSION'], batchSubmissionFile])
 			if cmd_result:
 				result_msg = "Successfully submitted %d %s to Deadline." %(num_jobs, verbose.pluralise("job", num_jobs))
 
 			# Delete submission info files
 			if int(os.environ['IC_VERBOSITY']) < 4:
 				for jobInfoFile in jobInfoFileList:
-					osOps.recurseRemove(jobInfoFile)
+					os_wrapper.recurseRemove(jobInfoFile)
 				for pluginInfoFile in pluginInfoFileList:
-					osOps.recurseRemove(pluginInfoFile)
-				osOps.recurseRemove(batchSubmissionFile)
+					os_wrapper.recurseRemove(pluginInfoFile)
+				os_wrapper.recurseRemove(batchSubmissionFile)
 
 		else:  # Single job submission ---------------------------------------
 			# Generate submission info files
@@ -211,14 +211,14 @@ def submit_job(**kwargs):
 			pluginInfoFile = generate_plugin_info_file(**kwargs)
 
 			# Execute deadlinecommand
-			cmd_result, cmd_output = osOps.execute([os.environ['DEADLINECMDVERSION'], jobInfoFile, pluginInfoFile])
+			cmd_result, cmd_output = os_wrapper.execute([os.environ['DEADLINECMDVERSION'], jobInfoFile, pluginInfoFile])
 			if cmd_result:
 				result_msg = "Successfully submitted job to Deadline."
 
 			# Delete submission info files
 			if int(os.environ['IC_VERBOSITY']) < 4:
-				osOps.recurseRemove(jobInfoFile)
-				osOps.recurseRemove(pluginInfoFile)
+				os_wrapper.recurseRemove(jobInfoFile)
+				os_wrapper.recurseRemove(pluginInfoFile)
 
 		if cmd_result:
 			result = True

@@ -4,13 +4,24 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2019 Gramercy Park Studios
 #
 # Render publishing module.
 
 
-import os, sys, traceback
-import pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, djvOps, inProgress
+import os
+import sys
+import traceback
+
+from . import pblChk
+from . import pblOptsPrc
+from . import inProgress
+from shared import djvOps
+from shared import icPblData
+from shared import os_wrapper
+from shared import pDialog
+from shared import vCtrl
+from shared import verbose
 
 
 def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes):
@@ -56,7 +67,7 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes):
 		pblResult = 'SUCCESS'
 
 		# Create publish directories
-		pblDir = osOps.createDir(os.path.join(pblDir, version))
+		pblDir = os_wrapper.createDir(os.path.join(pblDir, version))
 
 		# Create in-progress tmp file
 		inProgress.start(pblDir)
@@ -74,13 +85,13 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes):
 				for currentPblLayer in currentPblLayerLs:
 					# Create respective layer folder in new version
 					if os.path.isdir(os.path.join(renderRootPblDir, currentVersion, currentPblLayer)):
-						osOps.createDir(os.path.join(pblDir, currentPblLayer))
+						os_wrapper.createDir(os.path.join(pblDir, currentPblLayer))
 						# Get all files in current layer
 						currentLayerFileLs = sorted(os.listdir(os.path.join(renderRootPblDir, currentVersion, currentPblLayer)))
 						# Hard linking files to new version
 						for currentLayerFile in currentLayerFileLs:
 							verbose.pblFeed(msg='Processing %s' % currentLayerFile)
-							osOps.hardLink(os.path.join(renderRootPblDir, currentVersion, currentPblLayer, currentLayerFile), os.path.join(pblDir, currentPblLayer))
+							os_wrapper.hardLink(os.path.join(renderRootPblDir, currentVersion, currentPblLayer, currentLayerFile), os.path.join(pblDir, currentPblLayer))
 
 		# Process all new layers and passes
 		for key in renderDic.keys():
@@ -89,17 +100,17 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes):
 			for file_ in dirContents:
 				verbose.pblFeed(msg='Processing %s' % file_)
 				if key == mainLayer:
-					osOps.createDir(os.path.join(pblDir, 'main'))
+					os_wrapper.createDir(os.path.join(pblDir, 'main'))
 					#if os.path.isfile(os.path.join(srcLayerDir, file_)):
 					#	prcFile = pblOptsPrc.renderName_prc(key, 'main', file_)
 					#	if prcFile:
-					#		osOps.hardLink(os.path.join(srcLayerDir, file_), os.path.join(pblDir, 'main', prcFile))
-					osOps.hardLink(os.path.join(srcLayerDir, file_), os.path.join(pblDir, key))
+					#		os_wrapper.hardLink(os.path.join(srcLayerDir, file_), os.path.join(pblDir, 'main', prcFile))
+					os_wrapper.hardLink(os.path.join(srcLayerDir, file_), os.path.join(pblDir, key))
 				else:
 					destLayerDir = os.path.join(pblDir, key)
 					if not os.path.isdir(destLayerDir):
-						osOps.createDir(destLayerDir)
-					osOps.hardLink(os.path.join(srcLayerDir, file_), destLayerDir)
+						os_wrapper.createDir(destLayerDir)
+					os_wrapper.hardLink(os.path.join(srcLayerDir, file_), destLayerDir)
 
 		# Create publish snapshot from main layer new version
 		mainLayerDir = os.path.join(pblDir, 'main')
@@ -147,7 +158,7 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes):
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		pathToPblAsset = ''
-		osOps.recurseRemove(pblDir)
+		os_wrapper.recurseRemove(pblDir)
 		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += verbose.pblRollback()
 

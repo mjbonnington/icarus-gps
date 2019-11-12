@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
-# [Icarus] osOps.py
+# os_wrapper.py
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2018 Gramercy Park Studios
+# (c) 2013-2019 Gramercy Park Studios
 #
 # This module acts as a wrapper for low-level OS operations.
 
@@ -17,7 +17,7 @@ import sys
 import traceback
 
 # Import custom modules
-import verbose
+from shared import verbose
 
 
 # Prevent spawned processes from opening a shell window
@@ -88,7 +88,7 @@ def setPermissions(path, mode='a+w'):
 	return path
 
 
-def hardLink(source, destination, umask='000'):
+def hardLink(source, destination, umask='000', verify=True):
 	""" Creates hard links.
 	"""
 	src = os.path.normpath(source)
@@ -115,7 +115,27 @@ def hardLink(source, destination, umask='000'):
 	verbose.print_(cmdStr)
 	os.system(cmdStr)
 
-	return dst
+	# Make sure source and destination files match
+	if verify:
+		if verify_hardlink(src, dst):
+			return dst
+		else:
+			verbose.warning("Failed to create hardlink. Attempting to copy file instead.")
+			copy(src, dst)
+	else:
+		return dst
+
+
+def verify_hardlink(src, dst):
+	""" Compare os.stat() for src and dst files to check for hardlink.
+	"""
+	try:
+		if os.stat(src) == os.stat(dst):
+			return True
+	except:
+		pass
+
+	return False
 
 
 def recurseRemove(path):

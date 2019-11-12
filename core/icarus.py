@@ -37,9 +37,9 @@ def standalone():
 	sys.exit(main_app.exec_())
 
 
-def app(parent=None):
+def app(app=None, parent=None):
 	""" Run in DCC app mode. Return the instance of the main app object to add
 		to an AppSession object.
 	"""
-	icarus = icarus__main__.window(parent=parent, standalone=False)
+	icarus = icarus__main__.window(app=app, parent=parent)
 	return icarus

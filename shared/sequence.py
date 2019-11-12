@@ -16,7 +16,7 @@ import re
 from collections import OrderedDict
 
 # Import custom modules
-import verbose
+from . import verbose
 
 
 def numList(num_range_str, sort=True, quiet=False):

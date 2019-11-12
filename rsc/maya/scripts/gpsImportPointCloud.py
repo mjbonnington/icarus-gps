@@ -14,7 +14,7 @@ import math, time, re, os
 import numpy as np
 import maya.cmds as mc
 import maya.mel as mel
-#import gpsCommon as gps
+#from . import gpsCommon as gps
 
 
 class gpsImportPointCloud():

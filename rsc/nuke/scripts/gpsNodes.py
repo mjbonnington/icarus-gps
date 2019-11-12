@@ -12,9 +12,9 @@
 import os
 import nuke
 
-import gpsSave
-import osOps
-import vCtrl
+from . import gpsSave
+from shared import os_wrapper
+from shared import vCtrl
 
 
 ############
@@ -23,7 +23,7 @@ import vCtrl
 def read_create():
 	""" Create a custom GPS Read node.
 	"""
-	readDir = osOps.absolutePath('$SHOTPATH/')
+	readDir = os_wrapper.absolutePath('$SHOTPATH/')
 	dialogPathLs = nuke.getClipname('Read File(s)', default=readDir, multiple=True)
 	if dialogPathLs:
 		for dialogPath in dialogPathLs:
@@ -35,7 +35,7 @@ def read_create():
 				startFrame, endFrame = os.environ['STARTFRAME'], os.environ['ENDFRAME']
 
 			# Make filePath relative
-			filePath = osOps.relativePath(filePath, 'JOBPATH', tokenFormat='nuke')
+			filePath = os_wrapper.relativePath(filePath, 'JOBPATH', tokenFormat='nuke')
 
 			readNode = nuke.createNode('Read', 'name GPS_Read')
 			readNode.knob('file').setValue(filePath)
@@ -105,7 +105,7 @@ def w_create_dir():
 	"""
 	path = os.path.dirname(nuke.filename(nuke.thisNode()))
 	if not os.path.isdir(path):
-		osOps.createDir(path)
+		os_wrapper.createDir(path)
 	return path
 
 
@@ -113,7 +113,7 @@ def w_openPermissions():
 	""" Opens up the permissions for all written files.
 	"""
 	path = os.path.dirname(nuke.filename(nuke.thisNode()))
-	osOps.setPermissions(path)
+	os_wrapper.setPermissions(path)
 
 
 def w_global_preset(writeNode, presetType):
@@ -139,7 +139,7 @@ def w_path_preset(writeNode, presetType='Precomp'):
 		fullPath = os.path.join(os.environ['NUKERENDERSDIR'], presetType)
 
 	version = vCtrl.version(fullPath)
-	filePath = osOps.absolutePath(os.path.join(filePath, version))
+	filePath = os_wrapper.absolutePath(os.path.join(filePath, version))
 
 	return filePath
 
@@ -150,11 +150,11 @@ def w_fileName_preset(writeNode, filePath, presetType, ext, proxy=True):
 	fileName = '%s_%s.%s.%s' % (os.environ['SHOT'], presetType, r'%04d', ext)
 	# fullPath = os.path.join(filePath, 'full', fileName)
 	# fileName = '$SHOT_%s.%04d.%s' % (presetType, ext)
-	fullPath = osOps.absolutePath('%s/full/%s' %(filePath, fileName))
+	fullPath = os_wrapper.absolutePath('%s/full/%s' %(filePath, fileName))
 	writeNode.knob('file').setValue(fullPath)
 	if proxy:
 		# proxyPath = os.path.join(filePath, 'proxy', fileName)
-		proxyPath = osOps.absolutePath('%s/proxy/%s' %(filePath, fileName))
+		proxyPath = os_wrapper.absolutePath('%s/proxy/%s' %(filePath, fileName))
 		writeNode.knob('proxy').setValue(proxyPath)
 
 
@@ -197,7 +197,7 @@ def w_render_submit():
 	else:
 		frameRange = None
 
-	import render_submit
+	from tools.renderQueue import render_submit
 	render_submit.run_nuke(
 		layers=writeNode.name(),
 		frameRange=frameRange)

@@ -57,7 +57,7 @@ def launchDjv():
 	""" Launches djv_view, if a read or write node is selected the appropriate sequence will be loaded.
 		TODO: Evaluate [getenv VARIABLE] inside string to get the correct path.
 	"""
-	import djvOps
+	from shared import djvOps
 
 	filePath = ''
 	selectedNodes = nuke.selectedNodes()
@@ -94,7 +94,7 @@ def saveAs(pathToPblAsset):
 def submitRender(**kwargs):
 	""" Launches GPS Render Submitter dialog.
 	"""
-	import render_submit
+	from tools.renderQueue import render_submit
 	render_submit.run_nuke(**kwargs)
 	# render_submit.run_nuke(flags='-i')
 	# # renderSubmitDialog = render_submit.renderSubmitDialog()
@@ -117,7 +117,7 @@ def submitRender(**kwargs):
 # 	# if selectedNode.Class() == 'Write':
 # 	# 	writeNodes = '-X %s ' %selectedNode.name()
 
-# 	import render_submit
+# 	from tools.renderQueue import render_submit
 # 	render_submit.run_nuke(flags='-i %s' %writeNodes)
 # 	# renderSubmitDialog = render_submit.renderSubmitDialog()
 # 	# renderSubmitDialog.display(flags='-i %s' %writeNodes)

@@ -15,7 +15,7 @@ from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
 
 # Import custom modules
-from shared import osOps
+from shared import os_wrapper
 from shared import pDialog
 from shared import verbose
 
@@ -98,13 +98,13 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 			the job path is invalid.
 		"""
 		enable = True
-		jobPath = osOps.translatePath(self.ui.jobPath_lineEdit.text())
+		jobPath = os_wrapper.translatePath(self.ui.jobPath_lineEdit.text())
 
 		if self.ui.jobName_lineEdit.text() == "":
 			enable = False
 		if self.ui.jobPath_lineEdit.text() == "":
 			enable = False
-		if not osOps.checkIllegalChars(jobPath):
+		if not os_wrapper.checkIllegalChars(jobPath):
 			verbose.illegalCharacters(jobPath)
 			enable = False
 
@@ -114,7 +114,7 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 	def browseDir(self):
 		""" Opens a dialog from which to select a folder.
 		"""
-		startingDir = osOps.translatePath(self.ui.jobPath_lineEdit.text())
+		startingDir = os_wrapper.translatePath(self.ui.jobPath_lineEdit.text())
 		if os.path.isdir(startingDir):
 			dialogHome = startingDir
 		else:
@@ -132,13 +132,13 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		if dialogPath:
 		# if dialog.exec_():
 		# 	dialogPath = dialog.getExistingDirectory(self, self.tr('Directory'), dialogHome, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
-			if osOps.checkIllegalChars(dialogPath): #, r'[^\w\.-]'):
-				jobPath = osOps.relativePath(dialogPath, 'JOBSROOT')
+			if os_wrapper.checkIllegalChars(dialogPath): #, r'[^\w\.-]'):
+				jobPath = os_wrapper.relativePath(dialogPath, 'JOBSROOT')
 				self.ui.jobPath_lineEdit.setText(jobPath)
 				# Only autofill job name field it it's empty
 				if not self.ui.jobName_lineEdit.text():
 					try:
-						# if os.environ['JOBSROOT'] in osOps.absolutePath(jobPath):
+						# if os.environ['JOBSROOT'] in os_wrapper.absolutePath(jobPath):
 						#       jobName = jobPath.split('/')[1]
 						# else:
 						#       jobName = jobPath.split('/')[-1]

@@ -4,15 +4,23 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2019 Gramercy Park Studios
 #
 # Gather a published asset.
 
 
-import os, sys, traceback
-import settingsData, mayaOps, osOps, pDialog, verbose
+import os
+import sys
+import traceback
+
 import maya.cmds as mc
 import maya.mel as mel
+
+from rsc.maya.scripts import mayaOps
+from shared import os_wrapper
+from shared import pDialog
+from shared import settingsData
+from shared import verbose
 
 
 def gather(gatherPath):

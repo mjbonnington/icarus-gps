@@ -16,8 +16,8 @@ except ModuleNotFoundError:  # Python 3 compatibility
 
 import os
 
-import osOps
-import verbose
+from . import os_wrapper
+from . import verbose
 
 
 config = SafeConfigParser()
@@ -52,7 +52,7 @@ def _create(env):
 	recentFilesDir = os.environ['IC_RECENTFILESDIR']
 
 	if not os.path.isdir(recentFilesDir):
-		osOps.createDir(recentFilesDir)
+		os_wrapper.createDir(recentFilesDir)
 	if not config.has_section(os.environ['SHOT']): # create shot section if it doesn't exist
 		config.add_section(os.environ['SHOT'])
 	if not config.has_option(os.environ['SHOT'], env): # create current app option if it doesn't exist
@@ -69,7 +69,7 @@ def updateLs(newEntry, env=os.environ['IC_ENV']):
 
 	fileLs = [] # clear recent file list
 
-	#newEntry = osOps.absolutePath(newEntry) # normalise path for host os
+	#newEntry = os_wrapper.absolutePath(newEntry) # normalise path for host os
 	newEntry = newEntry.replace('\\', '/')
 	shotpath = os.environ['SHOTPATH'].replace('\\', '/')
 

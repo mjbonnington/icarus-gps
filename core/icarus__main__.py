@@ -68,7 +68,7 @@ from shared import jobs
 from shared import launchApps   # merge these two?
 from shared import appLauncher  # merge these two?
 from shared import openDirs
-from shared import osOps
+from shared import os_wrapper
 from shared import pDialog
 from shared import sequence
 from shared import userPrefs
@@ -1026,7 +1026,7 @@ Developers: %s
 	  COPYRIGHT,
 	  VENDOR)
 
-		import about
+		from . import about
 		about = about.dialog(parent=self)
 		about.display(about_msg)
 		# verbose.print_(about_msg, 4)
@@ -1326,14 +1326,14 @@ Developers: %s
 	def renderPreview(self, item, column):
 		""" Launches sequence viewer when entry is double-clicked.
 		"""
-		path = osOps.absolutePath(item.text(3))
+		path = os_wrapper.absolutePath(item.text(3))
 		self.preview(sequence.getFirst(path))
 
 
 	def dailyPreview(self, item, column):
 		""" Launches sequence viewer when entry is double-clicked.
 		"""
-		path = osOps.absolutePath(os.path.join(item.text(3), item.text(0)))
+		path = os_wrapper.absolutePath(os.path.join(item.text(3), item.text(0)))
 		self.preview(sequence.getFirst(path))
 
 
@@ -1407,7 +1407,7 @@ Developers: %s
 					# renderLayerItem.setText(0, '%s (%d)' % (renderLayerDir, len(renderPasses)))
 					renderLayerItem.setText(0, renderLayerDir)
 					renderLayerItem.setText(2, 'layer')
-					renderLayerItem.setText(3, osOps.relativePath(os.path.join(renderPath, renderLayerDir), 'SHOTPATH'))
+					renderLayerItem.setText(3, os_wrapper.relativePath(os.path.join(renderPath, renderLayerDir), 'SHOTPATH'))
 
 					self.ui.renderPbl_treeWidget.addTopLevelItem(renderLayerItem)
 					renderLayerItem.setExpanded(True)
@@ -1422,7 +1422,7 @@ Developers: %s
 						if not sequence.check(fr_range):  # Set red text for sequence mismatch
 							renderPassItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#f92672")))
 						renderPassItem.setText(2, ext.split('.', 1)[1])
-						renderPassItem.setText(3, osOps.relativePath(os.path.join(renderPath, renderLayerDir, renderPass), 'SHOTPATH'))
+						renderPassItem.setText(3, os_wrapper.relativePath(os.path.join(renderPath, renderLayerDir, renderPass), 'SHOTPATH'))
 
 						self.ui.renderPbl_treeWidget.addTopLevelItem(renderPassItem)
 
@@ -1456,7 +1456,7 @@ Developers: %s
 				if not sequence.check(fr_range):  # Set red text for sequence mismatch
 					dailyItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#f92672")))
 				dailyItem.setText(2, self.dailyType)
-				dailyItem.setText(3, osOps.relativePath(path, 'SHOTPATH'))
+				dailyItem.setText(3, os_wrapper.relativePath(path, 'SHOTPATH'))
 				self.ui.dailyPbl_treeWidget.addTopLevelItem(dailyItem)
 				#dailyItem.setExpanded(True)
 
@@ -2005,94 +2005,105 @@ Developers: %s
 # Run functions
 # ----------------------------------------------------------------------------
 
-def window(parent=None, standalone=True):
-	""" Return main Icarus window.
+def window(app='standalone', parent=None):
+	""" Return main Icarus window - 'parent' will be ignored unless 'app' is
+		'standalone'.
 	"""
+	if app == 'standalone':
+		pass
+	elif app == 'maya':
+		parent = UI._maya_main_window()
+	elif app == 'houdini':
+		parent = UI._houdini_main_window()
+	elif app == 'nuke':
+		parent = UI._nuke_main_window()
+
 	# Instantiate main application class
-	app = IcarusApp(parent)
+	ic_app = IcarusApp(parent)
 
-	# Apply application style.
-	# On Windows best results are obtained when this is disabled.
-	# On Mac, best option is unclear due to inconsistent results.
-	# Linux has not been tested.
-	if os.environ['IC_RUNNING_OS'] == "MacOS":
-		styles = QtWidgets.QStyleFactory.keys()
-		if 'Fusion' in styles:
-			app.setStyle('Fusion')  # Qt5
-		elif 'Plastique' in styles:
-			app.setStyle('Plastique')  # Qt4
+	if app == 'standalone':
+		# Apply application style.
+		# On Windows best results are obtained when this is disabled.
+		# On Mac, best option is unclear due to inconsistent results.
+		# Linux has not been tested.
+		if os.environ['IC_RUNNING_OS'] == "MacOS":
+			styles = QtWidgets.QStyleFactory.keys()
+			if 'Fusion' in styles:
+				ic_app.setStyle('Fusion')  # Qt5
+			elif 'Plastique' in styles:
+				ic_app.setStyle('Plastique')  # Qt4
 
-	# Apply UI style sheet
-	if STYLESHEET is not None:
-		qss = os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
-		with open(qss, "r") as fh:
-			app.setStyleSheet(fh.read())
+		# Apply UI style sheet
+		if STYLESHEET is not None:
+			qss = os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
+			with open(qss, "r") as fh:
+				ic_app.setStyleSheet(fh.read())
 
-	# Set application icon
-	app.setWindowIcon(QtGui.QIcon(os.path.join(os.environ['IC_FORMSDIR'], 'rsc', 'icarus.png')))
+		# Set application icon
+		ic_app.setWindowIcon(QtGui.QIcon(os.path.join(os.environ['IC_FORMSDIR'], 'rsc', 'icarus.png')))
 
-	# Set Window flags
-	app.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint)
+		# Set Window flags
+		ic_app.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint)
 
-	return app
-
-
-def run_maya():
-	""" Run in Maya.
-	"""
-	UI._maya_delete_ui(WINDOW_OBJECT, WINDOW_TITLE)  # Delete any already existing UI
-	icApp = IcarusApp(parent=UI._maya_main_window())
-
-	if not DOCK_WITH_MAYA_UI:
-		icApp.show()  # Show the UI
-	elif DOCK_WITH_MAYA_UI:
-		allowed_areas = ['right', 'left']
-		mc.dockControl(WINDOW_TITLE, label=WINDOW_TITLE, area='left', content=WINDOW_OBJECT, allowedArea=allowed_areas)
+	return ic_app
 
 
-def run_houdini():
-	""" Run in Houdini.
-	"""
-	# UI._houdini_delete_ui(WINDOW_OBJECT, WINDOW_TITLE)  # Delete any already existing UI
-	# icApp = IcarusApp(parent=UI._houdini_main_window())
-	icApp = IcarusApp(parent=hou.qt.mainWindow())
-	icApp.show()  # Show the UI
+# def run_maya():
+# 	""" Run in Maya.
+# 	"""
+# 	UI._maya_delete_ui(WINDOW_OBJECT, WINDOW_TITLE)  # Delete any already existing UI
+# 	icApp = IcarusApp(parent=UI._maya_main_window())
+
+# 	if not DOCK_WITH_MAYA_UI:
+# 		icApp.show()  # Show the UI
+# 	elif DOCK_WITH_MAYA_UI:
+# 		allowed_areas = ['right', 'left']
+# 		mc.dockControl(WINDOW_TITLE, label=WINDOW_TITLE, area='left', content=WINDOW_OBJECT, allowedArea=allowed_areas)
 
 
-def run_nuke():
-	""" Run in Nuke.
+# def run_houdini():
+# 	""" Run in Houdini.
+# 	"""
+# 	# UI._houdini_delete_ui(WINDOW_OBJECT, WINDOW_TITLE)  # Delete any already existing UI
+# 	# icApp = IcarusApp(parent=UI._houdini_main_window())
+# 	icApp = IcarusApp(parent=hou.qt.mainWindow())
+# 	icApp.show()  # Show the UI
 
-		Note:
-			If you want the UI to always stay on top, replace:
-			'icApp.setWindowFlags(QtCore.Qt.Tool)'
-			with:
-			'icApp.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)'
 
-			If you want the UI to be modal:
-			'icApp.setWindowModality(QtCore.Qt.WindowModal)'
-	"""
-	UI._nuke_delete_ui(WINDOW_OBJECT, WINDOW_TITLE)  # Delete any already existing UI
+# def run_nuke():
+# 	""" Run in Nuke.
 
-	if not DOCK_WITH_NUKE_UI:
-		# icApp = IcarusApp(parent=dcc_app_integration.nuke_main_window())
-		icApp = IcarusApp(parent=UI._nuke_main_window())
-		icApp.setWindowFlags(QtCore.Qt.Tool)
-		icApp.show()  # Show the UI
-	elif DOCK_WITH_NUKE_UI:
-		prefix = ''
-		basename = os.path.basename(__file__)
-		module_name = basename[: basename.rfind('.')]
-		if __name__ == module_name:
-			prefix = module_name + '.'
-		panel = nukescripts.panels.registerWidgetAsPanel(
-			widget=prefix + WINDOW_TITLE,  # module_name.Class_name
-			name=WINDOW_TITLE,
-			id='uk.co.thefoundry.' + WINDOW_TITLE,
-			create=True)
-		pane = nuke.getPaneFor('Properties.1')
-		panel.addToPane(pane)
-		icApp = panel.customKnob.getObject().widget
-		UI._nuke_set_zero_margins(icApp)
+# 		Note:
+# 			If you want the UI to always stay on top, replace:
+# 			'icApp.setWindowFlags(QtCore.Qt.Tool)'
+# 			with:
+# 			'icApp.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)'
+
+# 			If you want the UI to be modal:
+# 			'icApp.setWindowModality(QtCore.Qt.WindowModal)'
+# 	"""
+# 	UI._nuke_delete_ui(WINDOW_OBJECT, WINDOW_TITLE)  # Delete any already existing UI
+
+# 	if not DOCK_WITH_NUKE_UI:
+# 		# icApp = IcarusApp(parent=dcc_app_integration.nuke_main_window())
+# 		icApp = IcarusApp(parent=UI._nuke_main_window())
+# 		icApp.setWindowFlags(QtCore.Qt.Tool)
+# 		icApp.show()  # Show the UI
+# 	elif DOCK_WITH_NUKE_UI:
+# 		prefix = ''
+# 		basename = os.path.basename(__file__)
+# 		module_name = basename[: basename.rfind('.')]
+# 		if __name__ == module_name:
+# 			prefix = module_name + '.'
+# 		panel = nukescripts.panels.registerWidgetAsPanel(
+# 			widget=prefix + WINDOW_TITLE,  # module_name.Class_name
+# 			name=WINDOW_TITLE,
+# 			id='uk.co.thefoundry.' + WINDOW_TITLE,
+# 			create=True)
+# 		pane = nuke.getPaneFor('Properties.1')
+# 		panel.addToPane(pane)
+# 		icApp = panel.customKnob.getObject().widget
+# 		UI._nuke_set_zero_margins(icApp)
 
 
 # def run_clarisse():

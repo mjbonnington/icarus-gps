@@ -13,7 +13,7 @@ import maya.cmds as mc
 import os
 import time
 
-import verbose
+from shared import verbose
 
 
 # ----------------------------------------------------------------------------

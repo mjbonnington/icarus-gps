@@ -19,11 +19,11 @@ from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
 
 # Import custom modules
-import render_common
-import render_submit_deadline as deadline
-import renderQueue
+from . import render_common
+from . import render_submit_deadline as deadline
+from . import renderQueue
 
-from shared import osOps
+from shared import os_wrapper
 from shared import pDialog
 from shared import sequence
 # from shared import settingsData
@@ -174,7 +174,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 			sceneName = mc.file(query=True, sceneName=True)
 			if sceneName:  # Check we're not working in an unsaved scene
-				relPath = self.makePathRelative(osOps.absolutePath(sceneName))
+				relPath = self.makePathRelative(os_wrapper.absolutePath(sceneName))
 				if relPath:
 					self.ui.mayaScene_comboBox.addItem(relPath)
 			else:
@@ -208,7 +208,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 			scriptName = nuke.value('root.name')
 			if scriptName:  # Check we're not working in an unsaved script
-				relPath = self.makePathRelative(osOps.absolutePath(scriptName))
+				relPath = self.makePathRelative(os_wrapper.absolutePath(scriptName))
 				if relPath:
 					self.ui.nukeScript_comboBox.addItem(relPath)
 			else:
@@ -320,14 +320,14 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		elif self.jobType == "Maya":
 			self.ui.maya_groupBox.show()
 			try:
-				self.relativeScenesDir = osOps.absolutePath('%s/%s' %(os.environ['MAYADIR'], 'scenes'))
+				self.relativeScenesDir = os_wrapper.absolutePath('%s/%s' %(os.environ['MAYADIR'], 'scenes'))
 			except KeyError:
 				self.relativeScenesDir = ""
 
 		elif self.jobType == "Nuke":
 			self.ui.nuke_groupBox.show()
 			try:
-				self.relativeScenesDir = osOps.absolutePath('%s/%s' %(os.environ['NUKEDIR'], 'scripts'))
+				self.relativeScenesDir = os_wrapper.absolutePath('%s/%s' %(os.environ['NUKEDIR'], 'scripts'))
 			except KeyError:
 				self.relativeScenesDir = ""
 
@@ -348,7 +348,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 			from shared import recentFiles
 			for filePath in recentFiles.getLs(self.jobType):
-				fullPath = osOps.absolutePath(os.environ['SHOTPATH'] + filePath)
+				fullPath = os_wrapper.absolutePath(os.environ['SHOTPATH'] + filePath)
 				relPath = self.makePathRelative(fullPath)
 				if relPath:
 					comboBox.addItem(relPath)
@@ -387,7 +387,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		filePath = self.fileDialog(startingDir, fileFilter)
 
 		if filePath:
-			newEntry = osOps.absolutePath(filePath)
+			newEntry = os_wrapper.absolutePath(filePath)
 			self.ui.command_lineEdit.setText(newEntry)
 
 
@@ -419,8 +419,8 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		filePath = self.fileDialog(startingDir, fileFilter)
 
 		if filePath:
-			newEntry = self.makePathRelative(osOps.absolutePath(filePath))
-			#newEntry = osOps.absolutePath(filePath)
+			newEntry = self.makePathRelative(os_wrapper.absolutePath(filePath))
+			#newEntry = os_wrapper.absolutePath(filePath)
 			if newEntry:
 				comboBox.removeItem(comboBox.findText(newEntry))  # If the entry already exists in the list, delete it
 				comboBox.insertItem(0, newEntry)
@@ -751,7 +751,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		try:
 			#path = node.knob('file').value()  # Gets the unprocessed output file path string
 			path = node.knob('file').evaluate()  # Evaluates the path as a Nuke TCL expression
-			#path = osOps.absolutePath(node.knob('file'))  # Preserves padding but doesn't expand environment variables
+			#path = os_wrapper.absolutePath(node.knob('file'))  # Preserves padding but doesn't expand environment variables
 		except:
 			path = ""
 
@@ -766,7 +766,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			path = mc.workspace(expandName=mc.workspace(fileRuleEntry="images"))
 		except:  # Make a guess
 			#path = ""
-			path = osOps.absolutePath("$MAYADIR/renders")
+			path = os_wrapper.absolutePath("$MAYADIR/renders")
 
 		return path
 
@@ -808,7 +808,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			if camera:
 				prefix2 = prefix2.replace('<Camera>', camera)
 
-			filepath = osOps.absolutePath("%s/%s.####.exr" %(path, prefix2))
+			filepath = os_wrapper.absolutePath("%s/%s.####.exr" %(path, prefix2))
 			outputs[layer] = os.path.split(filepath)
 
 		return outputs

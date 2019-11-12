@@ -11,8 +11,8 @@
 
 import os
 
-import osOps
-import verbose
+from shared import os_wrapper
+from shared import verbose
 
 
 def autoDeploy():
@@ -30,7 +30,7 @@ def autoDeploy():
 			osdir = 'osx'
 		src = os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'realflow', 'realflow__env__', osdir, 'commandsOrganizer.dat')
 		dst = os.path.join(os.environ['REALFLOWSCENESDIR'], '.cmdsOrg', 'commandsOrganizer.dat')
-		osOps.copy(src, dst)
+		os_wrapper.copy(src, dst)
 		verbose.message("%s Ok" %outputMsg)
 	except:
 		verbose.error("%s Failed" %outputMsg)

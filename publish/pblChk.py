@@ -5,7 +5,7 @@
 
 
 import os
-import shared.verbose
+from shared import verbose
 
 #checks if a publish for the same asset is currently under progress
 def concurrentPbl(pblDir):
@@ -94,7 +94,7 @@ def success(pathToPblAsset):
 
 #checks if versioned items exist
 def versionedItems(path, vb=True):
-	import vCtrl
+	from shared import vCtrl
 	if vCtrl.version(path) == 'v001':
 		if vb:
 			verbose.noVersion()

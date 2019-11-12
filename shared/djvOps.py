@@ -12,7 +12,7 @@
 import os
 import subprocess
 
-import verbose
+from . import verbose
 
 
 def exportDjvLibs():

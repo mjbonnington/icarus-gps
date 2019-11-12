@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2019 Gramercy Park Studios
 #
 # Loads Version Manager and updates asset.
 
@@ -13,8 +13,8 @@ import os
 
 
 def update(ICSet):
-	import mayaOps
-	import versionManager
+	from rsc.maya.scripts import mayaOps
+	from tools.versionManager import versionManager
 	reload(versionManager)
 
 	ICSetAttrDic = mayaOps.getICSetAttrs(ICSet)
@@ -27,11 +27,11 @@ def update(ICSet):
 
 		# Update alembic geo caches
 		if ICSetAttrDic['icAssetExt'] == 'abc':
-			import ma_geoCacheUpdate
+			from . import ma_geoCacheUpdate
 			ma_geoCacheUpdate.alembic(ICSet, updatePath)
 
 		# All other geo types
 		else:
-			import ma_assetUpdate
+			from . import ma_assetUpdate
 			ma_assetUpdate.update(ICSet, updatePath)
 

@@ -12,10 +12,10 @@ import os
 import xml.etree.ElementTree as ET
 
 # Import custom modules
-import job__env__
-import osOps
-import verbose
-import xmlData
+from . import job__env__
+from . import os_wrapper
+from . import verbose
+from . import xmlData
 
 
 class Jobs(xmlData.XMLData):
@@ -35,7 +35,7 @@ class Jobs(xmlData.XMLData):
 		""" Set job.
 		"""
 		jobPath = self.getPath(jobName, translate=True)
-		shotPath = osOps.absolutePath("%s/$IC_SHOTSDIR/%s" %(jobPath, shotName))
+		shotPath = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s" %(jobPath, shotName))
 
 		# Create environment variables
 		if job__env__.setEnv(jobName, shotName, shotPath):
@@ -45,7 +45,7 @@ class Jobs(xmlData.XMLData):
 
 			# Remember for next time
 			if storeLastJob:
-				import userPrefs
+				from . import userPrefs
 				newEntry = '%s,%s' % (jobName, shotName)
 				# userPrefs.edit('main', 'lastjob', newEntry)
 				userPrefs.updateRecentShots(newEntry)
@@ -60,7 +60,7 @@ class Jobs(xmlData.XMLData):
 		""" Check if shot path exists.
 		"""
 		jobPath = self.getPath(jobName, translate=True)
-		shotPath = osOps.absolutePath("%s/$IC_SHOTSDIR/%s" %(jobPath, shotName))
+		shotPath = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s" %(jobPath, shotName))
 		if os.path.isdir(shotPath):
 			return True
 		else:
@@ -75,7 +75,7 @@ class Jobs(xmlData.XMLData):
 		# Published asset directories
 		for directory in (os.environ['JOBPUBLISHDIR'], os.environ['SHOTPUBLISHDIR']):
 			if not os.path.isdir(directory):
-				osOps.createDir(directory)
+				os_wrapper.createDir(directory)
 
 		# Plate directories
 		res_full = "%sx%s" %(os.environ['RESOLUTIONX'], os.environ['RESOLUTIONY'])
@@ -83,7 +83,7 @@ class Jobs(xmlData.XMLData):
 		plates = (res_full, res_proxy)
 		platesDir = os.path.join(os.environ['SHOTPATH'], 'Plate')
 		if not os.path.isdir(platesDir):
-			osOps.createDir(platesDir)
+			os_wrapper.createDir(platesDir)
 
 		# Delete any pre-existing redundant plate directories that are empty
 		try:
@@ -91,13 +91,13 @@ class Jobs(xmlData.XMLData):
 				existingDir = os.path.join(platesDir, directory)
 				if os.path.isdir(existingDir) and not os.listdir(existingDir):
 					if directory not in plates:
-						osOps.recurseRemove(existingDir)
+						os_wrapper.recurseRemove(existingDir)
 
 			# Create plate directory named with resolution
 			for directory in plates:
 				plateDir = os.path.join(platesDir, directory)
 				if not os.path.isdir(plateDir):
-					osOps.createDir(plateDir)
+					os_wrapper.createDir(plateDir)
 
 		except:
 			pass
@@ -130,7 +130,7 @@ class Jobs(xmlData.XMLData):
 		else:
 			os.environ['FILESYSTEMROOT'] = str(self.linux_root)
 
-		os.environ['JOBSROOT'] = osOps.absolutePath('$FILESYSTEMROOT/%s' %self.jobs_path, stripTrailingSlash=True)
+		os.environ['JOBSROOT'] = os_wrapper.absolutePath('$FILESYSTEMROOT/%s' %self.jobs_path, stripTrailingSlash=True)
 
 
 	def setRootPaths(self, winPath=None, osxPath=None, linuxPath=None, jobsRelPath=None):
@@ -174,7 +174,7 @@ class Jobs(xmlData.XMLData):
 			jobName = jobElement.find('name').text
 			jobPath = jobElement.find('path').text
 
-			jobPath = osOps.translatePath(jobPath)
+			jobPath = os_wrapper.translatePath(jobPath)
 
 			if os.path.exists(jobPath): # Only add jobs which exist on disk
 				jobLs.append(jobName)
@@ -287,7 +287,7 @@ class Jobs(xmlData.XMLData):
 		if element is not None:
 			jobPath = element.find('path').text
 			if translate:
-				return osOps.translatePath(jobPath)
+				return os_wrapper.translatePath(jobPath)
 			else:
 				return jobPath
 
@@ -306,7 +306,7 @@ class Jobs(xmlData.XMLData):
 			job.
 		"""
 		jobPath = self.getPath(jobName, translate=True)
-		shotsPath = osOps.absolutePath("%s/$IC_SHOTSDIR" %jobPath)
+		shotsPath = os_wrapper.absolutePath("%s/$IC_SHOTSDIR" %jobPath)
 
 		# Check shot path exists before proceeding...
 		if os.path.exists(shotsPath):
@@ -319,7 +319,7 @@ class Jobs(xmlData.XMLData):
 				if item.startswith('SH') or item.startswith('PC'):
 					# Check that the directory is a valid shot by checking for
 					# the existence of the '.icarus' subdirectory
-					if os.path.isdir(osOps.absolutePath("%s/%s/$IC_METADATA" %(shotsPath, item))):
+					if os.path.isdir(os_wrapper.absolutePath("%s/%s/$IC_METADATA" %(shotsPath, item))):
 						shotLs.append(item)
 
 			if len(shotLs):

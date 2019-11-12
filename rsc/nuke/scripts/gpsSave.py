@@ -11,7 +11,8 @@
 
 import os
 import nuke
-import recentFiles, osOps
+from shared import os_wrapper
+from shared import recentFiles
 
 
 def updateRecentFilesMenu(menu):
@@ -119,7 +120,7 @@ def save(incr=False, saveAs=False):
 			updateRecentFiles( nkPath )
 			fileSaved = True
 			#opening permissions on written file
-			osOps.setPermissions(nkPath)
+			os_wrapper.setPermissions(nkPath)
 
 	else:
 		nuke.scriptSave()

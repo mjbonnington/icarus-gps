@@ -4,7 +4,8 @@
 #copyright	:Gramercy Park Studios
 
 import os, subprocess
-import osOps, djvOps
+from shared import os_wrapper
+from shared import djvOps
 	
 	
 def importObj(scene, GUIFilePickerDialog, FILE_PICKER_LOAD):
@@ -64,7 +65,7 @@ def purgeScene(scene, GUIFormDialog, particles=True, meshes=True, preview=True):
 		for particle in particleLs:
 				if particle not in inUseParticleLs:
 					scene.message(str(particle))
-					osOps.recurseRemove(os.path.join(particleDir,  particle))
+					os_wrapper.recurseRemove(os.path.join(particleDir,  particle))
 	
 	#purges meshes
 	if meshes:
@@ -86,15 +87,15 @@ def purgeScene(scene, GUIFormDialog, particles=True, meshes=True, preview=True):
 		for meshFile in meshFileLs:
 			if meshFile not in inUseMeshLs:
 				scene.message(str(meshFile))
-				osOps.recurseRemove(os.path.join(meshFileDir,  meshFile))
+				os_wrapper.recurseRemove(os.path.join(meshFileDir,  meshFile))
 				
 	#purges preivew
 	if preview:
 		previewDir = os.path.join(scene.getRootPath(), 'preview')
-		osOps.recurseRemove(previewDir)
+		os_wrapper.recurseRemove(previewDir)
 		
 def preview(scene, EXECUTE_SHELL_COMMAND):
-	import versionUp
+	from . import versionUp
 	#getting scene, project and shot settings
 	sceneName = scene.getFileName()
 	if not sceneName:
@@ -114,8 +115,8 @@ def preview(scene, EXECUTE_SHELL_COMMAND):
 	startFrame = int(scene.getMinFrame())
 	endFrame = int(scene.getLastCachedFrame())
 	#creating directories
-	osOps.createDir(imgPreviewDir)
-	osOps.createDir(movPreviewDir)
+	os_wrapper.createDir(imgPreviewDir)
+	os_wrapper.createDir(movPreviewDir)
 	scene.videoPreview(os.path.join(movPreviewDir, sceneName), 
 	imgPreviewDir, 
 	width, 

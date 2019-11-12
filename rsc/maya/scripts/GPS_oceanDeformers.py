@@ -14,7 +14,7 @@ def createOcean(type):
 		#oceanGeoSh = mc.listRelatives(oceanGeo, s=True)
 		#mel.eval('deformer -type hotOceanDeformer)
 	elif type == 'vray':
-		import gpsRenderToolsVRay
+		from rsc.maya.scripts import gpsRenderToolsVRay
 		#creating ocean geo
 		oceanGeo = mc.polyPlane(n='vray_oceanDeformer1', w=100, h=100, sx=30, sy=30, ax=(0,1,0), cuv=2, ch=1)
 		oceanGeoSh = mc.listRelatives(oceanGeo, s=True)

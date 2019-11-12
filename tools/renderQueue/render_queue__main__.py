@@ -26,8 +26,8 @@ from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
 
 # Import custom modules
-import renderQueue
-import render_submit
+from . import renderQueue
+from . import render_submit
 
 from shared import pDialog
 from shared import sequence

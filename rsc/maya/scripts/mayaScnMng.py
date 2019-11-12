@@ -11,7 +11,7 @@
 
 
 import os
-import mayaOps
+from . import mayaOps
 
 
 def newMayaScene():

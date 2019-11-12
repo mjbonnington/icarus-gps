@@ -5,8 +5,8 @@
 
 
 import os
-import pblChk
-import verbose
+from . import pblChk
+from shared import verbose
 
 
 #Processes publish options arriving from the different publish modules

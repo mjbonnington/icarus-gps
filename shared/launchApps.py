@@ -14,7 +14,7 @@ import os
 import subprocess
 import sys
 
-import verbose
+from . import verbose
 
 
 def launch(app=None, executable=None, flags=None):
@@ -99,7 +99,7 @@ def djv():
 		in the 'external_apps' folder.
 	"""
 	verbose.launchApp('djv_view')
-	import djvOps
+	from . import djvOps
 	# djvOps.viewer(os.environ['SHOTPATH'])
 	djvOps.viewer()
 

@@ -113,19 +113,19 @@ global proc menus2Py.gpsCreateCamera(string $cam)
 	python "camera = mel.eval('$temp=$camera')";
 	python "rig = mc.optionVar( q='GPSCreateCameraRig' )";
 	python "physical = mc.optionVar( q='GPSAddVRayPhysicalCamera' )";
-	python "import gpsCreateCamera; gpsCreateCamera.gpsCreateCamera().createCamera(camera, rig, physical)";
+	python "from rsc.maya.scripts import gpsCreateCamera; gpsCreateCamera.gpsCreateCamera().createCamera(camera, rig, physical)";
 }
 
 
 global proc menus2Py.newScene()
 {
-	python("import mayaScnMng; mayaScnMng.newMayaScene()");
+	python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.newMayaScene()");
 }
 
 
 global proc menus2Py.openScene()
 {
-	python("import mayaScnMng; mayaScnMng.openMayaScene()");
+	python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.openMayaScene()");
 }
 
 
@@ -135,7 +135,7 @@ global proc menus2Py.openRecent(string $menuSel)
 	$recentFile = $menuSel;
 	python "import maya.mel as mel";
 	python "recentFile = mel.eval('$temp=$recentFile')";
-	python("import mayaScnMng; mayaScnMng.openMayaRecentScene(recentFile)");
+	python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.openMayaRecentScene(recentFile)");
 }
 
 
@@ -158,7 +158,7 @@ global proc menus2Py.updateRecentFilesMenu(string $menu)
 
 global proc menus2Py.saveScene()
 {
-	python("import mayaScnMng; mayaScnMng.saveMayaScene()");
+	python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.saveMayaScene()");
 }
 
 
@@ -170,7 +170,7 @@ global proc menus2Py.incrementalSave()
 
 global proc menus2Py.saveSceneAs()
 {
-	python("import mayaScnMng; mayaScnMng.saveMayaSceneAs()");
+	python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.saveMayaSceneAs()");
 }
 
 
@@ -194,13 +194,13 @@ global proc menus2Py.forceOverrideComponentDisplay(string $nodeName)
 	//maya retrives the node name in the format [currentNodeName].[originalNodeName]. 
 	//We only need the current nodeName so everything after the'.' needs to be removed
 	python "icSetNodeName = mel.eval('$temp=$icSetNodeName'); icSetNodeName=icSetNodeName.split('.')[0]";
-	python "import mayaOps; mayaOps.removeDrawOverride(objLs=[icSetNodeName], icSet=True, hierarchy=True, shapes=True, overrideLayers=False)";
+	python "from rsc.maya.scripts import mayaOps; mayaOps.removeDrawOverride(objLs=[icSetNodeName], icSet=True, hierarchy=True, shapes=True, overrideLayers=False)";
 }
 
 
 global proc menus2Py.bulkRename()
 {
-	python("import gpsRenameTools; gpsRenameTools.gpsRenameTools().UI()");
+	python("from tools.rename import gpsRenameTools; gpsRenameTools.gpsRenameTools().UI()");
 }
 
 

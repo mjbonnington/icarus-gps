@@ -15,11 +15,11 @@ from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
 
 # Import custom modules
-import edit_job
-import edit_root_paths
+from . import edit_job
+from . import edit_root_paths
 
 from shared import jobs
-from shared import osOps
+from shared import os_wrapper
 from shared import pDialog
 from shared import verbose
 
@@ -204,7 +204,7 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 			item.setCheckState(QtCore.Qt.Unchecked)
 
 		# Grey out entries that don't exist on disk
-		if not os.path.isdir(osOps.translatePath(jobPath)):
+		if not os.path.isdir(os_wrapper.translatePath(jobPath)):
 			item.setForeground(QtGui.QColor(102,102,102))
 			item.setToolTip("Job path not found")
 

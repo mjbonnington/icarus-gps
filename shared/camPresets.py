@@ -11,7 +11,7 @@
 #import xml.etree.ElementTree as ET
 
 # Import custom modules
-import xmlData
+from . import xmlData
 
 
 class CamPresets(xmlData.XMLData):

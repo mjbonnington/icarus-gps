@@ -4,13 +4,25 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2019 Gramercy Park Studios
 #
 # Dailies publishing module.
 
 
-import os, sys, time, traceback
-import pblChk, pblOptsPrc, vCtrl, pDialog, osOps, icPblData, verbose, djvOps, inProgress
+import os
+import sys
+import time
+import traceback
+
+from . import pblChk
+from . import pblOptsPrc
+from . import inProgress
+from shared import djvOps
+from shared import icPblData
+from shared import os_wrapper
+from shared import pDialog
+from shared import vCtrl
+from shared import verbose
 
 
 def publish(dailyPblOpts, pblTo, pblNotes):
@@ -52,7 +64,7 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 		pblResult = 'SUCCESS'
 
 		# Create publish directories
-		pblDir = osOps.createDir(os.path.join(pblDir, version))
+		pblDir = os_wrapper.createDir(os.path.join(pblDir, version))
 
 		# Create in-progress tmp file
 		inProgress.start(pblDir)
@@ -86,11 +98,11 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 		dailyFileLs = os.listdir(pblDir)
 		dailyDateDir = time.strftime('%Y_%m_%d')
 		dailyDatePath = os.path.join(os.environ['WIPSDIR'], 'CGI', dailyDateDir, '%s_%s_%s' % (os.environ['SHOT'], subsetName, version))
-		osOps.createDir(dailyDatePath)
+		os_wrapper.createDir(dailyDatePath)
 		excludeLs = ['in_progress.tmp']
 		for file_ in dailyFileLs:
 			if file_ not in excludeLs:
-				osOps.hardLink(os.path.join(pblDir, file_), os.path.join(dailyDatePath, file_))
+				os_wrapper.hardLink(os.path.join(pblDir, file_), os.path.join(dailyDatePath, file_))
 				dailyFile = file_
 
 		# Create daily snapshot
@@ -123,8 +135,8 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		pathToPblAsset = ''
-		osOps.recurseRemove(pblDir)
-		osOps.recurseRemove(dailyDatePath)
+		os_wrapper.recurseRemove(pblDir)
+		os_wrapper.recurseRemove(dailyDatePath)
 		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += " - " + verbose.pblRollback()
 

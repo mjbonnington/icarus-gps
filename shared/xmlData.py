@@ -13,8 +13,8 @@ import os
 import xml.etree.ElementTree as ET
 
 # Import custom modules
-import osOps
-import verbose
+from . import os_wrapper
+from . import verbose
 
 
 class XMLData():
@@ -47,7 +47,7 @@ class XMLData():
 		if use_template and not os.path.isfile(self.datafile):
 			xml_file = os.path.basename(self.datafile)
 			template_file = os.path.join(os.environ['IC_BASEDIR'], 'core', 'templates', xml_file)
-			success, msg = osOps.copy(template_file, self.datafile, quiet=quiet)
+			success, msg = os_wrapper.copy(template_file, self.datafile, quiet=quiet)
 			if not quiet:
 				if success:
 					verbose.print_('XML file "%s" copied from templates.' %xml_file)

@@ -13,7 +13,7 @@ import argparse
 import os
 import sys
 
-import sequence
+from . import sequence
 
 
 # Set up arguments

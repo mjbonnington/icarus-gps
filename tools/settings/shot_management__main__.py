@@ -16,7 +16,7 @@ import ui_template as UI
 
 # Import custom modules
 import jobs
-import osOps
+import os_wrapper
 import settingsData
 import verbose
 
@@ -176,7 +176,7 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 				newRowHeaderItem = QtWidgets.QTableWidgetItem(shotName)
 				newItem = QtWidgets.QTableWidgetItem(shotName)
 				self.ui.shots_tableWidget.setVerticalHeaderItem(row, newRowHeaderItem)
-				shotDataPath = osOps.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA/shotData.xml" %(jobPath, shotName))
+				shotDataPath = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA/shotData.xml" %(jobPath, shotName))
 				shotData = settingsData.SettingsData()
 				shotData.loadXML(shotDataPath)
 
@@ -269,7 +269,7 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 	# 		item.setCheckState(QtCore.Qt.Unchecked)
 
 	# 	# Grey out entries that don't exist on disk
-	# 	if not os.path.isdir(osOps.translatePath(jobPath)):
+	# 	if not os.path.isdir(os_wrapper.translatePath(jobPath)):
 	# 		item.setForeground(QtGui.QColor(102,102,102))
 	# 		item.setToolTip("Job path not found")
 

@@ -20,7 +20,7 @@ import maya.cmds as mc
 os.environ['IC_ENV'] = 'MAYA'
 
 from rsc.maya.scripts import mayaOps
-from shared import osOps
+from shared import os_wrapper
 from shared import verbose
 
 
@@ -31,9 +31,9 @@ if not batchMode:
 	mayaShelvesDir = os.path.join(mc.about(preferences=True), 'prefs', 'shelves')
 	# mayaModulesDir = os.path.join(mc.about(preferences=True), 'modules')
 	try:
-		osOps.copyDirContents(os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'maya', 'shelves'), mayaShelvesDir)
-		# osOps.copyDirContents(os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'maya', 'modules'), mayaModulesDir)
-		# osOps.copyDirContents(os.path.join(os.environ['JOBPUBLISHDIR'], 'ma_shelves'), mayaShelvesDir)
+		os_wrapper.copyDirContents(os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'maya', 'shelves'), mayaShelvesDir)
+		# os_wrapper.copyDirContents(os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'maya', 'modules'), mayaModulesDir)
+		# os_wrapper.copyDirContents(os.path.join(os.environ['JOBPUBLISHDIR'], 'ma_shelves'), mayaShelvesDir)
 		verbose.gpsToolDeploy('OK')
 	except:
 		verbose.gpsToolDeploy('Failed')

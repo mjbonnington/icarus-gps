@@ -11,7 +11,7 @@
 import os
 
 # Import custom modules
-from shared import osOps
+from shared import os_wrapper
 
 
 def settings_file(scene, suffix=""):
@@ -21,11 +21,11 @@ def settings_file(scene, suffix=""):
 	if os.path.isfile(scene):
 		sceneDir, sceneFile = os.path.split(scene)
 		settingsDir = os.path.join(sceneDir, os.environ['IC_METADATA'])
-		settingsFile = osOps.sanitize(sceneFile, replace='_') + suffix
+		settingsFile = os_wrapper.sanitize(sceneFile, replace='_') + suffix
 
 		# Create settings directory if it doesn't exist
 		if not os.path.isdir(settingsDir):
-			osOps.createDir(settingsDir)
+			os_wrapper.createDir(settingsDir)
 
 		return os.path.join(settingsDir, settingsFile)
 
