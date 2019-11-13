@@ -36,7 +36,7 @@ global proc gpsRenderSetup.setCommonOptions()
 global proc gpsRenderSetup.setOutputPath()
 {
 	string $user = `getenv "IC_USERNAME"`;
-	string $shot = `getenv "SHOT"`;
+	string $shot = `getenv "IC_SHOT"`;
 
 	setAttr -type "string" "defaultRenderGlobals.ifp" ($user + "/<Scene>/<RenderLayer>/" + $shot + "_<RenderLayer>");
 }

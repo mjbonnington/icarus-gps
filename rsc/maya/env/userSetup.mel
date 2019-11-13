@@ -6,12 +6,18 @@
 //
 // Commands to execute at Maya startup.
 
-// Set up path remapping for cross-platform support
-python("import os, sys; sys.path.append(os.environ['IC_BASEDIR'])");
+
+// // Set environment (should be done first)
+python("import os, sys");
+python("os.environ['IC_ENV'] = 'MAYA'")
+
+// // Initialise Icarus environment
+python("sys.path.append(os.environ['IC_BASEDIR'])");
+// // python("from core import env__init__; env__init__.appendSysPaths()");
 python("from core.app_session import *");
 
 // Set up path remapping for cross-platform support
-string $root = `getenv FILESYSTEMROOT`;
+/*string $root = `getenv FILESYSTEMROOT`;
 string $win_root = `getenv FILESYSTEMROOTWIN`;
 string $osx_root = `getenv FILESYSTEMROOTOSX`;
 string $linux_root = `getenv FILESYSTEMROOTLINUX`;
@@ -30,7 +36,7 @@ if ($root != "None")
 	{
 		dirmap -m $linux_root $root;
 	}
-}
+}*/
 
 // Run UI related stuff
 int $batchMode = `about -batch`;
@@ -62,9 +68,9 @@ if (!$batchMode)
 	hotkey -ctl -alt -k "s" -n "GPSSaveIncremental";
 
 	// Instance the Icarus UI
-	python("from core import icarus; session.icarus = icarus.app(app='maya'); #session.icarus.setAppEnv('maya')");
+	python("from core import icarus; session.icarus = icarus.app(app='maya')");
 
-	// Update Maya scene defaults at startup
-	python ("from rsc.maya.scripts import mayaOps; mayaOps.update()");
-	//source gpsRenderSetup.mel; gpsRenderSetup.setCommonOptions()
+	// // Update Maya scene defaults at startup
+	// python ("from rsc.maya.scripts import mayaOps; mayaOps.update()");
+	// //source gpsRenderSetup.mel; gpsRenderSetup.setCommonOptions()
 }

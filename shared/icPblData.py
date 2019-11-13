@@ -32,11 +32,11 @@ def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, not
 	assetData.loadXML(os.path.join(pblDir, 'assetData.xml'), quiet=True)
 
 	# Parse asset file path, make relative
-	assetRootDir = os_wrapper.relativePath(os.path.split(pblDir)[0], 'JOBPATH')
+	assetRootDir = os_wrapper.relativePath(os.path.split(pblDir)[0], 'IC_JOBPATH')
 
 	# Parse source scene file path, make relative
 	if assetSrc:
-		assetSource = os_wrapper.relativePath(assetSrc, 'JOBPATH')
+		assetSource = os_wrapper.relativePath(assetSrc, 'IC_JOBPATH')
 	else:
 		assetSource = None
 

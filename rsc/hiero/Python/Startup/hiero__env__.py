@@ -26,7 +26,7 @@ from shared import os_wrapper
 # def removeAutoSave():
 # 	""" Remove autosave of project if it exists.
 # 	"""
-# 	autosave_filename = os_wrapper.absolutePath("$HIEROEDITORIALPATH/$JOB.hrox.autosave")
+# 	autosave_filename = os_wrapper.absolutePath("$HIEROEDITORIALPATH/$IC_JOB.hrox.autosave")
 # 	if os.path.isfile(autosave_filename):
 # 		os_wrapper.recurseRemove(autosave_filename)
 
@@ -34,7 +34,7 @@ from shared import os_wrapper
 def loadDailies(dailies_categories=['CGI', 'Flame', 'Edit']):
 	"""	Load or create project and import dailies.
 	"""
-	filename = os_wrapper.absolutePath("$HIEROEDITORIALPATH/$JOB.hrox")
+	filename = os_wrapper.absolutePath("$HIEROEDITORIALPATH/$IC_JOB.hrox")
 
 	if os.path.isfile(filename):
 		hiero_project = hc.openProject(filename)

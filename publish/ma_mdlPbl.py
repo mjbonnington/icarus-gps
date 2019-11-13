@@ -83,7 +83,7 @@ def publish(pblTo, slShot, subtype, textures, pblNotes):
 
 	# Add shot name to assetPblName if asset is being publish to a shot
 	# Determining publish env var for relative directory
-	if pblTo != os.environ['JOBPUBLISHDIR']:
+	if pblTo != os.environ['IC_JOBPUBLISHDIR']:
 		assetPblName += '_%s' % slShot
 
 	# Version control
@@ -122,7 +122,7 @@ def publish(pblTo, slShot, subtype, textures, pblNotes):
 		if textures:
 			# Copy textures to publish directory (use hardlink instead?)
 			txFullPath = os.path.join(pblDir, 'tx')
-			# txRelPath = txFullPath.replace(os.path.expandvars('$JOBPATH'), '$JOBPATH')
+			# txRelPath = txFullPath.replace(os.path.expandvars('$IC_JOBPATH'), '$IC_JOBPATH')
 			# txPaths = (txFullPath, txRelPath)
 			
 			# Returns a dict for fileNodes and oldTxPaths if updateMaya = True

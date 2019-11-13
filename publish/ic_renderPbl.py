@@ -26,12 +26,12 @@ from shared import verbose
 
 def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes):
 
-	job = os.environ['JOB']
+	job = os.environ['IC_JOB']
 	assetType = 'render'
 	prefix = ''
 	convention = ''
 	suffix = ''
-	subsetName = os.environ['SHOT']
+	subsetName = os.environ['IC_SHOT']
 	assetExt = ''
 	assetPblName = '%s%s%s' % (prefix, convention, suffix)
 	assetName = assetPblName 

@@ -33,7 +33,7 @@ def publish(pblTo, pblNotes):
 	assetType = 'ma_shot'
 	subsetName = ''
 	prefix = ''
-	convention = os.environ['SHOT']
+	convention = os.environ['IC_SHOT']
 	suffix = '_shot'
 	fileType = 'mayaAscii'
 	extension = 'ma'
@@ -71,7 +71,7 @@ def publish(pblTo, pblNotes):
 		# Publish operations
 		# Copy textures to publish directory (use hardlink instead?)
 		txFullPath = os.path.join(pblDir, 'tx')
-		# txRelPath = txFullPath.replace(os.path.expandvars('$JOBPATH'), '$JOBPATH')
+		# txRelPath = txFullPath.replace(os.path.expandvars('$IC_JOBPATH'), '$IC_JOBPATH')
 		# txPaths = (txFullPath, txRelPath)
 
 		# Returns a dict for fileNodes and oldTxPaths if updateMaya = True

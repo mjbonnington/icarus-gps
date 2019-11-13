@@ -85,7 +85,7 @@ def publish(pblTo, slShot, subtype, pblNotes):
 
 	# Add shot name to assetPblName if asset is being publish to a shot
 	# Determining publish env var for relative directory
-	if pblTo != os.environ['JOBPUBLISHDIR']:
+	if pblTo != os.environ['IC_JOBPUBLISHDIR']:
 		assetPblName += '_%s' % slShot
 
 	# Version control

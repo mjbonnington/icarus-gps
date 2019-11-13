@@ -14,7 +14,7 @@ export PATH
 
 ################################
 
-##JOB AND SHOT TERMINAL SETUP##
+## Job And Shot Terminal Setup ##
 #Changing prompt color
 #export CLICOLOR=1
 #export LSCOLORS=cxfxexdxbxegedabagacad
@@ -24,12 +24,12 @@ NO_COLOUR="\[\033[0m\]"
 function EXT_COLOR () { echo -ne "\[\033[38;5;$1m\]"; }
 
 ##echoing shot info##
-clear; echo -e "GRAMERCY PARK STUDIOS - $JOB | $SHOT"; echo
-PS1="`EXT_COLOR 64`[\u $JOB-$SHOT \W]\$ ${NO_COLOUR}"
+clear; echo -e "GRAMERCY PARK STUDIOS - $IC_JOB | $IC_SHOT"; echo
+PS1="`EXT_COLOR 64`[\u $IC_JOB-$IC_SHOT \W]\$ ${NO_COLOUR}"
 #PS1="\[\033[38;5;64m\][\u@\h \W]\$\[\033[0m\] "
 
 ##cd into shot dir##
-cd $SHOTPATH
+cd $IC_SHOTPATH
 
 
 ##software aliases##
@@ -47,7 +47,7 @@ fi
 
 ##other aliases
 # Add bash aliases.
-alias shot="cd $SHOTPATH"
+alias shot="cd $IC_SHOTPATH"
 alias cls="clear"
 alias dir="ls -l"
 alias ll="ls -ltr"

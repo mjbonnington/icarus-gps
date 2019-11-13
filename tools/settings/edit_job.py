@@ -118,7 +118,7 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		if os.path.isdir(startingDir):
 			dialogHome = startingDir
 		else:
-			dialogHome = os.environ['JOBSROOT']
+			dialogHome = os.environ['IC_JOBSROOT']
 
 		# Append slash to path if it's a Windows drive letter, otherwise file
 		# dialog won't open the correct location
@@ -133,12 +133,12 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		# if dialog.exec_():
 		# 	dialogPath = dialog.getExistingDirectory(self, self.tr('Directory'), dialogHome, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
 			if os_wrapper.checkIllegalChars(dialogPath): #, r'[^\w\.-]'):
-				jobPath = os_wrapper.relativePath(dialogPath, 'JOBSROOT')
+				jobPath = os_wrapper.relativePath(dialogPath, 'IC_JOBSROOT')
 				self.ui.jobPath_lineEdit.setText(jobPath)
 				# Only autofill job name field it it's empty
 				if not self.ui.jobName_lineEdit.text():
 					try:
-						# if os.environ['JOBSROOT'] in os_wrapper.absolutePath(jobPath):
+						# if os.environ['IC_JOBSROOT'] in os_wrapper.absolutePath(jobPath):
 						#       jobName = jobPath.split('/')[1]
 						# else:
 						#       jobName = jobPath.split('/')[-1]

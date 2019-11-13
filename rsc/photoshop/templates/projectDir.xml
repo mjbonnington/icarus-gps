@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<root location="$SHOTPATH/2D">
+<root location="$IC_SHOTPATH/2D">
 	<dir name="photoshop">
 		<dir name="$IC_USERNAME" env="PSDIR" />
 	</dir>

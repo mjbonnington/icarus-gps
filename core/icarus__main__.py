@@ -79,12 +79,16 @@ from shared import verbose
 # Configuration
 # ----------------------------------------------------------------------------
 
+NAME = "Icarus"
 VENDOR = "Gramercy Park Studios"
 COPYRIGHT = "(c) 2013-2019"
 DEVELOPERS = "Nuno Pereira, Mike Bonnington, Ben Parry"
 
 # Set window title and object names
-WINDOW_TITLE = "Icarus"
+if os.environ['IC_ENV'] == 'STANDALONE':
+	WINDOW_TITLE = NAME
+else:
+	WINDOW_TITLE = NAME + " - " + os.environ['IC_ENV'].capitalize()
 WINDOW_OBJECT = "icarusMainUI"
 
 # Set the UI and the stylesheet
@@ -131,6 +135,8 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.j = jobs.Jobs()
 
 		self.expertMode = False  # TODO: enable start in expert mode with command-line argument
+
+		self.ui.user_toolButton.hide()  # TEMPORARY - until user prefs UI works
 
 		# Set up keyboard shortcuts
 		self.shortcutExpertMode = QtWidgets.QShortcut(self)
@@ -311,8 +317,13 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.shotEnv_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 			self.ui.shotEnv_toolButton.addAction(self.ui.actionJob_settings)
 			self.ui.shotEnv_toolButton.addAction(self.ui.actionShot_settings)
-
 			self.ui.shotEnv_toolButton.setEnabled(True)
+
+			# Apply job/shot settings pop-up menu to user label (only in standalone mode)
+			self.ui.user_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+			self.ui.user_toolButton.addAction(self.ui.actionUser_settings)
+			self.ui.user_toolButton.setText(os.environ['IC_USERNAME'])
+			self.ui.user_toolButton.setEnabled(True)
 
 			# Setup app launch icons
 			self.al.setupIconGrid(sortBy=self.sortAppsBy)
@@ -636,7 +647,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		""" Switches the shot drop down menu to the current environment shot.
 			Disables publishing to alternative shot.
 		"""
-		self.ui.publishToShot_comboBox.setCurrentIndex(self.ui.publishToShot_comboBox.findText(os.environ['SHOT']))
+		self.ui.publishToShot_comboBox.setCurrentIndex(self.ui.publishToShot_comboBox.findText(os.environ['IC_SHOT']))
 
 
 	################
@@ -778,10 +789,10 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		""" Populate specified combo box with shot list.
 		"""
 		comboBox.clear()
-		shotLs = self.j.listShots(os.environ['JOB'])
+		shotLs = self.j.listShots(os.environ['IC_JOB'])
 		if shotLs:
 			comboBox.insertItems(0, shotLs)
-			comboBox.setCurrentIndex(comboBox.findText(os.environ['SHOT']))
+			comboBox.setCurrentIndex(comboBox.findText(os.environ['IC_SHOT']))
 
 
 	def setComboBox(self, comboBox, text):
@@ -967,8 +978,8 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		""" Updates job label tool button with the current job and shot.
 		"""
 		if os.environ['IC_ENV'] != 'STANDALONE':
-			self.job = os.environ['JOB']
-			self.shot = os.environ['SHOT']
+			self.job = os.environ['IC_JOB']
+			self.shot = os.environ['IC_SHOT']
 
 		self.ui.shotEnv_toolButton.setText('%s - %s' %(self.job, self.shot))
 
@@ -1026,7 +1037,7 @@ Environment: %s
 
 Developers: %s
 %s %s
-""" %("   ".join(WINDOW_TITLE.upper()),
+""" %("   ".join(NAME.upper()),
 	  os.environ['IC_VERSION'],
 	  python_ver_str,
 	  pyside_ver_str,
@@ -1048,12 +1059,12 @@ Developers: %s
 		"""
 		if settingsType == "Job":
 			categoryLs = ['job', 'apps', 'units', 'time', 'resolution', 'other']
-			xmlData = os.path.join(os.environ['JOBDATA'], 'jobData.xml')
+			xmlData = os.path.join(os.environ['IC_JOBDATA'], 'jobData.xml')
 			inherit = None  # "Defaults"
 		elif settingsType == "Shot":
 			categoryLs = ['shot', 'units', 'time', 'resolution', 'camera']
-			xmlData = os.path.join(os.environ['SHOTDATA'], 'shotData.xml')
-			inherit = os.path.join(os.environ['JOBDATA'], 'jobData.xml')
+			xmlData = os.path.join(os.environ['IC_SHOTDATA'], 'shotData.xml')
+			inherit = os.path.join(os.environ['IC_JOBDATA'], 'jobData.xml')
 			#inherit = "Job"
 		elif settingsType == "User":
 			categoryLs = ['user', 'launcher']
@@ -1066,7 +1077,7 @@ Developers: %s
 			inherit = None
 		if settingsType == "App":  # Temporary
 			categoryLs = ['apps', ]
-			xmlData = os.path.join(os.environ['JOBDATA'], 'jobData.xml')
+			xmlData = os.path.join(os.environ['IC_JOBDATA'], 'jobData.xml')
 			inherit = None  # "Defaults"
 
 		if startPanel not in categoryLs:
@@ -1231,7 +1242,7 @@ Developers: %s
 #	def renderTableAdd(self):
 #		#processes latest path added to self.renderPaths
 #		renderPath = self.renderPblBrowse()
-#		renderPath = renderPath.replace(os.environ['SHOTPATH'], '$SHOTPATH')
+#		renderPath = renderPath.replace(os.environ['IC_SHOTPATH'], '$IC_SHOTPATH')
 #		renderDic = {}
 #		if renderPath:
 #			renderDic = pblOptsPrc.renderPath_prc(renderPath)
@@ -1370,7 +1381,7 @@ Developers: %s
 	def renderTableAdd(self):
 		""" Adds entries to the render layer tree view widget.
 		"""
-		shot_dir = os.environ['SHOTPATH']
+		shot_dir = os.environ['IC_SHOTPATH']
 		start_dir = os.environ.get('MAYARENDERSDIR', shot_dir)
 		self.renderPath = self.folderDialog(start_dir)
 		self.renderTableUpdate()
@@ -1418,7 +1429,7 @@ Developers: %s
 					# renderLayerItem.setText(0, '%s (%d)' % (renderLayerDir, len(renderPasses)))
 					renderLayerItem.setText(0, renderLayerDir)
 					renderLayerItem.setText(2, 'layer')
-					renderLayerItem.setText(3, os_wrapper.relativePath(os.path.join(renderPath, renderLayerDir), 'SHOTPATH'))
+					renderLayerItem.setText(3, os_wrapper.relativePath(os.path.join(renderPath, renderLayerDir), 'IC_SHOTPATH'))
 
 					self.ui.renderPbl_treeWidget.addTopLevelItem(renderLayerItem)
 					renderLayerItem.setExpanded(True)
@@ -1433,7 +1444,7 @@ Developers: %s
 						if not sequence.check(fr_range):  # Set red text for sequence mismatch
 							renderPassItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#f92672")))
 						renderPassItem.setText(2, ext.split('.', 1)[1])
-						renderPassItem.setText(3, os_wrapper.relativePath(os.path.join(renderPath, renderLayerDir, renderPass), 'SHOTPATH'))
+						renderPassItem.setText(3, os_wrapper.relativePath(os.path.join(renderPath, renderLayerDir, renderPass), 'IC_SHOTPATH'))
 
 						self.ui.renderPbl_treeWidget.addTopLevelItem(renderPassItem)
 
@@ -1467,7 +1478,7 @@ Developers: %s
 				if not sequence.check(fr_range):  # Set red text for sequence mismatch
 					dailyItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#f92672")))
 				dailyItem.setText(2, self.dailyType)
-				dailyItem.setText(3, os_wrapper.relativePath(path, 'SHOTPATH'))
+				dailyItem.setText(3, os_wrapper.relativePath(path, 'IC_SHOTPATH'))
 				self.ui.dailyPbl_treeWidget.addTopLevelItem(dailyItem)
 				#dailyItem.setExpanded(True)
 
@@ -1495,7 +1506,7 @@ Developers: %s
 	# ################browse dialogs###############	
 	# # Browse for assets to publish
 	# def assetPblBrowse(self):
-	# 	dialogHome = os.environ['JOBPATH']
+	# 	dialogHome = os.environ['IC_JOBPATH']
 	# 	self.ui.pathToAsset_lineEdit.setText(self.fileDialog(dialogHome))
 
 	# # Browse for renders to publish
@@ -1506,7 +1517,7 @@ Developers: %s
 	def dailyPblBrowse(self):
 		""" Browse for dailies to publish.
 		"""
-		shot_dir = os.environ['SHOTPATH']
+		shot_dir = os.environ['IC_SHOTPATH']
 		if self.dailyType in ('modeling', 'texturing', 'animation', 'anim', 'fx', 'previs', 'tracking', 'rigging'):
 			start_dir = os.environ.get('MAYAPLAYBLASTSDIR', shot_dir)
 		elif self.dailyType in ('lighting', 'shading', 'lookdev'):
@@ -1535,12 +1546,12 @@ Developers: %s
 
 		# Get path to publish to. If selected shot doesn't match shot the correct publish path is assigned based on the selected shot
 		if self.ui.publishToShot_radioButton.isChecked() == 1:
-			if self.slShot == os.environ['SHOT']: # publish to current shot
-				self.pblTo = os.environ['SHOTPUBLISHDIR']
+			if self.slShot == os.environ['IC_SHOT']: # publish to current shot
+				self.pblTo = os.environ['IC_SHOTPUBLISHDIR']
 			else: # publish to user-specified shot
-				self.pblTo = os.path.join(os.environ['JOBPATH'], self.slShot, os.environ['IC_ASSETDIR'])
+				self.pblTo = os.path.join(os.environ['IC_JOBPATH'], self.slShot, os.environ['IC_ASSETDIR'])
 		elif self.ui.publishToJob_radioButton.isChecked() == 1: # publish to job
-			self.pblTo = os.environ['JOBPUBLISHDIR']
+			self.pblTo = os.environ['IC_JOBPUBLISHDIR']
 		elif self.ui.publishToLibrary_radioButton.isChecked() == 1: # publish to library
 			self.pblTo = os.environ['GLOBALPUBLISHDIR']
 
@@ -1791,12 +1802,12 @@ Developers: %s
 
 		# Get path to gather from. If selected shot doesn't match shot the correct publish path is assigned based on the selected shot
 		if self.ui.gatherFromShot_radioButton.isChecked() == 1:
-			if slShot == os.environ['SHOT']: # gather from current shot
-				self.gatherFrom = os.environ['SHOTPUBLISHDIR']
+			if slShot == os.environ['IC_SHOT']: # gather from current shot
+				self.gatherFrom = os.environ['IC_SHOTPUBLISHDIR']
 			else: # gather from user-specified shot
-				self.gatherFrom = os.path.join(os.environ['JOBPATH'], slShot, os.environ['IC_ASSETDIR'])
+				self.gatherFrom = os.path.join(os.environ['IC_JOBPATH'], slShot, os.environ['IC_ASSETDIR'])
 		elif self.ui.gatherFromJob_radioButton.isChecked() == 1: # gather from job
-			self.gatherFrom = os.environ['JOBPUBLISHDIR']
+			self.gatherFrom = os.environ['IC_JOBPUBLISHDIR']
 		elif self.ui.gatherFromLibrary_radioButton.isChecked() == 1: # gather from library
 			self.gatherFrom = os.environ['GLOBALPUBLISHDIR']
 
@@ -2012,11 +2023,15 @@ Developers: %s
 
 # ----------------------------------------------------------------------------
 # End of main application class
-# ----------------------------------------------------------------------------
-
-# ----------------------------------------------------------------------------
+# ============================================================================
 # Run functions
 # ----------------------------------------------------------------------------
+
+def main_application():
+	""" Return main Qt Application object.
+	"""
+	return QtWidgets.QApplication(sys.argv)
+
 
 def window(app='standalone', parent=None):
 	""" Return main Icarus window - 'parent' will be ignored unless 'app' is
@@ -2052,122 +2067,11 @@ def window(app='standalone', parent=None):
 			with open(qss, "r") as fh:
 				ic_app.setStyleSheet(fh.read())
 
-		# Set application icon
+		# Set window title, flags and application icon
+		ic_app.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint)
 		ic_app.setWindowIcon(QtGui.QIcon(os.path.join(os.environ['IC_FORMSDIR'], 'rsc', 'icarus.png')))
 
-		# Set Window flags
-		ic_app.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint)
-
 	return ic_app
-
-
-# def run_maya():
-# 	""" Run in Maya.
-# 	"""
-# 	UI._maya_delete_ui(WINDOW_OBJECT, WINDOW_TITLE)  # Delete any already existing UI
-# 	icApp = IcarusApp(parent=UI._maya_main_window())
-
-# 	if not DOCK_WITH_MAYA_UI:
-# 		icApp.show()  # Show the UI
-# 	elif DOCK_WITH_MAYA_UI:
-# 		allowed_areas = ['right', 'left']
-# 		mc.dockControl(WINDOW_TITLE, label=WINDOW_TITLE, area='left', content=WINDOW_OBJECT, allowedArea=allowed_areas)
-
-
-# def run_houdini():
-# 	""" Run in Houdini.
-# 	"""
-# 	# UI._houdini_delete_ui(WINDOW_OBJECT, WINDOW_TITLE)  # Delete any already existing UI
-# 	# icApp = IcarusApp(parent=UI._houdini_main_window())
-# 	icApp = IcarusApp(parent=hou.qt.mainWindow())
-# 	icApp.show()  # Show the UI
-
-
-# def run_nuke():
-# 	""" Run in Nuke.
-
-# 		Note:
-# 			If you want the UI to always stay on top, replace:
-# 			'icApp.setWindowFlags(QtCore.Qt.Tool)'
-# 			with:
-# 			'icApp.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)'
-
-# 			If you want the UI to be modal:
-# 			'icApp.setWindowModality(QtCore.Qt.WindowModal)'
-# 	"""
-# 	UI._nuke_delete_ui(WINDOW_OBJECT, WINDOW_TITLE)  # Delete any already existing UI
-
-# 	if not DOCK_WITH_NUKE_UI:
-# 		# icApp = IcarusApp(parent=dcc_app_integration.nuke_main_window())
-# 		icApp = IcarusApp(parent=UI._nuke_main_window())
-# 		icApp.setWindowFlags(QtCore.Qt.Tool)
-# 		icApp.show()  # Show the UI
-# 	elif DOCK_WITH_NUKE_UI:
-# 		prefix = ''
-# 		basename = os.path.basename(__file__)
-# 		module_name = basename[: basename.rfind('.')]
-# 		if __name__ == module_name:
-# 			prefix = module_name + '.'
-# 		panel = nukescripts.panels.registerWidgetAsPanel(
-# 			widget=prefix + WINDOW_TITLE,  # module_name.Class_name
-# 			name=WINDOW_TITLE,
-# 			id='uk.co.thefoundry.' + WINDOW_TITLE,
-# 			create=True)
-# 		pane = nuke.getPaneFor('Properties.1')
-# 		panel.addToPane(pane)
-# 		icApp = panel.customKnob.getObject().widget
-# 		UI._nuke_set_zero_margins(icApp)
-
-
-# def run_clarisse():
-# 	""" Run in Clarisse.
-# 		Waiting until Clarisse purchase,
-# 	"""
-# 	import clarisse_icarusEventLoop
-# 	try:
-# 		mainApp = QtGui.QApplication(WINDOW_TITLE)
-# 	except RuntimeError:
-# 		mainApp = QtCore.QCoreApplication.instance()
-# 	app = IcarusApp()
-# 	app.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint)
-# 	app.show()
-# 	icarus_clarisseWrap.exec_(mainApp)
-
-
-# def run_standalone():
-# 	""" Run standalone.
-# 	"""
-# 	app = QtWidgets.QApplication(sys.argv)
-
-# 	# Apply application style.
-# 	# On Windows best results are obtained when this is disabled.
-# 	# On Mac, best option is unclear due to inconsistent results.
-# 	# Linux has not been tested.
-# 	if os.environ['IC_RUNNING_OS'] == "MacOS":
-# 		styles = QtWidgets.QStyleFactory.keys()
-# 		if 'Fusion' in styles:
-# 			app.setStyle('Fusion')  # Qt5
-# 		elif 'Plastique' in styles:
-# 			app.setStyle('Plastique')  # Qt4
-
-# 	# Apply UI style sheet
-# 	if STYLESHEET is not None:
-# 		qss = os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
-# 		with open(qss, "r") as fh:
-# 			app.setStyleSheet(fh.read())
-
-# 	# Set application icon
-# 	app.setWindowIcon(QtGui.QIcon(os.path.join(os.environ['IC_FORMSDIR'], 'rsc', 'icarus.png')))
-
-# 	# Instantiate main application class
-# 	icApp = IcarusApp()
-
-# 	# Set Window flags
-# 	icApp.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint)
-
-# 	# Show the application UI
-# 	icApp.show()
-# 	sys.exit(app.exec_())
 
 
 #########################################
@@ -2182,18 +2086,19 @@ os.environ['IC_VERBOSITY'] = userPrefs.query('main', 'verbosity', datatype='str'
 os.environ['IC_NUMRECENTFILES'] = userPrefs.query('recent', 'numrecentfiles', datatype='str', default="10", create=True)
 
 # Print launch initialisation message
-verbose.icarusLaunch(WINDOW_TITLE.upper(), 
-                     os.environ['IC_VERSION'], 
-                     "%s %s" %(COPYRIGHT, VENDOR), 
-                     os.environ['IC_BASEDIR'], 
-                     os.environ['IC_USERNAME'], 
-                     userOverride)
+verbose.icarusLaunch(name=NAME.upper(), 
+                     version=os.environ['IC_VERSION'], 
+                     vendor="%s %s" %(COPYRIGHT, VENDOR), 
+                     location=os.environ['IC_BASEDIR'], 
+                     env=os.environ['IC_ENV'], 
+                     user=os.environ['IC_USERNAME'], 
+                     userOverride=userOverride)
 
 # Python version check
 try:
 	assert sys.version_info >= (2,7)
 except AssertionError:
-	sys.exit("ERROR: %s requires Python version 2.7 or above." %WINDOW_TITLE)
+	sys.exit("ERROR: %s requires Python version 2.7 or above." %NAME)
 
 # Enable high DPI scaling
 try:
@@ -2201,11 +2106,9 @@ try:
 except AttributeError:
 	verbose.warning("High DPI scaling not available in Qt %s. User Interface elements may not display correctly on high DPI display devices." %QtCore.qVersion())
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
 # 	run_standalone()
-
-
-def main_application():
-	""" Return main Qt Application object.
-	"""
-	return QtWidgets.QApplication(sys.argv)
+	main_app = main_application()
+	icarus = window()
+	icarus.show()
+	sys.exit(main_app.exec_())

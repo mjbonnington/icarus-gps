@@ -4,12 +4,16 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2016 Gramercy Park Studios
+# (c) 2013-2019 Gramercy Park Studios
 #
 # Customises Nuke's menus and toolbars.
 
 
 import gpsSave
+
+# Initialise Icarus
+from core import icarus
+session.icarus = icarus.app(app='nuke')
 
 
 # ----------------------------------------------------------------------------
@@ -23,10 +27,10 @@ cryptomatte_utilities.setup_cryptomatte_ui()
 import pixelfudger
 
 # Deadline integrated submitter
-import DeadlineNukeClient
-menubar = nuke.menu("Nuke")
-tbmenu = menubar.addMenu("&Thinkbox")
-tbmenu.addCommand("Submit Nuke To Deadline", DeadlineNukeClient.main, "")
+# import DeadlineNukeClient
+# menubar = nuke.menu("Nuke")
+# tbmenu = menubar.addMenu("&Thinkbox")
+# tbmenu.addCommand("Submit Nuke To Deadline", DeadlineNukeClient.main, "")
 
 # ----------------------------------------------------------------------------
 
@@ -53,7 +57,8 @@ openJobDir = 'from shared import openDirs; openDirs.openJob()'
 openElementsLibDir = 'from shared import openDirs; openDirs.openElementsLib()'
 launchProdBoard  = 'from shared import launchApps; launchApps.prodBoard()'
 launchNuke = 'from shared import launchApps; launchApps.launch("%s")' % nukeType
-launchIcarus = 'import icarus__main__; icarus__main__.run_nuke()'
+# launchIcarus = 'import icarus__main__; icarus__main__.run_nuke()'
+launchIcarus = 'session.icarus.show()'
 launchDjv = 'import nukeOps; nukeOps.launchDjv()'
 launchHieroPlayer = 'from shared import launchApps; launchApps.launch("HieroPlayer")'
 versionUp = 'import switchVersion; switchVersion.versionUp()'

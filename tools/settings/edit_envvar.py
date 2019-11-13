@@ -141,7 +141,7 @@ class Dialog(QtWidgets.QDialog, UI.TemplateUI):
 		if os.path.isdir(startingDir):
 			dialogHome = startingDir
 		else:
-			dialogHome = os.environ['JOB']
+			dialogHome = os.environ['IC_JOB']
 
 		# Append slash to path if it's a Windows drive letter, otherwise file
 		# dialog won't open the correct location
@@ -161,7 +161,7 @@ class Dialog(QtWidgets.QDialog, UI.TemplateUI):
 		if os.path.isdir(startingDir):
 			dialogHome = startingDir
 		else:
-			dialogHome = os.environ['JOB']
+			dialogHome = os.environ['IC_JOB']
 
 		# Append slash to path if it's a Windows drive letter, otherwise file
 		# dialog won't open the correct location

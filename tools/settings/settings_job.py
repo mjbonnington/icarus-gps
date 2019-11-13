@@ -19,5 +19,5 @@ class helper():
 		self.frame = frame
 
 		# Populate line edit with job name
-		self.frame.job_lineEdit.setText(os.getenv('JOB', ''))
+		self.frame.job_lineEdit.setText(os.getenv('IC_JOB', ''))
 

@@ -249,7 +249,7 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		""" Open the edit job dialog to add a new job.
 		"""
 		editJobDialog = edit_job.dialog(parent=self)
-		if editJobDialog.display('', '$JOBSROOT', True):
+		if editJobDialog.display('', '$IC_JOBSROOT', True):
 			if self.j.addJob(editJobDialog.jobName, editJobDialog.jobPath, editJobDialog.jobActive):
 				self.reloadJobs(reloadDatabase=False, selectItem=editJobDialog.jobName)
 			else:

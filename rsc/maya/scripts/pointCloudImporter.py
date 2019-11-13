@@ -66,7 +66,7 @@ class pointCloud():
 	
 	#point cloud browse dialog
 	def pCloudBrowse(self):
-		dialogHome = os.environ['SHOTPATH']
+		dialogHome = os.environ['IC_SHOTPATH']
 		pCloudFiles = "Point Cloud Files (*.txt)"
 		pCloudPath = mc.fileDialog2(ds=2, fm=1, dir=dialogHome, ff=pCloudFiles, cap='Point Cloud File', okc='Ok')
 		if pCloudPath:
@@ -74,7 +74,7 @@ class pointCloud():
 
 	#camera cloud browse dialog
 	def camCloudBrowse(self):
-		dialogHome = os.environ['SHOTPATH']
+		dialogHome = os.environ['IC_SHOTPATH']
 		camCloudFiles = "Camera Cloud Files (*.chan)"
 		camCloudPath = mc.fileDialog2(ds=2, fm=1, dir=dialogHome, ff=camCloudFiles, cap='Camera Cloud File', okc='Ok')
 		if camCloudPath:

@@ -21,7 +21,7 @@ from . import verbose
 
 
 config = SafeConfigParser()
-configFile = os.path.join(os.environ['IC_RECENTFILESDIR'], '%s.ini' %os.environ['JOB'])
+configFile = os.path.join(os.environ['IC_RECENTFILESDIR'], '%s.ini' %os.environ['IC_JOB'])
 
 
 def _read(env):
@@ -53,10 +53,10 @@ def _create(env):
 
 	if not os.path.isdir(recentFilesDir):
 		os_wrapper.createDir(recentFilesDir)
-	if not config.has_section(os.environ['SHOT']): # create shot section if it doesn't exist
-		config.add_section(os.environ['SHOT'])
-	if not config.has_option(os.environ['SHOT'], env): # create current app option if it doesn't exist
-		config.set(os.environ['SHOT'], env, '')
+	if not config.has_section(os.environ['IC_SHOT']): # create shot section if it doesn't exist
+		config.add_section(os.environ['IC_SHOT'])
+	if not config.has_option(os.environ['IC_SHOT'], env): # create current app option if it doesn't exist
+		config.set(os.environ['IC_SHOT'], env, '')
 
 	_write()
 
@@ -71,12 +71,12 @@ def updateLs(newEntry, env=os.environ['IC_ENV']):
 
 	#newEntry = os_wrapper.absolutePath(newEntry) # normalise path for host os
 	newEntry = newEntry.replace('\\', '/')
-	shotpath = os.environ['SHOTPATH'].replace('\\', '/')
+	shotpath = os.environ['IC_SHOTPATH'].replace('\\', '/')
 
 	if newEntry.startswith(shotpath): # only add files in the current shot
 		newEntry = newEntry.replace(shotpath, '')
 
-		fileStr = config.get(os.environ['SHOT'], env)
+		fileStr = config.get(os.environ['IC_SHOT'], env)
 
 		if not fileStr=='':
 			fileLs = fileStr.split('; ')
@@ -92,7 +92,7 @@ def updateLs(newEntry, env=os.environ['IC_ENV']):
 		while len(fileLs) > int(os.environ['IC_NUMRECENTFILES']):
 			fileLs.pop()
 
-		config.set(os.environ['SHOT'], env, '; '.join(n for n in fileLs)) # encode the list into a single line with entries separated by semicolons
+		config.set(os.environ['IC_SHOT'], env, '; '.join(n for n in fileLs)) # encode the list into a single line with entries separated by semicolons
 
 		_write()
 
@@ -107,7 +107,7 @@ def getLs(env=os.environ['IC_ENV']):
 	_create(env) # create section for the current shot
 
 	try:
-		fileLs = config.get(os.environ['SHOT'], env).split('; ')
+		fileLs = config.get(os.environ['IC_SHOT'], env).split('; ')
 		fileLs = fileLs[:int(os.environ['IC_NUMRECENTFILES'])]
 	except:
 		fileLs = []

@@ -105,7 +105,7 @@ def viewer(path=None):
 		If path is not specified, use shot directory.
 	"""
 	# Get starting directory
-	startupDir = os.environ['SHOTPATH']
+	startupDir = os.environ['IC_SHOTPATH']
 	pathIsFile = False
 	if path is not None:
 		if os.path.isfile(path):

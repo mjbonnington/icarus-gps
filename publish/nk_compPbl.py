@@ -45,7 +45,7 @@ def publish(pblTo, slShot, subtype, pblNotes):
 	assetPblName, assetDir, pblDir = pblOptsPrc.prc(pblTo, subsetName, assetType, prefix, convention, suffix)
 
 	# Add shot name to assetPblName if asset is being publish to a shot
-	if pblTo != os.environ['JOBPUBLISHDIR']:
+	if pblTo != os.environ['IC_JOBPUBLISHDIR']:
 		assetPblName += '_%s' % slShot
 
 	# Version control

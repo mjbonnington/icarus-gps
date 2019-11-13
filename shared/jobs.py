@@ -73,7 +73,7 @@ class Jobs(xmlData.XMLData):
 			and generated based on that.
 		"""
 		# Published asset directories
-		for directory in (os.environ['JOBPUBLISHDIR'], os.environ['SHOTPUBLISHDIR']):
+		for directory in (os.environ['IC_JOBPUBLISHDIR'], os.environ['IC_SHOTPUBLISHDIR']):
 			if not os.path.isdir(directory):
 				os_wrapper.createDir(directory)
 
@@ -81,7 +81,7 @@ class Jobs(xmlData.XMLData):
 		res_full = "%sx%s" %(os.environ['RESOLUTIONX'], os.environ['RESOLUTIONY'])
 		res_proxy = "%sx%s" %(os.environ['PROXY_RESOLUTIONX'], os.environ['PROXY_RESOLUTIONY'])
 		plates = (res_full, res_proxy)
-		platesDir = os.path.join(os.environ['SHOTPATH'], 'Plate')
+		platesDir = os.path.join(os.environ['IC_SHOTPATH'], 'Plate')
 		if not os.path.isdir(platesDir):
 			os_wrapper.createDir(platesDir)
 
@@ -130,7 +130,7 @@ class Jobs(xmlData.XMLData):
 		else:
 			os.environ['FILESYSTEMROOT'] = str(self.linux_root)
 
-		os.environ['JOBSROOT'] = os_wrapper.absolutePath('$FILESYSTEMROOT/%s' %self.jobs_path, stripTrailingSlash=True)
+		os.environ['IC_JOBSROOT'] = os_wrapper.absolutePath('$FILESYSTEMROOT/%s' %self.jobs_path, stripTrailingSlash=True)
 
 
 	def setRootPaths(self, winPath=None, osxPath=None, linuxPath=None, jobsRelPath=None):

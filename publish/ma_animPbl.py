@@ -37,7 +37,7 @@ def publish(pblTo, slShot, pblNotes):
 		return
 
 	# Define main variables
-	shot_ = os.environ['SHOT']
+	shot_ = os.environ['IC_SHOT']
 	assetType = 'ma_anim'
 	subsetName = ''
 	prefix = ''
@@ -90,7 +90,7 @@ def publish(pblTo, slShot, pblNotes):
 
 	# Add shot name to assetPblName if asset is being publish to a shot
 	# Determining publish env var for relative directory
-	if pblTo != os.environ['JOBPUBLISHDIR']:
+	if pblTo != os.environ['IC_JOBPUBLISHDIR']:
 		assetPblName += '_%s' % slShot
 
 	# Version control

@@ -348,7 +348,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 			from shared import recentFiles
 			for filePath in recentFiles.getLs(self.jobType):
-				fullPath = os_wrapper.absolutePath(os.environ['SHOTPATH'] + filePath)
+				fullPath = os_wrapper.absolutePath(os.environ['IC_SHOTPATH'] + filePath)
 				relPath = self.makePathRelative(fullPath)
 				if relPath:
 					comboBox.addItem(relPath)
@@ -374,7 +374,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 	def commandBrowse(self):
 		""" Browse for a command.
 		"""
-		fileDir = os.environ.get('JOBPATH', '.')  # Go to current dir if env var is not set
+		fileDir = os.environ.get('IC_JOBPATH', '.')  # Go to current dir if env var is not set
 		fileFilter = "All files (*.*)"
 
 		currentDir = os.path.dirname(self.ui.command_lineEdit.text())
@@ -405,7 +405,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			fileFilter = "Nuke files (*.nk)"
 			fileTerminology = "scripts"
 		# else:
-		# 	fileDir = os.environ.get('JOBPATH', '.')  # Go to current dir if env var is not set
+		# 	fileDir = os.environ.get('IC_JOBPATH', '.')  # Go to current dir if env var is not set
 		# 	fileFilter = "All files (*.*)"
 		# 	fileTerminology = "commands"
 
@@ -779,7 +779,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			prefix = mc.getAttr("defaultRenderGlobals.imageFilePrefix")
 		except:  # Make a guess
 			#prefix = ""
-			prefix = "%s/<Scene>/<RenderLayer>/%s_<RenderLayer>" %(os.environ['IC_USERNAME'], os.environ['SHOT'])
+			prefix = "%s/<Scene>/<RenderLayer>/%s_<RenderLayer>" %(os.environ['IC_USERNAME'], os.environ['IC_SHOT'])
 
 		return prefix
 
@@ -902,7 +902,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		submit_args['username'] = os.environ['IC_USERNAME']
 
 		# Environment variables...
-		submit_args['envVars'] = ['JOB', 'SHOT', 'JOBPATH', 'SHOTPATH']
+		submit_args['envVars'] = ['IC_JOB', 'IC_SHOT', 'IC_JOBPATH', 'IC_SHOTPATH']
 
 		################################
 		# Application-specific options #

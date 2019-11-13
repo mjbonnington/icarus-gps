@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<root location="$SHOTPATH/3D">
+<root location="$IC_SHOTPATH/3D">
 	<dir name="xsi">
-		<dir name="${JOB}_${SHOT}" env="XSIDIR">
+		<dir name="${IC_JOB}_${IC_SHOT}" env="XSIDIR">
 			<dir name="Scenes">
 				<dir name="$IC_USERNAME" env="XSISCENESDIR" />
 			</dir>

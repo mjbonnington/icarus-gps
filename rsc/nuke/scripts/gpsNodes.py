@@ -12,7 +12,7 @@
 import os
 import nuke
 
-from . import gpsSave
+from rsc.nuke.scripts import gpsSave
 from shared import os_wrapper
 from shared import vCtrl
 
@@ -23,7 +23,7 @@ from shared import vCtrl
 def read_create():
 	""" Create a custom GPS Read node.
 	"""
-	readDir = os_wrapper.absolutePath('$SHOTPATH/')
+	readDir = os_wrapper.absolutePath('$IC_SHOTPATH/')
 	dialogPathLs = nuke.getClipname('Read File(s)', default=readDir, multiple=True)
 	if dialogPathLs:
 		for dialogPath in dialogPathLs:
@@ -35,7 +35,7 @@ def read_create():
 				startFrame, endFrame = os.environ['STARTFRAME'], os.environ['ENDFRAME']
 
 			# Make filePath relative
-			filePath = os_wrapper.relativePath(filePath, 'JOBPATH', tokenFormat='nuke')
+			filePath = os_wrapper.relativePath(filePath, 'IC_JOBPATH', tokenFormat='nuke')
 
 			readNode = nuke.createNode('Read', 'name GPS_Read')
 			readNode.knob('file').setValue(filePath)
@@ -132,8 +132,8 @@ def w_path_preset(writeNode, presetType='Precomp'):
 	"""
 	if 'Plate_' in presetType:
 		presetType = presetType.replace('Plate_', '')
-		filePath = os.path.join('[getenv SHOTPATH]', 'Plate', presetType)
-		fullPath = os.path.join(os.environ['SHOTPATH'], 'Plate', presetType)
+		filePath = os.path.join('[getenv IC_SHOTPATH]', 'Plate', presetType)
+		fullPath = os.path.join(os.environ['IC_SHOTPATH'], 'Plate', presetType)
 	else:
 		filePath = os.path.join('[getenv NUKERENDERSDIR]', presetType)
 		fullPath = os.path.join(os.environ['NUKERENDERSDIR'], presetType)
@@ -147,9 +147,9 @@ def w_path_preset(writeNode, presetType='Precomp'):
 def w_fileName_preset(writeNode, filePath, presetType, ext, proxy=True):
 	""" Sets the fileName presets.
 	"""
-	fileName = '%s_%s.%s.%s' % (os.environ['SHOT'], presetType, r'%04d', ext)
+	fileName = '%s_%s.%s.%s' % (os.environ['IC_SHOT'], presetType, r'%04d', ext)
 	# fullPath = os.path.join(filePath, 'full', fileName)
-	# fileName = '$SHOT_%s.%04d.%s' % (presetType, ext)
+	# fileName = '$IC_SHOT_%s.%04d.%s' % (presetType, ext)
 	fullPath = os_wrapper.absolutePath('%s/full/%s' %(filePath, fileName))
 	writeNode.knob('file').setValue(fullPath)
 	if proxy:

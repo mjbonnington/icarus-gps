@@ -36,10 +36,10 @@ def open_(path_):
 
 # Preset functions...
 def openShot():
-	open_(os.environ['SHOTPATH'])
+	open_(os.environ['IC_SHOTPATH'])
 
 def openJob():
-	open_(os.path.split(os.environ['JOBPATH'])[0])
+	open_(os.path.split(os.environ['IC_JOBPATH'])[0])
 
 def openElementsLib():
 	open_(os.environ['ELEMENTSLIBRARY'])

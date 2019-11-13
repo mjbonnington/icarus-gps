@@ -60,7 +60,7 @@ class AppLauncher(QtWidgets.QDialog):
 
 		if job is not None:
 			self.ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'), use_template=True)
-			self.jd.loadXML(os.path.join(os.environ['JOBDATA'], 'jobData.xml'), use_template=False)
+			self.jd.loadXML(os.path.join(os.environ['IC_JOBDATA'], 'jobData.xml'), use_template=False)
 
 		parentLayout = self.frame.findChildren(QtWidgets.QVBoxLayout, 'launchApp_verticalLayout')[0]
 

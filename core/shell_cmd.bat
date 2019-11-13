@@ -1,10 +1,10 @@
 @echo off
 
-set prompt=$p$_[%IC_USERNAME%$s%JOB%-%SHOT%]$s$g
+set prompt=$p$_[%IC_USERNAME%$s%IC_JOB%-%IC_SHOT%]$s$g
 color 08
 
 rem cd into shot dir
-cd /d "%SHOTPATH%"
+cd /d "%IC_SHOTPATH%"
 
 rem software aliases
 doskey maya="%MAYAVERSION%" -proj "%MAYADIR%"
@@ -16,7 +16,7 @@ doskey hieroplayer="%NUKEVERSION%" --player
 doskey djv="%DJV_PLAY%"
 
 rem other aliases
-doskey shot=cd "%SHOTPATH%"
+doskey shot=cd "%IC_SHOTPATH%"
 doskey pwd=cd
 doskey clear=cls
 doskey ls=dir /w

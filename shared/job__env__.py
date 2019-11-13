@@ -48,14 +48,14 @@ def setEnv(job, shot, shotPath):
 	shotDataPath = os.path.join(shotPath, os.environ['IC_METADATA'])
 
 	# Set basic environment variables
-	os.environ['JOB'] = job
-	os.environ['SHOT'] = shot
-	os.environ['JOBPATH'] = os_wrapper.absolutePath(jobPath)
-	os.environ['SHOTPATH'] = os_wrapper.absolutePath(shotPath)
-	os.environ['JOBDATA'] = os_wrapper.absolutePath(jobDataPath)
-	os.environ['SHOTDATA'] = os_wrapper.absolutePath(shotDataPath)
+	os.environ['IC_JOB'] = job
+	os.environ['IC_SHOT'] = shot
+	os.environ['IC_JOBPATH'] = os_wrapper.absolutePath(jobPath)
+	os.environ['IC_SHOTPATH'] = os_wrapper.absolutePath(shotPath)
+	os.environ['IC_JOBDATA'] = os_wrapper.absolutePath(jobDataPath)
+	os.environ['IC_SHOTDATA'] = os_wrapper.absolutePath(shotDataPath)
 
-	os_wrapper.createDir(os.environ['JOBDATA'])
+	os_wrapper.createDir(os.environ['IC_JOBDATA'])
 
 	# Instantiate job / shot settings classes
 	jobData = settingsData.SettingsData()
@@ -127,9 +127,9 @@ def setEnv(job, shot, shotPath):
 
 	# Job / shot env
 	#os.environ['GLOBALPUBLISHDIR']  = os_wrapper.absolutePath(getInheritedValue('other', 'assetlib'))  # Path needs to be translated for OS portability
-	os.environ['JOBPUBLISHDIR']     = os_wrapper.absolutePath('$JOBPATH/$IC_ASSETDIR')
-	os.environ['SHOTPUBLISHDIR']    = os_wrapper.absolutePath('$SHOTPATH/$IC_ASSETDIR')
-	os.environ['WIPSDIR']           = os_wrapper.absolutePath('$JOBPATH/../Deliverables/WIPS')  # Perhaps this shouldn't be hard-coded?
+	os.environ['IC_JOBPUBLISHDIR']     = os_wrapper.absolutePath('$IC_JOBPATH/$IC_ASSETDIR')
+	os.environ['IC_SHOTPUBLISHDIR']    = os_wrapper.absolutePath('$IC_SHOTPATH/$IC_ASSETDIR')
+	os.environ['WIPSDIR']           = os_wrapper.absolutePath('$IC_JOBPATH/../Deliverables/WIPS')  # Perhaps this shouldn't be hard-coded?
 	os.environ['ELEMENTSLIBRARY']   = os_wrapper.absolutePath(getInheritedValue('other', 'elementslib'))  # Path needs to be translated for OS portability
 	os.environ['PRODBOARD']         = getInheritedValue('other', 'prodboard')
 	os.environ['UNIT']              = getInheritedValue('units', 'linear')
@@ -167,7 +167,7 @@ def setEnv(job, shot, shotPath):
 	# Maya
 	os.environ['MAYAVERSION']         = getAppExecPath('Maya')
 	os.environ['MAYARENDERVERSION']   = os_wrapper.absolutePath('%s/Render' %os.path.dirname(os.environ['MAYAVERSION']))
-	os.environ['MAYADIR']             = os_wrapper.absolutePath('$SHOTPATH/3D/maya')  # Currently needed by render submitter
+	os.environ['MAYADIR']             = os_wrapper.absolutePath('$IC_SHOTPATH/3D/maya')  # Currently needed by render submitter
 	os.environ['MAYASCENESDIR']       = os_wrapper.absolutePath('$MAYADIR/scenes/$IC_USERNAME')  # Currently needed by render submitter
 	os.environ['MAYASOURCEIMAGESDIR'] = os_wrapper.absolutePath('$MAYADIR/sourceimages/$IC_USERNAME')  # Currently needed by openDirs
 	os.environ['MAYARENDERSDIR']      = os_wrapper.absolutePath('$MAYADIR/renders/$IC_USERNAME')  # Currently needed by daily publish
@@ -186,15 +186,15 @@ def setEnv(job, shot, shotPath):
 
 		pluginsPath = os_wrapper.absolutePath('$IC_BASEDIR/rsc/maya/plugins') + os.pathsep \
 					+ os_wrapper.absolutePath('$MAYASHAREDRESOURCES/%s/plug-ins' %maya_ver)
-		scriptsPath = os_wrapper.absolutePath('$IC_BASEDIR/rsc/maya/maya__env__') + os.pathsep \
+		scriptsPath = os_wrapper.absolutePath('$IC_BASEDIR/rsc/maya/env') + os.pathsep \
 					+ os_wrapper.absolutePath('$IC_BASEDIR/rsc/maya/scripts') + os.pathsep \
 					+ os_wrapper.absolutePath('$MAYADIR/scripts') + os.pathsep \
-					+ os_wrapper.absolutePath('$JOBPUBLISHDIR/scripts') + os.pathsep \
-					+ os_wrapper.absolutePath('$SHOTPUBLISHDIR/scripts') + os.pathsep \
+					+ os_wrapper.absolutePath('$IC_JOBPUBLISHDIR/scripts') + os.pathsep \
+					+ os_wrapper.absolutePath('$IC_SHOTPUBLISHDIR/scripts') + os.pathsep \
 					+ os_wrapper.absolutePath('$MAYASHAREDRESOURCES/scripts') + os.pathsep \
 					+ os_wrapper.absolutePath('$MAYASHAREDRESOURCES/%s/scripts' %maya_ver)
 		iconsPath = os_wrapper.absolutePath('$IC_BASEDIR/rsc/maya/icons') + os.pathsep \
-				  + os_wrapper.absolutePath('$JOBPUBLISHDIR/icons') + os.pathsep \
+				  + os_wrapper.absolutePath('$IC_JOBPUBLISHDIR/icons') + os.pathsep \
 				  + os_wrapper.absolutePath('$MAYASHAREDRESOURCES/%s/icons' %maya_ver)
 		if os.environ['IC_RUNNING_OS'] == "Linux":  # Append the '%B' bitmap placeholder token required for Linux
 			iconsPathsModified = []
@@ -209,35 +209,44 @@ def setEnv(job, shot, shotPath):
 		#os.environ['VRAY_FOR_MAYA_SHADERS'] = os_wrapper.absolutePath('$IC_BASEDIR/rsc/maya/shaders')
 		#os.environ['VRAY_FOR_MAYA2014_PLUGINS_x64'] += os.pathsep + os_wrapper.absolutePath('$IC_BASEDIR/rsc/maya/plugins')
 
-		os.environ['MAYA_SHELF_PATH'] = os_wrapper.absolutePath('$JOBPUBLISHDIR/ma_shelves')
+		os.environ['MAYA_SHELF_PATH'] = os_wrapper.absolutePath('$IC_JOBPUBLISHDIR/ma_shelves')
 		os.environ['MAYA_PLUG_IN_PATH'] = pluginsPath
 		os.environ['MAYA_SCRIPT_PATH'] = scriptsPath
-		os.environ['PYTHONPATH'] = scriptsPath
+		# os.environ['PYTHONPATH'] = scriptsPath  # this should only happen at Maya launch
 		os.environ['XBMLANGPATH'] = iconsPath
 
 	except (AttributeError, KeyError, TypeError):
 		verbose.warning("Unable to set Maya environment variables - please check job settings to ensure Maya version is set.")
 
 
+	# Houdini
+	os.environ['HOUDINIVERSION'] = getAppExecPath('Houdini')
+	os.environ['HOUDINI_VER']    = str(jobData.getAppVersion('Houdini'))  # Temporary for Deadline submit
+	os.environ['HOUDINIDIR']     = os_wrapper.absolutePath('$IC_SHOTPATH/3D/houdini')  # Currently needed by render submitter
+	# os.environ['HOUDINI_PATH'] = '%s;&;' % os.environ['UHUB_HOUDINI_BASE_PATH']
+	os.environ['HOUDINI_PATH'] = os_wrapper.absolutePath('$IC_BASEDIR/rsc/houdini') + os.pathsep \
+							   + os_wrapper.absolutePath('$IC_BASEDIR/rsc/houdini/env') + os.pathsep + "&" + os.pathsep \
+
+
 	# Nuke
 	os.environ['NUKEVERSION']     = getAppExecPath('Nuke')
 	os.environ['NUKE_VER']        = str(jobData.getAppVersion('Nuke'))  # Temporary for Deadline submit
-	os.environ['NUKEDIR']         = os_wrapper.absolutePath('$SHOTPATH/2D/nuke')  # Currently needed by render submitter
+	os.environ['NUKEDIR']         = os_wrapper.absolutePath('$IC_SHOTPATH/2D/nuke')  # Currently needed by render submitter
 	os.environ['NUKEELEMENTSDIR'] = os_wrapper.absolutePath('$NUKEDIR/elements/$IC_USERNAME')  # Currently needed by openDirs
 	os.environ['NUKESCRIPTSDIR']  = os_wrapper.absolutePath('$NUKEDIR/scripts/$IC_USERNAME')  # Currently needed by render submitter
 	os.environ['NUKERENDERSDIR']  = os_wrapper.absolutePath('$NUKEDIR/renders/$IC_USERNAME')  # Currently needed by daily publish
-	os.environ['NUKE_PATH']       = os_wrapper.absolutePath('$IC_BASEDIR/rsc/nuke')
+	os.environ['NUKE_PATH']       = os_wrapper.absolutePath('$IC_BASEDIR/rsc/nuke') + os.pathsep + os_wrapper.absolutePath('$IC_BASEDIR/rsc/nuke/env')
 
 
 	# Hiero / HieroPlayer
 	os.environ['HIEROPLAYERVERSION'] = getAppExecPath('HieroPlayer')
-	os.environ['HIEROEDITORIALPATH'] = os_wrapper.absolutePath('$JOBPATH/../Editorial/Hiero')
+	os.environ['HIEROEDITORIALPATH'] = os_wrapper.absolutePath('$IC_JOBPATH/../Editorial/Hiero')
 	os.environ['HIERO_PLUGIN_PATH']  = os_wrapper.absolutePath('$IC_BASEDIR/rsc/hiero')
 
 
 	# After Effects
 	os.environ['AFXVERSION']     = getAppExecPath('AfterEffects')
-	# os.environ['AFXDIR']         = os_wrapper.absolutePath('$SHOTPATH/2D/aftereffects')
+	# os.environ['AFXDIR']         = os_wrapper.absolutePath('$IC_SHOTPATH/2D/aftereffects')
 	# os.environ['AFXELEMENTSDIR'] = os_wrapper.absolutePath('$AFXDIR/elements/$IC_USERNAME')
 	# os.environ['AFXCOMPSDIR']    = os_wrapper.absolutePath('$AFXDIR/comps/$IC_USERNAME')
 	# os.environ['AFXRENDERSDIR']  = os_wrapper.absolutePath('$AFXDIR/renders/$IC_USERNAME')
@@ -245,7 +254,7 @@ def setEnv(job, shot, shotPath):
 
 	# Photoshop
 	os.environ['PSVERSION'] = getAppExecPath('Photoshop')
-	# os.environ['PSDIR']     = os_wrapper.absolutePath('$SHOTPATH/2D/photoshop')
+	# os.environ['PSDIR']     = os_wrapper.absolutePath('$IC_SHOTPATH/2D/photoshop')
 
 
 	# Bridge
@@ -254,7 +263,7 @@ def setEnv(job, shot, shotPath):
 
 	# Mudbox
 	os.environ['MUDBOXVERSION']            = getAppExecPath('Mudbox')
-	# os.environ['MUDBOXDIR']                = os_wrapper.absolutePath('$SHOTPATH/3D/mudbox')
+	# os.environ['MUDBOXDIR']                = os_wrapper.absolutePath('$IC_SHOTPATH/3D/mudbox')
 	# os.environ['MUDBOXSCENESDIR']          = os_wrapper.absolutePath('$MUDBOXDIR/scenes/$IC_USERNAME')
 	os.environ['MUDBOX_PLUG_IN_PATH']      = os_wrapper.absolutePath('$IC_BASEDIR/rsc/mudbox/plugins') 
 	os.environ['MUDBOX_IDLE_LICENSE_TIME'] = '60'
@@ -263,7 +272,7 @@ def setEnv(job, shot, shotPath):
 	# Mari
 	os.environ['MARIVERSION']                = getAppExecPath('Mari')
 	os.environ['MARI_NUKEWORKFLOW_PATH']     = getAppExecPath('Nuke')
-	os.environ['MARIDIR']                    = os_wrapper.absolutePath('$SHOTPATH/3D/mari')
+	os.environ['MARIDIR']                    = os_wrapper.absolutePath('$IC_SHOTPATH/3D/mari')
 	os.environ['MARISCENESDIR']              = os_wrapper.absolutePath('$MARIDIR/scenes/$IC_USERNAME')
 	os.environ['MARIGEODIR']                 = os_wrapper.absolutePath('$MARIDIR/geo/$IC_USERNAME')
 	os.environ['MARITEXTURESDIR']            = os_wrapper.absolutePath('$MARIDIR/textures/$IC_USERNAME')
@@ -272,29 +281,29 @@ def setEnv(job, shot, shotPath):
 	os.environ['MARI_SCRIPT_PATH']           = os_wrapper.absolutePath('$IC_BASEDIR/rsc/mari/scripts')
 	os.environ['MARI_CACHE']                 = os.environ['MARISCENESDIR']
 	os.environ['MARI_WORKING_DIR']           = os.environ['MARISCENESDIR']
-	os.environ['MARI_DEFAULT_GEOMETRY_PATH'] = os.environ['SHOTPUBLISHDIR']
+	os.environ['MARI_DEFAULT_GEOMETRY_PATH'] = os.environ['IC_SHOTPUBLISHDIR']
 	os.environ['MARI_DEFAULT_ARCHIVE_PATH']  = os.environ['MARISCENESDIR']
 	os.environ['MARI_DEFAULT_EXPORT_PATH']   = os.environ['MARITEXTURESDIR']
 	os.environ['MARI_DEFAULT_IMPORT_PATH']   = os.environ['MARITEXTURESDIR']
 	os.environ['MARI_DEFAULT_RENDER_PATH']   = os.environ['MARIRENDERSDIR']
-	os.environ['MARI_DEFAULT_CAMERA_PATH']   = os.environ['SHOTPUBLISHDIR']
+	os.environ['MARI_DEFAULT_CAMERA_PATH']   = os.environ['IC_SHOTPUBLISHDIR']
 
 
 	# RealFlow (2013)
 	os.environ['REALFLOWVERSION']                    = getAppExecPath('RealFlow')
-	# os.environ['REALFLOWDIR']                        = os_wrapper.absolutePath('$SHOTPATH/3D/realflow')
+	# os.environ['REALFLOWDIR']                        = os_wrapper.absolutePath('$IC_SHOTPATH/3D/realflow')
 	# os.environ['REALFLOWSCENESDIR']                  = os_wrapper.absolutePath('$REALFLOWDIR/$IC_USERNAME')  # Currently needed by openDirs
-	# os.environ['RFDEFAULTPROJECT']                   = os_wrapper.absolutePath('$REALFLOWSCENESDIR/${JOB}_${SHOT}')  # Curly brackets required for correct variable expansion
+	# os.environ['RFDEFAULTPROJECT']                   = os_wrapper.absolutePath('$REALFLOWSCENESDIR/${IC_JOB}_${IC_SHOT}')  # Curly brackets required for correct variable expansion
 	# os.environ['RF_COMMANDS_ORGANIZER_FILE_PATH']    = os_wrapper.absolutePath('$REALFLOWSCENESDIR/.cmdsOrg/commandsOrganizer.dat')
 	os.environ['RF_RSC']                             = os_wrapper.absolutePath('$IC_BASEDIR/rsc/realflow')
 	os.environ['RF_STARTUP_PYTHON_SCRIPT_FILE_PATH'] = os_wrapper.absolutePath('$IC_BASEDIR/rsc/realflow/scripts/startup.rfs')
-	os.environ['RFOBJECTSPATH']                      = os_wrapper.absolutePath('$SHOTPUBLISHDIR/ma_geoCache/realflow')
+	os.environ['RFOBJECTSPATH']                      = os_wrapper.absolutePath('$IC_SHOTPUBLISHDIR/ma_geoCache/realflow')
 
 
 	# Cinema 4D
 	c4d_ver = str(jobData.getAppVersion('Cinema4D'))
 	os.environ['C4DVERSION']      = getAppExecPath('Cinema4D')
-	os.environ['C4DDIR']          = os_wrapper.absolutePath('$SHOTPATH/3D/c4d') #temp
+	os.environ['C4DDIR']          = os_wrapper.absolutePath('$IC_SHOTPATH/3D/c4d') #temp
 	os.environ['C4DSCENESDIR']    = os_wrapper.absolutePath('$C4DDIR/scenes/$IC_USERNAME') #temp
 	os.environ['C4D_PLUGINS_DIR'] = os_wrapper.absolutePath('$FILESYSTEMROOT/_Library/3D/C4D/%s/plugins' %c4d_ver)
 	os.environ['C4D_SCRIPTS_DIR'] = os_wrapper.absolutePath('$FILESYSTEMROOT/_Library/3D/C4D/%s/scripts' %c4d_ver)

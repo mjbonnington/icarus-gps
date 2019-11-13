@@ -1109,7 +1109,7 @@ def nkFileNodeExport(objLs, nodeType, fileName, pblDir, visiblePblDir, assetPblN
 	filePath = os.path.join(visiblePblDir, 'tx', fileName)
 
 	# Make file path relative
-	filePath = os_wrapper.relativePath(filePath, 'SHOTPUBLISHDIR', tokenFormat='nuke')
+	filePath = os_wrapper.relativePath(filePath, 'IC_SHOTPUBLISHDIR', tokenFormat='nuke')
 
 	nkFile = open(pathtoPblAsset, 'w')
 	nkFile.write('''Read {

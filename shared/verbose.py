@@ -194,10 +194,11 @@ def gpsPreview_uiValues():
 def gpsToolDeploy(status):
 	message("Deploying GPS tools... %s" %status)
 
-def icarusLaunch(name, version, vendor="", location="", user="", userOverride=False):
+def icarusLaunch(name, version, vendor="", location="", env="", user="", userOverride=False):
 	print_("%s%s%s %s" %(bcolors.ICGREEN, name, bcolors.ENDC, version), 0)
 	print_(vendor, 0)
 	print_('[Running from "%s"]' %location, 4)
+	print_('[Environment: %s]' %env, 4)
 	if userOverride:
 		userverbosity = 0
 	else:

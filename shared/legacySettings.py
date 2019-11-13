@@ -269,10 +269,10 @@ def checkAssetPath():
 	# import setJob
 
 	# Get the paths of the job and all shots within the job
-	paths = [os.environ['JOBPATH'], ]
-	shots = setJob_listShots(os.environ['JOB']) # UPDATE
+	paths = [os.environ['IC_JOBPATH'], ]
+	shots = setJob_listShots(os.environ['IC_JOB']) # UPDATE
 	for shot in shots:
-		paths.append( setJob_getPath(os.environ['JOB'], shot) ) # UPDATE
+		paths.append( setJob_getPath(os.environ['IC_JOB'], shot) ) # UPDATE
 
 	for path in paths:
 		assetDir = os.path.join(path, '.publish')

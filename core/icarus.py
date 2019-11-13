@@ -16,10 +16,6 @@ import sys
 from core import icarus__main__
 from shared import verbose
 
-# verbose = Verbose.Verbosity()
-# verbose.setOutput('console')
-# verbose.printOut()
-
 
 # Python version check
 try:

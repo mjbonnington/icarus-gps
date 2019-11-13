@@ -472,7 +472,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		# Disable submit button if shot is not set (temporary)
 		try:
-			os.environ['SHOT']
+			os.environ['IC_SHOT']
 			self.ui.jobSubmit_toolButton.setEnabled(True)
 		except KeyError:
 			self.ui.jobSubmit_toolButton.setEnabled(False)

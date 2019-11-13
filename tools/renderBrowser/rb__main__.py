@@ -112,7 +112,7 @@ class renderBrowserApp(QtGui.QMainWindow):
 					renderLayerItem.setText(0, '%s (%d)' % (renderLayerDir, len(renderPasses)))
 					renderLayerItem.setText(2, 'layer')
 					#renderLayerItem.setText(3, os.path.join(renderPath, renderLayerDir))
-					renderLayerItem.setText(3, os_wrapper.relativePath(os.path.join(renderPath, renderLayerDir), 'SHOTPATH'))
+					renderLayerItem.setText(3, os_wrapper.relativePath(os.path.join(renderPath, renderLayerDir), 'IC_SHOTPATH'))
 					self.ui.renderPbl_treeWidget.addTopLevelItem(renderLayerItem)
 					renderLayerItem.setExpanded(True)
 
@@ -129,7 +129,7 @@ class renderBrowserApp(QtGui.QMainWindow):
 							renderPassItem.setForeground(1, QtGui.QBrush(QtGui.QColor("#f92672")))
 						renderPassItem.setText(2, ext.split('.', 1)[1])
 						#renderPassItem.setText(3, path)
-						renderPassItem.setText(3, os_wrapper.relativePath(os.path.join(renderPath, renderLayerDir, renderPass), 'SHOTPATH'))
+						renderPassItem.setText(3, os_wrapper.relativePath(os.path.join(renderPath, renderLayerDir, renderPass), 'IC_SHOTPATH'))
 						self.ui.renderPbl_treeWidget.addTopLevelItem(renderPassItem)
 
 			# Resize columns

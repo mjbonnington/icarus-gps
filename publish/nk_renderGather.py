@@ -30,7 +30,7 @@ def gather(gatherPath):
 				fileName = 'GPS_Render_Read'
 
 			# Make file path relative
-			# filePath = os_wrapper.relativePath(filePath, 'SHOTPUBLISHDIR', tokenFormat='nuke')
+			# filePath = os_wrapper.relativePath(filePath, 'IC_SHOTPUBLISHDIR', tokenFormat='nuke')
 
 			readNode = nuke.createNode('Read', 'name %s' % fileName)
 			readNode.knob('file').setValue(filePath)

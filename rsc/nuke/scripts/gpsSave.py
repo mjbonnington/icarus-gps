@@ -26,7 +26,7 @@ def updateRecentFilesMenu(menu):
 
 	# Re-populate the items in the pop-up menu
 	for item in fileLs:
-		openRecentCmdStr = 'nuke.scriptOpen(\"%s%s\")' %(os.environ["SHOTPATH"], item)
+		openRecentCmdStr = 'nuke.scriptOpen(\"%s%s\")' %(os.environ["IC_SHOTPATH"], item)
 		menu.addCommand(item.replace('/', '\/'), openRecentCmdStr.replace('\\', '/')) # forward slashes need escaping to prevent Nuke from interpreting them as sub-menus
 
 	# If recent file list contains no entries, disable menu
@@ -64,7 +64,7 @@ def getWorkingScriptName():
 		#spliting path and getting file name only
 		scriptName = os.path.split(workingScript)[1]
 		#getting rid of all naming conventions to get script name only
-		scriptName = scriptName.split('%s_' % os.environ['SHOT'])[-1]
+		scriptName = scriptName.split('%s_' % os.environ['IC_SHOT'])[-1]
 		version = scriptName.split('_')[-1]
 		scriptName = scriptName.split('_%s' % version)[0]
 		#getting rid of padding and extension
@@ -109,7 +109,7 @@ def save(incr=False, saveAs=False):
 		version = 1
 		while not fileSaved:
 			#file path
-			nkPath = os.path.join(os.environ['NUKESCRIPTSDIR'], '%s_%s_v%03d.nk' % (os.environ['SHOT'], scriptName, version))
+			nkPath = os.path.join(os.environ['NUKESCRIPTSDIR'], '%s_%s_v%03d.nk' % (os.environ['IC_SHOT'], scriptName, version))
 			#versioning
 			if os.path.isfile( nkPath ):
 				version += 1

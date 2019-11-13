@@ -11,7 +11,7 @@
 
 
 import os
-from . import mayaOps
+from rsc.maya.scripts import mayaOps
 
 
 def newMayaScene():
@@ -53,7 +53,7 @@ def saveMayaSceneAs():
 # 	""" NOTE - this function doesn't appear to be called from anywhere. Could be redundant? Compare with mayaOps.update()
 # 	"""
 # 	import sys
-# 	shotDataPath = os.environ['SHOTDATA']
+# 	shotDataPath = os.environ['IC_SHOTDATA']
 # 	sys.path.append(shotDataPath)
 # 	import shotData, mayaOps
 # 	reload(shotData)

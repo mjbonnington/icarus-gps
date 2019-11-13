@@ -32,12 +32,23 @@ def launch(app=None, executable=None, flags=None):
 	###################################
 
 	elif app == 'Maya':
+		os.environ['PYTHONPATH'] = os.environ['MAYA_SCRIPT_PATH']
 		executable = os.environ['MAYAVERSION']
 		cmdStr = '"%s" -proj "%s"' %(executable, os.environ['MAYADIR'])
 
+	elif app == 'Nuke':
+		# Workaround to allow Nuke 11 to launch correctly - delete PYTHONPATH
+		# environment variable
+		try:
+			os.environ.pop('PYTHONPATH')
+			verbose.message("Deleted 'PYTHONPATH' environment variable.")
+		except KeyError:
+			pass
+		cmdStr = '"%s"' % executable
+
 	elif app == 'Bridge':
 		executable = os.environ['BRIDGEVERSION']
-		cmdStr = '"%s" "%s"' %(executable, os.environ['SHOTPATH'])
+		cmdStr = '"%s" "%s"' %(executable, os.environ['IC_SHOTPATH'])
 
 	elif app == 'HieroPlayer':
 		try:
@@ -100,7 +111,7 @@ def djv():
 	"""
 	verbose.launchApp('djv_view')
 	from . import djvOps
-	# djvOps.viewer(os.environ['SHOTPATH'])
+	# djvOps.viewer(os.environ['IC_SHOTPATH'])
 	djvOps.viewer()
 
 

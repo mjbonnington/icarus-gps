@@ -57,7 +57,7 @@ class gpsCreateCamera():
 
 		mc.optionMenuGrp("cameraPresets", label="Camera Preset: ")
 		mc.menuItem(label="Default")
-		mc.menuItem(label=os.environ['SHOT'])
+		mc.menuItem(label=os.environ['IC_SHOT'])
 		for item in self.cp.getPresets():
 			mc.menuItem(label=item)
 		mc.separator(width=396, height=12, style="in")
@@ -109,10 +109,10 @@ class gpsCreateCamera():
 			camSh = cam[1]; cam = cam[0]
 
 		# If the camera to be created is the shot camera, read shot data and apply values
-		if camera == os.environ['SHOT']:
+		if camera == os.environ['IC_SHOT']:
 			from shared import settingsData
 			sd = settingsData.SettingsData()
-			shotDataLoaded = sd.loadXML(os.path.join(os.environ['SHOTDATA'], 'shotData.xml'), use_template=False)
+			shotDataLoaded = sd.loadXML(os.path.join(os.environ['IC_SHOTDATA'], 'shotData.xml'), use_template=False)
 
 			mc.setAttr(camSh+'.horizontalFilmAperture', float(sd.getValue('camera', 'filmbackWidth')) / 25.4)
 			mc.setAttr(camSh+'.verticalFilmAperture', float(sd.getValue('camera', 'filmbackHeight')) / 25.4)

@@ -21,7 +21,7 @@ from Qt import QtCore, QtGui, QtWidgets
 # Import custom modules
 import ui_template as UI
 
-import appConnect
+from . import appConnect
 from shared import djvOps  # TODO: Change to viewer-agnostic wrapper
 # from shared import verbose
 

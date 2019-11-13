@@ -36,7 +36,7 @@ def publish(pblTo, slShot, subtype, pblNotes):
 		return
 
 	# Define main variables
-	shot_ = os.environ['SHOT']
+	shot_ = os.environ['IC_SHOT']
 	assetType = 'ic_camera'
 	subsetName = ''
 	prefix = ''

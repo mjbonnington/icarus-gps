@@ -378,7 +378,7 @@ iconTextButton -image1 "icarus.png"
                launchIcarusButton;
 
 // Print current job and shot info
-string $jobInfo = `getenv JOB` + " - " + `getenv SHOT`;
+string $jobInfo = `getenv IC_JOB` + " - " + `getenv IC_SHOT`;
 text -label "   ";
 text -label $jobInfo -h 27;
 setParent -menu ..;

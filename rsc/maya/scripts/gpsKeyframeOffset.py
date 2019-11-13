@@ -6,7 +6,7 @@
 
 import maya.cmds as mc
 import random
-from . import gpsSelectionSort
+from rsc.maya.scripts import gpsSelectionSort
 
 
 class gpsKeyframeOffset():

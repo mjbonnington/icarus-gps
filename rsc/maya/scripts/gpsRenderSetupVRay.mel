@@ -47,8 +47,8 @@ global proc gpsRenderSetupVRay.loadSettings()
 	// Setup frame stamp burn-in
 	setAttr "vraySettings.stamp_on" 1;
 	vray vfbControl -stamp true;
-	//string $job=`getenv JOB`;
-	//string $shot=`getenv SHOT`;
+	//string $job=`getenv IC_JOB`;
+	//string $shot=`getenv IC_SHOT`;
 	//string $user=`getenv IC_USERNAME`;
 	//string $stamp="Frame: %frame Render time: %rendertime Camera: %camera Job: " + $job + " - " + $shot;
 	//string $stamp="(V-Ray for Maya %vrayversion)     size: %wx%h     frame: %frame     render time: %rendertime     camera: %camera     layer: %renderlayer     job: " + $job + "     shot: " + $shot + "     user: " + $user;
@@ -123,7 +123,7 @@ global proc gpsRenderSetupVRay.loadSettings()
 global proc gpsRenderSetupVRay.setOutputPath()
 {
 	string $user = `getenv "IC_USERNAME"`;
-	string $shot = `getenv "SHOT"`;
+	string $shot = `getenv "IC_SHOT"`;
 	// Maya render globals Common tab...
 //	setAttr -type "string" "defaultRenderGlobals.ifp" ($user + "/<Scene>/<RenderLayer>/" + $shot + "_<RenderLayer>");
 	// V-Ray has its own Common tab...

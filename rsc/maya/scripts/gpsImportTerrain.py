@@ -13,7 +13,7 @@ import math, time, re, os
 import numpy as np
 import maya.cmds as mc
 import maya.mel as mel
-#from . import gpsCommon as gps
+#from rsc.maya.scripts import gpsCommon as gps
 
 
 class terrainMap():
