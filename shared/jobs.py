@@ -91,7 +91,7 @@ class Jobs(xmlData.XMLData):
 				existingDir = os.path.join(platesDir, directory)
 				if os.path.isdir(existingDir) and not os.listdir(existingDir):
 					if directory not in plates:
-						os_wrapper.recurseRemove(existingDir)
+						os_wrapper.remove(existingDir)
 
 			# Create plate directory named with resolution
 			for directory in plates:

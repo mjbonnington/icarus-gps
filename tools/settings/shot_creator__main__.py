@@ -55,13 +55,14 @@ class ShotCreatorDialog(QtWidgets.QDialog, UI.TemplateUI):
 		super(ShotCreatorDialog, self).__init__(parent)
 		self.parent = parent
 
-		xml_data = os.path.join(os.environ['IC_USERPREFS'], 'shotCreator.xml')
+		# xml_data = os.path.join(os.environ['IC_USERPREFS'], 'shotCreator.xml')
+		xml_data = os.path.join(os.environ['IC_USERPREFS'], 'shotcreator_prefs.json')
 
 		self.setupUI(window_object=WINDOW_OBJECT, 
 		             window_title=WINDOW_TITLE, 
 		             ui_file=UI_FILE, 
 		             stylesheet=STYLESHEET, 
-		             xml_data=xml_data, 
+		             prefs_file=xml_data, 
 		             store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
 
 		# Set window flags

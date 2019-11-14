@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# rename_frame_view.py
+# frameview.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2018-2019
@@ -27,7 +27,7 @@ cfg['window_title'] = "Frame View"
 cfg['window_object'] = "frameViewUI"
 
 # Set the UI and the stylesheet
-cfg['ui_file'] = "rename_frame_view_ui.ui"
+cfg['ui_file'] = "sequencerename_frameview.ui"
 cfg['stylesheet'] = "style.qss"  # Set to None to use the parent app's stylesheet
 
 # Other options

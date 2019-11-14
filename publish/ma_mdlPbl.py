@@ -152,7 +152,7 @@ def publish(pblTo, slShot, subtype, textures, pblNotes):
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		pathToPblAsset = ''
-		os_wrapper.recurseRemove(pblDir) # was commented out?
+		os_wrapper.remove(pblDir) # was commented out?
 		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += verbose.pblRollback()
 

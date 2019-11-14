@@ -1,19 +1,24 @@
 #!/usr/bin/python
 
-# [Icarus] rename.py
+# rename.py
 #
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2014-2017 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2014-2019
 #
 # Functions for renaming and renumbering.
 
 
 import re
-
 from . import verbose
 
 
-def replaceTextRE(origName, findStr, replaceStr, ignoreCase=False, regex=True, quiet=True):
+def replaceTextRE(
+	origName, 
+	findStr, 
+	replaceStr, 
+	ignoreCase=False, 
+	regex=True, 
+	quiet=True):
 	""" Find and replace using regular expressions.
 	"""
 	try:
@@ -41,7 +46,13 @@ def replaceTextRE(origName, findStr, replaceStr, ignoreCase=False, regex=True, q
 			verbose.warning("Regular expression is invalid.")
 
 
-def renumber(numLs, start=1, step=1, padding=4, preserve=True, autopad=True):
+def renumber(
+	numLs, 
+	start=1, 
+	step=1, 
+	padding=4, 
+	preserve=True, 
+	autopad=True):
 	""" Renumber objects.
 	"""
 	newNumLs = []
@@ -55,8 +66,6 @@ def renumber(numLs, start=1, step=1, padding=4, preserve=True, autopad=True):
 			maxNum = start + (step*(len(numLs)-1))
 
 		padding = len(str(maxNum))
-
-	#print(padding)
 
 	# Regenerate lists
 	index = start
@@ -73,4 +82,3 @@ def renumber(numLs, start=1, step=1, padding=4, preserve=True, autopad=True):
 			index += step
 
 	return newNumLs, padding
-

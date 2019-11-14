@@ -35,7 +35,7 @@ from shared import verbose
 # ----------------------------------------------------------------------------
 
 # The vendor string must be set in order to store window geometry
-VENDOR = "Gramercy Park Studios"
+VENDOR = os.environ['IC_VENDOR']
 
 
 # ----------------------------------------------------------------------------
@@ -64,7 +64,7 @@ except ImportError:
 	pass
 
 # ----------------------------------------------------------------------------
-# Settings data class
+# Settings data class for JSON prefs data
 # ----------------------------------------------------------------------------
 
 class SettingsData(object):
@@ -129,26 +129,50 @@ class TemplateUI(object):
 		ui_file="", 
 		stylesheet="", 
 		xml_data="", 
+		prefs_file=None, 
 		store_window_geometry=True):
 		""" Setup the UI.
 		"""
 		info_str = "Window object: %s Parent: %s" %(self, self.parent)
 		verbose.print_(info_str)
 
+		# Instantiate XML data class
+		if xml_data:
+			self.prefs = settingsData.SettingsData()
+			self.prefs.loadXML(xml_data)
+		# Instantiate preferences data file
+		else:
+			self.prefs = SettingsData(prefs_file)
+
 		# Define some global variables
 		self.currentAttrStr = ""
 
-		# Instantiate XML data class
-		self.xd = settingsData.SettingsData()
-		if xml_data:
-			xd_load = self.xd.loadXML(xml_data)
-
 		# Load UI & stylesheet
-		if ui_file:
-			uifile = os.path.join(os.environ['IC_FORMSDIR'], ui_file)
-			self.ui = QtCompat.loadUi(uifile, self)
-		self.stylesheet = stylesheet
-		self.reloadStyleSheet()
+		found_ui_file = self.checkFilePath(
+			ui_file, searchpath=[os.environ['IC_FORMSDIR'], ])
+		if os.path.isfile(found_ui_file):
+			self.ui = QtCompat.loadUi(found_ui_file, self)
+		else:
+			verbose.error("UI file does not exist: %s" % found_ui_file)
+
+		# # Store some system UI colours & define colour palette
+		self.col = {}
+		self.col['text'] = QtGui.QColor(204, 204, 204)
+		self.col['disabled'] = QtGui.QColor(102, 102, 102)
+		self.col['highlighted-text'] = QtGui.QColor(255, 255, 255)
+		# tmpWidget = QtWidgets.QWidget()
+		# self.col['sys-window'] = tmpWidget.palette().color(QtGui.QPalette.Window)
+		# self.col['sys-highlight'] = tmpWidget.palette().color(QtGui.QPalette.Highlight)
+		# self.col['window'] = self.col['sys-window']
+		# self.col['highlight'] = self.col['sys-highlight']
+		self.col['window'] = QtGui.QColor('#444444') #self.col['sys-window'] # load from settings
+		self.col['highlight'] = QtGui.QColor('#78909c') #self.col['sys-highlight'] # load from settings
+		self.computeUIPalette()
+
+		# Load and set stylesheet
+		self.stylesheet = self.checkFilePath(
+			stylesheet, searchpath=[os.environ['IC_FORMSDIR'], ])
+		self.loadStyleSheet()
 
 		# Set window title
 		self.setObjectName(window_object)
@@ -193,66 +217,145 @@ class TemplateUI(object):
 		# 	self.move(self.parent.frameGeometry().center() - self.frameGeometry().center())
 
 		# Set up keyboard shortcuts
+		self.shortcutUnloadStyleSheet = QtWidgets.QShortcut(self)
+		self.shortcutUnloadStyleSheet.setKey('Ctrl+Shift+R')
+		self.shortcutUnloadStyleSheet.activated.connect(self.unloadStyleSheet)
+
 		self.shortcutReloadStyleSheet = QtWidgets.QShortcut(self)
-		self.shortcutReloadStyleSheet.setKey('Ctrl+Shift+R')
-		self.shortcutReloadStyleSheet.activated.connect(self.reloadStyleSheet)
+		self.shortcutReloadStyleSheet.setKey('Ctrl+R')
+		self.shortcutReloadStyleSheet.activated.connect(self.loadStyleSheet)
+
+
+	def getInfo(self):
+		""" Return some version info about Python, Qt, binding, etc.
+		"""
+		info = {}
+		info['Python'] = "%d.%d.%d" %(sys.version_info[0], sys.version_info[1], sys.version_info[2])
+		info[__binding__] = __binding_version__
+		info['Qt'] = QtCore.qVersion()
+		info['OS'] = platform.system()
+		info['Environment'] = os.environ['IC_ENV']
+
+		return info
+
+
+	def promptDialog(self, message, title="Message", infotext=None, conf=False, modal=True):
+		""" Opens a message box dialog.
+		"""
+		message_box = QtWidgets.QMessageBox(parent=self)
+		message_box.setWindowTitle(title)
+
+		if infotext and infotext != '':
+			text = "{}\n\n{}".format(message, "\n".join(textwrap.wrap(infotext, width=100)))
+		else:
+			text = message
+		message_box.setText(text)
+
+		if conf:
+			message_box.setStandardButtons(QtWidgets.QMessageBox.Ok)
+		else:
+			message_box.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
+		message_box.setDefaultButton(QtWidgets.QMessageBox.Ok);
+
+		if message_box.exec_() == message_box.Cancel:
+			return False
+		else:
+			return True
 
 
 	def fileDialog(self, startingDir, fileFilter='All files (*.*)'):
 		""" Opens a dialog from which to select a single file.
-
-			The env check puts the main window in the background so dialog pop
-			up can return properly when running inside certain applications.
-			The window flags bypass a Mac bug that made the dialog always
-			appear under the Icarus window. This is ignored in a Linux env.
 		"""
-		envOverride = ['MAYA', 'NUKE']
-		if os.environ['IC_ENV'] in envOverride:
-			if os.environ['IC_RUNNING_OS'] == "MacOS":
-				self.setWindowFlags(QtCore.Qt.WindowStaysOnBottomHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
-				self.show()
-			dialog = QtWidgets.QFileDialog.getOpenFileName(self, self.tr('Files'), startingDir, fileFilter)
-			if os.environ['IC_RUNNING_OS'] == "MacOS":
-				self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
-				self.show()
-		else:
-			dialog = QtWidgets.QFileDialog.getOpenFileName(self, self.tr('Files'), startingDir, fileFilter)
+		dialog = QtWidgets.QFileDialog.getOpenFileName(self, self.tr('Files'), startingDir, fileFilter)
 
-		return dialog[0]
+		try:
+			return dialog[0]
+		except IndexError:
+			return None
 
 
 	def folderDialog(self, startingDir):
 		""" Opens a dialog from which to select a folder.
-
-			The env check puts the main window in the background so dialog pop
-			up can return properly when running inside certain applications.
-			The window flags bypass a Mac bug that made the dialog always
-			appear under the Icarus window. This is ignored in a Linux env.
 		"""
-		envOverride = ['MAYA', 'NUKE']
-		if os.environ['IC_ENV'] in envOverride:
-			if os.environ['IC_RUNNING_OS'] == "MacOS":
-				self.setWindowFlags(QtCore.Qt.WindowStaysOnBottomHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
-				self.show()
-			dialog = QtWidgets.QFileDialog.getExistingDirectory(self, self.tr('Directory'), startingDir, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
-			if os.environ['IC_RUNNING_OS'] == "MacOS":
-				self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
-				self.show()
-		else:
-			dialog = QtWidgets.QFileDialog.getExistingDirectory(self, self.tr('Directory'), startingDir, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
+		dialog = QtWidgets.QFileDialog.getExistingDirectory(self, self.tr('Directory'), startingDir, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
 
 		return dialog
+
+
+	# def fileDialog(self, startingDir, fileFilter='All files (*.*)'):
+	# 	""" Opens a dialog from which to select a single file.
+
+	# 		The env check puts the main window in the background so dialog pop
+	# 		up can return properly when running inside certain applications.
+	# 		The window flags bypass a Mac bug that made the dialog always
+	# 		appear under the Icarus window. This is ignored in a Linux env.
+	# 	"""
+	# 	envOverride = ['MAYA', 'NUKE']
+	# 	if os.environ['IC_ENV'] in envOverride:
+	# 		if os.environ['IC_RUNNING_OS'] == "MacOS":
+	# 			self.setWindowFlags(QtCore.Qt.WindowStaysOnBottomHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+	# 			self.show()
+	# 		dialog = QtWidgets.QFileDialog.getOpenFileName(self, self.tr('Files'), startingDir, fileFilter)
+	# 		if os.environ['IC_RUNNING_OS'] == "MacOS":
+	# 			self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+	# 			self.show()
+	# 	else:
+	# 		dialog = QtWidgets.QFileDialog.getOpenFileName(self, self.tr('Files'), startingDir, fileFilter)
+
+	# 	return dialog[0]
+
+
+	# def folderDialog(self, startingDir):
+	# 	""" Opens a dialog from which to select a folder.
+
+	# 		The env check puts the main window in the background so dialog pop
+	# 		up can return properly when running inside certain applications.
+	# 		The window flags bypass a Mac bug that made the dialog always
+	# 		appear under the Icarus window. This is ignored in a Linux env.
+	# 	"""
+	# 	envOverride = ['MAYA', 'NUKE']
+	# 	if os.environ['IC_ENV'] in envOverride:
+	# 		if os.environ['IC_RUNNING_OS'] == "MacOS":
+	# 			self.setWindowFlags(QtCore.Qt.WindowStaysOnBottomHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+	# 			self.show()
+	# 		dialog = QtWidgets.QFileDialog.getExistingDirectory(self, self.tr('Directory'), startingDir, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
+	# 		if os.environ['IC_RUNNING_OS'] == "MacOS":
+	# 			self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowCloseButtonHint)
+	# 			self.show()
+	# 	else:
+	# 		dialog = QtWidgets.QFileDialog.getExistingDirectory(self, self.tr('Directory'), startingDir, QtWidgets.QFileDialog.DontResolveSymlinks | QtWidgets.QFileDialog.ShowDirsOnly)
+
+	# 	return dialog
+
+
+	def colorPickerDialog(self, current_color=None):
+		""" Opens a system dialog for choosing a colour.
+			Return the selected colour as a QColor object, or None if the
+			dialog is cancelled.
+		"""
+		color_dialog = QtWidgets.QColorDialog()
+		#color_dialog.setOption(QtWidgets.QColorDialog.DontUseNativeDialog)
+
+		# Set current colour
+		if current_color is not None:
+			color_dialog.setCurrentColor(current_color)
+
+		# Only return a color if valid / dialog accepted
+		if color_dialog.exec_() == color_dialog.Accepted:
+			color = color_dialog.selectedColor()
+			return color
 
 
 	# ------------------------------------------------------------------------
 	# Widget handlers
 
-	def setupWidgets(self, 
-		             parentObject, 
-		             forceCategory=None, 
-		             inherit=None, 
-		             storeProperties=True, 
-		             updateOnly=False):
+	def setupWidgets(
+		self, 
+		parentObject, 
+		forceCategory=None, 
+		inherit=None, 
+		storeProperties=True, 
+		updateOnly=False):
 		""" Set up all the child widgets of the specified parent object.
 
 			If 'forceCategory' is specified, this will override the category
@@ -294,12 +397,9 @@ class TemplateUI(object):
 					category = self.findCategory(widget)
 				if category:
 					widget.setProperty('xmlCategory', category)
-					#value = self.xd.getValue(category, attr)
 
-					if inherit is None:
-						value = self.xd.getValue(category, attr)
-					else:
-						value = self.xd.getValue(category, attr)
+					if inherit:
+						value = self.prefs.getValue(category, attr)
 						if value == "":
 							value = inherit.getValue(category, attr)
 
@@ -314,11 +414,22 @@ class TemplateUI(object):
 							# actionRemoveOverride = QtWidgets.QAction("Remove override", None)
 							# actionRemoveOverride.triggered.connect(self.removeOverrides)
 							# widget.addAction(actionRemoveOverride)
+					else:
+						value = self.prefs.getValue(category, attr)
 
+
+					# Sliders...
+					if isinstance(widget, QtWidgets.QSlider):
+						if value is not None:
+							widget.setValue(int(value))
+						if storeProperties:
+							self.storeValue(category, attr, widget.value())
+						if not updateOnly:
+							widget.valueChanged.connect(self.storeSliderValue)
 
 					# Spin boxes...
 					if isinstance(widget, QtWidgets.QSpinBox):
-						if value is not "":
+						if value is not None:
 							widget.setValue(int(value))
 						if storeProperties:
 							self.storeValue(category, attr, widget.value())
@@ -327,7 +438,7 @@ class TemplateUI(object):
 
 					# Double spin boxes...
 					elif isinstance(widget, QtWidgets.QDoubleSpinBox):
-						if value is not "":
+						if value is not None:
 							widget.setValue(float(value))
 						if storeProperties:
 							self.storeValue(category, attr, widget.value())
@@ -336,7 +447,7 @@ class TemplateUI(object):
 
 					# Line edits...
 					elif isinstance(widget, QtWidgets.QLineEdit):
-						if value is not "":
+						if value is not None:
 							widget.setText(value)
 						if storeProperties:
 							self.storeValue(category, attr, widget.text())
@@ -346,7 +457,7 @@ class TemplateUI(object):
 
 					# Plain text edits...
 					elif isinstance(widget, QtWidgets.QPlainTextEdit):
-						if value is not "":
+						if value is not None:
 							widget.setPlainText(value)
 						if storeProperties:
 							self.storeValue(category, attr, widget.toPlainText())
@@ -355,10 +466,10 @@ class TemplateUI(object):
 
 					# Check boxes...
 					elif isinstance(widget, QtWidgets.QCheckBox):
-						if value is not "":
-							if value == "True":
+						if value is not None:
+							if value == True:
 								widget.setCheckState(QtCore.Qt.Checked)
-							elif value == "False":
+							elif value == False:
 								widget.setCheckState(QtCore.Qt.Unchecked)
 						if storeProperties:
 							self.storeValue(category, attr, self.getCheckBoxValue(widget))
@@ -367,7 +478,7 @@ class TemplateUI(object):
 
 					# Radio buttons...
 					elif isinstance(widget, QtWidgets.QRadioButton):
-						if value is not "":
+						if value is not None:
 							widget.setAutoExclusive(False)
 							if value == widget.text():
 								widget.setChecked(True)
@@ -382,36 +493,62 @@ class TemplateUI(object):
 
 					# Combo boxes...
 					elif isinstance(widget, QtWidgets.QComboBox):
-						if value is not "":
+						# Add items if history is enabled
+						if widget.property('storeHistory'):
+							widget.setInsertPolicy(widget.InsertAtTop)
+							history = self.prefs.getValue(category, "%s_history" % attr)
+							if history:
+								widget.addItems(history)
+						# Add/set current item
+						if value is not None:
 							if widget.findText(value) == -1:
-								widget.addItem(value)
+								widget.insertItem(0, value)
 							widget.setCurrentIndex(widget.findText(value))
+						# Store value in external file
 						if storeProperties:
 							self.storeValue(category, attr, widget.currentText())
+						# Connect signals & slots
 						if not updateOnly:
+							# widget.currentTextChanged.connect(self.storeComboBoxValue)
 							if widget.isEditable():
 								widget.editTextChanged.connect(self.storeComboBoxValue)
 							else:
 								widget.currentIndexChanged.connect(self.storeComboBoxValue)
+
+					# Enable colour chooser buttons...
+					elif isinstance(widget, QtWidgets.QToolButton):
+						if widget.property('colorChooser'):
+							if value is not None:
+								widget.setStyleSheet("QWidget { background-color: %s }" % value)
+							# if storeProperties:
+							# 	self.storeValue(category, attr, widget.currentText())
+							if not updateOnly:
+								widget.clicked.connect(self.storeColor)
 
 
 	def findCategory(self, widget):
 		""" Recursively check the parents of the given widget until a custom
 			property 'xmlCategory' is found.
 		"""
+		print("widget: " + widget.objectName())
 		if widget.property('xmlCategory'):
 			#verbose.print_("Category '%s' found for '%s'." %(widget.property('xmlCategory'), widget.objectName()))
 			return widget.property('xmlCategory')
 		else:
-			# Stop iterating if the widget's parent in the main window...
-			if isinstance(widget.parent(), QtWidgets.QMainWindow):
-				verbose.warning("No category could be found for '%s'. The widget's value cannot be stored." %self.base_widget)
-				return None
-			else:
+			# # Stop iterating if the widget's parent is the top window...
+			# if isinstance(widget.parent(), QtWidgets.QMainWindow) \
+			# or isinstance(widget.parent(), QtWidgets.QDialog):
+			# 	verbose.warning("No category could be found for '%s'. The widget's value cannot be stored." %self.base_widget)
+			# 	return None
+			# else:
+			try:
 				return self.findCategory(widget.parent())
+			except TypeError:
+				verbose.warning("No category could be found for '%s'. The widget's value cannot be stored." %self.base_widget)
+				return "none"
 
 
-	def addContextMenu(self, widget, name, command, icon=None):
+	def addContextMenu(self, widget, name, command, icon=None, tintNormal=True):
 		""" Add context menu item to widget.
 
 			'widget' should be a Push Button or Tool Button.
@@ -420,14 +557,12 @@ class TemplateUI(object):
 			'icon' is a pixmap to use for the item's icon (optional).
 		"""
 		widget.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-		actionName = "action%s" %os_wrapper.sanitize(name, pattern=r"[^\w]", replace="_")
+		# Remove illegal characters from name
+		actionName = "action%s" %re.sub(r"[^\w]", "_", name)
 
 		action = QtWidgets.QAction(name, None)
 		if icon:
-			actionIcon = QtGui.QIcon()
-			actionIcon.addPixmap(QtGui.QPixmap(os_wrapper.absolutePath("$IC_FORMSDIR/rsc/%s.png" %icon)), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-			actionIcon.addPixmap(QtGui.QPixmap(os_wrapper.absolutePath("$IC_FORMSDIR/rsc/%s_disabled.png" %icon)), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-			action.setIcon(actionIcon)
+			action.setIcon(self.iconSet(icon, tintNormal=tintNormal))
 		action.setObjectName(actionName)
 		action.triggered.connect(command)
 		widget.addAction(action)
@@ -436,6 +571,68 @@ class TemplateUI(object):
 		# (won't work without it for some reason)
 		exec_str = "self.%s = action" %actionName
 		exec(exec_str)
+
+
+	def iconSet(self, icon_name, tintNormal=True):
+		""" Return a QIcon using the specified image.
+			Generate tinted pixmaps for normal/disabled/active/selected
+			states.
+			tintNormal (bool): whether to tint the normal state icon or leave
+			it as-is.
+		"""
+		icon = QtGui.QIcon()
+		if tintNormal:
+			icon.addPixmap(
+				self.iconTint(icon_name, self.col['text']), 
+				QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		else:
+			icon.addPixmap(
+				self.iconTint(icon_name), 
+				QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		icon.addPixmap(
+			self.iconTint(icon_name, self.col['disabled']), 
+			QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+		icon.addPixmap(
+			self.iconTint(icon_name, self.col['highlighted-text']), 
+			QtGui.QIcon.Active, QtGui.QIcon.Off)
+		icon.addPixmap(
+			self.iconTint(icon_name, self.col['highlighted-text']), 
+			QtGui.QIcon.Selected, QtGui.QIcon.Off)
+		return icon
+
+
+	def iconTint(self, icon_name, tint=None):
+		""" Return a QIcon using the specified PNG image.
+			If tint (QColor) is given, tint the image with the given color.
+		"""
+		search_locations = [
+			'icons', 
+			os_wrapper.absolutePath('$IC_FORMSDIR/icons')
+		]
+
+		if icon_name.endswith('svg'):
+			w, h = 64, 64
+			svg_renderer = QtSvg.QSvgRenderer(self.checkFilePath(
+				icon_name, searchpath=search_locations))
+			image = QtGui.QImage(w, h, QtGui.QImage.Format_ARGB32)
+			image.fill(0x00000000)  # Set the ARGB to 0 to prevent rendering artifacts
+			svg_renderer.render(QtGui.QPainter(image))
+			pixmap = QtGui.QPixmap.fromImage(image)
+		else:
+			pixmap = QtGui.QPixmap(self.checkFilePath(
+				icon_name, searchpath=search_locations))
+
+		# Initialize painter to draw on a pixmap and set composition mode
+		if tint is not None:
+			painter = QtGui.QPainter()
+			painter.begin(pixmap)
+			painter.setCompositionMode(painter.CompositionMode_SourceIn)
+			painter.setBrush(tint)
+			painter.setPen(tint)
+			painter.drawRect(pixmap.rect())
+			painter.end()
+
+		return pixmap
 
 
 	def toggleExpertWidgets(self, isExpertMode, parentObject):
@@ -474,7 +671,7 @@ class TemplateUI(object):
 		labels = []
 		labelWidths = []
 
-		# Find all labels
+		# Find all labels in form layouts
 		for layout in parentObject.findChildren(QtWidgets.QFormLayout):
 			# print(layout.objectName())
 			items = (layout.itemAt(i) for i in range(layout.count()))
@@ -482,6 +679,18 @@ class TemplateUI(object):
 				widget = item.widget()
 				if isinstance(widget, QtWidgets.QLabel):
 					labels.append(widget)
+
+		# Find labels in first column of grid layouts
+		for layout in parentObject.findChildren(QtWidgets.QGridLayout):
+			# print(layout.objectName())
+			items = (layout.itemAt(i) for i in range(layout.count()))
+			for item in items:
+				widget = item.widget()
+				if isinstance(widget, QtWidgets.QLabel):
+					# Only items in first column (there's probably a neater
+					# way to do this)
+					if layout.getItemPosition(layout.indexOf(widget))[1] == 0:
+						labels.append(widget)
 
 		# Find label widths
 		for label in labels:
@@ -497,6 +706,32 @@ class TemplateUI(object):
 			for label in labels:
 				label.setFixedWidth(maxWidth+padding)
 				label.setAlignment(QtCore.Qt.AlignVCenter|QtCore.Qt.AlignRight)
+				label.setProperty('formLabel', True)  # Set custom property for styling
+
+
+	def toggleFormField(self, parentObject, field, enabled):
+		""" Enable/disable a field in a form layout including its label.
+		"""
+		layout = parentObject.findChildren(QtWidgets.QFormLayout)[0]
+		label = layout.labelForField(field)
+
+		field.setEnabled(enabled)
+		label.setEnabled(enabled)
+
+
+	def hideFormField(self, parentObject, field):
+		""" Hide a field in a form layout including its label, and close up
+			the remaining empty space.
+		"""
+		layout = parentObject.findChildren(QtWidgets.QFormLayout)[0]
+		label = layout.labelForField(field)
+
+		field.hide()
+		label.hide()
+		layout.removeWidget(field)
+		layout.removeWidget(label)
+
+		parentObject.toggled.emit(True)  # Force refresh
 
 
 	def getCheckBoxValue(self, checkBox):
@@ -530,11 +765,33 @@ class TemplateUI(object):
 
 
 	# @QtCore.Slot()
+	def storeColor(self):
+		""" Get the colour from a dialog opened from a colour chooser button.
+		"""
+		widget = self.sender()
+
+		# Get current colour and pass to function
+		current_color = widget.palette().color(QtGui.QPalette.Background)
+		color = self.colorPickerDialog(current_color)
+		if color:
+			widget.setStyleSheet("QWidget { background-color: %s }" %color.name())
+			category, attr = self.getWidgetMeta(self.sender())
+			self.storeValue(category, attr, color.name())
+
+
+	# @QtCore.Slot()
+	def storeSliderValue(self):
+		""" Get the value from a Slider and store in XML data.
+		"""
+		category, attr = self.getWidgetMeta(self.sender())
+		value = self.sender().value()
+		self.storeValue(category, attr, value)
+
+
+	# @QtCore.Slot()
 	def storeSpinBoxValue(self):
 		""" Get the value from a Spin Box and store in XML data.
 		"""
-		# category = self.sender().property('xmlCategory')
-		# attr = self.sender().property('xmlTag')
 		category, attr = self.getWidgetMeta(self.sender())
 		value = self.sender().value()
 		self.storeValue(category, attr, value)
@@ -544,8 +801,6 @@ class TemplateUI(object):
 	def storeLineEditValue(self):
 		""" Get the value from a Line Edit and store in XML data.
 		"""
-		# category = self.sender().property('xmlCategory')
-		# attr = self.sender().property('xmlTag')
 		category, attr = self.getWidgetMeta(self.sender())
 		value = self.sender().text()
 		self.storeValue(category, attr, value)
@@ -555,8 +810,6 @@ class TemplateUI(object):
 	def storeTextEditValue(self):
 		""" Get the value from a Plain Text Edit and store in XML data.
 		"""
-		# category = self.sender().property('xmlCategory')
-		# attr = self.sender().property('xmlTag')
 		category, attr = self.getWidgetMeta(self.sender())
 		value = self.sender().toPlainText()
 		self.storeValue(category, attr, value)
@@ -566,8 +819,6 @@ class TemplateUI(object):
 	def storeCheckBoxValue(self):
 		""" Get the value from a Check Box and store in XML data.
 		"""
-		# category = self.sender().property('xmlCategory')
-		# attr = self.sender().property('xmlTag')
 		category, attr = self.getWidgetMeta(self.sender())
 		value = self.getCheckBoxValue(self.sender())
 		self.storeValue(category, attr, value)
@@ -578,8 +829,6 @@ class TemplateUI(object):
 		""" Get the value from a Radio Button group and store in XML data.
 		"""
 		if self.sender().isChecked():
-			# category = self.sender().property('xmlCategory')
-			# attr = self.sender().property('xmlTag')
 			category, attr = self.getWidgetMeta(self.sender())
 			value = self.sender().text()
 			self.storeValue(category, attr, value)
@@ -589,11 +838,17 @@ class TemplateUI(object):
 	def storeComboBoxValue(self):
 		""" Get the value from a Combo Box and store in XML data.
 		"""
-		# category = self.sender().property('xmlCategory')
-		# attr = self.sender().property('xmlTag')
 		category, attr = self.getWidgetMeta(self.sender())
 		value = self.sender().currentText()
 		self.storeValue(category, attr, value)
+
+		# Store combo box history
+		if self.sender().property('storeHistory'):
+			max_count = self.sender().maxCount()
+			self.sender().setMaxCount(max_count-1)
+			self.sender().setMaxCount(max_count)
+			items = [self.sender().itemText(i) for i in range(self.sender().count())]
+			self.storeValue(category, "%s_history" % attr, items)
 
 
 	def storeValue(self, category, attr, value=""):
@@ -604,8 +859,9 @@ class TemplateUI(object):
 			verbose.print_("%s=%s" %(currentAttrStr, value), inline=True)
 		else:
 			verbose.print_("%s=%s" %(currentAttrStr, value))
-		# userPrefs.edit(category, attr, value)
-		self.xd.setValue(category, attr, str(value))
+
+		self.prefs.setValue(category, attr, value)  # str(value)
+
 		self.currentAttrStr = currentAttrStr
 
 
@@ -655,13 +911,180 @@ class TemplateUI(object):
 	# ------------------------------------------------------------------------
 
 
-	def reloadStyleSheet(self):
-		""" Reload stylesheet.
+	def checkFilePath(self, filename, searchpath=[]):
+		""" Check if 'filename' exists. If not, search through list of folders
+			given in the optional searchpath, then check in the current dir.
+		"""
+		if filename is None:
+			return None
+		if os.path.isfile(filename):
+			return filename
+		else:
+			# Append current dir to searchpath and try each in turn
+			searchpath.append(os.path.dirname(__file__))
+			for folder in searchpath:
+				filepath = os.path.join(folder, filename)
+				if os.path.isfile(filepath):
+					return filepath
+
+			# File not found
+			return None
+
+
+	def loadStyleSheet(self):
+		""" Load/reload stylesheet.
 		"""
 		if self.stylesheet:
-			qss = os.path.join(os.environ['IC_FORMSDIR'], self.stylesheet)
-			with open(qss, "r") as fh:
-				self.setStyleSheet(fh.read())
+			with open(self.stylesheet, 'r') as fh:
+				stylesheet = fh.read()
+
+			# Dynamic style --------------------------------------------------
+			# Read predefined colour variables and apply them to the style
+			for key, value in self.col.items():
+				rgb = "%d, %d, %d" %(value.red(), value.green(), value.blue())
+				stylesheet = stylesheet.replace("%"+key+"%", rgb)
+
+			# Replace image theme tokens
+			stylesheet = stylesheet.replace(r"%theme%", self.imgtheme)
+			# ----------------------------------------------------------------
+
+			self.setStyleSheet(stylesheet)
+			return stylesheet
+
+
+	def saveStyleSheet(self, output_name='style_out.qss'):
+		""" Write stylesheet and bake tokens for compatibility.
+		"""
+		stylesheet = self.loadStyleSheet()
+
+		with open(output_name, 'w') as fh:
+			fh.write("/* Generated by uistyle */\n")
+			fh.write(stylesheet)
+
+
+	def unloadStyleSheet(self):
+		""" Unload stylesheet.
+		"""
+		self.setStyleSheet("")
+
+
+	def offsetColor(self, input_color, amount, clamp=None):
+		""" Offset input_color by a given amount. Only works in greyscale.
+		"""
+		if amount == 0:  # Do nothing
+			return input_color
+
+		elif amount > 0:  # Lighten
+			if clamp is None:
+				min_clamp = 0
+			else:
+				min_clamp = clamp
+			max_clamp = 255
+
+		elif amount < 0:  # Darken
+			min_clamp = 0
+			if clamp is None:
+				max_clamp = 255
+			else:
+				max_clamp = clamp
+
+		lum = max(min_clamp, min(input_color.lightness()+amount, max_clamp))
+		return QtGui.QColor(lum, lum, lum)
+
+
+	def computeUIPalette(self):
+		""" Compute complementary UI colours based on window colour.
+		"""
+		self.col['group-bg'] = QtGui.QColor(128, 128, 128)
+		self.col['line'] = self.col['window'].darker(110)
+		self.col['mandatory'] = QtGui.QColor('#f92672')
+		self.col['warning'] = QtGui.QColor('#e6db74')
+		self.col['inherited'] = QtGui.QColor('#a1efe4')
+
+		if self.col['window'].lightness() < 128:  # Dark UI
+			self.imgtheme = "light"
+			self.col['text'] = QtGui.QColor(204, 204, 204)
+			self.col['disabled'] = self.offsetColor(self.col['window'], +51)
+			self.col['base'] = self.offsetColor(self.col['window'], -34, 34)
+			self.col['alternate'] = self.offsetColor(self.col['base'], +8)
+			self.col['button'] = self.offsetColor(self.col['window'], +34, 102)
+			self.col['button-border'] = self.offsetColor(self.col['button'], +8)
+			self.col['menu-bg'] = self.offsetColor(self.col['window'], -17, 68)
+			self.col['menu-border'] = self.offsetColor(self.col['menu-bg'], +17)
+			self.col['group-header'] = self.offsetColor(self.col['window'], +17)
+		else:  # Light UI
+			self.imgtheme = "dark"
+			self.col['text'] = QtGui.QColor(51, 51, 51)
+			self.col['disabled'] = self.offsetColor(self.col['window'], -51)
+			self.col['base'] = self.offsetColor(self.col['window'], +34, 221)
+			self.col['alternate'] = self.offsetColor(self.col['base'], -8)
+			self.col['button'] = self.offsetColor(self.col['window'], -17, 204)
+			self.col['button-border'] = self.offsetColor(self.col['button'], -8)
+			self.col['menu-bg'] = self.offsetColor(self.col['window'], +17, 187)
+			self.col['menu-border'] = self.offsetColor(self.col['menu-bg'], -17)
+			self.col['group-header'] = self.offsetColor(self.col['window'], -17)
+
+		self.col['hover'] = self.offsetColor(self.col['button'], +17)
+		self.col['checked'] = self.offsetColor(self.col['button'], -17)
+		self.col['pressed'] = self.col['highlight']
+
+		if self.col['highlight'].lightness() < 170:
+			self.col['highlighted-text'] = QtGui.QColor(255, 255, 255)
+		else:
+			self.col['highlighted-text'] = QtGui.QColor(0, 0, 0)
+
+		# if self.col['button'].lightness() < 170:
+		# 	self.col['button-text'] = self.offsetColor(self.col['button'], +68, 204)
+		# else:
+		# 	self.col['button-text'] = self.offsetColor(self.col['button'], -68, 51)
+		self.col['button-text'] = self.col['text']
+
+		self.col['mandatory-bg'] = self.col['mandatory']
+		if self.col['mandatory-bg'].lightness() < 128:
+			self.col['mandatory-text'] = self.offsetColor(self.col['mandatory-bg'], +68, 204)
+		else:
+			self.col['mandatory-text'] = self.offsetColor(self.col['mandatory-bg'], -68, 51)
+
+		self.col['warning-bg'] = self.col['warning']
+		if self.col['warning-bg'].lightness() < 128:
+			self.col['warning-text'] = self.offsetColor(self.col['warning-bg'], +68, 204)
+		else:
+			self.col['warning-text'] = self.offsetColor(self.col['warning-bg'], -68, 51)
+
+		self.col['inherited-bg'] = self.col['inherited']
+		if self.col['inherited-bg'].lightness() < 128:
+			self.col['inherited-text'] = self.offsetColor(self.col['inherited-bg'], +68, 204)
+		else:
+			self.col['inherited-text'] = self.offsetColor(self.col['inherited-bg'], -68, 51)
+
+
+	# @QtCore.Slot()
+	def setUIBrightness(self, value):
+		""" Set the UI style background shade.
+		"""
+		#print(value)
+		self.col['window'] = QtGui.QColor(value, value, value)
+		self.computeUIPalette()
+		self.loadStyleSheet()
+
+
+	# @QtCore.Slot()
+	def setAccentColor(self, color=None):
+		""" Set the UI style accent colour.
+		"""
+		widget = self.sender()
+
+		# Get current colour and pass to function
+		current_color = widget.palette().color(QtGui.QPalette.Background)
+		color = self.colorPickerDialog(current_color)
+		if color:
+			widget.setStyleSheet("QWidget { background-color: %s }" %color.name())
+			self.col['highlight'] = color
+			self.computeUIPalette()
+			self.loadStyleSheet()
+		# self.col['highlight'] = widget.palette().color(QtGui.QPalette.Background)
+		# self.computeUIPalette()
+		# self.loadStyleSheet()
 
 
 	def storeWindow(self):
@@ -695,11 +1118,9 @@ class TemplateUI(object):
 	def save(self):
 		""" Save data.
 		"""
-		if self.xd.saveXML():
-			# verbose.message("Settings saved.")
+		if self.prefs.write():
 			return True
 		else:
-			# verbose.error("Settings could not be saved.")
 			return False
 
 
@@ -728,28 +1149,9 @@ class TemplateUI(object):
 # DCC application helper functions
 # ----------------------------------------------------------------------------
 
-def _maya_delete_ui(window_object, window_title):
-	""" Delete existing UI in Maya.
-	"""
-	if mc.window(window_object, query=True, exists=True):
-		mc.deleteUI(window_object)  # Delete window
-	if mc.dockControl('MayaWindow|' + window_title, query=True, exists=True):
-		mc.deleteUI('MayaWindow|' + window_title)  # Delete docked window
-
-
-# def _houdini_delete_ui(window_object, window_title):
-# 	""" Delete existing UI in Houdini.
-# 	"""
-# 	pass
-
-
-def _nuke_delete_ui(window_object, window_title):
-	""" Delete existing UI in Nuke.
-	"""
-	for obj in QtWidgets.QApplication.allWidgets():
-		if obj.objectName() == window_object:
-			obj.deleteLater()
-
+########
+# MAYA #
+########
 
 def _maya_main_window():
 	""" Return Maya's main window.
@@ -760,14 +1162,39 @@ def _maya_main_window():
 	raise RuntimeError("Could not find MayaWindow instance")
 
 
+def _maya_delete_ui(window_object, window_title):
+	""" Delete existing UI in Maya.
+	"""
+	if mc.window(window_object, query=True, exists=True):
+		mc.deleteUI(window_object)  # Delete window
+	if mc.dockControl('MayaWindow|' + window_title, query=True, exists=True):
+		mc.deleteUI('MayaWindow|' + window_title)  # Delete docked window
+
+
+###########
+# HOUDINI #
+###########
+
+def _houdini_get_session():
+	return hou.session
+
+
 def _houdini_main_window():
 	""" Return Houdini's main window.
 	"""
-	try:
-		return hou.qt.mainWindow()
-	except:
-		raise RuntimeError("Could not find Houdini's main window instance")
+	return hou.qt.mainWindow()
+	raise RuntimeError("Could not find Houdini's main window instance")
 
+
+# def _houdini_delete_ui(window_object, window_title):
+# 	""" Delete existing UI in Houdini.
+# 	"""
+# 	pass
+
+
+########
+# NUKE #
+########
 
 def _nuke_main_window():
 	""" Returns Nuke's main window.
@@ -776,6 +1203,14 @@ def _nuke_main_window():
 		if (obj.inherits('QMainWindow') and obj.metaObject().className() == 'Foundry::UI::DockMainWindow'):
 			return obj
 	raise RuntimeError("Could not find DockMainWindow instance")
+
+
+def _nuke_delete_ui(window_object, window_title):
+	""" Delete existing UI in Nuke.
+	"""
+	for obj in QtWidgets.QApplication.allWidgets():
+		if obj.objectName() == window_object:
+			obj.deleteLater()
 
 
 def _nuke_set_zero_margins(widget_object):
@@ -798,55 +1233,3 @@ def _nuke_set_zero_margins(widget_object):
 							tinychild.setContentsMargins(0, 0, 0, 0)
 						except:
 							pass
-
-
-# ----------------------------------------------------------------------------
-# Run functions
-# ----------------------------------------------------------------------------
-
-# def run_(**kwargs):
-# 	# for key, value in kwargs.iteritems():
-# 	# 	print "%s = %s" % (key, value)
-# 	customUI = TemplateUI(**kwargs)
-# 	#customUI.setAttribute( QtCore.Qt.WA_DeleteOnClose )
-# 	print customUI
-# 	customUI.show()
-# 	#customUI.raise_()
-# 	#customUI.exec_()
-
-
-# def run_maya(**kwargs):
-# 	""" Run in Maya.
-# 	"""
-# 	_maya_delete_ui()  # Delete any already existing UI
-# 	customUI = TemplateUI(parent=_maya_main_window())
-
-# 	# Makes Maya perform magic which makes the window stay on top in OS X and
-# 	# Linux. As an added bonus, it'll make Maya remember the window position.
-# 	customUI.setProperty("saveWindowPref", True)
-
-# 	customUI.display(**kwargs)  # Show the UI
-
-
-# def run_nuke(**kwargs):
-# 	""" Run in Nuke.
-# 	"""
-# 	_nuke_delete_ui()  # Delete any already existing UI
-# 	customUI = TemplateUI(parent=_nuke_main_window())
-
-# 	customUI.display(**kwargs)  # Show the UI
-
-
-# Detect environment and run application
-if os.environ['IC_ENV'] == 'STANDALONE':
-	pass
-elif os.environ['IC_ENV'] == 'MAYA':
-	import maya.cmds as mc
-	# run_maya()
-elif os.environ['IC_ENV'] == 'NUKE':
-	import nuke
-	import nukescripts
-	# run_nuke()
-# elif __name__ == '__main__':
-# 	run_standalone()
-

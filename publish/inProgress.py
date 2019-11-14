@@ -21,4 +21,4 @@ def start(pblDir):
 def end(pblDir):
 	in_progressFile = os.path.join(pblDir, 'in_progress.tmp')
 	if os.path.isfile(in_progressFile):
-		os_wrapper.recurseRemove(in_progressFile)
+		os_wrapper.remove(in_progressFile)

@@ -65,7 +65,7 @@ def purgeScene(scene, GUIFormDialog, particles=True, meshes=True, preview=True):
 		for particle in particleLs:
 				if particle not in inUseParticleLs:
 					scene.message(str(particle))
-					os_wrapper.recurseRemove(os.path.join(particleDir,  particle))
+					os_wrapper.remove(os.path.join(particleDir,  particle))
 	
 	#purges meshes
 	if meshes:
@@ -87,12 +87,12 @@ def purgeScene(scene, GUIFormDialog, particles=True, meshes=True, preview=True):
 		for meshFile in meshFileLs:
 			if meshFile not in inUseMeshLs:
 				scene.message(str(meshFile))
-				os_wrapper.recurseRemove(os.path.join(meshFileDir,  meshFile))
+				os_wrapper.remove(os.path.join(meshFileDir,  meshFile))
 				
 	#purges preivew
 	if preview:
 		previewDir = os.path.join(scene.getRootPath(), 'preview')
-		os_wrapper.recurseRemove(previewDir)
+		os_wrapper.remove(previewDir)
 		
 def preview(scene, EXECUTE_SHELL_COMMAND):
 	from . import versionUp

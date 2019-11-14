@@ -137,7 +137,7 @@ def publish(pblTo, slShot, subtype, pblNotes):
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		pathToPblAsset = ''
-		os_wrapper.recurseRemove(pblDir)
+		os_wrapper.remove(pblDir)
 		pblResult = pblChk.success(pathToPblAsset)
 		pblResult += verbose.pblRollback()
 

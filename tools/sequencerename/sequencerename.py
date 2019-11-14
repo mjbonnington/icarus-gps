@@ -18,16 +18,16 @@ from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
 
 # Import custom modules
-from . import oswrapper
-from . import rename
-from . import sequence
+from shared import os_wrapper
+from shared import rename
+from shared import sequence
 
 
 # ----------------------------------------------------------------------------
 # Configuration
 # ----------------------------------------------------------------------------
 
-VERSION = "0.1.1"
+VERSION = "0.1.2"
 
 cfg = {}
 
@@ -40,10 +40,11 @@ cfg['ui_file'] = "sequencerename.ui"
 cfg['stylesheet'] = "style.qss"  # Set to None to use the parent app's stylesheet
 
 # Other options
-prefs_location = os.path.expanduser('~/.sequencerename')
-if not os.path.isdir(prefs_location):
-	os.makedirs(prefs_location)
-cfg['prefs_file'] = os.path.join(prefs_location, 'prefs.json')
+# prefs_location = os.path.expanduser('~/.sequencerename')
+# if not os.path.isdir(prefs_location):
+# 	os.makedirs(prefs_location)
+prefs_location = os.environ['IC_USERPREFS']
+cfg['prefs_file'] = os.path.join(prefs_location, 'sequencerename_prefs.json')
 cfg['store_window_geometry'] = True
 
 
@@ -215,8 +216,8 @@ class SequenceRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		"""
 		if self.lastDir:
 			browseDir = self.lastDir
-		elif os.environ.get('UHUB_MAYA_RENDERS_PATH') is not None:
-			browseDir = os.environ['UHUB_MAYA_RENDERS_PATH']
+		elif os.environ.get('MAYARENDERSDIR') is not None:
+			browseDir = os.environ['MAYARENDERSDIR']
 		else:
 			browseDir = os.getcwd()
 
@@ -228,7 +229,7 @@ class SequenceRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		"""
 		dirname = self.folderDialog(self.getBrowseDir())
 		if dirname:
-			dirname = oswrapper.absolutePath(dirname)
+			dirname = os_wrapper.absolutePath(dirname)
 			self.lastDir = dirname
 			self.updateTaskListDir(dirname)
 
@@ -238,7 +239,7 @@ class SequenceRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		"""
 		filename = self.fileDialog(self.getBrowseDir())
 		if filename:
-			filename = oswrapper.absolutePath(filename)
+			filename = os_wrapper.absolutePath(filename)
 			self.lastDir = os.path.dirname(filename)
 			self.updateTaskListFile(filename)
 
@@ -490,11 +491,11 @@ Developer: Mike Bonnington
 		src_fileLs = sequence.expandSeq(item.text(self.header("Path")), item.text(self.header("Before")))
 		dst_fileLs = sequence.expandSeq(item.text(self.header("Path")), item.text(self.header("After")))
 
-		from . import rename_frame_view
+		from . import frameview
 		try:
 			self.taskFrameViewUI.display(src_fileLs, dst_fileLs)
 		except AttributeError:
-			self.taskFrameViewUI = rename_frame_view.dialog(self)
+			self.taskFrameViewUI = frameview.dialog(self)
 			self.taskFrameViewUI.display(src_fileLs, dst_fileLs)
 
 
@@ -561,7 +562,7 @@ Developer: Mike Bonnington
 			item = self.ui.taskList_treeWidget.selectedItems()[0]
 
 		text = item.text(self.header("Prefix"))
-		text = oswrapper.sanitize(text, pattern=r'[^\w\.-]', replace='_')
+		text = os_wrapper.sanitize(text, pattern=r'[^\w\.-]', replace='_')
 
 		if self.ui.replace_comboBox.findText(text) == -1:
 			self.ui.replace_comboBox.insertItem(0, text)
@@ -749,7 +750,7 @@ class BatchRenameThread(QtCore.QThread):
 		self.printMessage.emit("Renaming 0%")
 
 		for i in range(len(src_fileLs)):
-			success, msg = oswrapper.rename(src_fileLs[i], dst_fileLs[i], quiet=True)
+			success, msg = os_wrapper.rename(src_fileLs[i], dst_fileLs[i], quiet=True)
 			if success:
 				last_index = i
 				progress = (i/len(src_fileLs))*100

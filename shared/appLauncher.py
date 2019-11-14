@@ -122,7 +122,7 @@ class AppLauncher(QtWidgets.QDialog):
 		iconPath = ":/rsc/rsc/icon_editor"
 		searchPaths = [os_wrapper.absolutePath(os.path.splitext(appIcon)[0]), 
 		               os_wrapper.absolutePath("$IC_BASEDIR/rsc/%s/icons/app_icon_%s" %(appName, appName)), 
-		               os_wrapper.absolutePath("$IC_FORMSDIR/rsc/app_icon_%s" %appName), 
+		               os_wrapper.absolutePath("$IC_FORMSDIR/icons/app_icon_%s" %appName), 
 		              ]
 
 		for searchPath in searchPaths:

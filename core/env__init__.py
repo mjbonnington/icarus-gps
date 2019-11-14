@@ -18,7 +18,11 @@ def set_env():
 	""" Set some environment variables for basic operation.
 	"""
 	# Set version string
-	os.environ['IC_VERSION'] = "v0.10.0-20191113"
+	os.environ['IC_VERSION'] = "v0.10.0-20191114"
+
+	# Set vendor strings
+	os.environ['IC_VENDOR'] = "Gramercy Park Studios"
+	os.environ['IC_VENDOR_INITIALS'] = "GPS"
 
 	# Standardise some environment variables across systems.
 	# Usernames will always be stored as lowercase for compatibility.

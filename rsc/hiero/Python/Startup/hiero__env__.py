@@ -28,7 +28,7 @@ from shared import os_wrapper
 # 	"""
 # 	autosave_filename = os_wrapper.absolutePath("$HIEROEDITORIALPATH/$IC_JOB.hrox.autosave")
 # 	if os.path.isfile(autosave_filename):
-# 		os_wrapper.recurseRemove(autosave_filename)
+# 		os_wrapper.remove(autosave_filename)
 
 
 def loadDailies(dailies_categories=['CGI', 'Flame', 'Edit']):

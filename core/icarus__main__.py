@@ -305,13 +305,28 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.render_toolButton.addAction(self.ui.actionSubmit_render)
 
 			# Review
-			self.addContextMenu(self.ui.openReview_toolButton, "djv_view", launchApps.djv, 'app_icon_djv')
-			self.addContextMenu(self.ui.openReview_toolButton, "HieroPlayer", lambda: launchApps.launch('HieroPlayer'), 'app_icon_hieroplayer')
-			self.addContextMenu(self.ui.openReview_toolButton, "Bridge", lambda: launchApps.launch('Bridge'), 'app_icon_bridge')
+			self.addContextMenu(self.ui.openReview_toolButton, 
+				"djv_view", 
+				launchApps.djv, 
+				'app_icon_djv.png', tintNormal=False)
+			self.addContextMenu(self.ui.openReview_toolButton, 
+				"HieroPlayer", 
+				lambda: launchApps.launch('HieroPlayer'), 
+				'app_icon_hieroplayer.png', tintNormal=False)
+			self.addContextMenu(self.ui.openReview_toolButton, 
+				"Bridge", 
+				lambda: launchApps.launch('Bridge'), 
+				'app_icon_bridge.png', tintNormal=False)
 
 			# Browse
-			self.addContextMenu(self.ui.browse_toolButton, "Shot", openDirs.openShot, 'icon_folder')
-			self.addContextMenu(self.ui.browse_toolButton, "Job", openDirs.openJob, 'icon_folder')
+			self.addContextMenu(self.ui.browse_toolButton, 
+				"Shot", 
+				openDirs.openShot, 
+				'icon_folder.png', tintNormal=False)
+			self.addContextMenu(self.ui.browse_toolButton, 
+				"Job", 
+				openDirs.openJob, 
+				'icon_folder.png', tintNormal=False)
 
 			# Apply job/shot settings pop-up menu to shotEnv label (only in standalone mode)
 			self.ui.shotEnv_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
@@ -2069,7 +2084,7 @@ def window(app='standalone', parent=None):
 
 		# Set window title, flags and application icon
 		ic_app.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint)
-		ic_app.setWindowIcon(QtGui.QIcon(os.path.join(os.environ['IC_FORMSDIR'], 'rsc', 'icarus.png')))
+		ic_app.setWindowIcon(QtGui.QIcon(os.path.join(os.environ['IC_FORMSDIR'], 'icons', 'icarus.png')))
 
 	return ic_app
 

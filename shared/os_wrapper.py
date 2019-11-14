@@ -138,24 +138,43 @@ def verify_hardlink(src, dst):
 	return False
 
 
-def recurseRemove(path):
+# def recurseRemove(path):
+# 	""" Removes files or folders recursively.
+# 		Could be rewritten to use shutil.rmtree?
+# 	"""
+# 	path = os.path.normpath(path)
+
+# 	if os.environ['IC_RUNNING_OS'] == "Windows":
+# 		if os.path.isdir(path):
+# 			cmdStr = 'rmdir %s /s /q' %path
+# 		else:
+# 			cmdStr = 'del %s /f /q' %path
+# 	else:
+# 		cmdStr = 'rm -rf %s' %path
+
+# 	verbose.print_(cmdStr, 4)
+# 	os.system(cmdStr)
+
+# 	return path
+
+
+def remove(path, quiet=False):
 	""" Removes files or folders recursively.
-		Could be rewritten to use shutil.rmtree?
 	"""
 	path = os.path.normpath(path)
 
-	if os.environ['IC_RUNNING_OS'] == "Windows":
-		if os.path.isdir(path):
-			cmdStr = 'rmdir %s /s /q' %path
-		else:
-			cmdStr = 'del %s /f /q' %path
-	else:
-		cmdStr = 'rm -rf %s' %path
-
-	verbose.print_(cmdStr, 4)
-	os.system(cmdStr)
-
-	return path
+	try:
+		if os.path.isfile(path):
+			os.remove(path)
+		elif os.path.isdir(path):
+			shutil.rmtree(path)
+		return True, path
+	except:
+		exc_type, exc_value, exc_traceback = sys.exc_info()
+		msg = traceback.format_exception_only(exc_type, exc_value)[0]
+		if not quiet:
+			verbose.error(msg)
+		return False, msg
 
 
 def rename(source, destination, quiet=False):
@@ -183,16 +202,9 @@ def copy(source, destination, quiet=False):
 	src = os.path.normpath(source)
 	dst = os.path.normpath(destination)
 
-	# if os.environ['IC_RUNNING_OS'] == "Windows":
-	# 	cmdStr = 'copy /Y "%s" "%s"' %(src, dst)
-	# else:
-	# 	cmdStr = 'cp -rf "%s" "%s"' %(src, dst)
-
 	if not quiet:
-	#	verbose.print_(cmdStr)
 		verbose.print_('copy "%s" -> "%s"' %(src, dst))
 	try:
-	#	os.system(cmdStr)
 		shutil.copyfile(src, dst)
 		return True, dst
 	except:
@@ -201,6 +213,25 @@ def copy(source, destination, quiet=False):
 		if not quiet:
 			verbose.error(msg)
 		return False, msg
+
+
+def move(source, destination, quiet=False):
+	""" Move a file or folder.
+	"""
+	src = os.path.normpath(source)
+	dst = os.path.normpath(destination)
+
+	if not quiet:
+		verbose.print_('move "%s" -> "%s"' %(src, dst))
+	try:
+		shutil.move(src, dst)
+		return True
+	except:
+		exc_type, exc_value, exc_traceback = sys.exc_info()
+		msg = traceback.format_exception_only(exc_type, exc_value)[0]
+		if not quiet:
+			verbose.error(msg)
+		return False
 
 
 def copyDirContents(source, destination, umask='000'):
@@ -213,11 +244,11 @@ def copyDirContents(source, destination, umask='000'):
 	if os.environ['IC_RUNNING_OS'] == "Windows":
 		cmdStr = 'copy /Y "%s" "%s"' %(src, dst)
 	elif os.environ['IC_RUNNING_OS'] == "Linux":  # Quick bodge
-		cmdStr = '%s; cp -rf %s %s' %(setUmask(umask), src, dst)
+		cmdStr = 'cp -rf %s %s' %(src, dst)
 	else:
-		cmdStr = '%s; cp -rf "%s" "%s"' %(setUmask(umask), src, dst)
+		cmdStr = 'cp -rf "%s" "%s"' %(src, dst)
 
-	verbose.print_(cmdStr, 4)
+	verbose.print_(cmdStr)
 	os.system(cmdStr)
 
 
@@ -231,13 +262,13 @@ def setHidden(path):
 	ctypes.windll.kernel32.SetFileAttributesW(path, FILE_ATTRIBUTE_HIDDEN)
 
 
-def setUmask(umask='000'):
-	""" Set the umask for permissions on created files and folders (Unix only).
-	"""
-	if os.environ['IC_RUNNING_OS'] == "Windows":
-		return ""
-	else:
-		return 'umask %s' %umask
+# def setUmask(umask='000'):
+# 	""" Set the umask for permissions on created files and folders (Unix only).
+# 	"""
+# 	if os.environ['IC_RUNNING_OS'] == "Windows":
+# 		return ""
+# 	else:
+# 		return 'umask %s' %umask
 
 
 def absolutePath(relPath, stripTrailingSlash=False):
@@ -285,32 +316,32 @@ def relativePath(absPath, token, tokenFormat='standard'):
 		return os.path.normpath(absPath).replace("\\", "/")
 
 
-def translatePath(jobPath):
+def translatePath(path):
 	""" Translate paths for cross-platform support.
 	"""
 	try:
-		jobPathTr = jobPath
+		path_tr = path
 		if os.environ['IC_RUNNING_OS'] == "Windows":
-			if jobPath.startswith(os.environ['FILESYSTEMROOTOSX']):
-				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTOSX'], os.environ['FILESYSTEMROOTWIN'])
-			elif jobPath.startswith(os.environ['FILESYSTEMROOTLINUX']):
-				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTLINUX'], os.environ['FILESYSTEMROOTWIN'])
+			if path.startswith(os.environ['FILESYSTEMROOTOSX']):
+				path_tr = path.replace(os.environ['FILESYSTEMROOTOSX'], os.environ['FILESYSTEMROOTWIN'])
+			elif path.startswith(os.environ['FILESYSTEMROOTLINUX']):
+				path_tr = path.replace(os.environ['FILESYSTEMROOTLINUX'], os.environ['FILESYSTEMROOTWIN'])
 		elif os.environ['IC_RUNNING_OS'] == "MacOS":
-			if jobPath.startswith(os.environ['FILESYSTEMROOTWIN']):
-				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTWIN'], os.environ['FILESYSTEMROOTOSX'])
-			elif jobPath.startswith(os.environ['FILESYSTEMROOTLINUX']):
-				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTLINUX'], os.environ['FILESYSTEMROOTOSX'])
+			if path.startswith(os.environ['FILESYSTEMROOTWIN']):
+				path_tr = path.replace(os.environ['FILESYSTEMROOTWIN'], os.environ['FILESYSTEMROOTOSX'])
+			elif path.startswith(os.environ['FILESYSTEMROOTLINUX']):
+				path_tr = path.replace(os.environ['FILESYSTEMROOTLINUX'], os.environ['FILESYSTEMROOTOSX'])
 		else:  # Linux
-			if jobPath.startswith(os.environ['FILESYSTEMROOTWIN']):
-				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTWIN'], os.environ['FILESYSTEMROOTLINUX'])
-			elif jobPath.startswith(os.environ['FILESYSTEMROOTOSX']):
-				jobPathTr = jobPath.replace(os.environ['FILESYSTEMROOTOSX'], os.environ['FILESYSTEMROOTLINUX'])
+			if path.startswith(os.environ['FILESYSTEMROOTWIN']):
+				path_tr = path.replace(os.environ['FILESYSTEMROOTWIN'], os.environ['FILESYSTEMROOTLINUX'])
+			elif path.startswith(os.environ['FILESYSTEMROOTOSX']):
+				path_tr = path.replace(os.environ['FILESYSTEMROOTOSX'], os.environ['FILESYSTEMROOTLINUX'])
 
-		#print("Performing path translation:\n%s\n%s\n" %(jobPath, absolutePath(jobPathTr)))
-		return absolutePath(jobPathTr)
+		#print("Performing path translation:\n%s\n%s\n" %(path, absolutePath(path_tr)))
+		return absolutePath(path_tr)
 
-	except TypeError:
-		return jobPath
+	except (KeyError, TypeError):
+		return path
 
 
 def checkIllegalChars(path, pattern=r'[^\w\.-]'):
@@ -330,4 +361,3 @@ def sanitize(instr, pattern=r'\W', replace=''):
 		characters.
 	"""
 	return re.sub(pattern, replace, instr)
-

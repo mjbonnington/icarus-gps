@@ -67,6 +67,12 @@ class XMLData():
 			return False
 
 
+	def write(self):
+		""" Convenience wrapper for saveXML().
+		"""
+		return self.saveXML()
+
+
 	def saveXML(self):
 		""" Save XML data.
 		"""

@@ -49,7 +49,7 @@ class SettingsData(xmlData.XMLData):
 		return ""  # Return an empty string, not None, so value can be stored in an environment variable without raising an error
 
 
-	def setValue(self, category, setting, newValue):
+	def setValue(self, category, setting, new_value):
 		""" Set value. Create elements if they don't exist.
 		"""
 		catElem = self.root.find("./data[@category='%s']" %category)
@@ -61,7 +61,7 @@ class SettingsData(xmlData.XMLData):
 		if settingElem is None:
 			settingElem = ET.SubElement(catElem, setting)
 
-		settingElem.text = str(newValue)
+		settingElem.text = str(new_value)
 
 
 	def removeElement(self, category, setting):

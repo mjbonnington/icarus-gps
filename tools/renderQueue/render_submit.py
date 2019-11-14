@@ -265,7 +265,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		self.xmlData = render_common.settings_file(scene, suffix="_icSubmissionData.xml")
 		if self.xmlData:
-			self.xd.loadXML(self.xmlData, use_template=False)
+			self.prefs.loadXML(self.xmlData, use_template=False)
 			self.setupWidgets(self.ui, updateOnly=True)
 
 

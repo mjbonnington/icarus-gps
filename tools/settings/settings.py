@@ -113,7 +113,7 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		# self.ui.categories_listWidget.blockSignals(True)
 
 		# Load data from xml file(s)
-		self.xd.loadXML(self.xmlData)
+		self.prefs.loadXML(self.xmlData)
 		if self.inherit:
 			from shared import settingsData
 			self.id = settingsData.SettingsData()
@@ -205,7 +205,7 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		for widget in self.ui.settings_frame.findChildren(QtWidgets.QWidget):
 			attr = widget.property('xmlTag')
 			if attr:
-				self.xd.removeElement(self.currentCategory, attr)
+				self.prefs.removeElement(self.currentCategory, attr)
 
 		self.openProperties(self.currentCategory, storeProperties=False)
 
