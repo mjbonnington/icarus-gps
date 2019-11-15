@@ -28,12 +28,19 @@ def setEnv(job, shot, shotPath):
 			nothing then look in job data instead.
 		"""
 		value = shotData.getValue(category, setting)
-		if value == "":
+		if value is None:
 			value = jobData.getValue(category, setting)
-			# if value == "":
+			# if value is None:
 			# 	value = defaultData.getValue(category, setting)
 
-		return value
+		#return value
+
+		# Return an empty string, not None, so value can be stored in an
+		# environment variable without raising an error
+		if value is None:
+			return ""
+		else:
+			return str(value)
 
 
 	def getAppExecPath(app):

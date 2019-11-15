@@ -21,6 +21,18 @@ class SettingsData(xmlData.XMLData):
 		Inherits XMLData class.
 	"""
 
+	def read(self, **kwargs):
+		""" Convenience wrapper for xmlData.loadXML().
+		"""
+		return self.loadXML(**kwargs)
+
+
+	def write(self):
+		""" Convenience wrapper for xmlData.saveXML().
+		"""
+		return self.saveXML()
+
+
 	def getValue(self, category, setting, type='str'):
 		""" Get the specified value.
 			'type' can be specified in order to return a value of a given
@@ -46,7 +58,8 @@ class SettingsData(xmlData.XMLData):
 		#			if text is not None:
 		#				return text
 
-		return ""  # Return an empty string, not None, so value can be stored in an environment variable without raising an error
+		return None
+		#return ""  # Return an empty string, not None, so value can be stored in an environment variable without raising an error
 
 
 	def setValue(self, category, setting, new_value):

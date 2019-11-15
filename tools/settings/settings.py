@@ -18,23 +18,27 @@ import ui_template as UI
 
 # Import custom modules
 from shared import verbose
+from shared import settingsData
 
 
 # ----------------------------------------------------------------------------
 # Configuration
 # ----------------------------------------------------------------------------
 
+cfg = {}
+
 # Set window title and object names
-WINDOW_TITLE = "Settings"
-WINDOW_OBJECT = "settingsUI"
+cfg['window_title'] = "Settings"
+cfg['window_object'] = "settingsUI"
 
 # Set the UI and the stylesheet
-UI_FILE = "settings_ui.ui"
-STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
+cfg['ui_file'] = 'settings_ui.ui'
+cfg['stylesheet'] = 'style.qss'  # Set to None to use the parent app's stylesheet
 
 # Other options
-STORE_WINDOW_GEOMETRY = False
-
+# prefs_location = os.environ['IC_USERPREFS']
+# cfg['prefs_file'] = os.path.join(prefs_location, 'scenemanager_prefs.json')
+cfg['store_window_geometry'] = True
 
 # ----------------------------------------------------------------------------
 # Main dialog class
@@ -47,11 +51,12 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		super(SettingsDialog, self).__init__(parent)
 		self.parent = parent
 
-		self.setupUI(window_object=WINDOW_OBJECT, 
-		             window_title=WINDOW_TITLE, 
-		             ui_file=UI_FILE, 
-		             stylesheet=STYLESHEET, 
-		             store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
+		self.setupUI(**cfg)
+		# self.setupUI(window_object=WINDOW_OBJECT, 
+		#              window_title=WINDOW_TITLE, 
+		#              ui_file=UI_FILE, 
+		#              stylesheet=STYLESHEET, 
+		#              store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
 
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Dialog)
@@ -102,7 +107,8 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 			title_suffix = ": " + os.environ['IC_SHOT']
 		else:
 			title_suffix = ""
-		self.setWindowTitle("%s %s%s" %(settingsType, WINDOW_TITLE, title_suffix))
+		self.setWindowTitle(
+			"%s %s%s" % (settingsType, cfg['window_title'], title_suffix))
 
 		return self.exec_()
 
@@ -113,13 +119,13 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		# self.ui.categories_listWidget.blockSignals(True)
 
 		# Load data from xml file(s)
+		self.prefs = settingsData.SettingsData()
 		self.prefs.loadXML(self.xmlData)
 		if self.inherit:
-			from shared import settingsData
-			self.id = settingsData.SettingsData()
-			self.id.loadXML(self.inherit)
+			self.prefs_inherited = settingsData.SettingsData()
+			self.prefs_inherited.loadXML(self.inherit)
 		else:
-			self.id = None
+			self.prefs_inherited = None
 
 		# Populate categories
 		if self.categoryLs:
@@ -151,11 +157,12 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 		# Show panel & load values into form widgets
 		if self.loadPanel(category):
-			if (self.inherit is not None) and self.ui.settings_frame.property('inheritable'):
+			if (self.inherit is not None) \
+			and self.ui.settings_frame.property('inheritable'):
 				verbose.print_("Category: %s (values inheritable)" %category)
 				self.setupWidgets(self.ui.settings_frame, 
 				                  forceCategory=category, 
-				                  inherit=self.id, 
+				                  inherit=self.prefs_inherited, 
 				                  storeProperties=False)
 			else:
 				verbose.print_("Category: %s" %category)

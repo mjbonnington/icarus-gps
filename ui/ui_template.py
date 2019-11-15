@@ -29,15 +29,6 @@ from shared import settingsData
 # from shared import userPrefs
 from shared import verbose
 
-
-# ----------------------------------------------------------------------------
-# Configuration
-# ----------------------------------------------------------------------------
-
-# The vendor string must be set in order to store window geometry
-VENDOR = os.environ['IC_VENDOR']
-
-
 # ----------------------------------------------------------------------------
 # Environment detection
 # ----------------------------------------------------------------------------
@@ -155,18 +146,18 @@ class TemplateUI(object):
 		else:
 			verbose.error("UI file does not exist: %s" % found_ui_file)
 
-		# # Store some system UI colours & define colour palette
+		# Store some system UI colours & define colour palette
 		self.col = {}
 		self.col['text'] = QtGui.QColor(204, 204, 204)
 		self.col['disabled'] = QtGui.QColor(102, 102, 102)
 		self.col['highlighted-text'] = QtGui.QColor(255, 255, 255)
-		# tmpWidget = QtWidgets.QWidget()
-		# self.col['sys-window'] = tmpWidget.palette().color(QtGui.QPalette.Window)
-		# self.col['sys-highlight'] = tmpWidget.palette().color(QtGui.QPalette.Highlight)
+		tmpWidget = QtWidgets.QWidget()
+		self.col['sys-window'] = tmpWidget.palette().color(QtGui.QPalette.Window)
+		self.col['sys-highlight'] = tmpWidget.palette().color(QtGui.QPalette.Highlight)
 		# self.col['window'] = self.col['sys-window']
-		# self.col['highlight'] = self.col['sys-highlight']
-		self.col['window'] = QtGui.QColor('#444444') #self.col['sys-window'] # load from settings
-		self.col['highlight'] = QtGui.QColor('#78909c') #self.col['sys-highlight'] # load from settings
+		self.col['highlight'] = self.col['sys-highlight']
+		self.col['window'] = QtGui.QColor('#444444')
+		# self.col['highlight'] = QtGui.QColor('#78909c')
 		self.computeUIPalette()
 
 		# Load and set stylesheet
@@ -187,26 +178,37 @@ class TemplateUI(object):
 		# Restore window geometry and state
 		self.store_window_geometry = store_window_geometry
 		if self.store_window_geometry:
+			try:
+				uiName = self.objectName()
+				if os.environ['IC_ENV'] != 'STANDALONE':
+					uiName += "_" + os.environ['IC_ENV'].lower()
+				self.settings = QtCore.QSettings(
+					os.environ['IC_VENDOR'], uiName)
+				self.restoreGeometry(self.settings.value("geometry", ""))
+				verbose.print_("Restoring window geometry for '%s'." % self.objectName())
+			except KeyError:
+				verbose.warning("Could not restore window geometry for '%s'." % self.objectName())
 
-			# Use QSettings to store window geometry and state.
-			# (Restore state may cause issues with PyQt5)
-			if os.environ['IC_ENV'] == 'STANDALONE':
-				verbose.print_("Restoring window geometry for '%s'." %self.objectName())
-				try:
-					self.settings = QtCore.QSettings(VENDOR, window_title)
-					self.restoreGeometry(self.settings.value("geometry", ""))
-					# self.restoreState(self.settings.value("windowState", ""))
-				except:
-					pass
+			# # Use QSettings to store window geometry and state.
+			# # (Restore state may cause issues with PyQt5)
+			# if os.environ['IC_ENV'] == 'STANDALONE':
+			# 	verbose.print_("Restoring window geometry for '%s'." %self.objectName())
+			# 	try:
+			# 		self.settings = QtCore.QSettings(
+			# 			os.environ['IC_VENDOR'], window_title)
+			# 		self.restoreGeometry(self.settings.value("geometry", ""))
+			# 		# self.restoreState(self.settings.value("windowState", ""))
+			# 	except:
+			# 		pass
 
-			# Makes Maya perform magic which makes the window stay on top in
-			# OS X and Linux. As an added bonus, it'll make Maya remember the
-			# window position.
-			elif os.environ['IC_ENV'] == 'MAYA':
-				self.setProperty("saveWindowPref", True)
+			# # Makes Maya perform magic which makes the window stay on top in
+			# # OS X and Linux. As an added bonus, it'll make Maya remember the
+			# # window position.
+			# elif os.environ['IC_ENV'] == 'MAYA':
+			# 	self.setProperty("saveWindowPref", True)
 
-			elif os.environ['IC_ENV'] == 'NUKE':
-				pass
+			# elif os.environ['IC_ENV'] == 'NUKE':
+			# 	pass
 
 		# else:
 		# 	# Move to centre of active screen
@@ -360,10 +362,9 @@ class TemplateUI(object):
 
 			If 'forceCategory' is specified, this will override the category
 			of all child widgets.
-			'inherit' specifies an alternative XML data source for widgets
-			to get their values from.
-			If 'storeProperties' is True, the values will be stored in the XML
-			data as well as applied to the widgets.
+			'inherit' specifies an alternative data source for widgets values.
+			If 'storeProperties' is True, the values will be stored in the
+			data file as well as applied to the widgets.
 			If 'updateOnly' is True, only the widgets' values will be updated.
 		"""
 		if forceCategory is not None:
@@ -400,7 +401,8 @@ class TemplateUI(object):
 
 					if inherit:
 						value = self.prefs.getValue(category, attr)
-						if value == "":
+						# if value == "":
+						if value is None:
 							value = inherit.getValue(category, attr)
 
 							# widget.setProperty('xmlTag', None)
@@ -530,7 +532,7 @@ class TemplateUI(object):
 		""" Recursively check the parents of the given widget until a custom
 			property 'xmlCategory' is found.
 		"""
-		print("widget: " + widget.objectName())
+		# print("widget: " + widget.objectName())
 		if widget.property('xmlCategory'):
 			#verbose.print_("Category '%s' found for '%s'." %(widget.property('xmlCategory'), widget.objectName()))
 			return widget.property('xmlCategory')
@@ -1092,13 +1094,19 @@ class TemplateUI(object):
 			(Save state may cause issues with PyQt5)
 		"""
 		if self.store_window_geometry:
-			if os.environ['IC_ENV'] == 'STANDALONE':
+			try:
+				self.settings.setValue("geometry", self.saveGeometry())
 				verbose.print_("Storing window geometry for '%s'." %self.objectName())
-				try:
-					self.settings.setValue("geometry", self.saveGeometry())
-					# self.settings.setValue("windowState", self.saveState())
-				except:
-					pass
+			except:
+				verbose.warning("Could not store window geometry for '%s'." % self.objectName())
+
+			# if os.environ['IC_ENV'] == 'STANDALONE':
+			# 	verbose.print_("Storing window geometry for '%s'." %self.objectName())
+			# 	try:
+			# 		self.settings.setValue("geometry", self.saveGeometry())
+			# 		# self.settings.setValue("windowState", self.saveState())
+			# 	except:
+			# 		pass
 
 
 	# def showEvent(self, event):

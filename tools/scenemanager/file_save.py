@@ -54,7 +54,7 @@ cfg = {}
 
 # Set window title and object names
 cfg['window_title'] = "Save"
-cfg['window_object'] = "FileSaveUI"
+cfg['window_object'] = "fileSaveUI"
 
 # Set the UI and the stylesheet
 cfg['ui_file'] = 'file_save.ui'

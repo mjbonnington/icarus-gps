@@ -6,7 +6,7 @@ v0.10.0 (--)
 -	[Icarus] Improved Linux compatibility.
 -	[Preview] Added ability to output TIFF images (with alpha channel).
 -	[Preview] Revised burn-in HUD.
--	[Preview] Enabled dailies publishing.
+-	[Preview] Enabled dailies publishing direct from preview.
 
 v0.9.12 (2018-04-27)
 -	[Icarus] Started to write some proper documentation.

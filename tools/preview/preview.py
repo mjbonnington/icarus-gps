@@ -69,7 +69,7 @@ class PreviewUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		#self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
 		# Set icons
-		self.ui.nameUpdate_toolButton.setIcon(self.iconSet('configure.svg'))
+		# self.ui.nameUpdate_toolButton.setIcon(self.iconSet('configure.svg'))
 
 		# Connect signals & slots
 		self.ui.name_lineEdit.textChanged.connect(self.checkFilename)
@@ -481,13 +481,22 @@ class PreviewUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			return False
 		else:
 			# Quick hack to replace frame number padding with first frame
-			outputFilePath = outputFilePath.replace(
-				"####", 
-				os.environ['PREVIEW_STARTFRAME'])
+			# outputFilePath = outputFilePath.replace(
+			# 	"####", 
+			# 	os.environ['PREVIEW_STARTFRAME'])
 			# dailyFromApp.makeDaily(
 			# 	app=os.environ['IC_ENV'], 
 			# 	outputFile=outputFilePath, 
 			# 	sourceFile=appConnect.getScene(fullPath=True))
+			from publish import ic_dailyPbl
+			dailyPblOpts = [
+				os.path.basename(outputFilePath), 
+				'%d-%d' % (self.frRange), 
+				'anim', 
+				os.path.dirname(outputFilePath)
+			]
+			ic_dailyPbl.publish(dailyPblOpts, os.environ['IC_SHOTPUBLISHDIR'], "Published from %s" % cfg['window_title'])
+			
 			return True
 
 

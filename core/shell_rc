@@ -24,7 +24,7 @@ NO_COLOUR="\[\033[0m\]"
 function EXT_COLOR () { echo -ne "\[\033[38;5;$1m\]"; }
 
 ##echoing shot info##
-clear; echo -e "GRAMERCY PARK STUDIOS - $IC_JOB | $IC_SHOT"; echo
+clear; echo -e "$IC_VENDOR - $IC_JOB | $IC_SHOT"; echo
 PS1="`EXT_COLOR 64`[\u $IC_JOB-$IC_SHOT \W]\$ ${NO_COLOUR}"
 #PS1="\[\033[38;5;64m\][\u@\h \W]\$\[\033[0m\] "
 

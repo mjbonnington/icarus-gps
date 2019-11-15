@@ -603,6 +603,8 @@ def nodetypeCheck(obj):
 
 ###############adds publish notes as custom attr##########
 def notesTag(obj, pblNotes):
+	if pblNotes is None:
+		pblNotes = ""
 	notesAttr = mc.listAttr(obj, st='Notes')
 	if not notesAttr:
 		mc.addAttr(obj, ln='Notes', dt='string')

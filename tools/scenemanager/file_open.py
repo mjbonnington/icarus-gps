@@ -14,6 +14,8 @@
 # Current support is for Maya, Nuke and Houdini.
 
 
+import datetime
+import fnmatch
 import os
 import sys
 # import time
@@ -25,6 +27,7 @@ from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
 
 from shared import os_wrapper
+from shared import recentFiles
 from shared import sequence
 
 try:
@@ -54,7 +57,7 @@ cfg = {}
 
 # Set window title and object names
 cfg['window_title'] = "Open"
-cfg['window_object'] = "FileOpenUI"
+cfg['window_object'] = "fileOpenUI"
 
 # Set the UI and the stylesheet
 cfg['ui_file'] = 'file_open.ui'
@@ -83,17 +86,17 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		# Set window icon, flags and other Qt attributes
 		self.setWindowFlags(QtCore.Qt.Dialog)
 
-		# # Set icons
+		# Set icons
 		# self.ui.shot_toolButton.setIcon(self.iconSet('configure.svg'))  # Make more appropriate icon
 
-		# # Connect signals & slots
+		# Connect signals & slots
 		# self.ui.shot_toolButton.clicked.connect(self.setShot)
 
-		# self.ui.discipline_comboBox.currentIndexChanged.connect(self.updateView)
-		# self.ui.artist_comboBox.currentIndexChanged.connect(self.updateView)
+		# self.ui.discipline_comboBox.currentIndexChanged.connect(self.disciplineChanged)
+		self.ui.artist_comboBox.currentIndexChanged.connect(self.artistChanged)
 
-		# self.ui.submit_pushButton.clicked.connect(self.openFile)
-		# self.ui.close_pushButton.clicked.connect(self.close)
+		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Open).clicked.connect(self.ok)
+		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.reject)
 
 		# # Context menus
 		# self.addContextMenu(self.ui.shot_toolButton, "Change", self.setShot)
@@ -102,6 +105,12 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		# # Set input validators
 		# desc_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w_]+'), self.ui.description_lineEdit)
 		# self.ui.description_lineEdit.setValidator(desc_validator)
+
+		# Restore widget state
+		self.restoreView()
+
+		# Define global variables
+		self.time_format_str = "%Y/%m/%d %H:%M:%S"
 
 		# Show initialisation message
 		info_ls = []
@@ -124,14 +133,27 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 
 		elif os.environ['IC_ENV'] == "MAYA":
 			self.setWindowTitle(
-				"[GPS] Open Scene - %s" % os.environ['IC_JOB'])
-			pass
+				"%s Open Scene - %s" % (
+					os.environ['IC_VENDOR_INITIALS'], os.environ['IC_JOB']))
+			self.base_dir = os_wrapper.absolutePath('$MAYASCENESDIR/..')
+			self.file_filter = '*.ma' # r'^\*\.m[a|b]$'
 
 		elif os.environ['IC_ENV'] == "HOUDINI":
-			pass
+			self.setWindowTitle(
+				"%s Open Scene - %s" % (
+					os.environ['IC_VENDOR_INITIALS'], os.environ['IC_JOB']))
+			self.base_dir = os_wrapper.absolutePath('$HIP')  # needs thought
+			self.file_filter = '*.hip'
 
 		elif os.environ['IC_ENV'] == "NUKE":
-			pass
+			self.setWindowTitle(
+				"%s Open Script - %s" % (
+					os.environ['IC_VENDOR_INITIALS'], os.environ['IC_JOB']))
+			self.base_dir = os_wrapper.absolutePath('$NUKESCRIPTSDIR/..')
+			self.file_filter = '*.nk'
+
+		self.populateComboBox(self.ui.artist_comboBox, self.getArtists())
+		self.updateView(self.base_dir)
 
 		self.show()
 		self.raise_()
@@ -140,145 +162,144 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		return self.returnValue
 
 
-	# def snapshot(self, scene=None):
-	# 	""" Save a copy (snapshot) of the current scene to a temp folder.
-	# 		Return the path to the snapshot, ready to be submitted.
+	def updateView(self, base_dir):
+		""" Update the file browser.
+			'base_dir' is the directory to look in.
+		"""
+		# Clear tree widget
+		self.ui.fileBrowser_treeWidget.clear()
+
+		# Populate tree widget
+		matches = []
+		for root, dirnames, filenames in os.walk(base_dir):
+			for filename in fnmatch.filter(filenames, self.file_filter):
+				matches.append(os.path.join(root, filename))
+
+		print(matches)
+		for item in matches:
+			fileItem = QtWidgets.QTreeWidgetItem(self.ui.fileBrowser_treeWidget)
+			fileItem.setText(0, os.path.basename(item))
+			fileItem.setText(1, str(os.path.getsize(item)))
+
+			timestamp = os.path.getmtime(item)
+			timestr = datetime.datetime.fromtimestamp(timestamp).strftime(self.time_format_str)
+			fileItem.setText(2, timestr)
+			fileItem.setText(3, self.getArtist(item))
+			fileItem.setText(4, os.path.normpath(item))
+
+			self.ui.fileBrowser_treeWidget.addTopLevelItem(fileItem)
+		# self.ui.fileBrowser_treeWidget()
+
+		# Resize all columns to fit content
+		# for i in range(0, self.ui.fileBrowser_treeWidget.columnCount()):
+		# 	self.ui.fileBrowser_treeWidget.resizeColumnToContents(i)
+
+		# Hide last column
+		self.ui.fileBrowser_treeWidget.setColumnHidden(4, True)
+
+		# Sort by submit time column - move this somewhere else?
+		# self.ui.fileBrowser_treeWidget.sortByColumn(2, QtCore.Qt.DescendingOrder)
+
+
+	def artistChanged(self):
+		""" Update the base dir for the specified artist.
+		"""
+		artist = self.ui.artist_comboBox.currentText()
+		if artist == "[any]" \
+		or artist == "" \
+		or artist == None:
+			self.updateView(self.base_dir)
+		else:
+			self.updateView(os.path.join(self.base_dir, artist))
+
+
+	def getArtists(self):
+		""" Return a list of artists. Calculate from all the subdirectories
+			of base dir plus the current username.
+		"""
+		artists = ["[any]", os.environ['IC_USERNAME']]
+
+		subdirs = next(os.walk(self.base_dir))[1]
+		if subdirs:
+			for subdir in subdirs:
+				if not subdir.startswith('.'):  # ignore hidden directories
+					if subdir not in artists:
+						artists.append(subdir)
+
+		return artists
+
+
+	def getArtist(self, filepath):
+		""" Return the artist name based on the filepath.
+		"""
+		dirname = os.path.dirname(filepath)
+		artist = os.path.split(dirname)[-1]
+		return artist
+
+
+	def restoreView(self):
+		""" Restore and apply saved state of tree widgets.
+		"""
+		try:
+			# self.ui.splitter.restoreState(self.settings.value("splitterSizes")) #.toByteArray())
+			self.ui.fileBrowser_treeWidget.header().restoreState(self.settings.value("fileBrowserView")) #.toByteArray())
+		except:
+			pass
+
+
+	# def resetView(self):
+	# 	""" Reset state of tree widgets to default.
 	# 	"""
-	# 	#timestamp = time.strftime(r"%Y%m%d_%H%M%S")
-
-	# 	if os.environ['IC_ENV'] == "MAYA":
-	# 		if scene:
-	# 			uhub_origFilePath = scene
-	# 		else:
-	# 			uhub_origFilePath = mc.file(query=True, expandName=True)
-	# 		uhub_tmpDir = os.path.join(os.environ['UHUB_MAYA_SCENES_PATH'], '.tmp')
-	# 		oswrapper.createDir(uhub_tmpDir)
-	# 		uhub_sceneName = mc.file(query=True, sceneName=True, shortName=True)
-	# 		uhub_tmpFilePath = os.path.join(uhub_tmpDir, uhub_sceneName)
-
-	# 		# Ensure output file naming convention is correct
-	# 		if self.getRenderer() == 'vray':
-	# 			mc.setAttr("vraySettings.fileNamePrefix", lock=False)
-	# 			mc.setAttr("vraySettings.fileNamePrefix", MAYA_OUTPUT_FORMAT_VRAY, type="string")
-	# 			mc.setAttr("vraySettings.fileNameRenderElementSeparator", lock=False)
-	# 			mc.setAttr("vraySettings.fileNameRenderElementSeparator", ".", type="string")
-
-	# 		else:  # Maya Common Default and Arnold
-	# 			mc.setAttr("defaultRenderGlobals.imageFilePrefix", MAYA_OUTPUT_FORMAT, type="string")
-
-	# 		mc.file(rename=uhub_tmpFilePath)
-	# 		snapshotScene = mc.file(save=True)
-	# 		mc.file(rename=uhub_origFilePath)
-	# 		#mc.file(save=True)
-	# 		print("Saved snapshot: %s" % snapshotScene)
-	# 		return snapshotScene
-
-	# 	# elif os.environ['IC_ENV'] == "NUKE":
-	# 	# 	currentScript = nuke.root()['name'].value()
-	# 	# 	#dirname, basename = os.path.split(currentScript)
-	# 	# 	#snapshotScript = os.path.join(tmpdir, basename)
-	# 	# 	base, ext = os.path.splitext(basename)
-	# 	# 	snapshotScript = "%s_snapshot_%s%s" % (base, timestamp, ext)
-	# 	# 	nuke.scriptSave(snapshotScript)
-	# 	# 	nuke.root()['name'].setValue(currentScript)
-	# 	# 	return snapshotScript
+	# 	self.settings.remove("fileBrowserView")
 
 
-	def saveScene(self):
-		""" Save the current scene/script if it has been modified.
+	def ok(self):
+		""" Dialog accept function.
 		"""
+		try:
+			for item in self.ui.fileBrowser_treeWidget.selectedItems():
+				filename = item.text(4)
+
+		except ValueError:
+			pass
+
+		print("Open %s" % filename)
+
 		if os.environ['IC_ENV'] == "STANDALONE":
-			pass  # Do nothing
+			pass
 
 		elif os.environ['IC_ENV'] == "MAYA":
-			# Check if scene is modified before saving, as Maya scene files
-			# can be quite large and saving can be slow.
-			if mc.file(q=True, modified=True):
-				mc.file(save=True)
+			recentFiles.updateLs(mc.file(filename, open=True, force=True, ignoreVersion=True))
 
 		elif os.environ['IC_ENV'] == "HOUDINI":
-			hou.hipFile.save()
+			pass
 
 		elif os.environ['IC_ENV'] == "NUKE":
-			nuke.scriptSave()
+			nuke.scriptOpen(filename)
+			recentFiles.updateLs(filename)
+
+		self.returnValue = filename
+		self.accept()
 
 
-	def incrementScene(self):
-		""" Increment the minor version number. For Maya, don't save as this
-			can be slow for large scenes. Instead copy the previous scene
-			file via the OS.
-		"""
-		if os.environ['IC_ENV'] == "STANDALONE":
-			pass  # Do nothing
-
-		elif os.environ['IC_ENV'] == "MAYA":
-			# As the scene will have just been saved, we create a copy of the
-			# scene and increment the minor version, and point the Maya file
-			# to the updated scene file. This gives us a performance gain by
-			# avoiding the overhead of a second save operation, which can be
-			# slow for large Maya ASCII scenes.
-			from u_vfx.u_maya.scripts.python import sceneManager
-			current_scene = mc.file(query=True, expandName=True)
-			ext = os.path.splitext(current_scene)[1]
-			updated_scene = sceneManager.versionUp(saveScene=False)
-			if updated_scene:
-				updated_scene += ext
-				oswrapper.copy(current_scene, updated_scene)
-				mc.file(rename=updated_scene)
-				# self.addSceneEntry(self.ui.mayaScene_comboBox, updated_scene)
-				self.getScene()
-
-		elif os.environ['IC_ENV'] == "HOUDINI":
-			from u_vfx.u_houdini.scripts import sceneManager
-			if sceneManager.versionUp():
-				self.getScene()
-
-		elif os.environ['IC_ENV'] == "NUKE":
-			from u_vfx.u_nuke.scripts import compManager
-			if compManager.versionUp():
-				self.getScene()
-
-
-	def about(self):
-		""" Show about dialog.
-		"""
-		import about
-
-		info_ls = []
-		sep = " | "
-		for key, value in self.getInfo().items():
-			if key in ['Environment', 'OS']:
-				pass
-			else:
-				info_ls.append("{} {}".format(key, value))
-		info_str = sep.join(info_ls)
-
-		about_msg = """
-%s
-v%s
-
-A unified tool for submitting render jobs to Deadline.
-
-Developer: Mike Bonnington
-(c) 2016-2019
-
-%s
-""" % (cfg['window_title'], VERSION, info_str)
-
-		aboutDialog = about.AboutDialog(parent=self)
-		aboutDialog.display(
-			bg_color=QtGui.QColor('#5b6368'), 
-			icon_pixmap=self.iconTint(
-				'clapperboard.png', 
-				tint=QtGui.QColor('#6e777d')), 
-			message=about_msg)
+	# def keyPressEvent(self, event):
+	# 	""" Override function to prevent Enter / Esc keypresses triggering
+	# 		OK / Cancel buttons.
+	# 	"""
+	# 	if event.key() == QtCore.Qt.Key_Return \
+	# 	or event.key() == QtCore.Qt.Key_Enter:
+	# 		return
 
 
 	def closeEvent(self, event):
-		""" Event handler for when window is closed.
+		""" Event handler for when window is closed. Save settings, store
+			window gemotry and state of certain widgets
 		"""
-		self.save()  # Save settings
-		self.storeWindow()  # Store window geometry
+		self.save()
+		self.storeWindow()
+		self.settings.setValue(
+			"fileBrowserView", 
+			self.ui.fileBrowser_treeWidget.header().saveState())
 
 # ----------------------------------------------------------------------------
 # End of main window class

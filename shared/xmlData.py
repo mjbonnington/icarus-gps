@@ -31,12 +31,6 @@ class XMLData():
 		self.tree = ET.ElementTree(self.root)
 
 
-	def read(self, **kwargs):
-		""" Convenience wrapper for loadXML().
-		"""
-		return self.loadXML(**kwargs)
-
-
 	def loadXML(self, datafile=None, use_template=False, quiet=False):
 		""" Load XML data.
 			Omit the keyword argument 'datafile' to reload the data.
@@ -71,12 +65,6 @@ class XMLData():
 				verbose.warning('XML data file is invalid or doesn\'t exist: "%s"' %self.datafile)
 			self.createXML()
 			return False
-
-
-	def write(self):
-		""" Convenience wrapper for saveXML().
-		"""
-		return self.saveXML()
 
 
 	def saveXML(self):

@@ -227,14 +227,26 @@
       </property>
       <item>
        <widget class="QTreeWidget" name="fileBrowser_treeWidget">
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="rootIsDecorated">
+         <bool>false</bool>
+        </property>
         <property name="uniformRowHeights">
          <bool>true</bool>
+        </property>
+        <property name="itemsExpandable">
+         <bool>false</bool>
         </property>
         <property name="sortingEnabled">
          <bool>true</bool>
         </property>
         <property name="allColumnsShowFocus">
          <bool>true</bool>
+        </property>
+        <property name="expandsOnDoubleClick">
+         <bool>false</bool>
         </property>
         <attribute name="headerStretchLastSection">
          <bool>true</bool>
@@ -257,6 +269,11 @@
         <column>
          <property name="text">
           <string>Artist</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Full file path</string>
          </property>
         </column>
        </widget>

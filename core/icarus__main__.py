@@ -80,7 +80,6 @@ from shared import verbose
 # ----------------------------------------------------------------------------
 
 NAME = "Icarus"
-VENDOR = "Gramercy Park Studios"
 COPYRIGHT = "(c) 2013-2019"
 DEVELOPERS = "Nuno Pereira, Mike Bonnington, Ben Parry"
 
@@ -89,7 +88,7 @@ if os.environ['IC_ENV'] == 'STANDALONE':
 	WINDOW_TITLE = NAME
 else:
 	WINDOW_TITLE = NAME + " - " + os.environ['IC_ENV'].capitalize()
-WINDOW_OBJECT = "icarusMainUI"
+WINDOW_OBJECT = "IcarusMainUI"
 
 # Set the UI and the stylesheet
 UI_FILE = "icarus_ui.ui"
@@ -1061,7 +1060,7 @@ Developers: %s
 	  os.environ['IC_ENV'],
 	  DEVELOPERS,
 	  COPYRIGHT,
-	  VENDOR)
+	  os.environ['IC_VENDOR'])
 
 		from . import about
 		about = about.dialog(parent=self)
@@ -1087,7 +1086,7 @@ Developers: %s
 			xmlData = os.path.join(os.environ['IC_USERPREFS'], 'userPrefs.xml')
 			inherit = None  # "Defaults"
 		elif settingsType == "Global":
-			categoryLs = ['global', ]
+			categoryLs = ['global', 'test']
 			xmlData = os.path.join(os.path.join(os.environ['IC_CONFIGDIR'], 'globalPrefs.xml'))
 			inherit = None
 		if settingsType == "App":  # Temporary
@@ -1781,7 +1780,7 @@ Developers: %s
 		# DAILIES #
 		###########
 		elif self.pblType == 'Dailies':
-			from publish import ic_dailyPbl;
+			from publish import ic_dailyPbl
 			self.getDailyPblOpts() # required just to get self.checkLs
 			if not pblChk.chkOpts(self.chkLs):  # Check for entries in mandatory fields
 				return
@@ -2103,7 +2102,7 @@ os.environ['IC_NUMRECENTFILES'] = userPrefs.query('recent', 'numrecentfiles', da
 # Print launch initialisation message
 verbose.icarusLaunch(name=NAME.upper(), 
                      version=os.environ['IC_VERSION'], 
-                     vendor="%s %s" %(COPYRIGHT, VENDOR), 
+                     vendor="%s %s" %(COPYRIGHT, os.environ['IC_VENDOR']), 
                      location=os.environ['IC_BASEDIR'], 
                      env=os.environ['IC_ENV'], 
                      user=os.environ['IC_USERNAME'], 

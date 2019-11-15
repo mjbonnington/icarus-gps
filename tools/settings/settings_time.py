@@ -3,7 +3,7 @@
 # [Icarus] settings_time.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2018 Gramercy Park Studios
+# (c) 2015-2019 Gramercy Park Studios
 #
 # Time settings handler.
 
@@ -70,11 +70,12 @@ class helper():
 		"""
 		durationFrames = rangeEnd - rangeStart + 1
 
-		fps = self.parent.xd.getValue('units', 'fps', type='float')
-		if fps == "":
+		fps = self.parent.prefs.getValue('units', 'fps', type='float')
+		if fps == None:
 			if self.parent.inherit:
-				fps = self.parent.id.getValue('units', 'fps', type='float')
-		if fps == "":
+				fps = self.parent.prefs_inherited.getValue(
+					'units', 'fps', type='float')
+		if fps == None:
 			verbose.warning("Undefined FPS.")
 			return durationFrames, ""
 
@@ -91,4 +92,3 @@ class helper():
 		formattedStr = "%s @ %s fps" %(durationStr, round(fps, 3))
 
 		return durationFrames, formattedStr
-

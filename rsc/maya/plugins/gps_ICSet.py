@@ -1,6 +1,7 @@
+import os
+import sys
 import maya.OpenMaya as OpenMaya
 import maya.OpenMayaMPx as OpenMayaMPx
-import sys
 
 kNodeName = "ICSet"
 kNodeId = OpenMaya.MTypeId(0x00122580)
@@ -10,10 +11,10 @@ kNodeId = OpenMaya.MTypeId(0x00122580)
 class ICSet(OpenMayaMPx.MPxObjectSet):
 	def __init__(self):
 		OpenMayaMPx.MPxObjectSet.__init__(self)
+
 # creator
 def nodeCreator():
 	return OpenMayaMPx.asMPxPtr(ICSet())
-
 
 # initializer
 def nodeInitializer():
@@ -53,10 +54,9 @@ def nodeInitializer():
 	ICSet.overrideComponentColor = overrideComponentColorAttr.create("overrideComponentColor", "overrideComponentColor", OpenMaya.MFnNumericData.kInt, 26)
 	ICSet.addAttribute(ICSet.overrideComponentColor)
 
-
 # initialize the script plug-in
 def initializePlugin(mobject):
-	mplugin = OpenMayaMPx.MFnPlugin(mobject, "Gramercy Park Studios", "1.0", "Any")
+	mplugin = OpenMayaMPx.MFnPlugin(mobject, os.environ['IC_VENDOR'], "1.0", "Any")
 	try:
 		mplugin.registerNode(kNodeName, kNodeId, nodeCreator, nodeInitializer, OpenMayaMPx.MPxNode.kObjectSet)
 	except:

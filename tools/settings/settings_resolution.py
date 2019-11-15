@@ -3,7 +3,7 @@
 # [Icarus] settings_resolution.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2017 Gramercy Park Studios
+# (c) 2015-2019 Gramercy Park Studios
 #
 # Resolution settings handler.
 
@@ -74,8 +74,8 @@ class helper():
 			widget.
 		"""
 		try:
-			return int(self.parent.xd.getValue('resolution', attr))
-		except ValueError:
+			return int(self.parent.prefs.getValue('resolution', attr))
+		except (TypeError, ValueError):
 			return self.frame.findChildren(QtWidgets.QSpinBox, '%s_spinBox' %attr)[0].value()
 
 
@@ -84,8 +84,8 @@ class helper():
 		"""
 		# # fullWidth = self.frame.fullWidth_spinBox.value()
 		# # fullHeight = self.frame.fullHeight_spinBox.value()
-		# fullWidth = int(self.parent.xd.getValue('resolution', 'fullWidth'))
-		# fullHeight = int(self.parent.xd.getValue('resolution', 'fullHeight'))
+		# fullWidth = int(self.parent.prefs.getValue('resolution', 'fullWidth'))
+		# fullHeight = int(self.parent.prefs.getValue('resolution', 'fullHeight'))
 		fullWidth = self.getInt('fullWidth')
 		fullHeight = self.getInt('fullHeight')
 		ar = Fraction(fullWidth, fullHeight)
@@ -268,10 +268,10 @@ class helper():
 		# # fullHeight = self.frame.fullHeight_spinBox.value()
 		# # proxyWidth = self.frame.proxyWidth_spinBox.value()
 		# # proxyHeight = self.frame.proxyHeight_spinBox.value()
-		# fullWidth = int(self.parent.xd.getValue('resolution', 'fullWidth'))
-		# fullHeight = int(self.parent.xd.getValue('resolution', 'fullHeight'))
-		# proxyWidth = int(self.parent.xd.getValue('resolution', 'proxyWidth'))
-		# proxyHeight = int(self.parent.xd.getValue('resolution', 'proxyHeight'))
+		# fullWidth = int(self.parent.prefs.getValue('resolution', 'fullWidth'))
+		# fullHeight = int(self.parent.prefs.getValue('resolution', 'fullHeight'))
+		# proxyWidth = int(self.parent.prefs.getValue('resolution', 'proxyWidth'))
+		# proxyHeight = int(self.parent.prefs.getValue('resolution', 'proxyHeight'))
 		fullWidth = self.getInt('fullWidth')
 		fullHeight = self.getInt('fullHeight')
 		proxyWidth = self.getInt('proxyWidth')

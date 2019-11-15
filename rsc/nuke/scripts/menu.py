@@ -49,6 +49,7 @@ save = 'import gpsSave; gpsSave.save(incr=False)'
 saveAs = 'import gpsSave; gpsSave.save(saveAs=True)'
 incrSave = 'import gpsSave; gpsSave.save(incr=True)'
 openScript = 'nuke.scriptOpen(\"%s/.\")' % os.environ["NUKESCRIPTSDIR"].replace('\\', '/')
+#openScript = 'from tools.scenemanager import file_open; file_open.run_nuke(session)'
 openScriptsDir = 'from shared import openDirs; openDirs.openNukeScripts()'
 openRendersDir = 'from shared import openDirs; openDirs.openNukeRenders()'
 openElementsDir = 'from shared import openDirs; openDirs.openNukeElements()'

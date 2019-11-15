@@ -25,7 +25,7 @@ class helper():
 		self.frame = frame
 		self.parent = parent
 
-		self.jd = parent.xd
+		self.jd = parent.prefs
 		self.ap = appPaths.AppPaths()
 		ap_load = self.ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'), use_template=True)
 
@@ -43,7 +43,7 @@ class helper():
 		appPaths_pushButton = self.frame.appPaths_pushButton
 
 		formLayout.setWidget(len(app_ls), QtWidgets.QFormLayout.FieldRole, appPaths_pushButton)  # Move edit button to bottom of form
-		appPaths_pushButton.clicked.connect(lambda: self.appPathsEditor())  # Only works a lambda for some reason
+		appPaths_pushButton.clicked.connect(lambda: self.appPathsEditor())  # Only works with a lambda for some reason
 
 		for i, app in enumerate(app_ls):
 			appName = app.get('id')
@@ -92,4 +92,3 @@ class helper():
 		if editAppPathsDialog.display():
 			self.ap.loadXML()  # Reload XML and update comboBox contents after closing dialog
 			self.parent.openProperties('apps')
-
