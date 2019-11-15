@@ -2069,12 +2069,12 @@ def window(app='standalone', parent=None):
 		# On Windows best results are obtained when this is disabled.
 		# On Mac, best option is unclear due to inconsistent results.
 		# Linux has not been tested.
-		if os.environ['IC_RUNNING_OS'] == "MacOS":
-			styles = QtWidgets.QStyleFactory.keys()
-			if 'Fusion' in styles:
-				ic_app.setStyle('Fusion')  # Qt5
-			elif 'Plastique' in styles:
-				ic_app.setStyle('Plastique')  # Qt4
+		# if os.environ['IC_RUNNING_OS'] == "MacOS":
+		# 	styles = QtWidgets.QStyleFactory.keys()
+		# 	if 'Fusion' in styles:
+		# 		ic_app.setStyle('Fusion')  # Qt5
+		# 	elif 'Plastique' in styles:
+		# 		ic_app.setStyle('Plastique')  # Qt4
 
 		# Apply UI style sheet
 		if STYLESHEET is not None:

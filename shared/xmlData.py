@@ -31,6 +31,12 @@ class XMLData():
 		self.tree = ET.ElementTree(self.root)
 
 
+	def read(self, **kwargs):
+		""" Convenience wrapper for loadXML().
+		"""
+		return self.loadXML(**kwargs)
+
+
 	def loadXML(self, datafile=None, use_template=False, quiet=False):
 		""" Load XML data.
 			Omit the keyword argument 'datafile' to reload the data.
