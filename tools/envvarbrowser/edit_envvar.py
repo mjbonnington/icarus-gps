@@ -16,7 +16,7 @@ from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
 
 # Import custom modules
-# import os_wrapper
+# from shared import os_wrapper
 
 
 # ----------------------------------------------------------------------------

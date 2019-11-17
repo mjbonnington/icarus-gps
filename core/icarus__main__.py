@@ -814,7 +814,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		"""
 		index = comboBox.findText(text)
 
-		if index is not -1:
+		if index != -1:
 			comboBox.setCurrentIndex(index)
 			return True
 		else:
@@ -2047,6 +2047,21 @@ def main_application():
 	return QtWidgets.QApplication(sys.argv)
 
 
+def get_style():
+	""" Return recommended Qt application style.
+		On Windows best results are obtained when this is disabled.
+		On Mac, best option is unclear due to inconsistent results.
+		Linux has not been tested.
+	"""
+	if os.environ['IC_RUNNING_OS'] == "MacOS":
+		styles = QtWidgets.QStyleFactory.keys()
+		if 'Fusion' in styles:
+			return 'Fusion'  # Qt5
+		elif 'Plastique' in styles:
+			return 'Plastique'  # Qt4
+	return None
+
+
 def window(app='standalone', parent=None):
 	""" Return main Icarus window - 'parent' will be ignored unless 'app' is
 		'standalone'.
@@ -2063,25 +2078,8 @@ def window(app='standalone', parent=None):
 	# Instantiate main application class
 	ic_app = IcarusApp(parent)
 
+	# Set window title, flags and application icon
 	if app == 'standalone':
-		# Apply application style.
-		# On Windows best results are obtained when this is disabled.
-		# On Mac, best option is unclear due to inconsistent results.
-		# Linux has not been tested.
-		# if os.environ['IC_RUNNING_OS'] == "MacOS":
-		# 	styles = QtWidgets.QStyleFactory.keys()
-		# 	if 'Fusion' in styles:
-		# 		ic_app.setStyle('Fusion')  # Qt5
-		# 	elif 'Plastique' in styles:
-		# 		ic_app.setStyle('Plastique')  # Qt4
-
-		# Apply UI style sheet
-		if STYLESHEET is not None:
-			qss = os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
-			with open(qss, "r") as fh:
-				ic_app.setStyleSheet(fh.read())
-
-		# Set window title, flags and application icon
 		ic_app.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowCloseButtonHint)
 		ic_app.setWindowIcon(QtGui.QIcon(os.path.join(os.environ['IC_FORMSDIR'], 'icons', 'icarus.png')))
 

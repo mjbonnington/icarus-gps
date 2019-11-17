@@ -17,7 +17,7 @@ from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
 
 # Import custom modules
-import edit_envvar
+from . import edit_envvar
 
 
 # ----------------------------------------------------------------------------

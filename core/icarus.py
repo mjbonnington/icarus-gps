@@ -28,6 +28,12 @@ def standalone():
 	""" Run in standalone mode.
 	"""
 	main_app = icarus__main__.main_application()
+
+	# Apply application style
+	style = icarus__main__.get_style()
+	if style is not None:
+		main_app.setStyle(style)
+
 	icarus = icarus__main__.window()
 	icarus.show()
 	sys.exit(main_app.exec_())

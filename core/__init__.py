@@ -5,9 +5,8 @@
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2019 Gramercy Park Studios
 #
-# Initialise Icarus environment.
+# Initialise Icarus environment and add libs to sys path.
 
 
-# Initialise Icarus environment and add libs to sys path
 from . import env__init__
 env__init__.set_env()

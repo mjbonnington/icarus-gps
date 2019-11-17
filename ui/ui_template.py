@@ -186,7 +186,7 @@ class TemplateUI(object):
 					os.environ['IC_VENDOR'], uiName)
 				self.restoreGeometry(self.settings.value("geometry", ""))
 				verbose.print_("Restoring window geometry for '%s'." % self.objectName())
-			except KeyError:
+			except (KeyError, TypeError):
 				verbose.warning("Could not restore window geometry for '%s'." % self.objectName())
 
 			# # Use QSettings to store window geometry and state.
