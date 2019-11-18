@@ -949,7 +949,7 @@ class TemplateUI(object):
 			stylesheet = stylesheet.replace(r"%theme%", self.imgtheme)
 
 			# Replace font tokens
-			if os.environ['IC_RUNNING_OS'] == 'WINDOWS':
+			if os.environ['IC_RUNNING_OS'] == 'Windows':
 				stylesheet = stylesheet.replace(r"%systemfont%", "'Segoe UI'")
 			else:
 				stylesheet = stylesheet.replace(r"%systemfont%", "")
