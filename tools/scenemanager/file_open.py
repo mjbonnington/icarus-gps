@@ -136,21 +136,22 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 				"%s Open Scene - %s" % (
 					os.environ['IC_VENDOR_INITIALS'], os.environ['IC_JOB']))
 			self.base_dir = os_wrapper.absolutePath('$MAYASCENESDIR/..')
-			self.file_filter = '*.ma' # r'^\*\.m[a|b]$'
+			# self.file_filter = '*.ma' # r'^\*\.m[a|b]$'
+			self.file_filter = ['*.ma', '*.mb'] # r'^\*\.m[a|b]$'
 
 		elif os.environ['IC_ENV'] == "HOUDINI":
 			self.setWindowTitle(
 				"%s Open Scene - %s" % (
 					os.environ['IC_VENDOR_INITIALS'], os.environ['IC_JOB']))
 			self.base_dir = os_wrapper.absolutePath('$HIP')  # needs thought
-			self.file_filter = '*.hip'
+			self.file_filter = ['*.hip', ]
 
 		elif os.environ['IC_ENV'] == "NUKE":
 			self.setWindowTitle(
 				"%s Open Script - %s" % (
 					os.environ['IC_VENDOR_INITIALS'], os.environ['IC_JOB']))
 			self.base_dir = os_wrapper.absolutePath('$NUKESCRIPTSDIR/..')
-			self.file_filter = '*.nk'
+			self.file_filter = ['*.nk', '*.nknc']
 
 		self.populateComboBox(self.ui.artist_comboBox, self.getArtists())
 		self.updateView(self.base_dir)
@@ -172,8 +173,9 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		# Populate tree widget
 		matches = []
 		for root, dirnames, filenames in os.walk(base_dir):
-			for filename in fnmatch.filter(filenames, self.file_filter):
-				matches.append(os.path.join(root, filename))
+			for filetype in self.file_filter:
+				for filename in fnmatch.filter(filenames, filetype):
+					matches.append(os.path.join(root, filename))
 
 		print(matches)
 		for item in matches:

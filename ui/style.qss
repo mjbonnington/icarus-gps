@@ -30,7 +30,7 @@ QWidget {
 	selection-background-color: rgb(112, 158, 50);
 	selection-color: rgb(255, 255, 255);
 	color: rgb(204, 204, 204);
-	font-family: 'Segoe UI', '.SF NS Text'; /* Lucida Grande, Sans, sans-serif */
+	font-family: %systemfont%;
 	font-size: 11px;
 	font-weight: normal;
 }
@@ -1533,18 +1533,21 @@ QSlider::handle:disabled {
 
 *[mandatoryField="true"] { /* custom colour for mandatory fields */
 	background: rgb(249, 38, 114);
+	border-color: rgb(249, 38, 114);
 	color: rgb(51, 51, 51);
 	/*border-top-color: rgb(51, 51, 51);*/
 }
 
 *[warning="true"] { /* custom colour for warning messages */
 	background: rgb(230, 219, 116);
+	border-color: rgb(230, 219, 116);
 	color: rgb(51, 51, 51);
 	/*border-top-color: rgb(51, 51, 51);*/
 }
 
 *[inheritedValue="true"] { /* custom colour for inherited attribute values */
 	background: rgb(161, 239, 228);
+	border-color: rgb(161, 239, 228);
 	color: rgb(51, 51, 51);
 	/*border-top-color: rgb(51, 51, 51);*/
 }

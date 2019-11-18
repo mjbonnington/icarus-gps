@@ -73,8 +73,13 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.ui.settings_buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.reject)
 
 
-	def display(self, settingsType="Generic", categoryLs=[], startPanel=None, 
-	            xmlData=None, inherit=None, autoFill=False):
+	def display(self, 
+		settingsType="Generic", 
+		categoryLs=[], 
+		startPanel=None, 
+		xmlData=None, 
+		inherit=None, 
+		autoFill=False):
 		""" Display the dialog.
 
 			'settingsType' is the name given to the settings dialog.
@@ -180,7 +185,7 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		ui_file = "settings_%s_ui.ui" %category
 		helper_module = 'settings_%s' %category
 		panel_ui_loaded = False
-		# helper_module_loaded = False
+		helper_module_loaded = False
 
 		# Create new frame to hold properties UI & load into frame
 		self.ui.settings_frame.close()
@@ -190,19 +195,23 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 			self.ui.settings_verticalLayout.addWidget(self.ui.settings_frame)
 			panel_ui_loaded = True
 		except FileNotFoundError:
-			message = "Could not open '%s' properties panel." %category
+			message = "Could not open '%s' properties panel UI. " %category
 			verbose.error(message)
 
 		# Load helper module
 		try:
-			exec_str = 'import %s as sh; helper = sh.helper(self, self.ui.settings_frame)' %helper_module
+			exec_str = 'from . import %s as sh; helper = sh.helper(self, self.ui.settings_frame)' %helper_module
 			# print(exec_str)
 			exec(exec_str)
-			# helper_module_loaded = True
+			helper_module_loaded = True
 		except ImportError:
-			pass
+			message = "Could not import '%s' module. " %helper_module
+			verbose.warning(message)
 
-		return panel_ui_loaded
+		if panel_ui_loaded: # and helper_module_loaded:
+			return True
+		else:
+			return False
 
 
 	def removeOverrides(self):
