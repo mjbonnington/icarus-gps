@@ -15,7 +15,8 @@
 
 
 import datetime
-import fnmatch
+# import fnmatch
+import glob
 import os
 import sys
 # import time
@@ -95,8 +96,9 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		# Connect signals & slots
 		# self.ui.shot_toolButton.clicked.connect(self.setShot)
 
-		# self.ui.discipline_comboBox.currentIndexChanged.connect(self.disciplineChanged)
-		self.ui.artist_comboBox.currentIndexChanged.connect(self.artistChanged)
+		self.ui.shot_lineEdit.textChanged.connect(self.updateFilters)
+		self.ui.discipline_comboBox.currentIndexChanged.connect(self.updateFilters)
+		self.ui.artist_comboBox.currentIndexChanged.connect(self.updateFilters)
 
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Open).clicked.connect(self.openFile)
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.close)
@@ -132,42 +134,52 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		self.ui.shot_lineEdit.setText(os.environ['SCNMGR_SHOT'])
 
 		self.base_dir = os_wrapper.absolutePath('$SCNMGR_SAVE_DIR/..')
-		self.file_filter = os.environ['SCNMGR_FILE_EXT'].split(os.pathsep)
-
-		# # Set job type from pipeline environment when possible
-		# if os.environ['IC_ENV'] == "STANDALONE":
-		# 	pass
-
-		# elif os.environ['IC_ENV'] == "MAYA":
-		# 	self.setWindowTitle(
-		# 		"%s Open Scene - %s" % (
-		# 			os.environ['IC_VENDOR_INITIALS'], os.environ['IC_JOB']))
-		# 	self.base_dir = os_wrapper.absolutePath('$MAYASCENESDIR/..')
-		# 	# self.file_filter = '*.ma' # r'^\*\.m[a|b]$'
-		# 	self.file_filter = ['*.ma', '*.mb'] # r'^\*\.m[a|b]$'
-
-		# elif os.environ['IC_ENV'] == "HOUDINI":
-		# 	self.setWindowTitle(
-		# 		"%s Open Scene - %s" % (
-		# 			os.environ['IC_VENDOR_INITIALS'], os.environ['IC_JOB']))
-		# 	self.base_dir = os_wrapper.absolutePath('$HIP')  # needs thought
-		# 	self.file_filter = ['*.hip', ]
-
-		# elif os.environ['IC_ENV'] == "NUKE":
-		# 	self.setWindowTitle(
-		# 		"%s Open Script - %s" % (
-		# 			os.environ['IC_VENDOR_INITIALS'], os.environ['IC_JOB']))
-		# 	self.base_dir = os_wrapper.absolutePath('$NUKESCRIPTSDIR/..')
-		# 	self.file_filter = ['*.nk', '*.nknc']
+		self.file_ext = os.environ['SCNMGR_FILE_EXT'].split(os.pathsep)
+		# self.file_filter = os.path.splitext(os.environ['SCNMGR_CONVENTION'])[0]
+		# self.file_filter.replace("<shot>", os.environ['SCNMGR_SHOT'])
 
 		self.populateComboBox(self.ui.artist_comboBox, self.getArtists())
 		self.updateView(self.base_dir)
 
 		self.show()
 		self.raise_()
-		# self.exec_()
 
 		return self.returnValue
+
+
+	# @QtCore.Slot()
+	def updateFilters(self):
+		""" Update the search filter to show filenames based on the currently
+			selected values, which match the naming convention described in
+			the environment variable 'SCNMGR_CONVENTION'.
+		"""
+		ignore_list = ["[any]", "[please select]", "", None]
+
+		shot = self.ui.shot_lineEdit.text()
+		discipline = self.ui.discipline_comboBox.currentText()
+		artist = self.ui.artist_comboBox.currentText()
+
+		# Current naming convention for reference:
+		# <artist>/<shot>.<discipline>.[<description>.]<version>.ext
+
+		# Remove file extension
+		self.file_filter = os.path.splitext(os.environ['SCNMGR_CONVENTION'])[0]
+
+		# Replace compulsory tokens
+		self.file_filter = self.file_filter.replace("<shot>", shot)
+
+		# Replace known tokens
+		if discipline not in ignore_list:
+			self.file_filter = self.file_filter.replace("<discipline>", discipline)
+		if artist not in ignore_list:
+			self.file_filter = self.file_filter.replace("<artist>", artist)
+
+		# Replace unspecified tokens with wildcards
+		self.file_filter = self.file_filter.replace("<artist>", "*")
+		self.file_filter = self.file_filter.replace("<discipline>", "*")
+		self.file_filter = self.file_filter.replace("[<description>.]<version>", "*")
+
+		self.updateView(self.base_dir)
 
 
 	def updateView(self, base_dir):
@@ -179,17 +191,22 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 
 		# Populate tree widget
 		matches = []
-		for root, dirnames, filenames in os.walk(base_dir):
-			for filetype in self.file_filter:
-				for filename in fnmatch.filter(filenames, "*" + filetype):
-					matches.append(os.path.join(root, filename))
+		for filetype in self.file_ext:
+			search_pattern = os.path.join(self.base_dir, self.file_filter+filetype)
+			# print search_pattern
+			for filepath in glob.glob(search_pattern):
+				matches.append(filepath)
+		# for root, dirnames, filenames in os.walk(base_dir):
+		# 	for filetype in self.file_ext:
+		# 		for filename in fnmatch.filter(filenames, "*" + filetype):
+		# 			matches.append(os.path.join(root, filename))
 		# delimiter='.v'
 		# for base in sequence.getBases(base_dir, delimiter=delimiter):
 		# 	path, prefix, v_range, ext, num_versions = sequence.getSequence(
 		# 		base_dir, base, delimiter=delimiter, ignorePadding=False)
 		# 	latest = max(sequence.numList(v_range))
-		# 	v_str = 'v' + str(latest).zfill(3)
-		# 	filename = 'prefix.%s.%s' % (v_str, ext)
+		# 	v_str = delimiter + str(latest).zfill(3)
+		# 	filename = prefix + v_str + ext
 		# 	matches.append(os.path.join(path, filename))
 
 		# print(matches)
@@ -216,18 +233,6 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 
 		# Sort by submit time column - move this somewhere else?
 		# self.ui.fileBrowser_treeWidget.sortByColumn(2, QtCore.Qt.DescendingOrder)
-
-
-	def artistChanged(self):
-		""" Update the base dir for the specified artist.
-		"""
-		artist = self.ui.artist_comboBox.currentText()
-		if artist == "[any]" \
-		or artist == "" \
-		or artist == None:
-			self.updateView(self.base_dir)
-		else:
-			self.updateView(os.path.join(self.base_dir, artist))
 
 
 	def getArtists(self):

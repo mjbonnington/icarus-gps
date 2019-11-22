@@ -126,7 +126,7 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 		self.setWindowTitle("%s - %s" % (cfg['window_title'], os.environ['SCNMGR_JOB']))
 		self.ui.shot_lineEdit.setText(os.environ['SCNMGR_SHOT'])
 
-		self.file_filter = os.environ['SCNMGR_FILE_EXT'].split(os.pathsep)
+		self.file_ext = os.environ['SCNMGR_FILE_EXT'].split(os.pathsep)
 
 		self.updateFilename()
 
@@ -164,13 +164,13 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 		# filename = filename.replace('<discipline>', discipline)
 		# filename = filename.replace('[description]', description)
 		# filename = filename.replace('<version>', v_str)
-		# computed_filename = filename + self.file_filter[0]  # Append file extension
+		# computed_filename = filename + self.file_ext[0]  # Append file extension
 
 		if description == "":
 			computed_filename = ".".join([shot, discipline, v_str])
 		else:
 			computed_filename = ".".join([shot, discipline, description, v_str])
-		computed_filename += self.file_filter[0]  # Add file extension
+		computed_filename += self.file_ext[0]  # Add file extension
 		self.ui.filename_lineEdit.setText(computed_filename)
 
 		return computed_filename
