@@ -5,7 +5,7 @@
 # Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2019
 #
-# Scene Manager - Open File
+# Scene Manager - Open File Dialog
 # A UI for opening files/scenes/scripts.
 # - Automatically handle file save locations, naming conventions and versions.
 # - Provide a consistent experience across DCC apps.
@@ -56,16 +56,19 @@ VERSION = "0.1.0"
 cfg = {}
 
 # Set window title and object names
-cfg['window_title'] = "Open"
 cfg['window_object'] = "fileOpenUI"
+if os.environ['SCNMGR_VENDOR_INITIALS']:
+	cfg['window_title'] = "%s Open" % os.environ['SCNMGR_VENDOR_INITIALS']
+else:
+	cfg['window_title'] = "Open"
 
 # Set the UI and the stylesheet
 cfg['ui_file'] = 'file_open.ui'
 cfg['stylesheet'] = 'style.qss'  # Set to None to use the parent app's stylesheet
 
 # Other options
-prefs_location = os.environ['IC_USERPREFS']
-cfg['prefs_file'] = os.path.join(prefs_location, 'scenemanager_prefs.json')
+cfg['prefs_file'] = os.path.join(
+	os.environ['SCNMGR_USER_PREFS_DIR'], 'scenemanager_prefs.json')
 cfg['store_window_geometry'] = True
 
 # ----------------------------------------------------------------------------
@@ -95,8 +98,8 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		# self.ui.discipline_comboBox.currentIndexChanged.connect(self.disciplineChanged)
 		self.ui.artist_comboBox.currentIndexChanged.connect(self.artistChanged)
 
-		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Open).clicked.connect(self.ok)
-		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.reject)
+		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Open).clicked.connect(self.openFile)
+		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.close)
 
 		# # Context menus
 		# self.addContextMenu(self.ui.shot_toolButton, "Change", self.setShot)
@@ -125,33 +128,37 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		"""
 		self.returnValue = False
 
-		self.ui.shot_lineEdit.setText(os.environ['IC_SHOT'])
+		self.setWindowTitle("%s - %s" % (cfg['window_title'], os.environ['SCNMGR_JOB']))
+		self.ui.shot_lineEdit.setText(os.environ['SCNMGR_SHOT'])
 
-		# Set job type from pipeline environment when possible
-		if os.environ['IC_ENV'] == "STANDALONE":
-			pass
+		self.base_dir = os_wrapper.absolutePath('$SCNMGR_SAVE_DIR/..')
+		self.file_filter = os.environ['SCNMGR_FILE_EXT'].split(os.pathsep)
 
-		elif os.environ['IC_ENV'] == "MAYA":
-			self.setWindowTitle(
-				"%s Open Scene - %s" % (
-					os.environ['IC_VENDOR_INITIALS'], os.environ['IC_JOB']))
-			self.base_dir = os_wrapper.absolutePath('$MAYASCENESDIR/..')
-			# self.file_filter = '*.ma' # r'^\*\.m[a|b]$'
-			self.file_filter = ['*.ma', '*.mb'] # r'^\*\.m[a|b]$'
+		# # Set job type from pipeline environment when possible
+		# if os.environ['IC_ENV'] == "STANDALONE":
+		# 	pass
 
-		elif os.environ['IC_ENV'] == "HOUDINI":
-			self.setWindowTitle(
-				"%s Open Scene - %s" % (
-					os.environ['IC_VENDOR_INITIALS'], os.environ['IC_JOB']))
-			self.base_dir = os_wrapper.absolutePath('$HIP')  # needs thought
-			self.file_filter = ['*.hip', ]
+		# elif os.environ['IC_ENV'] == "MAYA":
+		# 	self.setWindowTitle(
+		# 		"%s Open Scene - %s" % (
+		# 			os.environ['IC_VENDOR_INITIALS'], os.environ['IC_JOB']))
+		# 	self.base_dir = os_wrapper.absolutePath('$MAYASCENESDIR/..')
+		# 	# self.file_filter = '*.ma' # r'^\*\.m[a|b]$'
+		# 	self.file_filter = ['*.ma', '*.mb'] # r'^\*\.m[a|b]$'
 
-		elif os.environ['IC_ENV'] == "NUKE":
-			self.setWindowTitle(
-				"%s Open Script - %s" % (
-					os.environ['IC_VENDOR_INITIALS'], os.environ['IC_JOB']))
-			self.base_dir = os_wrapper.absolutePath('$NUKESCRIPTSDIR/..')
-			self.file_filter = ['*.nk', '*.nknc']
+		# elif os.environ['IC_ENV'] == "HOUDINI":
+		# 	self.setWindowTitle(
+		# 		"%s Open Scene - %s" % (
+		# 			os.environ['IC_VENDOR_INITIALS'], os.environ['IC_JOB']))
+		# 	self.base_dir = os_wrapper.absolutePath('$HIP')  # needs thought
+		# 	self.file_filter = ['*.hip', ]
+
+		# elif os.environ['IC_ENV'] == "NUKE":
+		# 	self.setWindowTitle(
+		# 		"%s Open Script - %s" % (
+		# 			os.environ['IC_VENDOR_INITIALS'], os.environ['IC_JOB']))
+		# 	self.base_dir = os_wrapper.absolutePath('$NUKESCRIPTSDIR/..')
+		# 	self.file_filter = ['*.nk', '*.nknc']
 
 		self.populateComboBox(self.ui.artist_comboBox, self.getArtists())
 		self.updateView(self.base_dir)
@@ -174,10 +181,18 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		matches = []
 		for root, dirnames, filenames in os.walk(base_dir):
 			for filetype in self.file_filter:
-				for filename in fnmatch.filter(filenames, filetype):
+				for filename in fnmatch.filter(filenames, "*" + filetype):
 					matches.append(os.path.join(root, filename))
+		# delimiter='.v'
+		# for base in sequence.getBases(base_dir, delimiter=delimiter):
+		# 	path, prefix, v_range, ext, num_versions = sequence.getSequence(
+		# 		base_dir, base, delimiter=delimiter, ignorePadding=False)
+		# 	latest = max(sequence.numList(v_range))
+		# 	v_str = 'v' + str(latest).zfill(3)
+		# 	filename = 'prefix.%s.%s' % (v_str, ext)
+		# 	matches.append(os.path.join(path, filename))
 
-		print(matches)
+		# print(matches)
 		for item in matches:
 			fileItem = QtWidgets.QTreeWidgetItem(self.ui.fileBrowser_treeWidget)
 			fileItem.setText(0, os.path.basename(item))
@@ -219,7 +234,7 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		""" Return a list of artists. Calculate from all the subdirectories
 			of base dir plus the current username.
 		"""
-		artists = ["[any]", os.environ['IC_USERNAME']]
+		artists = ["[any]", os.environ['SCNMGR_USER']]
 
 		subdirs = next(os.walk(self.base_dir))[1]
 		if subdirs:
@@ -255,7 +270,7 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 	# 	self.settings.remove("fileBrowserView")
 
 
-	def ok(self):
+	def openFile(self):
 		""" Dialog accept function.
 		"""
 		try:
@@ -265,18 +280,19 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		except ValueError:
 			pass
 
-		print("Open %s" % filename)
+		# print("Open %s" % filename)
 
-		if os.environ['IC_ENV'] == "STANDALONE":
+		if os.environ['SCNMGR_APP'] == "STANDALONE":
 			pass
 
-		elif os.environ['IC_ENV'] == "MAYA":
-			recentFiles.updateLs(mc.file(filename, open=True, force=True, ignoreVersion=True))
+		elif os.environ['SCNMGR_APP'] == "MAYA":
+			recentFiles.updateLs(
+				mc.file(filename, open=True, force=True, ignoreVersion=True))
 
-		elif os.environ['IC_ENV'] == "HOUDINI":
+		elif os.environ['SCNMGR_APP'] == "HOUDINI":
 			pass
 
-		elif os.environ['IC_ENV'] == "NUKE":
+		elif os.environ['SCNMGR_APP'] == "NUKE":
 			nuke.scriptOpen(filename)
 			recentFiles.updateLs(filename)
 
