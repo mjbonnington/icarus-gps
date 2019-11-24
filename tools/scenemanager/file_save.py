@@ -87,10 +87,10 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 		# Set window icon, flags and other Qt attributes
 		self.setWindowFlags(QtCore.Qt.Dialog)
 
-		# # Set icons
-		# self.ui.shot_toolButton.setIcon(self.iconSet('configure.svg'))  # Make more appropriate icon
+		# Set icons
+		# self.ui.shot_toolButton.setIcon(self.iconSet('configure.svg'))  # causes crash?
 
-		# # Connect signals & slots
+		# Connect signals & slots
 		# self.ui.shot_toolButton.clicked.connect(self.setShot)
 
 		self.ui.discipline_comboBox.currentIndexChanged.connect(self.updateFilename)
@@ -124,7 +124,9 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 		self.returnValue = False
 
 		self.setWindowTitle("%s - %s" % (cfg['window_title'], os.environ['SCNMGR_JOB']))
+
 		self.ui.shot_lineEdit.setText(os.environ['SCNMGR_SHOT'])
+		self.ui.shot_toolButton.setEnabled(False)  # temp until implemented
 
 		self.file_ext = os.environ['SCNMGR_FILE_EXT'].split(os.pathsep)
 
@@ -132,7 +134,6 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 
 		self.show()
 		self.raise_()
-		# self.exec_()
 
 		return self.returnValue
 

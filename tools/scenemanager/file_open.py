@@ -18,6 +18,7 @@ import datetime
 # import fnmatch
 import glob
 import os
+import re
 import sys
 # import time
 # import traceback
@@ -77,12 +78,14 @@ cfg['store_window_geometry'] = True
 # ----------------------------------------------------------------------------
 
 class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
-#class FileOpenUI(QtWidgets.QMainWindow, UI.TemplateUI):
 	""" File Open UI.
 	"""
 	def __init__(self, parent=None):
 		super(FileOpenUI, self).__init__(parent)
 		self.parent = parent
+
+		self.base_dir = os_wrapper.absolutePath('$SCNMGR_SAVE_DIR/..')
+		self.file_ext = os.environ['SCNMGR_FILE_EXT'].split(os.pathsep)
 
 		self.setupUI(**cfg)
 		self.conformFormLayoutLabels(self.ui)
@@ -91,25 +94,25 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		self.setWindowFlags(QtCore.Qt.Dialog)
 
 		# Set icons
-		# self.ui.shot_toolButton.setIcon(self.iconSet('configure.svg'))  # Make more appropriate icon
+		# self.ui.shot_toolButton.setIcon(self.iconSet('configure.svg'))  # causes crash?
 
 		# Connect signals & slots
 		# self.ui.shot_toolButton.clicked.connect(self.setShot)
+		# self.ui.shotChange_toolButton.clicked.connect(self.setShot)
+		# self.ui.shotReset_toolButton.clicked.connect(self.resetShot)
 
 		self.ui.shot_lineEdit.textChanged.connect(self.updateFilters)
 		self.ui.discipline_comboBox.currentIndexChanged.connect(self.updateFilters)
 		self.ui.artist_comboBox.currentIndexChanged.connect(self.updateFilters)
+
+		self.ui.fileBrowser_treeWidget.itemSelectionChanged.connect(self.updateSelection)
 
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Open).clicked.connect(self.openFile)
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.close)
 
 		# # Context menus
 		# self.addContextMenu(self.ui.shot_toolButton, "Change", self.setShot)
-		# self.addContextMenu(self.ui.shot_toolButton, "Reset to current", self.setShot)
-
-		# # Set input validators
-		# desc_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w_]+'), self.ui.description_lineEdit)
-		# self.ui.description_lineEdit.setValidator(desc_validator)
+		# self.addContextMenu(self.ui.shot_toolButton, "Reset to current", self.resetShot)
 
 		# Restore widget state
 		self.restoreView()
@@ -131,20 +134,33 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		self.returnValue = False
 
 		self.setWindowTitle("%s - %s" % (cfg['window_title'], os.environ['SCNMGR_JOB']))
-		self.ui.shot_lineEdit.setText(os.environ['SCNMGR_SHOT'])
 
-		self.base_dir = os_wrapper.absolutePath('$SCNMGR_SAVE_DIR/..')
-		self.file_ext = os.environ['SCNMGR_FILE_EXT'].split(os.pathsep)
-		# self.file_filter = os.path.splitext(os.environ['SCNMGR_CONVENTION'])[0]
-		# self.file_filter.replace("<shot>", os.environ['SCNMGR_SHOT'])
+		self.ui.shot_lineEdit.setText(os.environ['SCNMGR_SHOT'])
+		self.ui.shot_toolButton.setEnabled(False)  # temp until implemented
+
+		# self.base_dir = os_wrapper.absolutePath('$SCNMGR_SAVE_DIR/..')
+		# self.file_ext = os.environ['SCNMGR_FILE_EXT'].split(os.pathsep)
 
 		self.populateComboBox(self.ui.artist_comboBox, self.getArtists())
-		self.updateView(self.base_dir)
+		self.updateView()
+		self.updateSelection()
 
 		self.show()
 		self.raise_()
 
 		return self.returnValue
+
+
+	# @QtCore.Slot()
+	def updateSelection(self):
+		""" Enable/disable 'Open' button depending on current selection.
+		"""
+		# No items selected...
+		if len(self.ui.fileBrowser_treeWidget.selectedItems()) == 0:
+			self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Open).setEnabled(False)
+		# More than one item selected...
+		else:
+			self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Open).setEnabled(True)
 
 
 	# @QtCore.Slot()
@@ -179,12 +195,11 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		self.file_filter = self.file_filter.replace("<discipline>", "*")
 		self.file_filter = self.file_filter.replace("[<description>.]<version>", "*")
 
-		self.updateView(self.base_dir)
+		self.updateView()
 
 
-	def updateView(self, base_dir):
+	def updateView(self):
 		""" Update the file browser.
-			'base_dir' is the directory to look in.
 		"""
 		# Clear tree widget
 		self.ui.fileBrowser_treeWidget.clear()
@@ -195,21 +210,47 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 			search_pattern = os.path.join(self.base_dir, self.file_filter+filetype)
 			# print search_pattern
 			for filepath in glob.glob(search_pattern):
-				matches.append(filepath)
-		# for root, dirnames, filenames in os.walk(base_dir):
-		# 	for filetype in self.file_ext:
-		# 		for filename in fnmatch.filter(filenames, "*" + filetype):
-		# 			matches.append(os.path.join(root, filename))
-		# delimiter='.v'
-		# for base in sequence.getBases(base_dir, delimiter=delimiter):
-		# 	path, prefix, v_range, ext, num_versions = sequence.getSequence(
-		# 		base_dir, base, delimiter=delimiter, ignorePadding=False)
-		# 	latest = max(sequence.numList(v_range))
-		# 	v_str = delimiter + str(latest).zfill(3)
-		# 	filename = prefix + v_str + ext
-		# 	matches.append(os.path.join(path, filename))
+				# Only add files, not directories or symlinks
+				if os.path.isfile(filepath) \
+				and not os.path.islink(filepath):
+					matches.append(filepath)
+
+		# # Filter out all but latest version ----------------------------------
+		# # Create list to hold all basenames of sequences
+		# all_bases = []
+		# delimiter = '.v'
+
+		# # Get common bases in list of files
+		# for item in matches:
+		# 	dirname, basename = os.path.split(item)
+
+		# 	# Extract file extension
+		# 	root, ext = os.path.splitext(basename)
+		# 	# print root, ext
+
+		# 	# Match file names which have a trailing number separated by the
+		# 	# delimiter character
+		# 	seqRE = re.compile(r'%s\d+$' % re.escape(delimiter))
+		# 	match = seqRE.search(root)
+
+		# 	# Store version number
+		# 	version = int(match.group().split(delimiter)[1])
+
+		# 	# Store filename prefix
+		# 	if match is not None:
+		# 		prefix = root[:root.rfind(match.group())]
+		# 		result = '%s%s#%s' % (prefix, delimiter, ext)
+		# 		all_bases.append(result)
+
+		# # Remove duplicates & sort list
+		# bases = list(set(all_bases))
+		# bases.sort()
+		# print bases
+		# # matches = bases
+		# # --------------------------------------------------------------------
 
 		# print(matches)
+		# Add entries to tree widget
 		for item in matches:
 			fileItem = QtWidgets.QTreeWidgetItem(self.ui.fileBrowser_treeWidget)
 			fileItem.setText(0, os.path.basename(item))
@@ -222,7 +263,6 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 			fileItem.setText(4, os.path.normpath(item))
 
 			self.ui.fileBrowser_treeWidget.addTopLevelItem(fileItem)
-		# self.ui.fileBrowser_treeWidget()
 
 		# Resize all columns to fit content
 		# for i in range(0, self.ui.fileBrowser_treeWidget.columnCount()):
@@ -283,7 +323,8 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 				filename = item.text(4)
 
 		except ValueError:
-			pass
+			verbose.error("Nothing selected.")
+			return False
 
 		# print("Open %s" % filename)
 
