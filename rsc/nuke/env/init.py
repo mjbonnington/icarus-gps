@@ -9,11 +9,11 @@
 # Nuke initialisation.
 
 
-# Set environment (should be done first)
-os.environ['IC_ENV'] = 'NUKE'
-
 import os
 import sys
+
+# Set environment (should be done first)
+os.environ['IC_ENV'] = 'NUKE'
 
 # Append pipeline base dir to Python path
 sys.path.append(os.environ['IC_BASEDIR'])
@@ -40,7 +40,7 @@ nuke.pluginAddPath('../gizmos/pixelfudger')
 
 # Nuke seems to ditch the main root environment where it has been called from
 # so the path needs to be appended again.
-sys.path.append(os.environ['IC_WORKINGDIR'])
+# sys.path.append(os.environ['IC_WORKINGDIR'])
 from core import env__init__
 env__init__.appendSysPaths()
 # Nuke opens a entire new Nuke process with 'File>New Script' and doesn't
@@ -69,14 +69,13 @@ except KeyError:
 	pass
 
 # Plate format
-plateFormat = '%s %s %s' % (int(os.environ['RESOLUTIONX']), int(os.environ['RESOLUTIONY']), os.environ['IC_SHOT'])
-proxyFormat = '%s %s %s' % (int(os.environ['PROXY_RESOLUTIONX']), int(os.environ['PROXY_RESOLUTIONY']), '%s_proxy' % os.environ['IC_SHOT'])
-nuke.addFormat(plateFormat)
-nuke.addFormat(proxyFormat)
-nuke.knobDefault('Root.format', os.environ['IC_SHOT'])
-nuke.knobDefault('Root.proxy_type', 'format')
-nuke.knobDefault('Root.proxy_format', '%s_proxy' % os.environ['IC_SHOT'])
-nuke.knobDefault('Root.fps', os.environ['FPS'])
-nuke.knobDefault('Root.first_frame', os.environ['STARTFRAME'])
-nuke.knobDefault('Root.last_frame', os.environ['ENDFRAME'])
-
+# plateFormat = '%s %s %s' % (int(os.environ['RESOLUTIONX']), int(os.environ['RESOLUTIONY']), os.environ['IC_SHOT'])
+# proxyFormat = '%s %s %s' % (int(os.environ['PROXY_RESOLUTIONX']), int(os.environ['PROXY_RESOLUTIONY']), '%s_proxy' % os.environ['IC_SHOT'])
+# nuke.addFormat(plateFormat)
+# nuke.addFormat(proxyFormat)
+# nuke.knobDefault('Root.format', os.environ['IC_SHOT'])
+# nuke.knobDefault('Root.proxy_type', 'format')
+# nuke.knobDefault('Root.proxy_format', '%s_proxy' % os.environ['IC_SHOT'])
+# nuke.knobDefault('Root.fps', os.environ['FPS'])
+# nuke.knobDefault('Root.first_frame', os.environ['STARTFRAME'])
+# nuke.knobDefault('Root.last_frame', os.environ['ENDFRAME'])

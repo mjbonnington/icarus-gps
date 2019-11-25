@@ -17,6 +17,7 @@ os.environ['IC_ENV'] = 'MAYA'
 
 # Append pipeline base dir to Python path
 sys.path.append(os.environ['IC_BASEDIR'])
+from core.app_session import *
 from core import env__init__
 env__init__.appendSysPaths()
 
@@ -67,9 +68,14 @@ if not batchMode:
 	# from core import icarus
 	# session.icarus = icarus.app(app='maya')
 
+	# Initialise Scene Manager
+	from tools.scenemanager import scenemanager
+	session.scnmgr = scenemanager.create(app='maya')
+	session.scnmgr.set_defaults()
+
 	# Update Maya scene defaults at startup
-	from rsc.maya.scripts import mayaOps
-	mayaOps.update()
+	# from rsc.maya.scripts import mayaOps
+	# mayaOps.update()
 	#source gpsRenderSetup.mel; gpsRenderSetup.setCommonOptions()
 
 # Load plugins ---------------------------------------------------------------

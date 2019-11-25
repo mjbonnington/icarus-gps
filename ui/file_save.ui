@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>416</width>
-    <height>192</height>
+    <width>480</width>
+    <height>200</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,7 +37,10 @@
      <property name="xmlCategory" stdset="0">
       <string>file</string>
      </property>
-     <layout class="QFormLayout" name="formLayout">
+     <layout class="QFormLayout" name="options_formLayout">
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+      </property>
       <property name="labelAlignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
@@ -47,10 +50,55 @@
       <property name="margin">
        <number>0</number>
       </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="shot_label">
+        <property name="text">
+         <string>Shot:</string>
+        </property>
+        <property name="buddy">
+         <cstring>shot_lineEdit</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QFrame" name="shot_frame">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="lineWidth">
+         <number>0</number>
+        </property>
+        <layout class="QHBoxLayout" name="shot_horizontalLayout">
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLineEdit" name="shot_lineEdit">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="shot_toolButton">
+           <property name="text">
+            <string>Change...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="discipline_label">
         <property name="text">
          <string>Discipline:</string>
+        </property>
+        <property name="buddy">
+         <cstring>discipline_comboBox</cstring>
         </property>
        </widget>
       </item>
@@ -67,7 +115,7 @@
         </property>
         <item>
          <property name="text">
-          <string>[please select]</string>
+          <string>[any]</string>
          </property>
         </item>
         <item>
@@ -142,6 +190,9 @@
         <property name="text">
          <string>Description:</string>
         </property>
+        <property name="buddy">
+         <cstring>description_comboBox</cstring>
+        </property>
        </widget>
       </item>
       <item row="2" column="1">
@@ -166,71 +217,14 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="shot_label">
-        <property name="text">
-         <string>Shot:</string>
-        </property>
-       </widget>
-      </item>
       <item row="3" column="0">
        <widget class="QLabel" name="version_label">
         <property name="text">
          <string>Version:</string>
         </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="Line" name="line">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+        <property name="buddy">
+         <cstring>version_spinBox</cstring>
         </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="filename_label">
-        <property name="text">
-         <string>File name:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QLineEdit" name="filename_lineEdit">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QFrame" name="shot_frame">
-        <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Plain</enum>
-        </property>
-        <property name="lineWidth">
-         <number>0</number>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <property name="margin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QLineEdit" name="shot_lineEdit">
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="shot_toolButton">
-           <property name="text">
-            <string>Change...</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
        </widget>
       </item>
       <item row="3" column="1">
@@ -244,19 +238,10 @@
         <property name="lineWidth">
          <number>0</number>
         </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <layout class="QHBoxLayout" name="version_horizontalLayout">
          <property name="margin">
           <number>0</number>
          </property>
-         <item>
-          <widget class="QComboBox" name="version_comboBox">
-           <item>
-            <property name="text">
-             <string>1 (new)</string>
-            </property>
-           </item>
-          </widget>
-         </item>
          <item>
           <widget class="QSpinBox" name="version_spinBox">
            <property name="minimum">
@@ -264,6 +249,29 @@
            </property>
            <property name="maximum">
             <number>9999</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="versionPadding_label">
+           <property name="text">
+            <string>Padding:</string>
+           </property>
+           <property name="buddy">
+            <cstring>versionPadding_spinBox</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="versionPadding_spinBox">
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>4</number>
+           </property>
+           <property name="xmlTag" stdset="0">
+            <string>padding</string>
            </property>
           </widget>
          </item>
@@ -281,22 +289,90 @@
           </spacer>
          </item>
          <item>
-          <widget class="QLabel" name="versionPadding_label">
+          <widget class="QToolButton" name="nativeDialog_toolButton">
+           <property name="toolTip">
+            <string>Open the application's native dialog for saving files</string>
+           </property>
            <property name="text">
-            <string>Padding:</string>
+            <string>Native Dialog...</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>15</width>
+             <height>15</height>
+            </size>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
+           </property>
+           <property name="noBackground" stdset="0">
+            <bool>false</bool>
            </property>
           </widget>
          </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QFrame" name="output_frame">
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <layout class="QFormLayout" name="output_formLayout">
+      <property name="margin">
+       <number>0</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="filename_label">
+        <property name="text">
+         <string>File name:</string>
+        </property>
+        <property name="buddy">
+         <cstring>filename_lineEdit</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QFrame" name="filename_frame">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="lineWidth">
+         <number>0</number>
+        </property>
+        <layout class="QHBoxLayout" name="filename_horizontalLayout">
+         <property name="margin">
+          <number>0</number>
+         </property>
          <item>
-          <widget class="QSpinBox" name="versionPadding_spinBox">
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>4</number>
-           </property>
-           <property name="xmlTag" stdset="0">
-            <string>padding</string>
+          <widget class="QLineEdit" name="filename_lineEdit">
+           <property name="readOnly">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -315,6 +391,15 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>buttonBox</tabstop>
+  <tabstop>shot_lineEdit</tabstop>
+  <tabstop>shot_toolButton</tabstop>
+  <tabstop>discipline_comboBox</tabstop>
+  <tabstop>description_comboBox</tabstop>
+  <tabstop>version_spinBox</tabstop>
+  <tabstop>filename_lineEdit</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

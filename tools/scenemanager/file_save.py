@@ -16,8 +16,6 @@
 
 import os
 import sys
-# import time
-# import traceback
 
 from Qt import QtCore, QtGui, QtWidgets
 
@@ -25,24 +23,23 @@ from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
 
 from shared import os_wrapper
-from shared import recentFiles
-from shared import sequence
+# from shared import recentFiles
 
-try:
-	import maya.cmds as mc
-except ImportError:
-	pass
+# try:
+# 	import maya.cmds as mc
+# except ImportError:
+# 	pass
 
-try:
-	import hou
-except ImportError:
-	pass
+# try:
+# 	import hou
+# except ImportError:
+# 	pass
 
-try:
-	import nuke
-	import nukescripts
-except ImportError:
-	pass
+# try:
+# 	import nuke
+# 	import nukescripts
+# except ImportError:
+# 	pass
 
 
 # ----------------------------------------------------------------------------
@@ -77,9 +74,10 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 #class FileSaveUI(QtWidgets.QMainWindow, UI.TemplateUI):
 	""" File Save UI.
 	"""
-	def __init__(self, parent=None):
+	def __init__(self, parent=None, session=None):
 		super(FileSaveUI, self).__init__(parent)
 		self.parent = parent
+		self.session = session
 
 		self.setupUI(**cfg)
 		self.conformFormLayoutLabels(self.ui)
@@ -89,6 +87,7 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 
 		# Set icons
 		# self.ui.shot_toolButton.setIcon(self.iconSet('configure.svg'))  # causes crash?
+		self.ui.nativeDialog_toolButton.setIcon(self.iconSet('folder-open.svg'))  # find better icon
 
 		# Connect signals & slots
 		# self.ui.shot_toolButton.clicked.connect(self.setShot)
@@ -98,6 +97,8 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 		self.ui.description_comboBox.lineEdit().textChanged.connect(self.updateFilename)
 		self.ui.version_spinBox.valueChanged.connect(self.updateFilename)
 		self.ui.versionPadding_spinBox.valueChanged.connect(self.updateFilename)
+
+		self.ui.nativeDialog_toolButton.clicked.connect(self.nativeDialog)
 
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Save).clicked.connect(self.saveFile)
 		self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.close)
@@ -141,6 +142,8 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 	def updateFilename(self):
 		""" Update the filename field based on the other inputs.
 		"""
+		ignore_list = ["[any]", "[please select]", "", None]
+
 		shot = self.ui.shot_lineEdit.text()
 		discipline = self.ui.discipline_comboBox.currentText()
 		description = self.ui.description_comboBox.currentText()
@@ -167,14 +170,36 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 		# filename = filename.replace('<version>', v_str)
 		# computed_filename = filename + self.file_ext[0]  # Append file extension
 
-		if description == "":
-			computed_filename = ".".join([shot, discipline, v_str])
-		else:
-			computed_filename = ".".join([shot, discipline, description, v_str])
-		computed_filename += self.file_ext[0]  # Add file extension
-		self.ui.filename_lineEdit.setText(computed_filename)
+		if discipline in ignore_list:
+			self.ui.filename_lineEdit.setText("Please select a discipline")
+			self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Save).setEnabled(False)
 
-		return computed_filename
+			# self.ui.filename_lineEdit.setProperty("warning", True)
+			# self.ui.description_comboBox.setProperty("mandatoryField", True)
+			# self.ui.filename_lineEdit.style().unpolish(self.ui.filename_lineEdit)
+			# self.ui.filename_lineEdit.style().polish(self.ui.filename_lineEdit)
+			# self.ui.description_comboBox.style().unpolish(self.ui.description_comboBox)
+			# self.ui.description_comboBox.style().polish(self.ui.description_comboBox)
+
+			return None
+
+		else:
+			if description == "":
+				computed_filename = ".".join([shot, discipline, v_str])
+			else:
+				computed_filename = ".".join([shot, discipline, description, v_str])
+			computed_filename += self.file_ext[0]  # Add file extension
+			self.ui.filename_lineEdit.setText(computed_filename)
+			self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Save).setEnabled(True)
+
+			# self.ui.filename_lineEdit.setProperty("warning", False)
+			# self.ui.description_comboBox.setProperty("mandatoryField", False)
+			# self.ui.filename_lineEdit.style().unpolish(self.ui.filename_lineEdit)
+			# self.ui.filename_lineEdit.style().polish(self.ui.filename_lineEdit)
+			# self.ui.description_comboBox.style().unpolish(self.ui.description_comboBox)
+			# self.ui.description_comboBox.style().polish(self.ui.description_comboBox)
+
+			return computed_filename
 
 
 	def saveFile(self):
@@ -183,160 +208,33 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 		filename = os.path.join(os.environ['SCNMGR_SAVE_DIR'], self.updateFilename())
 		# filename = oswrapper.absolutePath('$SCNMGR_SAVE_DIR/' +  self.updateFilename())
 
-		if os.environ['SCNMGR_APP'] == "STANDALONE":
-			pass
-
-		elif os.environ['SCNMGR_APP'] == "MAYA":
-			mc.file(rename=filename)
-			recentFiles.updateLs(mc.file(options='v=0', force=True, save=True, type='mayaAscii'))
-
-		elif os.environ['SCNMGR_APP'] == "HOUDINI":
-			pass
-
-		elif os.environ['SCNMGR_APP'] == "NUKE":
-			nuke.scriptSaveAs(filename)
-			recentFiles.updateLs(filename)
+		self.session.file_save_as(filename)
 
 		self.returnValue = filename
 		self.accept()
 
 
-	# def snapshot(self, scene=None):
-	# 	""" Save a copy (snapshot) of the current scene to a temp folder.
-	# 		Return the path to the snapshot, ready to be submitted.
-	# 	"""
-	# 	#timestamp = time.strftime(r"%Y%m%d_%H%M%S")
+	def nativeDialog(self):
+		""" Save file using application-native dialog.
+		"""
+		self.hide()
 
-	# 	if os.environ['SCNMGR_APP'] == "MAYA":
-	# 		if scene:
-	# 			uhub_origFilePath = scene
-	# 		else:
-	# 			uhub_origFilePath = mc.file(query=True, expandName=True)
-	# 		uhub_tmpDir = os.path.join(os.environ['UHUB_MAYA_SCENES_PATH'], '.tmp')
-	# 		oswrapper.createDir(uhub_tmpDir)
-	# 		uhub_sceneName = mc.file(query=True, sceneName=True, shortName=True)
-	# 		uhub_tmpFilePath = os.path.join(uhub_tmpDir, uhub_sceneName)
+		try:
+			self.session.file_save_dialog()
+			self.close()
 
-	# 		# Ensure output file naming convention is correct
-	# 		if self.getRenderer() == 'vray':
-	# 			mc.setAttr("vraySettings.fileNamePrefix", lock=False)
-	# 			mc.setAttr("vraySettings.fileNamePrefix", MAYA_OUTPUT_FORMAT_VRAY, type="string")
-	# 			mc.setAttr("vraySettings.fileNameRenderElementSeparator", lock=False)
-	# 			mc.setAttr("vraySettings.fileNameRenderElementSeparator", ".", type="string")
-
-	# 		else:  # Maya Common Default and Arnold
-	# 			mc.setAttr("defaultRenderGlobals.imageFilePrefix", MAYA_OUTPUT_FORMAT, type="string")
-
-	# 		mc.file(rename=uhub_tmpFilePath)
-	# 		snapshotScene = mc.file(save=True)
-	# 		mc.file(rename=uhub_origFilePath)
-	# 		#mc.file(save=True)
-	# 		print("Saved snapshot: %s" % snapshotScene)
-	# 		return snapshotScene
-
-	# 	# elif os.environ['SCNMGR_APP'] == "NUKE":
-	# 	# 	currentScript = nuke.root()['name'].value()
-	# 	# 	#dirname, basename = os.path.split(currentScript)
-	# 	# 	#snapshotScript = os.path.join(tmpdir, basename)
-	# 	# 	base, ext = os.path.splitext(basename)
-	# 	# 	snapshotScript = "%s_snapshot_%s%s" % (base, timestamp, ext)
-	# 	# 	nuke.scriptSave(snapshotScript)
-	# 	# 	nuke.root()['name'].setValue(currentScript)
-	# 	# 	return snapshotScript
+		except RuntimeError:
+			# Return to custom dialog
+			self.show()
 
 
-# 	def saveScene(self):
-# 		""" Save the current scene/script if it has been modified.
-# 		"""
-# 		if os.environ['SCNMGR_APP'] == "STANDALONE":
-# 			pass  # Do nothing
-
-# 		elif os.environ['SCNMGR_APP'] == "MAYA":
-# 			# Check if scene is modified before saving, as Maya scene files
-# 			# can be quite large and saving can be slow.
-# 			if mc.file(q=True, modified=True):
-# 				mc.file(save=True)
-
-# 		elif os.environ['SCNMGR_APP'] == "HOUDINI":
-# 			hou.hipFile.save()
-
-# 		elif os.environ['SCNMGR_APP'] == "NUKE":
-# 			nuke.scriptSave()
-
-
-# 	def incrementScene(self):
-# 		""" Increment the minor version number. For Maya, don't save as this
-# 			can be slow for large scenes. Instead copy the previous scene
-# 			file via the OS.
-# 		"""
-# 		if os.environ['SCNMGR_APP'] == "STANDALONE":
-# 			pass  # Do nothing
-
-# 		elif os.environ['SCNMGR_APP'] == "MAYA":
-# 			# As the scene will have just been saved, we create a copy of the
-# 			# scene and increment the minor version, and point the Maya file
-# 			# to the updated scene file. This gives us a performance gain by
-# 			# avoiding the overhead of a second save operation, which can be
-# 			# slow for large Maya ASCII scenes.
-# 			from u_vfx.u_maya.scripts.python import sceneManager
-# 			current_scene = mc.file(query=True, expandName=True)
-# 			ext = os.path.splitext(current_scene)[1]
-# 			updated_scene = sceneManager.versionUp(saveScene=False)
-# 			if updated_scene:
-# 				updated_scene += ext
-# 				oswrapper.copy(current_scene, updated_scene)
-# 				mc.file(rename=updated_scene)
-# 				# self.addSceneEntry(self.ui.mayaScene_comboBox, updated_scene)
-# 				self.getScene()
-
-# 		elif os.environ['SCNMGR_APP'] == "HOUDINI":
-# 			from u_vfx.u_houdini.scripts import sceneManager
-# 			if sceneManager.versionUp():
-# 				self.getScene()
-
-# 		elif os.environ['SCNMGR_APP'] == "NUKE":
-# 			from u_vfx.u_nuke.scripts import compManager
-# 			if compManager.versionUp():
-# 				self.getScene()
-
-
-# 	def about(self):
-# 		""" Show about dialog.
-# 		"""
-# 		import about
-
-# 		info_ls = []
-# 		sep = " | "
-# 		for key, value in self.getInfo().items():
-# 			if key in ['Environment', 'OS']:
-# 				pass
-# 			else:
-# 				info_ls.append("{} {}".format(key, value))
-# 		info_str = sep.join(info_ls)
-
-# 		about_msg = """
-# %s
-# v%s
-
-# A UI for saving files/scenes/scripts.
-# - Automatically handle file save locations, naming conventions and versions.
-# - Provide a consistent experience across DCC apps.
-# - Make it easier to find latest versions regardless of the last user to work on the file.
-# Current support is for Maya, Nuke and Houdini.
-
-# Developer: Mike Bonnington
-# (c) 2019
-
-# %s
-# """ % (cfg['window_title'], VERSION, info_str)
-
-# 		aboutDialog = about.AboutDialog(parent=self)
-# 		aboutDialog.display(
-# 			bg_color=QtGui.QColor('#5b6368'), 
-# 			icon_pixmap=self.iconTint(
-# 				'clapperboard.png', 
-# 				tint=QtGui.QColor('#6e777d')), 
-# 			message=about_msg)
+	def keyPressEvent(self, event):
+		""" Override function to prevent Enter / Esc keypresses triggering
+			OK / Cancel buttons.
+		"""
+		if event.key() == QtCore.Qt.Key_Return \
+		or event.key() == QtCore.Qt.Key_Enter:
+			return
 
 
 	def closeEvent(self, event):
@@ -358,7 +256,7 @@ def run_maya(session, **kwargs):
 		session.fileSaveUI.display(**kwargs)
 	except:  # Create the UI
 		UI._maya_delete_ui(cfg['window_object'], cfg['window_title'])  # Delete any existing UI
-		session.fileSaveUI = FileSaveUI(parent=UI._maya_main_window())
+		session.fileSaveUI = FileSaveUI(parent=UI._maya_main_window(), session=session)
 		session.fileSaveUI.display(**kwargs)
 
 
@@ -370,7 +268,7 @@ def run_maya(session, **kwargs):
 # 	except:  # Create the UI
 # 		#UI._houdini_delete_ui(cfg['window_object'], cfg['window_title'])  # Delete any existing UI
 # 		#session = UI._houdini_get_session()
-# 		session.fileSaveUI = FileSaveUI(parent=UI._houdini_main_window())
+# 		session.fileSaveUI = FileSaveUI(parent=UI._houdini_main_window(), session=session)
 # 		session.fileSaveUI.display(**kwargs)
 
 
@@ -381,5 +279,5 @@ def run_nuke(session, **kwargs):
 		session.fileSaveUI.display(**kwargs)
 	except:  # Create the UI
 		UI._nuke_delete_ui(cfg['window_object'], cfg['window_title'])  # Delete any existing UI
-		session.fileSaveUI = FileSaveUI(parent=UI._nuke_main_window())
+		session.fileSaveUI = FileSaveUI(parent=UI._nuke_main_window(), session=session)
 		session.fileSaveUI.display(**kwargs)

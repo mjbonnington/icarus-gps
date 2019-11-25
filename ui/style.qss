@@ -27,7 +27,7 @@ QWidget {
 	margin: 0;
 	padding: 0;
 	alternate-background-color: rgb(42, 42, 42);
-	selection-background-color: rgb(112, 158, 50);
+	selection-background-color: rgb(%highlight%);
 	selection-color: rgb(255, 255, 255);
 	color: rgb(204, 204, 204);
 	font-family: %systemfont%;
@@ -50,7 +50,7 @@ QWidget:no-frame {
 }
 
 QWidget:focus {
-	/*border-bottom: 2px solid rgb(112, 158, 50);*/
+	/*border-bottom: 2px solid rgb(%highlight%);*/
 }
 
 /*QWidget:!focus {
@@ -200,7 +200,7 @@ QMenuBar::item {
 }
 
 QMenuBar::item:selected, QMenuBar::item:pressed {
-	background: rgb(112, 158, 50);
+	background: rgb(%highlight%);
 	color: rgb(255, 255, 255);
 }
 
@@ -224,7 +224,7 @@ QMenu::item {
 }
 
 QMenu::item:selected {
-	background: rgb(112, 158, 50);
+	background: rgb(%highlight%);
 	color: rgb(255, 255, 255);
 }
 
@@ -450,7 +450,7 @@ QTabBar QToolButton:hover {
 }
 
 QTabBar QToolButton:pressed {
-	background: rgb(112, 158, 50);
+	background: rgb(%highlight%);
 }
 
 QTabBar::tear {
@@ -616,7 +616,7 @@ QSplitter::handle:hover {
 }
 
 QSplitter::handle:pressed {
-	background: rgb(112, 158, 50);
+	background: rgb(%highlight%);
 }
 
 /* QProgressBar
@@ -787,7 +787,7 @@ QTableView QTableCornerButton::section {
 }
 
 QTableView QTableCornerButton::section:pressed {
-	background: rgb(112, 158, 50);
+	background: rgb(%highlight%);
 }
 
 /* QScrollArea
@@ -871,7 +871,8 @@ QPushButton {
 }
 
 QPushButton:default {
-	background: rgb(112, 158, 50);
+	/*background: rgb(%highlight%);*/
+	border-color: rgb(%highlight%);
 	color: rgb(255, 255, 255);
 }
 
@@ -881,7 +882,7 @@ QPushButton:hover, QPushButton:checked:hover {
 
 QPushButton:pressed, QPushButton:checked:pressed {
 	padding: 2px 1px 1px 2px;
-	background: rgb(112, 158, 50);
+	background: rgb(%highlight%);
 }
 
 QPushButton:checked {
@@ -896,7 +897,7 @@ QPushButton:disabled, QPushButton:default:disabled {
 }
 
 /*QPushButton:focus {
-	border-bottom-color: rgb(112, 158, 50);
+	border-bottom-color: rgb(%highlight%);
 }*/
 
 /* Flat Push Button */
@@ -907,7 +908,7 @@ QPushButton:flat {
 }
 
 QPushButton:flat:hover, QToolButton:hover {
-	border-color: rgb(112, 158, 50);
+	border-color: rgb(%highlight%);
 }
 
 QPushButton:flat:pressed, QPushButton:flat:checked:pressed {
@@ -1004,7 +1005,7 @@ QCheckBox::indicator {
 }
 
 QCheckBox::indicator:hover, QGroupBox::indicator:hover {
-	border-color: rgb(112, 158, 50);
+	border-color: rgb(%highlight%);
 }
 
 QCheckBox::indicator:checked, QGroupBox::indicator:checked {
@@ -1047,7 +1048,7 @@ QRadioButton::indicator {
 }
 
 QRadioButton::indicator:hover {
-	border-color: rgb(112, 158, 50);
+	border-color: rgb(%highlight%);
 }
 
 QRadioButton::indicator:checked {
@@ -1100,7 +1101,7 @@ QAbstractSpinBox:disabled {
 }
 
 /*QAbstractSpinBox:focus {
-	border-bottom-color: rgb(112, 158, 50);
+	border-bottom-color: rgb(%highlight%);
 }*/
 
 QAbstractSpinBox::up-button, 
@@ -1126,7 +1127,7 @@ QAbstractSpinBox::down-button:hover {
 
 QAbstractSpinBox::up-button:pressed, 
 QAbstractSpinBox::down-button:pressed {
-	background: rgb(112, 158, 50);
+	background: rgb(%highlight%);
 }
 
 QAbstractSpinBox::up-button:off, 
@@ -1241,7 +1242,7 @@ QComboBox::drop-down:disabled {
 }
 
 /*QComboBox:focus {
-	border-bottom-color: rgb(112, 158, 50);
+	border-bottom-color: rgb(%highlight%);
 }*/
 
 QComboBox::down-arrow {
@@ -1276,7 +1277,7 @@ QComboBox QAbstractItemView {
 
 /* Color of the selected list item. */
 /*QComboBox::item:selected {
-	background: rgb(112, 158, 50);
+	background: rgb(%highlight%);
 	color: rgb(255, 255, 255);
 	border: none;
 }*/
@@ -1320,7 +1321,7 @@ QLineEdit:disabled {
 }
 
 /*QLineEdit:focus {
-	border-bottom-color: rgb(112, 158, 50);
+	border-bottom-color: rgb(%highlight%);
 }*/
 
 /* End Misc. input */
@@ -1370,7 +1371,7 @@ QScrollBar::handle:hover {
 }
 
 QScrollBar::handle:pressed {
-	background: rgb(112, 158, 50);
+	background: rgb(%highlight%);
 }
 
 QScrollBar::handle:horizontal {
@@ -1419,7 +1420,7 @@ QScrollBar::add-line:hover, QScrollBar::sub-line:hover {
 
 QScrollBar::add-line:pressed, QScrollBar::sub-line:pressed {
 	padding: 2px 0 0 2px;
-	background: rgb(112, 158, 50);
+	background: rgb(%highlight%);
 }
 
 QScrollBar::add-line:disabled, QScrollBar::sub-line:disabled {
@@ -1518,7 +1519,7 @@ QSlider::handle:hover {
 }
 
 QSlider::handle:pressed {
-	background: rgb(112, 158, 50);
+	background: rgb(%highlight%);
 }
 
 QSlider::handle:disabled {

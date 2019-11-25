@@ -119,13 +119,15 @@ global proc menus2Py.gpsCreateCamera(string $cam)
 
 global proc menus2Py.newScene()
 {
-	python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.newMayaScene()");
+	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.newMayaScene()");
+	python("session.scnmgr.file_new()");
 }
 
 
 global proc menus2Py.openScene()
 {
-	python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.openMayaScene()");
+	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.openMayaScene()");
+	python("from tools.scenemanager import file_open; file_open.run_maya(session.scnmgr)");
 }
 
 
@@ -158,7 +160,8 @@ global proc menus2Py.updateRecentFilesMenu(string $menu)
 
 global proc menus2Py.saveScene()
 {
-	python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.saveMayaScene()");
+	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.saveMayaScene()");
+	python("session.scnmgr.file_save()");
 }
 
 
@@ -170,7 +173,8 @@ global proc menus2Py.incrementalSave()
 
 global proc menus2Py.saveSceneAs()
 {
-	python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.saveMayaSceneAs()");
+	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.saveMayaSceneAs()");
+	python("from tools.scenemanager import file_save; file_save.run_maya(session.scnmgr)");
 }
 
 

@@ -32,21 +32,21 @@ from shared import os_wrapper
 from shared import recentFiles
 from shared import sequence
 
-try:
-	import maya.cmds as mc
-except ImportError:
-	pass
+# try:
+# 	import maya.cmds as mc
+# except ImportError:
+# 	pass
 
-try:
-	import hou
-except ImportError:
-	pass
+# try:
+# 	import hou
+# except ImportError:
+# 	pass
 
-try:
-	import nuke
-	import nukescripts
-except ImportError:
-	pass
+# try:
+# 	import nuke
+# 	import nukescripts
+# except ImportError:
+# 	pass
 
 
 # ----------------------------------------------------------------------------
@@ -80,9 +80,10 @@ cfg['store_window_geometry'] = True
 class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 	""" File Open UI.
 	"""
-	def __init__(self, parent=None):
+	def __init__(self, parent=None, session=None):
 		super(FileOpenUI, self).__init__(parent)
 		self.parent = parent
+		self.session = session
 
 		self.base_dir = os_wrapper.absolutePath('$SCNMGR_SAVE_DIR/..')
 		self.file_ext = os.environ['SCNMGR_FILE_EXT'].split(os.pathsep)
@@ -95,6 +96,8 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 
 		# Set icons
 		# self.ui.shot_toolButton.setIcon(self.iconSet('configure.svg'))  # causes crash?
+		self.ui.refresh_toolButton.setIcon(self.iconSet('icon_refresh.png'))
+		self.ui.nativeDialog_toolButton.setIcon(self.iconSet('folder-open.svg'))
 
 		# Connect signals & slots
 		# self.ui.shot_toolButton.clicked.connect(self.setShot)
@@ -104,6 +107,9 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		self.ui.shot_lineEdit.textChanged.connect(self.updateFilters)
 		self.ui.discipline_comboBox.currentIndexChanged.connect(self.updateFilters)
 		self.ui.artist_comboBox.currentIndexChanged.connect(self.updateFilters)
+
+		self.ui.refresh_toolButton.clicked.connect(self.updateView)
+		self.ui.nativeDialog_toolButton.clicked.connect(self.nativeDialog)
 
 		self.ui.fileBrowser_treeWidget.itemSelectionChanged.connect(self.updateSelection)
 
@@ -137,6 +143,8 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 
 		self.ui.shot_lineEdit.setText(os.environ['SCNMGR_SHOT'])
 		self.ui.shot_toolButton.setEnabled(False)  # temp until implemented
+		self.ui.versionAll_radioButton.setEnabled(False)  # temp until implemented
+		self.ui.versionLatest_radioButton.setEnabled(False)  # temp until implemented
 
 		# self.base_dir = os_wrapper.absolutePath('$SCNMGR_SAVE_DIR/..')
 		# self.file_ext = os.environ['SCNMGR_FILE_EXT'].split(os.pathsep)
@@ -326,24 +334,24 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 			verbose.error("Nothing selected.")
 			return False
 
-		# print("Open %s" % filename)
-
-		if os.environ['SCNMGR_APP'] == "STANDALONE":
-			pass
-
-		elif os.environ['SCNMGR_APP'] == "MAYA":
-			recentFiles.updateLs(
-				mc.file(filename, open=True, force=True, ignoreVersion=True))
-
-		elif os.environ['SCNMGR_APP'] == "HOUDINI":
-			pass
-
-		elif os.environ['SCNMGR_APP'] == "NUKE":
-			nuke.scriptOpen(filename)
-			recentFiles.updateLs(filename)
+		self.session.file_open(filename)
 
 		self.returnValue = filename
 		self.accept()
+
+
+	def nativeDialog(self):
+		""" Open file using application-native dialog.
+		"""
+		self.hide()
+
+		try:
+			self.session.file_open_dialog()
+			self.close()
+
+		except RuntimeError:
+			# Return to custom dialog
+			self.show()
 
 
 	# def keyPressEvent(self, event):
@@ -378,7 +386,7 @@ def run_maya(session, **kwargs):
 		session.fileOpenUI.display(**kwargs)
 	except:  # Create the UI
 		UI._maya_delete_ui(cfg['window_object'], cfg['window_title'])  # Delete any existing UI
-		session.fileOpenUI = FileOpenUI(parent=UI._maya_main_window())
+		session.fileOpenUI = FileOpenUI(parent=UI._maya_main_window(), session=session)
 		session.fileOpenUI.display(**kwargs)
 
 
@@ -390,7 +398,7 @@ def run_maya(session, **kwargs):
 # 	except:  # Create the UI
 # 		#UI._houdini_delete_ui(cfg['window_object'], cfg['window_title'])  # Delete any existing UI
 # 		#session = UI._houdini_get_session()
-# 		session.fileOpenUI = FileOpenUI(parent=UI._houdini_main_window())
+# 		session.fileOpenUI = FileOpenUI(parent=UI._houdini_main_window(), session=session)
 # 		session.fileOpenUI.display(**kwargs)
 
 
@@ -401,5 +409,5 @@ def run_nuke(session, **kwargs):
 		session.fileOpenUI.display(**kwargs)
 	except:  # Create the UI
 		UI._nuke_delete_ui(cfg['window_object'], cfg['window_title'])  # Delete any existing UI
-		session.fileOpenUI = FileOpenUI(parent=UI._nuke_main_window())
+		session.fileOpenUI = FileOpenUI(parent=UI._nuke_main_window(), session=session)
 		session.fileOpenUI.display(**kwargs)
