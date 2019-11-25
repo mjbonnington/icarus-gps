@@ -39,6 +39,7 @@ class SceneManager(object):
 
 	def file_open(self, filepath):
 		""" Open the specified file.
+			TODO: prompt if current scene has been modified
 		"""
 		recentFiles.updateLs(
 			mc.file(filepath, open=True, force=True, ignoreVersion=True))
@@ -52,12 +53,14 @@ class SceneManager(object):
 
 	def file_save(self):
 		""" Save the current file.
+			TODO: if saving for first time take over and show custom dialog
 		"""
-		pass
+		mc.SaveScene()
 
 
 	def file_save_as(self, filepath):
 		""" Save the specified file.
+			TODO: prompt if save will overwrite existing file
 		"""
 		mc.file(rename=filepath)
 		recentFiles.updateLs(
