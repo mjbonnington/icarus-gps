@@ -1,4 +1,4 @@
-// [GPS] Build Menus
+// [Icarus] Build Maya Menus
 //
 // Nuno Pereira <nuno.pereira@gps-ldn.com>
 // Mike Bonnington <mike.bonnington@gps-ldn.com>
@@ -7,12 +7,15 @@
 // Dynamically modifies Maya's menus without the need to edit Maya's UI MEL
 // scripts directly.
 
+string $vendor = "";
+if (`getenv IC_VENDOR_INITIALS` != "")
+	$vendor = (`getenv IC_VENDOR_INITIALS` + " ");
 
 // Get Maya version
 float $maya_ver = getApplicationVersionAsFloat();
 
 // This function suppresses recent menus...
-global proc checkGPSFileMenu()
+global proc checkCustomFileMenu()
 {
 	$enable = true;
 
@@ -39,7 +42,7 @@ global proc checkGPSFileMenu()
 string $fileMenu = "MayaWindow|mainFileMenu";
 buildFileMenu();
 string $fileWindow_menu = `menu -exists $fileMenu`;
-menu -edit -postMenuCommand checkGPSFileMenu $fileMenu;
+menu -edit -postMenuCommand checkCustomFileMenu $fileMenu;
 
 // Delete file open / save menu items
 deleteUI -menuItem newProject;
@@ -72,12 +75,12 @@ for ($item in `menu -ia -q $fileMenu`) {
 		if (`menuItem -q -divider $item`) deleteUI -menuItem $item;
 }
 
-// Add GPS entries
+// Add custom entries
 setParent -menu $fileMenu;
 
 	// New Scene
 	menuItem -insertAfter ""
-			 -label "[GPS] New"
+			 -label ($vendor + "New")
 			 -annotation ("Create a new scene")
 			 -image "newScene.png"
 			 -command ("source menus2Py; menus2Py.newScene()")
@@ -85,7 +88,7 @@ setParent -menu $fileMenu;
 
 	// Open Scene
 	menuItem -insertAfter GPSNewScene
-			 -label "[GPS] Open..."
+			 -label ($vendor + "Open...")
 			 -annotation ("Open a saved scene")
 			 -image "openScene.png"
 			 -command ("source menus2Py; menus2Py.openScene()")
@@ -94,7 +97,7 @@ setParent -menu $fileMenu;
 	// Open Recent Scene
 	menuItem -insertAfter GPSOpenScene
 			 -subMenu true
-			 -label "[GPS] Open Recent"
+			 -label ($vendor + "Open Recent")
 			 -image "openScene.png"
 			 -postMenuCommand "source menus2Py; menus2Py.updateRecentFilesMenu(\"GPSFileMenuRecentFileItems\")"
 			 GPSFileMenuRecentFileItems;
@@ -113,7 +116,7 @@ setParent -menu $fileMenu;
 
 	// Save Scene
 	menuItem -insertAfter GPSFileDivider1
-			 -label "[GPS] Save"
+			 -label ($vendor + "Save")
 			 -annotation ("Save the current scene")
 			 -image "saveScene.png"
 			 -command ("source menus2Py; menus2Py.saveScene()")
@@ -121,7 +124,7 @@ setParent -menu $fileMenu;
 
 	// Save Scene As
 	menuItem -insertAfter GPSSaveScene
-			 -label "[GPS] Save As..."
+			 -label ($vendor + "Save As...")
 			 -annotation ("Save scene with a new name")
 			 -image "saveSceneAs.png"
 			 -command ("source menus2Py; menus2Py.saveSceneAs()")
@@ -129,13 +132,13 @@ setParent -menu $fileMenu;
 
 	// Incremental Save
 	menuItem -insertAfter GPSSaveSceneAs
-			 -label "[GPS] Incremental Save"
+			 -label ($vendor + "Incremental Save")
 			 -annotation "Save the current scene as new version"
 			 -image "incrementalSave.png"
 			 -command ("source menus2Py; menus2Py.incrementalSave()")
 			 GPSIncrementalSave;
 
-checkGPSFileMenu();
+checkCustomFileMenu();
 
 
 /////////////////
@@ -153,7 +156,7 @@ setParent -menu $createMenu;
 	menuItem -insertAfter LightsItem
 			 -subMenu true
 			 -tearOff true
-			 -label "[GPS] Camera Presets"
+			 -label ($vendor + "Camera Presets")
 			 -image "gpsCamera.png"
 			 -postMenuCommand "source menus2Py; menus2Py.updatePresetCameraMenu(\"GPSCreatePresetCameraItems\")"
 			 GPSCreatePresetCameraItems;
@@ -172,18 +175,18 @@ buildViewMenu($windowMenu);
 // Delete existing menu items
 //deleteUI -menuItem playblastItem;
 
-// Add GPS entries
+// Add custom entries
 setParent -menu $windowMenu;
-	// Replace the existing Playblast menu item with GPS Preview
+	// Replace the existing Playblast menu item with Preview
 	menuItem -edit
-			 -label ("[GPS] Preview")
+			 -label ($vendor + "Preview")
 			 -command ("source menus2Py; menus2Py.gpsPreviewNoUI()")
-			 -annotation ("GPS Preview")
+			 -annotation ($vendor + "Preview")
 			 -image "gpsPlayblast.png"
 			 playblastItem;
 	menuItem -edit
 			 -command ("source menus2Py; menus2Py.gpsPreview()")
-			 -annotation ("Launch GPS Preview UI")
+			 -annotation ("Launch " + $vendor + "Preview UI")
 			 playblastDialogItem;
 
 	menuItem -insertAfter playblastItem
@@ -206,14 +209,14 @@ setParent -menu $windowMenu;
 string $renderMenu = "MayaWindow|mainRenderMenu";
 RenRenderMenu($renderMenu);
 
-// Add GPS entries
+// Add custom entries
 setParent -menu $renderMenu;
-	// GPS Render Submit
+	// Render Submit
 	menuItem -divider true
 			 GPSRenderDivider1;
 
 	menuItem -insertAfter GPSRenderDivider1
-			 -label ("[GPS] Submit Render...")
+			 -label ($vendor + "Submit Render...")
 			 -command ("source menus2Py; menus2Py.submitRender()")
 			 -annotation ("Submit Render")
 			 -image "gpsSubmitRender.png"
@@ -238,29 +241,29 @@ updateTimeSliderMenu $timelineMenu;
 //menu -exists $timelineMenu;
 //string $timeline_menuItems[] = `menu -ia -q $timelineMenu`;
 
-// Add GPS entries
+// Add custom entries
 setParent -menu $timelineMenu;
-	// Replace the existing Playblast menu item with GPS Preview
+	// Replace the existing Playblast menu item with Preview
 	menuItem -edit
-			 -label ("[GPS] Preview")
+			 -label ($vendor + "Preview")
 			 -command ("source menus2Py; menus2Py.gpsPreviewNoUI()")
-			 -annotation ("GPS Preview")
+			 -annotation ($vendor + "Preview")
 			 -image "gpsPlayblast.png"
 			 timeSliderPlayblastItem;
 	menuItem -edit
 			 -command ("source menus2Py; menus2Py.gpsPreview()")
-			 -annotation ("Launch GPS Preview UI")
+			 -annotation ("Launch " + $vendor + "Preview UI")
 			 timeSliderPlayblastOptionItem;
 
 // Delete existing menu items
 //deleteUI -menuItem timeSliderPlayblastItem;
 
-// Add GPS entries
+// Add custom entries
 // setParent -menu $timelineMenu;
 // 	menuItem -divider true;
-// 	menuItem -label ("[GPS] Preview...")
+// 	menuItem -label ($vendor + "Preview...")
 // 			 -command ("source menus2Py; menus2Py.gpsPreview()")
-// 			 -annotation ("Launch GPS Preview")
+// 			 -annotation ("Launch " + $vendor + "Preview")
 // 			 -image "gpsPlayblast.png"
 // 			 GPSPlayblastItem;
 
@@ -326,7 +329,7 @@ string $editor_menu = `popupMenu -b 1 -p editorsButton`;
 		menuItem -label "Outliner" -c "OutlinerWindow";
 	} else {
 		// Custom dockable Outliner panel for Maya 2016 and earlier
-		menuItem -label "Outliner" -c "source dev_dockOutliner;dev_dockOutliner()";
+		menuItem -label "Outliner" -c "source dev_dockOutliner; dev_dockOutliner()";
 	};
 	menuItem -label "Node Editor" -c "NodeEditorWindow";
 	menuItem -divider true;

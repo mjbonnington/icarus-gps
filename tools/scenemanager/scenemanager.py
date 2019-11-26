@@ -5,15 +5,24 @@
 # Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2019
 #
-# Custom file opening/saving procedures.
+# Scene Manager for DCC apps
+# - Automatically handle file save locations, naming conventions and versions.
+# - Provide a consistent experience across DCC apps.
+# - Make it easier to find latest versions regardless of the last user to work
+#   on the file.
+#
+# Current support is for Maya, Nuke and Houdini.
+# In theory, adding support for a new app is as simple as writing a new module
+# 'scenemanager_<app>.py' wrapping the basic open/save functionality of the
+# app, then add the appropriate entry in the create() function here.
+# (Assuming the app supports Python & PySide/PyQt of course).
+#
+# Initialise at app startup with:
+# from tools.scenemanager import scenemanager
+# session.scnmgr = scenemanager.create(app='<app>')
 
 
 import os
-
-# Import custom modules
-from shared import os_wrapper
-from shared import recentFiles
-
 
 def create(app=None):
 	""" Return a new SceneManager object with wrappers for various DCC apps'
@@ -32,78 +41,3 @@ def create(app=None):
 	elif app == "nuke":
 		from . import scenemanager_nuke
 		return scenemanager_nuke.SceneManager()
-
-
-# class SceneManager(object):
-# 	""" File Open UI.
-# 	"""
-# 	def __init__(self):
-# 		pass
-
-
-# 	def file_new(self):
-# 		""" Start a new file.
-# 		"""
-# 		pass
-
-
-# 	def file_open_dialog(self, starting_dir=None):
-# 		""" Display a dialog to select a file to open.
-# 		"""
-# 		pass
-
-
-# 	def file_open(self, filepath):
-# 		""" Open the specified file.
-# 		"""
-# 		pass
-
-
-# 	def file_save_dialog(self, starting_dir=None):
-# 		""" Display a dialog for saving a file.
-# 		"""
-# 		pass
-
-
-# 	def file_save(self):
-# 		""" Save the current file.
-# 		"""
-# 		pass
-
-
-# 	def file_save_as(self, filepath):
-# 		""" Save the specified file.
-# 		"""
-# 		pass
-
-
-# 	def file_save_new_version(self):
-# 		""" Convenience function to save a new version of a file.
-# 		"""
-# 		pass
-
-
-# 	def file_snapshot(self, dest_dir=None):
-# 		""" Save a copy (snapshot) of the current scene to the destination
-# 			directory, without changing the current file pointer.
-# 		"""
-# 		pass
-
-
-# 	def file_get_name(self):
-# 		""" Change the name of the current file.
-# 		"""
-# 		pass
-
-
-# 	def file_set_name(self, new_name):
-# 		""" Change the name of the current file.
-# 		"""
-# 		pass
-
-
-# 	def update_recents_menu(self):
-# 		""" Populate the recent files menu or disable it if no recent files
-# 			in list.
-# 		"""
-# 		pass

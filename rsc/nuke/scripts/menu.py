@@ -47,22 +47,27 @@ else:
 
 # Detect if running app is Nuke or NukeX
 if nuke.env['nukex']:
-	nukeType = 'NukeX'
+	nuke_flags = "--nukex"
 else:
-	nukeType = 'Nuke'
+	nuke_flags = None
 
 
 # Command strings
 readNode = 'import gpsNodes; gpsNodes.read_create()'
 writeNode = 'import gpsNodes; gpsNodes.write_create()'
+launchNuke = 'from shared import launchApps; launchApps.launch("Nuke", executable="%s", flags=%s)' % (os.environ['NUKEVERSION'], nuke_flags)
+clearScript = 'session.scnmgr.file_new()'
+newScript = clearScript # launchNuke | clearScript - change the way Nuke deals with a new script
+# openScript = 'from tools.scenemanager import file_open; file_open.run_nuke(session.scnmgr)'
+openScript = 'session.scnmgr.file_open_dialog()'
 # save = 'import gpsSave; gpsSave.save(incr=False)'
 save = 'session.scnmgr.file_save()'
 # saveAs = 'import gpsSave; gpsSave.save(saveAs=True)'
-saveAs = 'from tools.scenemanager import file_save; file_save.run_nuke(session.scnmgr)'
+# saveAs = 'from tools.scenemanager import file_save; file_save.run_nuke(session.scnmgr)'
+saveAs = 'session.scnmgr.file_save_dialog()'
 # incrSave = 'import gpsSave; gpsSave.save(incr=True)'
 incrSave = 'session.scnmgr.file_save_new_version()'
 # openScript = 'nuke.scriptOpen(\"%s/.\")' % os.environ["NUKESCRIPTSDIR"].replace('\\', '/')
-openScript = 'from tools.scenemanager import file_open; file_open.run_nuke(session.scnmgr)'
 openScriptsDir = 'from shared import openDirs; openDirs.openNukeScripts()'
 openRendersDir = 'from shared import openDirs; openDirs.openNukeRenders()'
 openElementsDir = 'from shared import openDirs; openDirs.openNukeElements()'
@@ -70,8 +75,6 @@ openShotDir = 'from shared import openDirs; openDirs.openShot()'
 openJobDir = 'from shared import openDirs; openDirs.openJob()'
 openElementsLibDir = 'from shared import openDirs; openDirs.openElementsLib()'
 launchProdBoard  = 'from shared import launchApps; launchApps.prodBoard()'
-launchNuke = 'from shared import launchApps; launchApps.launch("%s")' % nukeType
-newScript = 'session.scnmgr.file_new()'
 # launchIcarus = 'import icarus__main__; icarus__main__.run_nuke()'
 launchIcarus = 'session.icarus.show()'
 launchDjv = 'import nukeOps; nukeOps.launchDjv()'
@@ -99,7 +102,7 @@ deflickerVelocity_cmd = gpsMenu_nodes.addCommand('Deflicker Velocity', "nuke.cre
 # separator
 nodesMenu.addSeparator()
 # new
-newMenu_nodes = nodesMenu.addCommand('New', launchNuke, icon='new.png')
+newMenu_nodes = nodesMenu.addCommand('New', newScript, icon='new.png')
 # open
 openMenu_nodes = nodesMenu.addMenu('Open', icon='openPopup.png')
 openMenu_nodes.addCommand('Open...', openScript, icon='open.png')
@@ -181,7 +184,7 @@ imageMenu.addCommand(vendor+'Submit render job...', submitRender, icon='submitRe
 # FILE MENU
 fileMenu = nukeMenu.menu('File')
 # new
-newMenu_gps = fileMenu.addCommand(vendor+'New', launchNuke, '^n', icon='new.png', index=0)
+newMenu_gps = fileMenu.addCommand(vendor+'New', newScript, '^n', icon='new.png', index=0)
 # open
 openMenu_gps = fileMenu.addCommand(vendor+'Open...', openScript, '^o', icon='open.png', index=1)
 # open recent

@@ -7,7 +7,7 @@
 # (c) 2013-2015 Gramercy Park Studios
 #
 # Custom file saving procedures.
-
+# This module has been superseded by tools.scenemanager
 
 import os
 import nuke

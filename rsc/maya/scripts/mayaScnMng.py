@@ -8,6 +8,7 @@
 #
 # Maya scene management module.
 # These are wrapper functions for the main code which is in mayaOps.py
+# This module has been superseded by tools.scenemanager
 
 
 import os

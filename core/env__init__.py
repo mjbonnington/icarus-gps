@@ -18,7 +18,7 @@ def set_env():
 	""" Set some environment variables for basic operation.
 	"""
 	# Set version string
-	os.environ['IC_VERSION'] = "v0.10.0-20191125"
+	os.environ['IC_VERSION'] = "v0.10.0-20191126"
 
 	# Set vendor strings
 	os.environ['IC_VENDOR'] = "Gramercy Park Studios"

@@ -127,7 +127,8 @@ global proc menus2Py.newScene()
 global proc menus2Py.openScene()
 {
 	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.openMayaScene()");
-	python("from tools.scenemanager import file_open; file_open.run_maya(session.scnmgr)");
+	// python("from tools.scenemanager import file_open; file_open.run_maya(session.scnmgr)");
+	python("session.scnmgr.file_open_dialog()");
 }
 
 
@@ -137,7 +138,8 @@ global proc menus2Py.openRecent(string $menuSel)
 	$recentFile = $menuSel;
 	python "import maya.mel as mel";
 	python "recentFile = mel.eval('$temp=$recentFile')";
-	python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.openMayaRecentScene(recentFile)");
+	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.openMayaRecentScene(recentFile)");
+	python("from rsc.maya.scripts import mayaOps; mayaOps.openScene(recentFile, dialog=False)");
 }
 
 
@@ -174,7 +176,8 @@ global proc menus2Py.incrementalSave()
 global proc menus2Py.saveSceneAs()
 {
 	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.saveMayaSceneAs()");
-	python("from tools.scenemanager import file_save; file_save.run_maya(session.scnmgr)");
+	// python("from tools.scenemanager import file_save; file_save.run_maya(session.scnmgr)");
+	python("session.scnmgr.file_save_dialog()");
 }
 
 

@@ -7,11 +7,6 @@
 #
 # Scene Manager - Open File Dialog
 # A UI for opening files/scenes/scripts.
-# - Automatically handle file save locations, naming conventions and versions.
-# - Provide a consistent experience across DCC apps.
-# - Make it easier to find latest versions regardless of the last user to work
-#   on the file.
-# Current support is for Maya, Nuke and Houdini.
 
 
 import datetime
@@ -28,26 +23,10 @@ from Qt import QtCore, QtGui, QtWidgets
 # Import custom modules
 import ui_template as UI
 
+from . import versioning
 from shared import os_wrapper
 from shared import recentFiles
 from shared import sequence
-
-# try:
-# 	import maya.cmds as mc
-# except ImportError:
-# 	pass
-
-# try:
-# 	import hou
-# except ImportError:
-# 	pass
-
-# try:
-# 	import nuke
-# 	import nukescripts
-# except ImportError:
-# 	pass
-
 
 # ----------------------------------------------------------------------------
 # Configuration
@@ -214,6 +193,7 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 
 		# Populate tree widget
 		matches = []
+		seq = {}
 		for filetype in self.file_ext:
 			search_pattern = os.path.join(self.base_dir, self.file_filter+filetype)
 			# print search_pattern
@@ -221,8 +201,19 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 				# Only add files, not directories or symlinks
 				if os.path.isfile(filepath) \
 				and not os.path.islink(filepath):
+					#---------------------------------------------------------
+					# meta = versioning.parse(filepath)
+					# # print presets
+					# if '<description>' in meta:
+					# 	prefix = ".".join([meta['<shot>'], meta['<discipline>'], meta['<description>']])
+					# else:
+					# 	prefix = ".".join([meta['<shot>'], meta['<discipline>']])
+					# v_int = versioning.version_to_int(meta['<version>'])
+					# seq[prefix] = {v_int: filepath}
+					#---------------------------------------------------------
 					matches.append(filepath)
 
+		# print seq
 		# # Filter out all but latest version ----------------------------------
 		# # Create list to hold all basenames of sequences
 		# all_bases = []
@@ -334,10 +325,9 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 			verbose.error("Nothing selected.")
 			return False
 
-		self.session.file_open(filename)
-
-		self.returnValue = filename
-		self.accept()
+		if self.session.file_open(filename):
+			self.returnValue = filename
+			self.accept()
 
 
 	def nativeDialog(self):
@@ -345,12 +335,9 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		"""
 		self.hide()
 
-		try:
-			self.session.file_open_dialog()
+		if self.session.file_open_native_dialog():
 			self.close()
-
-		except RuntimeError:
-			# Return to custom dialog
+		else:  # Return to custom dialog
 			self.show()
 
 
@@ -379,35 +366,16 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 # Run functions
 # ----------------------------------------------------------------------------
 
-def run_maya(session, **kwargs):
-	""" Run in Maya.
+def dialog(session, app='standalone'):
+	""" Instantiate UI object parented to appropriate app's main window
 	"""
-	try:  # Show the UI
-		session.fileOpenUI.display(**kwargs)
-	except:  # Create the UI
-		UI._maya_delete_ui(cfg['window_object'], cfg['window_title'])  # Delete any existing UI
-		session.fileOpenUI = FileOpenUI(parent=UI._maya_main_window(), session=session)
-		session.fileOpenUI.display(**kwargs)
+	if app == 'standalone':
+		pass
+	elif app == 'maya':
+		parent = UI._maya_main_window()
+	elif app == 'houdini':
+		parent = UI._houdini_main_window()
+	elif app == 'nuke':
+		parent = UI._nuke_main_window()
 
-
-# def run_houdini(session, **kwargs):
-# 	""" Run in Houdini.
-# 	"""
-# 	try:  # Show the UI
-# 		session.fileOpenUI.display(**kwargs)
-# 	except:  # Create the UI
-# 		#UI._houdini_delete_ui(cfg['window_object'], cfg['window_title'])  # Delete any existing UI
-# 		#session = UI._houdini_get_session()
-# 		session.fileOpenUI = FileOpenUI(parent=UI._houdini_main_window(), session=session)
-# 		session.fileOpenUI.display(**kwargs)
-
-
-def run_nuke(session, **kwargs):
-	""" Run in Nuke.
-	"""
-	try:  # Show the UI
-		session.fileOpenUI.display(**kwargs)
-	except:  # Create the UI
-		UI._nuke_delete_ui(cfg['window_object'], cfg['window_title'])  # Delete any existing UI
-		session.fileOpenUI = FileOpenUI(parent=UI._nuke_main_window(), session=session)
-		session.fileOpenUI.display(**kwargs)
+	return FileOpenUI(parent=parent, session=session)

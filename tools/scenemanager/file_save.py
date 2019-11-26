@@ -7,11 +7,6 @@
 #
 # Scene Manager - Save File Dialog
 # A UI for saving files/scenes/scripts.
-# - Automatically handle file save locations, naming conventions and versions.
-# - Provide a consistent experience across DCC apps.
-# - Make it easier to find latest versions regardless of the last user to work
-#   on the file.
-# Current support is for Maya, Nuke and Houdini.
 
 
 import os
@@ -22,25 +17,9 @@ from Qt import QtCore, QtGui, QtWidgets
 # Import custom modules
 import ui_template as UI
 
+from . import versioning
 from shared import os_wrapper
 # from shared import recentFiles
-
-# try:
-# 	import maya.cmds as mc
-# except ImportError:
-# 	pass
-
-# try:
-# 	import hou
-# except ImportError:
-# 	pass
-
-# try:
-# 	import nuke
-# 	import nukescripts
-# except ImportError:
-# 	pass
-
 
 # ----------------------------------------------------------------------------
 # Configuration
@@ -133,6 +112,20 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 
 		self.updateFilename()
 
+		# Set values from current file if possible
+		presets = versioning.parse(self.session.file_get_name())
+		if presets is not None:
+			try:
+				self.ui.shot_lineEdit.setText(presets['<shot>'])
+				self.ui.discipline_comboBox.setCurrentText(presets['<discipline>'])
+				if '<description>' in presets:
+					self.ui.description_comboBox.setCurrentText(presets['<description>'])
+				else:
+					self.ui.description_comboBox.setCurrentText("")
+				self.ui.version_spinBox.setValue(versioning.version_to_int(presets['<version>'])+1)  # this should look for the latest rather than incrementing current version
+			except KeyError:
+				pass
+
 		self.show()
 		self.raise_()
 
@@ -206,12 +199,11 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 		""" Dialog accept function.
 		"""
 		filename = os.path.join(os.environ['SCNMGR_SAVE_DIR'], self.updateFilename())
-		# filename = oswrapper.absolutePath('$SCNMGR_SAVE_DIR/' +  self.updateFilename())
+		# filename = os_wrapper.absolutePath('$SCNMGR_SAVE_DIR/' +  self.updateFilename())
 
-		self.session.file_save_as(filename)
-
-		self.returnValue = filename
-		self.accept()
+		if self.session.file_save_as(filename):
+			self.returnValue = filename
+			self.accept()
 
 
 	def nativeDialog(self):
@@ -219,12 +211,9 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 		"""
 		self.hide()
 
-		try:
-			self.session.file_save_dialog()
+		if self.session.file_save_native_dialog():
 			self.close()
-
-		except RuntimeError:
-			# Return to custom dialog
+		else:  # Return to custom dialog
 			self.show()
 
 
@@ -249,35 +238,16 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 # Run functions
 # ----------------------------------------------------------------------------
 
-def run_maya(session, **kwargs):
-	""" Run in Maya.
+def dialog(session, app='standalone'):
+	""" Instantiate UI object parented to appropriate app's main window
 	"""
-	try:  # Show the UI
-		session.fileSaveUI.display(**kwargs)
-	except:  # Create the UI
-		UI._maya_delete_ui(cfg['window_object'], cfg['window_title'])  # Delete any existing UI
-		session.fileSaveUI = FileSaveUI(parent=UI._maya_main_window(), session=session)
-		session.fileSaveUI.display(**kwargs)
+	if app == 'standalone':
+		pass
+	elif app == 'maya':
+		parent = UI._maya_main_window()
+	elif app == 'houdini':
+		parent = UI._houdini_main_window()
+	elif app == 'nuke':
+		parent = UI._nuke_main_window()
 
-
-# def run_houdini(session, **kwargs):
-# 	""" Run in Houdini.
-# 	"""
-# 	try:  # Show the UI
-# 		session.fileSaveUI.display(**kwargs)
-# 	except:  # Create the UI
-# 		#UI._houdini_delete_ui(cfg['window_object'], cfg['window_title'])  # Delete any existing UI
-# 		#session = UI._houdini_get_session()
-# 		session.fileSaveUI = FileSaveUI(parent=UI._houdini_main_window(), session=session)
-# 		session.fileSaveUI.display(**kwargs)
-
-
-def run_nuke(session, **kwargs):
-	""" Run in Nuke.
-	"""
-	try:  # Show the UI
-		session.fileSaveUI.display(**kwargs)
-	except:  # Create the UI
-		UI._nuke_delete_ui(cfg['window_object'], cfg['window_title'])  # Delete any existing UI
-		session.fileSaveUI = FileSaveUI(parent=UI._nuke_main_window(), session=session)
-		session.fileSaveUI.display(**kwargs)
+	return FileSaveUI(parent=parent, session=session)

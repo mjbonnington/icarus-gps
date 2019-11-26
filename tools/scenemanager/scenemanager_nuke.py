@@ -5,71 +5,118 @@
 # Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2019
 #
-# Custom file opening/saving procedures.
+# Custom file opening/saving procedures for Nuke.
 
 
 import os
 import nuke
 
 # Import custom modules
-# from . import file_open
-# from . import file_save
-from shared import os_wrapper
+from . import file_open
+from . import file_save
+# from shared import os_wrapper
 from shared import recentFiles
 
 
 class SceneManager(object):
-	""" File Open UI.
+	""" Interface to wrap Nuke's file open/save functionality.
 	"""
 	def __init__(self):
-		pass
+		self.app = 'nuke'
 
 
 	def file_new(self):
-		""" Start a new file.
+		""" Start a new file with some default settings.
 		"""
-		nuke.scriptClear()
-		self.set_defaults()
+		if self.confirm():
+			nuke.scriptClear()
+			self.set_defaults()
 
 
-	def file_open_dialog(self, starting_dir=None):
-		""" Display a dialog to select a file to open.
+	def file_open_dialog(self, **kwargs):
+		""" Display a custom dialog to select a file to open.
 		"""
-		if starting_dir is None:
-			nuke.scriptOpen()
+		self.file_open_ui = file_open.dialog(self, app=self.app)
+		return self.file_open_ui.display(**kwargs)
 
-		else:
-			nuke.scriptOpen(os.path.join(starting_dir, '.'))
+
+	def file_open_native_dialog(self, starting_dir=None):
+		""" Display a native dialog to select a file to open.
+			N.B. try/except to catch RuntimeError when dialog is cancelled.
+		"""
+		try:
+			if starting_dir is None:
+				nuke.scriptOpen()
+
+			else:
+				nuke.scriptOpen(os.path.join(starting_dir, '.'))
+
+			return True
+
+		except RuntimeError:
+			return False
 
 
 	def file_open(self, filepath):
 		""" Open the specified file.
 		"""
-		nuke.scriptOpen(filepath)
-		recentFiles.updateLs(filepath)
-
-
-	def file_save_dialog(self, starting_dir=None):
-		""" Display a dialog for saving a file.
-		"""
-		if starting_dir is None:
-			nuke.scriptSaveAs()
+		if self.confirm():
+			nuke.scriptClear()
+			nuke.scriptOpen(filepath)
+			recentFiles.updateLs(filepath)
+			return filepath
 
 		else:
-			nuke.scriptSaveAs(os.path.join(starting_dir, '.'))
+			return False
+
+
+	def file_save_dialog(self, **kwargs):
+		""" Display a custom dialog for saving a file.
+		"""
+		self.file_save_ui = file_save.dialog(self, app=self.app)
+		return self.file_save_ui.display(**kwargs)
+
+
+	def file_save_native_dialog(self, starting_dir=None):
+		""" Display a native dialog for saving a file.
+			N.B. try/except to catch RuntimeError when dialog is cancelled.
+		"""
+		try:
+			if starting_dir is None:
+				nuke.scriptSaveAs()
+
+			else:
+				nuke.scriptSaveAs(os.path.join(starting_dir, '.'))
+
+			return True
+
+		except RuntimeError:
+			return False
 
 
 	def file_save(self):
 		""" Save the current file.
+			If saving for first time take over and show custom dialog.
 		"""
-		nuke.scriptSave()
+		if nuke.Root().name() == 'Root':  # Is current file unsaved?
+			self.file_save_dialog()
+
+		else:
+			nuke.scriptSave()
 
 
 	def file_save_as(self, filepath):
 		""" Save the current file to the specified filepath.
+			Nuke automatically prompts if file already exists.
+			N.B. try/except to catch RuntimeError when dialog is cancelled.
 		"""
-		nuke.scriptSaveAs(filepath)
-		recentFiles.updateLs(filepath)
+		try:
+			nuke.scriptSaveAs(filepath)
+			recentFiles.updateLs(filepath)
+			return True
+
+		except RuntimeError:
+			return False
 
 
 	def file_save_new_version(self):
@@ -86,15 +133,25 @@ class SceneManager(object):
 
 
 	def file_get_name(self):
-		""" Change the name of the current file.
+		""" Get the name of the current file.
 		"""
-		pass
+		return nuke.Root().name()
 
 
 	def file_set_name(self, new_name):
 		""" Change the name of the current file.
 		"""
 		pass
+
+
+	def confirm(self):
+		""" Obtain confirmation to proceed with operation if the current file
+			is not saved.
+		"""
+		if nuke.Root().modified():
+			return nuke.ask("The current script has been modified. Do you want to continue?")
+		else:
+			return True
 
 
 	def update_recents_menu(self, menu):
@@ -109,7 +166,8 @@ class SceneManager(object):
 
 		# Re-populate the items in the pop-up menu
 		for item in fileLs:
-			openRecentCmdStr = 'nuke.scriptOpen(\"%s%s\")' % (os.environ['IC_SHOTPATH'], item)
+			# openRecentCmdStr = 'nuke.scriptOpen(\"%s%s\")' % (os.environ['IC_SHOTPATH'], item)
+			openRecentCmdStr = 'session.scnmgr.file_open(\"%s%s\")' % (os.environ['IC_SHOTPATH'], item)
 			menu.addCommand(item.replace('/', '\/'), openRecentCmdStr.replace('\\', '/'))  # Forward slashes need escaping to prevent Nuke from interpreting them as sub-menus
 
 		# If recent file list contains no entries, disable menu

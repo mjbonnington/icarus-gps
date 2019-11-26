@@ -37,8 +37,8 @@ def launch(app=None, executable=None, flags=None):
 		cmdStr = '"%s" -proj "%s"' %(executable, os.environ['MAYADIR'])
 
 	elif app == 'Nuke':
-		# Workaround to allow Nuke 11 to launch correctly - delete PYTHONPATH
-		# environment variable
+		# Workaround to allow Nuke 11 to launch correctly by deleting
+		# PYTHONPATH environment variable
 		try:
 			os.environ.pop('PYTHONPATH')
 			verbose.message("Deleted 'PYTHONPATH' environment variable.")

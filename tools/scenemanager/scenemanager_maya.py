@@ -5,57 +5,83 @@
 # Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2019
 #
-# Custom file opening/saving procedures.
+# Custom file opening/saving procedures for Maya.
 
 
 import os
 import maya.cmds as mc
-# import maya.mal as mel
 
 # Import custom modules
-from shared import os_wrapper
+from . import file_open
+from . import file_save
+# from shared import os_wrapper
 from shared import recentFiles
 
 
 class SceneManager(object):
-	""" File Open UI.
+	""" Interface to wrap Maya's file open/save functionality.
 	"""
 	def __init__(self):
-		pass
+		self.app = 'maya'
 
 
 	def file_new(self):
-		""" Start a new file.
+		""" Start a new file with some default settings.
+			Maya automatically prompts if scene has unsaved changes.
 		"""
 		mc.NewScene()
 		self.set_defaults()
 
 
-	def file_open_dialog(self, starting_dir=None):
-		""" Display a dialog to select a file to open.
+	def file_open_dialog(self, **kwargs):
+		""" Display a custom dialog to select a file to open.
+		"""
+		self.file_open_ui = file_open.dialog(self, app=self.app)
+		return self.file_open_ui.display(**kwargs)
+
+
+	def file_open_native_dialog(self, starting_dir=None):
+		""" Display a native dialog to select a file to open.
 		"""
 		mc.OpenScene()
+		return True
 
 
 	def file_open(self, filepath):
 		""" Open the specified file.
-			TODO: prompt if current scene has been modified
 		"""
-		recentFiles.updateLs(
-			mc.file(filepath, open=True, force=True, ignoreVersion=True))
+		if self.confirm():
+			recentFiles.updateLs(
+				mc.file(filepath, open=True, force=True, ignoreVersion=True))
+			return filepath
+
+		else:
+			return False
 
 
-	def file_save_dialog(self, starting_dir=None):
-		""" Display a dialog for saving a file.
+	def file_save_dialog(self, **kwargs):
+		""" Display a custom dialog for saving a file.
+		"""
+		self.file_save_ui = file_save.dialog(self, app=self.app)
+		return self.file_save_ui.display(**kwargs)
+
+
+	def file_save_native_dialog(self, starting_dir=None):
+		""" Display a native dialog for saving a file.
 		"""
 		mc.SaveSceneAs()
+		return True
 
 
 	def file_save(self):
 		""" Save the current file.
-			TODO: if saving for first time take over and show custom dialog
+			If saving for first time take over and show custom dialog.
 		"""
-		mc.SaveScene()
+		if mc.file(query=True, sceneName=True):  # Is current file unsaved?
+			self.file_save_dialog()
+
+		else:
+			mc.SaveScene()
 
 
 	def file_save_as(self, filepath):
@@ -63,8 +89,11 @@ class SceneManager(object):
 			TODO: prompt if save will overwrite existing file
 		"""
 		mc.file(rename=filepath)
-		recentFiles.updateLs(
-			mc.file(options='v=0', force=True, save=True, type='mayaAscii'))
+		mc.SaveScene()
+		recentFiles.updateLs(filepath)
+		# recentFiles.updateLs(
+		# 	mc.file(options='v=0', force=True, save=True, type='mayaAscii'))
+		return True
 
 
 	def file_save_new_version(self):
@@ -81,7 +110,7 @@ class SceneManager(object):
 
 
 	def file_get_name(self):
-		""" Change the name of the current file.
+		""" Get the name of the current file.
 		"""
 		pass
 
@@ -90,6 +119,24 @@ class SceneManager(object):
 		""" Change the name of the current file.
 		"""
 		mc.file(rename=new_name)
+
+
+	def confirm(self):
+		""" Obtain confirmation to proceed with operation if the current file
+			is not saved.
+		"""
+		if mc.file(query=True, modified=True):
+			if 'Yes' == mc.confirmDialog(
+				title='Unsaved Changes', 
+				message='The current scene has been modified. Do you want to continue?', 
+				button=['Yes', 'No'], 
+				defaultButton='Yes', 
+				cancelButton='No'):
+				return True
+			else:
+				return False
+		else:
+			return True
 
 
 	def update_recents_menu(self):

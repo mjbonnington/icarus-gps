@@ -74,7 +74,7 @@ def updateLs(newEntry, env=os.environ['IC_ENV']):
 	shotpath = os.environ['IC_SHOTPATH'].replace('\\', '/')
 
 	if newEntry.startswith(shotpath): # only add files in the current shot
-		newEntry = newEntry.replace(shotpath, '')
+		newEntry = newEntry.replace(shotpath, '', 1)
 
 		fileStr = config.get(os.environ['IC_SHOT'], env)
 

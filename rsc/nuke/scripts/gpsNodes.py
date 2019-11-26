@@ -12,7 +12,6 @@
 import os
 import nuke
 
-from rsc.nuke.scripts import gpsSave
 from shared import os_wrapper
 from shared import vCtrl
 
@@ -53,7 +52,7 @@ def read_create():
 def write_create():
 	""" Create a custom GPS Write node.
 	"""
-	if not gpsSave.getWorkingScriptName():
+	if not getWorkingScriptName():  # re-write this function
 		nuke.message('Please save your script first')
 		return
 
@@ -202,3 +201,23 @@ def w_render_submit():
 		layers=writeNode.name(),
 		frameRange=frameRange)
 
+
+def getWorkingScriptName():
+	""" Strips all naming conventions and returns script name.
+		Moved from redundant gpsSave module. Should be re-written ultimately.
+	"""
+	workingScript = nuke.root().name()
+	if not os.path.isfile(workingScript):
+		return
+	try:
+		#spliting path and getting file name only
+		scriptName = os.path.split(workingScript)[1]
+		#getting rid of all naming conventions to get script name only
+		scriptName = scriptName.split('%s_' % os.environ['IC_SHOT'])[-1]
+		version = scriptName.split('_')[-1]
+		scriptName = scriptName.split('_%s' % version)[0]
+		#getting rid of padding and extension
+		scriptName = scriptName.split('.')[0]
+		return scriptName
+	except:
+		return
