@@ -10,11 +10,14 @@
 
 import os
 import nuke
+# import sys
+# import traceback
 
 # Import custom modules
 from . import file_open
 from . import file_save
 # from shared import os_wrapper
+from shared import pDialog
 from shared import recentFiles
 
 
@@ -23,6 +26,8 @@ class SceneManager(object):
 	"""
 	def __init__(self):
 		self.app = 'nuke'
+		self.file_open_ui = file_open.dialog(self, app=self.app)
+		self.file_save_ui = file_save.dialog(self, app=self.app)
 
 
 	def file_new(self):
@@ -36,7 +41,6 @@ class SceneManager(object):
 	def file_open_dialog(self, **kwargs):
 		""" Display a custom dialog to select a file to open.
 		"""
-		self.file_open_ui = file_open.dialog(self, app=self.app)
 		return self.file_open_ui.display(**kwargs)
 
 
@@ -61,10 +65,19 @@ class SceneManager(object):
 		""" Open the specified file.
 		"""
 		if self.confirm():
-			nuke.scriptClear()
-			nuke.scriptOpen(filepath)
-			recentFiles.updateLs(filepath)
-			return filepath
+			try:
+				nuke.scriptClear()
+				nuke.scriptOpen(filepath)
+				recentFiles.updateLs(filepath)
+				return filepath
+
+			except RuntimeError as e:
+				# exc_type, exc_value, exc_traceback = sys.exc_info()
+				# # traceback.print_exception(exc_type, exc_value, exc_traceback)
+				# dialog_msg = traceback.format_exception_only(exc_type, exc_value)[0]
+				dialog = pDialog.dialog()
+				dialog.display(str(e), "Message", conf=True)
+				return False
 
 		else:
 			return False
@@ -73,7 +86,6 @@ class SceneManager(object):
 	def file_save_dialog(self, **kwargs):
 		""" Display a custom dialog for saving a file.
 		"""
-		self.file_save_ui = file_save.dialog(self, app=self.app)
 		return self.file_save_ui.display(**kwargs)
 
 

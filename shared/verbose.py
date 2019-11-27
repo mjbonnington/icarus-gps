@@ -51,6 +51,11 @@ class bcolors:
 statusBar = None
 
 
+def debug(message):
+	""" Print a debugging message.
+	"""
+	print_("DEBUG: " + message, 4)
+
 def progress(message):
 	""" Print a progress message.
 	"""
@@ -190,9 +195,6 @@ def dailyFail():
 
 def gpsPreview_uiValues():
 	warning("Not all GPS Preview UI values could be read.")
-
-def gpsToolDeploy(status):
-	message("Deploying GPS tools... %s" %status)
 
 def icarusLaunch(name, version, vendor="", location="", env="", user="", userOverride=False):
 	print_("%s%s%s %s" %(bcolors.ICGREEN, name, bcolors.ENDC, version), 0)

@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-# [GPS] init.py
+# [Icarus] init.py
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2013-2019 Gramercy Park Studios
 #
 # Nuke initialisation.

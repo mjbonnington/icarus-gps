@@ -124,7 +124,7 @@ class TemplateUI(object):
 		""" Setup the UI.
 		"""
 		info_str = "Window object: %s Parent: %s" %(self, self.parent)
-		verbose.print_(info_str)
+		verbose.debug(info_str)
 
 		# Instantiate XML data class
 		if xml_data:
@@ -880,11 +880,14 @@ class TemplateUI(object):
 		#self.setFixedHeight(self.sizeHint().height())  # Resize window
 
 
-	def populateComboBox(self, comboBox, contents, replace=True, addEmptyItems=False):
+	def populateComboBox(self, comboBox, contents, replace=True, addEmptyItems=False, blockSignals=False):
 		""" Use a list (contents) to populate a combo box.
 			If 'replace' is true, the existing items will be replaced,
 			otherwise the contents will be appended to the existing items.
 		"""
+		if blockSignals:
+			comboBox.blockSignals(True)
+
 		# Store current value
 		current = comboBox.currentText()
 
@@ -907,6 +910,9 @@ class TemplateUI(object):
 			comboBox.setCurrentIndex(0)
 		else:
 			comboBox.setCurrentIndex(index)
+
+		if blockSignals:
+			comboBox.blockSignals(False)
 
 	# End widget handlers
 	# ------------------------------------------------------------------------

@@ -26,7 +26,8 @@ import ui_template as UI
 from . import versioning
 from shared import os_wrapper
 from shared import recentFiles
-from shared import sequence
+# from shared import sequence
+from shared import verbose
 
 # ----------------------------------------------------------------------------
 # Configuration
@@ -83,9 +84,11 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		# self.ui.shotChange_toolButton.clicked.connect(self.setShot)
 		# self.ui.shotReset_toolButton.clicked.connect(self.resetShot)
 
-		self.ui.shot_lineEdit.textChanged.connect(self.updateFilters)
+		# self.ui.shot_lineEdit.textChanged.connect(self.updateFilters)  # disabled as this call should be done explicitly when shot is (re)set
 		self.ui.discipline_comboBox.currentIndexChanged.connect(self.updateFilters)
 		self.ui.artist_comboBox.currentIndexChanged.connect(self.updateFilters)
+		self.ui.versionAll_radioButton.toggled.connect(self.updateView)
+		self.ui.versionLatest_radioButton.toggled.connect(self.updateView)
 
 		self.ui.refresh_toolButton.clicked.connect(self.updateView)
 		self.ui.nativeDialog_toolButton.clicked.connect(self.nativeDialog)
@@ -110,7 +113,8 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		for key, value in self.getInfo().items():
 			info_ls.append("{} {}".format(key, value))
 		info_str = " | ".join(info_ls)
-		print("%s v%s\n%s" % (cfg['window_title'], VERSION, info_str))
+		verbose.message("%s v%s" % (cfg['window_title'], VERSION))
+		verbose.print_(info_str)
 
 
 	def display(self):
@@ -122,13 +126,18 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 
 		self.ui.shot_lineEdit.setText(os.environ['SCNMGR_SHOT'])
 		self.ui.shot_toolButton.setEnabled(False)  # temp until implemented
-		self.ui.versionAll_radioButton.setEnabled(False)  # temp until implemented
-		self.ui.versionLatest_radioButton.setEnabled(False)  # temp until implemented
+
+		# Generate a master list of all files matching the naming convention
+		# to compare against
+		self.generateFilter(shot=self.ui.shot_lineEdit.text())
+		self.matches_latest = versioning.get_latest(self.matchFiles(self.file_filter))
+		# print self.matches_latest
 
 		# self.base_dir = os_wrapper.absolutePath('$SCNMGR_SAVE_DIR/..')
 		# self.file_ext = os.environ['SCNMGR_FILE_EXT'].split(os.pathsep)
 
-		self.populateComboBox(self.ui.artist_comboBox, self.getArtists())
+		self.populateComboBox(self.ui.artist_comboBox, self.getArtists(), blockSignals=True)
+		self.updateFilters()
 		self.updateView()
 		self.updateSelection()
 
@@ -152,15 +161,23 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 
 	# @QtCore.Slot()
 	def updateFilters(self):
+		""" Update the search filter arguments when the widgets' values are
+			modified.
+		"""
+		shot = self.ui.shot_lineEdit.text()
+		discipline = self.ui.discipline_comboBox.currentText()
+		artist = self.ui.artist_comboBox.currentText()
+
+		self.generateFilter(shot, discipline, artist)
+		self.updateView()
+
+
+	def generateFilter(self, shot=os.environ['SCNMGR_SHOT'], discipline=None, artist=None):
 		""" Update the search filter to show filenames based on the currently
 			selected values, which match the naming convention described in
 			the environment variable 'SCNMGR_CONVENTION'.
 		"""
 		ignore_list = ["[any]", "[please select]", "", None]
-
-		shot = self.ui.shot_lineEdit.text()
-		discipline = self.ui.discipline_comboBox.currentText()
-		artist = self.ui.artist_comboBox.currentText()
 
 		# Current naming convention for reference:
 		# <artist>/<shot>.<discipline>.[<description>.]<version>.ext
@@ -182,90 +199,68 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		self.file_filter = self.file_filter.replace("<discipline>", "*")
 		self.file_filter = self.file_filter.replace("[<description>.]<version>", "*")
 
-		self.updateView()
+		print self.file_filter
 
 
-	def updateView(self):
-		""" Update the file browser.
+	def matchFiles(self, file_filter):
+		""" Match files based on the convention given in file_filter and
+			return as a list.
 		"""
-		# Clear tree widget
-		self.ui.fileBrowser_treeWidget.clear()
-
-		# Populate tree widget
 		matches = []
-		seq = {}
 		for filetype in self.file_ext:
-			search_pattern = os.path.join(self.base_dir, self.file_filter+filetype)
+			search_pattern = os.path.join(self.base_dir, file_filter+filetype)
 			# print search_pattern
 			for filepath in glob.glob(search_pattern):
 				# Only add files, not directories or symlinks
 				if os.path.isfile(filepath) \
 				and not os.path.islink(filepath):
-					#---------------------------------------------------------
-					# meta = versioning.parse(filepath)
-					# # print presets
-					# if '<description>' in meta:
-					# 	prefix = ".".join([meta['<shot>'], meta['<discipline>'], meta['<description>']])
-					# else:
-					# 	prefix = ".".join([meta['<shot>'], meta['<discipline>']])
-					# v_int = versioning.version_to_int(meta['<version>'])
-					# seq[prefix] = {v_int: filepath}
-					#---------------------------------------------------------
+					filepath = os_wrapper.absolutePath(filepath)
 					matches.append(filepath)
 
-		# print seq
-		# # Filter out all but latest version ----------------------------------
-		# # Create list to hold all basenames of sequences
-		# all_bases = []
-		# delimiter = '.v'
+		return matches
 
-		# # Get common bases in list of files
-		# for item in matches:
-		# 	dirname, basename = os.path.split(item)
 
-		# 	# Extract file extension
-		# 	root, ext = os.path.splitext(basename)
-		# 	# print root, ext
+	def updateView(self):
+		""" Update the file browser.
+		"""
+		try:
+			verbose.debug("updateView called from %s" % self.sender().objectName())
+		except:
+			verbose.debug("updateView called explicitly")
 
-		# 	# Match file names which have a trailing number separated by the
-		# 	# delimiter character
-		# 	seqRE = re.compile(r'%s\d+$' % re.escape(delimiter))
-		# 	match = seqRE.search(root)
+		show_latest = self.ui.versionLatest_radioButton.isChecked()
 
-		# 	# Store version number
-		# 	version = int(match.group().split(delimiter)[1])
+		# Clear tree widget
+		self.ui.fileBrowser_treeWidget.clear()
 
-		# 	# Store filename prefix
-		# 	if match is not None:
-		# 		prefix = root[:root.rfind(match.group())]
-		# 		result = '%s%s#%s' % (prefix, delimiter, ext)
-		# 		all_bases.append(result)
+		# Get list of files that match filters
+		matches = self.matchFiles(self.file_filter)
 
-		# # Remove duplicates & sort list
-		# bases = list(set(all_bases))
-		# bases.sort()
-		# print bases
-		# # matches = bases
-		# # --------------------------------------------------------------------
+		# matches_latest = versioning.get_latest(matches)
 
-		# print(matches)
+		if show_latest:
+			# matches = matches_latest
+			matches = versioning.get_latest(matches)
+
 		# Add entries to tree widget
 		for item in matches:
 			fileItem = QtWidgets.QTreeWidgetItem(self.ui.fileBrowser_treeWidget)
+			if item in self.matches_latest:
+				fileItem.setIcon(0, self.iconSet('starred.svg'))
+			else:
+				fileItem.setIcon(0, self.iconSet('empty.png'))
+				fileItem.setForeground(0, self.col['disabled'])
 			fileItem.setText(0, os.path.basename(item))
 			fileItem.setText(1, str(os.path.getsize(item)))
-
 			timestamp = os.path.getmtime(item)
 			timestr = datetime.datetime.fromtimestamp(timestamp).strftime(self.time_format_str)
 			fileItem.setText(2, timestr)
+			if self.getArtist(item) != os.environ['SCNMGR_USER']:
+				fileItem.setForeground(3, self.col['disabled'])
 			fileItem.setText(3, self.getArtist(item))
 			fileItem.setText(4, os.path.normpath(item))
 
 			self.ui.fileBrowser_treeWidget.addTopLevelItem(fileItem)
-
-		# Resize all columns to fit content
-		# for i in range(0, self.ui.fileBrowser_treeWidget.columnCount()):
-		# 	self.ui.fileBrowser_treeWidget.resizeColumnToContents(i)
 
 		# Hide last column
 		self.ui.fileBrowser_treeWidget.setColumnHidden(4, True)

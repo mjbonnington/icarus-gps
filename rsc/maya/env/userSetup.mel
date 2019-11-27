@@ -1,4 +1,4 @@
-// [GPS] User Setup
+// [Icarus] userSetup.mel
 //
 // Nuno Pereira <nuno.pereira@gps-ldn.com>
 // Mike Bonnington <mjbonnington@gmail.com>
@@ -9,43 +9,37 @@
 
 // Set environment (should be done first)
 python("import os, sys");
-python("os.environ['IC_ENV'] = 'MAYA'")
+python("os.environ['IC_ENV'] = 'MAYA'");
 
 // Initialise Icarus environment
 python("sys.path.append(os.environ['IC_BASEDIR'])");
-// python("from core import env__init__; env__init__.appendSysPaths()");
+python("from core import env__init__; env__init__.appendSysPaths()");
 python("from core.app_session import *");
 
 // Set up path remapping for cross-platform support
-/*string $root = `getenv FILESYSTEMROOT`;
+string $root = `getenv FILESYSTEMROOT`;
 string $win_root = `getenv FILESYSTEMROOTWIN`;
 string $osx_root = `getenv FILESYSTEMROOTOSX`;
 string $linux_root = `getenv FILESYSTEMROOTLINUX`;
 if ($root != "None")
 {
 	dirmap -en true;
-	if ($win_root != "None")
-	{
-		dirmap -m $win_root $root;
-	}
-	if ($osx_root != "None")
-	{
-		dirmap -m $osx_root $root;
-	}
-	if ($linux_root != "None")
-	{
-		dirmap -m $linux_root $root;
-	}
-}*/
+	if ($win_root != "None") dirmap -m $win_root $root;
+	if ($osx_root != "None") dirmap -m $osx_root $root;
+	if ($linux_root != "None") dirmap -m $linux_root $root;
+}
 
 // Run UI related stuff
 int $batchMode = `about -batch`;
 if (!$batchMode)
 {
-	// Build GPS menus
-	source gpsBuildMenus;
+	// Deploy custom tools
+	python("from rsc.maya.scripts import icDeployTools; icDeployTools.deploy()");
 
-	// Set up keyboard shortcuts for GPS tools
+	// Build custom menus
+	source gpsBuildMenus;
+/*
+	// Set up keyboard shortcuts for custom tools
 	// New Scene...
 	nameCommand "GPSNew" -ann "[GPS] New Scene" -c "source menus2Py; menus2Py.newScene()";
 	hotkey -cmd -k "n" -n "GPSNew";
@@ -66,14 +60,23 @@ if (!$batchMode)
 	nameCommand "GPSSaveIncremental" -ann "[GPS] Save Scene Incrementally" -c "source menus2Py; menus2Py.incrementalSave()";
 	hotkey -cmd -alt -k "s" -n "GPSSaveIncremental";
 	hotkey -ctl -alt -k "s" -n "GPSSaveIncremental";
-
+*/
 	// Instance the Icarus UI
 	python("from core import icarus; session.icarus = icarus.app(app='maya')");
 
 	// Initialise Scene Manager
-	// python("from tools.scenemanager import scenemanager_maya; session.scnmgr = scenemanager.create(app='maya')");
+	python("from tools.scenemanager import scenemanager; session.scnmgr = scenemanager.create(app='maya')");
 
-	// // Update Maya scene defaults at startup
-	// python ("from rsc.maya.scripts import mayaOps; mayaOps.update()");
-	// //source gpsRenderSetup.mel; gpsRenderSetup.setCommonOptions()
+	// Update Maya scene defaults at startup
+	//python("from rsc.maya.scripts import mayaOps; mayaOps.update()");
+	python("session.scnmgr.set_defaults()");
+	//source gpsRenderSetup.mel; gpsRenderSetup.setCommonOptions();
 }
+
+// Load plugins
+loadPlugin -quiet AbcExport;
+loadPlugin -quiet AbcImport;
+loadPlugin -quiet fbxmaya;
+loadPlugin -quiet objExport;
+loadPlugin -quiet OpenEXRLoader;
+loadPlugin -quiet tiffFloatReader;

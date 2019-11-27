@@ -21,6 +21,61 @@ __min_version__ = 0
 __max_version__ = 999
 
 
+def get_latest(file_list):
+	""" Detect the latest version of a file from the provided list of files.
+		Return a list of files containing only the latest versions.
+	"""
+	seq = get_versions(file_list)
+	matches = []
+	# print "\n---debug---"
+	# import json
+	# print(json.dumps(seq, indent=4, sort_keys=True))
+	# print "-----------\n"
+
+	# Find latest version
+	for prefix, value in seq.iteritems():
+		versions = []
+		for ver, path in value.iteritems():
+			versions.append(int(ver))
+		# print prefix, max(versions)
+		latest = max(versions)
+		matches.append(value[latest])
+
+	return matches
+
+
+def get_versions(file_list):
+	""" Detect versions of a file from the provided list of files.
+		Return a nested dictionary in the format:
+
+		base_file_prefix: {
+			version: filepath, 
+			version: filepath
+		}, 
+		base_file_prefix: {
+			version: filepath
+		}
+		...
+		etc.
+	"""
+	seq = {}
+
+	for filepath in file_list:
+		filepath = os_wrapper.absolutePath(filepath)
+		meta = parse(filepath)
+		if '<description>' in meta:
+			prefix = ".".join([meta['<shot>'], meta['<discipline>'], meta['<description>']])
+		else:
+			prefix = ".".join([meta['<shot>'], meta['<discipline>']])
+		v_int = version_to_int(meta['<version>'])
+		try:
+			seq[prefix][v_int] = filepath
+		except KeyError:
+			seq[prefix] = {v_int: filepath}
+
+	return seq
+
+
 def parse(filepath, 
 	      base_dir=os_wrapper.absolutePath('$SCNMGR_SAVE_DIR/..'), 
 	      convention=os.environ['SCNMGR_CONVENTION']):

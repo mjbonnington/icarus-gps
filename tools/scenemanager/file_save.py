@@ -20,6 +20,7 @@ import ui_template as UI
 from . import versioning
 from shared import os_wrapper
 # from shared import recentFiles
+from shared import verbose
 
 # ----------------------------------------------------------------------------
 # Configuration
@@ -95,7 +96,8 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 		for key, value in self.getInfo().items():
 			info_ls.append("{} {}".format(key, value))
 		info_str = " | ".join(info_ls)
-		print("%s v%s\n%s" % (cfg['window_title'], VERSION, info_str))
+		verbose.message("%s v%s" % (cfg['window_title'], VERSION))
+		verbose.print_(info_str)
 
 
 	def display(self):
@@ -117,11 +119,17 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 		if presets is not None:
 			try:
 				self.ui.shot_lineEdit.setText(presets['<shot>'])
-				self.ui.discipline_comboBox.setCurrentText(presets['<discipline>'])
+				self.ui.discipline_comboBox.setCurrentIndex(
+					self.ui.discipline_comboBox.findText(
+						presets['<discipline>']))
+				widget = self.ui.description_comboBox
 				if '<description>' in presets:
-					self.ui.description_comboBox.setCurrentText(presets['<description>'])
+					value = presets['<description>']
 				else:
-					self.ui.description_comboBox.setCurrentText("")
+					value = ""
+				if widget.findText(value) == -1:
+					widget.insertItem(0, value)
+				widget.setCurrentIndex(widget.findText(value))
 				self.ui.version_spinBox.setValue(versioning.version_to_int(presets['<version>'])+1)  # this should look for the latest rather than incrementing current version
 			except KeyError:
 				pass

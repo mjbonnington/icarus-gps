@@ -23,6 +23,8 @@ class SceneManager(object):
 	"""
 	def __init__(self):
 		self.app = 'maya'
+		self.file_open_ui = file_open.dialog(self, app=self.app)
+		self.file_save_ui = file_save.dialog(self, app=self.app)
 
 
 	def file_new(self):
@@ -36,7 +38,6 @@ class SceneManager(object):
 	def file_open_dialog(self, **kwargs):
 		""" Display a custom dialog to select a file to open.
 		"""
-		self.file_open_ui = file_open.dialog(self, app=self.app)
 		return self.file_open_ui.display(**kwargs)
 
 
@@ -62,7 +63,6 @@ class SceneManager(object):
 	def file_save_dialog(self, **kwargs):
 		""" Display a custom dialog for saving a file.
 		"""
-		self.file_save_ui = file_save.dialog(self, app=self.app)
 		return self.file_save_ui.display(**kwargs)
 
 
@@ -77,7 +77,7 @@ class SceneManager(object):
 		""" Save the current file.
 			If saving for first time take over and show custom dialog.
 		"""
-		if mc.file(query=True, sceneName=True):  # Is current file unsaved?
+		if mc.file(query=True, sceneName=True):  # Is this scene empty?
 			self.file_save_dialog()
 
 		else:
@@ -112,7 +112,7 @@ class SceneManager(object):
 	def file_get_name(self):
 		""" Get the name of the current file.
 		"""
-		pass
+		return mc.file(query=True, sceneName=True)
 
 
 	def file_set_name(self, new_name):
@@ -125,7 +125,8 @@ class SceneManager(object):
 		""" Obtain confirmation to proceed with operation if the current file
 			is not saved.
 		"""
-		if mc.file(query=True, modified=True):
+		if mc.file(query=True, sceneName=True) \
+		and mc.file(query=True, modified=True):
 			if 'Yes' == mc.confirmDialog(
 				title='Unsaved Changes', 
 				message='The current scene has been modified. Do you want to continue?', 

@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-# [GPS] menu.py
+# [Icarus] menu.py
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2013-2019 Gramercy Park Studios
 #
 # Customises Nuke's menus and toolbars.
@@ -16,8 +16,6 @@ from core import icarus
 session.icarus = icarus.app(app='nuke')
 
 # Initialise Scene Manager
-# from tools.scenemanager import scenemanager_nuke
-# session.scnmgr = scenemanager_nuke.SceneManager()
 from tools.scenemanager import scenemanager
 session.scnmgr = scenemanager.create(app='nuke')
 session.scnmgr.set_defaults()
