@@ -28,7 +28,7 @@ QWidget {
 	padding: 0;
 	alternate-background-color: rgb(42, 42, 42);
 	selection-background-color: rgb(%highlight%);
-	selection-color: rgb(255, 255, 255);
+	selection-color: rgb(%highlighted-text%);
 	color: rgb(204, 204, 204);
 	font-family: %systemfont%;
 	font-size: 11px;
@@ -201,7 +201,7 @@ QMenuBar::item {
 
 QMenuBar::item:selected, QMenuBar::item:pressed {
 	background: rgb(%highlight%);
-	color: rgb(255, 255, 255);
+	color: rgb(%highlighted-text%);
 }
 
 QMenuBar::item:selected:disabled {
@@ -225,7 +225,7 @@ QMenu::item {
 
 QMenu::item:selected {
 	background: rgb(%highlight%);
-	color: rgb(255, 255, 255);
+	color: rgb(%highlighted-text%);
 }
 
 QMenu::item:selected:disabled {
@@ -873,7 +873,6 @@ QPushButton {
 QPushButton:default {
 	/*background: rgb(%highlight%);*/
 	border-color: rgb(%highlight%);
-	color: rgb(255, 255, 255);
 }
 
 QPushButton:hover, QPushButton:checked:hover {
@@ -1278,7 +1277,7 @@ QComboBox QAbstractItemView {
 /* Color of the selected list item. */
 /*QComboBox::item:selected {
 	background: rgb(%highlight%);
-	color: rgb(255, 255, 255);
+	color: rgb(%highlighted-text%);
 	border: none;
 }*/
 

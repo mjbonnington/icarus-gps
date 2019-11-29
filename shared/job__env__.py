@@ -160,7 +160,7 @@ def setEnv(job, shot, shotPath):
 	# TODO: move out to individual modules
 
 	# Redshift centralised deployment
-	if getAppExecPath('Redshift') is not "":
+	if getAppExecPath('Redshift') != "":
 		# os.environ['redshift_LICENSE'] = "port@hostname"
 		os.environ['REDSHIFT_COREDATAPATH'] = getAppExecPath('Redshift')
 	elif os.environ['IC_RUNNING_OS'] == "Windows":

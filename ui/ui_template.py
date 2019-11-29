@@ -1041,7 +1041,7 @@ class TemplateUI(object):
 		self.col['checked'] = self.offsetColor(self.col['button'], -17)
 		self.col['pressed'] = self.col['highlight']
 
-		if self.col['highlight'].lightness() < 170:
+		if self.col['highlight'].lightness() < 136:
 			self.col['highlighted-text'] = QtGui.QColor(255, 255, 255)
 		else:
 			self.col['highlighted-text'] = QtGui.QColor(0, 0, 0)

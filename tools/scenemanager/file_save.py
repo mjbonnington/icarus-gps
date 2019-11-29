@@ -17,7 +17,7 @@ from Qt import QtCore, QtGui, QtWidgets
 # Import custom modules
 import ui_template as UI
 
-from . import versioning
+from . import convention
 from shared import os_wrapper
 # from shared import recentFiles
 from shared import verbose
@@ -115,7 +115,7 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 		self.updateFilename()
 
 		# Set values from current file if possible
-		presets = versioning.parse(self.session.file_get_name())
+		presets = convention.parse(self.session.file_get_name())
 		if presets is not None:
 			try:
 				self.ui.shot_lineEdit.setText(presets['<shot>'])
@@ -130,7 +130,7 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 				if widget.findText(value) == -1:
 					widget.insertItem(0, value)
 				widget.setCurrentIndex(widget.findText(value))
-				self.ui.version_spinBox.setValue(versioning.version_to_int(presets['<version>'])+1)  # this should look for the latest rather than incrementing current version
+				# self.ui.version_spinBox.setValue(convention.version_to_int(presets['<version>'])+1)  # this should look for the latest rather than incrementing current version
 			except KeyError:
 				pass
 
@@ -187,9 +187,25 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 		else:
 			if description == "":
 				computed_filename = ".".join([shot, discipline, v_str])
+				ff = ".".join([shot, discipline])
 			else:
 				computed_filename = ".".join([shot, discipline, description, v_str])
+				ff = ".".join([shot, discipline, description])
 			computed_filename += self.file_ext[0]  # Add file extension
+
+			# Detect the latest version
+			# file_filter = "*/%s.v*" % ff
+			# print file_filter
+			# matches_latest = convention.get_latest(
+			# 	convention.match_files(
+			# 		os_wrapper.absolutePath('$SCNMGR_SAVE_DIR/..'), 
+			# 		file_filter), 
+			# 	get_next=True)
+			# print "SAVE "
+			# print matches_latest
+			# if matches_latest:
+			# 	self.ui.filename_lineEdit.setText(matches_latest[0])
+			# else:
 			self.ui.filename_lineEdit.setText(computed_filename)
 			self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Save).setEnabled(True)
 

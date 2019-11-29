@@ -11,7 +11,7 @@
 
 import datetime
 # import fnmatch
-import glob
+# import glob
 import os
 import re
 import sys
@@ -23,7 +23,7 @@ from Qt import QtCore, QtGui, QtWidgets
 # Import custom modules
 import ui_template as UI
 
-from . import versioning
+from . import convention
 from shared import os_wrapper
 from shared import recentFiles
 # from shared import sequence
@@ -129,9 +129,13 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 
 		# Generate a master list of all files matching the naming convention
 		# to compare against
-		self.generateFilter(shot=self.ui.shot_lineEdit.text())
-		self.matches_latest = versioning.get_latest(self.matchFiles(self.file_filter))
-		# print self.matches_latest
+		# self.generateFilter(shot=self.ui.shot_lineEdit.text())
+		# self.matches_latest = convention.get_latest(self.matchFiles(self.file_filter))
+		self.matches_latest = convention.get_latest(
+			convention.match_files(
+				self.base_dir, 
+				convention.generate_filter(shot=self.ui.shot_lineEdit.text())))
+		print self.matches_latest
 
 		# self.base_dir = os_wrapper.absolutePath('$SCNMGR_SAVE_DIR/..')
 		# self.file_ext = os.environ['SCNMGR_FILE_EXT'].split(os.pathsep)
@@ -168,56 +172,60 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		discipline = self.ui.discipline_comboBox.currentText()
 		artist = self.ui.artist_comboBox.currentText()
 
-		self.generateFilter(shot, discipline, artist)
+		# self.generateFilter(shot, discipline, artist)
+		self.file_filter = convention.generate_filter(
+			shot=shot, 
+			discipline=discipline, 
+			artist=artist)
 		self.updateView()
 
 
-	def generateFilter(self, shot=os.environ['SCNMGR_SHOT'], discipline=None, artist=None):
-		""" Update the search filter to show filenames based on the currently
-			selected values, which match the naming convention described in
-			the environment variable 'SCNMGR_CONVENTION'.
-		"""
-		ignore_list = ["[any]", "[please select]", "", None]
+	# def generateFilter(self, shot=os.environ['SCNMGR_SHOT'], discipline=None, artist=None):
+	# 	""" Update the search filter to show filenames based on the currently
+	# 		selected values, which match the naming convention described in
+	# 		the environment variable 'SCNMGR_CONVENTION'.
+	# 	"""
+	# 	ignore_list = ["[any]", "[please select]", "", None]
 
-		# Current naming convention for reference:
-		# <artist>/<shot>.<discipline>.[<description>.]<version>.ext
+	# 	# Current naming convention for reference:
+	# 	# <artist>/<shot>.<discipline>.[<description>.]<version>.ext
 
-		# Remove file extension
-		self.file_filter = os.path.splitext(os.environ['SCNMGR_CONVENTION'])[0]
+	# 	# Remove file extension
+	# 	self.file_filter = os.path.splitext(os.environ['SCNMGR_CONVENTION'])[0]
 
-		# Replace compulsory tokens
-		self.file_filter = self.file_filter.replace("<shot>", shot)
+	# 	# Replace compulsory tokens
+	# 	self.file_filter = self.file_filter.replace("<shot>", shot)
 
-		# Replace known tokens
-		if discipline not in ignore_list:
-			self.file_filter = self.file_filter.replace("<discipline>", discipline)
-		if artist not in ignore_list:
-			self.file_filter = self.file_filter.replace("<artist>", artist)
+	# 	# Replace known tokens
+	# 	if discipline not in ignore_list:
+	# 		self.file_filter = self.file_filter.replace("<discipline>", discipline)
+	# 	if artist not in ignore_list:
+	# 		self.file_filter = self.file_filter.replace("<artist>", artist)
 
-		# Replace unspecified tokens with wildcards
-		self.file_filter = self.file_filter.replace("<artist>", "*")
-		self.file_filter = self.file_filter.replace("<discipline>", "*")
-		self.file_filter = self.file_filter.replace("[<description>.]<version>", "*")
+	# 	# Replace unspecified tokens with wildcards
+	# 	self.file_filter = self.file_filter.replace("<artist>", "*")
+	# 	self.file_filter = self.file_filter.replace("<discipline>", "*")
+	# 	self.file_filter = self.file_filter.replace("[<description>.]<version>", "*")
 
-		print self.file_filter
+	# 	# print self.file_filter
 
 
-	def matchFiles(self, file_filter):
-		""" Match files based on the convention given in file_filter and
-			return as a list.
-		"""
-		matches = []
-		for filetype in self.file_ext:
-			search_pattern = os.path.join(self.base_dir, file_filter+filetype)
-			# print search_pattern
-			for filepath in glob.glob(search_pattern):
-				# Only add files, not directories or symlinks
-				if os.path.isfile(filepath) \
-				and not os.path.islink(filepath):
-					filepath = os_wrapper.absolutePath(filepath)
-					matches.append(filepath)
+	# def matchFiles(self, file_filter):
+	# 	""" Match files based on the convention given in file_filter and
+	# 		return as a list.
+	# 	"""
+	# 	matches = []
+	# 	for filetype in self.file_ext:
+	# 		search_pattern = os.path.join(self.base_dir, file_filter+filetype)
+	# 		# print search_pattern
+	# 		for filepath in glob.glob(search_pattern):
+	# 			# Only add files, not directories or symlinks
+	# 			if os.path.isfile(filepath) \
+	# 			and not os.path.islink(filepath):
+	# 				filepath = os_wrapper.absolutePath(filepath)
+	# 				matches.append(filepath)
 
-		return matches
+	# 	return matches
 
 
 	def updateView(self):
@@ -234,13 +242,14 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		self.ui.fileBrowser_treeWidget.clear()
 
 		# Get list of files that match filters
-		matches = self.matchFiles(self.file_filter)
+		# matches = self.matchFiles(self.file_filter)
+		matches = convention.match_files(self.base_dir, self.file_filter)
 
-		# matches_latest = versioning.get_latest(matches)
+		# matches_latest = convention.get_latest(matches)
 
 		if show_latest:
 			# matches = matches_latest
-			matches = versioning.get_latest(matches)
+			matches = convention.get_latest(matches)
 
 		# Add entries to tree widget
 		for item in matches:
@@ -288,9 +297,11 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 	def getArtist(self, filepath):
 		""" Return the artist name based on the filepath.
 		"""
-		dirname = os.path.dirname(filepath)
-		artist = os.path.split(dirname)[-1]
-		return artist
+		# dirname = os.path.dirname(filepath)
+		# artist = os.path.split(dirname)[-1]
+		# return artist
+		meta = convention.parse(filepath)
+		return meta['<artist>']
 
 
 	def restoreView(self):

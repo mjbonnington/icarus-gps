@@ -1,14 +1,15 @@
 #!/usr/bin/python
 
-# [scenemanager] versioning.py
+# [scenemanager] convention.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2019
 #
-# Controls versioning of files.
+# Controls the naming convention and  versioning of files.
 
 
 import os
+import glob
 import re
 
 # Import custom modules
@@ -21,9 +22,10 @@ __min_version__ = 0
 __max_version__ = 999
 
 
-def get_latest(file_list):
+def get_latest(file_list, get_next=False):
 	""" Detect the latest version of a file from the provided list of files.
 		Return a list of files containing only the latest versions.
+		If get_next is True, return the latest version plus 1.
 	"""
 	seq = get_versions(file_list)
 	matches = []
@@ -39,6 +41,8 @@ def get_latest(file_list):
 			versions.append(int(ver))
 		# print prefix, max(versions)
 		latest = max(versions)
+		if get_next:  # Increment version
+			latest += 1
 		matches.append(value[latest])
 
 	return matches
@@ -198,3 +202,65 @@ def version(input_version, increment):
 		verbose.error("Version number out of bounds.")
 		return input_version
 
+
+def generate_filter(
+	shot=os.environ['SCNMGR_SHOT'], 
+	discipline=None, 
+	artist=None, 
+	description=None):
+	""" Update the search filter to show filenames based on the currently
+		selected values, which match the naming convention described in
+		the environment variable 'SCNMGR_CONVENTION'.
+	"""
+	ignore_list = ["[any]", "[please select]", "", None]
+
+	# Current naming convention for reference:
+	# <artist>/<shot>.<discipline>.[<description>.]<version>.ext
+
+	# Remove file extension
+	file_filter = os.path.splitext(os.environ['SCNMGR_CONVENTION'])[0]
+
+	# Replace compulsory tokens
+	file_filter = file_filter.replace("<shot>", shot)
+
+	# Replace known tokens
+	if discipline not in ignore_list:
+		file_filter = file_filter.replace("<discipline>", discipline)
+	if artist not in ignore_list:
+		file_filter = file_filter.replace("<artist>", artist)
+	if description not in ignore_list:
+		file_filter = file_filter.replace("<description>", description)
+
+	# Replace unspecified tokens with wildcards
+	file_filter = file_filter.replace("<artist>", "*")
+	file_filter = file_filter.replace("<discipline>", "*")
+
+	if description:
+		file_filter = file_filter.replace("[", "")
+		file_filter = file_filter.replace("]", "")
+		file_filter = file_filter.replace("<version>", "*")
+	else:
+		file_filter = file_filter.replace("[<description>.]<version>", "*")
+
+	# print file_filter
+	return file_filter
+
+
+def match_files(base_dir, file_filter):
+	""" Match files based on the convention given in file_filter and
+		return as a list.
+	"""
+	file_extensions = os.environ['SCNMGR_FILE_EXT'].split(os.pathsep)
+
+	matches = []
+	for filetype in file_extensions:
+		search_pattern = os.path.join(base_dir, file_filter+filetype)
+
+		for filepath in glob.glob(search_pattern):
+			# Only add files, not directories or symlinks
+			if os.path.isfile(filepath) \
+			and not os.path.islink(filepath):
+				filepath = os_wrapper.absolutePath(filepath)
+				matches.append(filepath)
+
+	return matches
