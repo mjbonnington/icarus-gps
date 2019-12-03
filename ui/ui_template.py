@@ -406,7 +406,9 @@ class TemplateUI(object):
 
 							# widget.setProperty('xmlTag', None)
 							widget.setProperty('inheritedValue', True)
-							widget.setToolTip("This value is being inherited. Change the value to override the inherited value.")  # Rework this in case widgets already have a tooltip
+							if widget.toolTip():
+								widget.setProperty('oldToolTip', widget.toolTip())
+							widget.setToolTip("This value is being inherited. Change the value to override the inherited value.")
 
 							# Apply pop-up menu to remove override - can't get to work here
 							# self.addContextMenu(widget, "Remove override", self.removeOverrides)
@@ -747,14 +749,22 @@ class TemplateUI(object):
 	def getWidgetMeta(self, widget):
 		""" 
 		"""
-		widget.setProperty('inheritedValue', False)
-		widget.setToolTip("")  # Rework this in case widgets already have a tooltip
-		widget.style().unpolish(widget)
-		widget.style().polish(widget)
+		if widget.property('oldToolTip'):  # Revert to old tooltip
+			widget.setToolTip(widget.property('oldToolTip'))
+
+		self.setDynamicProperty(widget, 'inheritedValue', False)
 
 		category = widget.property('xmlCategory')
 		attr = widget.property('xmlTag')
 		return category, attr
+
+
+	def setDynamicProperty(self, widget, property_name, property_value):
+		""" Set a dymanic property for a widget, and redraw it.
+		"""
+		widget.setProperty(property_name, property_value)
+		widget.style().unpolish(widget)
+		widget.style().polish(widget)
 
 
 	# @QtCore.Slot()
@@ -1039,7 +1049,7 @@ class TemplateUI(object):
 
 		self.col['hover'] = self.offsetColor(self.col['button'], +17)
 		self.col['checked'] = self.offsetColor(self.col['button'], -17)
-		self.col['pressed'] = self.col['highlight']
+		self.col['pressed'] = self.col['checked'] #self.col['highlight']
 
 		if self.col['highlight'].lightness() < 136:
 			self.col['highlighted-text'] = QtGui.QColor(255, 255, 255)

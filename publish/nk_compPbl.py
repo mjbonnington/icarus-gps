@@ -80,7 +80,8 @@ def publish(pblTo, slShot, subtype, pblNotes):
 		# File operations
 		pathToPblAsset = os.path.join(pblDir, '%s.%s' % (assetPblName, extension))
 		verbose.pblFeed(msg=assetPblName)
-		nukeOps.saveAs(pathToPblAsset)
+		# nukeOps.saveAs(pathToPblAsset)
+		nuke.scriptSaveAs(pathToPblAsset)
 		nuke.delete(icSet)
 
 		# Take snapshot

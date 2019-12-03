@@ -1,4 +1,4 @@
-// [GPS] menus2py.mel
+// [Icarus] menus2py.mel
 //
 // Nuno Pereira <nuno.pereira@gps-ldn.com>
 // Mike Bonnington <mike.bonnington@gps-ldn.com>
@@ -7,6 +7,76 @@
 // This module wraps python commands up in MEL so they can be called from Maya
 // UI scripts with slightly less pain.
 
+
+// File operations -----------------------------------------------------------
+
+global proc menus2Py.newScene()
+{
+	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.newMayaScene()");
+	python("session.scnmgr.file_new()");
+}
+
+
+global proc menus2Py.openScene()
+{
+	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.openMayaScene()");
+	// python("from tools.scenemanager import file_open; file_open.run_maya(session.scnmgr)");
+	python("session.scnmgr.file_open_dialog()");
+}
+
+
+global proc menus2Py.openRecent(string $menuSel)
+{
+	global string $recentFile;
+	$recentFile = $menuSel;
+	python "import maya.mel as mel";
+	python "recentFile = mel.eval('$temp=$recentFile')";
+	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.openMayaRecentScene(recentFile)");
+	// python("from rsc.maya.scripts import mayaOps; mayaOps.openScene(recentFile, dialog=False)");
+	python("session.scnmgr.file_open_dialog(recentFile)");
+}
+
+
+global proc menus2Py.updateRecentFilesMenu(string $menu)
+{
+	// Get the recent file list and store it in an array
+	python( "from shared import recentFiles" );
+	string $fileLs[] = python( "recentFiles.getLs()" );
+
+	// Delete all items in the pop-up menu
+	menu -edit -deleteAllItems $menu;
+
+	// Re-populate the items in the pop-up menu
+	for ( $item in $fileLs )
+	{
+		menuItem -label $item -command ("menus2Py.openRecent(\"" + `getenv IC_SHOTPATH` + $item + "\")")  -parent $menu $item;
+	}
+}
+
+
+global proc menus2Py.saveScene()
+{
+	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.saveMayaScene()");
+	python("session.scnmgr.file_save()");
+}
+
+
+global proc menus2Py.saveSceneAs()
+{
+	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.saveMayaSceneAs()");
+	// python("from tools.scenemanager import file_save; file_save.run_maya(session.scnmgr)");
+	python("session.scnmgr.file_save_dialog()");
+}
+
+
+global proc menus2Py.incrementAndSave()
+{
+	// incrementalSave; // rewrite this function in python?
+	python("session.scnmgr.file_save_new_version()");
+}
+
+
+// Open Icarus UI ------------------------------------------------------------
 
 global proc menus2Py.launchIcarus()
 {
@@ -80,27 +150,27 @@ global proc menus2Py.updatePresetCameraMenu(string $menu)
 	}
 	menuItem -divider true -parent $menu;
 	menuItem -label "Create Camera Rig"
-	         -checkBox `optionVar -q GPSCreateCameraRig`
+	         -checkBox `optionVar -q icCreateCameraRig`
 	         -command "menus2Py.toggleCreateCameraRig()"
 	         -parent $menu
-	         GPSCreateCameraRigMenu;
+	         icCreateCameraRigMenu;
 	menuItem -label "Add V-Ray Physical Camera Attributes"
-	         -checkBox `optionVar -q GPSAddVRayPhysicalCamera`
-	         -command "menus2Py.toggleGPSAddVRayPhysicalCamera()"
+	         -checkBox `optionVar -q icAddVRayPhysicalCamera`
+	         -command "menus2Py.toggleAddVRayPhysicalCamera()"
 	         -parent $menu
-	         GPSAddVRayPhysicalCameraMenu;
+	         icAddVRayPhysicalCameraMenu;
 }
 
 
 global proc menus2Py.toggleCreateCameraRig()
 {
-	optionVar -iv GPSCreateCameraRig `menuItem -q -checkBox GPSCreateCameraRigMenu`;
+	optionVar -iv icCreateCameraRig `menuItem -q -checkBox icCreateCameraRigMenu`;
 }
 
 
-global proc menus2Py.toggleGPSAddVRayPhysicalCamera()
+global proc menus2Py.toggleAddVRayPhysicalCamera()
 {
-	optionVar -iv GPSAddVRayPhysicalCamera `menuItem -q -checkBox GPSAddVRayPhysicalCameraMenu`;
+	optionVar -iv icAddVRayPhysicalCamera `menuItem -q -checkBox icAddVRayPhysicalCameraMenu`;
 }
 
 
@@ -111,73 +181,9 @@ global proc menus2Py.gpsCreateCamera(string $cam)
 	python "import maya.cmds as mc";
 	python "import maya.mel as mel";
 	python "camera = mel.eval('$temp=$camera')";
-	python "rig = mc.optionVar( q='GPSCreateCameraRig' )";
-	python "physical = mc.optionVar( q='GPSAddVRayPhysicalCamera' )";
+	python "rig = mc.optionVar( q='icCreateCameraRig' )";
+	python "physical = mc.optionVar( q='icAddVRayPhysicalCamera' )";
 	python "from rsc.maya.scripts import gpsCreateCamera; gpsCreateCamera.gpsCreateCamera().createCamera(camera, rig, physical)";
-}
-
-
-global proc menus2Py.newScene()
-{
-	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.newMayaScene()");
-	python("session.scnmgr.file_new()");
-}
-
-
-global proc menus2Py.openScene()
-{
-	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.openMayaScene()");
-	// python("from tools.scenemanager import file_open; file_open.run_maya(session.scnmgr)");
-	python("session.scnmgr.file_open_dialog()");
-}
-
-
-global proc menus2Py.openRecent(string $menuSel)
-{
-	global string $recentFile;
-	$recentFile = $menuSel;
-	python "import maya.mel as mel";
-	python "recentFile = mel.eval('$temp=$recentFile')";
-	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.openMayaRecentScene(recentFile)");
-	python("from rsc.maya.scripts import mayaOps; mayaOps.openScene(recentFile, dialog=False)");
-}
-
-
-global proc menus2Py.updateRecentFilesMenu(string $menu)
-{
-	// Get the recent file list and store it in an array
-	python( "from shared import recentFiles" );
-	string $fileLs[] = python( "recentFiles.getLs()" );
-
-	// Delete all items in the pop-up menu
-	menu -edit -deleteAllItems $menu;
-
-	// Re-populate the items in the pop-up menu
-	for ( $item in $fileLs )
-	{
-		menuItem -label $item -command ("menus2Py.openRecent(\"" + `getenv IC_SHOTPATH` + $item + "\")")  -parent $menu $item;
-	}
-}
-
-
-global proc menus2Py.saveScene()
-{
-	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.saveMayaScene()");
-	python("session.scnmgr.file_save()");
-}
-
-
-global proc menus2Py.incrementalSave()
-{
-	incrementalSave; // rewrite this function in python?
-}
-
-
-global proc menus2Py.saveSceneAs()
-{
-	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.saveMayaSceneAs()");
-	// python("from tools.scenemanager import file_save; file_save.run_maya(session.scnmgr)");
-	python("session.scnmgr.file_save_dialog()");
 }
 
 

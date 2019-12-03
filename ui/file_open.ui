@@ -233,9 +233,9 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QRadioButton" name="versionAll_radioButton">
+          <widget class="QRadioButton" name="versionLatest_radioButton">
            <property name="text">
-            <string>All versions</string>
+            <string>Latest version</string>
            </property>
            <property name="checked">
             <bool>true</bool>
@@ -246,9 +246,12 @@
           </widget>
          </item>
          <item>
-          <widget class="QRadioButton" name="versionLatest_radioButton">
+          <widget class="QRadioButton" name="versionAll_radioButton">
            <property name="text">
-            <string>Latest version</string>
+            <string>All versions</string>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
            </property>
            <property name="xmlTag" stdset="0">
             <string>show</string>
@@ -409,7 +412,6 @@
   <tabstop>discipline_comboBox</tabstop>
   <tabstop>artist_comboBox</tabstop>
   <tabstop>versionAll_radioButton</tabstop>
-  <tabstop>versionLatest_radioButton</tabstop>
   <tabstop>refresh_toolButton</tabstop>
   <tabstop>nativeDialog_toolButton</tabstop>
  </tabstops>

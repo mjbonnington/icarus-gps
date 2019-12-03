@@ -16,7 +16,14 @@ os.environ['SCNMGR_JOB'] = os.environ['IC_JOB']
 os.environ['SCNMGR_SHOT'] = os.environ['IC_SHOT']
 os.environ['SCNMGR_USER'] = os.environ['IC_USERNAME']
 os.environ['SCNMGR_APP'] = os.environ['IC_ENV']
+
+# Define naming conventions.
+# Tokens are defined like so: <token>
+# Each token must be separated by / . _ -
+# Optional tokens should be encased in square brackets.
+# No more than one optional section allowed.
 os.environ['SCNMGR_CONVENTION'] = "<artist>/<shot>.<discipline>.[<description>.]<version>.ext"
+os.environ['SCNMGR_VERSION_CONVENTION'] = "v###"
 
 if os.environ['IC_ENV'] == "STANDALONE":
 	pass

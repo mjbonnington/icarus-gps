@@ -12,9 +12,10 @@ import os
 import maya.cmds as mc
 
 # Import custom modules
+from . import convention
 from . import file_open
 from . import file_save
-# from shared import os_wrapper
+from shared import os_wrapper
 from shared import recentFiles
 
 
@@ -77,7 +78,7 @@ class SceneManager(object):
 		""" Save the current file.
 			If saving for first time take over and show custom dialog.
 		"""
-		if mc.file(query=True, sceneName=True):  # Is this scene empty?
+		if self.get_current_name():  # Is this scene empty?
 			self.file_save_dialog()
 
 		else:
@@ -87,6 +88,7 @@ class SceneManager(object):
 	def file_save_as(self, filepath):
 		""" Save the specified file.
 			TODO: prompt if save will overwrite existing file
+			TODO: add updateRecentFiles flag
 		"""
 		mc.file(rename=filepath)
 		mc.SaveScene()
@@ -97,25 +99,48 @@ class SceneManager(object):
 
 
 	def file_save_new_version(self):
-		""" Convenience function to save a new version of a file.
+		""" Increment the version number and save a new version of a file.
 		"""
-		pass
+		current_name = self.get_current_name()
+
+		if current_name:  # Is current file unsaved?
+			result = convention.version_next(current_name)
+			if result:
+				self.file_save_as(result)
+			else:
+				self.file_save_dialog()
+
+		else:
+			self.file_save_dialog()
 
 
 	def file_snapshot(self, dest_dir=None):
 		""" Save a copy (snapshot) of the current scene to the destination
 			directory, without changing the current file pointer.
+			TODO: implement and test properly
 		"""
-		pass
+		current_file = mc.file(query=True, expandName=True)
+		# tmp_dir = os.path.join(os.environ['SCNMGR_SAVE_DIR'], '.tmp')
+		tmp_dir = dest_dir
+		os_wrapper.createDir(tmp_dir)
+		scene_name = mc.file(query=True, sceneName=True, shortName=True)
+		snapshot_file = os.path.join(tmp_dir, scene_name)
+
+		mc.file(rename=snapshot_file)
+		snapshot_scene = mc.file(save=True)
+		mc.file(rename=current_file)
+		#mc.file(save=True)
+		# print("Saved snapshot: %s" % snapshot_scene)
+		return snapshot_scene
 
 
-	def file_get_name(self):
+	def get_current_name(self):
 		""" Get the name of the current file.
 		"""
 		return mc.file(query=True, sceneName=True)
 
 
-	def file_set_name(self, new_name):
+	def set_current_name(self, new_name):
 		""" Change the name of the current file.
 		"""
 		mc.file(rename=new_name)
@@ -206,3 +231,13 @@ class SceneManager(object):
 			animationEndTime=endFrame, 
 			playbackSpeed=0, 
 			maxPlaybackSpeed=1)
+
+		# # Ensure output file naming convention is correct
+		# if self.getRenderer() == 'vray':
+		# 	mc.setAttr("vraySettings.fileNamePrefix", lock=False)
+		# 	mc.setAttr("vraySettings.fileNamePrefix", MAYA_OUTPUT_FORMAT_VRAY, type="string")
+		# 	mc.setAttr("vraySettings.fileNameRenderElementSeparator", lock=False)
+		# 	mc.setAttr("vraySettings.fileNameRenderElementSeparator", ".", type="string")
+
+		# else:  # Maya Common Default and Arnold
+		# 	mc.setAttr("defaultRenderGlobals.imageFilePrefix", MAYA_OUTPUT_FORMAT, type="string")

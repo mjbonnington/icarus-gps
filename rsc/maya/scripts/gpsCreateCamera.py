@@ -65,18 +65,18 @@ class gpsCreateCamera():
 		mc.rowLayout(numberOfColumns=2, columnAttach2=["left", "left"], columnAlign2=["both", "both"], columnOffset2=[142, 8])
 		mc.checkBox( "createRig",
 		             label="Create Camera Rig",
-		             value=mc.optionVar( q='GPSCreateCameraRig' ),
-		             onCommand=lambda *args: mc.optionVar( iv=('GPSCreateCameraRig', 1) ),
-		             offCommand=lambda *args: mc.optionVar( iv=('GPSCreateCameraRig', 0) )
+		             value=mc.optionVar( q='icCreateCameraRig' ),
+		             onCommand=lambda *args: mc.optionVar( iv=('icCreateCameraRig', 1) ),
+		             offCommand=lambda *args: mc.optionVar( iv=('icCreateCameraRig', 0) )
 		           )
 		mc.setParent(name)
 		mc.rowLayout(numberOfColumns=2, columnAttach2=["left", "left"], columnAlign2=["both", "both"], columnOffset2=[142, 8])
 		mc.checkBox( "physicalCam",
 		             label="Add V-Ray Physical Camera Attributes",
-		             value=mc.optionVar( q='GPSAddVRayPhysicalCamera' ),
+		             value=mc.optionVar( q='icAddVRayPhysicalCamera' ),
 		             enable=mc.pluginInfo( "vrayformaya", query=True, loaded=True ),
-		             onCommand=lambda *args: mc.optionVar( iv=('GPSAddVRayPhysicalCamera', 1) ),
-		             offCommand=lambda *args: mc.optionVar( iv=('GPSAddVRayPhysicalCamera', 0) )
+		             onCommand=lambda *args: mc.optionVar( iv=('icAddVRayPhysicalCamera', 1) ),
+		             offCommand=lambda *args: mc.optionVar( iv=('icAddVRayPhysicalCamera', 0) )
 		           )
 		mc.setParent(name)
 

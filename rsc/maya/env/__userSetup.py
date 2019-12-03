@@ -7,6 +7,7 @@
 # (c) 2013-2019 Gramercy Park Studios
 #
 # Commands to execute at Maya startup.
+# This module has been deprecated: all operations moved to userSetup.mel
 
 
 import os

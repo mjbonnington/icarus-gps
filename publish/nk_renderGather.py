@@ -23,11 +23,11 @@ def gather(gatherPath):
 				filePath, frameRange = dialogPath.split(' ')
 				startFrame, endFrame = frameRange.split('-')
 				filePathTail = os.path.split(filePath)[-1]
-				fileName = 'GPS_%s' % filePathTail.split('.')[0]
+				fileName = '%s_%s' % (os.environ['IC_VENDOR_INITIALS'], filePathTail.split('.')[0])
 			except ValueError:
 				filePath = dialogPath
 				startFrame, endFrame = os.environ['STARTFRAME'], os.environ['ENDFRAME']
-				fileName = 'GPS_Render_Read'
+				fileName = '%s_Render_Read' % os.environ['IC_VENDOR_INITIALS']
 
 			# Make file path relative
 			# filePath = os_wrapper.relativePath(filePath, 'IC_SHOTPUBLISHDIR', tokenFormat='nuke')

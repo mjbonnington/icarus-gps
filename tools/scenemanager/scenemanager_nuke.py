@@ -14,6 +14,7 @@ import nuke
 # import traceback
 
 # Import custom modules
+from . import convention
 from . import file_open
 from . import file_save
 # from shared import os_wrapper
@@ -57,7 +58,10 @@ class SceneManager(object):
 
 			return True
 
-		except RuntimeError:
+		except RuntimeError as e:
+			if str(e) != "Cancelled":
+				dialog = pDialog.dialog()
+				dialog.display(str(e), "Error Opening File", conf=True)
 			return False
 
 
@@ -76,7 +80,7 @@ class SceneManager(object):
 				# # traceback.print_exception(exc_type, exc_value, exc_traceback)
 				# dialog_msg = traceback.format_exception_only(exc_type, exc_value)[0]
 				dialog = pDialog.dialog()
-				dialog.display(str(e), "Message", conf=True)
+				dialog.display(str(e), "Error Opening File", conf=True)
 				return False
 
 		else:
@@ -102,7 +106,10 @@ class SceneManager(object):
 
 			return True
 
-		except RuntimeError:
+		except RuntimeError as e:
+			if str(e) != "Cancelled":
+				dialog = pDialog.dialog()
+				dialog.display(str(e), "Error Saving File", conf=True)
 			return False
 
 
@@ -110,7 +117,7 @@ class SceneManager(object):
 		""" Save the current file.
 			If saving for first time take over and show custom dialog.
 		"""
-		if nuke.Root().name() == 'Root':  # Is current file unsaved?
+		if self.get_current_name() == 'Root':  # Is current file unsaved?
 			self.file_save_dialog()
 
 		else:
@@ -127,33 +134,55 @@ class SceneManager(object):
 			recentFiles.updateLs(filepath)
 			return True
 
-		except RuntimeError:
+		except RuntimeError as e:
+			if str(e) != "Cancelled":
+				dialog = pDialog.dialog()
+				dialog.display(str(e), "Error Saving File", conf=True)
 			return False
 
 
 	def file_save_new_version(self):
-		""" Convenience function to save a new version of a file.
+		""" Increment the version number and save a new version of a file.
 		"""
-		pass
+		current_name = self.get_current_name()
+
+		if current_name == 'Root':  # Is current file unsaved?
+			self.file_save_dialog()
+
+		else:
+			result = convention.version_next(current_name)
+			if result:
+				self.file_save_as(result)
+			else:
+				self.file_save_dialog()
 
 
 	def file_snapshot(self, dest_dir=None):
 		""" Save a copy (snapshot) of the current scene to the destination
 			directory, without changing the current file pointer.
+			TODO: implement and test properly
 		"""
-		pass
+		current_script = nuke.root()['name'].value()
+		dirname, basename = os.path.split(current_script)
+		snapshot_script = os.path.join(tmpdir, basename)
+		base, ext = os.path.splitext(basename)
+		timestamp = time.strftime(r"%Y%m%d_%H%M%S")
+		snapshot_script = "%s_snapshot_%s%s" % (base, timestamp, ext)
+		nuke.scriptSave(snapshot_script)
+		nuke.root()['name'].setValue(current_script)
+		return snapshot_script
 
 
-	def file_get_name(self):
+	def get_current_name(self):
 		""" Get the name of the current file.
 		"""
 		return nuke.Root().name()
 
 
-	def file_set_name(self, new_name):
+	def set_current_name(self, new_name):
 		""" Change the name of the current file.
 		"""
-		pass
+		nuke.root()['name'].setValue(new_name)
 
 
 	def confirm(self):
@@ -228,102 +257,37 @@ class SceneManager(object):
 		nuke.knobDefault('Root.last_frame', os.environ['ENDFRAME'])
 
 
-	# def snapshot(self, scene=None):
-	# 	""" Save a copy (snapshot) of the current scene to a temp folder.
-	# 		Return the path to the snapshot, ready to be submitted.
+	# def incrementSceneWithoutSave(self):
+	# 	""" Increment the minor version number. For Maya, don't save as this
+	# 		can be slow for large scenes. Instead copy the previous scene
+	# 		file via the OS.
 	# 	"""
-	# 	#timestamp = time.strftime(r"%Y%m%d_%H%M%S")
+	# 	if os.environ['SCNMGR_APP'] == "STANDALONE":
+	# 		pass  # Do nothing
 
-	# 	if os.environ['SCNMGR_APP'] == "MAYA":
-	# 		if scene:
-	# 			uhub_origFilePath = scene
-	# 		else:
-	# 			uhub_origFilePath = mc.file(query=True, expandName=True)
-	# 		uhub_tmpDir = os.path.join(os.environ['UHUB_MAYA_SCENES_PATH'], '.tmp')
-	# 		oswrapper.createDir(uhub_tmpDir)
-	# 		uhub_sceneName = mc.file(query=True, sceneName=True, shortName=True)
-	# 		uhub_tmpFilePath = os.path.join(uhub_tmpDir, uhub_sceneName)
+	# 	elif os.environ['SCNMGR_APP'] == "MAYA":
+	# 		# As the scene will have just been saved, we create a copy of the
+	# 		# scene and increment the minor version, and point the Maya file
+	# 		# to the updated scene file. This gives us a performance gain by
+	# 		# avoiding the overhead of a second save operation, which can be
+	# 		# slow for large Maya ASCII scenes.
+	# 		from u_vfx.u_maya.scripts.python import sceneManager
+	# 		current_scene = mc.file(query=True, expandName=True)
+	# 		ext = os.path.splitext(current_scene)[1]
+	# 		updated_scene = sceneManager.versionUp(saveScene=False)
+	# 		if updated_scene:
+	# 			updated_scene += ext
+	# 			oswrapper.copy(current_scene, updated_scene)
+	# 			mc.file(rename=updated_scene)
+	# 			# self.addSceneEntry(self.ui.mayaScene_comboBox, updated_scene)
+	# 			self.getScene()
 
-	# 		# Ensure output file naming convention is correct
-	# 		if self.getRenderer() == 'vray':
-	# 			mc.setAttr("vraySettings.fileNamePrefix", lock=False)
-	# 			mc.setAttr("vraySettings.fileNamePrefix", MAYA_OUTPUT_FORMAT_VRAY, type="string")
-	# 			mc.setAttr("vraySettings.fileNameRenderElementSeparator", lock=False)
-	# 			mc.setAttr("vraySettings.fileNameRenderElementSeparator", ".", type="string")
+	# 	elif os.environ['SCNMGR_APP'] == "HOUDINI":
+	# 		from u_vfx.u_houdini.scripts import sceneManager
+	# 		if sceneManager.versionUp():
+	# 			self.getScene()
 
-	# 		else:  # Maya Common Default and Arnold
-	# 			mc.setAttr("defaultRenderGlobals.imageFilePrefix", MAYA_OUTPUT_FORMAT, type="string")
-
-	# 		mc.file(rename=uhub_tmpFilePath)
-	# 		snapshotScene = mc.file(save=True)
-	# 		mc.file(rename=uhub_origFilePath)
-	# 		#mc.file(save=True)
-	# 		print("Saved snapshot: %s" % snapshotScene)
-	# 		return snapshotScene
-
-	# 	# elif os.environ['SCNMGR_APP'] == "NUKE":
-	# 	# 	currentScript = nuke.root()['name'].value()
-	# 	# 	#dirname, basename = os.path.split(currentScript)
-	# 	# 	#snapshotScript = os.path.join(tmpdir, basename)
-	# 	# 	base, ext = os.path.splitext(basename)
-	# 	# 	snapshotScript = "%s_snapshot_%s%s" % (base, timestamp, ext)
-	# 	# 	nuke.scriptSave(snapshotScript)
-	# 	# 	nuke.root()['name'].setValue(currentScript)
-	# 	# 	return snapshotScript
-
-
-# 	def saveScene(self):
-# 		""" Save the current scene/script if it has been modified.
-# 		"""
-# 		if os.environ['SCNMGR_APP'] == "STANDALONE":
-# 			pass  # Do nothing
-
-# 		elif os.environ['SCNMGR_APP'] == "MAYA":
-# 			# Check if scene is modified before saving, as Maya scene files
-# 			# can be quite large and saving can be slow.
-# 			if mc.file(q=True, modified=True):
-# 				mc.file(save=True)
-
-# 		elif os.environ['SCNMGR_APP'] == "HOUDINI":
-# 			hou.hipFile.save()
-
-# 		elif os.environ['SCNMGR_APP'] == "NUKE":
-# 			nuke.scriptSave()
-
-
-# 	def incrementScene(self):
-# 		""" Increment the minor version number. For Maya, don't save as this
-# 			can be slow for large scenes. Instead copy the previous scene
-# 			file via the OS.
-# 		"""
-# 		if os.environ['SCNMGR_APP'] == "STANDALONE":
-# 			pass  # Do nothing
-
-# 		elif os.environ['SCNMGR_APP'] == "MAYA":
-# 			# As the scene will have just been saved, we create a copy of the
-# 			# scene and increment the minor version, and point the Maya file
-# 			# to the updated scene file. This gives us a performance gain by
-# 			# avoiding the overhead of a second save operation, which can be
-# 			# slow for large Maya ASCII scenes.
-# 			from u_vfx.u_maya.scripts.python import sceneManager
-# 			current_scene = mc.file(query=True, expandName=True)
-# 			ext = os.path.splitext(current_scene)[1]
-# 			updated_scene = sceneManager.versionUp(saveScene=False)
-# 			if updated_scene:
-# 				updated_scene += ext
-# 				oswrapper.copy(current_scene, updated_scene)
-# 				mc.file(rename=updated_scene)
-# 				# self.addSceneEntry(self.ui.mayaScene_comboBox, updated_scene)
-# 				self.getScene()
-
-# 		elif os.environ['SCNMGR_APP'] == "HOUDINI":
-# 			from u_vfx.u_houdini.scripts import sceneManager
-# 			if sceneManager.versionUp():
-# 				self.getScene()
-
-# 		elif os.environ['SCNMGR_APP'] == "NUKE":
-# 			from u_vfx.u_nuke.scripts import compManager
-# 			if compManager.versionUp():
-# 				self.getScene()
-
-
+	# 	elif os.environ['SCNMGR_APP'] == "NUKE":
+	# 		from u_vfx.u_nuke.scripts import compManager
+	# 		if compManager.versionUp():
+	# 			self.getScene()

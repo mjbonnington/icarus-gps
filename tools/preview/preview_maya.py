@@ -131,7 +131,7 @@ class Preview():
 
 	# Header
 	def hudHeader(self):
-		return "GPS"
+		return os.environ['IC_VENDOR_INITIALS']
 
 	# Current project
 	def hudJob(self):

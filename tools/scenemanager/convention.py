@@ -22,10 +22,9 @@ __min_version__ = 0
 __max_version__ = 999
 
 
-def get_latest(file_list, get_next=False):
+def get_latest(file_list):
 	""" Detect the latest version of a file from the provided list of files.
 		Return a list of files containing only the latest versions.
-		If get_next is True, return the latest version plus 1.
 	"""
 	seq = get_versions(file_list)
 	matches = []
@@ -41,8 +40,6 @@ def get_latest(file_list, get_next=False):
 			versions.append(int(ver))
 		# print prefix, max(versions)
 		latest = max(versions)
-		if get_next:  # Increment version
-			latest += 1
 		matches.append(value[latest])
 
 	return matches
@@ -80,9 +77,10 @@ def get_versions(file_list):
 	return seq
 
 
-def parse(filepath, 
-	      base_dir=os_wrapper.absolutePath('$SCNMGR_SAVE_DIR/..'), 
-	      convention=os.environ['SCNMGR_CONVENTION']):
+def parse(
+	filepath, 
+	base_dir=os_wrapper.absolutePath('$SCNMGR_SAVE_DIR/..'), 
+	convention=os.environ['SCNMGR_CONVENTION']):
 	""" Parse the given filepath (relative to base_dir) based on a naming
 		convention and return a dictionary of elements for processing.
 		TODO: check shot, artist, discipline etc. against valid whitelist
@@ -180,22 +178,101 @@ def same_structure(a, b):
 
 
 def version_to_int(v_str):
-	""" Convert a version string in the format 'vXXX' to an integer.
+	""" Convert a version string in the format 'v###' to an integer.
 	"""
 	# if v_str.startswith('v'):
 	return int(v_str.replace('v', '', 1))
 
 
+def version_to_str(v_int):
+	""" Convert an integer to a version string in the format 'v###'.
+	"""
+	padding = os.environ['SCNMGR_VERSION_CONVENTION'].count('#')
+	return 'v' + str(v_int).zfill(padding)
+
+
 def version_up(base_file):
-	""" Upversion the given file.
+	""" Detect the version from the given file, and return the filepath with
+		the version number incremented.
 	"""
-	pass
+	meta = parse(base_file)
+	v_int = version_to_int(meta['<version>'])
+	v_str = version_to_str(change_version(v_int, 1))
+
+	return base_file.replace(meta['<version>'], v_str)
 
 
-def version(input_version, increment):
+def version_next(base_file):
+	""" Find all related versions of base_file and return a path to the next
+		version numerically.
+	"""
+	meta = parse(base_file)
+
+	shot = meta['<shot>']
+	discipline = meta['<discipline>']
+	try:
+		description = meta['<description>']
+	except KeyError:
+		description = ""
+
+	return version_next_meta(shot, discipline, description)[0]
+
+
+def version_next_meta(shot, discipline, description=""):
+	""" Find all related versions and return a tuple containing the path to
+		the new version, and the number of existing related versions.
+	"""
+		#os.environ['SCNMGR_CONVENTION'] = "<shot>.<discipline>.[description].<version>.ext"
+		# valid_tokens = {
+		# 	'<user>': 'SCNMGR_USER', 
+		# 	'<user-initials>': 'SCNMGR_USER_INITIALS', 
+		# 	'<job>': 'SCNMGR_JOB', 
+		# 	'<shot>': 'SCNMGR_SHOT', 
+		# 	'<discipline>': 'SCNMGR_DISCIPLINE', 
+		# }
+
+		# filename = os.environ['SCNMGR_CONVENTION']
+		# filename = filename.replace('<artist>', os.environ['SCNMGR_USER'])
+		# filename = filename.replace('<shot>', os.environ['SCNMGR_SHOT'])
+		# filename = filename.replace('<discipline>', discipline)
+		# filename = filename.replace('[description]', description)
+		# filename = filename.replace('<version>', v_str)
+		# computed_filename = filename + self.file_ext[0]  # Append file extension
+
+	# Generate filter to search for related versions
+	# TODO: make compliant with alt naming and padding conventions
+	if description == "":
+		ff = ".".join([shot, discipline])
+	else:
+		ff = ".".join([shot, discipline, description])
+	file_filter = "*/%s.v*" % ff
+
+	# Detect the latest version
+	existing_versions = match_files(
+			os_wrapper.absolutePath('$SCNMGR_SAVE_DIR/..'), file_filter)
+	matches_latest = get_latest(existing_versions)
+	if matches_latest:
+		n = len(existing_versions)
+		computed_filename = os.path.basename(version_up(matches_latest[0]))
+		filename = os.path.join(
+			os.environ['SCNMGR_SAVE_DIR'], computed_filename)
+		return filename, n
+
+	else:
+		return None, 0
+
+
+def change_version(input_version, value, absolute=False):
 	""" Change the version number.
+		If absolute is True, set the version to the given value.
+		Otherwise, adjust the existing value by the given value.
 	"""
-	new_version = input_version + increment
+	if absolute:
+		new_version = value
+	else:
+		new_version = input_version + value
+
+	# Ensure the new value is within the allowed range
 	if __min_version__ <= new_version <= __max_version__:
 		return new_version
 	else:

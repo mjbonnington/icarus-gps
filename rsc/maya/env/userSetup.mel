@@ -33,34 +33,38 @@ if ($root != "None")
 int $batchMode = `about -batch`;
 if (!$batchMode)
 {
+	string $vendor = "";
+	if (`getenv IC_VENDOR_INITIALS` != "")
+		$vendor = (`getenv IC_VENDOR_INITIALS` + " ");
+
 	// Deploy custom tools
 	python("from rsc.maya.scripts import icDeployTools; icDeployTools.deploy()");
 
 	// Build custom menus
 	source gpsBuildMenus;
-/*
+
 	// Set up keyboard shortcuts for custom tools
 	// New Scene...
-	nameCommand "GPSNew" -ann "[GPS] New Scene" -c "source menus2Py; menus2Py.newScene()";
-	hotkey -cmd -k "n" -n "GPSNew";
-	hotkey -ctl -k "n" -n "GPSNew";
+	nameCommand "icNewScene" -ann ($vendor + "New Scene") -c "source menus2Py; menus2Py.newScene()";
+	hotkey -cmd -k "n" -n "icNewScene";
+	hotkey -ctl -k "n" -n "icNewScene";
 	// Open Scene...
-	nameCommand "GPSOpen" -ann "[GPS] Open Scene" -c "source menus2Py; menus2Py.openScene()";
-	hotkey -cmd -k "o" -n "GPSOpen";
-	hotkey -ctl -k "o" -n "GPSOpen";
+	nameCommand "icOpenScene" -ann ($vendor + "Open Scene") -c "source menus2Py; menus2Py.openScene()";
+	hotkey -cmd -k "o" -n "icOpenScene";
+	hotkey -ctl -k "o" -n "icOpenScene";
 	// Save Scene...
-	nameCommand "GPSSave" -ann "[GPS] Save Scene" -c "source menus2Py; menus2Py.saveScene()";
-	hotkey -cmd -k "s" -n "GPSSave";
-	hotkey -ctl -k "s" -n "GPSSave";
+	nameCommand "icSaveScene" -ann ($vendor + "Save Scene") -c "source menus2Py; menus2Py.saveScene()";
+	hotkey -cmd -k "s" -n "icSaveScene";
+	hotkey -ctl -k "s" -n "icSaveScene";
 	// Save Scene As...
-	nameCommand "GPSSaveAs" -ann "[GPS] Save Scene As" -c "source menus2Py; menus2Py.saveSceneAs()";
-	hotkey -cmd -k "S" -n "GPSSaveAs";
-	hotkey -ctl -k "S" -n "GPSSaveAs";
+	nameCommand "icSaveSceneAs" -ann ($vendor + "Save Scene As") -c "source menus2Py; menus2Py.saveSceneAs()";
+	hotkey -cmd -k "S" -n "icSaveSceneAs";
+	hotkey -ctl -k "S" -n "icSaveSceneAs";
 	// Incremental Save...
-	nameCommand "GPSSaveIncremental" -ann "[GPS] Save Scene Incrementally" -c "source menus2Py; menus2Py.incrementalSave()";
-	hotkey -cmd -alt -k "s" -n "GPSSaveIncremental";
-	hotkey -ctl -alt -k "s" -n "GPSSaveIncremental";
-*/
+	nameCommand "icIncrementAndSave" -ann ($vendor + "Increment and Save") -c "source menus2Py; menus2Py.incrementAndSave()";
+	hotkey -cmd -alt -k "s" -n "icIncrementAndSave";
+	hotkey -ctl -alt -k "s" -n "icIncrementAndSave";
+
 	// Instance the Icarus UI
 	python("from core import icarus; session.icarus = icarus.app(app='maya')");
 
@@ -68,7 +72,6 @@ if (!$batchMode)
 	python("from tools.scenemanager import scenemanager; session.scnmgr = scenemanager.create(app='maya')");
 
 	// Update Maya scene defaults at startup
-	//python("from rsc.maya.scripts import mayaOps; mayaOps.update()");
 	python("session.scnmgr.set_defaults()");
 	//source gpsRenderSetup.mel; gpsRenderSetup.setCommonOptions();
 }

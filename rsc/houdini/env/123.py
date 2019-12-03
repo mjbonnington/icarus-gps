@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# [GPS] 123.py
+# [Icarus] 123.py
 #
 # Mike Bonnington <michael.bonnington@hogarthww.com>
 # (c) 2019 Gramercy Park Studios

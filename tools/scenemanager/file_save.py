@@ -10,7 +10,7 @@
 
 
 import os
-import sys
+# import sys
 
 from Qt import QtCore, QtGui, QtWidgets
 
@@ -18,7 +18,7 @@ from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
 
 from . import convention
-from shared import os_wrapper
+# from shared import os_wrapper
 # from shared import recentFiles
 from shared import verbose
 
@@ -71,12 +71,13 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 
 		# Connect signals & slots
 		# self.ui.shot_toolButton.clicked.connect(self.setShot)
+		# self.ui.shotChange_toolButton.clicked.connect(self.setShot)
+		# self.ui.shotReset_toolButton.clicked.connect(self.resetShot)
 
 		self.ui.discipline_comboBox.currentIndexChanged.connect(self.updateFilename)
 		self.ui.description_comboBox.currentIndexChanged.connect(self.updateFilename)
 		self.ui.description_comboBox.lineEdit().textChanged.connect(self.updateFilename)
-		self.ui.version_spinBox.valueChanged.connect(self.updateFilename)
-		self.ui.versionPadding_spinBox.valueChanged.connect(self.updateFilename)
+		# self.ui.version_spinBox.valueChanged.connect(self.updateFilename)
 
 		self.ui.nativeDialog_toolButton.clicked.connect(self.nativeDialog)
 
@@ -91,17 +92,18 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 		desc_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w_]{1,32}'), self.ui.description_comboBox.lineEdit())
 		self.ui.description_comboBox.lineEdit().setValidator(desc_validator)
 
-		# Show initialisation message
-		info_ls = []
-		for key, value in self.getInfo().items():
-			info_ls.append("{} {}".format(key, value))
-		info_str = " | ".join(info_ls)
-		verbose.message("%s v%s" % (cfg['window_title'], VERSION))
-		verbose.print_(info_str)
+		# # Show initialisation message
+		# info_ls = []
+		# for key, value in self.getInfo().items():
+		# 	info_ls.append("{} {}".format(key, value))
+		# info_str = " | ".join(info_ls)
+		# verbose.message("%s v%s" % (cfg['window_title'], VERSION))
+		# verbose.print_(info_str)
 
 
-	def display(self):
-		""" Display the window.
+	def display(self, current=None):
+		""" Display the window. Pass in the current scene/script name to be
+			parsed and autofill dialog fields.
 		"""
 		self.returnValue = False
 
@@ -109,13 +111,13 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 
 		self.ui.shot_lineEdit.setText(os.environ['SCNMGR_SHOT'])
 		self.ui.shot_toolButton.setEnabled(False)  # temp until implemented
+		self.ui.version_spinBox.hide()
 
 		self.file_ext = os.environ['SCNMGR_FILE_EXT'].split(os.pathsep)
 
-		self.updateFilename()
-
 		# Set values from current file if possible
-		presets = convention.parse(self.session.file_get_name())
+		# TODO: optimise
+		presets = convention.parse(self.session.get_current_name())
 		if presets is not None:
 			try:
 				self.ui.shot_lineEdit.setText(presets['<shot>'])
@@ -130,9 +132,11 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 				if widget.findText(value) == -1:
 					widget.insertItem(0, value)
 				widget.setCurrentIndex(widget.findText(value))
-				# self.ui.version_spinBox.setValue(convention.version_to_int(presets['<version>'])+1)  # this should look for the latest rather than incrementing current version
+
 			except KeyError:
 				pass
+
+		self.updateFilename()
 
 		self.show()
 		self.raise_()
@@ -149,72 +153,44 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 		discipline = self.ui.discipline_comboBox.currentText()
 		description = self.ui.description_comboBox.currentText()
 
-		#version = self.ui.version_comboBox.currentText()
-		version = self.ui.version_spinBox.value()
-		padding = self.ui.versionPadding_spinBox.value()
-		v_str = "v" + str(version).zfill(padding)
-
-		#os.environ['SCNMGR_CONVENTION'] = "<shot>.<discipline>.[description].<version>.ext"
-		# valid_tokens = {
-		# 	'<user>': 'SCNMGR_USER', 
-		# 	'<user-initials>': 'SCNMGR_USER_INITIALS', 
-		# 	'<job>': 'SCNMGR_JOB', 
-		# 	'<shot>': 'SCNMGR_SHOT', 
-		# 	'<discipline>': 'SCNMGR_DISCIPLINE', 
-		# }
-
-		# filename = os.environ['SCNMGR_CONVENTION']
-		# filename = filename.replace('<artist>', os.environ['SCNMGR_USER'])
-		# filename = filename.replace('<shot>', os.environ['SCNMGR_SHOT'])
-		# filename = filename.replace('<discipline>', discipline)
-		# filename = filename.replace('[description]', description)
-		# filename = filename.replace('<version>', v_str)
-		# computed_filename = filename + self.file_ext[0]  # Append file extension
+		# version = self.ui.version_spinBox.value()
+		# v_str = convention.version_to_str(version)
+		v_str = convention.version_to_str(1)  # Set version to 1
 
 		if discipline in ignore_list:
+			# Modify UI elements
 			self.ui.filename_lineEdit.setText("Please select a discipline")
 			self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Save).setEnabled(False)
-
-			# self.ui.filename_lineEdit.setProperty("warning", True)
-			# self.ui.description_comboBox.setProperty("mandatoryField", True)
-			# self.ui.filename_lineEdit.style().unpolish(self.ui.filename_lineEdit)
-			# self.ui.filename_lineEdit.style().polish(self.ui.filename_lineEdit)
-			# self.ui.description_comboBox.style().unpolish(self.ui.description_comboBox)
-			# self.ui.description_comboBox.style().polish(self.ui.description_comboBox)
+			self.setDynamicProperty(self.ui.filename_lineEdit, "warning", True)
+			self.setDynamicProperty(self.ui.discipline_comboBox, "warning", True)
 
 			return None
 
+		# Generate filename - this should be rewritten to adhere to convention
 		else:
 			if description == "":
 				computed_filename = ".".join([shot, discipline, v_str])
-				ff = ".".join([shot, discipline])
 			else:
 				computed_filename = ".".join([shot, discipline, description, v_str])
-				ff = ".".join([shot, discipline, description])
+
 			computed_filename += self.file_ext[0]  # Add file extension
 
 			# Detect the latest version
-			# file_filter = "*/%s.v*" % ff
-			# print file_filter
-			# matches_latest = convention.get_latest(
-			# 	convention.match_files(
-			# 		os_wrapper.absolutePath('$SCNMGR_SAVE_DIR/..'), 
-			# 		file_filter), 
-			# 	get_next=True)
-			# print "SAVE "
-			# print matches_latest
-			# if matches_latest:
-			# 	self.ui.filename_lineEdit.setText(matches_latest[0])
-			# else:
+			message = ""
+			result, n = convention.version_next_meta(shot, discipline, description)
+			if result:
+				computed_filename = os.path.basename(result)
+				message = "%d existing %s found" % (n, verbose.pluralise("version", n))
+				# self.ui.version_spinBox.setEnabled(False)
+			else:
+				message = "new"
+
+			# Modify UI elements
+			self.ui.v_info_label.setText(message)
 			self.ui.filename_lineEdit.setText(computed_filename)
 			self.ui.buttonBox.button(QtWidgets.QDialogButtonBox.Save).setEnabled(True)
-
-			# self.ui.filename_lineEdit.setProperty("warning", False)
-			# self.ui.description_comboBox.setProperty("mandatoryField", False)
-			# self.ui.filename_lineEdit.style().unpolish(self.ui.filename_lineEdit)
-			# self.ui.filename_lineEdit.style().polish(self.ui.filename_lineEdit)
-			# self.ui.description_comboBox.style().unpolish(self.ui.description_comboBox)
-			# self.ui.description_comboBox.style().polish(self.ui.description_comboBox)
+			self.setDynamicProperty(self.ui.filename_lineEdit, "warning", False)
+			self.setDynamicProperty(self.ui.discipline_comboBox, "warning", False)
 
 			return computed_filename
 

@@ -1,7 +1,7 @@
 // [Icarus] Build Maya Menus
 //
 // Nuno Pereira <nuno.pereira@gps-ldn.com>
-// Mike Bonnington <mike.bonnington@gps-ldn.com>
+// Mike Bonnington <mjbonnington@gmail.com>
 // (c) 2015-2019 Gramercy Park Studios
 //
 // Dynamically modifies Maya's menus without the need to edit Maya's UI MEL
@@ -26,7 +26,7 @@ global proc checkCustomFileMenu()
 	// If recent file list contains no entries, disable menu
 	if (size($fileLs)==0) $enable = false;
 	if (size($fileLs)==1 && $fileLs[0]=="") $enable = false;
-	menuItem -edit -enable $enable GPSFileMenuRecentFileItems;
+	menuItem -edit -enable $enable icFileMenuRecentFileItems;
 
 	// Create "Send To" menu items for one-click
 	// interop with available applications.
@@ -84,59 +84,59 @@ setParent -menu $fileMenu;
 			 -annotation ("Create a new scene")
 			 -image "newScene.png"
 			 -command ("source menus2Py; menus2Py.newScene()")
-			 GPSNewScene;
+			 icNewScene;
 
 	// Open Scene
-	menuItem -insertAfter GPSNewScene
+	menuItem -insertAfter icNewScene
 			 -label ($vendor + "Open...")
 			 -annotation ("Open a saved scene")
 			 -image "openScene.png"
 			 -command ("source menus2Py; menus2Py.openScene()")
-			 GPSOpenScene;
+			 icOpenScene;
 
 	// Open Recent Scene
-	menuItem -insertAfter GPSOpenScene
+	menuItem -insertAfter icOpenScene
 			 -subMenu true
 			 -label ($vendor + "Open Recent")
 			 -image "openScene.png"
-			 -postMenuCommand "source menus2Py; menus2Py.updateRecentFilesMenu(\"GPSFileMenuRecentFileItems\")"
-			 GPSFileMenuRecentFileItems;
+			 -postMenuCommand "source menus2Py; menus2Py.updateRecentFilesMenu(\"icFileMenuRecentFileItems\")"
+			 icFileMenuRecentFileItems;
 	setParent -menu ..;
 
 	if ($maya_ver >= 2016) {
-		menuItem -insertAfter GPSFileMenuRecentFileItems
+		menuItem -insertAfter icFileMenuRecentFileItems
 				 -divider true
 				 -longDivider false
-				 GPSFileDivider1;
+				 icFileDivider1;
 	} else {
-		menuItem -insertAfter GPSFileMenuRecentFileItems
+		menuItem -insertAfter icFileMenuRecentFileItems
 				 -divider true
-				 GPSFileDivider1;
+				 icFileDivider1;
 	}
 
 	// Save Scene
-	menuItem -insertAfter GPSFileDivider1
+	menuItem -insertAfter icFileDivider1
 			 -label ($vendor + "Save")
 			 -annotation ("Save the current scene")
 			 -image "saveScene.png"
 			 -command ("source menus2Py; menus2Py.saveScene()")
-			 GPSSaveScene;
+			 icSaveScene;
 
 	// Save Scene As
-	menuItem -insertAfter GPSSaveScene
+	menuItem -insertAfter icSaveScene
 			 -label ($vendor + "Save As...")
 			 -annotation ("Save scene with a new name")
 			 -image "saveSceneAs.png"
 			 -command ("source menus2Py; menus2Py.saveSceneAs()")
-			 GPSSaveSceneAs;
+			 icSaveSceneAs;
 
 	// Incremental Save
-	menuItem -insertAfter GPSSaveSceneAs
+	menuItem -insertAfter icSaveSceneAs
 			 -label ($vendor + "Incremental Save")
 			 -annotation "Save the current scene as new version"
 			 -image "incrementalSave.png"
-			 -command ("source menus2Py; menus2Py.incrementalSave()")
-			 GPSIncrementalSave;
+			 -command ("source menus2Py; menus2Py.incrementAndSave()")
+			 icIncrementAndSave;
 
 checkCustomFileMenu();
 
@@ -148,8 +148,8 @@ checkCustomFileMenu();
 string $createMenu = "MayaWindow|mainCreateMenu";
 ModCreateMenu($createMenu);
 
-if ( !`optionVar -exists GPSCreateCameraRig` ) optionVar -iv GPSCreateCameraRig 0;
-if ( !`optionVar -exists GPSAddVRayPhysicalCamera` ) optionVar -iv GPSAddVRayPhysicalCamera 0;
+if ( !`optionVar -exists icCreateCameraRig` ) optionVar -iv icCreateCameraRig 0;
+if ( !`optionVar -exists icAddVRayPhysicalCamera` ) optionVar -iv icAddVRayPhysicalCamera 0;
 
 setParent -menu $createMenu;
 	// Create Cameras menu
@@ -158,8 +158,8 @@ setParent -menu $createMenu;
 			 -tearOff true
 			 -label ($vendor + "Camera Presets")
 			 -image "gpsCamera.png"
-			 -postMenuCommand "source menus2Py; menus2Py.updatePresetCameraMenu(\"GPSCreatePresetCameraItems\")"
-			 GPSCreatePresetCameraItems;
+			 -postMenuCommand "source menus2Py; menus2Py.updatePresetCameraMenu(\"icCreatePresetCameraItems\")"
+			 icCreatePresetCameraItems;
 	setParent -menu ..;
 
 
@@ -191,15 +191,15 @@ setParent -menu $windowMenu;
 
 	menuItem -insertAfter playblastItem
 			 -divider true
-			 GPSWindowDivider1;
+			 icWindowDivider1;
 
 	// Launch Icarus UI
-	menuItem -insertAfter GPSWindowDivider1
+	menuItem -insertAfter icWindowDivider1
 			 -label "Icarus UI..."
 			 -annotation ("Launch Icarus UI")
 			 -image "icarus.png"
 			 -command ("source menus2Py; menus2Py.launchIcarus()")
-			 GPSLaunchIcarusUI;
+			 icLaunchIcarusUI;
 
 
 /////////////////
@@ -213,14 +213,14 @@ RenRenderMenu($renderMenu);
 setParent -menu $renderMenu;
 	// Render Submit
 	menuItem -divider true
-			 GPSRenderDivider1;
+			 icRenderDivider1;
 
-	menuItem -insertAfter GPSRenderDivider1
+	menuItem -insertAfter icRenderDivider1
 			 -label ($vendor + "Submit Render...")
 			 -command ("source menus2Py; menus2Py.submitRender()")
 			 -annotation ("Submit Render")
 			 -image "gpsSubmitRender.png"
-			 GPSSubmitRenderItem;
+			 icSubmitRenderItem;
 
 
 //////////////////////
@@ -265,7 +265,7 @@ setParent -menu $timelineMenu;
 // 			 -command ("source menus2Py; menus2Py.gpsPreview()")
 // 			 -annotation ("Launch " + $vendor + "Preview")
 // 			 -image "gpsPlayblast.png"
-// 			 GPSPlayblastItem;
+// 			 icPlayblastItem;
 
 
 /////////////////////////
@@ -305,7 +305,7 @@ iconTextButton -edit -image1 "saveScene.png"
 
 // Create a popup menu on the Save button for Save As and Incremental Save
 string $save_menu = `popupMenu -parent saveSceneButton`;
-	menuItem -label "Incremental Save" -command "source menus2Py; menus2Py.incrementalSave()";
+	menuItem -label "Incremental Save" -command "source menus2Py; menus2Py.incrementAndSave()";
 	menuItem -label "Save As..." -command "source menus2Py; menus2Py.saveSceneAs()";
 
 // The following are new buttons added to the end of the status line toolbar...

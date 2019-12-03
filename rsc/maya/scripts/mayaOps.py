@@ -401,6 +401,8 @@ def getICSetAttrs(ICSet):
 
 def getScene():
 	""" Returns filename and path of currently open scene.
+		Deprecated: superseded by scenemanager.get_current_name()
+		Still in use by publishing modules
 	"""
 	sceneName = mc.file(q=True, sceneName=True)
 	return sceneName
@@ -589,11 +591,12 @@ def lodSystemCheck(objLs):
 	return lodA, lodB, lodC
 
 
-def newScene():
-	""" Create a new scene.
-	"""
-	mc.NewScene()
-	update()
+# def newScene():
+# 	""" Create a new scene.
+# 		Deprecated: superseded by scenemanager.file_new()
+# 	"""
+# 	mc.NewScene()
+# 	update()
 
 
 ###################node type check########################
@@ -614,6 +617,8 @@ def notesTag(obj, pblNotes):
 
 def openScene(filePath, extension=None, dialog=True, updateRecentFiles=True):
 	""" Open a saved scene.
+		Deprecated: superseded by scenemanager.file_open()
+		Still in use by publishing modules
 	"""
 	if mel.eval('saveChanges("")'):
 		if dialog:
@@ -636,8 +641,9 @@ def parentCnstrHrq(obj1, obj2):
 
 
 def redirectScene(sceneFile):
-	"""
-	Redirect scene name and path.
+	""" Redirect scene name and path.
+		Deprecated: superseded by scenemanager.set_current_name()
+		Still in use by publishing modules
 	"""
 	mc.file(rename=sceneFile)
 
@@ -835,6 +841,8 @@ def renameObj(objLs, newName, oldName=False):
 
 def saveFile(fileType, updateRecentFiles=True):
 	""" Save Maya scene.
+		Deprecated: superseded by scenemanager.file_save_as()
+		Still in use by publishing modules
 	"""
 	if fileType == 'ma':
 		fileType = 'mayaAscii'
@@ -847,17 +855,18 @@ def saveFile(fileType, updateRecentFiles=True):
 	print "\nScene saved: %s" %filename, # print confirmation - the trailing comma make the message visible in Maya's command line output field
 
 
-def saveFileAs(filePath, extension, updateRecentFiles=True):
-	""" Save Maya scene as.
-	"""
-	saveFolder = mc.fileDialog2(ds=2, fm=0, ff=extension, dir=filePath, cap='[GPS] Save As', okc='Save')
-	if saveFolder == None:
-		return
-	else:
-		mc.file(rename=saveFolder[0])
+# def saveFileAs(filePath, extension, updateRecentFiles=True):
+# 	""" Save Maya scene as.
+# 		Deprecated: superseded by scenemanager.file_save_dialog()
+# 	"""
+# 	saveFolder = mc.fileDialog2(ds=2, fm=0, ff=extension, dir=filePath, cap='[GPS] Save As', okc='Save')
+# 	if saveFolder == None:
+# 		return
+# 	else:
+# 		mc.file(rename=saveFolder[0])
 
-		fileType = os.path.splitext(saveFolder[0])[1][1:] # get the extension without a leading dot
-		saveFile(fileType, updateRecentFiles)
+# 		fileType = os.path.splitext(saveFolder[0])[1][1:] # get the extension without a leading dot
+# 		saveFile(fileType, updateRecentFiles)
 
 
 def snapShot(output_folder, isolate=True, fit=False):
@@ -939,64 +948,66 @@ def submitRenderLayer():
 	# renderSubmitDialog.display(frameRange=frameRange, flags='-rl %s' %currentLayer)
 
 
-def update():
-	""" Automatically set some defaults from the shot settings.
-	"""
-	unit = os.getenv('UNIT', 'cm')
-	angle = os.getenv('ANGLE', 'deg')
-	timeFormat = os.getenv('TIMEFORMAT', 'pal')
-	startFrame = int(os.getenv('STARTFRAME', '1001'))
-	endFrame = int(os.getenv('ENDFRAME', '1100'))
-	inFrame = int(os.getenv('INFRAME', startFrame))
-	outFrame = int(os.getenv('OUTFRAME', endFrame))
-	psExecutable = os.getenv('PSVERSION', '')
-	djvExecutable = os.getenv('DJVVERSION', '')
+# def update():
+# 	""" Automatically set some defaults from the shot settings.
+# 		Deprecated: superseded by scenemanager.set_defaults()
+# 		Remove?
+# 	"""
+# 	unit = os.getenv('UNIT', 'cm')
+# 	angle = os.getenv('ANGLE', 'deg')
+# 	timeFormat = os.getenv('TIMEFORMAT', 'pal')
+# 	startFrame = int(os.getenv('STARTFRAME', '1001'))
+# 	endFrame = int(os.getenv('ENDFRAME', '1100'))
+# 	inFrame = int(os.getenv('INFRAME', startFrame))
+# 	outFrame = int(os.getenv('OUTFRAME', endFrame))
+# 	psExecutable = os.getenv('PSVERSION', '')
+# 	djvExecutable = os.getenv('DJVVERSION', '')
 
-	# Setting defaults for Maya startup
-	#mc.currentUnit(l=unit, a=angle, t=timeFormat)
-	try:
-		mc.currentUnit(l=unit)
-		mc.optionVar(sv=('workingUnitLinear', unit))
-		mc.optionVar(sv=('workingUnitLinearDefault', unit))
-		# mc.optionVar(sv=('workingUnitLinearHold', unit))
-	except RuntimeError:
-		mc.warning("Unable to set linear unit.")
-	try:
-		mc.currentUnit(a=angle)
-		mc.optionVar(sv=('workingUnitAngular', angle))
-		mc.optionVar(sv=('workingUnitAngularDefault', angle))
-		# mc.optionVar(sv=('workingUnitAngularHold', angle))
-	except RuntimeError:
-		mc.warning("Unable to set angular unit.")
-	try:
-		mc.currentUnit(t=timeFormat)
-		mc.optionVar(sv=('workingUnitTime', timeFormat))
-		mc.optionVar(sv=('workingUnitTimeDefault', timeFormat))
-		# mc.optionVar(sv=('workingUnitTimeHold', timeFormat))
-	except RuntimeError:
-		mc.warning('Unable to set time unit.')
+# 	# Setting defaults for Maya startup
+# 	#mc.currentUnit(l=unit, a=angle, t=timeFormat)
+# 	try:
+# 		mc.currentUnit(l=unit)
+# 		mc.optionVar(sv=('workingUnitLinear', unit))
+# 		mc.optionVar(sv=('workingUnitLinearDefault', unit))
+# 		# mc.optionVar(sv=('workingUnitLinearHold', unit))
+# 	except RuntimeError:
+# 		mc.warning("Unable to set linear unit.")
+# 	try:
+# 		mc.currentUnit(a=angle)
+# 		mc.optionVar(sv=('workingUnitAngular', angle))
+# 		mc.optionVar(sv=('workingUnitAngularDefault', angle))
+# 		# mc.optionVar(sv=('workingUnitAngularHold', angle))
+# 	except RuntimeError:
+# 		mc.warning("Unable to set angular unit.")
+# 	try:
+# 		mc.currentUnit(t=timeFormat)
+# 		mc.optionVar(sv=('workingUnitTime', timeFormat))
+# 		mc.optionVar(sv=('workingUnitTimeDefault', timeFormat))
+# 		# mc.optionVar(sv=('workingUnitTimeHold', timeFormat))
+# 	except RuntimeError:
+# 		mc.warning('Unable to set time unit.')
 
-	mc.optionVar(fv=('playbackMinRangeDefault', startFrame))
-	mc.optionVar(fv=('playbackMinDefault', inFrame))
-	mc.optionVar(fv=('playbackMaxRangeDefault', endFrame))
-	mc.optionVar(fv=('playbackMaxDefault', outFrame))
+# 	mc.optionVar(fv=('playbackMinRangeDefault', startFrame))
+# 	mc.optionVar(fv=('playbackMinDefault', inFrame))
+# 	mc.optionVar(fv=('playbackMaxRangeDefault', endFrame))
+# 	mc.optionVar(fv=('playbackMaxDefault', outFrame))
 
-	mc.optionVar(sv=('upAxisDirection', 'y'))
+# 	mc.optionVar(sv=('upAxisDirection', 'y'))
 
-	mc.optionVar(sv=('EditImageDir', psExecutable))
-	mc.optionVar(sv=('PhotoshopDir', psExecutable))
+# 	mc.optionVar(sv=('EditImageDir', psExecutable))
+# 	mc.optionVar(sv=('PhotoshopDir', psExecutable))
 
-	mc.optionVar(sv=('PlayblastCmdAvi', djvExecutable))
-	mc.optionVar(sv=('PlayblastCmdQuicktime', djvExecutable))
-	mc.optionVar(sv=('ViewImageDir', djvExecutable))
-	mc.optionVar(sv=('ViewSequenceDir', djvExecutable))
+# 	mc.optionVar(sv=('PlayblastCmdAvi', djvExecutable))
+# 	mc.optionVar(sv=('PlayblastCmdQuicktime', djvExecutable))
+# 	mc.optionVar(sv=('ViewImageDir', djvExecutable))
+# 	mc.optionVar(sv=('ViewSequenceDir', djvExecutable))
 
-	mc.playbackOptions(animationStartTime=startFrame, 
-	                   minTime=inFrame, 
-	                   maxTime=outFrame, 
-	                   animationEndTime=endFrame, 
-	                   playbackSpeed=0, 
-	                   maxPlaybackSpeed=1)
+# 	mc.playbackOptions(animationStartTime=startFrame, 
+# 	                   minTime=inFrame, 
+# 	                   maxTime=outFrame, 
+# 	                   animationEndTime=endFrame, 
+# 	                   playbackSpeed=0, 
+# 	                   maxPlaybackSpeed=1)
 
 
 ###################updates ic set version#################

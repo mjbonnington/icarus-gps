@@ -102,6 +102,9 @@
     <layout class="QHBoxLayout" name="posterFrame_horizontalLayout">
      <item>
       <widget class="QSpinBox" name="posterFrame_spinBox">
+       <property name="toolTip">
+        <string>The frame to use for thumbnails, etc.</string>
+       </property>
        <property name="buttonSymbols">
         <enum>QAbstractSpinBox::NoButtons</enum>
        </property>

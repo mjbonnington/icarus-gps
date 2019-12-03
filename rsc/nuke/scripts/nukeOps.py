@@ -85,12 +85,6 @@ def resolveNameConflict(name):
 		node['name'].setValue(solvedName)
 
 
-def saveAs(pathToPblAsset):
-	""" Saves script.
-	"""
-	return nuke.scriptSaveAs(pathToPblAsset)
-
-
 def submitRender(**kwargs):
 	""" Launches GPS Render Submitter dialog.
 	"""
