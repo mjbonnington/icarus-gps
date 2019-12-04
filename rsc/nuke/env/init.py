@@ -21,12 +21,15 @@ from core.app_session import *
 
 # Set up path remapping for cross-platform support
 def filenameFix(filename):
-	filename=filename.replace(
-		os.environ['FILESYSTEMROOTWIN'], os.environ['FILESYSTEMROOT'])
-	filename=filename.replace(
-		os.environ['FILESYSTEMROOTOSX'], os.environ['FILESYSTEMROOT'])
-	filename=filename.replace(
-		os.environ['FILESYSTEMROOTLINUX'], os.environ['FILESYSTEMROOT'])
+	filename = filename.replace(
+		os.environ['IC_FILESYSTEM_ROOT_WIN'], 
+		os.environ['IC_FILESYSTEM_ROOT'])
+	filename = filename.replace(
+		os.environ['IC_FILESYSTEM_ROOT_OSX'], 
+		os.environ['IC_FILESYSTEM_ROOT'])
+	filename = filename.replace(
+		os.environ['IC_FILESYSTEM_ROOT_LINUX'], 
+		os.environ['IC_FILESYSTEM_ROOT'])
 	return filename
 
 # Adding to Nuke path
@@ -42,7 +45,7 @@ nuke.pluginAddPath('../gizmos/pixelfudger')
 # so the path needs to be appended again.
 # sys.path.append(os.environ['IC_WORKINGDIR'])
 from core import env__init__
-env__init__.appendSysPaths()
+env__init__.append_sys_paths()
 # Nuke opens a entire new Nuke process with 'File>New Script' and doesn't
 # simply create an empty script in the current env.
 # The Icarus env has to be set temporarily as NUKE_TMP to avoid Icarus
@@ -60,10 +63,10 @@ import multiEdit
 
 # Shot directories
 try:
-	nuke.addFavoriteDir('Scripts', os.environ['NUKESCRIPTSDIR'])
-	nuke.addFavoriteDir('Renders', os.environ['NUKERENDERSDIR'])
-	nuke.addFavoriteDir('Elements', os.environ['NUKEELEMENTSDIR'])
+	nuke.addFavoriteDir('Scripts', os.environ['IC_NUKE_SCRIPTS_DIR'])
+	nuke.addFavoriteDir('Renders', os.environ['IC_NUKE_RENDERS_DIR'])
+	nuke.addFavoriteDir('Elements', os.environ['IC_NUKE_ELEMENTS_DIR'])
 	nuke.addFavoriteDir('Plate', os.path.join('[getenv IC_SHOTPATH]', 'Plate'))
-	nuke.addFavoriteDir('Elements Library', os.environ['ELEMENTSLIBRARY'])
+	nuke.addFavoriteDir('Elements Library', os.environ['IC_ELEMENTS_LIBRARY'])
 except KeyError:
 	pass

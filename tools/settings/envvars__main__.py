@@ -16,7 +16,7 @@ import sys
 if __name__ == "__main__":
 	sys.path.append(os.environ['IC_WORKINGDIR'])
 	import env__init__
-	env__init__.setEnv()
+	env__init__.set_env()
 
 from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI

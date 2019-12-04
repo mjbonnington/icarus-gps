@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <root location="$IC_SHOTPATH/3D">
-	<dir name="photoscan" env="PHOTOSCANDIR">
+	<dir name="photoscan" env="IC_PHOTOSCAN_PROJECT_DIR">
 		<dir name="scenes">
 			<dir name="$IC_USERNAME" />
 		</dir>

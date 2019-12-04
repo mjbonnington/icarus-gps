@@ -51,7 +51,7 @@ else:
 # Command strings
 readNode = 'import gpsNodes; gpsNodes.read_create()'
 writeNode = 'import gpsNodes; gpsNodes.write_create()'
-launchNuke = 'from shared import launchApps; launchApps.launch("Nuke", executable="%s", flags=%s)' % (os.environ['NUKEVERSION'], nuke_flags)
+launchNuke = 'from shared import launchApps; launchApps.launch("Nuke", executable="%s", flags=%s)' % (os.environ['IC_NUKE_EXECUTABLE'], nuke_flags)
 clearScript = 'session.scnmgr.file_new()'
 newScript = clearScript # launchNuke | clearScript - change the way Nuke deals with a new script
 openScript = 'session.scnmgr.file_open_dialog()'

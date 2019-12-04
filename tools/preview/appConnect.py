@@ -70,7 +70,7 @@ class AppConnect(object):
 		#if os.environ['IC_ENV'] == 'MAYA':
 		if os.environ['PREVIEW_APPCONNECT'] == 'maya':
 			#self.outputDir = os.path.join(mc.workspace(q=True, active=True), 'playblasts', self.fileInput)
-			self.outputDir = os.path.join(os.environ['MAYAPLAYBLASTSDIR'], self.fileInput)
+			self.outputDir = os.path.join(os.environ['IC_MAYA_PLAYBLASTS_DIR'], self.fileInput)
 			from . import preview_maya
 			previewSetup = preview_maya.Preview(self.outputDir, 
 			                                    self.outputFile, 

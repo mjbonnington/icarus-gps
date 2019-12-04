@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <root location="$IC_SHOTPATH/3D">
 	<dir name="c4d">
-		<dir name="$IC_USERNAME" env="C4DDIR">
+		<dir name="$IC_USERNAME" env="IC_C4D_PROJECT_DIR">
 			<dir name="tex" />
 		</dir>
 	</dir>

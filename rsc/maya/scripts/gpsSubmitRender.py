@@ -195,9 +195,9 @@ class gpsSubmitRender():
 		self.calcFrameList(quiet=False)
 
 		try:
-			renderCmd = os.environ["MAYARENDERVERSION"]
+			renderCmd = os.environ["IC_MAYA_RENDER_EXECUTABLE"]
 		except KeyError:
-			mc.error("Path to Maya Render command executable not found. This can be set with the environment variable 'MAYARENDERVERSION'.")
+			mc.error("Path to Maya Render command executable not found. This can be set with the environment variable 'IC_MAYA_RENDER_EXECUTABLE'.")
 
 		cmdStr = ""
 		args = "-proj %s" %mc.workspace(query=True, rootDirectory=True)

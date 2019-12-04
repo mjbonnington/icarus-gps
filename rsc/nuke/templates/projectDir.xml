@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
 <root location="$IC_SHOTPATH/2D">
-	<dir name="nuke" env="NUKEDIR">
+	<dir name="nuke" env="IC_NUKE_PROJECT_DIR">
 		<dir name="scripts">
-			<dir name="$IC_USERNAME" env="NUKESCRIPTSDIR" />
+			<dir name="$IC_USERNAME" env="IC_NUKE_SCRIPTS_DIR" />
 		</dir>
 		<dir name="elements">
-			<dir name="$IC_USERNAME" env="NUKEELEMENTSDIR" />
+			<dir name="$IC_USERNAME" env="IC_NUKE_ELEMENTS_DIR" />
 		</dir>
 		<dir name="renders">
-			<dir name="$IC_USERNAME" env="NUKERENDERSDIR" />
+			<dir name="$IC_USERNAME" env="IC_NUKE_RENDERS_DIR" />
 		</dir>
 	</dir>
 </root>

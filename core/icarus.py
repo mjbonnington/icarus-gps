@@ -17,16 +17,14 @@ from core import icarus__main__
 from shared import verbose
 
 
-# Python version check
-try:
-	assert sys.version_info >= (2,7)
-except AssertionError:
-	sys.exit("ERROR: Python version 2.7 or above is required.")
-
-
-def standalone():
+def standalone(**kwargs):
 	""" Run in standalone mode.
 	"""
+	if kwargs['verbosity']:
+		os.environ['IC_VERBOSITY'] = str(kwargs['verbosity'])
+
+	os.environ['IC_EXPERT_MODE'] = str(kwargs['expert'])
+
 	main_app = icarus__main__.main_application()
 
 	# Apply application style
@@ -34,7 +32,7 @@ def standalone():
 	if style is not None:
 		main_app.setStyle(style)
 
-	icarus = icarus__main__.window()
+	icarus = icarus__main__.window(**kwargs)
 	icarus.show()
 	sys.exit(main_app.exec_())
 

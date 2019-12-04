@@ -15,7 +15,7 @@ import sys
 import maya.cmds as mc
 
 from rsc.maya.scripts import mayaOps
-from shared import settingsData
+from shared import settings_data_xml
 from shared import verbose
 
 
@@ -24,7 +24,7 @@ def alembic(ICSet, updatePath):
 	updatePath = os.path.expandvars(updatePath)
 
 	# Instantiate XML data classes
-	assetData = settingsData.SettingsData()
+	assetData = settings_data_xml.SettingsData()
 	assetData.loadXML(os.path.join(updatePath, 'assetData.xml'), quiet=True)
 
 	assetPblName = assetData.getValue('asset', 'assetPblName')

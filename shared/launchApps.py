@@ -33,8 +33,8 @@ def launch(app=None, executable=None, flags=None):
 
 	elif app == 'Maya':
 		os.environ['PYTHONPATH'] = os.environ['MAYA_SCRIPT_PATH']
-		executable = os.environ['MAYAVERSION']
-		cmdStr = '"%s" -proj "%s"' %(executable, os.environ['MAYADIR'])
+		executable = os.environ['IC_MAYA_EXECUTABLE']
+		cmdStr = '"%s" -proj "%s"' %(executable, os.environ['IC_MAYA_PROJECT_DIR'])
 
 	elif app == 'Nuke':
 		# Workaround to allow Nuke 11 to launch correctly by deleting
@@ -47,20 +47,20 @@ def launch(app=None, executable=None, flags=None):
 		cmdStr = '"%s"' % executable
 
 	elif app == 'Bridge':
-		executable = os.environ['BRIDGEVERSION']
+		executable = os.environ['IC_BRIDGE_EXECUTABLE']
 		cmdStr = '"%s" "%s"' %(executable, os.environ['IC_SHOTPATH'])
 
 	elif app == 'HieroPlayer':
 		try:
-			executable = os.environ['HIEROPLAYERVERSION']
+			executable = os.environ['IC_HIEROPLAYER_EXECUTABLE']
 			cmdStr = '"%s"' %executable
 		except KeyError:
 			# Hiero Player is bundled with Nuke 9.x and later.
-			executable = os.environ['NUKEVERSION']
+			executable = os.environ['IC_NUKE_EXECUTABLE']
 			cmdStr = '"%s" --player' %executable
 
 	elif app == 'RealFlow':
-		executable = os.environ['REALFLOWVERSION']
+		executable = os.environ['IC_REALFLOW_EXECUTABLE']
 		sys.path.append(os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'realflow', 'scripts'))
 		import startup
 		startup.autoDeploy()
@@ -128,11 +128,11 @@ def terminal():
 def prodBoard():
 	""" Launch the production board URL in a web browser.
 	"""
-	# webbrowser.open(os.environ['PRODBOARD'], new=2, autoraise=True)
+	# webbrowser.open(os.environ['IC_PRODUCTION_BOARD'], new=2, autoraise=True)
 	if os.environ['IC_RUNNING_OS'] == "Windows":
-		subprocess.Popen('explorer "%s"' %os.environ['PRODBOARD'], shell=True)
+		subprocess.Popen('explorer "%s"' %os.environ['IC_PRODUCTION_BOARD'], shell=True)
 	elif os.environ['IC_RUNNING_OS'] == "MacOS":
-		subprocess.Popen('open "%s"' %os.environ['PRODBOARD'], shell=True)
+		subprocess.Popen('open "%s"' %os.environ['IC_PRODUCTION_BOARD'], shell=True)
 	else:
-		subprocess.Popen('xdg-open "%s"' %os.environ['PRODBOARD'], shell=True)
+		subprocess.Popen('xdg-open "%s"' %os.environ['IC_PRODUCTION_BOARD'], shell=True)
 

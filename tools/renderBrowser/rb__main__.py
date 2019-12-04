@@ -19,8 +19,8 @@ import os, re, sys
 # Initialise Icarus environment
 sys.path.append(os.environ['IC_WORKINGDIR'])
 import env__init__
-env__init__.setEnv()
-#env__init__.appendSysPaths()
+env__init__.set_env()
+#env__init__.append_sys_paths()
 
 import sequence as seq
 import djvOps, os_wrapper
@@ -44,7 +44,7 @@ class renderBrowserApp(QtGui.QMainWindow):
 		self.renderTableUpdate()
 
 
-	def generateThumbnail(self, imagePath, imagePrefix, extension, posterFrame=os.environ['STARTFRAME']):
+	def generateThumbnail(self, imagePath, imagePrefix, extension, posterFrame=os.environ['IC_STARTFRAME']):
 		""" Generates a low-res JPEG thumbnail from the image path provided.
 		"""
 		inPrefix = os.path.join(imagePath, imagePrefix)
@@ -141,10 +141,10 @@ class renderBrowserApp(QtGui.QMainWindow):
 	def renderTableAdd(self):
 		""" Adds entries to the render layer tree view widget.
 		"""
-		if os.environ.get('MAYARENDERSDIR') is None:
+		if os.environ.get('IC_MAYA_RENDERS_DIR') is None:
 			renderBrowseDir = os.getcwd()
 		else:
-			renderBrowseDir = os.environ['MAYARENDERSDIR']
+			renderBrowseDir = os.environ['IC_MAYA_RENDERS_DIR']
 
 		self.renderPath = self.folderDialog(renderBrowseDir)
 		self.renderTableUpdate()

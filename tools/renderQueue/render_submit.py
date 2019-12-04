@@ -26,7 +26,7 @@ from . import renderQueue
 from shared import os_wrapper
 from shared import pDialog
 from shared import sequence
-# from shared import settingsData
+# from shared import settings_data_xml
 from shared import userPrefs
 from shared import verbose
 
@@ -320,14 +320,14 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		elif self.jobType == "Maya":
 			self.ui.maya_groupBox.show()
 			try:
-				self.relativeScenesDir = os_wrapper.absolutePath('%s/%s' %(os.environ['MAYADIR'], 'scenes'))
+				self.relativeScenesDir = os_wrapper.absolutePath('%s/%s' %(os.environ['IC_MAYA_PROJECT_DIR'], 'scenes'))
 			except KeyError:
 				self.relativeScenesDir = ""
 
 		elif self.jobType == "Nuke":
 			self.ui.nuke_groupBox.show()
 			try:
-				self.relativeScenesDir = os_wrapper.absolutePath('%s/%s' %(os.environ['NUKEDIR'], 'scripts'))
+				self.relativeScenesDir = os_wrapper.absolutePath('%s/%s' %(os.environ['IC_NUKE_PROJECT_DIR'], 'scripts'))
 			except KeyError:
 				self.relativeScenesDir = ""
 
@@ -396,12 +396,12 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		"""
 		if self.jobType == "Maya":
 			comboBox = self.ui.mayaScene_comboBox
-			fileDir = os.environ.get('MAYASCENESDIR', '.')  # Go to current dir if env var is not set
+			fileDir = os.environ.get('IC_MAYA_SCENES_DIR', '.')  # Go to current dir if env var is not set
 			fileFilter = "Maya files (*.ma *.mb)"
 			fileTerminology = "scenes"
 		elif self.jobType == "Nuke":
 			comboBox = self.ui.nukeScript_comboBox
-			fileDir = os.environ.get('NUKESCRIPTSDIR', '.')  # Go to current dir if env var is not set
+			fileDir = os.environ.get('IC_NUKE_SCRIPTS_DIR', '.')  # Go to current dir if env var is not set
 			fileFilter = "Nuke files (*.nk)"
 			fileTerminology = "scripts"
 		# else:
@@ -433,7 +433,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		""" Get frame range from shot settings.
 		"""
 		try:
-			self.ui.frames_lineEdit.setText("%d-%d" %(int(os.environ['STARTFRAME']), int(os.environ['ENDFRAME'])))
+			self.ui.frames_lineEdit.setText("%d-%d" %(int(os.environ['IC_STARTFRAME']), int(os.environ['IC_ENDFRAME'])))
 		except KeyError:
 			self.ui.frames_lineEdit.setText("")
 
@@ -665,7 +665,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			MAYA-SPECIFIC
 		"""
 		try:  # Project is implicit if job is set
-			mayaProject = os.environ['MAYADIR'].replace("\\", "/")
+			mayaProject = os.environ['IC_MAYA_PROJECT_DIR'].replace("\\", "/")
 		except KeyError:
 			mayaProject = scene.split('/scenes')[0]
 
@@ -766,7 +766,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			path = mc.workspace(expandName=mc.workspace(fileRuleEntry="images"))
 		except:  # Make a guess
 			#path = ""
-			path = os_wrapper.absolutePath("$MAYADIR/renders")
+			path = os_wrapper.absolutePath("$IC_MAYA_PROJECT_DIR/renders")
 
 		return path
 
@@ -918,9 +918,9 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		elif self.jobType == "Maya":
 			submit_args['plugin'] = "MayaBatch"  # Deadline only
-			submit_args['renderCmdEnvVar'] = 'MAYARENDERVERSION'  # RQ only
+			submit_args['renderCmdEnvVar'] = 'IC_MAYA_RENDER_EXECUTABLE'  # RQ only
 			submit_args['flags'] = ""  # RQ only
-			submit_args['version'] = os.environ['MAYA_VER']  #jobData.getAppVersion('Maya')
+			submit_args['version'] = os.environ['IC_MAYA_VERSION']  #jobData.getAppVersion('Maya')
 			submit_args['renderer'] = self.ui.renderer_comboBox.currentText()  # Maya submit only
 			submit_args['camera'] = self.ui.camera_comboBox.currentText()
 			scene = self.makePathAbsolute(self.ui.mayaScene_comboBox.currentText()).replace("\\", "/")
@@ -945,15 +945,15 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 				submit_args['output'] = self.getOutputs()
 
 			# Environment variables...
-			submit_args['envVars'] += ['MAYADIR', 'MAYASCENESDIR', 'MAYARENDERSDIR']
+			submit_args['envVars'] += ['IC_MAYA_PROJECT_DIR', 'IC_MAYA_SCENES_DIR', 'IC_MAYA_RENDERS_DIR']
 			if submit_args['renderer'] == "redshift":
 				submit_args['envVars'] += ['REDSHIFT_COREDATAPATH']
 
 		elif self.jobType == "Nuke":
 			submit_args['plugin'] = "Nuke"  # Deadline only
-			submit_args['renderCmdEnvVar'] = 'NUKEVERSION'  # RQ only
+			submit_args['renderCmdEnvVar'] = 'IC_NUKE_EXECUTABLE'  # RQ only
 			submit_args['flags'] = ""  # RQ only
-			submit_args['version'] = os.environ['NUKE_VER'].split('v')[0]  #jobData.getAppVersion('Nuke')
+			submit_args['version'] = os.environ['IC_NUKE_VERSION'].split('v')[0]  #jobData.getAppVersion('Nuke')
 			submit_args['isMovie'] = self.getCheckBoxValue(self.ui.isMovie_checkBox)
 			submit_args['nukeX'] = self.getCheckBoxValue(self.ui.useNukeX_checkBox)
 			submit_args['interactiveLicense'] = self.getCheckBoxValue(self.ui.interactiveLicense_checkBox)
@@ -969,7 +969,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			submit_args['output'] = self.getOutputs()
 
 			# Environment variables...
-			submit_args['envVars'] += ['NUKEDIR', 'NUKESCRIPTSDIR', 'NUKERENDERSDIR']
+			submit_args['envVars'] += ['IC_NUKE_PROJECT_DIR', 'IC_NUKE_SCRIPTS_DIR', 'IC_NUKE_RENDERS_DIR']
 
 		return submit_args
 

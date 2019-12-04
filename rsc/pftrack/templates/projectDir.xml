@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <root location="$IC_SHOTPATH/3D">
 	<dir name="pftrack">
-		<dir name="$IC_USERNAME" env="PFTRACKDIR" />
+		<dir name="$IC_USERNAME" env="IC_PFTRACK_PROJECT_DIR" />
 	</dir>
 </root>

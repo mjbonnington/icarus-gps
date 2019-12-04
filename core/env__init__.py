@@ -18,7 +18,7 @@ def set_env():
 	""" Set some environment variables for basic operation.
 	"""
 	# Set version string
-	os.environ['IC_VERSION'] = "v0.10.0-20191203"
+	os.environ['IC_VERSION'] = "v0.10.0-20191204"
 
 	# Set vendor strings
 	os.environ['IC_VENDOR'] = "Gramercy Park Studios"
@@ -63,31 +63,18 @@ def set_env():
 	#os.environ['IC_USERPREFS'] = os.path.join(os.environ['IC_USERHOME'], os.environ['IC_METADATA'])  # User prefs stored in user home folder
 	os.environ['IC_RECENTFILESDIR'] = os.path.join(os.environ['IC_USERPREFS'], 'recentFiles')
 
-	appendSysPaths()
+	append_sys_paths()
 
 
-def appendSysPaths():
+def append_sys_paths():
 	""" Add paths for custom modules.
-		Perhaps in the future we should re-structure the modules into
-		packages to simplify this?
+		Only add the UI/forms dir so that Qt.py, ui_template.py, compiled UI
+		files and resources can be loaded without using relative imports.
 	"""
-	# libs = os.path.join(os.environ['IC_BASEDIR'], 'core', 'libs')
-	# tools = os.path.join(os.environ['IC_BASEDIR'], 'core', 'tools')
-	forms = os.path.join(os.environ['IC_BASEDIR'], 'ui')
-	vendor = os.path.join(os.environ['IC_BASEDIR'], 'vendor')
-
-	pathsToAppend = [forms, vendor]
-
-	# Add subdirectories in libs and tools directories
-	# for path in [libs, tools]:
-	# 	subdirs = next(os.walk(path))[1]
-	# 	if subdirs:
-	# 		for subdir in subdirs:
-	# 			# Ignore directories that start with a dot
-	# 			if not subdir.startswith('.'):
-	# 				pathsToAppend.append(os.path.join(path, subdir))
+	pathsToAppend = [
+		os.environ['IC_FORMSDIR'], 
+	]
 
 	# Append paths
 	for path in pathsToAppend:
 		sys.path.append(path)
-

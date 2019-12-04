@@ -11,10 +11,10 @@
 #import xml.etree.ElementTree as ET
 
 # Import custom modules
-from . import xmlData
+from . import xml_data
 
 
-class CamPresets(xmlData.XMLData):
+class CamPresets(xml_data.XMLData):
 	""" Manipulates XML database to store camera presets.
 		Inherits XMLData class.
 	"""

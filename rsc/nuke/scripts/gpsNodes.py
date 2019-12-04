@@ -31,7 +31,7 @@ def read_create():
 				startFrame, endFrame = frameRange.split('-')
 			except ValueError:
 				filePath = dialogPath
-				startFrame, endFrame = os.environ['STARTFRAME'], os.environ['ENDFRAME']
+				startFrame, endFrame = os.environ['IC_STARTFRAME'], os.environ['IC_ENDFRAME']
 
 			# Make filePath relative
 			filePath = os_wrapper.relativePath(filePath, 'IC_JOBPATH', tokenFormat='nuke')
@@ -118,8 +118,8 @@ def w_openPermissions():
 def w_global_preset(writeNode, presetType):
 	""" Sets the default presets on the write node.
 	"""
-	startFrame = os.environ['STARTFRAME']
-	endFrame = os.environ['ENDFRAME']
+	startFrame = os.environ['IC_STARTFRAME']
+	endFrame = os.environ['IC_ENDFRAME']
 	writeNode = nuke.thisNode()
 	writeNode.knob('use_limit').setValue('True')
 	writeNode.knob('first').setValue(int(startFrame))
@@ -134,8 +134,8 @@ def w_path_preset(writeNode, presetType='Precomp'):
 		filePath = os.path.join('[getenv IC_SHOTPATH]', 'Plate', presetType)
 		fullPath = os.path.join(os.environ['IC_SHOTPATH'], 'Plate', presetType)
 	else:
-		filePath = os.path.join('[getenv NUKERENDERSDIR]', presetType)
-		fullPath = os.path.join(os.environ['NUKERENDERSDIR'], presetType)
+		filePath = os.path.join('[getenv IC_NUKE_RENDERS_DIR]', presetType)
+		fullPath = os.path.join(os.environ['IC_NUKE_RENDERS_DIR'], presetType)
 
 	version = vCtrl.version(fullPath)
 	filePath = os_wrapper.absolutePath(os.path.join(filePath, version))

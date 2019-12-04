@@ -18,7 +18,7 @@ import ui_template as UI
 
 # Import custom modules
 from shared import verbose
-from shared import settingsData
+from shared import settings_data_xml
 
 
 # ----------------------------------------------------------------------------
@@ -124,11 +124,11 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		# self.ui.categories_listWidget.blockSignals(True)
 
 		# Load data from xml file(s)
-		self.prefs = settingsData.SettingsData()
-		self.prefs.loadXML(self.xmlData)
+		self.prefs = settings_data_xml.SettingsData()
+		self.prefs.read(datafile=self.xmlData)
 		if self.inherit:
-			self.prefs_inherited = settingsData.SettingsData()
-			self.prefs_inherited.loadXML(self.inherit)
+			self.prefs_inherited = settings_data_xml.SettingsData()
+			self.prefs_inherited.read(datafile=self.inherit)
 		else:
 			self.prefs_inherited = None
 

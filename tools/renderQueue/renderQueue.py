@@ -9,10 +9,10 @@
 
 
 import xml.etree.ElementTree as ET
-from shared import xmlData
+from shared import xml_data
 
 
-class RenderQueue(xmlData.XMLData):
+class RenderQueue(xml_data.XMLData):
 	""" Class to hold the render queue database.
 		Inherits XMLData class
 	"""
@@ -135,7 +135,7 @@ class RenderQueue(xmlData.XMLData):
 
 
 	# def getValue(self, element, tag):
-	# 	""" Return the value of 'tag' belonging to 'element'. - this is now in xmlData.py
+	# 	""" Return the value of 'tag' belonging to 'element'. - this is now in xml_data.py
 	# 	"""
 	# 	elem = element.find(tag)
 	# 	if elem is not None:

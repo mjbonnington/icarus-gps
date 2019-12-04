@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <root location="$IC_SHOTPATH/3D">
 	<dir name="houdini">
-		<dir name="$IC_USERNAME" env="HIP">
+		<dir name="$IC_USERNAME" env="IC_HOUDINI_PROJECT_DIR">
 			<dir name="abc" />
 			<dir name="audio" />
 			<dir name="comp" />
@@ -9,10 +9,10 @@
 			<dir name="flip" />
 			<dir name="geo" />
 			<dir name="hda" />
-			<dir name="render" env="HOUDINIRENDERSDIR" />
+			<dir name="render" env="IC_HOUDINI_RENDERS_DIR" />
 			<dir name="scripts" />
 			<dir name="sim" />
-			<dir name="tex" env="HOUDINITEXTURESDIR" />
+			<dir name="tex" env="IC_HOUDINI_TEXTURES_DIR" />
 			<dir name="video" />
 		</dir>
 	</dir>

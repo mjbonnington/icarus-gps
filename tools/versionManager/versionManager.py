@@ -17,7 +17,7 @@ from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
 
 # Import custom modules
-from shared import settingsData
+from shared import settings_data_xml
 
 
 # ----------------------------------------------------------------------------
@@ -72,7 +72,7 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.assetRootDir = os.path.expandvars(assetRootDir)
 
 		# Instantiate XML data classes
-		self.assetData = settingsData.SettingsData()
+		self.assetData = settings_data_xml.SettingsData()
 		self.assetData.loadXML(os.path.join(self.assetRootDir, version, 'assetData.xml'), use_template=False, quiet=False)
 
 		# Set asset label text

@@ -29,7 +29,7 @@ def autoDeploy():
 		else:
 			osdir = 'osx'
 		src = os.path.join(os.environ['IC_BASEDIR'], 'rsc', 'realflow', 'realflow__env__', osdir, 'commandsOrganizer.dat')
-		dst = os.path.join(os.environ['REALFLOWSCENESDIR'], '.cmdsOrg', 'commandsOrganizer.dat')
+		dst = os.path.join(os.environ['IC_REALFLOW_SCENES_DIR'], '.cmdsOrg', 'commandsOrganizer.dat')
 		os_wrapper.copy(src, dst)
 		verbose.message("%s Ok" %outputMsg)
 	except:
@@ -39,7 +39,7 @@ def autoDeploy():
 #def setupScene(scene, EXPORT_PREVIEW, IMAGE_FORMAT_JPG):
 def setupScene(scene):
 	#updating scene with shot settings
-	scene.setFps(int(os.environ['FPS']))
-	maxFrame = (int(os.environ['ENDFRAME']) - int(os.environ['STARTFRAME']))
+	scene.setFps(int(os.environ['IC_FPS']))
+	maxFrame = (int(os.environ['IC_ENDFRAME']) - int(os.environ['IC_STARTFRAME']))
 	scene.setMaxFrames(int(maxFrame))
 

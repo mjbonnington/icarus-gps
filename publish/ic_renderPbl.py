@@ -132,7 +132,7 @@ def publish(renderDic, pblTo, mainLayer, streamPbl, pblNotes):
 			# midFrame = int((int(startFrame) + int(endFrame))/2)
 
 			try:
-				posterFrame = int(os.environ['POSTERFRAME'])
+				posterFrame = int(os.environ['IC_POSTER_FRAME'])
 			except ValueError:
 				posterFrame = -1
 			if not (startFrame <= posterFrame <= endFrame): # if poster frame is not within frame range, use mid frame

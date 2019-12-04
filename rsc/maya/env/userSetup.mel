@@ -13,20 +13,20 @@ python("os.environ['IC_ENV'] = 'MAYA'");
 
 // Initialise Icarus environment
 python("sys.path.append(os.environ['IC_BASEDIR'])");
-python("from core import env__init__; env__init__.appendSysPaths()");
+python("from core import env__init__; env__init__.append_sys_paths()");
 python("from core.app_session import *");
 
 // Set up path remapping for cross-platform support
-string $root = `getenv FILESYSTEMROOT`;
-string $win_root = `getenv FILESYSTEMROOTWIN`;
-string $osx_root = `getenv FILESYSTEMROOTOSX`;
-string $linux_root = `getenv FILESYSTEMROOTLINUX`;
+string $root = `getenv IC_FILESYSTEM_ROOT`;
+string $root_win = `getenv IC_FILESYSTEM_ROOT_WIN`;
+string $root_osx = `getenv IC_FILESYSTEM_ROOT_OSX`;
+string $root_linux = `getenv IC_FILESYSTEM_ROOT_LINUX`;
 if ($root != "None")
 {
 	dirmap -en true;
-	if ($win_root != "None") dirmap -m $win_root $root;
-	if ($osx_root != "None") dirmap -m $osx_root $root;
-	if ($linux_root != "None") dirmap -m $linux_root $root;
+	if ($root_win != "None") dirmap -m $root_win $root;
+	if ($root_osx != "None") dirmap -m $root_osx $root;
+	if ($root_linux != "None") dirmap -m $root_linux $root;
 }
 
 // Run UI related stuff
@@ -41,7 +41,7 @@ if (!$batchMode)
 	python("from rsc.maya.scripts import icDeployTools; icDeployTools.deploy()");
 
 	// Build custom menus
-	source gpsBuildMenus;
+	source menuBuild;
 
 	// Set up keyboard shortcuts for custom tools
 	// New Scene...

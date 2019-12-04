@@ -25,7 +25,7 @@ def get_pools():
 	""" Get Deadline pools and return in a list.
 	"""
 	try:
-		pools = os_wrapper.execute([os.environ['DEADLINECMDVERSION'], '-pools'])[1]
+		pools = os_wrapper.execute([os.environ['IC_DEADINE_CMD_EXECUTABLE'], '-pools'])[1]
 		return pools.splitlines()
 	except:
 		verbose.warning("Could not retrieve Deadline pools.")
@@ -36,7 +36,7 @@ def get_groups():
 	""" Get Deadline groups and return in a list.
 	"""
 	try:
-		groups = os_wrapper.execute([os.environ['DEADLINECMDVERSION'], '-groups'])[1]
+		groups = os_wrapper.execute([os.environ['IC_DEADINE_CMD_EXECUTABLE'], '-groups'])[1]
 		return groups.splitlines()
 	except:
 		verbose.warning("Could not retrieve Deadline groups.")
@@ -192,7 +192,7 @@ def submit_job(**kwargs):
 				pluginInfoFileList)
 
 			# Execute deadlinecommand
-			cmd_result, cmd_output = os_wrapper.execute([os.environ['DEADLINECMDVERSION'], batchSubmissionFile])
+			cmd_result, cmd_output = os_wrapper.execute([os.environ['IC_DEADINE_CMD_EXECUTABLE'], batchSubmissionFile])
 			if cmd_result:
 				result_msg = "Successfully submitted %d %s to Deadline." %(num_jobs, verbose.pluralise("job", num_jobs))
 
@@ -211,7 +211,7 @@ def submit_job(**kwargs):
 			pluginInfoFile = generate_plugin_info_file(**kwargs)
 
 			# Execute deadlinecommand
-			cmd_result, cmd_output = os_wrapper.execute([os.environ['DEADLINECMDVERSION'], jobInfoFile, pluginInfoFile])
+			cmd_result, cmd_output = os_wrapper.execute([os.environ['IC_DEADINE_CMD_EXECUTABLE'], jobInfoFile, pluginInfoFile])
 			if cmd_result:
 				result_msg = "Successfully submitted job to Deadline."
 

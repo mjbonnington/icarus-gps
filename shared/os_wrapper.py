@@ -322,20 +322,20 @@ def translatePath(path):
 	try:
 		path_tr = path
 		if os.environ['IC_RUNNING_OS'] == "Windows":
-			if path.startswith(os.environ['FILESYSTEMROOTOSX']):
-				path_tr = path.replace(os.environ['FILESYSTEMROOTOSX'], os.environ['FILESYSTEMROOTWIN'])
-			elif path.startswith(os.environ['FILESYSTEMROOTLINUX']):
-				path_tr = path.replace(os.environ['FILESYSTEMROOTLINUX'], os.environ['FILESYSTEMROOTWIN'])
+			if path.startswith(os.environ['IC_FILESYSTEM_ROOT_OSX']):
+				path_tr = path.replace(os.environ['IC_FILESYSTEM_ROOT_OSX'], os.environ['IC_FILESYSTEM_ROOT_WIN'])
+			elif path.startswith(os.environ['IC_FILESYSTEM_ROOT_LINUX']):
+				path_tr = path.replace(os.environ['IC_FILESYSTEM_ROOT_LINUX'], os.environ['IC_FILESYSTEM_ROOT_WIN'])
 		elif os.environ['IC_RUNNING_OS'] == "MacOS":
-			if path.startswith(os.environ['FILESYSTEMROOTWIN']):
-				path_tr = path.replace(os.environ['FILESYSTEMROOTWIN'], os.environ['FILESYSTEMROOTOSX'])
-			elif path.startswith(os.environ['FILESYSTEMROOTLINUX']):
-				path_tr = path.replace(os.environ['FILESYSTEMROOTLINUX'], os.environ['FILESYSTEMROOTOSX'])
+			if path.startswith(os.environ['IC_FILESYSTEM_ROOT_WIN']):
+				path_tr = path.replace(os.environ['IC_FILESYSTEM_ROOT_WIN'], os.environ['IC_FILESYSTEM_ROOT_OSX'])
+			elif path.startswith(os.environ['IC_FILESYSTEM_ROOT_LINUX']):
+				path_tr = path.replace(os.environ['IC_FILESYSTEM_ROOT_LINUX'], os.environ['IC_FILESYSTEM_ROOT_OSX'])
 		else:  # Linux
-			if path.startswith(os.environ['FILESYSTEMROOTWIN']):
-				path_tr = path.replace(os.environ['FILESYSTEMROOTWIN'], os.environ['FILESYSTEMROOTLINUX'])
-			elif path.startswith(os.environ['FILESYSTEMROOTOSX']):
-				path_tr = path.replace(os.environ['FILESYSTEMROOTOSX'], os.environ['FILESYSTEMROOTLINUX'])
+			if path.startswith(os.environ['IC_FILESYSTEM_ROOT_WIN']):
+				path_tr = path.replace(os.environ['IC_FILESYSTEM_ROOT_WIN'], os.environ['IC_FILESYSTEM_ROOT_LINUX'])
+			elif path.startswith(os.environ['IC_FILESYSTEM_ROOT_OSX']):
+				path_tr = path.replace(os.environ['IC_FILESYSTEM_ROOT_OSX'], os.environ['IC_FILESYSTEM_ROOT_LINUX'])
 
 		#print("Performing path translation:\n%s\n%s\n" %(path, absolutePath(path_tr)))
 		return absolutePath(path_tr)

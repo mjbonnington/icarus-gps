@@ -329,8 +329,8 @@ def check(fr_range):
 	start_frame = int(start_frame)
 	end_frame = int(end_frame)
 
-	shot_env_start_frame = int(os.environ['STARTFRAME'])
-	shot_env_end_frame = int(os.environ['ENDFRAME'])
+	shot_env_start_frame = int(os.environ['IC_STARTFRAME'])
+	shot_env_end_frame = int(os.environ['IC_ENDFRAME'])
 
 	if (start_frame == shot_env_start_frame) and (end_frame == shot_env_end_frame):
 		return True

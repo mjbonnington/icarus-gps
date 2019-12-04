@@ -176,15 +176,15 @@ class SceneManager(object):
 		""" Automatically set some defaults from the shot settings for a new
 			scene.
 		"""
-		unit = os.getenv('UNIT', 'cm')
-		angle = os.getenv('ANGLE', 'deg')
-		timeFormat = os.getenv('TIMEFORMAT', 'pal')
-		startFrame = int(os.getenv('STARTFRAME', '1001'))
-		endFrame = int(os.getenv('ENDFRAME', '1100'))
-		inFrame = int(os.getenv('INFRAME', startFrame))
-		outFrame = int(os.getenv('OUTFRAME', endFrame))
-		psExecutable = os.getenv('PSVERSION', '')
-		djvExecutable = os.getenv('DJVVERSION', '')
+		unit = os.getenv('IC_LINEAR_UNIT', 'cm')
+		angle = os.getenv('IC_ANGULAR_UNIT', 'deg')
+		timeFormat = os.getenv('IC_TIME_UNIT', 'pal')
+		startFrame = int(os.getenv('IC_STARTFRAME', '1001'))
+		endFrame = int(os.getenv('IC_ENDFRAME', '1100'))
+		inFrame = int(os.getenv('IC_INFRAME', startFrame))
+		outFrame = int(os.getenv('IC_OUTFRAME', endFrame))
+		psExecutable = os.getenv('IC_PS_EXECUTABLE', '')
+		djvExecutable = os.getenv('IC_DJV_EXECUTABLE', '')
 
 		# Set defaults for Maya startup
 		# mc.currentUnit(l=unit, a=angle, t=timeFormat)

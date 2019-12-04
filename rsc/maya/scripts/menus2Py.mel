@@ -1,7 +1,7 @@
 // [Icarus] menus2py.mel
 //
 // Nuno Pereira <nuno.pereira@gps-ldn.com>
-// Mike Bonnington <mike.bonnington@gps-ldn.com>
+// Mike Bonnington <mjbonnington@gmail.com>
 // (c) 2013-2019 Gramercy Park Studios
 //
 // This module wraps python commands up in MEL so they can be called from Maya
@@ -12,15 +12,12 @@
 
 global proc menus2Py.newScene()
 {
-	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.newMayaScene()");
 	python("session.scnmgr.file_new()");
 }
 
 
 global proc menus2Py.openScene()
 {
-	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.openMayaScene()");
-	// python("from tools.scenemanager import file_open; file_open.run_maya(session.scnmgr)");
 	python("session.scnmgr.file_open_dialog()");
 }
 
@@ -31,9 +28,7 @@ global proc menus2Py.openRecent(string $menuSel)
 	$recentFile = $menuSel;
 	python "import maya.mel as mel";
 	python "recentFile = mel.eval('$temp=$recentFile')";
-	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.openMayaRecentScene(recentFile)");
-	// python("from rsc.maya.scripts import mayaOps; mayaOps.openScene(recentFile, dialog=False)");
-	python("session.scnmgr.file_open_dialog(recentFile)");
+	python("session.scnmgr.file_open(recentFile)");
 }
 
 
@@ -49,29 +44,27 @@ global proc menus2Py.updateRecentFilesMenu(string $menu)
 	// Re-populate the items in the pop-up menu
 	for ( $item in $fileLs )
 	{
-		menuItem -label $item -command ("menus2Py.openRecent(\"" + `getenv IC_SHOTPATH` + $item + "\")")  -parent $menu $item;
+		menuItem -label $item
+		         -command ("menus2Py.openRecent(\"" + `getenv IC_SHOTPATH` + $item + "\")")
+		         -parent $menu $item;
 	}
 }
 
 
 global proc menus2Py.saveScene()
 {
-	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.saveMayaScene()");
 	python("session.scnmgr.file_save()");
 }
 
 
 global proc menus2Py.saveSceneAs()
 {
-	// python("from rsc.maya.scripts import mayaScnMng; mayaScnMng.saveMayaSceneAs()");
-	// python("from tools.scenemanager import file_save; file_save.run_maya(session.scnmgr)");
 	python("session.scnmgr.file_save_dialog()");
 }
 
 
 global proc menus2Py.incrementAndSave()
 {
-	// incrementalSave; // rewrite this function in python?
 	python("session.scnmgr.file_save_new_version()");
 }
 
@@ -80,7 +73,6 @@ global proc menus2Py.incrementAndSave()
 
 global proc menus2Py.launchIcarus()
 {
-	// python("import icarus__main__; icarus__main__.run_maya()");
 	python("session.icarus.show()");
 }
 
@@ -146,7 +138,9 @@ global proc menus2Py.updatePresetCameraMenu(string $menu)
 	// Re-populate the items in the menu
 	for ( $item in $camLs )
 	{
-		menuItem -label $item -command ("menus2Py.gpsCreateCamera(\"" + $item + "\")") -parent $menu $item;
+		menuItem -label $item
+		         -command ("menus2Py.gpsCreateCamera(\"" + $item + "\")")
+		         -parent $menu $item;
 	}
 	menuItem -divider true -parent $menu;
 	menuItem -label "Create Camera Rig"
@@ -204,8 +198,8 @@ global proc menus2Py.forceOverrideComponentDisplay(string $nodeName)
 	global string $icSetNodeName;
 	$icSetNodeName = $nodeName;
 	python "import maya.mel as mel";
-	//maya retrives the node name in the format [currentNodeName].[originalNodeName]. 
-	//We only need the current nodeName so everything after the'.' needs to be removed
+	// Maya retrieves the node name in the format [currentNodeName].[originalNodeName].
+	// We only need the current nodeName so everything after the '.' needs to be removed.
 	python "icSetNodeName = mel.eval('$temp=$icSetNodeName'); icSetNodeName=icSetNodeName.split('.')[0]";
 	python "from rsc.maya.scripts import mayaOps; mayaOps.removeDrawOverride(objLs=[icSetNodeName], icSet=True, hierarchy=True, shapes=True, overrideLayers=False)";
 }

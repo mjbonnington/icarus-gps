@@ -219,7 +219,7 @@ class PreviewUI(QtWidgets.QMainWindow, UI.TemplateUI):
 				resX = float(os.environ['PREVIEW_RESOLUTION_X']) * proxy_scale
 				resY = float(os.environ['PREVIEW_RESOLUTION_Y']) * proxy_scale
 				res = int(resX), int(resY)
-				#res = int(os.environ['PROXY_RESOLUTIONX']), int(os.environ['PROXY_RESOLUTIONY'])
+				#res = int(os.environ['IC_PROXY_RESOLUTION_X']), int(os.environ['IC_PROXY_RESOLUTION_Y'])
 			elif resMode == "Render settings":
 				res = appConnect.getResolution()
 			else:

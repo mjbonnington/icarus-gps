@@ -368,8 +368,8 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 # 	# Initialise Icarus environment
 # 	sys.path.append(os.environ['IC_WORKINGDIR'])
 # 	import env__init__
-# 	env__init__.setEnv()
-# 	#env__init__.appendSysPaths()
+# 	env__init__.set_env()
+# 	#env__init__.append_sys_paths()
 
 # 	import rsc_rc
 

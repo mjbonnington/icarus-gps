@@ -23,7 +23,7 @@ from . import dirStructure
 from . import launchApps  # temp?
 from . import os_wrapper
 # from . import recentFiles  # for sorting by most used
-from . import settingsData
+from . import settings_data_xml
 from . import userPrefs
 from . import verbose
 
@@ -39,7 +39,7 @@ class AppLauncher(QtWidgets.QDialog):
 
 		# Instantiate data classes
 		self.ap = appPaths.AppPaths()
-		self.jd = settingsData.SettingsData()
+		self.jd = settings_data_xml.SettingsData()
 		self.ds = dirStructure.DirStructure()
 
 		# Set OS identifier strings to get correct app executable paths
@@ -292,7 +292,7 @@ class AppLauncher(QtWidgets.QDialog):
 
 		# Create project folder structure & set environment variables
 		if projectFolders:
-			folder_xml = os_wrapper.absolutePath("$IC_BASEDIR/rsc/%s/templates/projectDir.xml" %shortName)
+			folder_xml = os_wrapper.absolutePath("$IC_BASEDIR/rsc/%s/templates/projectDir.xml" % shortName)
 			self.ds.createDirStructure(folder_xml)
 
 		# Run the executable
@@ -307,4 +307,3 @@ class AppLauncher(QtWidgets.QDialog):
 		# Minimise the UI if the option is set
 		if self.parent.boolMinimiseOnAppLaunch:
 			self.parent.showMinimized()
-

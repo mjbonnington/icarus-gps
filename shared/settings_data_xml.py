@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# [Icarus] settingsData.py
+# [Icarus] settings_data_xml.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2015-2018 Gramercy Park Studios
@@ -13,22 +13,22 @@ import re
 import xml.etree.ElementTree as ET
 
 # Import custom modules
-from . import xmlData
+from . import xml_data
 
 
-class SettingsData(xmlData.XMLData):
+class SettingsData(xml_data.XMLData):
 	""" Manipulates XML database to store job settings.
 		Inherits XMLData class.
 	"""
 
 	def read(self, **kwargs):
-		""" Convenience wrapper for xmlData.loadXML().
+		""" Convenience wrapper for xml_data.loadXML().
 		"""
 		return self.loadXML(**kwargs)
 
 
 	def write(self):
-		""" Convenience wrapper for xmlData.saveXML().
+		""" Convenience wrapper for xml_data.saveXML().
 		"""
 		return self.saveXML()
 

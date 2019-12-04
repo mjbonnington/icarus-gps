@@ -20,7 +20,7 @@ import time
 if __name__ == "__main__":
 	sys.path.append(os.environ['IC_WORKINGDIR'])
 	from core import env__init__
-	env__init__.setEnv()
+	env__init__.set_env()
 
 from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
@@ -787,9 +787,9 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		jobType = self.rq.getValue(jobElement, 'type')
 		if jobType == 'Maya':
 			# try:
-			# 	renderCmd = '"%s"' %os.environ['MAYARENDERVERSION'] # store this in XML as maya version may vary with project
+			# 	renderCmd = '"%s"' %os.environ['IC_MAYA_RENDER_EXECUTABLE'] # store this in XML as maya version may vary with project
 			# except KeyError:
-			# 	print "ERROR: Path to Maya Render command executable not found. This can be set with the environment variable 'MAYARENDERVERSION'."
+			# 	print "ERROR: Path to Maya Render command executable not found. This can be set with the environment variable 'IC_MAYA_RENDER_EXECUTABLE'."
 			#renderCmd = '"%s"' %os.path.normpath(self.rq.getValue(jobElement, 'mayaRenderCmd'))
 			renderCmd = self.rq.getValue(jobElement, 'mayaRenderCmd')
 			# if not os.path.isfile(renderCmd): # disabled this check 

@@ -7,12 +7,12 @@ rem cd into shot dir
 cd /d "%IC_SHOTPATH%"
 
 rem software aliases
-doskey maya="%MAYAVERSION%" -proj "%MAYADIR%"
-doskey mayarender="%MAYARENDERVERSION%" -proj "%MAYADIR%"
-doskey Render="%MAYARENDERVERSION%" $*
-doskey nuke="%NUKEVERSION%"
-doskey nukex="%NUKEVERSION%" --nukex
-doskey hieroplayer="%NUKEVERSION%" --player
+doskey maya="%IC_MAYA_EXECUTABLE%" -proj "%IC_MAYA_PROJECT_DIR%"
+doskey mayarender="%IC_MAYA_RENDER_EXECUTABLE%" -proj "%IC_MAYA_PROJECT_DIR%"
+doskey Render="%IC_MAYA_RENDER_EXECUTABLE%" $*
+doskey nuke="%IC_NUKE_EXECUTABLE%"
+doskey nukex="%IC_NUKE_EXECUTABLE%" --nukex
+doskey hieroplayer="%IC_NUKE_EXECUTABLE%" --player
 doskey djv="%DJV_PLAY%"
 
 rem other aliases

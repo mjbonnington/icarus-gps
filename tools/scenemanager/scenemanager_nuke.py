@@ -244,17 +244,17 @@ class SceneManager(object):
 		""" Automatically set some defaults from the shot settings for a new
 			script.
 		"""
-		plateFormat = '%s %s %s' % (int(os.environ['RESOLUTIONX']), int(os.environ['RESOLUTIONY']), os.environ['IC_SHOT'])
-		proxyFormat = '%s %s %s' % (int(os.environ['PROXY_RESOLUTIONX']), int(os.environ['PROXY_RESOLUTIONY']), '%s_proxy' % os.environ['IC_SHOT'])
+		plateFormat = '%s %s %s' % (int(os.environ['IC_RESOLUTION_X']), int(os.environ['IC_RESOLUTION_Y']), os.environ['IC_SHOT'])
+		proxyFormat = '%s %s %s' % (int(os.environ['IC_PROXY_RESOLUTION_X']), int(os.environ['IC_PROXY_RESOLUTION_Y']), '%s_proxy' % os.environ['IC_SHOT'])
 		nuke.addFormat(plateFormat)
 		nuke.addFormat(proxyFormat)
 
 		nuke.knobDefault('Root.format', os.environ['IC_SHOT'])
 		nuke.knobDefault('Root.proxy_type', 'format')
 		nuke.knobDefault('Root.proxy_format', '%s_proxy' % os.environ['IC_SHOT'])
-		nuke.knobDefault('Root.fps', os.environ['FPS'])
-		nuke.knobDefault('Root.first_frame', os.environ['STARTFRAME'])
-		nuke.knobDefault('Root.last_frame', os.environ['ENDFRAME'])
+		nuke.knobDefault('Root.fps', os.environ['IC_FPS'])
+		nuke.knobDefault('Root.first_frame', os.environ['IC_STARTFRAME'])
+		nuke.knobDefault('Root.last_frame', os.environ['IC_ENDFRAME'])
 
 
 	# def incrementSceneWithoutSave(self):

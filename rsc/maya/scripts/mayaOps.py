@@ -285,7 +285,7 @@ def exportAll(pathToPblAsset, fileType):
 
 ##############exports animation curves via atom###########
 def exportAnimation(pathToPblAsset, pblDir, objLs):
-	mayaAppPath = os.path.split(os.environ['MAYAVERSION'])[0]
+	mayaAppPath = os.path.split(os.environ['IC_MAYA_EXECUTABLE'])[0]
 	#plugin = os.path.join(mayaAppPath, 'plug-ins/atomImportExport.bundle')
 	mc.loadPlugin('atomImportExport', qt=True)
 	startFr = mc.playbackOptions(min=True, q=True)
@@ -299,14 +299,14 @@ def exportAnimation(pathToPblAsset, pblDir, objLs):
 
 #####################export geo types#####################
 def exportGeo(objLs, geoType, pathToPblAsset):
-	mayaAppPath = os.path.split(os.environ['MAYAVERSION'])[0]
+	mayaAppPath = os.path.split(os.environ['IC_MAYA_EXECUTABLE'])[0]
 	if geoType == 'abc':
 		plugin = 'AbcExport'
 		mc.loadPlugin(plugin, qt=True)
 		minFrame = int(mc.playbackOptions(min=True, q=True))
 		maxFrame = int(mc.playbackOptions(max=True, q=True))
-		#minFrame = int(os.environ['STARTFRAME'])
-		#maxFrame = int(os.environ['ENDFRAME'])
+		#minFrame = int(os.environ['IC_STARTFRAME'])
+		#maxFrame = int(os.environ['IC_ENDFRAME'])
 		abcJob = '-fr %s %s -s 1 -uv -ws -ef -rt %s -f %s' % (minFrame, maxFrame, objLs[0], pathToPblAsset)
 		mc.AbcExport(j=abcJob)
 		return
@@ -953,15 +953,15 @@ def submitRenderLayer():
 # 		Deprecated: superseded by scenemanager.set_defaults()
 # 		Remove?
 # 	"""
-# 	unit = os.getenv('UNIT', 'cm')
-# 	angle = os.getenv('ANGLE', 'deg')
-# 	timeFormat = os.getenv('TIMEFORMAT', 'pal')
-# 	startFrame = int(os.getenv('STARTFRAME', '1001'))
-# 	endFrame = int(os.getenv('ENDFRAME', '1100'))
-# 	inFrame = int(os.getenv('INFRAME', startFrame))
-# 	outFrame = int(os.getenv('OUTFRAME', endFrame))
-# 	psExecutable = os.getenv('PSVERSION', '')
-# 	djvExecutable = os.getenv('DJVVERSION', '')
+# 	unit = os.getenv('IC_LINEAR_UNIT', 'cm')
+# 	angle = os.getenv('IC_ANGULAR_UNIT', 'deg')
+# 	timeFormat = os.getenv('IC_TIME_UNIT', 'pal')
+# 	startFrame = int(os.getenv('IC_STARTFRAME', '1001'))
+# 	endFrame = int(os.getenv('IC_ENDFRAME', '1100'))
+# 	inFrame = int(os.getenv('IC_INFRAME', startFrame))
+# 	outFrame = int(os.getenv('IC_OUTFRAME', endFrame))
+# 	psExecutable = os.getenv('IC_PS_EXECUTABLE', '')
+# 	djvExecutable = os.getenv('IC_DJV_EXECUTABLE', '')
 
 # 	# Setting defaults for Maya startup
 # 	#mc.currentUnit(l=unit, a=angle, t=timeFormat)

@@ -42,35 +42,35 @@ def openJob():
 	open_(os.path.split(os.environ['IC_JOBPATH'])[0])
 
 def openElementsLib():
-	open_(os.environ['ELEMENTSLIBRARY'])
+	open_(os.environ['IC_ELEMENTS_LIBRARY'])
 
 def openMaya():
-	open_(os.environ['MAYADIR'])
+	open_(os.environ['IC_MAYA_PROJECT_DIR'])
 
 def openMayaScenes():
-	open_(os.environ['MAYASCENESDIR'])
+	open_(os.environ['IC_MAYA_SCENES_DIR'])
 
 def openMayaSourceimages():
-	open_(os.environ['MAYASOURCEIMAGESDIR'])
+	open_(os.environ['IC_MAYA_SOURCEIMAGES_DIR'])
 
 def openMayaRenders():
-	open_(os.environ['MAYARENDERSDIR'])
+	open_(os.environ['IC_MAYA_RENDERS_DIR'])
 
 def openMayaPlayblasts():
-	open_(os.environ['MAYAPLAYBLASTSDIR'])
+	open_(os.environ['IC_MAYA_PLAYBLASTS_DIR'])
 
 def openNuke():
-	open_(os.environ['NUKEDIR'])
+	open_(os.environ['IC_NUKE_PROJECT_DIR'])
 
 def openNukeScripts():
-	open_(os.environ['NUKESCRIPTSDIR'])
+	open_(os.environ['IC_NUKE_SCRIPTS_DIR'])
 
 def openNukeElements():
-	open_(os.environ['NUKEELEMENTSDIR'])
+	open_(os.environ['IC_NUKE_ELEMENTS_DIR'])
 
 def openNukeRenders():
-	open_(os.environ['NUKERENDERSDIR'])
+	open_(os.environ['IC_NUKE_RENDERS_DIR'])
 
 def openRealflowScenes():
-	open_(os.environ['REALFLOWSCENESDIR'])
+	open_(os.environ['IC_REALFLOW_SCENES_DIR'])
 

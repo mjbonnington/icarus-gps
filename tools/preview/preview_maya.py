@@ -300,7 +300,7 @@ class Preview():
 			cameraShape = mc.listRelatives(activeCamera, shapes=True)
 
 		# Disable undo
-		mc.undoInfo(openChunk=True, chunkName='u_preview')
+		mc.undoInfo(openChunk=True, chunkName='previewPlayblast')
 		# undoState = mc.undoInfo(q=True, state=True)
 		# if undoState:
 		# 	mc.undoInfo(state=False)
@@ -360,7 +360,7 @@ class Preview():
 		mc.lookThru(self.activeView, activeCameraOrig)
 
 		# Re-enable undo
-		mc.undoInfo(closeChunk=True, chunkName='u_preview')
+		mc.undoInfo(closeChunk=True, chunkName='previewPlayblast')
 		# if undoState:
 		# 	mc.undoInfo(state=True)
 

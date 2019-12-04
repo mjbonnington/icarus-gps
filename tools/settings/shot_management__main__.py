@@ -15,10 +15,10 @@ from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
 
 # Import custom modules
-import jobs
-import os_wrapper
-import settingsData
-import verbose
+from shared import jobs
+from shared import os_wrapper
+from shared import settings_data_xml
+from shared import verbose
 
 
 # ----------------------------------------------------------------------------
@@ -177,7 +177,7 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 				newItem = QtWidgets.QTableWidgetItem(shotName)
 				self.ui.shots_tableWidget.setVerticalHeaderItem(row, newRowHeaderItem)
 				shotDataPath = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA/shotData.xml" %(jobPath, shotName))
-				shotData = settingsData.SettingsData()
+				shotData = settings_data_xml.SettingsData()
 				shotData.loadXML(shotDataPath)
 
 				text = "%s-%s" %(shotData.getValue('time', 'rangeStart'), shotData.getValue('time', 'rangeEnd'))
@@ -438,8 +438,8 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 # 	# Initialise Icarus environment
 # 	sys.path.append(os.environ['IC_WORKINGDIR'])
 # 	import env__init__
-# 	env__init__.setEnv()
-# 	#env__init__.appendSysPaths()
+# 	env__init__.set_env()
+# 	#env__init__.append_sys_paths()
 
 # 	import rsc_rc
 

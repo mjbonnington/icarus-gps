@@ -8,7 +8,7 @@
 			<var>MAYA_DEBUG_ENABLE_CRASH_REPORTING=0</var>
 			<var>MAYA_FORCE_PANEL_FOCUS=0</var>
 		</env-vars>
-		<flagsX>-proj $MAYADIR</flagsX>
+		<flagsX>-proj $IC_MAYA_PROJECT_DIR</flagsX>
 		<path version="[template]">
 			<osx>/Applications/Autodesk/maya[ver]/Maya.app/Contents/MacOS/Maya</osx>
 			<linux>/usr/autodesk/maya[ver]-x64/bin/maya[ver]</linux>

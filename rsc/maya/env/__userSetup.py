@@ -20,7 +20,7 @@ os.environ['IC_ENV'] = 'MAYA'
 sys.path.append(os.environ['IC_BASEDIR'])
 # from core.app_session import *
 from core import env__init__
-env__init__.appendSysPaths()
+env__init__.append_sys_paths()
 
 import maya.cmds as mc
 
@@ -29,23 +29,23 @@ import maya.cmds as mc
 # from shared import verbose
 
 # Set up path remapping for cross-platform support
-if os.environ['FILESYSTEMROOT'] != "None":
+if os.environ['IC_FILESYSTEM_ROOT'] != "None":
 	mc.dirmap(enable=True)
-	if os.environ['FILESYSTEMROOTWIN'] != "None":
+	if os.environ['IC_FILESYSTEM_ROOT_WIN'] != "None":
 		mc.dirmap(
 			mapDirectory=(
-				os.environ['FILESYSTEMROOTWIN'], 
-				os.environ['FILESYSTEMROOT']))
-	if os.environ['FILESYSTEMROOTOSX'] != "None":
+				os.environ['IC_FILESYSTEM_ROOT_WIN'], 
+				os.environ['IC_FILESYSTEM_ROOT']))
+	if os.environ['IC_FILESYSTEM_ROOT_OSX'] != "None":
 		mc.dirmap(
 			mapDirectory=(
-				os.environ['FILESYSTEMROOTOSX'], 
-				os.environ['FILESYSTEMROOT']))
-	if os.environ['FILESYSTEMROOTLINUX'] != "None":
+				os.environ['IC_FILESYSTEM_ROOT_OSX'], 
+				os.environ['IC_FILESYSTEM_ROOT']))
+	if os.environ['IC_FILESYSTEM_ROOT_LINUX'] != "None":
 		mc.dirmap(
 			mapDirectory=(
-				os.environ['FILESYSTEMROOTLINUX'], 
-				os.environ['FILESYSTEMROOT']))
+				os.environ['IC_FILESYSTEM_ROOT_LINUX'], 
+				os.environ['IC_FILESYSTEM_ROOT']))
 
 batchMode = mc.about(batch=True)
 

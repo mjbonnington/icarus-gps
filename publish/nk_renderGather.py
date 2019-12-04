@@ -26,7 +26,7 @@ def gather(gatherPath):
 				fileName = '%s_%s' % (os.environ['IC_VENDOR_INITIALS'], filePathTail.split('.')[0])
 			except ValueError:
 				filePath = dialogPath
-				startFrame, endFrame = os.environ['STARTFRAME'], os.environ['ENDFRAME']
+				startFrame, endFrame = os.environ['IC_STARTFRAME'], os.environ['IC_ENDFRAME']
 				fileName = '%s_Render_Read' % os.environ['IC_VENDOR_INITIALS']
 
 			# Make file path relative

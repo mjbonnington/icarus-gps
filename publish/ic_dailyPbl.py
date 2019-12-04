@@ -78,7 +78,7 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 			startFrame = endFrame = dailyRange # if frame range is a single frame
 
 		try:
-			posterFrame_ = int(os.environ['POSTERFRAME'])
+			posterFrame_ = int(os.environ['IC_POSTER_FRAME'])
 		except ValueError:
 			posterFrame_ = -1
 		if not (int(startFrame) <= posterFrame_ <= int(endFrame)): # if poster frame is not within frame range, use mid frame
@@ -91,13 +91,13 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 		inFile = os.path.join(dailyPath, nameBody)
 		#print(inFile)
 		outFile = os.path.join(pblDir, dailyFileBody)
-		#djvOps.prcImg(inFile, outFile, startFrame, endFrame, extension, outExt='jpg', fps=os.environ['FPS'])
+		#djvOps.prcImg(inFile, outFile, startFrame, endFrame, extension, outExt='jpg', fps=os.environ['IC_FPS'])
 		djvOps.prcQt(inFile, pblDir, startFrame, endFrame, extension, name='%s_%s' % (dailyFileBody, version))
 
 		# Hard linking daily to dated folder in wips dir
 		dailyFileLs = os.listdir(pblDir)
 		dailyDateDir = time.strftime('%Y_%m_%d')
-		dailyDatePath = os.path.join(os.environ['WIPSDIR'], 'CGI', dailyDateDir, '%s_%s_%s' % (os.environ['IC_SHOT'], subsetName, version))
+		dailyDatePath = os.path.join(os.environ['IC_WIPS_DIR'], 'CGI', dailyDateDir, '%s_%s_%s' % (os.environ['IC_SHOT'], subsetName, version))
 		os_wrapper.createDir(dailyDatePath)
 		excludeLs = ['in_progress.tmp']
 		for file_ in dailyFileLs:

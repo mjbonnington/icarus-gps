@@ -33,12 +33,12 @@ cd $IC_SHOTPATH
 
 
 ##software aliases##
-alias maya="$MAYAVERSION -proj $MAYADIR &"
-alias mayarender="$MAYARENDERVERSION -proj $MAYADIR"
-alias Render="$MAYARENDERVERSION"
-alias nuke="$NUKEVERSION &"
-alias nukex="$NUKEVERSION --nukex &"
-alias hieroplayer="$NUKEVERSION --player &"
+alias maya="$IC_MAYA_EXECUTABLE -proj $IC_MAYA_PROJECT_DIR &"
+alias mayarender="$IC_MAYA_RENDER_EXECUTABLE -proj $IC_MAYA_PROJECT_DIR"
+alias Render="$IC_MAYA_RENDER_EXECUTABLE"
+alias nuke="$IC_NUKE_EXECUTABLE &"
+alias nukex="$IC_NUKE_EXECUTABLE --nukex &"
+alias hieroplayer="$IC_NUKE_EXECUTABLE --player &"
 if [[ $IC_RUNNING_OS == 'Linux' ]]; then
 	alias djv="export LD_LIBRARY_PATH=$DJV_LIB; $DJV_PLAY &"
 else

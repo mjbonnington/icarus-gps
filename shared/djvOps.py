@@ -38,7 +38,7 @@ def processSpeed(arg, fps=None):
 	valid_fps = [1, 3, 6, 12, 15, 16, 18, 23.976, 24, 25, 29.97, 30, 50, 59.94, 60, 120]
 
 	if fps is None:
-		fps = float(os.environ.get('FPS', '25'))
+		fps = float(os.environ.get('IC_FPS', '25'))
 	if fps == int(fps):
 		fps = int(fps)  # Convert to integer if it can be represented as such
 	if fps in valid_fps:

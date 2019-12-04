@@ -20,8 +20,8 @@ sys.path.append(os.path.join(os.getenv('IC_BASEDIR'), 'core', 'ui'))
 sys.path.append(os.path.join(os.getenv('IC_BASEDIR'), 'core', 'libs', 'shared'))
 
 # Set shot settings
-scene.setFps(int(os.environ['FPS']))
-maxFrame = (int(os.environ['ENDFRAME']) - int(os.environ['STARTFRAME']))
+scene.setFps(int(os.environ['IC_FPS']))
+maxFrame = (int(os.environ['IC_ENDFRAME']) - int(os.environ['IC_STARTFRAME']))
 scene.setMaxFrames(int(maxFrame))
 
 # Set export resources paths

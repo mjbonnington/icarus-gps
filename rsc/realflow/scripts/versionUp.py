@@ -23,12 +23,12 @@ def version(scene, GUIMessageDialog, GUIFormDialog):
 	projPath = scene.getRootPath()
 	projName = os.path.split(projPath)[-1]
 	#gets current and new version
-	currentVersion, newVersion = vCtrl(os.environ['REALFLOWSCENESDIR'], projName)
+	currentVersion, newVersion = vCtrl(os.environ['IC_REALFLOW_SCENES_DIR'], projName)
 	
 	#removing version naming convention from project name
 	projName = projName.replace('_%s' % currentVersion, "")
 	
-	newProjPath = '%s/%s_%s' % (os.environ['REALFLOWSCENESDIR'], projName, newVersion)
+	newProjPath = '%s/%s_%s' % (os.environ['IC_REALFLOW_SCENES_DIR'], projName, newVersion)
 	
 	#saving current scene and 
 	scene.save('%s/%s' % (projPath, sceneName))

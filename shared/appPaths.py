@@ -12,10 +12,10 @@ import xml.etree.ElementTree as ET
 
 # Import custom modules
 from . import verbose
-from . import xmlData
+from . import xml_data
 
 
-class AppPaths(xmlData.XMLData):
+class AppPaths(xml_data.XMLData):
 	""" Manipulates XML database to store application version paths.
 		Inherits XMLData class.
 	"""

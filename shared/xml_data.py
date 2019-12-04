@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# [Icarus] xmlData.py
+# [Icarus] xml_data.py
 #
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
 # (c) 2015-2019 Gramercy Park Studios
@@ -17,7 +17,7 @@ from . import os_wrapper
 from . import verbose
 
 
-class XMLData():
+class XMLData(object):
 
 	def __init__(self, datafile=None):
 		if datafile is not None:

@@ -15,10 +15,10 @@ import xml.etree.ElementTree as ET
 # Import custom modules
 from . import os_wrapper
 from . import verbose
-from . import xmlData
+from . import xml_data
 
 
-class DirStructure(xmlData.XMLData):
+class DirStructure(xml_data.XMLData):
 	""" Manipulates XML data to create folder structures on disk.
 		Inherits XMLData class.
 	"""

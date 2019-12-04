@@ -45,8 +45,8 @@ global proc gpsRenderSetup.setOutputPath()
 // Set frame range.
 global proc gpsRenderSetup.setFrameRange()
 {
-	string $startFrame = `getenv "STARTFRAME"`;
-	string $endFrame = `getenv "ENDFRAME"`;
+	string $startFrame = `getenv "IC_STARTFRAME"`;
+	string $endFrame = `getenv "IC_ENDFRAME"`;
 
 	setAttr "defaultRenderGlobals.startFrame" $startFrame;
 	setAttr "defaultRenderGlobals.endFrame" $endFrame;
@@ -56,9 +56,9 @@ global proc gpsRenderSetup.setFrameRange()
 // Set resolution.
 global proc gpsRenderSetup.setResolution()
 {
-	int $resX = `getenv "RESOLUTIONX"`;
-	int $resY = `getenv "RESOLUTIONY"`;
-	float $aspectRatio = `getenv "ASPECTRATIO"`;
+	int $resX = `getenv "IC_RESOLUTION_X"`;
+	int $resY = `getenv "IC_RESOLUTION_Y"`;
+	float $aspectRatio = `getenv "IC_ASPECT_RATIO"`;
 
 	setAttr "defaultResolution.w" $resX;
 	setAttr "defaultResolution.h" $resY;

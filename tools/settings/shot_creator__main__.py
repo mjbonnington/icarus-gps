@@ -15,7 +15,7 @@ import sys
 # if __name__ == "__main__":
 # 	sys.path.append("J:/dev/icarus/core/run")  # Temporary
 # 	import env__init__
-# 	env__init__.setEnv()
+# 	env__init__.set_env()
 
 from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
@@ -24,7 +24,7 @@ import ui_template as UI
 from shared import jobs
 from shared import os_wrapper
 from shared import pDialog
-from shared import settingsData
+from shared import settings_data_xml
 from shared import verbose
 
 
@@ -88,7 +88,7 @@ class ShotCreatorDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 		# Instantiate jobs class and load data
 		self.j = jobs.Jobs()
-		self.sd = settingsData.SettingsData()
+		self.sd = settings_data_xml.SettingsData()
 
 
 	def display(self, job=None):

@@ -11,10 +11,10 @@
 #import xml.etree.ElementTree as ET
 
 # Import custom modules
-from . import xmlData
+from . import xml_data
 
 
-class ResPresets(xmlData.XMLData):
+class ResPresets(xml_data.XMLData):
 	""" Manipulates XML database to store resolution presets.
 		Inherits XMLData class.
 	"""

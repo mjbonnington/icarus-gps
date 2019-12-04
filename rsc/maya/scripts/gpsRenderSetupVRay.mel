@@ -22,11 +22,11 @@ global proc gpsRenderSetupVRay.loadBaseSettings()
 global proc gpsRenderSetupVRay.loadSettings()
 {
 	// Get environment variables
-	string $startFrame = `getenv "STARTFRAME"`;
-	string $endFrame = `getenv "ENDFRAME"`;
-	int $resX = `getenv "RESOLUTIONX"`;
-	int $resY = `getenv "RESOLUTIONY"`;
-	float $aspectRatio = `getenv "ASPECTRATIO"`;
+	string $startFrame = `getenv "IC_STARTFRAME"`;
+	string $endFrame = `getenv "IC_ENDFRAME"`;
+	int $resX = `getenv "IC_RESOLUTION_X"`;
+	int $resY = `getenv "IC_RESOLUTION_Y"`;
+	float $aspectRatio = `getenv "IC_ASPECT_RATIO"`;
 
 	// Set V-Ray as the current renderer
 	setCurrentRenderer vray;

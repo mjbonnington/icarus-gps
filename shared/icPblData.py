@@ -12,7 +12,7 @@
 import os
 import time
 
-from . import settingsData
+from . import settings_data_xml
 from . import os_wrapper
 from . import verbose
 
@@ -28,7 +28,7 @@ def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, not
 	username = os.environ['IC_USERNAME']
 
 	# Instantiate XML data classes
-	assetData = settingsData.SettingsData()
+	assetData = settings_data_xml.SettingsData()
 	assetData.loadXML(os.path.join(pblDir, 'assetData.xml'), quiet=True)
 
 	# Parse asset file path, make relative

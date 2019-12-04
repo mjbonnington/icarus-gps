@@ -17,7 +17,7 @@ import maya.cmds as mc
 
 from rsc.maya.scripts import mayaOps
 from shared import pDialog
-from shared import settingsData
+from shared import settings_data_xml
 from shared import verbose
 
 
@@ -26,7 +26,7 @@ def gather(gatherPath):
 	gatherPath = os.path.expandvars(gatherPath)
 
 	# Instantiate XML data classes
-	assetData = settingsData.SettingsData()
+	assetData = settings_data_xml.SettingsData()
 	assetData.loadXML(os.path.join(gatherPath, 'assetData.xml'), quiet=True)
 
 	try:

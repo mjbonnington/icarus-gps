@@ -12,13 +12,13 @@ import os
 import xml.etree.ElementTree as ET
 
 # Import custom modules
-from . import job__env__
+from . import shot__env__
 from . import os_wrapper
 from . import verbose
-from . import xmlData
+from . import xml_data
 
 
-class Jobs(xmlData.XMLData):
+class Jobs(xml_data.XMLData):
 	""" Manipulates XML database for storing jobs.
 		Add and remove jobs, make jobs active or inactive, modify job
 		properties.
@@ -38,7 +38,7 @@ class Jobs(xmlData.XMLData):
 		shotPath = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s" %(jobPath, shotName))
 
 		# Create environment variables
-		if job__env__.setEnv(jobName, shotName, shotPath):
+		if shot__env__.set_env(jobName, shotName, shotPath):
 
 			# Create folder structure
 			self.createDirs()
@@ -78,8 +78,8 @@ class Jobs(xmlData.XMLData):
 				os_wrapper.createDir(directory)
 
 		# Plate directories
-		res_full = "%sx%s" %(os.environ['RESOLUTIONX'], os.environ['RESOLUTIONY'])
-		res_proxy = "%sx%s" %(os.environ['PROXY_RESOLUTIONX'], os.environ['PROXY_RESOLUTIONY'])
+		res_full = "%sx%s" %(os.environ['IC_RESOLUTION_X'], os.environ['IC_RESOLUTION_Y'])
+		res_proxy = "%sx%s" %(os.environ['IC_PROXY_RESOLUTION_X'], os.environ['IC_PROXY_RESOLUTION_Y'])
 		plates = (res_full, res_proxy)
 		platesDir = os.path.join(os.environ['IC_SHOTPATH'], 'Plate')
 		if not os.path.isdir(platesDir):
@@ -119,18 +119,18 @@ class Jobs(xmlData.XMLData):
 			self.jobs_path = None
 
 		# Set environment variables
-		os.environ['FILESYSTEMROOTWIN'] = str(self.win_root)
-		os.environ['FILESYSTEMROOTOSX'] = str(self.osx_root)
-		os.environ['FILESYSTEMROOTLINUX'] = str(self.linux_root)
+		os.environ['IC_FILESYSTEM_ROOT_WIN'] = str(self.win_root)
+		os.environ['IC_FILESYSTEM_ROOT_OSX'] = str(self.osx_root)
+		os.environ['IC_FILESYSTEM_ROOT_LINUX'] = str(self.linux_root)
 
 		if os.environ['IC_RUNNING_OS'] == "Windows":
-			os.environ['FILESYSTEMROOT'] = str(self.win_root)
+			os.environ['IC_FILESYSTEM_ROOT'] = str(self.win_root)
 		elif os.environ['IC_RUNNING_OS'] == "MacOS":
-			os.environ['FILESYSTEMROOT'] = str(self.osx_root)
+			os.environ['IC_FILESYSTEM_ROOT'] = str(self.osx_root)
 		else:
-			os.environ['FILESYSTEMROOT'] = str(self.linux_root)
+			os.environ['IC_FILESYSTEM_ROOT'] = str(self.linux_root)
 
-		os.environ['IC_JOBSROOT'] = os_wrapper.absolutePath('$FILESYSTEMROOT/%s' %self.jobs_path, stripTrailingSlash=True)
+		os.environ['IC_JOBSROOT'] = os_wrapper.absolutePath('$IC_FILESYSTEM_ROOT/%s' %self.jobs_path, stripTrailingSlash=True)
 
 
 	def setRootPaths(self, winPath=None, osxPath=None, linuxPath=None, jobsRelPath=None):

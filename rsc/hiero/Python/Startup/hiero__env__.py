@@ -17,7 +17,7 @@ import hiero.core as hc
 # been called from so the path needs to be appended again.
 sys.path.append(os.path.join(os.environ['IC_BASEDIR'], 'core', 'run'))
 from core import env__init__
-env__init__.appendSysPaths()
+env__init__.append_sys_paths()
 
 from shared import os_wrapper
 # from shared import verbose
@@ -26,7 +26,7 @@ from shared import os_wrapper
 # def removeAutoSave():
 # 	""" Remove autosave of project if it exists.
 # 	"""
-# 	autosave_filename = os_wrapper.absolutePath("$HIEROEDITORIALPATH/$IC_JOB.hrox.autosave")
+# 	autosave_filename = os_wrapper.absolutePath("$IC_HIERO_EDITORIAL_DIR/$IC_JOB.hrox.autosave")
 # 	if os.path.isfile(autosave_filename):
 # 		os_wrapper.remove(autosave_filename)
 
@@ -34,7 +34,7 @@ from shared import os_wrapper
 def loadDailies(dailies_categories=['CGI', 'Flame', 'Edit']):
 	"""	Load or create project and import dailies.
 	"""
-	filename = os_wrapper.absolutePath("$HIEROEDITORIALPATH/$IC_JOB.hrox")
+	filename = os_wrapper.absolutePath("$IC_HIERO_EDITORIAL_DIR/$IC_JOB.hrox")
 
 	if os.path.isfile(filename):
 		hiero_project = hc.openProject(filename)
@@ -53,7 +53,7 @@ def loadDailies(dailies_categories=['CGI', 'Flame', 'Edit']):
 
 	for cat in dailies_categories:
 		_bin = hc.findItemsInProject(hiero_project, hc.Bin, cat, verbose=0)[0]
-		_path = os.path.join(os.environ['WIPSDIR'], cat)
+		_path = os.path.join(os.environ['IC_WIPS_DIR'], cat)
 		loadItems(_path, _bin, emptyBin=True)
 
 
@@ -91,5 +91,5 @@ loadDailies()
 # import hiero.core as hc
 # wipsProject = hc.newProject()
 # clipsBin = wipsProject.clipsBin()
-# clipsBin.importFolder(os.environ['WIPSDIR'])
+# clipsBin.importFolder(os.environ['IC_WIPS_DIR'])
 

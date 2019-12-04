@@ -216,8 +216,8 @@ class SequenceRenameApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		"""
 		if self.lastDir:
 			browseDir = self.lastDir
-		elif os.environ.get('MAYARENDERSDIR') is not None:
-			browseDir = os.environ['MAYARENDERSDIR']
+		elif os.environ.get('IC_MAYA_RENDERS_DIR') is not None:
+			browseDir = os.environ['IC_MAYA_RENDERS_DIR']
 		else:
 			browseDir = os.getcwd()
 

@@ -76,7 +76,7 @@ QLineEdit {
           </sizepolicy>
          </property>
          <property name="pixmap">
-          <pixmap resource="rsc.qrc">:/rsc/rsc/icarus_header.png</pixmap>
+          <pixmap resource="rsc.qrc">:/icons/icons/icarus_header.png</pixmap>
          </property>
         </widget>
        </item>
@@ -145,8 +145,8 @@ QToolButton:disabled {
          </property>
          <property name="icon">
           <iconset resource="rsc.qrc">
-           <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
-           <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
+           <normaloff>:/icons/icons/icon_user.png</normaloff>
+           <disabledoff>:/icons/icons/icon_user_disabled.png</disabledoff>:/icons/icons/icon_user.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -192,8 +192,8 @@ QToolButton:disabled {
          </property>
          <property name="icon">
           <iconset resource="rsc.qrc">
-           <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
-           <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
+           <normaloff>:/icons/icons/icon_settings.png</normaloff>
+           <disabledoff>:/icons/icons/icon_settings_disabled.png</disabledoff>:/icons/icons/icon_settings.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -236,8 +236,8 @@ QToolButton:disabled {
          </property>
          <property name="icon">
           <iconset resource="rsc.qrc">
-           <normaloff>:/rsc/rsc/icon_editor.png</normaloff>
-           <disabledoff>:/rsc/rsc/icon_editor_disabled.png</disabledoff>:/rsc/rsc/icon_editor.png</iconset>
+           <normaloff>:/icons/icons/icon_editor.png</normaloff>
+           <disabledoff>:/icons/icons/icon_editor_disabled.png</disabledoff>:/icons/icons/icon_editor.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -266,8 +266,8 @@ QToolButton:disabled {
          </property>
          <property name="icon">
           <iconset resource="rsc.qrc">
-           <normaloff>:/rsc/rsc/icon_info.png</normaloff>
-           <disabledoff>:/rsc/rsc/icon_info_disabled.png</disabledoff>:/rsc/rsc/icon_info.png</iconset>
+           <normaloff>:/icons/icons/icon_info.png</normaloff>
+           <disabledoff>:/icons/icons/icon_info_disabled.png</disabledoff>:/icons/icons/icon_info.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -387,8 +387,8 @@ QToolButton:disabled {
                 </property>
                 <property name="icon">
                  <iconset resource="rsc.qrc">
-                  <normaloff>:/rsc/rsc/icon_refresh.png</normaloff>
-                  <disabledoff>:/rsc/rsc/icon_refresh_disabled.png</disabledoff>:/rsc/rsc/icon_refresh.png</iconset>
+                  <normaloff>:/icons/icons/icon_refresh.png</normaloff>
+                  <disabledoff>:/icons/icons/icon_refresh_disabled.png</disabledoff>:/icons/icons/icon_refresh.png</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -465,10 +465,10 @@ QToolButton:pressed, QToolButton:checked:pressed {
                 </property>
                 <property name="icon">
                  <iconset resource="rsc.qrc">
-                  <normaloff>:/rsc/rsc/icon_unlocked.png</normaloff>
-                  <normalon>:/rsc/rsc/icon_locked.png</normalon>
-                  <disabledoff>:/rsc/rsc/icon_unlocked_disabled.png</disabledoff>
-                  <disabledon>:/rsc/rsc/icon_locked_disabled.png</disabledon>:/rsc/rsc/icon_unlocked.png</iconset>
+                  <normaloff>:/icons/icons/icon_unlocked.png</normaloff>
+                  <normalon>:/icons/icons/icon_locked.png</normalon>
+                  <disabledoff>:/icons/icons/icon_unlocked_disabled.png</disabledoff>
+                  <disabledon>:/icons/icons/icon_locked_disabled.png</disabledon>:/icons/icons/icon_unlocked.png</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -577,8 +577,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/icon_editor.png</normaloff>
-                     <disabledoff>:/rsc/rsc/icon_editor_disabled.png</disabledoff>:/rsc/rsc/icon_editor.png</iconset>
+                     <normaloff>:/icons/icons/icon_editor.png</normaloff>
+                     <disabledoff>:/icons/icons/icon_editor_disabled.png</disabledoff>:/icons/icons/icon_editor.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -614,8 +614,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/icon_render.png</normaloff>
-                     <disabledoff>:/rsc/rsc/icon_render_disabled.png</disabledoff>:/rsc/rsc/icon_render.png</iconset>
+                     <normaloff>:/icons/icons/icon_render.png</normaloff>
+                     <disabledoff>:/icons/icons/icon_render_disabled.png</disabledoff>:/icons/icons/icon_render.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -647,8 +647,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/icon_review.png</normaloff>
-                     <disabledoff>:/rsc/rsc/icon_review_disabled.png</disabledoff>:/rsc/rsc/icon_review.png</iconset>
+                     <normaloff>:/icons/icons/icon_review.png</normaloff>
+                     <disabledoff>:/icons/icons/icon_review_disabled.png</disabledoff>:/icons/icons/icon_review.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -680,8 +680,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/icon_terminal.png</normaloff>
-                     <disabledoff>:/rsc/rsc/icon_terminal_disabled.png</disabledoff>:/rsc/rsc/icon_terminal.png</iconset>
+                     <normaloff>:/icons/icons/icon_terminal.png</normaloff>
+                     <disabledoff>:/icons/icons/icon_terminal_disabled.png</disabledoff>:/icons/icons/icon_terminal.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -713,8 +713,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/icon_productionBoard.png</normaloff>
-                     <disabledoff>:/rsc/rsc/icon_productionBoard_disabled.png</disabledoff>:/rsc/rsc/icon_productionBoard.png</iconset>
+                     <normaloff>:/icons/icons/icon_productionboard.png</normaloff>
+                     <disabledoff>:/icons/icons/icon_productionboard_disabled.png</disabledoff>:/icons/icons/icon_productionboard.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -746,8 +746,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/icon_folder.png</normaloff>
-                     <disabledoff>:/rsc/rsc/icon_folder_disabled.png</disabledoff>:/rsc/rsc/icon_folder.png</iconset>
+                     <normaloff>:/icons/icons/icon_folder.png</normaloff>
+                     <disabledoff>:/icons/icons/icon_folder_disabled.png</disabledoff>:/icons/icons/icon_folder.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -799,8 +799,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
              </property>
              <property name="icon">
               <iconset resource="rsc.qrc">
-               <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
-               <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
+               <normaloff>:/icons/icons/icon_settings.png</normaloff>
+               <disabledoff>:/icons/icons/icon_settings_disabled.png</disabledoff>:/icons/icons/icon_settings.png</iconset>
              </property>
              <property name="iconSize">
               <size>
@@ -963,7 +963,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
           <widget class="QWidget" name="maAssetPublishTab">
            <attribute name="icon">
             <iconset resource="rsc.qrc">
-             <normaloff>:/rsc/rsc/tab_icon_maya.png</normaloff>:/rsc/rsc/tab_icon_maya.png</iconset>
+             <normaloff>:/icons/icons/tab_icon_maya.png</normaloff>:/icons/icons/tab_icon_maya.png</iconset>
            </attribute>
            <attribute name="title">
             <string>ma Asset</string>
@@ -1002,8 +1002,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/publish_icon_geo.png</normaloff>
-                     <disabledoff>:/rsc/rsc/publish_icon_geo_disabled.png</disabledoff>:/rsc/rsc/publish_icon_geo.png</iconset>
+                     <normaloff>:/icons/icons/publish_icon_geo.png</normaloff>
+                     <disabledoff>:/icons/icons/publish_icon_geo_disabled.png</disabledoff>:/icons/icons/publish_icon_geo.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -1035,8 +1035,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/publish_icon_rig.png</normaloff>
-                     <disabledoff>:/rsc/rsc/publish_icon_rig_disabled.png</disabledoff>:/rsc/rsc/publish_icon_rig.png</iconset>
+                     <normaloff>:/icons/icons/publish_icon_rig.png</normaloff>
+                     <disabledoff>:/icons/icons/publish_icon_rig_disabled.png</disabledoff>:/icons/icons/publish_icon_rig.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -1068,8 +1068,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/publish_icon_camera.png</normaloff>
-                     <disabledoff>:/rsc/rsc/publish_icon_camera_disabled.png</disabledoff>:/rsc/rsc/publish_icon_camera.png</iconset>
+                     <normaloff>:/icons/icons/publish_icon_camera.png</normaloff>
+                     <disabledoff>:/icons/icons/publish_icon_camera_disabled.png</disabledoff>:/icons/icons/publish_icon_camera.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -1101,8 +1101,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/publish_icon_anim.png</normaloff>
-                     <disabledoff>:/rsc/rsc/publish_icon_anim_disabled.png</disabledoff>:/rsc/rsc/publish_icon_anim.png</iconset>
+                     <normaloff>:/icons/icons/publish_icon_anim.png</normaloff>
+                     <disabledoff>:/icons/icons/publish_icon_anim_disabled.png</disabledoff>:/icons/icons/publish_icon_anim.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -1134,8 +1134,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/publish_icon_geo.png</normaloff>
-                     <disabledoff>:/rsc/rsc/publish_icon_geo_disabled.png</disabledoff>:/rsc/rsc/publish_icon_geo.png</iconset>
+                     <normaloff>:/icons/icons/publish_icon_geo.png</normaloff>
+                     <disabledoff>:/icons/icons/publish_icon_geo_disabled.png</disabledoff>:/icons/icons/publish_icon_geo.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -1167,8 +1167,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/publish_icon_anim.png</normaloff>
-                     <disabledoff>:/rsc/rsc/publish_icon_anim_disabled.png</disabledoff>:/rsc/rsc/publish_icon_anim.png</iconset>
+                     <normaloff>:/icons/icons/publish_icon_anim.png</normaloff>
+                     <disabledoff>:/icons/icons/publish_icon_anim_disabled.png</disabledoff>:/icons/icons/publish_icon_anim.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -1200,8 +1200,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/publish_icon_shader.png</normaloff>
-                     <disabledoff>:/rsc/rsc/publish_icon_shader_disabled.png</disabledoff>:/rsc/rsc/publish_icon_shader.png</iconset>
+                     <normaloff>:/icons/icons/publish_icon_shader.png</normaloff>
+                     <disabledoff>:/icons/icons/publish_icon_shader_disabled.png</disabledoff>:/icons/icons/publish_icon_shader.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -1233,8 +1233,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/publish_icon_fx.png</normaloff>
-                     <disabledoff>:/rsc/rsc/publish_icon_fx_disabled.png</disabledoff>:/rsc/rsc/publish_icon_fx.png</iconset>
+                     <normaloff>:/icons/icons/publish_icon_fx.png</normaloff>
+                     <disabledoff>:/icons/icons/publish_icon_fx_disabled.png</disabledoff>:/icons/icons/publish_icon_fx.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -1266,8 +1266,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/publish_icon_pointCloud.png</normaloff>
-                     <disabledoff>:/rsc/rsc/publish_icon_pointCloud_disabled.png</disabledoff>:/rsc/rsc/publish_icon_pointCloud.png</iconset>
+                     <normaloff>:/icons/icons/publish_icon_pointCloud.png</normaloff>
+                     <disabledoff>:/icons/icons/publish_icon_pointCloud_disabled.png</disabledoff>:/icons/icons/publish_icon_pointCloud.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -1299,8 +1299,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/icon_render.png</normaloff>
-                     <disabledoff>:/rsc/rsc/icon_render_disabled.png</disabledoff>:/rsc/rsc/icon_render.png</iconset>
+                     <normaloff>:/icons/icons/icon_render.png</normaloff>
+                     <disabledoff>:/icons/icons/icon_render_disabled.png</disabledoff>:/icons/icons/icon_render.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -1332,8 +1332,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/publish_icon_scene.png</normaloff>
-                     <disabledoff>:/rsc/rsc/publish_icon_scene_disabled.png</disabledoff>:/rsc/rsc/publish_icon_scene.png</iconset>
+                     <normaloff>:/icons/icons/publish_icon_scene.png</normaloff>
+                     <disabledoff>:/icons/icons/publish_icon_scene_disabled.png</disabledoff>:/icons/icons/publish_icon_scene.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -1365,8 +1365,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/publish_icon_node.png</normaloff>
-                     <disabledoff>:/rsc/rsc/publish_icon_node_disabled.png</disabledoff>:/rsc/rsc/publish_icon_node.png</iconset>
+                     <normaloff>:/icons/icons/publish_icon_node.png</normaloff>
+                     <disabledoff>:/icons/icons/publish_icon_node_disabled.png</disabledoff>:/icons/icons/publish_icon_node.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -1590,7 +1590,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
           <widget class="QWidget" name="nkAssetPublishTab">
            <attribute name="icon">
             <iconset resource="rsc.qrc">
-             <normaloff>:/rsc/rsc/tab_icon_nuke.png</normaloff>:/rsc/rsc/tab_icon_nuke.png</iconset>
+             <normaloff>:/icons/icons/tab_icon_nuke.png</normaloff>:/icons/icons/tab_icon_nuke.png</iconset>
            </attribute>
            <attribute name="title">
             <string>nk Asset</string>
@@ -1629,8 +1629,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/publish_icon_pointCloud.png</normaloff>
-                     <disabledoff>:/rsc/rsc/publish_icon_pointCloud_disabled.png</disabledoff>:/rsc/rsc/publish_icon_pointCloud.png</iconset>
+                     <normaloff>:/icons/icons/publish_icon_pointCloud.png</normaloff>
+                     <disabledoff>:/icons/icons/publish_icon_pointCloud_disabled.png</disabledoff>:/icons/icons/publish_icon_pointCloud.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -1662,8 +1662,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/publish_icon_card.png</normaloff>
-                     <disabledoff>:/rsc/rsc/publish_icon_card_disabled.png</disabledoff>:/rsc/rsc/publish_icon_card.png</iconset>
+                     <normaloff>:/icons/icons/publish_icon_card.png</normaloff>
+                     <disabledoff>:/icons/icons/publish_icon_card_disabled.png</disabledoff>:/icons/icons/publish_icon_card.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -1695,8 +1695,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/publish_icon_comp.png</normaloff>
-                     <disabledoff>:/rsc/rsc/publish_icon_comp_disabled.png</disabledoff>:/rsc/rsc/publish_icon_comp.png</iconset>
+                     <normaloff>:/icons/icons/publish_icon_comp.png</normaloff>
+                     <disabledoff>:/icons/icons/publish_icon_comp_disabled.png</disabledoff>:/icons/icons/publish_icon_comp.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -1728,8 +1728,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/publish_icon_comp.png</normaloff>
-                     <disabledoff>:/rsc/rsc/publish_icon_comp_disabled.png</disabledoff>:/rsc/rsc/publish_icon_comp.png</iconset>
+                     <normaloff>:/icons/icons/publish_icon_comp.png</normaloff>
+                     <disabledoff>:/icons/icons/publish_icon_comp_disabled.png</disabledoff>:/icons/icons/publish_icon_comp.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -1761,8 +1761,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/publish_icon_node.png</normaloff>
-                     <disabledoff>:/rsc/rsc/publish_icon_node_disabled.png</disabledoff>:/rsc/rsc/publish_icon_node.png</iconset>
+                     <normaloff>:/icons/icons/publish_icon_node.png</normaloff>
+                     <disabledoff>:/icons/icons/publish_icon_node_disabled.png</disabledoff>:/icons/icons/publish_icon_node.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -1794,8 +1794,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    </property>
                    <property name="icon">
                     <iconset resource="rsc.qrc">
-                     <normaloff>:/rsc/rsc/publish_icon_setup.png</normaloff>
-                     <disabledoff>:/rsc/rsc/publish_icon_setup_disabled.png</disabledoff>:/rsc/rsc/publish_icon_setup.png</iconset>
+                     <normaloff>:/icons/icons/publish_icon_setup.png</normaloff>
+                     <disabledoff>:/icons/icons/publish_icon_setup_disabled.png</disabledoff>:/icons/icons/publish_icon_setup.png</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
@@ -1887,8 +1887,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>136</width>
-                    <height>70</height>
+                    <width>355</width>
+                    <height>329</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -2517,8 +2517,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
              </property>
              <property name="icon">
               <iconset resource="rsc.qrc">
-               <normaloff>:/rsc/rsc/icon_refresh.png</normaloff>
-               <disabledoff>:/rsc/rsc/icon_refresh_disabled.png</disabledoff>:/rsc/rsc/icon_refresh.png</iconset>
+               <normaloff>:/icons/icons/icon_refresh.png</normaloff>
+               <disabledoff>:/icons/icons/icon_refresh_disabled.png</disabledoff>:/icons/icons/icon_refresh.png</iconset>
              </property>
              <property name="iconSize">
               <size>
@@ -2882,8 +2882,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
   <action name="actionShot_settings">
    <property name="icon">
     <iconset resource="rsc.qrc">
-     <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
-     <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
+     <normaloff>:/icons/icons/icon_settings.png</normaloff>
+     <disabledoff>:/icons/icons/icon_settings_disabled.png</disabledoff>:/icons/icons/icon_settings.png</iconset>
    </property>
    <property name="text">
     <string>Shot settings...</string>
@@ -2892,8 +2892,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
   <action name="actionJob_settings">
    <property name="icon">
     <iconset resource="rsc.qrc">
-     <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
-     <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
+     <normaloff>:/icons/icons/icon_settings.png</normaloff>
+     <disabledoff>:/icons/icons/icon_settings_disabled.png</disabledoff>:/icons/icons/icon_settings.png</iconset>
    </property>
    <property name="text">
     <string>Job settings...</string>
@@ -2915,8 +2915,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
   <action name="actionBatch_Rename">
    <property name="icon">
     <iconset resource="rsc.qrc">
-     <normaloff>:/rsc/rsc/icon_rename.png</normaloff>
-     <disabledoff>:/rsc/rsc/icon_rename_disabled.png</disabledoff>:/rsc/rsc/icon_rename.png</iconset>
+     <normaloff>:/icons/icons/icon_rename.png</normaloff>
+     <disabledoff>:/icons/icons/icon_rename_disabled.png</disabledoff>:/icons/icons/icon_rename.png</iconset>
    </property>
    <property name="text">
     <string>Batch Rename...</string>
@@ -2925,8 +2925,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
   <action name="actionRender_Queue">
    <property name="icon">
     <iconset resource="rsc.qrc">
-     <normaloff>:/rsc/rsc/icon_render.png</normaloff>
-     <disabledoff>:/rsc/rsc/icon_render_disabled.png</disabledoff>:/rsc/rsc/icon_render.png</iconset>
+     <normaloff>:/icons/icons/icon_render.png</normaloff>
+     <disabledoff>:/icons/icons/icon_render_disabled.png</disabledoff>:/icons/icons/icon_render.png</iconset>
    </property>
    <property name="text">
     <string>Render Queue...</string>
@@ -2935,8 +2935,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
   <action name="actionAbout_Icarus">
    <property name="icon">
     <iconset resource="rsc.qrc">
-     <normaloff>:/rsc/rsc/icon_info.png</normaloff>
-     <disabledoff>:/rsc/rsc/icon_info_disabled.png</disabledoff>:/rsc/rsc/icon_info.png</iconset>
+     <normaloff>:/icons/icons/icon_info.png</normaloff>
+     <disabledoff>:/icons/icons/icon_info_disabled.png</disabledoff>:/icons/icons/icon_info.png</iconset>
    </property>
    <property name="text">
     <string>About Icarus...</string>
@@ -2945,8 +2945,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
   <action name="actionUser_settings">
    <property name="icon">
     <iconset resource="rsc.qrc">
-     <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
-     <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
+     <normaloff>:/icons/icons/icon_settings.png</normaloff>
+     <disabledoff>:/icons/icons/icon_settings_disabled.png</disabledoff>:/icons/icons/icon_settings.png</iconset>
    </property>
    <property name="text">
     <string>User settings...</string>
@@ -2958,8 +2958,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
   <action name="actionGlobal_settings">
    <property name="icon">
     <iconset resource="rsc.qrc">
-     <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
-     <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
+     <normaloff>:/icons/icons/icon_settings.png</normaloff>
+     <disabledoff>:/icons/icons/icon_settings_disabled.png</disabledoff>:/icons/icons/icon_settings.png</iconset>
    </property>
    <property name="text">
     <string>Global settings...</string>
@@ -2976,8 +2976,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
   <action name="actionSubmit_render">
    <property name="icon">
     <iconset resource="rsc.qrc">
-     <normaloff>:/rsc/rsc/icon_render.png</normaloff>
-     <disabledoff>:/rsc/rsc/icon_render_disabled.png</disabledoff>:/rsc/rsc/icon_render.png</iconset>
+     <normaloff>:/icons/icons/icon_render.png</normaloff>
+     <disabledoff>:/icons/icons/icon_render_disabled.png</disabledoff>:/icons/icons/icon_render.png</iconset>
    </property>
    <property name="text">
     <string>Submit render...</string>

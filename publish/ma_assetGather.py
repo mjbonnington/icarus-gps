@@ -19,7 +19,7 @@ import maya.mel as mel
 from rsc.maya.scripts import mayaOps
 from shared import os_wrapper
 from shared import pDialog
-from shared import settingsData
+from shared import settings_data_xml
 from shared import verbose
 
 
@@ -28,7 +28,7 @@ def gather(gatherPath):
 	gatherPath = os.path.expandvars(gatherPath)
 
 	# Instantiate XML data classes
-	assetData = settingsData.SettingsData()
+	assetData = settings_data_xml.SettingsData()
 	assetData.loadXML(os.path.join(gatherPath, 'assetData.xml'), quiet=True)
 
 	try:
@@ -62,7 +62,7 @@ def gather(gatherPath):
 		drawOverrides = True
 		if assetType == 'ma_shot':
 			mayaOps.openScene(assetPath, dialog=False, updateRecentFiles=False)
-			mayaOps.redirectScene(os.path.join(os.environ['MAYASCENESDIR'], 'untitled'))
+			mayaOps.redirectScene(os.path.join(os.environ['IC_MAYA_SCENES_DIR'], 'untitled'))
 			return
 		elif assetExt == 'vrmesh':
 			chkNameConflict(asset)
