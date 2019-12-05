@@ -17,7 +17,7 @@ import nuke
 from . import convention
 from . import file_open
 from . import file_save
-# from shared import os_wrapper
+from shared import os_wrapper
 from shared import pDialog
 from shared import recentFiles
 
@@ -126,13 +126,17 @@ class SceneManager(object):
 
 	def file_save_as(self, filepath):
 		""" Save the current file to the specified filepath.
+			If the destination dir doesn't exist, create it.
 			Nuke automatically prompts if file already exists.
 			N.B. try/except to catch RuntimeError when dialog is cancelled.
 		"""
 		try:
+			dirname = os.path.dirname(filepath)
+			if not os.path.isdir(dirname):
+				os_wrapper.createDir(dirname)
 			nuke.scriptSaveAs(filepath)
 			recentFiles.updateLs(filepath)
-			return True
+			return filepath
 
 		except RuntimeError as e:
 			if str(e) != "Cancelled":

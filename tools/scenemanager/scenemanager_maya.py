@@ -78,23 +78,25 @@ class SceneManager(object):
 		""" Save the current file.
 			If saving for first time take over and show custom dialog.
 		"""
-		if self.get_current_name():  # Is this scene empty?
-			self.file_save_dialog()
-
-		else:
+		if self.get_current_name():  # Scene has been saved before
 			mc.SaveScene()
+
+		else:  # Scene not yet saved
+			self.file_save_dialog()
 
 
 	def file_save_as(self, filepath):
-		""" Save the specified file.
+		""" Save the current file to the specified filepath.
+			If the destination dir doesn't exist, create it.
 			TODO: prompt if save will overwrite existing file
 			TODO: add updateRecentFiles flag
 		"""
+		dirname = os.path.dirname(filepath)
+		if not os.path.isdir(dirname):
+			os_wrapper.createDir(dirname)
 		mc.file(rename=filepath)
 		mc.SaveScene()
 		recentFiles.updateLs(filepath)
-		# recentFiles.updateLs(
-		# 	mc.file(options='v=0', force=True, save=True, type='mayaAscii'))
 		return True
 
 
@@ -103,14 +105,14 @@ class SceneManager(object):
 		"""
 		current_name = self.get_current_name()
 
-		if current_name:  # Is current file unsaved?
+		if current_name:  # Scene has been saved before
 			result = convention.version_next(current_name)
 			if result:
 				self.file_save_as(result)
 			else:
 				self.file_save_dialog()
 
-		else:
+		else:  # Scene not yet saved
 			self.file_save_dialog()
 
 

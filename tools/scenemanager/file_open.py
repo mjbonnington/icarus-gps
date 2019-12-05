@@ -64,7 +64,7 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		self.parent = parent
 		self.session = session
 
-		self.base_dir = os_wrapper.absolutePath('$SCNMGR_SAVE_DIR/..')
+		self.base_dir = os.environ['SCNMGR_SAVE_DIR']
 		self.file_ext = os.environ['SCNMGR_FILE_EXT'].split(os.pathsep)
 
 		self.setupUI(**cfg)
@@ -125,9 +125,6 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 
 		self.ui.shot_lineEdit.setText(os.environ['SCNMGR_SHOT'])
 		self.ui.shot_toolButton.setEnabled(False)  # temp until implemented
-
-		# self.base_dir = os_wrapper.absolutePath('$SCNMGR_SAVE_DIR/..')
-		# self.file_ext = os.environ['SCNMGR_FILE_EXT'].split(os.pathsep)
 
 		self.populateComboBox(self.ui.artist_comboBox, self.getArtists(), blockSignals=True)
 		self.updateFilters()

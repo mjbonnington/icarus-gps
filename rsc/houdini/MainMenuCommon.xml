@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Please see ExampleMenu.xml for examples that customise the main menu -->
+<!-- Please see menu.xsd for the menu validation schema. -->
+<mainMenu>
+	<menuBar>
+		<!-- File Menu -->
+		<subMenu id="file_menu">
+			<!-- <removeItem id="h.new"/>
+			<removeItem id="h.open"/>
+			<removeItem id="recent_files"/>
+			<removeItem id="h.save"/>
+			<removeItem id="h.save_as"/>
+			<removeItem id="h.new_project"/>
+			<removeItem id="h.set_project"/>
+			<removeItem id="recent_projects"/>
+			<removeItem id="file_menu_sep_1"/>
+			<removeItem id="file_menu_sep_2"/> -->
+
+			<scriptItem id="h.ic_new">
+				<label>GPS New</label>
+				<scriptCode>hou.session.scnmgr.file_new()</scriptCode>
+				<insertAtIndex>0</insertAtIndex>
+			</scriptItem>
+
+			<scriptItem id="h.ic_open">
+				<label>GPS Open</label>
+				<scriptCode>hou.session.scnmgr.file_open_dialog()</scriptCode>
+				<insertAtIndex>1</insertAtIndex>
+			</scriptItem>
+
+			<!--
+			<actionItem id="h.ic_recent_files">
+				<label>GPS Open Recent</label>
+				<insertAtIndex>2</insertAtIndex>
+			</actionItem>
+			-->
+
+			<scriptItem id="h.ic_save">
+				<label>GPS Save</label>
+				<scriptCode>hou.session.scnmgr.file_save()</scriptCode>
+				<insertAtIndex>3</insertAtIndex>
+			</scriptItem>
+
+			<scriptItem id="h.ic_save_as">
+				<label>GPS Save As</label>
+				<scriptCode>hou.session.scnmgr.file_save_dialog()</scriptCode>
+				<insertAtIndex>4</insertAtIndex>
+			</scriptItem>
+
+			<scriptItem id="h.ic_increment_and_save">
+				<label>GPS Increment and Save</label>
+				<scriptCode>hou.session.scnmgr.file_save_new_version()</scriptCode>
+				<insertAtIndex>5</insertAtIndex>
+			</scriptItem>
+
+		</subMenu>
+
+		<subMenu>
+			<labelExpression><![CDATA[
+import os
+label = '%s - %s' % (os.environ['IC_JOB'], os.environ['IC_SHOT'])
+return label
+]]></labelExpression>
+		</subMenu>
+
+		<subMenu>
+			<labelExpression><![CDATA[
+import os
+return os.environ['IC_VENDOR_INITIALS']
+]]></labelExpression>
+
+			<scriptItem id="h.ic_icarus_ui">
+				<label>Icarus UI...</label>
+				<scriptCode>hou.session.icarus.show()</scriptCode>
+				<insertAtIndex>0</insertAtIndex>
+			</scriptItem>
+		</subMenu>
+	</menuBar>
+</mainMenu>

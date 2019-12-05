@@ -1,21 +1,12 @@
 <?xml version='1.0' encoding='utf-8'?>
-<root location="$IC_SHOTPATH/3D">
-	<dir name="xsi">
-		<dir name="${IC_JOB}_${IC_SHOT}" env="IC_XSIDIR">
-			<dir name="Scenes">
-				<dir name="$IC_USERNAME" env="IC_XSI_SCENES_DIR" />
-			</dir>
-			<dir name="Pictures">
-				<dir name="$IC_USERNAME" env="IC_XSI_PICTURES_DIR" />
-			</dir>
-			<dir name="Render_Pictures">
-				<dir name="$IC_USERNAME" env="IC_XSI_RENDERPICTURES_DIR" />
-			</dir>
-			<dir name="Cache" />
-			<dir name="system">
-				<dir name="$IC_USERNAME" env="IC_XSI_SYSTEM_DIR" />
-				<file name="dsprojectinfo" />
-			</dir>
+<root location="$IC_SHOTPATH">
+	<dir name="xsi" env="IC_XSI_PROJECT_DIR">
+		<dir name="Scenes" env="IC_XSI_SCENES_DIR" />
+		<dir name="Pictures" env="IC_XSI_PICTURES_DIR" />
+		<dir name="Render_Pictures" env="IC_XSI_RENDERPICTURES_DIR" />
+		<dir name="Cache" />
+		<dir name="system" env="IC_XSI_SYSTEM_DIR" />
+			<file name="dsprojectinfo" />
 		</dir>
 	</dir>
 </root>

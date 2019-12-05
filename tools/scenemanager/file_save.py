@@ -198,8 +198,10 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 	def saveFile(self):
 		""" Dialog accept function.
 		"""
-		filename = os.path.join(os.environ['SCNMGR_SAVE_DIR'], self.updateFilename())
-		# filename = os_wrapper.absolutePath('$SCNMGR_SAVE_DIR/' +  self.updateFilename())
+		filename = os.path.join(
+			os.environ['SCNMGR_SAVE_DIR'], 
+			os.environ['SCNMGR_USER'], 
+			self.updateFilename())
 
 		if self.session.file_save_as(filename):
 			self.returnValue = filename

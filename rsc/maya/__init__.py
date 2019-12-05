@@ -20,7 +20,7 @@
 # # Maya
 # os.environ['IC_MAYA_EXECUTABLE'] = getAppExecPath('Maya')
 # os.environ['IC_MAYA_RENDER_EXECUTABLE'] = os_wrapper.absolutePath('%s/Render' % os.path.dirname(os.environ['IC_MAYA_EXECUTABLE']))
-# os.environ['IC_MAYA_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/3D/maya')  # Currently needed by render submitter
+# os.environ['IC_MAYA_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/maya')  # Currently needed by render submitter
 # os.environ['IC_MAYA_SCENES_DIR'] = os_wrapper.absolutePath('$IC_MAYA_PROJECT_DIR/scenes/$IC_USERNAME')  # Currently needed by render submitter
 # os.environ['IC_MAYA_SOURCEIMAGES_DIR'] = os_wrapper.absolutePath('$IC_MAYA_PROJECT_DIR/sourceimages/$IC_USERNAME')  # Currently needed by openDirs
 # os.environ['IC_MAYA_RENDERS_DIR'] = os_wrapper.absolutePath('$IC_MAYA_PROJECT_DIR/renders/$IC_USERNAME')  # Currently needed by daily publish

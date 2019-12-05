@@ -1,14 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<root location="$IC_SHOTPATH/3D">
+<root location="$IC_SHOTPATH">
 	<dir name="mudbox" env="IC_MUDBOX_PROJECT_DIR">
-		<dir name="scenes">
-			<dir name="$IC_USERNAME" env="IC_MUDBOX_SCENES_DIR" />
-		</dir>
-		<dir name="sourceimages">
-			<dir name="$IC_USERNAME" env="IC_MUDBOX_SOURCEIMAGES_DIR" />
-		</dir>
-		<dir name="models">
-			<dir name="$IC_USERNAME" env="IC_MUDBOX_MODELS_DIR" />
-		</dir>
+		<dir name="scenes" env="IC_MUDBOX_SCENES_DIR" />
+		<dir name="sourceimages" env="IC_MUDBOX_SOURCEIMAGES_DIR" />
+		<dir name="models" env="IC_MUDBOX_MODELS_DIR" />
 	</dir>
 </root>

@@ -79,7 +79,7 @@ def get_versions(file_list):
 
 def parse(
 	filepath, 
-	base_dir=os_wrapper.absolutePath('$SCNMGR_SAVE_DIR/..'), 
+	base_dir=os.environ['SCNMGR_SAVE_DIR'], 
 	convention=os.environ['SCNMGR_CONVENTION']):
 	""" Parse the given filepath (relative to base_dir) based on a naming
 		convention and return a dictionary of elements for processing.
@@ -249,13 +249,15 @@ def version_next_meta(shot, discipline, description=""):
 
 	# Detect the latest version
 	existing_versions = match_files(
-			os_wrapper.absolutePath('$SCNMGR_SAVE_DIR/..'), file_filter)
+			os.environ['SCNMGR_SAVE_DIR'], file_filter)
 	matches_latest = get_latest(existing_versions)
 	if matches_latest:
 		n = len(existing_versions)
 		computed_filename = os.path.basename(version_up(matches_latest[0]))
 		filename = os.path.join(
-			os.environ['SCNMGR_SAVE_DIR'], computed_filename)
+			os.environ['SCNMGR_SAVE_DIR'], 
+			os.environ['SCNMGR_USER'], 
+			computed_filename)
 		return filename, n
 
 	else:

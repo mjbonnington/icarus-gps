@@ -36,7 +36,8 @@ def create(app=None):
 		return scenemanager_maya.SceneManager()
 
 	elif app == "houdini":
-		pass
+		from . import scenemanager_houdini
+		return scenemanager_houdini.SceneManager()
 
 	elif app == "nuke":
 		from . import scenemanager_nuke

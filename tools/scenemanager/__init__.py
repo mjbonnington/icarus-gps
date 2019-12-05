@@ -31,8 +31,8 @@ elif os.environ['IC_ENV'] == "MAYA":
 	os.environ['SCNMGR_SAVE_DIR'] = os.environ['IC_MAYA_SCENES_DIR']
 	os.environ['SCNMGR_FILE_EXT'] = ".ma" + os.pathsep + ".mb"
 elif os.environ['IC_ENV'] == "HOUDINI":
-	os.environ['SCNMGR_SAVE_DIR'] = os.environ['HIP']
-	os.environ['SCNMGR_FILE_EXT'] = ".hip"
+	os.environ['SCNMGR_SAVE_DIR'] = os.environ['IC_HOUDINI_SCENES_DIR']
+	os.environ['SCNMGR_FILE_EXT'] = ".hip" + os.pathsep + ".hipnc"
 elif os.environ['IC_ENV'] == "NUKE":
 	os.environ['SCNMGR_SAVE_DIR'] = os.environ['IC_NUKE_SCRIPTS_DIR']
 	os.environ['SCNMGR_FILE_EXT'] = ".nk" + os.pathsep + ".nknc"

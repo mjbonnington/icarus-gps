@@ -1,6 +1,4 @@
 <?xml version='1.0' encoding='utf-8'?>
-<root location="$IC_SHOTPATH/3D">
-	<dir name="zbrush">
-		<dir name="$IC_USERNAME" env="IC_ZBRUSH_PROJECT_DIR" />
-	</dir>
+<root location="$IC_SHOTPATH">
+	<dir name="zbrush" env="IC_ZBRUSH_PROJECT_DIR" />
 </root>

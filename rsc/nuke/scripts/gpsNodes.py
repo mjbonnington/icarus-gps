@@ -131,8 +131,8 @@ def w_path_preset(writeNode, presetType='Precomp'):
 	"""
 	if 'Plate_' in presetType:
 		presetType = presetType.replace('Plate_', '')
-		filePath = os.path.join('[getenv IC_SHOTPATH]', 'Plate', presetType)
-		fullPath = os.path.join(os.environ['IC_SHOTPATH'], 'Plate', presetType)
+		filePath = os.path.join('[getenv IC_SHOTPATH]', 'plate', presetType)
+		fullPath = os.path.join(os.environ['IC_SHOTPATH'], 'plate', presetType)
 	else:
 		filePath = os.path.join('[getenv IC_NUKE_RENDERS_DIR]', presetType)
 		fullPath = os.path.join(os.environ['IC_NUKE_RENDERS_DIR'], presetType)

@@ -81,7 +81,7 @@ class Jobs(xml_data.XMLData):
 		res_full = "%sx%s" %(os.environ['IC_RESOLUTION_X'], os.environ['IC_RESOLUTION_Y'])
 		res_proxy = "%sx%s" %(os.environ['IC_PROXY_RESOLUTION_X'], os.environ['IC_PROXY_RESOLUTION_Y'])
 		plates = (res_full, res_proxy)
-		platesDir = os.path.join(os.environ['IC_SHOTPATH'], 'Plate')
+		platesDir = os.path.join(os.environ['IC_SHOTPATH'], 'plate')
 		if not os.path.isdir(platesDir):
 			os_wrapper.createDir(platesDir)
 

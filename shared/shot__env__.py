@@ -20,7 +20,7 @@ from . import settings_data_xml
 from . import verbose
 
 
-def set_env(job, shot, shotPath):
+def set_env(job, shot, shot_path):
 	""" Set job and shot environment variables.
 	"""
 
@@ -28,11 +28,11 @@ def set_env(job, shot, shotPath):
 		""" First try to get the value from the shot data, if it returns
 			nothing then look in job data instead.
 		"""
-		value = shotData.getValue(category, setting)
+		value = shot_data.getValue(category, setting)
 		if value is None:
-			value = jobData.getValue(category, setting)
+			value = job_data.getValue(category, setting)
 			# if value is None:
-			# 	value = defaultData.getValue(category, setting)
+			# 	value = default_data.getValue(category, setting)
 
 		#return value
 
@@ -48,74 +48,45 @@ def set_env(job, shot, shotPath):
 		""" Return the path to the executable for the specified app on the
 			current OS.
 		"""
-		return ap.getPath(app, getInheritedValue('apps', app), currentOS)
+		return app_paths.getPath(app, getInheritedValue('apps', app), currentOS)
 
 
-	jobPath = os.path.split(shotPath)[0]
-	jobDataPath = os.path.join(jobPath, os.environ['IC_METADATA'])
-	shotDataPath = os.path.join(shotPath, os.environ['IC_METADATA'])
+	job_path = os.path.split(shot_path)[0]
+	job_data_path = os.path.join(job_path, os.environ['IC_METADATA'])
+	shot_data_path = os.path.join(shot_path, os.environ['IC_METADATA'])
 
 	# Set basic environment variables
 	os.environ['IC_JOB'] = job
 	os.environ['IC_SHOT'] = shot
-	os.environ['IC_JOBPATH'] = os_wrapper.absolutePath(jobPath)
-	os.environ['IC_SHOTPATH'] = os_wrapper.absolutePath(shotPath)
-	os.environ['IC_JOBDATA'] = os_wrapper.absolutePath(jobDataPath)
-	os.environ['IC_SHOTDATA'] = os_wrapper.absolutePath(shotDataPath)
+	os.environ['IC_JOBPATH'] = os_wrapper.absolutePath(job_path)
+	os.environ['IC_SHOTPATH'] = os_wrapper.absolutePath(shot_path)
+	os.environ['IC_JOBDATA'] = os_wrapper.absolutePath(job_data_path)
+	os.environ['IC_SHOTDATA'] = os_wrapper.absolutePath(shot_data_path)
 
 	os_wrapper.createDir(os.environ['IC_JOBDATA'])
 
 	# Instantiate job / shot settings classes
-	jobData = settings_data_xml.SettingsData()
-	shotData = settings_data_xml.SettingsData()
-	#defaultData = settings_data_xml.SettingsData()
-	ap = appPaths.AppPaths()
+	job_data = settings_data_xml.SettingsData()
+	shot_data = settings_data_xml.SettingsData()
+	#default_data = settings_data_xml.SettingsData()
+	app_paths = appPaths.AppPaths()
 
-	jobDataLoaded = jobData.loadXML(os.path.join(jobDataPath, 'jobData.xml'), use_template=False)
-	shotDataLoaded = shotData.loadXML(os.path.join(shotDataPath, 'shotData.xml'), use_template=False)
-	#defaultData.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'defaultData.xml'))
-	ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'), use_template=True)
+	# Load data
+	job_data.loadXML(os.path.join(job_data_path, 'jobData.xml'), use_template=False)
+	shot_data.loadXML(os.path.join(shot_data_path, 'shotData.xml'), use_template=False)
+	#default_data.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'defaultData.xml'))
+	app_paths.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'), use_template=True)
 
-	# ------------------------------------------------------------------------
-	# If XML files don't exist, create defaults, and attempt to convert data
-	# from Python data files
-	jobDataLegacy = False
-	if not jobDataLoaded:
-		from . import legacySettings
+	os.environ['IC_ASSETDIR'] = 'assets'
 
-		# Try to convert from jobData.py to XML (legacy jobs)
-		if legacySettings.convertJobData(jobDataPath, jobData, ap):
-			jobDataLegacy = True
-			jobData.loadXML()
-		else:
-			return False
-
-	if jobDataLegacy and not shotDataLoaded:
-		from . import legacySettings
-
-		# Try to convert from shotData.py to XML (legacy jobs)
-		if legacySettings.convertShotData(shotDataPath, shotData):
-			shotData.loadXML()
-
-
-	# Check if the job is using the old hidden asset publish directory
-	assetDir = jobData.getValue('meta', 'assetDir')
-	if assetDir:
-		os.environ['IC_ASSETDIR'] = assetDir
+	# Check if the job is using the correct Icarus version
+	icVersion = job_data.getValue('meta', 'icVersion')
+	if icVersion:
+		if icVersion != os.environ['IC_VERSION']:
+			verbose.warning("This job requires version %s of Icarus. You're currently running %s" % (icVersion, os.environ['IC_VERSION']))
 	else:
-		from . import legacySettings
-
-		# Check for existing legacy published assets in the job and shot(s)
-		if legacySettings.checkAssetPath():
-			assetDir = '.publish'
-		else:
-			assetDir = 'Assets'  # Perhaps this shouldn't be hard-coded?
-
-		jobData.setValue('meta', 'assetDir', assetDir)
-		jobData.saveXML()
-		os.environ['IC_ASSETDIR'] = assetDir
-	# ------------------------------------------------------------------------
-
+		job_data.setValue('meta', 'icVersion', os.environ['IC_VERSION'])
+		job_data.saveXML()
 
 	# Set OS identifier strings to get correct app executable paths
 	if os.environ['IC_RUNNING_OS'] == "Windows":
@@ -125,16 +96,14 @@ def set_env(job, shot, shotPath):
 	elif os.environ['IC_RUNNING_OS'] == "Linux":
 		currentOS = "linux"
 
-
 	# Terminal / Command Prompt
 	if os.environ['IC_RUNNING_OS'] == "Windows":
 		os.environ['IC_SHELL_RC'] = os_wrapper.absolutePath('$IC_WORKINGDIR/shell_cmd.bat')
 	else:
 		os.environ['IC_SHELL_RC'] = os_wrapper.absolutePath('$IC_WORKINGDIR/shell_rc')
 
-
 	# Job / shot env
-	#os.environ['GLOBALPUBLISHDIR']  = os_wrapper.absolutePath(getInheritedValue('other', 'assetlib'))  # Path needs to be translated for OS portability
+	#os.environ['IC_GLOBALPUBLISHDIR']  = os_wrapper.absolutePath(getInheritedValue('other', 'assetlib'))  # Path needs to be translated for OS portability
 	os.environ['IC_JOBPUBLISHDIR'] = os_wrapper.absolutePath('$IC_JOBPATH/$IC_ASSETDIR')
 	os.environ['IC_SHOTPUBLISHDIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/$IC_ASSETDIR')
 	os.environ['IC_WIPS_DIR'] = os_wrapper.absolutePath('$IC_JOBPATH/../Deliverables/WIPS')  # Perhaps this shouldn't be hard-coded?
@@ -156,6 +125,7 @@ def set_env(job, shot, shotPath):
 	os.environ['IC_ASPECT_RATIO'] = str(float(os.environ['IC_RESOLUTION_X']) / float(os.environ['IC_RESOLUTION_Y']))
 	os.environ['IC_EDITOR'] = getAppExecPath('SublimeText')  # Make dynamic 
 
+	# ------------------------------------------------------------------------
 
 	# Application specific environment variables...
 	# TODO: move out to individual modules
@@ -175,7 +145,7 @@ def set_env(job, shot, shotPath):
 	# Maya
 	os.environ['IC_MAYA_EXECUTABLE'] = getAppExecPath('Maya')
 	os.environ['IC_MAYA_RENDER_EXECUTABLE'] = os_wrapper.absolutePath('%s/Render' % os.path.dirname(os.environ['IC_MAYA_EXECUTABLE']))
-	os.environ['IC_MAYA_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/3D/maya')  # Currently needed by render submitter
+	os.environ['IC_MAYA_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/maya')  # Currently needed by render submitter
 	os.environ['IC_MAYA_SCENES_DIR'] = os_wrapper.absolutePath('$IC_MAYA_PROJECT_DIR/scenes/$IC_USERNAME')  # Currently needed by render submitter
 	os.environ['IC_MAYA_SOURCEIMAGES_DIR'] = os_wrapper.absolutePath('$IC_MAYA_PROJECT_DIR/sourceimages/$IC_USERNAME')  # Currently needed by openDirs
 	os.environ['IC_MAYA_RENDERS_DIR'] = os_wrapper.absolutePath('$IC_MAYA_PROJECT_DIR/renders/$IC_USERNAME')  # Currently needed by daily publish
@@ -183,7 +153,7 @@ def set_env(job, shot, shotPath):
 	os.environ['IC_MAYA_SHARED_RESOURCES'] = os_wrapper.absolutePath('$IC_FILESYSTEM_ROOT/_Library/3D/Maya')  # Store this in app settings / ic global prefs?
 
 	try:
-		maya_ver = str(jobData.getAppVersion('Maya'))
+		maya_ver = str(job_data.getAppVersion('Maya'))
 		os.environ['IC_MAYA_VERSION'] = maya_ver
 
 		os.environ['MAYA_DEBUG_ENABLE_CRASH_REPORTING'] = "0"
@@ -229,17 +199,22 @@ def set_env(job, shot, shotPath):
 
 	# Houdini
 	os.environ['IC_HOUDINI_EXECUTABLE'] = getAppExecPath('Houdini')
-	os.environ['IC_HOUDINI_VERSION'] = str(jobData.getAppVersion('Houdini'))  # Temporary for Deadline submit
-	os.environ['IC_HOUDINI_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/3D/houdini')  # Currently needed by render submitter
+	os.environ['IC_HOUDINI_VERSION'] = str(job_data.getAppVersion('Houdini'))  # Temporary for Deadline submit
+	os.environ['IC_HOUDINI_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/houdini')  # Currently needed by render submitter
+	os.environ['IC_HOUDINI_SCENES_DIR'] = os_wrapper.absolutePath('$IC_HOUDINI_PROJECT_DIR/scenes/$IC_USERNAME')  # Currently needed by render submitter
 
 	os.environ['HOUDINI_PATH'] = os_wrapper.absolutePath('$IC_BASEDIR/rsc/houdini') + os.pathsep \
 	                           + os_wrapper.absolutePath('$IC_BASEDIR/rsc/houdini/env') + os.pathsep + "&" + os.pathsep
+	os.environ['HOUDINI_UI_ICON_PATH'] = os_wrapper.absolutePath('$IC_FORMSDIR/icons') + os.pathsep + "&" + os.pathsep
+	os.environ['HOUDINI_TOOLBAR_PATH'] = os_wrapper.absolutePath('$IC_BASEDIR/rsc/houdini/shelves') + os.pathsep + "&" + os.pathsep
+	os.environ['JOB'] = os.environ['IC_HOUDINI_PROJECT_DIR']
+	os.environ['HIP'] = os_wrapper.absolutePath('$IC_HOUDINI_PROJECT_DIR/scenes')
 
 
 	# Nuke
 	os.environ['IC_NUKE_EXECUTABLE'] = getAppExecPath('Nuke')
-	os.environ['IC_NUKE_VERSION'] = str(jobData.getAppVersion('Nuke'))  # Temporary for Deadline submit
-	os.environ['IC_NUKE_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/2D/nuke')  # Currently needed by render submitter
+	os.environ['IC_NUKE_VERSION'] = str(job_data.getAppVersion('Nuke'))  # Temporary for Deadline submit
+	os.environ['IC_NUKE_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/nuke')  # Currently needed by render submitter
 	os.environ['IC_NUKE_ELEMENTS_DIR'] = os_wrapper.absolutePath('$IC_NUKE_PROJECT_DIR/elements/$IC_USERNAME')  # Currently needed by openDirs
 	os.environ['IC_NUKE_SCRIPTS_DIR'] = os_wrapper.absolutePath('$IC_NUKE_PROJECT_DIR/scripts/$IC_USERNAME')  # Currently needed by render submitter
 	os.environ['IC_NUKE_RENDERS_DIR'] = os_wrapper.absolutePath('$IC_NUKE_PROJECT_DIR/renders/$IC_USERNAME')  # Currently needed by daily publish
@@ -257,7 +232,7 @@ def set_env(job, shot, shotPath):
 
 	# After Effects
 	os.environ['IC_AE_EXECUTABLE'] = getAppExecPath('AfterEffects')
-	# os.environ['IC_AE_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/2D/aftereffects')
+	# os.environ['IC_AE_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/aftereffects')
 	# os.environ['IC_AE_ELEMENTS_DIR'] = os_wrapper.absolutePath('$IC_AE_PROJECT_DIR/elements/$IC_USERNAME')
 	# os.environ['IC_AE_COMPS_DIR'] = os_wrapper.absolutePath('$IC_AE_PROJECT_DIR/comps/$IC_USERNAME')
 	# os.environ['IC_AE_RENDERS_DIR'] = os_wrapper.absolutePath('$IC_AE_PROJECT_DIR/renders/$IC_USERNAME')
@@ -265,7 +240,7 @@ def set_env(job, shot, shotPath):
 
 	# Photoshop
 	os.environ['IC_PS_EXECUTABLE'] = getAppExecPath('Photoshop')
-	# os.environ['IC_PS_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/2D/photoshop')
+	# os.environ['IC_PS_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/photoshop')
 
 
 	# Bridge
@@ -274,7 +249,7 @@ def set_env(job, shot, shotPath):
 
 	# Mudbox
 	os.environ['IC_MUDBOX_EXECUTABLE'] = getAppExecPath('Mudbox')
-	# os.environ['IC_MUDBOX_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/3D/mudbox')
+	# os.environ['IC_MUDBOX_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/mudbox')
 	# os.environ['IC_MUDBOX_SCENES_DIR'] = os_wrapper.absolutePath('$IC_MUDBOX_PROJECT_DIR/scenes/$IC_USERNAME')
 
 	os.environ['MUDBOX_PLUG_IN_PATH'] = os_wrapper.absolutePath('$IC_BASEDIR/rsc/mudbox/plugins') 
@@ -283,7 +258,7 @@ def set_env(job, shot, shotPath):
 
 	# Mari
 	os.environ['IC_MARI_EXECUTABLE'] = getAppExecPath('Mari')
-	os.environ['IC_MARI_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/3D/mari')
+	os.environ['IC_MARI_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/mari')
 	os.environ['IC_MARI_SCENES_DIR'] = os_wrapper.absolutePath('$IC_MARI_PROJECT_DIR/scenes/$IC_USERNAME')
 	os.environ['IC_MARI_GEO_DIR'] = os_wrapper.absolutePath('$IC_MARI_PROJECT_DIR/geo/$IC_USERNAME')
 	os.environ['IC_MARI_TEXTURES_DIR'] = os_wrapper.absolutePath('$IC_MARI_PROJECT_DIR/textures/$IC_USERNAME')
@@ -304,7 +279,7 @@ def set_env(job, shot, shotPath):
 
 	# RealFlow (2013)
 	os.environ['IC_REALFLOW_EXECUTABLE'] = getAppExecPath('RealFlow')
-	# os.environ['IC_REALFLOW_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/3D/realflow')
+	# os.environ['IC_REALFLOW_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/realflow')
 	# os.environ['IC_REALFLOW_SCENES_DIR'] = os_wrapper.absolutePath('$IC_REALFLOW_PROJECT_DIR/$IC_USERNAME')  # Currently needed by openDirs
 
 	# os.environ['RFDEFAULTPROJECT'] = os_wrapper.absolutePath('$IC_REALFLOW_SCENES_DIR/${IC_JOB}_${IC_SHOT}')  # Curly brackets required for correct variable expansion
@@ -316,8 +291,8 @@ def set_env(job, shot, shotPath):
 
 	# Cinema 4D
 	os.environ['IC_C4D_EXECUTABLE'] = getAppExecPath('Cinema4D')
-	os.environ['IC_C4D_VERSION'] = str(jobData.getAppVersion('Cinema4D'))
-	os.environ['IC_C4D_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/3D/c4d') #temp
+	os.environ['IC_C4D_VERSION'] = str(job_data.getAppVersion('Cinema4D'))
+	os.environ['IC_C4D_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/c4d') #temp
 	os.environ['IC_C4D_SCENES_DIR'] = os_wrapper.absolutePath('$IC_C4D_PROJECT_DIR/scenes/$IC_USERNAME') #temp
 
 	os.environ['C4D_PLUGINS_DIR'] = os_wrapper.absolutePath('$IC_FILESYSTEM_ROOT/_Library/3D/C4D/$IC_C4D_VERSION/plugins')
@@ -330,7 +305,7 @@ def set_env(job, shot, shotPath):
 
 	# djv_view
 	os.environ['IC_DJV_EXECUTABLE'] = getAppExecPath('djv_view')
-	# djv_ver = str(jobData.getAppVersion('djv_view'))
+	# djv_ver = str(job_data.getAppVersion('djv_view'))
 	# djv_embedded_ver = '1.1.0'
 	# if os.environ['IC_RUNNING_OS'] == "Windows":
 	# 	# os.environ['DJV_CONVERT'] = os_wrapper.absolutePath('$IC_BASEDIR/external_apps/djv/djv-1.0.5-Windows-32/bin/djv_convert.exe')  # Latest 32-bit version

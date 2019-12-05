@@ -49,7 +49,7 @@ def createDir(path):
 	path = os.path.normpath(path)
 
 	if os.path.isdir(path):
-		verbose.print_("Directory already exists: %s" %path)
+		verbose.print_("Directory already exists: %s" % path)
 		pass
 
 	else:
@@ -62,11 +62,11 @@ def createDir(path):
 				if os.path.basename(path).startswith('.'):
 					setHidden(path)
 
-			verbose.print_('mkdir "%s"' %path)  # This causes an error if user config dir doesn't exist
+			verbose.print_('mkdir "%s"' % path)  # This causes an error if user config dir doesn't exist
 			return path
 
 		except:
-			verbose.error("Cannot create directory: %s" %path)
+			verbose.error("Cannot create directory: %s" % path)
 			return False
 
 

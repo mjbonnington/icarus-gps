@@ -1,23 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
-<root location="$IC_SHOTPATH/3D">
+<root location="$IC_SHOTPATH">
 	<dir name="mari" env="IC_MARI_PROJECT_DIR">
-		<dir name="scenes">
-			<dir name="$IC_USERNAME" env="IC_MARI_SCENES_DIR" />
-		</dir>
-		<dir name="geo">
-			<dir name="$IC_USERNAME" env="IC_MARI_GEO_DIR" />
-		</dir>
-		<dir name="textures">
-			<dir name="$IC_USERNAME" env="IC_MARI_TEXTURES_DIR" />
-		</dir>
-		<dir name="sourceimages">
-			<dir name="$IC_USERNAME" env="IC_MARI_SOURCEIMAGES_DIR" />
-		</dir>
-		<dir name="renders">
-			<dir name="$IC_USERNAME" env="IC_MARI_RENDERS_DIR" />
-		</dir>
-		<dir name="archives">
-			<dir name="$IC_USERNAME" />
-		</dir>
+		<dir name="scenes" env="IC_MARI_SCENES_DIR" />
+		<dir name="geo" env="IC_MARI_GEO_DIR" />
+		<dir name="textures" env="IC_MARI_TEXTURES_DIR" />
+		<dir name="sourceimages" env="IC_MARI_SOURCEIMAGES_DIR" />
+		<dir name="renders" env="IC_MARI_RENDERS_DIR" />
+		<dir name="archives" />
 	</dir>
 </root>

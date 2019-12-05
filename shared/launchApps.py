@@ -32,19 +32,19 @@ def launch(app=None, executable=None, flags=None):
 	###################################
 
 	elif app == 'Maya':
-		os.environ['PYTHONPATH'] = os.environ['MAYA_SCRIPT_PATH']
+		# os.environ['PYTHONPATH'] = os.environ['MAYA_SCRIPT_PATH']
 		executable = os.environ['IC_MAYA_EXECUTABLE']
 		cmdStr = '"%s" -proj "%s"' %(executable, os.environ['IC_MAYA_PROJECT_DIR'])
 
-	elif app == 'Nuke':
-		# Workaround to allow Nuke 11 to launch correctly by deleting
-		# PYTHONPATH environment variable
-		try:
-			os.environ.pop('PYTHONPATH')
-			verbose.message("Deleted 'PYTHONPATH' environment variable.")
-		except KeyError:
-			pass
-		cmdStr = '"%s"' % executable
+	# elif app == 'Nuke':
+	# 	# Workaround to allow Nuke 11 to launch correctly by deleting
+	# 	# PYTHONPATH environment variable
+	# 	try:
+	# 		os.environ.pop('PYTHONPATH')
+	# 		verbose.message("Deleted 'PYTHONPATH' environment variable.")
+	# 	except KeyError:
+	# 		pass
+	# 	cmdStr = '"%s"' % executable
 
 	elif app == 'Bridge':
 		executable = os.environ['IC_BRIDGE_EXECUTABLE']

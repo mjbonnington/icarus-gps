@@ -66,7 +66,7 @@ try:
 	nuke.addFavoriteDir('Scripts', os.environ['IC_NUKE_SCRIPTS_DIR'])
 	nuke.addFavoriteDir('Renders', os.environ['IC_NUKE_RENDERS_DIR'])
 	nuke.addFavoriteDir('Elements', os.environ['IC_NUKE_ELEMENTS_DIR'])
-	nuke.addFavoriteDir('Plate', os.path.join('[getenv IC_SHOTPATH]', 'Plate'))
+	nuke.addFavoriteDir('Plate', os.path.join('[getenv IC_SHOTPATH]', 'plate'))
 	nuke.addFavoriteDir('Elements Library', os.environ['IC_ELEMENTS_LIBRARY'])
 except KeyError:
 	pass

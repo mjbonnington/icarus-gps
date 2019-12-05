@@ -1,19 +1,18 @@
 <?xml version='1.0' encoding='utf-8'?>
-<root location="$IC_SHOTPATH/3D">
-	<dir name="houdini">
-		<dir name="$IC_USERNAME" env="IC_HOUDINI_PROJECT_DIR">
-			<dir name="abc" />
-			<dir name="audio" />
-			<dir name="comp" />
-			<dir name="desk" />
-			<dir name="flip" />
-			<dir name="geo" />
-			<dir name="hda" />
-			<dir name="render" env="IC_HOUDINI_RENDERS_DIR" />
-			<dir name="scripts" />
-			<dir name="sim" />
-			<dir name="tex" env="IC_HOUDINI_TEXTURES_DIR" />
-			<dir name="video" />
-		</dir>
+<root location="$IC_SHOTPATH">
+	<dir name="houdini" env="IC_HOUDINI_PROJECT_DIR">
+		<dir name="geo" />
+		<dir name="hda" />
+		<dir name="sim" />
+		<dir name="abc" />
+		<dir name="tex" env="IC_HOUDINI_TEXTURES_DIR" />
+		<dir name="render" env="IC_HOUDINI_RENDERS_DIR" />
+		<dir name="flip" />
+		<dir name="scripts" />
+		<dir name="comp" />
+		<dir name="audio" />
+		<dir name="video" />
+		<dir name="desk" />
+		<dir name="scenes" env="IC_HOUDINI_SCENES_DIR" />
 	</dir>
 </root>

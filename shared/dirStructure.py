@@ -82,7 +82,7 @@ class DirStructure(xml_data.XMLData):
 			verbose.warning("Could not create project folders because the root folder was not specified.")
 
 
-	def createXML(self, basedir, datafile=None):
+	def generateXML(self, basedir, datafile=None):
 		""" Create XML definition of folder structure.
 		"""
 		if datafile is not None:
