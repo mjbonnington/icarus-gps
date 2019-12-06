@@ -6,7 +6,7 @@
 	<menuBar>
 		<!-- File Menu -->
 		<subMenu id="file_menu">
-			<!-- <removeItem id="h.new"/>
+			<removeItem id="h.new"/>
 			<removeItem id="h.open"/>
 			<removeItem id="recent_files"/>
 			<removeItem id="h.save"/>
@@ -15,66 +15,108 @@
 			<removeItem id="h.set_project"/>
 			<removeItem id="recent_projects"/>
 			<removeItem id="file_menu_sep_1"/>
-			<removeItem id="file_menu_sep_2"/> -->
+			<removeItem id="file_menu_sep_2"/>
 
 			<scriptItem id="h.ic_new">
 				<label>GPS New</label>
-				<scriptCode>hou.session.scnmgr.file_new()</scriptCode>
-				<insertAtIndex>0</insertAtIndex>
+				<scriptCode>from core.app_session import *; session.scnmgr.file_new()</scriptCode>
+				<insertBefore />
 			</scriptItem>
 
 			<scriptItem id="h.ic_open">
-				<label>GPS Open</label>
-				<scriptCode>hou.session.scnmgr.file_open_dialog()</scriptCode>
-				<insertAtIndex>1</insertAtIndex>
+				<label>GPS Open...</label>
+				<scriptCode>from core.app_session import *; session.scnmgr.file_open_dialog()</scriptCode>
+				<insertAfter>h.ic_new</insertAfter>
 			</scriptItem>
 
-			<!--
-			<actionItem id="h.ic_recent_files">
+			<!-- <actionItem id="h.ic_recent_files">
 				<label>GPS Open Recent</label>
-				<insertAtIndex>2</insertAtIndex>
-			</actionItem>
-			-->
+				<insertAfter>h.ic_open</insertAfter>
+			</actionItem> -->
+
+			<subMenu id="h.ic_recent_files">
+				<label>GPS Open Recent</label>
+				<scriptMenuStripDynamic id="myUniqueDynamicStripId">
+					<contentsScriptCode><![CDATA[
+#from core.app_session import *
+from core import app_session; session = app_session.session
+
+try:
+	return session.scnmgr.update_recents_menu()
+except (AttributeError, NameError):
+	return ['', '']
+]]></contentsScriptCode>
+					<scriptCode><![CDATA[
+#from core.app_session import *
+from core import app_session; session = app_session.session
+
+selected_token = kwargs["selectedtoken"]
+selected_label = kwargs["selectedlabel"]
+
+try:
+	session.scnmgr.file_open(selected_token)
+except (AttributeError, NameError):
+	pass
+]]></scriptCode>
+				</scriptMenuStripDynamic>
+				<insertAfter>h.ic_open</insertAfter>
+			</subMenu>
+
+			<separatorItem id="h.ic_file_menu_sep_1">
+				<insertAfter>h.ic_recent_files</insertAfter>
+			</separatorItem>
 
 			<scriptItem id="h.ic_save">
 				<label>GPS Save</label>
-				<scriptCode>hou.session.scnmgr.file_save()</scriptCode>
-				<insertAtIndex>3</insertAtIndex>
+				<scriptCode>from core.app_session import *; session.scnmgr.file_save()</scriptCode>
+				<insertAfter>h.ic_file_menu_sep_1</insertAfter>
 			</scriptItem>
 
 			<scriptItem id="h.ic_save_as">
-				<label>GPS Save As</label>
-				<scriptCode>hou.session.scnmgr.file_save_dialog()</scriptCode>
-				<insertAtIndex>4</insertAtIndex>
+				<label>GPS Save As...</label>
+				<scriptCode>from core.app_session import *; session.scnmgr.file_save_dialog()</scriptCode>
+				<insertAfter>h.ic_save</insertAfter>
 			</scriptItem>
 
 			<scriptItem id="h.ic_increment_and_save">
 				<label>GPS Increment and Save</label>
-				<scriptCode>hou.session.scnmgr.file_save_new_version()</scriptCode>
-				<insertAtIndex>5</insertAtIndex>
+				<scriptCode>from core.app_session import *; session.scnmgr.file_save_new_version()</scriptCode>
+				<insertAfter>h.ic_save_as</insertAfter>
 			</scriptItem>
 
+			<separatorItem id="h.ic_file_menu_sep_2">
+				<insertAfter>h.ic_increment_and_save</insertAfter>
+			</separatorItem>
+
 		</subMenu>
 
-		<subMenu>
-			<labelExpression><![CDATA[
-import os
-label = '%s - %s' % (os.environ['IC_JOB'], os.environ['IC_SHOT'])
-return label
-]]></labelExpression>
-		</subMenu>
+		<subMenu id="ic_custom_menu">
+			<insertBefore>help_menu</insertBefore>
 
-		<subMenu>
 			<labelExpression><![CDATA[
 import os
 return os.environ['IC_VENDOR_INITIALS']
 ]]></labelExpression>
 
+			<scriptItem id="h.ic_shot_info">
+				<labelExpression><![CDATA[
+import os
+label = '%s - %s' % (os.environ['IC_JOB'], os.environ['IC_SHOT'])
+return label
+]]></labelExpression>
+				<insertBefore />
+			</scriptItem>
+
+			<separatorItem id="h.ic_custom_menu_sep_1">
+				<insertAfter>h.ic_shot_info</insertAfter>
+			</separatorItem>
+
 			<scriptItem id="h.ic_icarus_ui">
 				<label>Icarus UI...</label>
-				<scriptCode>hou.session.icarus.show()</scriptCode>
-				<insertAtIndex>0</insertAtIndex>
+				<scriptCode>from core.app_session import *; session.icarus.show()</scriptCode>
+				<insertAfter>h.ic_custom_menu_sep_1</insertAfter>
 			</scriptItem>
+
 		</subMenu>
 	</menuBar>
 </mainMenu>

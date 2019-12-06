@@ -12,9 +12,10 @@ import os
 import hou
 
 # Import custom modules
+from . import convention
 from . import file_open
 from . import file_save
-# from shared import os_wrapper
+from shared import os_wrapper
 from shared import pDialog
 from shared import recentFiles
 
@@ -44,15 +45,25 @@ class SceneManager(object):
 	def file_open_native_dialog(self, starting_dir=None):
 		""" Display a native dialog to select a file to open.
 		"""
-		# open scene dialog command
-		return True
+		filepath = hou.ui.selectFile(
+			start_directory=starting_dir, 
+			title='Open', 
+			pattern='*.hip, *.hiplc, *.hipnc, *.hip*')
+
+		print filepath
+		return self.file_open(filepath)
 
 
 	def file_open(self, filepath):
 		""" Open the specified file.
 		"""
+		# Remove backslashes from path as this causes issues on Windows...
+		filepath = os_wrapper.absolutePath(filepath)
+		# print("Loading: %s" % filepath)
 		try:
-			hou.hipFile.load(filepath)
+			hou.hipFile.load(file_name=filepath)
+			self.set_hip_and_job_vars(
+				set_hip_explicit=os.path.dirname(filepath))
 			return filepath
 
 		except hou.OperationFailed as e:
@@ -75,8 +86,12 @@ class SceneManager(object):
 	def file_save_native_dialog(self, starting_dir=None):
 		""" Display a native dialog for saving a file.
 		"""
-		# save scene dialog command
-		return True
+		filepath = hou.ui.selectFile(
+			start_directory=starting_dir, 
+			title='Save As', 
+			pattern='*.hip, *.hiplc, *.hipnc, *.hip*')
+
+		return self.file_save_as(filepath)
 
 
 	def file_save(self):
@@ -95,8 +110,16 @@ class SceneManager(object):
 			If the destination dir doesn't exist, Houdini will automatically
 			create it.
 		"""
+		# Remove backslashes from path as this causes issues on Windows...
+		filepath = os_wrapper.absolutePath(filepath)
+		# print("Saving: %s" % filepath)
 		try:
+			# dirname = os.path.dirname(filepath)
+			# if not os.path.isdir(dirname):
+			# 	os_wrapper.createDir(dirname)
 			hou.hipFile.save(filepath)
+			self.set_hip_and_job_vars(
+				set_hip_explicit=os.path.dirname(filepath))
 			recentFiles.updateLs(filepath)
 			return filepath
 
@@ -155,8 +178,17 @@ class SceneManager(object):
 	def update_recents_menu(self):
 		""" Populate the recent files menu or disable it if no recent files
 			in list.
+			Returns a list to populate the custom recent files menu.
 		"""
-		pass
+		recent_file_list = recentFiles.getLs('houdini')
+
+		menu_items = []
+		for item in recent_file_list:
+			full_path = os_wrapper.absolutePath('$IC_SHOTPATH/%s' % item)
+			menu_items.append(full_path); menu_items.append(item)
+			# menu_items.append(item); menu_items.append(os.path.basename(item))
+
+		return menu_items
 
 
 	def set_defaults(self):
@@ -167,9 +199,32 @@ class SceneManager(object):
 		endFrame = int(os.environ['IC_ENDFRAME'])
 		fps = float(os.environ['IC_FPS'])
 
-		hou.playbar.setPlaybackRange(startFrame, endFrame)
 		startTime = (float(startFrame)-1) / float(fps)
 		endTime = float(endFrame) / float(fps)
-		hou.hscript('tset %s %s' % (startTime, endTime))
 		hou.setFps(fps)
-		hou.setFrame(startFrame)
+		hou.hscript('tset %s %s' % (startTime, endTime))
+		hou.playbar.setPlaybackRange(startFrame, endFrame)
+		# hou.setFrame(startFrame)
+
+		self.set_hip_and_job_vars()
+
+
+	def set_hip_and_job_vars(self, set_hip_explicit=None):
+		""" Set the $HIP and $JOB env vars to the correct location.
+			$HIP defaults to user scene dir unless set_hip_explicit is given.
+		"""
+		if set_hip_explicit is None:
+			hip_dir = os_wrapper.absolutePath('$IC_HOUDINI_SCENES_DIR/$IC_USERNAME')
+		else:
+			hip_dir = os_wrapper.absolutePath(set_hip_explicit)
+		job_dir = os_wrapper.absolutePath('$IC_HOUDINI_PROJECT_DIR')
+
+		# Create $HIP dir if it doesn't exist
+		if not os.path.isdir(hip_dir):
+			os_wrapper.createDir(hip_dir)
+
+		# Set vars
+		os.environ['HIP'] = hip_dir
+		hou.putenv('HIP', hip_dir)
+		os.environ['JOB'] = job_dir
+		hou.putenv('JOB', job_dir)

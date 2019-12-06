@@ -146,10 +146,10 @@ def set_env(job, shot, shot_path):
 	os.environ['IC_MAYA_EXECUTABLE'] = getAppExecPath('Maya')
 	os.environ['IC_MAYA_RENDER_EXECUTABLE'] = os_wrapper.absolutePath('%s/Render' % os.path.dirname(os.environ['IC_MAYA_EXECUTABLE']))
 	os.environ['IC_MAYA_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/maya')  # Currently needed by render submitter
-	os.environ['IC_MAYA_SCENES_DIR'] = os_wrapper.absolutePath('$IC_MAYA_PROJECT_DIR/scenes/$IC_USERNAME')  # Currently needed by render submitter
-	os.environ['IC_MAYA_SOURCEIMAGES_DIR'] = os_wrapper.absolutePath('$IC_MAYA_PROJECT_DIR/sourceimages/$IC_USERNAME')  # Currently needed by openDirs
-	os.environ['IC_MAYA_RENDERS_DIR'] = os_wrapper.absolutePath('$IC_MAYA_PROJECT_DIR/renders/$IC_USERNAME')  # Currently needed by daily publish
-	os.environ['IC_MAYA_PLAYBLASTS_DIR'] = os_wrapper.absolutePath('$IC_MAYA_PROJECT_DIR/playblasts/$IC_USERNAME')  # Currently needed by daily publish
+	os.environ['IC_MAYA_SCENES_DIR'] = os_wrapper.absolutePath('$IC_MAYA_PROJECT_DIR/scenes')  # Currently needed by render submitter
+	os.environ['IC_MAYA_SOURCEIMAGES_DIR'] = os_wrapper.absolutePath('$IC_MAYA_PROJECT_DIR/sourceimages')  # Currently needed by openDirs
+	os.environ['IC_MAYA_RENDERS_DIR'] = os_wrapper.absolutePath('$IC_MAYA_PROJECT_DIR/renders')  # Currently needed by daily publish
+	os.environ['IC_MAYA_PLAYBLASTS_DIR'] = os_wrapper.absolutePath('$IC_MAYA_PROJECT_DIR/playblasts')  # Currently needed by daily publish
 	os.environ['IC_MAYA_SHARED_RESOURCES'] = os_wrapper.absolutePath('$IC_FILESYSTEM_ROOT/_Library/3D/Maya')  # Store this in app settings / ic global prefs?
 
 	try:
@@ -201,23 +201,23 @@ def set_env(job, shot, shot_path):
 	os.environ['IC_HOUDINI_EXECUTABLE'] = getAppExecPath('Houdini')
 	os.environ['IC_HOUDINI_VERSION'] = str(job_data.getAppVersion('Houdini'))  # Temporary for Deadline submit
 	os.environ['IC_HOUDINI_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/houdini')  # Currently needed by render submitter
-	os.environ['IC_HOUDINI_SCENES_DIR'] = os_wrapper.absolutePath('$IC_HOUDINI_PROJECT_DIR/scenes/$IC_USERNAME')  # Currently needed by render submitter
+	os.environ['IC_HOUDINI_SCENES_DIR'] = os_wrapper.absolutePath('$IC_HOUDINI_PROJECT_DIR/scenes')  # Currently needed by render submitter
 
 	os.environ['HOUDINI_PATH'] = os_wrapper.absolutePath('$IC_BASEDIR/rsc/houdini') + os.pathsep \
 	                           + os_wrapper.absolutePath('$IC_BASEDIR/rsc/houdini/env') + os.pathsep + "&" + os.pathsep
 	os.environ['HOUDINI_UI_ICON_PATH'] = os_wrapper.absolutePath('$IC_FORMSDIR/icons') + os.pathsep + "&" + os.pathsep
 	os.environ['HOUDINI_TOOLBAR_PATH'] = os_wrapper.absolutePath('$IC_BASEDIR/rsc/houdini/shelves') + os.pathsep + "&" + os.pathsep
-	os.environ['JOB'] = os.environ['IC_HOUDINI_PROJECT_DIR']
-	os.environ['HIP'] = os_wrapper.absolutePath('$IC_HOUDINI_PROJECT_DIR/scenes')
+	# os.environ['JOB'] = os.environ['IC_HOUDINI_PROJECT_DIR']
+	# os.environ['HIP'] = os_wrapper.absolutePath('$IC_HOUDINI_PROJECT_DIR/scenes')
 
 
 	# Nuke
 	os.environ['IC_NUKE_EXECUTABLE'] = getAppExecPath('Nuke')
 	os.environ['IC_NUKE_VERSION'] = str(job_data.getAppVersion('Nuke'))  # Temporary for Deadline submit
 	os.environ['IC_NUKE_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/nuke')  # Currently needed by render submitter
-	os.environ['IC_NUKE_ELEMENTS_DIR'] = os_wrapper.absolutePath('$IC_NUKE_PROJECT_DIR/elements/$IC_USERNAME')  # Currently needed by openDirs
-	os.environ['IC_NUKE_SCRIPTS_DIR'] = os_wrapper.absolutePath('$IC_NUKE_PROJECT_DIR/scripts/$IC_USERNAME')  # Currently needed by render submitter
-	os.environ['IC_NUKE_RENDERS_DIR'] = os_wrapper.absolutePath('$IC_NUKE_PROJECT_DIR/renders/$IC_USERNAME')  # Currently needed by daily publish
+	os.environ['IC_NUKE_ELEMENTS_DIR'] = os_wrapper.absolutePath('$IC_NUKE_PROJECT_DIR/elements')  # Currently needed by openDirs
+	os.environ['IC_NUKE_SCRIPTS_DIR'] = os_wrapper.absolutePath('$IC_NUKE_PROJECT_DIR/scripts')  # Currently needed by render submitter
+	os.environ['IC_NUKE_RENDERS_DIR'] = os_wrapper.absolutePath('$IC_NUKE_PROJECT_DIR/renders')  # Currently needed by daily publish
 
 	os.environ['NUKE_PATH'] = os_wrapper.absolutePath('$IC_BASEDIR/rsc/nuke') + os.pathsep \
 	                        + os_wrapper.absolutePath('$IC_BASEDIR/rsc/nuke/env')
@@ -233,9 +233,9 @@ def set_env(job, shot, shot_path):
 	# After Effects
 	os.environ['IC_AE_EXECUTABLE'] = getAppExecPath('AfterEffects')
 	# os.environ['IC_AE_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/aftereffects')
-	# os.environ['IC_AE_ELEMENTS_DIR'] = os_wrapper.absolutePath('$IC_AE_PROJECT_DIR/elements/$IC_USERNAME')
-	# os.environ['IC_AE_COMPS_DIR'] = os_wrapper.absolutePath('$IC_AE_PROJECT_DIR/comps/$IC_USERNAME')
-	# os.environ['IC_AE_RENDERS_DIR'] = os_wrapper.absolutePath('$IC_AE_PROJECT_DIR/renders/$IC_USERNAME')
+	# os.environ['IC_AE_ELEMENTS_DIR'] = os_wrapper.absolutePath('$IC_AE_PROJECT_DIR/elements')
+	# os.environ['IC_AE_COMPS_DIR'] = os_wrapper.absolutePath('$IC_AE_PROJECT_DIR/comps')
+	# os.environ['IC_AE_RENDERS_DIR'] = os_wrapper.absolutePath('$IC_AE_PROJECT_DIR/renders')
 
 
 	# Photoshop
@@ -250,7 +250,7 @@ def set_env(job, shot, shot_path):
 	# Mudbox
 	os.environ['IC_MUDBOX_EXECUTABLE'] = getAppExecPath('Mudbox')
 	# os.environ['IC_MUDBOX_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/mudbox')
-	# os.environ['IC_MUDBOX_SCENES_DIR'] = os_wrapper.absolutePath('$IC_MUDBOX_PROJECT_DIR/scenes/$IC_USERNAME')
+	# os.environ['IC_MUDBOX_SCENES_DIR'] = os_wrapper.absolutePath('$IC_MUDBOX_PROJECT_DIR/scenes')
 
 	os.environ['MUDBOX_PLUG_IN_PATH'] = os_wrapper.absolutePath('$IC_BASEDIR/rsc/mudbox/plugins') 
 	os.environ['MUDBOX_IDLE_LICENSE_TIME'] = '60'
@@ -259,13 +259,13 @@ def set_env(job, shot, shot_path):
 	# Mari
 	os.environ['IC_MARI_EXECUTABLE'] = getAppExecPath('Mari')
 	os.environ['IC_MARI_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/mari')
-	os.environ['IC_MARI_SCENES_DIR'] = os_wrapper.absolutePath('$IC_MARI_PROJECT_DIR/scenes/$IC_USERNAME')
-	os.environ['IC_MARI_GEO_DIR'] = os_wrapper.absolutePath('$IC_MARI_PROJECT_DIR/geo/$IC_USERNAME')
-	os.environ['IC_MARI_TEXTURES_DIR'] = os_wrapper.absolutePath('$IC_MARI_PROJECT_DIR/textures/$IC_USERNAME')
-	os.environ['IC_MARI_RENDERS_DIR'] = os_wrapper.absolutePath('$IC_MARI_PROJECT_DIR/renders/$IC_USERNAME')
+	os.environ['IC_MARI_SCENES_DIR'] = os_wrapper.absolutePath('$IC_MARI_PROJECT_DIR/scenes')
+	os.environ['IC_MARI_GEO_DIR'] = os_wrapper.absolutePath('$IC_MARI_PROJECT_DIR/geo')
+	os.environ['IC_MARI_TEXTURES_DIR'] = os_wrapper.absolutePath('$IC_MARI_PROJECT_DIR/textures')
+	os.environ['IC_MARI_RENDERS_DIR'] = os_wrapper.absolutePath('$IC_MARI_PROJECT_DIR/renders')
 
 	os.environ['MARI_NUKEWORKFLOW_PATH'] = getAppExecPath('Nuke')
-	os.environ['MARI_DEFAULT_IMAGEPATH'] = os_wrapper.absolutePath('$IC_MARI_PROJECT_DIR/sourceimages/$IC_USERNAME')
+	os.environ['MARI_DEFAULT_IMAGEPATH'] = os_wrapper.absolutePath('$IC_MARI_PROJECT_DIR/sourceimages')
 	os.environ['MARI_SCRIPT_PATH'] = os_wrapper.absolutePath('$IC_BASEDIR/rsc/mari/scripts')
 	os.environ['MARI_CACHE'] = os.environ['IC_MARI_SCENES_DIR']
 	os.environ['MARI_WORKING_DIR'] = os.environ['IC_MARI_SCENES_DIR']
@@ -293,7 +293,7 @@ def set_env(job, shot, shot_path):
 	os.environ['IC_C4D_EXECUTABLE'] = getAppExecPath('Cinema4D')
 	os.environ['IC_C4D_VERSION'] = str(job_data.getAppVersion('Cinema4D'))
 	os.environ['IC_C4D_PROJECT_DIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/c4d') #temp
-	os.environ['IC_C4D_SCENES_DIR'] = os_wrapper.absolutePath('$IC_C4D_PROJECT_DIR/scenes/$IC_USERNAME') #temp
+	os.environ['IC_C4D_SCENES_DIR'] = os_wrapper.absolutePath('$IC_C4D_PROJECT_DIR/scenes') #temp
 
 	os.environ['C4D_PLUGINS_DIR'] = os_wrapper.absolutePath('$IC_FILESYSTEM_ROOT/_Library/3D/C4D/$IC_C4D_VERSION/plugins')
 	os.environ['C4D_SCRIPTS_DIR'] = os_wrapper.absolutePath('$IC_FILESYSTEM_ROOT/_Library/3D/C4D/$IC_C4D_VERSION/scripts')

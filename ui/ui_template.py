@@ -1210,7 +1210,9 @@ def _houdini_get_session():
 def _houdini_main_window():
 	""" Return Houdini's main window.
 	"""
-	return hou.qt.mainWindow()
+	obj = hou.qt.mainWindow()
+	if obj:
+		return obj
 	raise RuntimeError("Could not find Houdini's main window instance")
 
 

@@ -41,25 +41,6 @@
         <height>24</height>
        </size>
       </property>
-      <property name="styleSheet">
-       <string notr="true">QLabel {
-	margin: 0px;
-	padding:  0px;
-	background-color: transparent;
-	border-color: transparent;
-	color: #709e32;
-	font-family: &quot;Helvetica, Arial, sans-serif&quot;;
-	font-size: 28pt
-}
-
-QLineEdit {
-	background: transparent;
-	border-color: transparent;
-	color: #ccc;
-	selection-background-color: #709e32; /*#00b2ee;*/
-	selection-color: #FFF;
-}</string>
-      </property>
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
       </property>
@@ -116,53 +97,6 @@ QLineEdit {
         </widget>
        </item>
        <item>
-        <widget class="QToolButton" name="user_toolButton">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QToolButton {
-  padding: 1px 12px 2px 1px;
-}
-
-QToolButton:pressed, QToolButton:checked:pressed {
-  padding: 2px 11px 1px 2px;
-}
-
-QToolButton:disabled {
-  color: #ccc;
-}
-</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="rsc.qrc">
-           <normaloff>:/icons/icons/icon_user.png</normaloff>
-           <disabledoff>:/icons/icons/icon_user_disabled.png</disabledoff>:/icons/icons/icon_user.png</iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>15</width>
-           <height>15</height>
-          </size>
-         </property>
-         <property name="popupMode">
-          <enum>QToolButton::InstantPopup</enum>
-         </property>
-         <property name="toolButtonStyle">
-          <enum>Qt::ToolButtonTextBesideIcon</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QToolButton" name="shotEnv_toolButton">
          <property name="enabled">
           <bool>false</bool>
@@ -184,8 +118,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
 
 QToolButton:disabled {
   color: #ccc;
-}
-</string>
+}</string>
          </property>
          <property name="text">
           <string/>
@@ -194,6 +127,52 @@ QToolButton:disabled {
           <iconset resource="rsc.qrc">
            <normaloff>:/icons/icons/icon_settings.png</normaloff>
            <disabledoff>:/icons/icons/icon_settings_disabled.png</disabledoff>:/icons/icons/icon_settings.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>15</width>
+           <height>15</height>
+          </size>
+         </property>
+         <property name="popupMode">
+          <enum>QToolButton::InstantPopup</enum>
+         </property>
+         <property name="toolButtonStyle">
+          <enum>Qt::ToolButtonTextBesideIcon</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="user_toolButton">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QToolButton {
+  padding: 1px 12px 2px 1px;
+}
+
+QToolButton:pressed, QToolButton:checked:pressed {
+  padding: 2px 11px 1px 2px;
+}
+
+QToolButton:disabled {
+  color: #ccc;
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="rsc.qrc">
+           <normaloff>:/icons/icons/icon_user.png</normaloff>
+           <disabledoff>:/icons/icons/icon_user_disabled.png</disabledoff>:/icons/icons/icon_user.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -219,17 +198,16 @@ QToolButton:disabled {
          </property>
          <property name="styleSheet">
           <string notr="true">QToolButton {
-	padding: 1px 12px 2px 1px;
+  padding: 1px 12px 2px 1px;
 }
 
 QToolButton:pressed, QToolButton:checked:pressed {
-	padding: 2px 11px 1px 2px;
+  padding: 2px 11px 1px 2px;
 }
 
 QToolButton:disabled {
-	color: #ccc;
-}
-</string>
+  color: #ccc;
+}</string>
          </property>
          <property name="text">
           <string>Tools</string>
@@ -260,6 +238,19 @@ QToolButton:disabled {
          </property>
          <property name="statusTip">
           <string>About Icarus</string>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QToolButton {
+  padding: 1px 2px 2px 1px;
+}
+
+QToolButton:pressed, QToolButton:checked:pressed {
+  padding: 2px 1px 1px 2px;
+}
+
+QToolButton:disabled {
+  color: #ccc;
+}</string>
          </property>
          <property name="text">
           <string>...</string>
@@ -453,12 +444,7 @@ QToolButton:disabled {
 
 QToolButton:pressed, QToolButton:checked:pressed {
 	padding: 2px 11px 1px 2px;
-}
-
-/*QToolButton:disabled {
-	color: #ccc;
-}*/
-</string>
+}</string>
                 </property>
                 <property name="text">
                  <string>Set Shot</string>
@@ -787,12 +773,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
 
 QToolButton:pressed, QToolButton:checked:pressed {
 	padding: 2px 11px 1px 2px;
-}
-
-/*QToolButton:disabled {
-	color: #ccc;
-}*/
-</string>
+}</string>
              </property>
              <property name="text">
               <string>Launch options</string>
@@ -1887,8 +1868,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>355</width>
-                    <height>329</height>
+                    <width>136</width>
+                    <height>70</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_8">

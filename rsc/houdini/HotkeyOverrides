@@ -1,5 +1,5 @@
 h.ic_new	"GPS New"	"Custom Menu Operation: GPS New"	 Ctrl+N
-h.ic_open	"GPS Open"	"Custom Menu Operation: GPS Open"	 Ctrl+O
+h.ic_open	"GPS Open..."	"Custom Menu Operation: GPS Open..."	 Ctrl+O
 h.ic_save	"GPS Save"	"Custom Menu Operation: GPS Save"	 Ctrl+S
-h.ic_save_as	"GPS Save As"	"Custom Menu Operation: GPS Save As"	 Ctrl+Shift+S
+h.ic_save_as	"GPS Save As..."	"Custom Menu Operation: GPS Save As..."	 Ctrl+Shift+S
 h.ic_increment_and_save	"GPS Increment and Save"	"Custom Menu Operation: GPS Increment and Save"	 Alt+Ctrl+S

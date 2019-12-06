@@ -1,4 +1,5 @@
 v0.10.0 (--)
+-	[Icarus] Implemented unified open/save system for DCC apps.
 -	[Icarus] Added preliminary support for Houdini.
 -	[Icarus] Found a workaround for an issue which was preventing Nuke 11.x from starting.
 -	[Icarus] Restructured code into Python packages.

@@ -297,7 +297,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.user_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 			self.ui.user_toolButton.addAction(self.ui.actionUser_settings)
 			self.ui.user_toolButton.setText(os.environ['IC_USERNAME'])
-			self.ui.user_toolButton.setEnabled(True)
+			self.ui.user_toolButton.setEnabled(False)
 
 			# Setup app launch icons
 			self.al.setupIconGrid(sortBy=self.sortAppsBy)
