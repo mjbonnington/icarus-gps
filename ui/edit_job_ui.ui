@@ -17,16 +17,7 @@
    <bool>true</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="leftMargin">
-    <number>8</number>
-   </property>
-   <property name="topMargin">
-    <number>8</number>
-   </property>
-   <property name="rightMargin">
-    <number>8</number>
-   </property>
-   <property name="bottomMargin">
+   <property name="margin">
     <number>8</number>
    </property>
    <item>
@@ -47,16 +38,7 @@
       <property name="labelAlignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
-      <property name="leftMargin">
-       <number>8</number>
-      </property>
-      <property name="topMargin">
-       <number>8</number>
-      </property>
-      <property name="rightMargin">
-       <number>8</number>
-      </property>
-      <property name="bottomMargin">
+      <property name="margin">
        <number>8</number>
       </property>
       <item row="0" column="0">
@@ -102,12 +84,12 @@
         <item>
          <widget class="QToolButton" name="jobPathBrowse_toolButton">
           <property name="text">
-           <string>...</string>
+           <string>Browse...</string>
           </property>
           <property name="icon">
            <iconset resource="rsc.qrc">
-            <normaloff>:/rsc/rsc/icon_folder.png</normaloff>
-            <disabledoff>:/rsc/rsc/icon_folder_disabled.png</disabledoff>:/rsc/rsc/icon_folder.png</iconset>
+            <normaloff>:/icons/icons/icon_folder.png</normaloff>
+            <disabledoff>:/icons/icons/icon_folder_disabled.png</disabledoff>:/icons/icons/icon_folder.png</iconset>
           </property>
           <property name="iconSize">
            <size>
