@@ -89,8 +89,8 @@
         </property>
         <property name="icon">
          <iconset resource="rsc.qrc">
-          <normaloff>:/rsc/rsc/icon_add.png</normaloff>
-          <disabledoff>:/rsc/rsc/icon_add_disabled.png</disabledoff>:/rsc/rsc/icon_add.png</iconset>
+          <normaloff>:/icons/icons/icon_add.png</normaloff>
+          <disabledoff>:/icons/icons/icon_add_disabled.png</disabledoff>:/icons/icons/icon_add.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -119,8 +119,8 @@
         </property>
         <property name="icon">
          <iconset resource="rsc.qrc">
-          <normaloff>:/rsc/rsc/icon_minus.png</normaloff>
-          <disabledoff>:/rsc/rsc/icon_minus_disabled.png</disabledoff>:/rsc/rsc/icon_minus.png</iconset>
+          <normaloff>:/icons/icons/icon_minus.png</normaloff>
+          <disabledoff>:/icons/icons/icon_minus_disabled.png</disabledoff>:/icons/icons/icon_minus.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -149,8 +149,8 @@
         </property>
         <property name="icon">
          <iconset resource="rsc.qrc">
-          <normaloff>:/rsc/rsc/icon_refresh.png</normaloff>
-          <disabledoff>:/rsc/rsc/icon_refresh_disabled.png</disabledoff>:/rsc/rsc/icon_refresh.png</iconset>
+          <normaloff>:/icons/icons/icon_refresh.png</normaloff>
+          <disabledoff>:/icons/icons/icon_refresh_disabled.png</disabledoff>:/icons/icons/icon_refresh.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -179,8 +179,8 @@
         </property>
         <property name="icon">
          <iconset resource="rsc.qrc">
-          <normaloff>:/rsc/rsc/icon_settings.png</normaloff>
-          <disabledoff>:/rsc/rsc/icon_settings_disabled.png</disabledoff>:/rsc/rsc/icon_settings.png</iconset>
+          <normaloff>:/icons/icons/icon_settings.png</normaloff>
+          <disabledoff>:/icons/icons/icon_settings_disabled.png</disabledoff>:/icons/icons/icon_settings.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -222,8 +222,8 @@
         </property>
         <property name="icon">
          <iconset resource="rsc.qrc">
-          <normaloff>:/rsc/rsc/icon_folder.png</normaloff>
-          <disabledoff>:/rsc/rsc/icon_folder_disabled.png</disabledoff>:/rsc/rsc/icon_folder.png</iconset>
+          <normaloff>:/icons/icons/icon_folder.png</normaloff>
+          <disabledoff>:/icons/icons/icon_folder_disabled.png</disabledoff>:/icons/icons/icon_folder.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -258,8 +258,8 @@
        </property>
        <property name="icon">
         <iconset resource="rsc.qrc">
-         <normaloff>:/rsc/rsc/icon_cross.png</normaloff>
-         <disabledoff>:/rsc/rsc/icon_cross_disabled.png</disabledoff>:/rsc/rsc/icon_cross.png</iconset>
+         <normaloff>:/icons/icons/icon_cross.png</normaloff>
+         <disabledoff>:/icons/icons/icon_cross_disabled.png</disabledoff>:/icons/icons/icon_cross.png</iconset>
        </property>
        <property name="iconSize">
         <size>

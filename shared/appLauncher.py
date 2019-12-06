@@ -53,6 +53,39 @@ class AppLauncher(QtWidgets.QDialog):
 		# self.setupIconGrid()
 
 
+	def setAppEnvVars(self):
+		""" Dynamically generate application environment variables.
+		"""
+		for app in self.ap.getApps():
+			displayName = app.get('name')  # Apps are referenced by their display name
+			shortName = app.get('id')
+			appVersion = self.jd.getAppVersion(displayName)
+			if appVersion:  # Only apps that have a version set in the job settings
+				appExecutable = self.ap.getPath(displayName, appVersion, self.currentOS)
+
+				# Set app exec and version environment variables
+				os.environ['IC_%s_EXECUTABLE' % shortName.upper()] = appExecutable
+				os.environ['IC_%s_VERSION' % shortName.upper()] = appVersion
+
+				# Source individual app's custom environment
+				# TODO: implement
+				# folder_env = os_wrapper.absolutePath("$IC_BASEDIR/rsc/%s/env" % shortName)
+				# print folder_env
+				# import folder_env
+				# from rsc import shortName
+				# from rsc.shortName import env
+				try:
+					# exec_str = 'from rsc.%s.env import env_vars; env_vars.set()' % shortName.lower()
+					exec_str = 'from rsc import %s' % shortName.lower()
+					# exec_str = 'from rsc.%s import env' % shortName.lower()
+					print(exec_str)
+					exec(exec_str)
+
+				except ImportError:
+					message = "Could not import '%s' module. " % shortName.lower()
+					verbose.warning(message)
+
+
 	def setupIconGrid(self, job=None, sortBy=None):
 		""" Dynamically generate grid of tool button icons.
 		"""
@@ -94,7 +127,7 @@ class AppLauncher(QtWidgets.QDialog):
 				# Create grid layout
 				icon_size = self.getIconSize(num_row_items)
 				row_gridLayout = QtWidgets.QGridLayout()
-				row_gridLayout.setObjectName("apps_gridLayout%d" %row)
+				row_gridLayout.setObjectName("apps_gridLayout%d" % row)
 				parentLayout.insertLayout(row, row_gridLayout)
 				for col in range(num_row_items):
 					self.createIcon(app_ls[item_index], icon_size, row_gridLayout, col)
@@ -121,8 +154,8 @@ class AppLauncher(QtWidgets.QDialog):
 
 		iconPath = ":/icons/icons/icon_editor"
 		searchPaths = [os_wrapper.absolutePath(os.path.splitext(appIcon)[0]), 
-		               os_wrapper.absolutePath("$IC_BASEDIR/rsc/%s/icons/app_icon_%s" %(appName, appName)), 
-		               os_wrapper.absolutePath("$IC_FORMSDIR/icons/app_icon_%s" %appName), 
+		               os_wrapper.absolutePath("$IC_BASEDIR/rsc/%s/icons/app_icon_%s" % (appName, appName)), 
+		               os_wrapper.absolutePath("$IC_FORMSDIR/icons/app_icon_%s" % appName), 
 		              ]
 
 		for searchPath in searchPaths:
@@ -150,7 +183,7 @@ class AppLauncher(QtWidgets.QDialog):
 		flags = app.findtext('flags')
 		# tooltip = ""
 		# if self.showToolTips:
-		tooltip = "Launch %s %s" %(displayName, appVersion)
+		tooltip = "Launch %s %s" % (displayName, appVersion)
 		# print(layout.objectName(), column, shortName)
 
 		toolButton = QtWidgets.QToolButton(self.frame)
@@ -164,7 +197,7 @@ class AppLauncher(QtWidgets.QDialog):
 		toolButton.setIconSize(QtCore.QSize(iconSize[0], iconSize[1]))  # Vary according to number of items in row - QSize won't accept tuple
 		toolButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
 		toolButton.setText(displayName)
-		toolButton.setObjectName("%s_toolButton" %shortName)
+		toolButton.setObjectName("%s_toolButton" % shortName)
 		toolButton.setProperty('shortName', shortName)
 		toolButton.setProperty('displayName', displayName)
 		toolButton.setProperty('projectFolders', projectFolders)
@@ -175,7 +208,7 @@ class AppLauncher(QtWidgets.QDialog):
 		if not os.path.isfile(appExecutable):
 			toolButton.setEnabled(False)
 			# if self.showToolTips:
-			tooltip = "%s %s executable not found" %(displayName, appVersion)
+			tooltip = "%s %s executable not found" % (displayName, appVersion)
 
 		toolButton.setToolTip(tooltip)
 		toolButton.setStatusTip(tooltip)
@@ -191,7 +224,7 @@ class AppLauncher(QtWidgets.QDialog):
 			for entry in submenus:
 				menuName = entry.get('name')
 				flags = entry.findtext('flags')
-				actionName = "action%s" %menuName.replace(" ", "")
+				actionName = "action%s" % menuName.replace(" ", "")
 
 				action = QtWidgets.QAction(menuName, None)
 				action.setIcon(self.getIcon(entry, shortName))
@@ -202,7 +235,7 @@ class AppLauncher(QtWidgets.QDialog):
 				action.setProperty('executable', appExecutable)
 				action.setProperty('flags', flags)
 				# if self.showToolTips:
-				tooltip = "Launch %s %s" %(menuName, appVersion)
+				tooltip = "Launch %s %s" % (menuName, appVersion)
 				action.setToolTip(tooltip)    # Does nothing?
 				action.setStatusTip(tooltip)  # Does nothing?
 				action.triggered.connect(self.launchApp)
@@ -210,12 +243,10 @@ class AppLauncher(QtWidgets.QDialog):
 
 				# Make a class-scope reference to this object
 				# (won't work without it for some reason)
-				exec_str = "self.%s = action" %actionName
+				exec_str = "self.%s = action" % actionName
 				exec(exec_str)
 
 		layout.addWidget(toolButton, 0, column)
-
-		# Set environment variables
 
 
 	def getRows(self, num_items):

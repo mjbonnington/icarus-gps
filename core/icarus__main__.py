@@ -315,8 +315,8 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		####################
 
 		elif os.environ['IC_ENV'] == 'MAYA':
-			pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_maya_disabled.png")
-			self.ui.appIcon_label.setPixmap(pixmap)
+			# pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_maya_disabled.png")
+			# self.ui.appIcon_label.setPixmap(pixmap)
 
 			# Hide certain UI items
 			uiHideLs = ['assetSubType_listWidget', 'toolMenu_toolButton']
@@ -350,8 +350,8 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		#######################
 
 		elif os.environ['IC_ENV'] == 'HOUDINI':
-			pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_houdini_disabled.png")
-			self.ui.appIcon_label.setPixmap(pixmap)
+			# pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_houdini_disabled.png")
+			# self.ui.appIcon_label.setPixmap(pixmap)
 
 			# Hide certain UI items
 			uiHideLs = ['assetSubType_listWidget', 'toolMenu_toolButton']
@@ -386,8 +386,8 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		####################
 
 		elif os.environ['IC_ENV'] == 'NUKE':
-			pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_nuke_disabled.png")
-			self.ui.appIcon_label.setPixmap(pixmap)
+			# pixmap = QtGui.QPixmap(":/rsc/rsc/app_icon_nuke_disabled.png")
+			# self.ui.appIcon_label.setPixmap(pixmap)
 
 			# Hide certain UI items
 			uiHideLs = ['assetSubType_listWidget', 'toolMenu_toolButton']
@@ -821,6 +821,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				self.lockJobUI()
 				self.assetRefresh()
 				self.al.setupIconGrid(job=self.job, sortBy=self.sortAppsBy)
+				self.al.setAppEnvVars()
 
 				return True
 

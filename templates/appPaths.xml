@@ -444,7 +444,7 @@
 			<win>C:/Program Files/djv-1.1.0-Windows-64/bin/djv_view.exe</win>
 		</path>
 	</app>
-	<app id="rs" name="Redshift" projectFolders="False" visible="False">
+	<app id="redshift" name="Redshift" projectFolders="False" visible="False">
 		<path version="[template]">
 			<osx />
 			<linux />
