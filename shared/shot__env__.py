@@ -132,6 +132,7 @@ def set_env(job, shot, shot_path):
 				exec_str = os.path.join(cwd, v_str, 'run.py')
 				flags = " -j %s -s %s" % (job, shot)
 				verbose.print_(exec_str+flags)
+				import subprocess
 				subprocess.call(exec_str+flags, shell=True)
 				sys.exit()
 			else:
