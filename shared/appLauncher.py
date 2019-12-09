@@ -75,14 +75,19 @@ class AppLauncher(QtWidgets.QDialog):
 				# from rsc import shortName
 				# from rsc.shortName import env
 				try:
-					# exec_str = 'from rsc.%s.env import env_vars; env_vars.set()' % shortName.lower()
-					exec_str = 'from rsc import %s' % shortName.lower()
 					# exec_str = 'from rsc.%s import env' % shortName.lower()
-					print(exec_str)
+					# exec_str = 'from rsc.%s.env import env_vars; env_vars.set()' % shortName.lower()
+					# exec_str = 'from rsc import %s' % shortName.lower()
+					exec_str = 'from rsc.%s.env import %s__env__ as app_env; app_env.set_env()' % (shortName.lower(), shortName.lower())
+					verbose.debug(exec_str)
 					exec(exec_str)
 
 				except ImportError:
-					message = "Could not import '%s' module. " % shortName.lower()
+					message = "Could not import '%s' module." % shortName.lower()
+					verbose.print_(message)
+
+				except (AttributeError, KeyError, TypeError):
+					message = "Unable to set %s environment variables." % shortName
 					verbose.warning(message)
 
 

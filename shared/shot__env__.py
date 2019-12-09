@@ -48,6 +48,14 @@ def set_env(job, shot, shot_path):
 		""" Return the path to the executable for the specified app on the
 			current OS.
 		"""
+		# Set OS identifier strings to get correct app executable paths
+		if os.environ['IC_RUNNING_OS'] == "Windows":
+			currentOS = "win"
+		elif os.environ['IC_RUNNING_OS'] == "MacOS":
+			currentOS = "osx"
+		elif os.environ['IC_RUNNING_OS'] == "Linux":
+			currentOS = "linux"
+
 		return app_paths.getPath(app, getInheritedValue('apps', app), currentOS)
 
 
@@ -87,14 +95,6 @@ def set_env(job, shot, shot_path):
 	else:
 		job_data.setValue('meta', 'icVersion', os.environ['IC_VERSION'])
 		job_data.saveXML()
-
-	# Set OS identifier strings to get correct app executable paths
-	if os.environ['IC_RUNNING_OS'] == "Windows":
-		currentOS = "win"
-	elif os.environ['IC_RUNNING_OS'] == "MacOS":
-		currentOS = "osx"
-	elif os.environ['IC_RUNNING_OS'] == "Linux":
-		currentOS = "linux"
 
 	# Terminal / Command Prompt
 	if os.environ['IC_RUNNING_OS'] == "Windows":
