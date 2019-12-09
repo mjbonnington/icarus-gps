@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <root location="$IC_SHOTPATH">
 	<dir name="c4d" env="IC_C4D_PROJECT_DIR">
-		<dir name="tex" />
+		<dir name="tex" env="IC_C4D_TEXTURES_DIR" />
+		<dir name="scenes" env="IC_C4D_SCENES_DIR" />
 	</dir>
 </root>

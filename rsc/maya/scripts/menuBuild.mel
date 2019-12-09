@@ -8,12 +8,18 @@
 // scripts directly.
 
 
+// Get Maya version
+float $maya_ver = getApplicationVersionAsFloat();
+
+// Get vendor name and initials
 string $vendor = "";
 if (`getenv IC_VENDOR_INITIALS` != "")
 	$vendor = (`getenv IC_VENDOR_INITIALS` + " ");
 
-// Get Maya version
-float $maya_ver = getApplicationVersionAsFloat();
+// Get job and shot
+string $job = `getenv IC_JOB`;
+string $shot = `getenv IC_SHOT`;
+string $shotInfo = $job + " - " + $shot;
 
 // This function suppresses recent menus...
 global proc checkCustomFileMenu()
@@ -80,64 +86,73 @@ for ($item in `menu -ia -q $fileMenu`) {
 setParent -menu $fileMenu;
 
 	// New Scene
-	menuItem -insertAfter ""
-			 -label ($vendor + "New")
-			 -annotation ("Create a new scene")
-			 -image "newScene.png"
-			 -command "source menus2Py; menus2Py.newScene"
-			 icNewScene;
+	menuItem
+		-insertAfter ""
+		-label ($vendor + "New")
+		-annotation "Create a new scene"
+		-image "newScene.png"
+		-command "source menus2Py; menus2Py.newScene"
+		icNewSceneItem;
 
 	// Open Scene
-	menuItem -insertAfter icNewScene
-			 -label ($vendor + "Open...")
-			 -annotation ("Open a saved scene")
-			 -image "openScene.png"
-			 -command "source menus2Py; menus2Py.openScene"
-			 icOpenScene;
+	menuItem
+		-insertAfter icNewSceneItem
+		-label ($vendor + "Open...")
+		-annotation "Open a saved scene"
+		-image "openScene.png"
+		-command "source menus2Py; menus2Py.openScene"
+		icOpenSceneItem;
 
 	// Open Recent Scene
-	menuItem -insertAfter icOpenScene
-			 -subMenu true
-			 -label ($vendor + "Open Recent")
-			 -image "openScene.png"
-			 -postMenuCommand "source menus2Py; menus2Py.updateRecentFilesMenu(\"icFileMenuRecentFileItems\")"
-			 icFileMenuRecentFileItems;
-	setParent -menu ..;
+	menuItem
+		-insertAfter icOpenSceneItem
+		-subMenu true
+		-label ($vendor + "Open Recent")
+		-image "openScene.png"
+		-postMenuCommand "source menus2Py; menus2Py.updateRecentFilesMenu(\"icFileMenuRecentFileItems\")"
+		icFileMenuRecentFileItems;
+
+		setParent -menu ..;
 
 	if ($maya_ver >= 2016) {
-		menuItem -insertAfter icFileMenuRecentFileItems
-				 -divider true
-				 -longDivider false
-				 icFileDivider1;
+		menuItem
+			-insertAfter icFileMenuRecentFileItems
+			-divider true
+			-longDivider false
+			icFileDivider1;
 	} else {
-		menuItem -insertAfter icFileMenuRecentFileItems
-				 -divider true
-				 icFileDivider1;
+		menuItem
+			-insertAfter icFileMenuRecentFileItems
+			-divider true
+			icFileDivider1;
 	}
 
 	// Save Scene
-	menuItem -insertAfter icFileDivider1
-			 -label ($vendor + "Save")
-			 -annotation "Save the current scene"
-			 -image "saveScene.png"
-			 -command "source menus2Py; menus2Py.saveScene"
-			 icSaveScene;
+	menuItem
+		-insertAfter icFileDivider1
+		-label ($vendor + "Save")
+		-annotation "Save the current scene"
+		-image "saveScene.png"
+		-command "source menus2Py; menus2Py.saveScene"
+		icSaveSceneItem;
 
 	// Save Scene As
-	menuItem -insertAfter icSaveScene
-			 -label ($vendor + "Save As...")
-			 -annotation "Save scene with a new name"
-			 -image "saveSceneAs.png"
-			 -command "source menus2Py; menus2Py.saveSceneAs"
-			 icSaveSceneAs;
+	menuItem
+		-insertAfter icSaveSceneItem
+		-label ($vendor + "Save As...")
+		-annotation "Save scene with a new name"
+		-image "saveSceneAs.png"
+		-command "source menus2Py; menus2Py.saveSceneAs"
+		icSaveSceneAsItem;
 
 	// Incremental Save
-	menuItem -insertAfter icSaveSceneAs
-			 -label ($vendor + "Incremental Save")
-			 -annotation "Save the current scene as new version"
-			 -image "incrementalSave.png"
-			 -command "source menus2Py; menus2Py.incrementAndSave"
-			 icIncrementAndSave;
+	menuItem
+		-insertAfter icSaveSceneAsItem
+		-label ($vendor + "Increment and Save")
+		-annotation "Save the current scene as new version"
+		-image "incrementalSave.png"
+		-command "source menus2Py; menus2Py.incrementAndSave"
+		icIncrementAndSaveItem;
 
 checkCustomFileMenu();
 
@@ -154,14 +169,16 @@ if ( !`optionVar -exists icAddVRayPhysicalCamera` ) optionVar -iv icAddVRayPhysi
 
 setParent -menu $createMenu;
 	// Create Cameras menu
-	menuItem -insertAfter LightsItem
-			 -subMenu true
-			 -tearOff true
-			 -label ($vendor + "Camera Presets")
-			 -image "gpsCamera.png"
-			 -postMenuCommand "source menus2Py; menus2Py.updatePresetCameraMenu(\"icCreatePresetCameraItems\")"
-			 icCreatePresetCameraItems;
-	setParent -menu ..;
+	menuItem
+		-insertAfter LightsItem
+		-subMenu true
+		-tearOff true
+		-label ($vendor + "Camera Presets")
+		-image "gpsCamera.png"
+		-postMenuCommand "source menus2Py; menus2Py.updatePresetCameraMenu(\"icCreatePresetCameraItems\")"
+		icCreatePresetCameraItems;
+
+		setParent -menu ..;
 
 
 /////////////////
@@ -174,28 +191,32 @@ buildViewMenu($windowMenu);
 // Add custom entries
 setParent -menu $windowMenu;
 	// Replace the existing Playblast menu item with Preview
-	menuItem -edit
-			 -label ($vendor + "Preview")
-			 -command "source menus2Py; menus2Py.gpsPreviewNoUI"
-			 -annotation ($vendor + "Preview")
-			 -image "gpsPlayblast.png"
-			 playblastItem;
-	menuItem -edit
-			 -command "source menus2Py; menus2Py.gpsPreview"
-			 -annotation ($vendor + "Preview UI")
-			 playblastDialogItem;
+	menuItem
+		-edit
+		-label ($vendor + "Preview")
+		-command "source menus2Py; menus2Py.gpsPreviewNoUI"
+		-annotation "Generate preview (playblast)"
+		-image "gpsPlayblast.png"
+		playblastItem;
+	menuItem
+		-edit
+		-command "source menus2Py; menus2Py.gpsPreview"
+		-annotation "Open preview (playblast) options dialog"
+		playblastDialogItem;
 
-	menuItem -insertAfter playblastItem
-			 -divider true
-			 icWindowDivider1;
+	menuItem
+		-insertAfter playblastItem
+		-divider true
+		icWindowDivider1;
 
 	// Launch Icarus UI
-	menuItem -insertAfter icWindowDivider1
-			 -label "Icarus UI..."
-			 -annotation "Open Icarus UI"
-			 -image "icarus.png"
-			 -command "source menus2Py; menus2Py.launchIcarus"
-			 icLaunchIcarusUI;
+	menuItem
+		-insertAfter icWindowDivider1
+		-label "Icarus UI..."
+		-annotation "Open Icarus UI"
+		-image "icarus.png"
+		-command "source menus2Py; menus2Py.launchIcarus"
+		icLaunchIcarusItem;
 
 
 /////////////////
@@ -208,15 +229,17 @@ RenRenderMenu($renderMenu);
 // Add custom entries
 setParent -menu $renderMenu;
 	// Render Submit
-	menuItem -divider true
-			 icRenderDivider1;
+	menuItem
+		-divider true
+		icRenderDivider1;
 
-	menuItem -insertAfter icRenderDivider1
-			 -label ($vendor + "Submit Render...")
-			 -command "source menus2Py; menus2Py.submitRender"
-			 -annotation "Submit Render"
-			 -image "gpsSubmitRender.png"
-			 icSubmitRenderItem;
+	menuItem
+		-insertAfter icRenderDivider1
+		-label ($vendor + "Submit Render...")
+		-command "source menus2Py; menus2Py.submitRender"
+		-annotation "Submit Render"
+		-image "gpsSubmitRender.png"
+		icSubmitRenderItem;
 
 
 //////////////////////
@@ -226,19 +249,184 @@ setParent -menu $renderMenu;
 string $timelineMenu = "TimeSliderMenu";
 updateTimeSliderMenu $timelineMenu;
 
-// Add custom entries
 setParent -menu $timelineMenu;
 	// Replace the existing Playblast menu item with Preview
-	menuItem -edit
-	         -label ($vendor + "Preview")
-	         -command "source menus2Py; menus2Py.gpsPreviewNoUI"
-	         -annotation ($vendor + "Preview")
-	         -image "gpsPlayblast.png"
-	         timeSliderPlayblastItem;
-	menuItem -edit
-	         -command "source menus2Py; menus2Py.gpsPreview"
-	         -annotation ($vendor + "Preview UI")
-	         timeSliderPlayblastOptionItem;
+	menuItem
+		-edit
+		-label ($vendor + "Preview")
+		-command "source menus2Py; menus2Py.gpsPreviewNoUI"
+		-annotation "Generate preview (playblast)"
+		-image "gpsPlayblast.png"
+		timeSliderPlayblastItem;
+	menuItem
+		-edit
+		-command "source menus2Py; menus2Py.gpsPreview"
+		-annotation "Open preview (playblast) options dialog"
+		timeSliderPlayblastOptionItem;
+
+
+/////////////////
+// Custom Menu //
+/////////////////
+
+string $custom_menu = "icCustomMenu";
+menu -label $vendor -parent MayaWindow -tearOff true $custom_menu;
+setParent -menu $custom_menu;
+	// Current job and shot info
+	menuItem
+		-label $shotInfo
+		-command "source menus2Py; menus2Py.shotInfo"
+		icShotInfoItem;
+
+	menuItem -divider true;
+
+	// Launch Icarus UI
+	menuItem
+		-label "Icarus..."
+		-annotation "Open Icarus UI"
+		-image "icarus.png"
+		-command "source menus2Py; menus2Py.launchIcarus"
+		icLaunchIcarusItem;
+
+	menuItem -divider true;
+
+	// Review
+	menuItem
+		-label "Review"
+		-annotation "Launch review app"
+		-image "review.png"
+		-command "source menus2Py; menus2Py.launchDjv"
+		icReviewItem;
+
+	// Open production board
+	menuItem
+		-label "Production board"
+		-annotation "Open the Production Board"
+		-image "productionBoard.png"
+		-command "source menus2Py; menus2Py.launchProdBoard"
+		icLaunchProdBoardItem;
+
+	// Browse project directories
+	menuItem
+		-subMenu true
+		-tearOff true
+		-label "Browse project folders"
+		-image "browse.png"
+		icBrowseDirsMenu;
+
+		menuItem
+			-label "Scenes"
+			-command "source menus2Py; menus2Py.browseScenes";
+		menuItem
+			-label "Renders"
+			-command "source menus2Py; menus2Py.browseRenders";
+		menuItem
+			-label "Playblasts"
+			-command "source menus2Py; menus2Py.browsePlayblasts";
+		menuItem
+			-label "Sourceimages"
+			-command "source menus2Py; menus2Py.browseSourceimages";
+		menuItem
+			-label ("Shot - " + $shot)
+			-command "source menus2Py; menus2Py.browseShot";
+		menuItem
+			-label ("Job - " + $job)
+			-command "source menus2Py; menus2Py.browseJob";
+
+		setParent -menu ..;
+
+	menuItem -divider true;
+
+	// // Publish
+	// menuItem
+	// 	-label "Publish..."
+	// 	-annotation "Publish an asset"
+	// 	-image "publish.png"
+	// 	-command "source menus2Py; menus2Py.publish"
+	// 	icPublishItem;
+
+	// // Gather
+	// menuItem
+	// 	-label "Gather..."
+	// 	-annotation "Gather asset(s) into scene"
+	// 	-image "gather.png"
+	// 	-command "source menus2Py; menus2Py.gather"
+	// 	icGatherItem;
+
+	// // Asset Manager
+	// menuItem
+	// 	-label "Asset Manager..."
+	// 	-annotation "Manage the assets in your scene"
+	// 	-image "assets.png"
+	// 	-command "source menus2Py; menus2Py.assetManager"
+	// 	icAssetManagerItem;
+
+	// menuItem -divider true;
+
+	// Rename Tools
+	menuItem
+		-label ($vendor + "Rename Tools")
+		-annotation "Advanced renaming of objects"
+		-image "bulkRename.png"
+		-command "source menus2Py.mel; menus2Py.bulkRename"
+		icBulkRenameItem;
+
+	// Preview
+	menuItem
+		-label ($vendor + "Preview")
+		-annotation "Generate preview (playblast)"
+		-command "source menus2Py; menus2Py.gpsPreviewNoUI"
+		-image "gpsPlayblast.png"
+		icPreviewItem;
+	menuItem
+		-optionBox true
+		-annotation "Open preview (playblast) options dialog"
+		-command "source menus2Py; menus2Py.gpsPreview"
+		icPreviewDialogItem;
+
+	// Submit Render
+	menuItem
+		-label ($vendor + "Submit Render...")
+		-annotation "Submit Render"
+		-command "source menus2Py; menus2Py.submitRender"
+		-image "gpsSubmitRender.png"
+		icSubmitRenderItem;
+
+	// Open common editors
+	menuItem
+		-subMenu true
+		-tearOff true
+		-label "Editors"
+		-label "Open commonly used editor windows"
+		-image "editor.png"
+		icEditorsMenu;
+
+		if ($maya_ver >= 2017) {
+			menuItem -label "Outliner"
+			-command "OutlinerWindow";
+		} else {
+			// Custom dockable Outliner panel for Maya 2016 and earlier
+			menuItem -label "Outliner"
+			-command "source dev_dockOutliner; dev_dockOutliner";
+		};
+		menuItem
+			-label "Node Editor"
+			-command "NodeEditorWindow";
+		menuItem -divider true;
+		menuItem
+			-label "Hypershade"
+			-command "HypershadeWindow";
+		menuItem
+			-label "UV Texture Editor"
+			-command "TextureViewWindow";
+		menuItem -divider true;
+		menuItem -label "Graph Editor"
+		         -command "GraphEditor";
+		menuItem
+			-label "Dope Sheet"
+			-command "DopeSheetEditor";
+
+		setParent -menu ..;
 
 
 /////////////////////////
@@ -249,150 +437,158 @@ setParent $gStatusLine;
 int $iconHeight = 26;
 
 // New Scene
-iconTextButton -edit
-               -image1 "newScene.png"
-               -width $iconHeight
-               -height $iconHeight
-               -command "source menus2Py; menus2Py.newScene"
-               -annotation "New scene"
-               newSceneButton;
+iconTextButton
+	-edit
+	-image1 "newScene.png"
+	-width $iconHeight
+	-height $iconHeight
+	-command "source menus2Py; menus2Py.newScene"
+	-annotation "Create a new scene"
+	newSceneButton;
 
 // Open Scene
-iconTextButton -edit
-               -image1 "openScene.png"
-               -width $iconHeight
-               -height $iconHeight
-               -command "source menus2Py; menus2Py.openScene"
-               -annotation "Open scene. Right click for recent files."
-               openSceneButton;
+iconTextButton
+	-edit
+	-image1 "openScene.png"
+	-width $iconHeight
+	-height $iconHeight
+	-command "source menus2Py; menus2Py.openScene"
+	-annotation "Open a saved scene. Right click for recent files."
+	openSceneButton;
 
 // Create a popup menu for Recent Files on the Open Scene button
 deleteUI -menu OpenSceneButtonRecentFileItems;
 popupMenu -parent openSceneButton OpenSceneButtonRecentFileItems;
-	menu -edit
-	     -postMenuCommand "source menus2Py; menus2Py.updateRecentFilesMenu(\"OpenSceneButtonRecentFileItems\")"
-	     OpenSceneButtonRecentFileItems;
-setParent -menu ..;
+	menu
+		-edit
+		-postMenuCommand "source menus2Py; menus2Py.updateRecentFilesMenu(\"OpenSceneButtonRecentFileItems\")"
+		OpenSceneButtonRecentFileItems;
+	setParent -menu ..;
 
 // Save Scene
-iconTextButton -edit
-               -image1 "saveScene.png"
-               -width $iconHeight
-               -height $iconHeight
-               -command "source menus2Py; menus2Py.saveScene"
-               -annotation "Save scene"
-               saveSceneButton;
+iconTextButton
+	-edit
+	-image1 "saveScene.png"
+	-width $iconHeight
+	-height $iconHeight
+	-command "source menus2Py; menus2Py.saveScene"
+	-annotation "Save the current scene"
+	saveSceneButton;
 
 // Create a popup menu on the Save button for Save As and Incremental Save
 string $save_menu = `popupMenu -parent saveSceneButton`;
-	menuItem -label "Incremental Save"
-	         -command "source menus2Py; menus2Py.incrementAndSave";
-	menuItem -label "Save As..."
-	         -command "source menus2Py; menus2Py.saveSceneAs";
+	menuItem
+		-label "Increment and Save"
+		-command "source menus2Py; menus2Py.incrementAndSave"
+		-annotation "Save scene with a new name";
+	menuItem
+		-label "Save As..."
+		-command "source menus2Py; menus2Py.saveSceneAs"
+		-annotation "Save the current scene as new version";
 
 // The following are new buttons added to the end of the status line toolbar...
 
-// Rename Tools
-iconTextButton -image1 "bulkRename.png"
-               -width $iconHeight
-               -height $iconHeight
-               -command "source menus2Py.mel; menus2Py.bulkRename"
-               -annotation "Advanced renaming of objects"
-               bulkRenameButton;
+// // Rename Tools
+// iconTextButton -image1 "bulkRename.png"
+//                -width $iconHeight
+//                -height $iconHeight
+//                -command "source menus2Py.mel; menus2Py.bulkRename"
+//                -annotation "Advanced renaming of objects"
+//                bulkRenameButton;
 
-// Common Editors
-iconTextButton -image1 "editor.png"
-               -width $iconHeight
-               -height $iconHeight
-               -annotation "Open commonly used editor windows"
-               editorsButton;
+// // Common Editors
+// iconTextButton -image1 "editor.png"
+//                -width $iconHeight
+//                -height $iconHeight
+//                -annotation "Open commonly used editor windows"
+//                editorsButton;
 
-// Add popup menu for common editors
-string $editor_menu = `popupMenu -b 1 -p editorsButton`;
-	if ($maya_ver >= 2017) {
-		menuItem -label "Outliner"
-		-command "OutlinerWindow";
-	} else {
-		// Custom dockable Outliner panel for Maya 2016 and earlier
-		menuItem -label "Outliner"
-		-command "source dev_dockOutliner; dev_dockOutliner";
-	};
-	menuItem -label "Node Editor"
-	         -command "NodeEditorWindow";
-	menuItem -divider true;
-	menuItem -label "Hypershade"
-	         -command "HypershadeWindow";
-	menuItem -label "UV Texture Editor"
-	         -command "TextureViewWindow";
-	menuItem -divider true;
-	menuItem -label "Graph Editor"
-	         -command "GraphEditor";
-	menuItem -label "Dope Sheet"
-	         -command "DopeSheetEditor";
+// // Add popup menu for common editors
+// string $editor_menu = `popupMenu -b 1 -p editorsButton`;
+// 	if ($maya_ver >= 2017) {
+// 		menuItem -label "Outliner"
+// 		-command "OutlinerWindow";
+// 	} else {
+// 		// Custom dockable Outliner panel for Maya 2016 and earlier
+// 		menuItem -label "Outliner"
+// 		-command "source dev_dockOutliner; dev_dockOutliner";
+// 	};
+// 	menuItem -label "Node Editor"
+// 	         -command "NodeEditorWindow";
+// 	menuItem -divider true;
+// 	menuItem -label "Hypershade"
+// 	         -command "HypershadeWindow";
+// 	menuItem -label "UV Texture Editor"
+// 	         -command "TextureViewWindow";
+// 	menuItem -divider true;
+// 	menuItem -label "Graph Editor"
+// 	         -command "GraphEditor";
+// 	menuItem -label "Dope Sheet"
+// 	         -command "DopeSheetEditor";
 
-// Browse Project Directories
-iconTextButton -image1 "browse.png"
-               -width $iconHeight -height $iconHeight
-               -annotation "Browse project directories"
-               browseDirsButton;
+// // Browse project directories
+// iconTextButton -image1 "browse.png"
+//                -width $iconHeight -height $iconHeight
+//                -annotation "Browse project directories"
+//                browseDirsButton;
 
-// Create a menu on the browse dir button for different directories
-string $browser_menu = `popupMenu -b 1 -p browseDirsButton`;
-	menuItem -label "Browse scenes"
-	         -command "source menus2Py; menus2Py.browseScenes";
-	menuItem -label "Browse playblasts"
-	         -command "source menus2Py; menus2Py.browsePlayblasts";
-	menuItem -label "Browse renders"
-	         -command "source menus2Py; menus2Py.browseRenders";
-	menuItem -label "Browse sourceimages"
-	         -command "source menus2Py; menus2Py.browseSourceimages";
-	menuItem -label "Browse shot"
-	         -command "source menus2Py; menus2Py.browseShot";
-	menuItem -label "Browse job"
-	         -command "source menus2Py; menus2Py.browseJob";
+// // Create a menu on the browse dir button for different directories
+// string $browser_menu = `popupMenu -b 1 -p browseDirsButton`;
+// 	menuItem -label "Browse scenes"
+// 	         -command "source menus2Py; menus2Py.browseScenes";
+// 	menuItem -label "Browse playblasts"
+// 	         -command "source menus2Py; menus2Py.browsePlayblasts";
+// 	menuItem -label "Browse renders"
+// 	         -command "source menus2Py; menus2Py.browseRenders";
+// 	menuItem -label "Browse sourceimages"
+// 	         -command "source menus2Py; menus2Py.browseSourceimages";
+// 	menuItem -label "Browse shot"
+// 	         -command "source menus2Py; menus2Py.browseShot";
+// 	menuItem -label "Browse job"
+// 	         -command "source menus2Py; menus2Py.browseJob";
 
-// Review
-iconTextButton -image1 "review.png"
-               -width $iconHeight
-               -height $iconHeight
-               -command "source menus2Py; menus2Py.launchHieroPlayer"
-               -annotation "Launch review app"
-               reviewButton;
+// // Review
+// iconTextButton -image1 "review.png"
+//                -width $iconHeight
+//                -height $iconHeight
+//                -command "source menus2Py; menus2Py.launchHieroPlayer"
+//                -annotation "Launch review app"
+//                reviewButton;
 
-// Create a menu on the review button for different review software
-string $review_menu = `popupMenu -b 1 -p reviewButton`;
-	menuItem -label "HieroPlayer"
-	         -command "source menus2Py; menus2Py.launchHieroPlayer";
-	menuItem -label "djv_view"
-	         -command "source menus2Py; menus2Py.launchDjv";
+// // Create a menu on the review button for different review software
+// string $review_menu = `popupMenu -b 1 -p reviewButton`;
+// 	menuItem -label "HieroPlayer"
+// 	         -command "source menus2Py; menus2Py.launchHieroPlayer";
+// 	menuItem -label "djv_view"
+// 	         -command "source menus2Py; menus2Py.launchDjv";
 
-// Open Production Board
-iconTextButton -image1 "productionBoard.png"
-               -width $iconHeight
-               -height $iconHeight
-               -command "source menus2Py; menus2Py.launchProdBoard"
-               -annotation "Open the Production Board"
-               launchProdBoardButton;
+// // Open production board
+// iconTextButton -image1 "productionBoard.png"
+//                -width $iconHeight
+//                -height $iconHeight
+//                -command "source menus2Py; menus2Py.launchProdBoard"
+//                -annotation "Open the Production Board"
+//                launchProdBoardButton;
 
-// Launch Icarus UI
-iconTextButton -image1 "icarus.png"
-               -width $iconHeight
-               -height $iconHeight
-               -command "source menus2Py; menus2Py.launchIcarus"
-               -annotation "Open Icarus UI"
-               launchIcarusButton;
+// // Launch Icarus UI
+// iconTextButton -image1 "icarus.png"
+//                -width $iconHeight
+//                -height $iconHeight
+//                -command "source menus2Py; menus2Py.launchIcarus"
+//                -annotation "Open Icarus UI"
+//                launchIcarusButton;
 
-// Print current job and shot info
-string $jobInfo = `getenv IC_JOB` + " - " + `getenv IC_SHOT`;
-text -label "   ";
-text -label $jobInfo -h 27;
-setParent -menu ..;
+// // Print current job and shot info
+// text -label "   ";
+// text -label $shotInfo -h 27;
+// setParent -menu ..;
 
 // Swap Object Mode / Component Mode buttons (fix for Maya 2014 only)
 if ($maya_ver == 2014) {
-	formLayout -edit
-	           -af selectBtnComponent right 0
-	           -ac selectBtnObject right 0 selectBtnComponent
-	           -ac selectBtnHierComb right 0 selectBtnObject
-	           masksForm;
+	formLayout
+		-edit
+		-af selectBtnComponent right 0
+		-ac selectBtnObject right 0 selectBtnComponent
+		-ac selectBtnHierComb right 0 selectBtnObject
+		masksForm;
 }

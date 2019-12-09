@@ -29,11 +29,6 @@
 				<insertAfter>h.ic_new</insertAfter>
 			</scriptItem>
 
-			<!-- <actionItem id="h.ic_recent_files">
-				<label>GPS Open Recent</label>
-				<insertAfter>h.ic_open</insertAfter>
-			</actionItem> -->
-
 			<subMenu id="h.ic_recent_files">
 				<label>GPS Open Recent</label>
 				<scriptMenuStripDynamic id="myUniqueDynamicStripId">
@@ -104,6 +99,7 @@ import os
 label = '%s - %s' % (os.environ['IC_JOB'], os.environ['IC_SHOT'])
 return label
 ]]></labelExpression>
+				<scriptCode>from shared import shot_info; shot_info.show()</scriptCode>
 				<insertBefore />
 			</scriptItem>
 
@@ -112,9 +108,66 @@ return label
 			</separatorItem>
 
 			<scriptItem id="h.ic_icarus_ui">
-				<label>Icarus UI...</label>
+				<label>Icarus...</label>
 				<scriptCode>from core.app_session import *; session.icarus.show()</scriptCode>
 				<insertAfter>h.ic_custom_menu_sep_1</insertAfter>
+			</scriptItem>
+
+			<separatorItem id="h.ic_custom_menu_sep_2">
+				<insertAfter>h.ic_icarus_ui</insertAfter>
+			</separatorItem>
+
+			<scriptItem id="h.ic_review">
+				<label>Review</label>
+				<scriptCode>from shared import launchApps; launchApps.djv()</scriptCode>
+				<insertAfter>h.ic_custom_menu_sep_2</insertAfter>
+			</scriptItem>
+
+			<scriptItem id="h.ic_production_board">
+				<label>Production board</label>
+				<scriptCode>from shared import launchApps; launchApps.prodBoard()</scriptCode>
+				<insertAfter>h.ic_review</insertAfter>
+			</scriptItem>
+
+			<subMenu id="h.ic_browse_dirs">
+				<label>Browse project folders</label>
+				<insertAfter>h.ic_production_board</insertAfter>
+
+				<scriptItem id="h.ic_browse_scenes">
+					<label>Scenes</label>
+					<scriptCode>from shared import openDirs; openDirs.openHoudiniScenes()</scriptCode>
+				</scriptItem>
+
+				<scriptItem id="h.ic_browse_renders">
+					<label>Renders</label>
+					<scriptCode>from shared import openDirs; openDirs.openHoudiniRenders()</scriptCode>
+				</scriptItem>
+
+				<scriptItem id="h.ic_browse_textures">
+					<label>Textures</label>
+					<scriptCode>from shared import openDirs; openDirs.openHoudiniTextures()</scriptCode>
+				</scriptItem>
+
+				<scriptItem id="h.ic_browse_shot">
+					<label>Shot</label>
+					<scriptCode>from shared import openDirs; openDirs.openShot()</scriptCode>
+				</scriptItem>
+
+				<scriptItem id="h.ic_browse_job">
+					<label>Job</label>
+					<scriptCode>from shared import openDirs; openDirs.openJob()</scriptCode>
+				</scriptItem>
+
+			</subMenu>
+
+			<separatorItem id="h.ic_custom_menu_sep_3">
+				<insertAfter>h.ic_browse_dirs</insertAfter>
+			</separatorItem>
+
+			<scriptItem id="h.ic_submit_render">
+				<label>Submit Render...</label>
+				<scriptCode>from tools.renderQueue import render_submit; render_submit.run_houdini()</scriptCode>
+				<insertAfter>h.ic_custom_menu_sep_3</insertAfter>
 			</scriptItem>
 
 		</subMenu>

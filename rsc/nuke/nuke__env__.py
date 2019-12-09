@@ -1,11 +1,11 @@
 #!/usr/bin/python
 
-# [nuke] __init__.py
+# nuke__env__.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2019
 #
-# Initialise Nuke-specific environment.
+# Set Nuke-specific environment variables.
 
 import os
 

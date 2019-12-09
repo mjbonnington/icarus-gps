@@ -60,6 +60,11 @@ class AppLauncher(QtWidgets.QDialog):
 			displayName = app.get('name')  # Apps are referenced by their display name
 			shortName = app.get('id')
 			appVersion = self.jd.getAppVersion(displayName)
+			if app.get('projectFolders') == "True":
+				projectFolders = True
+			else:
+				projectFolders = False
+
 			if appVersion:  # Only apps that have a version set in the job settings
 				appExecutable = self.ap.getPath(displayName, appVersion, self.currentOS)
 
@@ -67,19 +72,19 @@ class AppLauncher(QtWidgets.QDialog):
 				os.environ['IC_%s_EXECUTABLE' % shortName.upper()] = appExecutable
 				os.environ['IC_%s_VERSION' % shortName.upper()] = appVersion
 
+				# Set environment variables for project folder structure
+				if projectFolders:
+					folder_xml = os_wrapper.absolutePath("$IC_BASEDIR/rsc/%s/templates/projectDir.xml" % shortName)
+					self.ds.createDirStructure(
+						datafile=folder_xml, 
+						createDirs=False, 
+						createFiles=False, 
+						createEnvVars=True)
+
 				# Source individual app's custom environment
-				# TODO: implement
-				# folder_env = os_wrapper.absolutePath("$IC_BASEDIR/rsc/%s/env" % shortName)
-				# print folder_env
-				# import folder_env
-				# from rsc import shortName
-				# from rsc.shortName import env
 				try:
-					# exec_str = 'from rsc.%s import env' % shortName.lower()
-					# exec_str = 'from rsc.%s.env import env_vars; env_vars.set()' % shortName.lower()
-					# exec_str = 'from rsc import %s' % shortName.lower()
-					exec_str = 'from rsc.%s.env import %s__env__ as app_env; app_env.set_env()' % (shortName.lower(), shortName.lower())
-					verbose.debug(exec_str)
+					exec_str = 'from rsc.%s import %s__env__ as app_env; app_env.set_env()' % (shortName.lower(), shortName.lower())
+					# verbose.debug(exec_str)
 					exec(exec_str)
 
 				except ImportError:
@@ -87,7 +92,7 @@ class AppLauncher(QtWidgets.QDialog):
 					verbose.print_(message)
 
 				except (AttributeError, KeyError, TypeError):
-					message = "Unable to set %s environment variables." % shortName
+					message = "Unable to set %s environment variables." % displayName
 					verbose.warning(message)
 
 
@@ -329,7 +334,7 @@ class AppLauncher(QtWidgets.QDialog):
 		# Create project folder structure & set environment variables
 		if projectFolders:
 			folder_xml = os_wrapper.absolutePath("$IC_BASEDIR/rsc/%s/templates/projectDir.xml" % shortName)
-			self.ds.createDirStructure(folder_xml)
+			self.ds.createDirStructure(datafile=folder_xml)
 
 		# Run the executable
 		launchApps.launch(displayName, executable, flags)

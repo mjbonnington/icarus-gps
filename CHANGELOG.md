@@ -1,8 +1,10 @@
 v0.10.0 (--)
 -	[Icarus] Implemented unified open/save system for DCC apps.
+-	[Icarus] Moved toolbar icons in Maya and Nuke to a new 'GPS' menu in pursuit of a more consistent user experience.
 -	[Icarus] Added preliminary support for Houdini.
 -	[Icarus] Found a workaround for an issue which was preventing Nuke 11.x from starting.
 -	[Icarus] Restructured code into Python packages.
+-	[Icarus] All Icarus-set environment variables now prefixed with 'IC_'. This helps avoid conflicts with existing variables which may have the same name.
 -	[Icarus] Added fallback for systems that do not support hardlinks: the file(s) will be copied instead. This fixes an issue that could potentially break the publishing system.
 -	[Icarus] Improved Linux compatibility.
 -	[Preview] Added ability to output TIFF images (with alpha channel).

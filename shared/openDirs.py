@@ -3,8 +3,8 @@
 # [Icarus] openDirs.py
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2018 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2013-2019 Gramercy Park Studios
 #
 # Contains functions to open certain directories in the system's file explorer
 # application.
@@ -19,7 +19,7 @@ if os.environ['IC_RUNNING_OS'] == "Windows":
 elif os.environ['IC_RUNNING_OS'] == "MacOS":
 	sysCommand = "open"
 else:  # Linux
-	sysCommand = "nautilus"
+	sysCommand = "xdg-open"
 
 
 def open_(path_):
@@ -70,6 +70,18 @@ def openNukeElements():
 
 def openNukeRenders():
 	open_(os.environ['IC_NUKE_RENDERS_DIR'])
+
+def openHoudini():
+	open_(os.environ['IC_HOUDINI_PROJECT_DIR'])
+
+def openHoudiniScenes():
+	open_(os.environ['IC_HOUDINI_SCENES_DIR'])
+
+def openHoudiniTextures():
+	open_(os.environ['IC_HOUDINI_TEXTURES_DIR'])
+
+def openHoudiniRenders():
+	open_(os.environ['IC_HOUDINI_RENDERS_DIR'])
 
 def openRealflowScenes():
 	open_(os.environ['IC_REALFLOW_SCENES_DIR'])

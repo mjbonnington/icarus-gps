@@ -87,6 +87,9 @@
            <property name="text">
             <string>Change...</string>
            </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
+           </property>
           </widget>
          </item>
         </layout>

@@ -32,7 +32,7 @@ def filenameFix(filename):
 		os.environ['IC_FILESYSTEM_ROOT'])
 	return filename
 
-# Adding to Nuke path
+# Add locations to Nuke path
 nuke.pluginAddPath('../gizmos')
 nuke.pluginAddPath('../icons')
 nuke.pluginAddPath('../scripts')

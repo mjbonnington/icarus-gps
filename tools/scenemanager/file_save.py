@@ -66,8 +66,8 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 		self.setWindowFlags(QtCore.Qt.Dialog)
 
 		# Set icons
-		# self.ui.shot_toolButton.setIcon(self.iconSet('configure.svg'))  # causes crash?
-		self.ui.nativeDialog_toolButton.setIcon(self.iconSet('folder-open.svg'))  # find better icon
+		self.ui.shot_toolButton.setIcon(self.iconSet('icon_settings.png'))
+		self.ui.nativeDialog_toolButton.setIcon(self.iconSet('folder-open.svg'))
 
 		# Connect signals & slots
 		# self.ui.shot_toolButton.clicked.connect(self.setShot)

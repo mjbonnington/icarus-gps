@@ -95,6 +95,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.toggleExpertWidgets(False, self.ui)
 
 		# self.ui.user_toolButton.hide()  # TEMPORARY - until user prefs UI works
+		self.ui.user_toolButton.setText(os.environ['IC_USERNAME'])
 
 		# Set up keyboard shortcuts
 		self.shortcutExpertMode = QtWidgets.QShortcut(self)
@@ -293,10 +294,10 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.shotEnv_toolButton.addAction(self.ui.actionShot_settings)
 			self.ui.shotEnv_toolButton.setEnabled(True)
 
-			# Apply job/shot settings pop-up menu to user label (only in standalone mode)
+			# Apply user settings pop-up menu to user label (only in standalone mode)
 			self.ui.user_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 			self.ui.user_toolButton.addAction(self.ui.actionUser_settings)
-			self.ui.user_toolButton.setText(os.environ['IC_USERNAME'])
+			# self.ui.user_toolButton.setText(os.environ['IC_USERNAME'])
 			self.ui.user_toolButton.setEnabled(False)
 
 			# Setup app launch icons
@@ -1814,7 +1815,7 @@ Developers: %s
 	def clearColumn(self, column):
 		for i in range(0, column.count()):
 			column.takeItem(0)
-	
+
 	#returns a list of items to display in gather based on running environment
 	def getAssetEnvPrefix(self):
 		if os.environ['IC_ENV'] == 'MAYA':
@@ -1823,7 +1824,7 @@ Developers: %s
 			return ('nk', 'ic', 'render')
 		else:
 			return ('ma', 'nk', 'ic', 'render', 'daily', 'dailies') # daily -> dailies
-		
+
 	#populates columns
 	def fillColumn(self, column, searchPath):
 		envPrefix = self.getAssetEnvPrefix()
@@ -1850,7 +1851,7 @@ Developers: %s
 		#column.item(0).setSelected(True) # select the first item automatically
 		#self.updateInfoField()
 		#self.updateImgPreview()
-	
+
 	#adjust UI columns to accodmodate assetSubType column
 	def adjustColumns(self):
 		#checks for versioned items inside assetName folder. If not found displays subset column
@@ -1879,7 +1880,7 @@ Developers: %s
 		pixmap = QtGui.QPixmap(None)
 		self.ui.gatherImgPreview_label.setPixmap(pixmap)
 		self.fillColumn(self.aTypeCol, self.gatherFrom)
-	
+
 	#updates assetName column
 	def updateAssetNameCol(self):
 		self.adjustGatherTab()

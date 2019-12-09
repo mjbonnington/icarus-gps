@@ -1,20 +1,21 @@
 #!/usr/bin/python
 
-# [maya] __init__.py
+# maya__env__.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2019
 #
-# Initialise Maya-specific environment.
+# Set Maya-specific environment variables.
 
 import os
 
 from shared import os_wrapper
 
 def set_env():
-	# Icarus env vars (N.B. Project path vars are set in templates/projectDir.xml)
+	# Icarus env vars
+	# (N.B. Project path vars are set in templates/projectDir.xml)
 	os.environ['IC_MAYA_RENDER_EXECUTABLE'] = os_wrapper.absolutePath('%s/Render' % os.path.dirname(os.environ['IC_MAYA_EXECUTABLE']))
-	os.environ['IC_MAYA_SHARED_RESOURCES'] = os_wrapper.absolutePath('$IC_FILESYSTEM_ROOT/_Library/3D/Maya')  # Store this in app settings / ic global prefs?
+	os.environ['IC_MAYA_SHARED_RESOURCES'] = os_wrapper.absolutePath('$IC_FILESYSTEM_ROOT/_Library/3D/Maya')  # Store this in app settings / IC global prefs?
 
 	# Maya config vars
 	os.environ['MAYA_DEBUG_ENABLE_CRASH_REPORTING'] = "0"

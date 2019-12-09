@@ -50,8 +50,10 @@ class SceneManager(object):
 			title='Open', 
 			pattern='*.hip, *.hiplc, *.hipnc, *.hip*')
 
-		print filepath
-		return self.file_open(filepath)
+		if filepath:
+			return self.file_open(filepath)
+		else:
+			return False
 
 
 	def file_open(self, filepath):
@@ -60,6 +62,10 @@ class SceneManager(object):
 		# Remove backslashes from path as this causes issues on Windows...
 		filepath = os_wrapper.absolutePath(filepath)
 		# print("Loading: %s" % filepath)
+
+		# Hide UI to prevent is stealing focus from Houdini's own dialog...
+		self.file_open_ui.hide()
+
 		try:
 			hou.hipFile.load(file_name=filepath)
 			self.set_hip_and_job_vars(
@@ -91,7 +97,10 @@ class SceneManager(object):
 			title='Save As', 
 			pattern='*.hip, *.hiplc, *.hipnc, *.hip*')
 
-		return self.file_save_as(filepath)
+		if filepath:
+			return self.file_save_as(filepath)
+		else:
+			return False
 
 
 	def file_save(self):
@@ -113,10 +122,11 @@ class SceneManager(object):
 		# Remove backslashes from path as this causes issues on Windows...
 		filepath = os_wrapper.absolutePath(filepath)
 		# print("Saving: %s" % filepath)
+
+		# Hide UI to prevent is stealing focus from Houdini's own dialog...
+		self.file_save_ui.hide()
+
 		try:
-			# dirname = os.path.dirname(filepath)
-			# if not os.path.isdir(dirname):
-			# 	os_wrapper.createDir(dirname)
 			hou.hipFile.save(filepath)
 			self.set_hip_and_job_vars(
 				set_hip_explicit=os.path.dirname(filepath))

@@ -6,6 +6,13 @@
  * with the values defined in the Python module 'ui_template'.
  */
 
+/* Reset styles */
+* {
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+
 /* Generic Elements --------------------------------------------------------*/
 
 QMainWindow, QDialog { /* main background colour */

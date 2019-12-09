@@ -241,7 +241,7 @@ class SceneManager(object):
 		else:
 			vendor = ""
 		self.update_recents_menu(nuke.menu('Nuke').menu('File').menu(vendor+'Open Recent'))
-		self.update_recents_menu(nuke.menu('Nodes').menu('Open').menu('Open Recent'))
+		# self.update_recents_menu(nuke.menu('Nodes').menu('Open').menu('Open Recent'))
 
 
 	def set_defaults(self):

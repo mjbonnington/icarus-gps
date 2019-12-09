@@ -74,7 +74,7 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		self.setWindowFlags(QtCore.Qt.Dialog)
 
 		# Set icons
-		# self.ui.shot_toolButton.setIcon(self.iconSet('configure.svg'))  # causes crash?
+		self.ui.shot_toolButton.setIcon(self.iconSet('icon_settings.png'))
 		self.ui.refresh_toolButton.setIcon(self.iconSet('icon_refresh.png'))
 		self.ui.nativeDialog_toolButton.setIcon(self.iconSet('folder-open.svg'))
 

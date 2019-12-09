@@ -77,6 +77,12 @@ global proc menus2Py.launchIcarus()
 }
 
 
+global proc menus2Py.shotInfo()
+{
+	python("from shared import shot_info; shot_info.show()");
+}
+
+
 global proc menus2Py.launchProdBoard()
 {
 	python("from shared import launchApps; launchApps.prodBoard()");
@@ -207,7 +213,8 @@ global proc menus2Py.forceOverrideComponentDisplay(string $nodeName)
 
 global proc menus2Py.bulkRename()
 {
-	python("from tools.rename import gpsRenameTools; gpsRenameTools.gpsRenameTools().UI()");
+	// python("from tools.sequencerename import gpsRenameTools; gpsRenameTools.gpsRenameTools().UI()");
+	python("from rsc.maya.scripts import gpsRenameTools; gpsRenameTools.gpsRenameTools().UI()");
 }
 
 
