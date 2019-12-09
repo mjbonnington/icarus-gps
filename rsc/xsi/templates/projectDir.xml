@@ -5,7 +5,7 @@
 		<dir name="Pictures" env="IC_XSI_PICTURES_DIR" />
 		<dir name="Render_Pictures" env="IC_XSI_RENDERPICTURES_DIR" />
 		<dir name="Cache" />
-		<dir name="system" env="IC_XSI_SYSTEM_DIR" />
+		<dir name="system" env="IC_XSI_SYSTEM_DIR">
 			<file name="dsprojectinfo" />
 		</dir>
 	</dir>

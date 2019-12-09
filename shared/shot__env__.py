@@ -9,10 +9,11 @@
 # Set up shot-related environment variables.
 
 import os
-# import sys
+import sys
 
 from . import appPaths
 from . import os_wrapper
+from . import pDialog
 from . import settings_data_xml
 from . import verbose
 
@@ -56,6 +57,23 @@ def set_env(job, shot, shot_path):
 	# 	return app_paths.getPath(app, getInheritedValue('apps', app), currentOS)
 
 
+	def parseVersion(v_str):
+		""" Parse version string and return a 3-tuple containing the major,
+			minor and point version as integers.
+		"""
+		try:
+			version = v_str.rsplit('-')[0]  # Strip date from version number
+			v_split = version.lstrip('v').split('.')
+			v_major = int(v_split[0])
+			v_minor = int(v_split[1])
+			v_point = int(v_split[2])
+			return v_major, v_minor, v_point
+
+		except (ValueError, KeyError):
+			verbose.warning("Could not parse version string.")
+			return None
+
+
 	job_path = os.path.split(shot_path)[0]
 	job_data_path = os.path.join(job_path, os.environ['IC_METADATA'])
 	shot_data_path = os.path.join(shot_path, os.environ['IC_METADATA'])
@@ -85,15 +103,40 @@ def set_env(job, shot, shot_path):
 	os.environ['IC_ASSETDIR'] = 'assets'
 
 	# Check if the job is using the correct Icarus version
+	v_current = parseVersion(os.environ['IC_VERSION'])
 	icVersion = job_data.getValue('meta', 'icVersion')
 	if icVersion:
-		if icVersion != os.environ['IC_VERSION']:
-			verbose.warning("This job requires version %s of Icarus. You're currently running %s" % (icVersion, os.environ['IC_VERSION']))
+		v_required = parseVersion(icVersion)
 	else:
-		# TODO: give the option to restart Icarus with the correct version,
-		# or attempt to upgrade the project for compatibility.
-		job_data.setValue('meta', 'icVersion', os.environ['IC_VERSION'])
-		job_data.saveXML()
+		v_required = (0, 9, 12)  # last incompatible version
+
+	if v_required[:-1] != v_current[:-1]:  # don't compare point version
+		v_str = "v%d.%d.%d" % v_required
+		msg = "This job requires version %s of Icarus. You're currently running %s" % (v_str, os.environ['IC_VERSION'])
+		verbose.warning(msg)
+		dialog = pDialog.dialog()
+		title = "Incompatible Version"
+		# msg += "\n\nDo you want to continue?"
+		# msg += "\n\nYou have two options:"
+		# msg += "\n\nRestart with Icarus %s" % v_str
+		# msg += "\n\nUpgrade the job for compatibility with the latest version"
+
+		cwd = os.environ.get('IC_MULTIVERSION', None)
+		if cwd:
+			msg += "\n\nDo you want to restart with Icarus %s?" % v_str
+			if dialog.display(msg, title):
+				# TODO: give the option to restart Icarus with the correct version,
+				# or attempt to upgrade the project for compatibility.
+				# job_data.setValue('meta', 'icVersion', os.environ['IC_VERSION'])
+				# job_data.saveXML()
+				exec_str = os.path.join(cwd, v_str, 'run.py')
+				flags = " -j %s -s %s" % (job, shot)
+				verbose.print_(exec_str+flags)
+				subprocess.call(exec_str+flags, shell=True)
+				sys.exit()
+			else:
+				return False
+
 
 	# Terminal / Command Prompt
 	if os.environ['IC_RUNNING_OS'] == "Windows":
