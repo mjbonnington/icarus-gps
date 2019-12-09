@@ -2082,13 +2082,14 @@ os.environ['IC_NUMRECENTFILES'] = "10"
 
 # Print launch initialisation message
 userOverride = True
-verbose.icarusLaunch(name=NAME.upper(), 
-                     version=os.environ['IC_VERSION'], 
-                     vendor="%s %s" % (COPYRIGHT, os.environ['IC_VENDOR']), 
-                     location=os.environ['IC_BASEDIR'], 
-                     env=os.environ['IC_ENV'], 
-                     user=os.environ['IC_USERNAME'], 
-                     userOverride=userOverride)
+verbose.icarusLaunch(
+	name=NAME.upper(), 
+	version=os.environ['IC_VERSION'], 
+	vendor="%s %s" % (COPYRIGHT, os.environ['IC_VENDOR']), 
+	location=os.environ['IC_BASEDIR'], 
+	env=os.environ['IC_ENV'], 
+	user=os.environ['IC_USERNAME'], 
+	userOverride=userOverride)
 
 # Python version check
 try:
@@ -2103,7 +2104,6 @@ except AttributeError:
 	verbose.warning("High DPI scaling not available in Qt %s. User Interface elements may not display correctly on high DPI display devices." %QtCore.qVersion())
 
 if __name__ == '__main__':
-# 	run_standalone()
 	main_app = main_application()
 	icarus = window()
 	icarus.show()
