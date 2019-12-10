@@ -196,17 +196,12 @@ def dailyFail():
 def gpsPreview_uiValues():
 	warning("Not all GPS Preview UI values could be read.")
 
-def icarusLaunch(name, version, vendor="", location="", env="", user="", userOverride=False):
-	print_("%s%s%s %s" %(bcolors.ICGREEN, name, bcolors.ENDC, version), 0)
+def icarusLaunch(name, version, vendor="", location="", extra=""):
+	print_("%s%s%s %s" % (bcolors.ICGREEN, name, bcolors.ENDC, version), 0)
 	print_(vendor, 0)
-	print_('[Running from "%s"]' %location, 4)
-	print_('[Environment: %s]' %env, 4)
-	if userOverride:
-		userverbosity = 0
-	else:
-		userverbosity = 4
-	print_('[User: %s]' %user, userverbosity)
-	print_('', 0)
+	print_('Running from "%s"' % location, 4)
+	print_(extra, 4)
+	print_('', 0)  # add newline
 
 def ignored(asset):
 	warning("%s ignored" %asset)

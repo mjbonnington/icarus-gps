@@ -310,9 +310,9 @@ class Jobs(xml_data.XMLData):
 
 		# Check shot path exists before proceeding...
 		if os.path.exists(shotsPath):
-			dirContents = os.listdir(shotsPath)
 			shotLs = []
 
+			dirContents = os.listdir(shotsPath)
 			for item in dirContents:
 				# Check for shot naming convention to disregard everything
 				# else in directory
@@ -321,6 +321,12 @@ class Jobs(xml_data.XMLData):
 					# the existence of the '.icarus' subdirectory
 					if os.path.isdir(os_wrapper.absolutePath("%s/%s/$IC_METADATA" %(shotsPath, item))):
 						shotLs.append(item)
+
+			# subdirs = next(os.walk(shotsPath))[1]
+			# if subdirs:
+			# 	for subdir in subdirs:
+			# 		if not subdir.startswith('.'): # ignore directories that start with a dot
+			# 			shotLs.append(subdir)
 
 			if len(shotLs):
 				shotLs.sort()

@@ -29,7 +29,7 @@ import ui_template as UI
 from . import renderQueue
 from . import render_submit
 
-from shared import pDialog
+from shared import prompt
 from shared import sequence
 from shared import verbose
 
@@ -938,7 +938,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			dialogMsg += 'There is currently a render in progress on the local slave. Closing the Render Queue window will also kill the render.\n'
 			dialogMsg += 'Are you sure you want to quit?'
 
-			dialog = pDialog.dialog()
+			dialog = prompt.dialog()
 			if dialog.display(dialogMsg, dialogTitle):
 				event.accept()
 			else:

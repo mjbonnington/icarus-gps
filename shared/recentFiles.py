@@ -89,7 +89,7 @@ def updateLs(newEntry, env=os.environ['IC_ENV']):
 		fileLs.insert(0, newEntry) # prepend entry to the list
 
 		# while len(fileLs) > 10: # limit list to ten entries - currently hard-coded, but could be saved in user prefs?
-		while len(fileLs) > int(os.environ['IC_NUMRECENTFILES']):
+		while len(fileLs) > int(os.environ.get('IC_NUMRECENTFILES', 10)):
 			fileLs.pop()
 
 		config.set(os.environ['IC_SHOT'], env, '; '.join(n for n in fileLs)) # encode the list into a single line with entries separated by semicolons
@@ -108,7 +108,7 @@ def getLs(env=os.environ['IC_ENV']):
 
 	try:
 		fileLs = config.get(os.environ['IC_SHOT'], env).split('; ')
-		fileLs = fileLs[:int(os.environ['IC_NUMRECENTFILES'])]
+		fileLs = fileLs[:int(os.environ.get('IC_NUMRECENTFILES', 10))]
 	except:
 		fileLs = []
 

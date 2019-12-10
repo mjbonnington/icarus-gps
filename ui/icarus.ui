@@ -479,7 +479,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
         <item>
          <widget class="QFrame" name="launchApp_frame">
           <property name="enabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Launch applications to work within the job environment.&lt;/p&gt;&lt;p&gt;This section becomes available once the job and shot environment is set.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -750,54 +750,6 @@ QToolButton:pressed, QToolButton:checked:pressed {
                </item>
               </layout>
              </widget>
-            </widget>
-           </item>
-           <item>
-            <widget class="QToolButton" name="launchOptions_toolButton">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="toolTip">
-              <string>Launch options</string>
-             </property>
-             <property name="statusTip">
-              <string>Launch options</string>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">QToolButton {
-	padding: 1px 12px 2px 1px;
-}
-
-QToolButton:pressed, QToolButton:checked:pressed {
-	padding: 2px 11px 1px 2px;
-}</string>
-             </property>
-             <property name="text">
-              <string>Launch options</string>
-             </property>
-             <property name="icon">
-              <iconset resource="rsc.qrc">
-               <normaloff>:/icons/icons/icon_settings.png</normaloff>
-               <disabledoff>:/icons/icons/icon_settings_disabled.png</disabledoff>:/icons/icons/icon_settings.png</iconset>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>15</width>
-               <height>15</height>
-              </size>
-             </property>
-             <property name="popupMode">
-              <enum>QToolButton::InstantPopup</enum>
-             </property>
-             <property name="toolButtonStyle">
-              <enum>Qt::ToolButtonIconOnly</enum>
-             </property>
-             <property name="noBackground" stdset="0">
-              <bool>true</bool>
-             </property>
             </widget>
            </item>
           </layout>
@@ -2750,21 +2702,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
     <property name="title">
      <string>Options</string>
     </property>
-    <widget class="QMenu" name="menuLauncher">
-     <property name="title">
-      <string>Launcher</string>
-     </property>
-     <addaction name="actionMinimise_on_Launch"/>
-     <addaction name="separator"/>
-     <addaction name="actionName"/>
-     <addaction name="actionCategory"/>
-     <addaction name="actionVendor"/>
-     <addaction name="actionMost_used"/>
-    </widget>
     <addaction name="actionUser_settings"/>
     <addaction name="actionGlobal_settings"/>
-    <addaction name="separator"/>
-    <addaction name="menuLauncher"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -2849,7 +2788,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
     <string>Vendor</string>
    </property>
   </action>
-  <action name="actionMost_used">
+  <action name="actionMostUsed">
    <property name="checkable">
     <bool>true</bool>
    </property>

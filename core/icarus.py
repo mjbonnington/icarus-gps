@@ -3,7 +3,7 @@
 # [Icarus] icarus.py
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2019 Gramercy Park Studios
 #
 # Launch Icarus.
@@ -20,7 +20,7 @@ from shared import verbose
 def standalone(**kwargs):
 	""" Run in standalone mode.
 	"""
-	if kwargs['verbosity']:
+	if kwargs['verbosity'] != -1:
 		os.environ['IC_VERBOSITY'] = str(kwargs['verbosity'])
 
 	os.environ['IC_EXPERT_MODE'] = str(kwargs['expert'])

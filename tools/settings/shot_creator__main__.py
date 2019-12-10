@@ -23,7 +23,7 @@ import ui_template as UI
 # Import custom modules
 from shared import jobs
 from shared import os_wrapper
-from shared import pDialog
+from shared import prompt
 from shared import settings_data_xml
 from shared import verbose
 
@@ -55,14 +55,14 @@ class ShotCreatorDialog(QtWidgets.QDialog, UI.TemplateUI):
 		super(ShotCreatorDialog, self).__init__(parent)
 		self.parent = parent
 
-		# xml_data = os.path.join(os.environ['IC_USERPREFS'], 'shotCreator.xml')
-		xml_data = os.path.join(os.environ['IC_USERPREFS'], 'shotcreator_prefs.json')
+		# prefs_file = os.path.join(os.environ['IC_USERPREFS'], 'shotCreator.xml')
+		prefs_file = os.path.join(os.environ['IC_USERPREFS'], 'shotcreator_prefs.json')
 
 		self.setupUI(window_object=WINDOW_OBJECT, 
 		             window_title=WINDOW_TITLE, 
 		             ui_file=UI_FILE, 
 		             stylesheet=STYLESHEET, 
-		             prefs_file=xml_data, 
+		             prefs_file=prefs_file, 
 		             store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
 
 		# Set window flags
@@ -219,7 +219,7 @@ class ShotCreatorDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 		# Confirmation dialog
 		dialogTitle = "Shot Creator Results"
-		dialog = pDialog.dialog()
+		dialog = prompt.dialog()
 		dialog.display(dialogMsg, dialogTitle, conf=True)
 
 		self.populateShots()

@@ -144,7 +144,7 @@ def updateRecentShots(newEntry):
 
 	recentShotLs.insert(0, newEntry)  # Prepend entry to the list
 
-	while len(recentShotLs) > int(os.environ['IC_NUMRECENTFILES']):
+	while len(recentShotLs) > int(os.environ.get('IC_NUMRECENTFILES', 10)):
 		recentShotLs.pop()
 
 	# Encode the list into a single line with entries separated by semicolons
@@ -160,7 +160,7 @@ def getRecentShots(last=False):
 
 	try:
 		recentShotLs = config.get('recent', 'shots').split('; ')
-		recentShotLs = recentShotLs[:int(os.environ['IC_NUMRECENTFILES'])]
+		recentShotLs = recentShotLs[:int(os.environ.get('IC_NUMRECENTFILES', 10))]
 	except:
 		recentShotLs = []
 

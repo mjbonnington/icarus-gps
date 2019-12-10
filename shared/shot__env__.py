@@ -13,7 +13,7 @@ import sys
 
 from . import appPaths
 from . import os_wrapper
-from . import pDialog
+from . import prompt
 from . import settings_data_xml
 from . import verbose
 
@@ -114,7 +114,7 @@ def set_env(job, shot, shot_path):
 		v_str = "v%d.%d.%d" % v_required
 		msg = "This job requires version %s of Icarus. You're currently running %s" % (v_str, os.environ['IC_VERSION'])
 		verbose.warning(msg)
-		dialog = pDialog.dialog()
+		dialog = prompt.dialog()
 		title = "Incompatible Version"
 		# msg += "\n\nDo you want to continue?"
 		# msg += "\n\nYou have two options:"

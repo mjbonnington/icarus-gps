@@ -54,7 +54,7 @@ class AppPaths(xml_data.XMLData):
 			apps[:] = sorted(apps, key=self.sortByCategory)
 		elif sortBy == "Vendor":
 			apps[:] = sorted(apps, key=self.sortByVendor)
-		elif sortBy == "Most_used":
+		elif sortBy == "Most used":
 			apps[:] = sorted(apps, key=self.sortByMostUsed, reverse=True)
 		return apps
 

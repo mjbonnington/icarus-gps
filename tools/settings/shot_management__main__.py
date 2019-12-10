@@ -324,9 +324,9 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 	# 			verbose.error(errorMsg)
 
 	# 			# Confirmation dialog
-	# 			import pDialog
+	# 			import prompt
 	# 			dialogTitle = 'Job Not Created'
-	# 			dialog = pDialog.dialog()
+	# 			dialog = prompt.dialog()
 	# 			if dialog.display(dialogMsg, dialogTitle):
 	# 				self.addJob()
 
@@ -350,9 +350,9 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 	# 			verbose.error(errorMsg)
 
 	# 			# Confirmation dialog
-	# 			import pDialog
+	# 			import prompt
 	# 			dialogTitle = 'Job Not Created'
-	# 			dialog = pDialog.dialog()
+	# 			dialog = prompt.dialog()
 	# 			if dialog.display(dialogMsg, dialogTitle):
 	# 				self.editJob()
 

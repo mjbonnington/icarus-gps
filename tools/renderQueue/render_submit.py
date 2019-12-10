@@ -24,7 +24,7 @@ from . import render_submit_deadline as deadline
 from . import renderQueue
 
 from shared import os_wrapper
-from shared import pDialog
+from shared import prompt
 from shared import sequence
 # from shared import settings_data_xml
 from shared import userPrefs
@@ -864,7 +864,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			# Show confirmation dialog
 			dialog_title = "Submit to %s - %s" %(self.submitTo, submit_args['jobName'])
 			dialog_msg = job_info_msg + "\n" + frames_msg + "Do you want to continue?"
-			dialog = pDialog.dialog()
+			dialog = prompt.dialog()
 
 			if dialog.display(dialog_msg, dialog_title):
 				# Actually submit the job

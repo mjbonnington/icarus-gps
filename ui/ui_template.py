@@ -71,6 +71,7 @@ class SettingsData(object):
 		try:
 			with open(self.prefs_file, 'r') as f:
 				self.prefs_dict = json.load(f)
+			verbose.print_('JSON read: "%s"' % self.prefs_file)
 		except:
 			pass
 
@@ -78,6 +79,7 @@ class SettingsData(object):
 		try:
 			with open(self.prefs_file, 'w') as f:
 				json.dump(self.prefs_dict, f, indent=4, sort_keys=True)
+			verbose.print_('JSON write: "%s"' % self.prefs_file)
 			return True
 		except:
 			return False
@@ -118,20 +120,26 @@ class TemplateUI(object):
 		window_title="", 
 		ui_file="", 
 		stylesheet="", 
-		xml_data="", 
+#		xml_data="", 
 		prefs_file=None, 
 		store_window_geometry=True):
 		""" Setup the UI.
 		"""
 		verbose.debug("Window object: %s Parent: %s" % (self, self.parent))
 
-		# Instantiate XML data class
-		if xml_data:
-			self.prefs = settings_data_xml.SettingsData()
-			self.prefs.loadXML(xml_data)
-		# Instantiate preferences data file
+		# # Instantiate XML data class
+		# if xml_data:
+		# 	self.prefs = settings_data_xml.SettingsData()
+		# 	self.prefs.loadXML(xml_data)
+		# # Instantiate preferences data file
+		# else:
+		# 	self.prefs = SettingsData(prefs_file)
+
+		# Instantiate preferences data class
+		if prefs_file is None:
+			self.prefs = None
 		else:
-			self.prefs = SettingsData(prefs_file)
+			self.prefs = self.createPrefs(prefs_file)
 
 		# Define some global variables
 		self.currentAttrStr = ""
@@ -237,6 +245,18 @@ class TemplateUI(object):
 		info['Environment'] = os.environ['IC_ENV']
 
 		return info
+
+
+	def createPrefs(self, prefs_file):
+		""" Create object to hold preferences.
+		"""
+		if prefs_file.endswith('.json'):
+			prefs = SettingsData(prefs_file)
+		if prefs_file.endswith('.xml'):
+			prefs = settings_data_xml.SettingsData()
+			prefs.loadXML(prefs_file)
+
+		return prefs
 
 
 	def promptDialog(self, message, title="Message", infotext=None, conf=False, modal=True):

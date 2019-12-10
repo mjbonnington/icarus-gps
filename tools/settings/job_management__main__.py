@@ -20,7 +20,7 @@ from . import edit_root_paths
 
 from shared import jobs
 from shared import os_wrapper
-from shared import pDialog
+from shared import prompt
 from shared import verbose
 
 
@@ -132,7 +132,7 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 			# Confirmation dialog
 			dialogTitle = "Root Paths Not Set"
-			dialog = pDialog.dialog()
+			dialog = prompt.dialog()
 			dialog.display(dialogMsg, dialogTitle, conf=True)
 
 			self.editPaths()
@@ -259,7 +259,7 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 				# Confirmation dialog
 				dialogTitle = 'Job Not Created'
-				dialog = pDialog.dialog()
+				dialog = prompt.dialog()
 				if dialog.display(dialogMsg, dialogTitle):
 					self.addJob()
 
@@ -283,7 +283,7 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 				# Confirmation dialog
 				dialogTitle = 'Job Not Created'
-				dialog = pDialog.dialog()
+				dialog = prompt.dialog()
 				if dialog.display(dialogMsg, dialogTitle):
 					self.editJob()
 

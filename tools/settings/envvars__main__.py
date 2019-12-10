@@ -23,7 +23,7 @@ import ui_template as UI
 
 # Import custom modules
 from . import edit_envvar
-from shared import pDialog
+from shared import prompt
 from shared import verbose
 
 
@@ -202,7 +202,7 @@ class EnvVarsDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 				# Confirmation dialog
 				dialogTitle = "Environment Variable Not Created"
-				dialog = pDialog.dialog()
+				dialog = prompt.dialog()
 				if dialog.display(dialogMsg, dialogTitle):
 					self.addEnvVar()  # Should pass in value from previous dialog?
 

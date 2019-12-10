@@ -88,7 +88,7 @@ class AppLauncher(QtWidgets.QDialog):
 					exec(exec_str)
 
 				except ImportError:
-					message = "Could not import '%s' module." % shortName.lower()
+					message = "Could not import '%s' environment variables." % shortName.lower()
 					verbose.print_(message)
 
 				except (AttributeError, KeyError, TypeError):
@@ -346,5 +346,5 @@ class AppLauncher(QtWidgets.QDialog):
 		userPrefs.edit('launchcounter', shortName, count)
 
 		# Minimise the UI if the option is set
-		if self.parent.boolMinimiseOnAppLaunch:
+		if self.parent.minimiseOnAppLaunch:
 			self.parent.showMinimized()

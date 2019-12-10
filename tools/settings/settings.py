@@ -2,7 +2,7 @@
 
 # [Icarus] settings.py
 #
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2015-2019 Gramercy Park Studios
 #
 # Modular settings editor dialog.
@@ -14,9 +14,10 @@ import os
 import sys
 
 from Qt import QtCompat, QtCore, QtWidgets
-import ui_template as UI
 
 # Import custom modules
+import ui_template as UI
+
 from shared import verbose
 from shared import settings_data_xml
 
@@ -37,7 +38,7 @@ cfg['stylesheet'] = 'style.qss'  # Set to None to use the parent app's styleshee
 
 # Other options
 # prefs_location = os.environ['IC_USERPREFS']
-# cfg['prefs_file'] = os.path.join(prefs_location, 'scenemanager_prefs.json')
+# cfg['prefs_file'] = os.path.join(prefs_location, '_prefs.json')
 cfg['store_window_geometry'] = True
 
 # ----------------------------------------------------------------------------
@@ -52,14 +53,10 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.parent = parent
 
 		self.setupUI(**cfg)
-		# self.setupUI(window_object=WINDOW_OBJECT, 
-		#              window_title=WINDOW_TITLE, 
-		#              ui_file=UI_FILE, 
-		#              stylesheet=STYLESHEET, 
-		#              store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
 
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Dialog)
+		self.setWindowIcon(self.iconSet('icon_settings.png', tintNormal=False))
 
 		# Set other Qt attributes
 		self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
@@ -74,46 +71,48 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 
 	def display(self, 
-		settingsType="Generic", 
-		categoryLs=[], 
-		startPanel=None, 
-		xmlData=None, 
+		settings_type="Generic", 
+		category_list=[], 
+		start_panel=None, 
+		prefs_file=None, 
 		inherit=None, 
-		autoFill=False):
+		autofill=False):
 		""" Display the dialog.
 
-			'settingsType' is the name given to the settings dialog.
-			'categoryLs' is a list of categories, should correspond to a page
-			of properties defined by a .ui file.
-			'startPanel' if set will jump straight to the named panel.
-			'xmlData' is the path to the XML file storing the settings.
+			'settings_type' is the name given to the settings dialog.
+			'category_list' is a list of categories, should correspond to a
+			page of properties defined by a .ui file.
+			'start_panel' if set will jump straight to the named panel.
+			'prefs_file' is the path to the XML file storing the settings.
 			'inherit' whether to inherit any values. This should be in the
-			form of a path just like the 'xmlData' argument.
-			'autoFill' when true, attempt to fill some fields automatically.
+			form of a path just like the 'prefs_file' argument.
+			'autofill' when true, attempt to fill some fields automatically.
 		"""
-		if startPanel:
-			print("Start Panel: " + startPanel)
-			self.currentCategory = startPanel
+		if start_panel:
+			verbose.debug("Start Panel: " + start_panel)
+			self.currentCategory = start_panel
 		else:
 			self.currentCategory = ""
 
-		self.settingsType = settingsType
-		self.categoryLs = categoryLs
-		self.xmlData = xmlData
+		self.settings_type = settings_type
+		self.category_list = category_list
+		self.prefs_file = prefs_file
 		self.inherit = inherit
-		self.autoFill = autoFill
+		self.autofill = autofill
 
 		self.reset()
 
-		# Set window title
-		if settingsType == "Job":
+		# Set window title - TODO: pass in as keyword arg
+		if settings_type == "User":
+			title_suffix = ": " + os.environ['IC_USERNAME']
+		elif settings_type == "Job":
 			title_suffix = ": " + os.environ['IC_JOB']
-		elif settingsType == "Shot":
+		elif settings_type == "Shot":
 			title_suffix = ": " + os.environ['IC_SHOT']
 		else:
 			title_suffix = ""
 		self.setWindowTitle(
-			"%s %s%s" % (settingsType, cfg['window_title'], title_suffix))
+			"%s %s%s" % (settings_type, cfg['window_title'], title_suffix))
 
 		return self.exec_()
 
@@ -123,20 +122,28 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		"""
 		# self.ui.categories_listWidget.blockSignals(True)
 
-		# Load data from xml file(s)
-		self.prefs = settings_data_xml.SettingsData()
-		self.prefs.read(datafile=self.xmlData)
-		if self.inherit:
-			self.prefs_inherited = settings_data_xml.SettingsData()
-			self.prefs_inherited.read(datafile=self.inherit)
-		else:
-			self.prefs_inherited = None
+		# # Load data from xml file(s)
+		# self.prefs = settings_data_xml.SettingsData()
+		# self.prefs.read(datafile=self.prefs_file)
+		# if self.inherit:
+		# 	self.prefs_inherited = settings_data_xml.SettingsData()
+		# 	self.prefs_inherited.read(datafile=self.inherit)
+		# else:
+		# 	self.prefs_inherited = None
+
+		# Instantiate preferences data class(es)
+		if self.prefs_file is not None:
+			self.prefs = self.createPrefs(self.prefs_file)
+			if self.inherit:
+				self.prefs_inherited = self.createPrefs(self.inherit)
+			else:
+				self.prefs_inherited = None
 
 		# Populate categories
-		if self.categoryLs:
+		if self.category_list:
 			self.ui.categories_listWidget.clear()
 
-			for cat in self.categoryLs:
+			for cat in self.category_list:
 				self.ui.categories_listWidget.addItem(cat)
 
 			# Set the maximum size of the list widget
@@ -150,6 +157,11 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 			currentItem.setSelected(True)
 			# self.openProperties(currentItem.text())
+
+			# Hide category list if there's only one item
+			if len(self.category_list) <= 1:
+				# self.ui.categories_listWidget.hide()  # doesn't work
+				self.ui.categories_listWidget.setMaximumWidth(0)
 
 		# self.ui.categories_listWidget.blockSignals(False)
 
@@ -230,7 +242,7 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		""" Save settings and close the dialog.
 		"""
 		# Store the values from widgets on all pages
-		for category in self.categoryLs:
+		for category in self.category_list:
 			self.openProperties(category, storeProperties=True)
 
 		# There's a bug where all property panel widgets become visible if a

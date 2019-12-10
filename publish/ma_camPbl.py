@@ -21,7 +21,7 @@ from . import inProgress
 from rsc.maya.scripts import mayaOps
 from shared import icPblData
 from shared import os_wrapper
-from shared import pDialog
+from shared import prompt
 from shared import vCtrl
 from shared import verbose
 
@@ -75,7 +75,7 @@ def publish(pblTo, slShot, subtype, pblNotes):
 	# Confirmation dialog
 	dialogTitle = 'Publishing %s' % assetPblName # convention
 	dialogMsg = 'Asset:\t%s\n\nVersion:\t%s\n\nSubset:\t%s\n\nNotes:\t%s' % (assetPblName, version, subsetName, pblNotes)
-	dialog = pDialog.dialog()
+	dialog = prompt.dialog()
 	if not dialog.display(dialogMsg, dialogTitle):
 		return
 
@@ -128,6 +128,6 @@ def publish(pblTo, slShot, subtype, pblNotes):
 	# Show publish result dialog
 	dialogTitle = 'Publish Report'
 	dialogMsg = 'Asset:\t%s\n\nVersion:\t%s\n\nSubset:\t%s\n\n\n%s' % (assetPblName, version, subsetName, pblResult)
-	dialog = pDialog.dialog()
+	dialog = prompt.dialog()
 	dialog.display(dialogMsg, dialogTitle, conf=True)
 

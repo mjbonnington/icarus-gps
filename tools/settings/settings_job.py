@@ -20,4 +20,3 @@ class helper():
 
 		# Populate line edit with job name
 		self.frame.job_lineEdit.setText(os.getenv('IC_JOB', ''))
-

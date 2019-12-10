@@ -16,7 +16,7 @@ import ui_template as UI
 
 # Import custom modules
 from shared import os_wrapper
-from shared import pDialog
+from shared import prompt
 from shared import verbose
 
 
@@ -153,7 +153,7 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 				# Warning dialog
 				dialogTitle = "Path contains illegal characters"
 				dialogMsg = "The path \"%s\" contains illegal characters. File and folder names must be formed of alphanumeric characters, underscores, hyphens and dots only." %dialogPath
-				dialog = pDialog.dialog()
+				dialog = prompt.dialog()
 				dialog.display(dialogMsg, dialogTitle, conf=True)
 
 		# return dialogPath

@@ -18,7 +18,7 @@ from . import convention
 from . import file_open
 from . import file_save
 from shared import os_wrapper
-from shared import pDialog
+from shared import prompt
 from shared import recentFiles
 
 
@@ -60,7 +60,7 @@ class SceneManager(object):
 
 		except RuntimeError as e:
 			if str(e) != "Cancelled":
-				dialog = pDialog.dialog()
+				dialog = prompt.dialog()
 				dialog.display(str(e), "Error Opening File", conf=True)
 			return False
 
@@ -79,7 +79,7 @@ class SceneManager(object):
 				# exc_type, exc_value, exc_traceback = sys.exc_info()
 				# # traceback.print_exception(exc_type, exc_value, exc_traceback)
 				# dialog_msg = traceback.format_exception_only(exc_type, exc_value)[0]
-				dialog = pDialog.dialog()
+				dialog = prompt.dialog()
 				dialog.display(str(e), "Error Opening File", conf=True)
 				return False
 
@@ -108,7 +108,7 @@ class SceneManager(object):
 
 		except RuntimeError as e:
 			if str(e) != "Cancelled":
-				dialog = pDialog.dialog()
+				dialog = prompt.dialog()
 				dialog.display(str(e), "Error Saving File", conf=True)
 			return False
 
@@ -140,7 +140,7 @@ class SceneManager(object):
 
 		except RuntimeError as e:
 			if str(e) != "Cancelled":
-				dialog = pDialog.dialog()
+				dialog = prompt.dialog()
 				dialog.display(str(e), "Error Saving File", conf=True)
 			return False
 

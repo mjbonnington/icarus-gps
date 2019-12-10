@@ -10,11 +10,11 @@
 
 import os
 
-from shared import pDialog
+from shared import prompt
 
 
 def show():
-	dialog = pDialog.dialog()
+	dialog = prompt.dialog()
 	title = '%s - %s' % (os.environ['IC_JOB'], os.environ['IC_SHOT'])
 	message = """Shot info:
 

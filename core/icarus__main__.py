@@ -3,7 +3,7 @@
 # [Icarus] icarus__main__.py
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2013-2019 Gramercy Park Studios
 #
 # The main Icarus UI.
@@ -27,7 +27,7 @@ from shared import launchApps   # merge these two?
 from shared import appLauncher  # merge these two?
 from shared import openDirs
 from shared import os_wrapper
-from shared import pDialog
+from shared import prompt
 from shared import sequence
 from shared import userPrefs
 from shared import verbose
@@ -50,7 +50,7 @@ else:
 	cfg['window_title'] = NAME + " - " + os.environ['IC_ENV'].capitalize()
 
 # Set the UI and the stylesheet
-cfg['ui_file'] = 'icarus_ui.ui'
+cfg['ui_file'] = 'icarus.ui'
 cfg['stylesheet'] = 'style.qss'  # Set to None to use the parent app's stylesheet
 
 # Other options
@@ -70,7 +70,18 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 	def __init__(self, parent=None, **kwargs):
 		super(IcarusApp, self).__init__(parent)
 		self.parent = parent
-		# print(kwargs)
+
+		# Print launch initialisation message
+		info_ls = []
+		for key, value in self.getInfo().items():
+			info_ls.append("{} {}".format(key, value))
+		info_str = " | ".join(info_ls)
+		verbose.icarusLaunch(
+			name=NAME.upper(), 
+			version=os.environ['IC_VERSION'], 
+			vendor="%s %s" % (COPYRIGHT, os.environ['IC_VENDOR']), 
+			location=os.environ['IC_BASEDIR'], 
+			extra=info_str)
 
 		self.setupUI(**cfg)
 
@@ -83,6 +94,13 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Automatically set main tab to 'Launcher' - removes the requirement
 		# for the UI file to be saved with this as the current tab.
 		self.ui.main_tabWidget.setCurrentIndex(0)
+
+		# Set verbosity - TODO: ideally this should be loaded before
+		# instantiating the UI class. However, this would require splitting
+		# JSON handler out to its own module
+		if 'IC_VERBOSITY' not in os.environ:
+			os.environ['IC_VERBOSITY'] = str(self.prefs.getValue('user', 'verbosity', default=3))
+		# os.environ['IC_NUMRECENTFILES'] = str(self.prefs.getValue('user', 'numrecentfiles', default=10))
 
 		# Instantiate jobs class
 		self.j = jobs.Jobs()
@@ -216,44 +234,44 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			# self.ui.appPlaceholder_toolButton.clicked.connect(lambda: self.jobSettings(startPanel='apps'))
 			self.ui.appPlaceholder_toolButton.clicked.connect(self.appSettings)
 
-			# Launch options menu
-			self.ui.launchOptions_toolButton.setMenu(self.ui.menuLauncher)
+			# # Launch options menu -- DELETED
+			# self.ui.launchOptions_toolButton.setMenu(self.ui.menuLauncher)
 
 			# Set 'Minimise on launch' checkbox from user prefs
-			# self.boolMinimiseOnAppLaunch = userPrefs.query('main', 'minimiseonlaunch', datatype='bool', default=True)
-			self.boolMinimiseOnAppLaunch = self.prefs.getValue('main', 'minimiseonlaunch', default=True)
-			self.ui.actionMinimise_on_Launch.setChecked(self.boolMinimiseOnAppLaunch)
-			self.ui.actionMinimise_on_Launch.toggled.connect(self.setMinimiseOnAppLaunch)
+			# self.minimiseOnAppLaunch = userPrefs.query('main', 'minimiseonlaunch', datatype='bool', default=True)
+			self.minimiseOnAppLaunch = self.prefs.getValue('user', 'minimiseonlaunch', default=True)
+			# self.ui.actionMinimise_on_Launch.setChecked(self.minimiseOnAppLaunch)
+			# self.ui.actionMinimise_on_Launch.toggled.connect(self.setMinimiseOnAppLaunch)
 
-			# Add 'Sort by' separator label
-			label = QtWidgets.QLabel("Sort by:")
-			sortBy_separator = QtWidgets.QWidgetAction(self)
-			sortBy_separator.setDefaultWidget(label)
-			self.ui.menuLauncher.insertAction(self.ui.actionName, sortBy_separator)
+			# # Add 'Sort by' separator label -- DELETED
+			# label = QtWidgets.QLabel("Sort by:")
+			# sortBy_separator = QtWidgets.QWidgetAction(self)
+			# sortBy_separator.setDefaultWidget(label)
+			# self.ui.menuLauncher.insertAction(self.ui.actionName, sortBy_separator)
 
-			# Make 'Sort by' actions mutually exclusive
-			alignmentGroup = QtWidgets.QActionGroup(self)
-			alignmentGroup.addAction(self.ui.actionName)
-			alignmentGroup.addAction(self.ui.actionCategory)
-			alignmentGroup.addAction(self.ui.actionVendor)
-			alignmentGroup.addAction(self.ui.actionMost_used)
+			# # Make 'Sort by' actions mutually exclusive
+			# alignmentGroup = QtWidgets.QActionGroup(self)
+			# alignmentGroup.addAction(self.ui.actionName)
+			# alignmentGroup.addAction(self.ui.actionCategory)
+			# alignmentGroup.addAction(self.ui.actionVendor)
+			# alignmentGroup.addAction(self.ui.actionMostUsed)
 
 			# Set 'Sort by' menu from user prefs
-			# self.sortAppsBy = userPrefs.query('main', 'sortappsby', datatype='str', default="Most_used")
-			self.sortAppsBy = self.prefs.getValue('main', 'sortappsby', default="Most_used")
-			if self.sortAppsBy == "Name":
-				self.ui.actionName.setChecked(True)
-			elif self.sortAppsBy == "Category":
-				self.ui.actionCategory.setChecked(True)
-			elif self.sortAppsBy == "Vendor":
-				self.ui.actionVendor.setChecked(True)
-			elif self.sortAppsBy == "Most_used":
-				self.ui.actionMost_used.setChecked(True)
+			# self.sortAppsBy = userPrefs.query('main', 'sortappsby', datatype='str', default="Most used")
+			self.sortAppsBy = self.prefs.getValue('user', 'sortappsby', default="Most used")
+			# if self.sortAppsBy == "Name":
+			# 	self.ui.actionName.setChecked(True)
+			# elif self.sortAppsBy == "Category":
+			# 	self.ui.actionCategory.setChecked(True)
+			# elif self.sortAppsBy == "Vendor":
+			# 	self.ui.actionVendor.setChecked(True)
+			# elif self.sortAppsBy == "Most used":
+			# 	self.ui.actionMostUsed.setChecked(True)
 
-			self.ui.actionName.triggered.connect(lambda: self.setSortAppsBy("Name"))
-			self.ui.actionCategory.triggered.connect(lambda: self.setSortAppsBy("Category"))
-			self.ui.actionVendor.triggered.connect(lambda: self.setSortAppsBy("Vendor"))
-			self.ui.actionMost_used.triggered.connect(lambda: self.setSortAppsBy("Most_used"))
+			# self.ui.actionName.triggered.connect(lambda: self.setSortAppsBy("Name"))
+			# self.ui.actionCategory.triggered.connect(lambda: self.setSortAppsBy("Category"))
+			# self.ui.actionVendor.triggered.connect(lambda: self.setSortAppsBy("Vendor"))
+			# self.ui.actionMostUsed.triggered.connect(lambda: self.setSortAppsBy("Most used"))
 
 			# ----------------------------------------------------------------
 			# Add context menus to buttons
@@ -298,7 +316,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.user_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 			self.ui.user_toolButton.addAction(self.ui.actionUser_settings)
 			# self.ui.user_toolButton.setText(os.environ['IC_USERNAME'])
-			self.ui.user_toolButton.setEnabled(False)
+			self.ui.user_toolButton.setEnabled(True)
 
 			# Setup app launch icons
 			self.al.setupIconGrid(sortBy=self.sortAppsBy)
@@ -464,7 +482,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			os.environ['IC_VERBOSITY'] = "4"
 		else:
 			# os.environ['IC_VERBOSITY'] = userPrefs.query('main', 'verbosity', datatype='str', default="3", create=True)
-			os.environ['IC_VERBOSITY'] = str(self.prefs.getValue('main', 'verbosity', default=3))
+			os.environ['IC_VERBOSITY'] = str(self.prefs.getValue('user', 'verbosity', default=3))
 
 		os.environ['IC_EXPERT_MODE'] = str(self.expertMode)
 		verbose.message("Expert mode: %s" %self.expertMode)
@@ -563,7 +581,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		# Remember last selection with entry in user prefs
 		# userPrefs.edit('main', 'lastpublishma', assetType)
-		self.prefs.setValue('main', 'lastpublishma', assetType)
+		self.prefs.setValue('user', 'lastpublishma', assetType)
 
 
 	def adjustPublishOptsNukeUI(self):
@@ -584,7 +602,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		# Remember last selection with entry in user prefs
 		# userPrefs.edit('main', 'lastpublishnk', assetType)
-		self.prefs.setValue('main', 'lastpublishnk', assetType)
+		self.prefs.setValue('user', 'lastpublishnk', assetType)
 
 
 	def adjustPblTypeUI(self):
@@ -712,7 +730,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			# Warning dialog
 			dialogTitle = "No Jobs Found"
 			dialogMsg = "No active jobs were found. Would you like to set up some jobs now?"
-			dialog = pDialog.dialog()
+			dialog = prompt.dialog()
 			if dialog.display(dialogMsg, dialogTitle):
 				self.launchJobManagement()
 			else:
@@ -762,7 +780,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			# Warning dialog
 			dialogTitle = "No Shots Found"
 			dialogMsg = "No shots were found for the job '%s'. Would you like to create some shots now?" %selJob
-			dialog = pDialog.dialog()
+			dialog = prompt.dialog()
 			if dialog.display(dialogMsg, dialogTitle):
 				self.launchShotCreator()
 			else:
@@ -832,10 +850,10 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 				# Confirmation dialog
 				dialogTitle = 'Job settings not found'
-				dialog = pDialog.dialog()
+				dialog = prompt.dialog()
 				dialog.display(dialogMsg, dialogTitle, conf=True)
 
-				if self.openSettings("Job", autoFill=True):
+				if self.openSettings("Job", autofill=True):
 					self.setupJob()
 
 				return False
@@ -918,13 +936,19 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		self.ui.shotSetup_groupBox.setEnabled(False)
 		self.ui.refreshJobs_toolButton.setEnabled(False)
+
 		self.ui.launchApp_frame.setEnabled(True)
+		# self.ui.launchApp_frame.show()
+		# self.ui.launchTab_verticalLayout.removeItem(self.ui.launchTab_verticalSpacer)
+		# self.ui.launchTab_verticalSpacer = None
+		# # self.ui.launchTab_verticalSpacer.hide()
+
 		self.ui.main_tabWidget.insertTab(1, self.publishTab, 'Publish')
 		self.ui.main_tabWidget.insertTab(2, self.gatherTab, 'Assets')
 		self.ui.gather_frame.hide()
 		self.ui.setShot_toolButton.setChecked(True)
 		self.ui.shotEnv_toolButton.show()
-		self.ui.menuLauncher.setEnabled(True)
+		# self.ui.menuLauncher.setEnabled(True)  -- DELETED
 		self.ui.actionJob_settings.setEnabled(True)
 		self.ui.actionShot_settings.setEnabled(True)
 		self.ui.actionJob_Management.setEnabled(False)
@@ -945,14 +969,20 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		self.ui.shotSetup_groupBox.setEnabled(True)
 		self.ui.refreshJobs_toolButton.setEnabled(True)
+
 		self.ui.launchApp_frame.setEnabled(False)
+		# self.ui.launchApp_frame.hide()
+		# self.ui.launchTab_verticalSpacer = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+		# self.ui.launchTab_verticalLayout.addItem(self.ui.launchTab_verticalSpacer)
+		# # self.ui.launchTab_verticalSpacer.show()
+
 		self.ui.main_tabWidget.removeTab(1)  # Remove publish & assets tab
 		self.ui.main_tabWidget.removeTab(1)  # Remove publish & assets tab
 		self.ui.renderPbl_treeWidget.clear() # Clear the render layer tree view widget
 		self.ui.dailyPbl_treeWidget.clear()  # Clear the dailies tree view widget
 		self.ui.shotEnv_toolButton.setText('')
 		self.ui.shotEnv_toolButton.hide()
-		self.ui.menuLauncher.setEnabled(False)
+		# self.ui.menuLauncher.setEnabled(False) -- DELETED
 		self.ui.actionJob_settings.setEnabled(False)
 		self.ui.actionShot_settings.setEnabled(False)
 		self.ui.actionJob_Management.setEnabled(True)
@@ -971,21 +1001,21 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.shotEnv_toolButton.setText('%s - %s' %(self.job, self.shot))
 
 
-	def setMinimiseOnAppLaunch(self, state):
-		""" Sets state of minimise on app launch variable.
-		"""
-		self.boolMinimiseOnAppLaunch = state
-		# userPrefs.edit('main', 'minimiseonlaunch', state)
-		self.prefs.setValue('main', 'minimiseonlaunch', state)
+	# def setMinimiseOnAppLaunch(self, state):
+	# 	""" Sets state of minimise on app launch variable.
+	# 	"""
+	# 	self.minimiseOnAppLaunch = state
+	# 	# userPrefs.edit('main', 'minimiseonlaunch', state)
+	# 	self.prefs.setValue('user', 'minimiseonlaunch', state)
 
 
-	def setSortAppsBy(self, value):
-		""" Stores 'Sort by' value for sorting app grid.
-		"""
-		self.al.setupIconGrid(job=self.job, sortBy=value)
-		self.sortAppsBy = value
-		# userPrefs.edit('main', 'sortappsby', value)
-		self.prefs.setValue('main', 'sortappsby', value)
+	# def setSortAppsBy(self, value):
+	# 	""" Stores 'Sort by' value for sorting app grid.
+	# 	"""
+	# 	self.al.setupIconGrid(job=self.job, sortBy=value)
+	# 	self.sortAppsBy = value
+	# 	# userPrefs.edit('main', 'sortappsby', value)
+	# 	self.prefs.setValue('user', 'sortappsby', value)
 
 
 	def printEnvVars(self, allvars=False):
@@ -1021,21 +1051,21 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 %s
 
-Python %s / %s / Qt %s / %s
+Python %s | %s | Qt %s | %s
 Environment: %s
 
 Developers: %s
 %s %s
-""" %("   ".join(NAME.upper()),
-	  os.environ['IC_VERSION'],
-	  python_ver_str,
-	  pyside_ver_str,
-	  qt_ver_str,
-	  os.environ['IC_RUNNING_OS'],
-	  os.environ['IC_ENV'],
-	  DEVELOPERS,
-	  COPYRIGHT,
-	  os.environ['IC_VENDOR'])
+""" % ("   ".join(NAME.upper()),
+os.environ['IC_VERSION'],
+python_ver_str,
+pyside_ver_str,
+qt_ver_str,
+os.environ['IC_RUNNING_OS'],
+os.environ['IC_ENV'],
+DEVELOPERS,
+COPYRIGHT,
+os.environ['IC_VENDOR'])
 
 		from . import about
 		about = about.dialog(parent=self)
@@ -1043,43 +1073,45 @@ Developers: %s
 		# verbose.print_(about_msg, 4)
 
 
-	def openSettings(self, settingsType, startPanel=None, autoFill=False):
+	def openSettings(self, settingsType, startPanel=None, autofill=False):
 		""" Open settings dialog.
 		"""
 		if settingsType == "Job":
 			categoryLs = ['job', 'apps', 'units', 'time', 'resolution', 'other']
-			xmlData = os.path.join(os.environ['IC_JOBDATA'], 'jobData.xml')
-			inherit = None  # "Defaults"
+			settingsFile = os.path.join(os.environ['IC_JOBDATA'], 'jobData.xml')
+			inherit = None
 		elif settingsType == "Shot":
 			categoryLs = ['shot', 'units', 'time', 'resolution', 'camera']
-			xmlData = os.path.join(os.environ['IC_SHOTDATA'], 'shotData.xml')
+			settingsFile = os.path.join(os.environ['IC_SHOTDATA'], 'shotData.xml')
 			inherit = os.path.join(os.environ['IC_JOBDATA'], 'jobData.xml')
-			#inherit = "Job"
 		elif settingsType == "User":
-			categoryLs = ['user', 'launcher']
-			# categoryLs = ['user', 'global', 'test', 'job', 'time', 'resolution', 'units', 'apps', 'other', 'camera']
-			xmlData = os.path.join(os.environ['IC_USERPREFS'], 'userPrefs.xml')
-			inherit = None  # "Defaults"
-		elif settingsType == "Global":
-			categoryLs = ['global', 'test']
-			xmlData = os.path.join(os.path.join(os.environ['IC_CONFIGDIR'], 'globalPrefs.xml'))
+			categoryLs = ['user', ]
+			settingsFile = cfg['prefs_file']  # Use Icarus UI prefs
+			# settingsFile = os.path.join(os.environ['IC_USERPREFS'], 'icarus_prefs.json')
+			# categoryLs = ['user', 'launcher', 'global', 'test', 'job', 'time', 'resolution', 'units', 'apps', 'other', 'camera']
+			# settingsFile = os.path.join(os.environ['IC_USERPREFS'], 'userPrefs.xml')
 			inherit = None
-		if settingsType == "App":  # Temporary
+		elif settingsType == "Global":
+			categoryLs = ['global', ]
+			settingsFile = os.path.join(os.path.join(os.environ['IC_CONFIGDIR'], 'icarus_globals.json'))
+			inherit = None
+		elif settingsType == "App":  # Workaround for apps only dialog
 			categoryLs = ['apps', ]
-			xmlData = os.path.join(os.environ['IC_JOBDATA'], 'jobData.xml')
-			inherit = None  # "Defaults"
+			settingsFile = os.path.join(os.environ['IC_JOBDATA'], 'jobData.xml')
+			inherit = None
 
 		if startPanel not in categoryLs:
 			startPanel = None
 
 		from tools.settings import settings
 		self.settingsEditor = settings.SettingsDialog(parent=self)
-		result = self.settingsEditor.display(settingsType=settingsType, 
-		                                     categoryLs=categoryLs, 
-		                                     startPanel=startPanel, 
-		                                     xmlData=xmlData, 
-		                                     inherit=inherit, 
-		                                     autoFill=autoFill)
+		result = self.settingsEditor.display(
+			settings_type=settingsType, 
+			category_list=categoryLs, 
+			start_panel=startPanel, 
+			prefs_file=settingsFile, 
+			inherit=inherit, 
+			autofill=autofill)
 		#print(result)
 		return result
 
@@ -1102,7 +1134,15 @@ Developers: %s
 		""" Open user settings dialog wrapper function.
 		"""
 		if self.openSettings("User"):
-			pass
+			self.prefs.read()
+			self.minimiseOnAppLaunch = self.prefs.getValue('user', 'minimiseonlaunch')
+			self.sortAppsBy = self.prefs.getValue('user', 'sortappsby')
+			os.environ['IC_VERBOSITY'] = str(self.prefs.getValue('user', 'verbosity'))
+			os.environ['IC_NUMRECENTFILES'] = str(self.prefs.getValue('user', 'numrecentfiles'))
+			try:
+				self.al.setupIconGrid(job=self.job, sortBy=self.sortAppsBy)
+			except (AttributeError, KeyError):
+				pass
 
 
 	def globalSettings(self):
@@ -2078,18 +2118,18 @@ def window(app='standalone', parent=None, **kwargs):
 # Set verbosity, number of recent files
 # os.environ['IC_VERBOSITY'] = userPrefs.query('main', 'verbosity', datatype='str', default="3", create=True)
 # os.environ['IC_NUMRECENTFILES'] = userPrefs.query('recent', 'numrecentfiles', datatype='str', default="10", create=True)
-os.environ['IC_NUMRECENTFILES'] = "10"
+# os.environ['IC_NUMRECENTFILES'] = "10"
 
-# Print launch initialisation message
-userOverride = True
-verbose.icarusLaunch(
-	name=NAME.upper(), 
-	version=os.environ['IC_VERSION'], 
-	vendor="%s %s" % (COPYRIGHT, os.environ['IC_VENDOR']), 
-	location=os.environ['IC_BASEDIR'], 
-	env=os.environ['IC_ENV'], 
-	user=os.environ['IC_USERNAME'], 
-	userOverride=userOverride)
+# # Print launch initialisation message
+# userOverride = True
+# verbose.icarusLaunch(
+# 	name=NAME.upper(), 
+# 	version=os.environ['IC_VERSION'], 
+# 	vendor="%s %s" % (COPYRIGHT, os.environ['IC_VENDOR']), 
+# 	location=os.environ['IC_BASEDIR'], 
+# 	env=os.environ['IC_ENV'], 
+# 	user=os.environ['IC_USERNAME'], 
+# 	userOverride=userOverride)
 
 # Python version check
 try:
@@ -2097,11 +2137,11 @@ try:
 except AssertionError:
 	sys.exit("ERROR: %s requires Python version 2.7 or above." % NAME)
 
-# Enable high DPI scaling
+# Enable high DPI scaling - TODO: move this to ui_template?
 try:
 	QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 except AttributeError:
-	verbose.warning("High DPI scaling not available in Qt %s. User Interface elements may not display correctly on high DPI display devices." %QtCore.qVersion())
+	verbose.debug("High DPI scaling not available in Qt %s. User Interface elements may not display correctly on high DPI display devices." %QtCore.qVersion())
 
 if __name__ == '__main__':
 	main_app = main_application()

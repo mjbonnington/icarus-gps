@@ -18,7 +18,7 @@ def set_env():
 	""" Set some environment variables for basic operation.
 	"""
 	# Set version string
-	os.environ['IC_VERSION'] = "v0.10.0-20191209"
+	os.environ['IC_VERSION'] = "v0.10.0-20191210"
 
 	# Set vendor strings
 	os.environ['IC_VENDOR'] = "Gramercy Park Studios"
@@ -28,17 +28,17 @@ def set_env():
 	# Usernames will always be stored as lowercase for compatibility.
 	if platform.system() == "Windows":  # Windows
 		os.environ['IC_RUNNING_OS'] = "Windows"
-		if not 'IC_USERNAME' in os.environ:
+		if 'IC_USERNAME' not in os.environ:
 			os.environ['IC_USERNAME'] = os.environ['USERNAME'].lower()
 		os.environ['IC_USERHOME'] = os.environ['USERPROFILE']
 	elif platform.system() == "Darwin":  # Mac OS
 		os.environ['IC_RUNNING_OS'] = "MacOS"
-		if not 'IC_USERNAME' in os.environ:
+		if 'IC_USERNAME' not in os.environ:
 			os.environ['IC_USERNAME'] = os.environ['USER'].lower()
 		os.environ['IC_USERHOME'] = os.environ['HOME']
 	else:  # Linux
 		os.environ['IC_RUNNING_OS'] = "Linux"
-		if not 'IC_USERNAME' in os.environ:
+		if 'IC_USERNAME' not in os.environ:
 			os.environ['IC_USERNAME'] = os.environ['USER'].lower()
 		os.environ['IC_USERHOME'] = os.environ['HOME']
 
@@ -54,9 +54,10 @@ def set_env():
 
 	# Set up basic paths
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
-	icarusRunDir = 'core'
+	# icarusRunDir = 'core'
 	os.environ['IC_WORKINGDIR'] = icarusWorkingDir
-	os.environ['IC_BASEDIR'] = icarusWorkingDir.replace(icarusRunDir, '')
+	# os.environ['IC_BASEDIR'] = icarusWorkingDir.replace(icarusRunDir, '')
+	os.environ['IC_BASEDIR'] = os.path.dirname(icarusWorkingDir)
 	os.environ['IC_FORMSDIR'] = os.path.join(os.environ['IC_BASEDIR'], 'ui')
 	os.environ['IC_CONFIGDIR'] = os.path.join(os.environ['IC_BASEDIR'], 'config')
 	os.environ['IC_USERPREFS'] = os.path.join(os.environ['IC_CONFIGDIR'], 'users', os.environ['IC_USERNAME'])  # User prefs stored on server

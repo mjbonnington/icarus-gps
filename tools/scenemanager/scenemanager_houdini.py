@@ -16,7 +16,7 @@ from . import convention
 from . import file_open
 from . import file_save
 from shared import os_wrapper
-from shared import pDialog
+from shared import prompt
 from shared import recentFiles
 
 
@@ -73,12 +73,12 @@ class SceneManager(object):
 			return filepath
 
 		except hou.OperationFailed as e:
-			dialog = pDialog.dialog()
+			dialog = prompt.dialog()
 			dialog.display(str(e), "Error Opening File", conf=True)
 			return False
 
 		except hou.LoadWarning as e:
-			dialog = pDialog.dialog()
+			dialog = prompt.dialog()
 			dialog.display(str(e), "Warning", conf=True)
 			return False
 
@@ -134,7 +134,7 @@ class SceneManager(object):
 			return filepath
 
 		except hou.OperationFailed as e:
-			dialog = pDialog.dialog()
+			dialog = prompt.dialog()
 			dialog.display(str(e), "Error Saving File", conf=True)
 			return False
 
