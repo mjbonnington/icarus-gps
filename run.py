@@ -17,7 +17,7 @@ parser.add_argument('-j', '--job', help="set job")
 parser.add_argument('-s', '--shot', help="set shot")
 parser.add_argument('-u', '--user', help="override username")
 parser.add_argument('-v', '--verbosity', 
-	type=int, choices=xrange(0, 5), default=-1, help="output verbosity level")
+	type=int, choices=range(0, 5), default=-1, help="output verbosity level")
 parser.add_argument("-e", "--expert", 
 	action='store_true', help="start in expert mode")
 args = parser.parse_args()

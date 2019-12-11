@@ -899,7 +899,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
              <normaloff>:/icons/icons/tab_icon_maya.png</normaloff>:/icons/icons/tab_icon_maya.png</iconset>
            </attribute>
            <attribute name="title">
-            <string>ma Asset</string>
+            <string>Maya Asset</string>
            </attribute>
            <layout class="QHBoxLayout" name="horizontalLayout_9">
             <property name="spacing">
@@ -1388,8 +1388,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>355</width>
-                    <height>328</height>
+                    <width>164</width>
+                    <height>143</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -1526,7 +1526,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
              <normaloff>:/icons/icons/tab_icon_nuke.png</normaloff>:/icons/icons/tab_icon_nuke.png</iconset>
            </attribute>
            <attribute name="title">
-            <string>nk Asset</string>
+            <string>Nuke Asset</string>
            </attribute>
            <layout class="QHBoxLayout" name="horizontalLayout_12">
             <property name="spacing">
@@ -2800,21 +2800,11 @@ QToolButton:pressed, QToolButton:checked:pressed {
    </property>
   </action>
   <action name="actionShot_settings">
-   <property name="icon">
-    <iconset resource="rsc.qrc">
-     <normaloff>:/icons/icons/icon_settings.png</normaloff>
-     <disabledoff>:/icons/icons/icon_settings_disabled.png</disabledoff>:/icons/icons/icon_settings.png</iconset>
-   </property>
    <property name="text">
     <string>Shot settings...</string>
    </property>
   </action>
   <action name="actionJob_settings">
-   <property name="icon">
-    <iconset resource="rsc.qrc">
-     <normaloff>:/icons/icons/icon_settings.png</normaloff>
-     <disabledoff>:/icons/icons/icon_settings_disabled.png</disabledoff>:/icons/icons/icon_settings.png</iconset>
-   </property>
    <property name="text">
     <string>Job settings...</string>
    </property>
@@ -2863,11 +2853,6 @@ QToolButton:pressed, QToolButton:checked:pressed {
    </property>
   </action>
   <action name="actionUser_settings">
-   <property name="icon">
-    <iconset resource="rsc.qrc">
-     <normaloff>:/icons/icons/icon_settings.png</normaloff>
-     <disabledoff>:/icons/icons/icon_settings_disabled.png</disabledoff>:/icons/icons/icon_settings.png</iconset>
-   </property>
    <property name="text">
     <string>User settings...</string>
    </property>
@@ -2876,11 +2861,6 @@ QToolButton:pressed, QToolButton:checked:pressed {
    </property>
   </action>
   <action name="actionGlobal_settings">
-   <property name="icon">
-    <iconset resource="rsc.qrc">
-     <normaloff>:/icons/icons/icon_settings.png</normaloff>
-     <disabledoff>:/icons/icons/icon_settings_disabled.png</disabledoff>:/icons/icons/icon_settings.png</iconset>
-   </property>
    <property name="text">
     <string>Global settings...</string>
    </property>

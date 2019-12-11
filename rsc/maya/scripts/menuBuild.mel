@@ -397,7 +397,7 @@ setParent -menu $custom_menu;
 		-subMenu true
 		-tearOff true
 		-label "Editors"
-		-label "Open commonly used editor windows"
+		-annotation "Open commonly used editor windows"
 		-image "editor.png"
 		icEditorsMenu;
 

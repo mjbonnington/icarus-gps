@@ -348,7 +348,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.populateShotLs(self.ui.gatherFromShot_comboBox)
 			self.updateJobLabel()
 			self.ui.main_tabWidget.removeTab(0) # Remove 'Launcher' tab
-			self.ui.publishType_tabWidget.removeTab(1) # Remove 'nk Asset' tab
+			self.ui.publishType_tabWidget.removeTab(1) # Remove 'Nuke Asset' tab
 
 			# Attempt to set the publish asset type button to remember the
 			# last selection - 'self.connectNewSignalsSlots()' must be called
@@ -383,8 +383,8 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.populateShotLs(self.ui.gatherFromShot_comboBox)
 			self.updateJobLabel()
 			self.ui.main_tabWidget.removeTab(0) # Remove 'Launcher' tab
-			self.ui.publishType_tabWidget.removeTab(1) # Remove 'nk Asset' tab
-			self.ui.publishType_tabWidget.removeTab(0) # Remove 'ma Asset' tab
+			self.ui.publishType_tabWidget.removeTab(1) # Remove 'Nuke Asset' tab
+			self.ui.publishType_tabWidget.removeTab(0) # Remove 'Maya Asset' tab
 
 			# # Attempt to set the publish asset type button to remember the
 			# # last selection - 'self.connectNewSignalsSlots()' must be called
@@ -419,7 +419,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.populateShotLs(self.ui.gatherFromShot_comboBox)
 			self.updateJobLabel()
 			self.ui.main_tabWidget.removeTab(0) # Remove 'Launcher' tab
-			self.ui.publishType_tabWidget.removeTab(0) # Remove 'ma Asset' tab
+			self.ui.publishType_tabWidget.removeTab(0) # Remove 'Maya Asset' tab
 
 			# Attempt to set the publish asset type button to remember the
 			# last selection - 'self.connectNewSignalsSlots()' must be called
@@ -612,10 +612,10 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		tabIndex = self.ui.publishType_tabWidget.currentIndex()
 		tabText = self.ui.publishType_tabWidget.tabText(tabIndex)
 
-		if tabText == 'ma Asset':
+		if tabText == 'Maya Asset':
 			self.lockPublishTo(lock=False)
 
-		elif tabText == 'nk Asset':
+		elif tabText == 'Nuke Asset':
 			self.lockPublishTo(lock=False)
 			# if self.ui.comp_toolButton.isChecked() == True:
 			# 	self.lockPublishTo(lock=True)
@@ -1669,7 +1669,7 @@ os.environ['IC_VENDOR'])
 		###############
 		# MAYA ASSETS #
 		###############
-		if self.pblType == 'ma Asset':
+		if self.pblType == 'Maya Asset':
 
 			self.get_maya_assetPblOpts()
 			#print(self.chkLs)
@@ -1746,7 +1746,7 @@ os.environ['IC_VENDOR'])
 		###############
 		# NUKE ASSETS #
 		###############
-		if self.pblType == 'nk Asset':
+		if self.pblType == 'Nuke Asset':
 
 			self.get_nuke_assetPblOpts()
 			# if not pblChk.chkOpts(self.chkLs):

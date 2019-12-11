@@ -136,23 +136,23 @@ QAbstractItemView::item {
 	padding: 2px 0;
 }
 
-/*QAbstractItemView::item:selected {
-	background-color: rgba(150, 158, 163, 50%);
-	color: #fff;
+QAbstractItemView::item:selected {
+	background-color: rgb(%highlight%);
+	color: rgb(%highlighted-text%);
 }
 
 QAbstractItemView::item:hover {
-	background-color: rgba(150, 158, 163, 25%);
+	background-color: rgba(%highlight%, 10%);
 }
 
 QAbstractItemView::item:selected:hover {
-	background-color: rgba(150, 158, 163, 75%);
+	background-color: rgba(%highlight%, 100%);
 }
 
 QAbstractItemView::item:selected:disabled {
 	background-color: #666;
 	color: #333;
-}*/
+}
 
 QAbstractItemView::item QLineEdit {
 	margin: 0;
