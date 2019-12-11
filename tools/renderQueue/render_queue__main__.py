@@ -226,14 +226,14 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 			# Get values from XML
 			jobID = jobElement.get('id')
-			jobName = self.rq.getValue(jobElement, 'name')
-			jobType = self.rq.getValue(jobElement, 'type')
-			jobFrames = self.rq.getValue(jobElement, 'frames')
-			jobPriority = self.rq.getValue(jobElement, 'priority')
-			jobStatus = self.rq.getValue(jobElement, 'status')
-			jobUser = self.rq.getValue(jobElement, 'user')
-			jobSubmitTime = self.rq.getValue(jobElement, 'submitTime')
-			jobComment = self.rq.getValue(jobElement, 'comment')
+			jobName = self.rq.get_attr(jobElement, 'name')
+			jobType = self.rq.get_attr(jobElement, 'type')
+			jobFrames = self.rq.get_attr(jobElement, 'frames')
+			jobPriority = self.rq.get_attr(jobElement, 'priority')
+			jobStatus = self.rq.get_attr(jobElement, 'status')
+			jobUser = self.rq.get_attr(jobElement, 'user')
+			jobSubmitTime = self.rq.get_attr(jobElement, 'submitTime')
+			jobComment = self.rq.get_attr(jobElement, 'comment')
 
 			# Get the render job item or create it if it doesn't exist
 			renderJobItem = self.getQueueItem(self.ui.renderQueue_treeWidget.invisibleRootItem(), jobID)
@@ -265,10 +265,10 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 				# Get values from XML
 				taskID = taskElement.get('id')
-				taskFrames = self.rq.getValue(taskElement, 'frames')
-				taskStatus = self.rq.getValue(taskElement, 'status')
-				taskTotalTime = self.rq.getValue(taskElement, 'totalTime')
-				taskSlave = self.rq.getValue(taskElement, 'slave')
+				taskFrames = self.rq.get_attr(taskElement, 'frames')
+				taskStatus = self.rq.get_attr(taskElement, 'status')
+				taskTotalTime = self.rq.get_attr(taskElement, 'totalTime')
+				taskSlave = self.rq.get_attr(taskElement, 'slave')
 
 				# Get the render task item or create it if it doesn't exist
 				renderTaskItem = self.getQueueItem(renderJobItem, taskID)
@@ -617,16 +617,16 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 	# 		for item in self.ui.renderQueue_treeWidget.selectedItems():
 	# 			if not item.parent(): # if item has no parent then it must be a top level item, and therefore also a job
 
-	# 				jobName = self.rq.getValue(item, 'name')
-	# 				jobType = self.rq.getValue(item, 'type')
-	# 				priority = self.rq.getValue(item, 'priority')
-	# 				frames = self.rq.getValue(item, 'frames')
-	# 				taskSize = self.rq.getValue(item, 'taskSize')
+	# 				jobName = self.rq.get_attr(item, 'name')
+	# 				jobType = self.rq.get_attr(item, 'type')
+	# 				priority = self.rq.get_attr(item, 'priority')
+	# 				frames = self.rq.get_attr(item, 'frames')
+	# 				taskSize = self.rq.get_attr(item, 'taskSize')
 
-	# 				mayaScene = self.rq.getValue(item, 'mayaScene')
-	# 				mayaProject = self.rq.getValue(item, 'mayaProject')
-	# 				mayaFlags = self.rq.getValue(item, 'mayaFlags')
-	# 				mayaRenderCmd = self.rq.getValue(item, 'mayaRenderCmd')
+	# 				mayaScene = self.rq.get_attr(item, 'mayaScene')
+	# 				mayaProject = self.rq.get_attr(item, 'mayaProject')
+	# 				mayaFlags = self.rq.get_attr(item, 'mayaFlags')
+	# 				mayaRenderCmd = self.rq.get_attr(item, 'mayaRenderCmd')
 
 	# 				taskList = []
 
@@ -736,7 +736,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.actionSlaveContinueAfterTask.setVisible(True)
 			self.actionSlaveStopAfterTask.setVisible(True)
 
-			# self.ui.taskInfo_label.setText("Rendering %s %s from '%s'" %(verbose.pluralise("frame", len(frameList)), frames, self.rq.getValue(jobElement, 'name')))
+			# self.ui.taskInfo_label.setText("Rendering %s %s from '%s'" %(verbose.pluralise("frame", len(frameList)), frames, self.rq.get_attr(jobElement, 'name')))
 			# self.ui.runningTime_label.setText(startTime)  # change this to display the task running time
 
 		verbose.message("[%s] Local slave %s." %(self.localhost, self.slaveStatus))
@@ -784,19 +784,19 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			endFrame = max(frameList)
 
 
-		jobType = self.rq.getValue(jobElement, 'type')
+		jobType = self.rq.get_attr(jobElement, 'type')
 		if jobType == 'Maya':
 			# try:
 			# 	renderCmd = '"%s"' %os.environ['IC_MAYA_RENDER_EXECUTABLE'] # store this in XML as maya version may vary with project
 			# except KeyError:
 			# 	print "ERROR: Path to Maya Render command executable not found. This can be set with the environment variable 'IC_MAYA_RENDER_EXECUTABLE'."
-			#renderCmd = '"%s"' %os.path.normpath(self.rq.getValue(jobElement, 'mayaRenderCmd'))
-			renderCmd = self.rq.getValue(jobElement, 'mayaRenderCmd')
+			#renderCmd = '"%s"' %os.path.normpath(self.rq.get_attr(jobElement, 'mayaRenderCmd'))
+			renderCmd = self.rq.get_attr(jobElement, 'mayaRenderCmd')
 			# if not os.path.isfile(renderCmd): # disabled this check 
 			# 	print "ERROR: Maya render command not found: %s" %renderCmd
 			# 	return False
 
-			sceneName = self.rq.getValue(jobElement, 'mayaScene')
+			sceneName = self.rq.get_attr(jobElement, 'mayaScene')
 			# if not os.path.isfile(sceneName): # check scene exists - disabled for now as could cause slave to get stuck in a loop
 			# 	print "ERROR: Scene not found: %s" %sceneName
 			# 	self.rq.requeueTask(self.renderJobID, self.renderTaskID)
@@ -804,9 +804,9 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			# 	return False
 
 			cmdStr = ''
-			args = '-proj "%s"' %self.rq.getValue(jobElement, 'mayaProject')
+			args = '-proj "%s"' %self.rq.get_attr(jobElement, 'mayaProject')
 
-			mayaFlags = self.rq.getValue(jobElement, 'mayaFlags')
+			mayaFlags = self.rq.get_attr(jobElement, 'mayaFlags')
 			if mayaFlags is not None:
 				args += ' %s' %mayaFlags
 
@@ -817,13 +817,13 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				cmdStr += '"%s" %s -s %d -e %d "%s"' %(renderCmd, args, int(startFrame), int(endFrame), sceneName)
 
 		elif jobType == 'Nuke':
-			renderCmd = self.rq.getValue(jobElement, 'nukeRenderCmd')
-			scriptName = self.rq.getValue(jobElement, 'nukeScript')
+			renderCmd = self.rq.get_attr(jobElement, 'nukeRenderCmd')
+			scriptName = self.rq.get_attr(jobElement, 'nukeScript')
 
 			cmdStr = ''
 			args = ''
 
-			nukeFlags = self.rq.getValue(jobElement, 'nukeFlags')
+			nukeFlags = self.rq.get_attr(jobElement, 'nukeFlags')
 			if nukeFlags is not None:
 				args += ' %s' %nukeFlags
 
@@ -838,7 +838,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 #		verbose.print_(cmdStr, 4)
 
 		# Fill info fields
-		self.ui.taskInfo_label.setText("Rendering %s %s from '%s'" %(verbose.pluralise("frame", len(frameList)), frames, self.rq.getValue(jobElement, 'name')))
+		self.ui.taskInfo_label.setText("Rendering %s %s from '%s'" %(verbose.pluralise("frame", len(frameList)), frames, self.rq.get_attr(jobElement, 'name')))
 		#self.ui.runningTime_label.setText(startTime)  # change this to display the task running time
 		self.ui.runningTime_label.setText( str(datetime.timedelta(seconds=0)) )
 

@@ -4,10 +4,9 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2018 Gramercy Park Studios
+# (c) 2013-2019 Gramercy Park Studios
 #
 # Launches and controls the Icarus Version Manager UI.
-# TODO: If XML metadata not found, fall back to legacy python icData.
 
 
 import os
@@ -17,7 +16,7 @@ from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
 
 # Import custom modules
-from shared import settings_data_xml
+from shared import json_metadata as metadata
 
 
 # ----------------------------------------------------------------------------
@@ -71,15 +70,15 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		"""
 		self.assetRootDir = os.path.expandvars(assetRootDir)
 
-		# Instantiate XML data classes
-		self.assetData = settings_data_xml.SettingsData()
-		self.assetData.loadXML(os.path.join(self.assetRootDir, version, 'assetData.xml'), use_template=False, quiet=False)
+		# Instantiate data classes
+		self.assetData = metadata.Metadata(
+			os.path.join(self.assetRootDir, version, 'asset_data.json'))
 
 		# Set asset label text
-		self.ui.asset_label.setText( self.assetData.getValue('asset', 'assetPblName') )
+		self.ui.asset_label.setText( self.assetData.get_attr('asset', 'assetPblName') )
 
 		self.updateVersion = ''
-		self.updateAssetVersionCol( self.assetData.getValue('asset', 'version'), setCurrentVersion=True )
+		self.updateAssetVersionCol( self.assetData.get_attr('asset', 'version'), setCurrentVersion=True )
 		self.reloadVersionDetails()
 
 		if modal:
@@ -99,21 +98,22 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		selVersion = self.ui.assetVersion_listWidget.currentItem().text()
 		assetDir = os.path.join(self.assetRootDir, selVersion)
 
-		assetDataLoaded = self.assetData.loadXML(os.path.join(assetDir, 'assetData.xml'), use_template=False, quiet=False)
+		self.assetData.load(os.path.join(assetDir, 'asset_data.json'))
 
-		# --------------------------------------------------------------------
-		# If XML files don't exist, create defaults, and attempt to convert
-		# data from Python data files.
-		# This code may be removed in the future.
-		if not assetDataLoaded:
-			from shared import legacySettings
+		# assetDataLoaded = self.assetData.loadXML(os.path.join(assetDir, 'assetData.xml'), use_template=False, quiet=False)
+		# # --------------------------------------------------------------------
+		# # If XML files don't exist, create defaults, and attempt to convert
+		# # data from Python data files.
+		# # This code may be removed in the future.
+		# if not assetDataLoaded:
+		# 	from shared import legacySettings
 
-			# Try to convert from icData.py to XML (legacy assets)
-			if legacySettings.convertAssetData(assetDir, self.assetData):
-				self.assetData.loadXML()
-			else:
-				return False
-		# --------------------------------------------------------------------
+		# 	# Try to convert from icData.py to XML (legacy assets)
+		# 	if legacySettings.convertAssetData(assetDir, self.assetData):
+		# 		self.assetData.reload()
+		# 	else:
+		# 		return False
+		# # --------------------------------------------------------------------
 
 		# Update image preview and info field
 		self.updateImgPreview(assetDir)
@@ -153,11 +153,11 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		""" Update info field with notes and other relevant data.
 		"""
 		infoText = ""
-		notes = self.assetData.getValue('asset', 'notes')
+		notes = self.assetData.get_attr('asset', 'notes')
 		if notes:
 			infoText += "%s\n\n" % notes
-		infoText += "Published by %s\n%s" % (self.assetData.getValue('asset', 'user'), self.assetData.getValue('asset', 'timestamp'))
-		source = self.assetData.getValue('asset', 'assetSource')
+		infoText += "Published by %s\n%s" % (self.assetData.get_attr('asset', 'user'), self.assetData.get_attr('asset', 'timestamp'))
+		source = self.assetData.get_attr('asset', 'assetSource')
 		if source:
 			infoText += "\nFrom '%s'" % source #os.path.basename(source)
 

@@ -110,35 +110,35 @@ class gpsCreateCamera():
 
 		# If the camera to be created is the shot camera, read shot data and apply values
 		if camera == os.environ['IC_SHOT']:
-			from shared import settings_data_xml
-			sd = settings_data_xml.SettingsData()
-			shotDataLoaded = sd.loadXML(os.path.join(os.environ['IC_SHOTDATA'], 'shotData.xml'), use_template=False)
+			from shared import json_metadata as metadata
+			sd = metadata.Metadata(
+				os.path.join(os.environ['IC_SHOTDATA'], 'shot_settings.json'))
 
-			mc.setAttr(camSh+'.horizontalFilmAperture', float(sd.getValue('camera', 'filmbackWidth')) / 25.4)
-			mc.setAttr(camSh+'.verticalFilmAperture', float(sd.getValue('camera', 'filmbackHeight')) / 25.4)
+			mc.setAttr(camSh+'.horizontalFilmAperture', float(sd.get_attr('camera', 'filmbackWidth')) / 25.4)
+			mc.setAttr(camSh+'.verticalFilmAperture', float(sd.get_attr('camera', 'filmbackHeight')) / 25.4)
 			mc.setAttr(camSh+'.cameraAperture', lock=True)
-			mc.setAttr(camSh+'.shutterAngle', float(sd.getValue('camera', 'shutterAngle')))
-			#self.setAttr(camSh+'.shutterAngle', '%sdeg' % sd.getValue('camera', 'shutterAngle'))
-			mc.setAttr(camSh+'.focalLength', float(sd.getValue('camera', 'focalLength')))
-			mc.setAttr(camSh+'.fStop', float(sd.getValue('camera', 'aperture')))
+			mc.setAttr(camSh+'.shutterAngle', float(sd.get_attr('camera', 'shutterAngle')))
+			#self.setAttr(camSh+'.shutterAngle', '%sdeg' % sd.get_attr('camera', 'shutterAngle'))
+			mc.setAttr(camSh+'.focalLength', float(sd.get_attr('camera', 'focalLength')))
+			mc.setAttr(camSh+'.fStop', float(sd.get_attr('camera', 'aperture')))
 			#mc.setAttr(camSh+'.locatorScale', 25)
 
-			self.setAttr(camSh+'.focusDistance', '%sm' % sd.getValue('camera', 'focusDistance'))
-			self.setAttr(camSh+'.centerOfInterest', '%sm' % sd.getValue('camera', 'subjectDistance'))
+			self.setAttr(camSh+'.focusDistance', '%sm' % sd.get_attr('camera', 'focusDistance'))
+			self.setAttr(camSh+'.centerOfInterest', '%sm' % sd.get_attr('camera', 'subjectDistance'))
 
 			if not rig:
-				# self.setAttr(cam+'.ty', '%sm' % sd.getValue('camera', 'camHeight'))
-				# self.setAttr(cam+'.rx', '%sdeg' % sd.getValue('camera', 'camPitch'))
-				mc.move(0, '%sm' % sd.getValue('camera', 'camHeight'), 0, cam)
-				mc.rotate('%sdeg' % sd.getValue('camera', 'camPitch'), 0, 0, cam)
+				# self.setAttr(cam+'.ty', '%sm' % sd.get_attr('camera', 'camHeight'))
+				# self.setAttr(cam+'.rx', '%sdeg' % sd.get_attr('camera', 'camPitch'))
+				mc.move(0, '%sm' % sd.get_attr('camera', 'camHeight'), 0, cam)
+				mc.rotate('%sdeg' % sd.get_attr('camera', 'camPitch'), 0, 0, cam)
 
 			# Add extra attributes and notes
 			mc.addAttr(camSh, ln='clipRef', nn='Clip / reel ref', dt='string')
-			mc.setAttr(camSh+'.clipRef', sd.getValue('camera', 'clipRef'), typ='string')
+			mc.setAttr(camSh+'.clipRef', sd.get_attr('camera', 'clipRef'), typ='string')
 			mc.addAttr(camSh, ln='filter', nn='Filter(s)', dt='string')
-			mc.setAttr(camSh+'.filter', sd.getValue('camera', 'filter'), typ='string')
+			mc.setAttr(camSh+'.filter', sd.get_attr('camera', 'filter'), typ='string')
 			mc.addAttr(camSh, ln='notes', dt='string')
-			mc.setAttr(camSh+'.notes', sd.getValue('camera', 'notes'), type='string')
+			mc.setAttr(camSh+'.notes', sd.get_attr('camera', 'notes'), type='string')
 
 			# TODO - attach plate as image plane
 

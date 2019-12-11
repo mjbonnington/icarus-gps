@@ -14,7 +14,7 @@ import sys
 from . import appPaths
 from . import os_wrapper
 from . import prompt
-from . import settings_data_xml
+from . import json_metadata as metadata
 from . import verbose
 
 
@@ -26,13 +26,9 @@ def set_env(job, shot, shot_path):
 		""" First try to get the value from the shot data, if it returns
 			nothing then look in job data instead.
 		"""
-		value = shot_data.getValue(category, setting)
+		value = shot_data.get_attr(category, setting)
 		if value is None:
-			value = job_data.getValue(category, setting)
-			# if value is None:
-			# 	value = default_data.getValue(category, setting)
-
-		#return value
+			value = job_data.get_attr(category, setting)
 
 		# Return an empty string, not None, so value can be stored in an
 		# environment variable without raising an error
@@ -89,22 +85,31 @@ def set_env(job, shot, shot_path):
 	os_wrapper.createDir(os.environ['IC_JOBDATA'])
 
 	# Instantiate job / shot settings classes
-	job_data = settings_data_xml.SettingsData()
-	shot_data = settings_data_xml.SettingsData()
-	#default_data = settings_data_xml.SettingsData()
+	job_data = metadata.Metadata()
+	shot_data = metadata.Metadata()
 	app_paths = appPaths.AppPaths()
 
 	# Load data
-	job_data.loadXML(os.path.join(job_data_path, 'jobData.xml'), use_template=False)
-	shot_data.loadXML(os.path.join(shot_data_path, 'shotData.xml'), use_template=False)
-	#default_data.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'defaultData.xml'))
-	app_paths.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'), use_template=True)
+	# job_data.load(datafile=os.path.join(job_data_path, 'jobData.xml'), use_template=False)
+	# shot_data.load(datafile=os.path.join(shot_data_path, 'shotData.xml'), use_template=False)
+	job_data_loaded = job_data.load(
+		os.path.join(job_data_path, 'job_settings.json'))
+	shot_data_loaded = shot_data.load(
+		os.path.join(shot_data_path, 'shot_settings.json'))
+	app_paths.loadXML(
+		os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'), 
+		use_template=True)
+
+	verbose.debug("%s job data loaded: %s, %s shot data loaded: %s" % (job, job_data_loaded, shot, shot_data_loaded))
+	# if (not job_data_loaded) or (not shot_data_loaded):
+	if not job_data_loaded:
+		return False
 
 	os.environ['IC_ASSETDIR'] = 'assets'
 
 	# Check if the job is using the correct Icarus version
 	v_current = parseVersion(os.environ['IC_VERSION'])
-	icVersion = job_data.getValue('meta', 'icVersion')
+	icVersion = job_data.get_attr('meta', 'icVersion')
 	if icVersion:
 		v_required = parseVersion(icVersion)
 	else:
@@ -127,8 +132,8 @@ def set_env(job, shot, shot_path):
 			if dialog.display(msg, title):
 				# TODO: give the option to restart Icarus with the correct version,
 				# or attempt to upgrade the project for compatibility.
-				# job_data.setValue('meta', 'icVersion', os.environ['IC_VERSION'])
-				# job_data.saveXML()
+				# job_data.set_attr('meta', 'icVersion', os.environ['IC_VERSION'])
+				# job_data.save()
 				exec_str = os.path.join(cwd, v_str, 'run.py')
 				flags = " -j %s -s %s" % (job, shot)
 				verbose.print_(exec_str+flags)

@@ -298,13 +298,13 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		if editPathsDialog.display(self.j.win_root, self.j.osx_root, self.j.linux_root, self.j.jobs_path):
 			self.j.setRootPaths(editPathsDialog.winPath, editPathsDialog.osxPath, editPathsDialog.linuxPath, editPathsDialog.jobsRelPath)
 			self.j.getRootPaths()
-			#self.j.saveXML()
+			#self.j.save()
 
 
 	def save(self):
 		""" Save data.
 		"""
-		if self.j.saveXML():
+		if self.j.save():
 			verbose.message("Job database saved.")
 			return True
 		else:

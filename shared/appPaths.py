@@ -20,14 +20,31 @@ class AppPaths(xml_data.XMLData):
 		Inherits XMLData class.
 	"""
 
-	def getApps(self):
+	def getApps(self, visible_only=False, sort_by=None):
 		""" Return all apps as elements.
+			'visible_only' returns only visible (launchable) apps.
 		"""
-		return self.root.findall('./app')
+		if visible_only:
+			apps = self.root.findall("./app[@visible='True']")
+		else:
+			apps = self.root.findall("./app")
+
+		if sort_by is None:
+			pass  # No sorting, order will be as written in XML
+		elif sort_by == "Name":
+			apps[:] = sorted(apps, key=self.sortByName)
+		elif sort_by == "Category":
+			apps[:] = sorted(apps, key=self.sortByCategory)
+		elif sort_by == "Vendor":
+			apps[:] = sorted(apps, key=self.sortByVendor)
+		elif sort_by == "Most used":
+			apps[:] = sorted(apps, key=self.sortByMostUsed, reverse=True)
+
+		return apps
 
 
 	# ------------------------------------------------------------------------
-	# These functions are used by getVisibleApps() to return a sorted list of
+	# These functions are used by getApps() to return a sorted list of
 	# elements...
 	def sortByName(self, elem):
 		return elem.get('name').lower()
@@ -42,21 +59,6 @@ class AppPaths(xml_data.XMLData):
 		from . import userPrefs
 		return userPrefs.query('launchcounter', elem.get('id'), datatype='int', default=0)
 	# ------------------------------------------------------------------------
-
-
-	def getVisibleApps(self, sortBy=None):
-		""" Return all visible (launchable) apps as elements.
-		"""
-		apps = self.root.findall("./app[@visible='True']")
-		if sortBy == "Name":
-			apps[:] = sorted(apps, key=self.sortByName)
-		elif sortBy == "Category":
-			apps[:] = sorted(apps, key=self.sortByCategory)
-		elif sortBy == "Vendor":
-			apps[:] = sorted(apps, key=self.sortByVendor)
-		elif sortBy == "Most used":
-			apps[:] = sorted(apps, key=self.sortByMostUsed, reverse=True)
-		return apps
 
 
 	def getAppIDs(self):

@@ -2,8 +2,8 @@
 
 # [Icarus] settings_apps.py
 #
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2017 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2015-2019
 #
 # Applications settings handler.
 
@@ -27,7 +27,9 @@ class helper():
 
 		self.jd = parent.prefs
 		self.ap = appPaths.AppPaths()
-		ap_load = self.ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'), use_template=True)
+		self.ap.loadXML(
+			os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'), 
+			use_template=True)
 
 		self.setupAppVersions()
 
@@ -38,7 +40,7 @@ class helper():
 		"""
 		noSelectText = ""
 		# apps = self.ap.getAppNames()  # Get apps and versions
-		app_ls = self.ap.getApps()  # Get apps and versions
+		app_ls = self.ap.getApps()  # Get apps and versions - sort_by='Most used'
 		formLayout = self.frame.findChildren(QtWidgets.QFormLayout, 'formLayout')[0]
 		appPaths_pushButton = self.frame.appPaths_pushButton
 
@@ -56,9 +58,7 @@ class helper():
 
 			comboBox = QtWidgets.QComboBox(self.frame)
 			comboBox.setObjectName("%s_comboBox" %appName)
-			# comboBox.setProperty('xmlTag', appName)  # Use 'displayName' for backwards-compatibility
-			comboBox.setProperty('xmlTag', displayName)  # Use 'displayName' for backwards-compatibility
-			# print(comboBox.property('xmlTag'))
+			comboBox.setProperty('xmlTag', appName)  # Use 'displayName' for backwards-compatibility
 			comboBox.clear()
 
 			versions = self.ap.getVersions(displayName)  # Populate the combo box with available app versions
@@ -73,8 +73,7 @@ class helper():
 
 			if selectCurrent:  # Set selection to correct entry
 				try:
-					# text = self.jd.getAppVersion(displayName)
-					text = self.jd.getAppVersion(appName)
+					text = self.jd.getAppVersion(appName)  # Use 'displayName' for backwards-compatibility
 				except AttributeError:
 					text = noSelectText
 					# comboBox.insertItem(text, 0)
@@ -90,5 +89,6 @@ class helper():
 		"""
 		editAppPathsDialog = edit_app_paths.dialog(parent=self.parent)
 		if editAppPathsDialog.display():
-			self.ap.loadXML()  # Reload XML and update comboBox contents after closing dialog
+			# Reload XML and update comboBox contents after closing dialog
+			self.ap.loadXML()
 			self.parent.openProperties('apps')

@@ -67,19 +67,19 @@ def convertJobData(dataPath, jd, ap):
 
 		# Units settings
 		try:
-			jd.setValue('units', 'linear', jobData.unit)
+			jd.set_attr('units', 'linear', jobData.unit)
 		except AttributeError:
 			pass
 		try:
-			jd.setValue('units', 'angle', jobData.angle)
+			jd.set_attr('units', 'angle', jobData.angle)
 		except AttributeError:
 			pass
 		try:
-			jd.setValue('units', 'time', jobData.timeFormat)
+			jd.set_attr('units', 'time', jobData.timeFormat)
 		except AttributeError:
 			pass
 		try:
-			jd.setValue('units', 'fps', jobData.fps)
+			jd.set_attr('units', 'fps', jobData.fps)
 		except AttributeError:
 			pass
 
@@ -87,46 +87,46 @@ def convertJobData(dataPath, jd, ap):
 
 		# App versions
 		try:
-			jd.setValue('apps', 'Maya', convertAppExecPath('Maya', jobData.mayaVersion, ap))
+			jd.set_attr('apps', 'Maya', convertAppExecPath('Maya', jobData.mayaVersion, ap))
 		except AttributeError:
 			pass
 		try:
-			jd.setValue('apps', 'Mudbox', convertAppExecPath('Mudbox', jobData.mudboxVersion, ap))
+			jd.set_attr('apps', 'Mudbox', convertAppExecPath('Mudbox', jobData.mudboxVersion, ap))
 		except AttributeError:
 			pass
 		try:
-			jd.setValue('apps', 'Mari', convertAppExecPath('Mari', jobData.mariVersion, ap))
+			jd.set_attr('apps', 'Mari', convertAppExecPath('Mari', jobData.mariVersion, ap))
 		except AttributeError:
 			pass
 		try:
-			jd.setValue('apps', 'Nuke', convertAppExecPath('Nuke', jobData.nukeVersion, ap))
+			jd.set_attr('apps', 'Nuke', convertAppExecPath('Nuke', jobData.nukeVersion, ap))
 		except AttributeError:
 			pass
 		try:
-			jd.setValue('apps', 'RealFlow', convertAppExecPath('RealFlow', jobData.realflowVersion, ap))
+			jd.set_attr('apps', 'RealFlow', convertAppExecPath('RealFlow', jobData.realflowVersion, ap))
 		except AttributeError:
 			pass
 		try:
-			jd.setValue('apps', 'HieroPlayer', convertAppExecPath('HieroPlayer', jobData.hieroPlayerVersion, ap))
+			jd.set_attr('apps', 'HieroPlayer', convertAppExecPath('HieroPlayer', jobData.hieroPlayerVersion, ap))
 		except AttributeError:
 			pass
 
 		# Other settings
 		try:
-			jd.setValue('other', 'prodboard', jobData.prodBoard)
+			jd.set_attr('other', 'prodboard', jobData.prodBoard)
 		except AttributeError:
 			pass
 		try:
-			jd.setValue('other', 'projtools', jobData.projectTools)
+			jd.set_attr('other', 'projtools', jobData.projectTools)
 		except AttributeError:
 			pass
 		try:
-			jd.setValue('other', 'elementslib', jobData.elementsLibrary)
+			jd.set_attr('other', 'elementslib', jobData.elementsLibrary)
 		except AttributeError:
 			pass
 
 		# Save XML
-		if jd.saveXML():
+		if jd.save():
 			verbose.message("Successfully converted legacy job data to XML.")
 			return True
 		else:
@@ -149,34 +149,34 @@ def convertShotData(dataPath, sd):
 
 		# Time settings
 		try:
-			sd.setValue('time', 'rangeStart', shotData.frRange[0])
+			sd.set_attr('time', 'rangeStart', shotData.frRange[0])
 		except AttributeError:
 			pass
 		try:
-			sd.setValue('time', 'rangeEnd', shotData.frRange[1])
+			sd.set_attr('time', 'rangeEnd', shotData.frRange[1])
 		except AttributeError:
 			pass
 
 		# Resolution settings
 		try:
-			sd.setValue('resolution', 'fullWidth', shotData.res[0])
+			sd.set_attr('resolution', 'fullWidth', shotData.res[0])
 		except AttributeError:
 			pass
 		try:
-			sd.setValue('resolution', 'fullHeight', shotData.res[1])
+			sd.set_attr('resolution', 'fullHeight', shotData.res[1])
 		except AttributeError:
 			pass
 		try:
-			sd.setValue('resolution', 'proxyWidth', int(shotData.res[0]) / 2.0)
+			sd.set_attr('resolution', 'proxyWidth', int(shotData.res[0]) / 2.0)
 		except AttributeError:
 			pass
 		try:
-			sd.setValue('resolution', 'proxyHeight', int(shotData.res[1]) / 2.0)
+			sd.set_attr('resolution', 'proxyHeight', int(shotData.res[1]) / 2.0)
 		except AttributeError:
 			pass
 
 		# Save XML
-		if sd.saveXML():
+		if sd.save():
 			verbose.message("Successfully converted legacy shot data to XML.")
 			return True
 		else:
@@ -198,35 +198,35 @@ def convertAssetData(dataPath, data):
 
 		# Store values
 		try:
-			data.setValue('asset', 'assetRootDir', icData.assetRootDir)
+			data.set_attr('asset', 'assetRootDir', icData.assetRootDir)
 		except AttributeError:
 			pass
 		try:
-			data.setValue('asset', 'assetPblName', icData.assetPblName)
+			data.set_attr('asset', 'assetPblName', icData.assetPblName)
 		except AttributeError:
 			pass
 		try:
-			data.setValue('asset', 'asset', icData.asset)
+			data.set_attr('asset', 'asset', icData.asset)
 		except AttributeError:
 			pass
 		try:
-			data.setValue('asset', 'assetType', icData.assetType)
+			data.set_attr('asset', 'assetType', icData.assetType)
 		except AttributeError:
 			pass
 		try:
-			data.setValue('asset', 'assetExt', icData.assetExt)
+			data.set_attr('asset', 'assetExt', icData.assetExt)
 		except AttributeError:
 			pass
 		try:
-			data.setValue('asset', 'version', icData.version)
+			data.set_attr('asset', 'version', icData.version)
 		except AttributeError:
 			pass
 		try:
-			data.setValue('asset', 'requires', icData.requires)
+			data.set_attr('asset', 'requires', icData.requires)
 		except AttributeError:
 			pass
 		try:
-			data.setValue('asset', 'compatible', icData.compatible)
+			data.set_attr('asset', 'compatible', icData.compatible)
 		except AttributeError:
 			pass
 
@@ -238,14 +238,14 @@ def convertAssetData(dataPath, data):
 			username = notesFooter[0]
 			timestamp = notesFooter[1]
 
-			data.setValue('asset', 'notes', notes)
-			data.setValue('asset', 'user', username)
-			data.setValue('asset', 'timestamp', timestamp)
+			data.set_attr('asset', 'notes', notes)
+			data.set_attr('asset', 'user', username)
+			data.set_attr('asset', 'timestamp', timestamp)
 		except AttributeError:
 			pass
 
 		# Save XML
-		if data.saveXML():
+		if data.save():
 			verbose.message("Successfully converted legacy asset data to XML.")
 			return True
 		else:

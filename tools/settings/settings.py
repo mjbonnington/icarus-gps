@@ -19,7 +19,6 @@ from Qt import QtCompat, QtCore, QtWidgets
 import ui_template as UI
 
 from shared import verbose
-from shared import settings_data_xml
 
 
 # ----------------------------------------------------------------------------
@@ -83,7 +82,8 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 			'category_list' is a list of categories, should correspond to a
 			page of properties defined by a .ui file.
 			'start_panel' if set will jump straight to the named panel.
-			'prefs_file' is the path to the XML file storing the settings.
+			'prefs_file' is the path to the file storing the settings. Can be
+			either an XML or a JSON file.
 			'inherit' whether to inherit any values. This should be in the
 			form of a path just like the 'prefs_file' argument.
 			'autofill' when true, attempt to fill some fields automatically.
@@ -121,15 +121,6 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		""" Initialise or reset by reloading data.
 		"""
 		# self.ui.categories_listWidget.blockSignals(True)
-
-		# # Load data from xml file(s)
-		# self.prefs = settings_data_xml.SettingsData()
-		# self.prefs.read(datafile=self.prefs_file)
-		# if self.inherit:
-		# 	self.prefs_inherited = settings_data_xml.SettingsData()
-		# 	self.prefs_inherited.read(datafile=self.inherit)
-		# else:
-		# 	self.prefs_inherited = None
 
 		# Instantiate preferences data class(es)
 		if self.prefs_file is not None:
@@ -233,7 +224,7 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		for widget in self.ui.settings_frame.findChildren(QtWidgets.QWidget):
 			attr = widget.property('xmlTag')
 			if attr:
-				self.prefs.removeElement(self.currentCategory, attr)
+				self.prefs.remove_attr(self.currentCategory, attr)
 
 		self.openProperties(self.currentCategory, storeProperties=False)
 

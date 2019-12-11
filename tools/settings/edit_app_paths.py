@@ -230,7 +230,7 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.storeAppPathLinux()
 		self.storeAppPathWin()
 
-		if self.ap.saveXML():
+		if self.ap.save():
 			verbose.message("Application paths data file saved.")
 			return True
 		else:

@@ -117,7 +117,7 @@ class PreviewUI(QtWidgets.QMainWindow, UI.TemplateUI):
 	def initSettings(self):
 		""" Initialise settings.
 		"""
-		self.activeView = self.prefs.getValue('preview', 'activeview') #None
+		self.activeView = self.prefs.get_attr('preview', 'activeview') #None
 		# self.ui.activeView_lineEdit.hide()
 		self.ui.message_plainTextEdit.hide()
 		#self.setFixedHeight(self.minimumSizeHint().height())
@@ -195,7 +195,7 @@ class PreviewUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.resSep_label.setEnabled(True)
 
 			# Read values from user settings
-			value = self.prefs.getValue('preview', 'customresolution')
+			value = self.prefs.get_attr('preview', 'customresolution')
 			if value is not None:
 				try:
 					res = value.split('x')
@@ -256,7 +256,7 @@ class PreviewUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.rangeSep_label.setEnabled(True)
 
 			# Read values from user settings
-			value = self.prefs.getValue('preview', 'customframerange')
+			value = self.prefs.get_attr('preview', 'customframerange')
 			if value is not None:
 				try:
 					frRange = value.split('-')

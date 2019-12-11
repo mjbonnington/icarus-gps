@@ -2,8 +2,8 @@
 
 # [Icarus] xml_data.py
 #
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2019 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2015-2019
 #
 # Class for handling generic XML data files via ElementTree.
 # Classes written to handle specific data files should inherit this class.
@@ -18,17 +18,45 @@ from . import verbose
 
 
 class XMLData(object):
-
+	""" Class for XML data.
+	"""
 	def __init__(self, datafile=None):
+		""" Initialise class. If datafile is not specified, create bare
+			class. The data should then be loaded with the load() method.
+		"""
+		verbose.debug("Class: %s" % self)
+
+		self._create()
 		if datafile is not None:
-			self.datafile = os.path.normpath(datafile)
+			self.load(datafile)
 
 
-	def createXML(self):
-		""" Create empty XML data file.
+	def _create(self):
+		""" Create empty ElementTree XML data structure.
 		"""
 		self.root = ET.Element('root')
 		self.tree = ET.ElementTree(self.root)
+
+
+	def load(self, datafile):
+		""" Load data from datafile and store in an ElementTree.
+		"""
+		self.datafile = os.path.normpath(datafile)
+		return self.reload()
+
+
+	def reload(self):
+		""" Reload data from current datafile.
+		"""
+		try:
+			self.tree = ET.parse(self.datafile)
+			self.root = self.tree.getroot()
+			verbose.print_('XML load: "%s"' % self.datafile)
+			return True
+
+		except (IOError, ET.ParseError):
+			verbose.warning('XML file is invalid or doesn\'t exist: "%s"' % self.datafile)
+			return False
 
 
 	def loadXML(self, datafile=None, use_template=False, quiet=False):
@@ -50,38 +78,45 @@ class XMLData(object):
 			success, msg = os_wrapper.copy(template_file, self.datafile, quiet=quiet)
 			if not quiet:
 				if success:
-					verbose.print_('XML file "%s" copied from templates.' %xml_file)
+					verbose.print_('XML file "%s" copied from templates.' % xml_file)
 				else:
 					verbose.warning("XML template could not be copied.")
 
 		try:
 			self.tree = ET.parse(self.datafile)
 			self.root = self.tree.getroot()
-			verbose.print_('XML read: "%s"' %self.datafile)
+			verbose.print_('XML load: "%s"' % self.datafile)
 			return True
 
 		except (IOError, ET.ParseError):
 			if not quiet:
-				verbose.warning('XML data file is invalid or doesn\'t exist: "%s"' %self.datafile)
-			self.createXML()
+				verbose.warning('XML file is invalid or doesn\'t exist: "%s"' % self.datafile)
+			# self._create()
 			return False
 
 
-	def saveXML(self):
-		""" Save XML data.
+	def save(self):
+		""" Save ElementTree to datafile.
 		"""
 		try:
-			self.indent(self.root)
-			self.tree.write(self.datafile, xml_declaration=True, encoding='utf-8')
-			verbose.print_('XML write: "%s"' %self.datafile)
+			self._indent(self.root)
+			self.tree.write(
+				self.datafile, xml_declaration=True, encoding='utf-8')
+			verbose.print_('XML save: "%s"' % self.datafile)
 			return True
 
-		except:
-			verbose.error('XML data file could not be written: "%s"' %self.datafile)
+		except IOError:
+			verbose.error('XML file could not be written: "%s"' % self.datafile)
 			return False
 
 
-	def indent(self, elem, level=0):
+	def clear(self):
+		""" Clear all data from the ElementTree.
+		"""
+		self._create()
+
+
+	def _indent(self, elem, level=0):
 		""" Indent elements automatically to prepare nicely formatted XML for
 			output.
 		"""
@@ -92,7 +127,7 @@ class XMLData(object):
 			if not elem.tail or not elem.tail.strip():
 				elem.tail = i
 			for elem in elem:
-				self.indent(elem, level+1)
+				self._indent(elem, level+1)
 			if not elem.tail or not elem.tail.strip():
 				elem.tail = i
 		else:
@@ -108,4 +143,3 @@ class XMLData(object):
 			text = elem.text
 			if text is not None:
 				return text
-

@@ -24,7 +24,7 @@ import ui_template as UI
 from shared import jobs
 from shared import os_wrapper
 from shared import prompt
-from shared import settings_data_xml
+from shared import json_metadata as metadata
 from shared import verbose
 
 
@@ -88,7 +88,7 @@ class ShotCreatorDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 		# Instantiate jobs class and load data
 		self.j = jobs.Jobs()
-		self.sd = settings_data_xml.SettingsData()
+		self.sd = metadata.Metadata()
 
 
 	def display(self, job=None):
@@ -189,13 +189,11 @@ class ShotCreatorDialog(QtWidgets.QDialog, UI.TemplateUI):
 		for shot in self.shotLs:
 			path = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA" %(jobPath, shot))
 			os_wrapper.createDir(path)
-			shotData = os.path.join(path, "shotData.xml")
-			# sd.createXML()
-			# sd.saveXML()
-			if self.sd.loadXML(shotData):
+			shotData = os.path.join(path, "shot_settings.json")
+			if self.sd.load(shotData):
 				existing += 1
 				existingShots += shot + " "
-			elif self.sd.saveXML():
+			elif self.sd.save():
 				success += 1
 				createdShots += shot + " "
 			else:

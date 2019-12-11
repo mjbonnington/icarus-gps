@@ -99,8 +99,8 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# instantiating the UI class. However, this would require splitting
 		# JSON handler out to its own module
 		if 'IC_VERBOSITY' not in os.environ:
-			os.environ['IC_VERBOSITY'] = str(self.prefs.getValue('user', 'verbosity', default=3))
-		# os.environ['IC_NUMRECENTFILES'] = str(self.prefs.getValue('user', 'numrecentfiles', default=10))
+			os.environ['IC_VERBOSITY'] = str(self.prefs.get_attr('user', 'verbosity', default=3))
+		# os.environ['IC_NUMRECENTFILES'] = str(self.prefs.get_attr('user', 'numrecentfiles', default=10))
 
 		# Instantiate jobs class
 		self.j = jobs.Jobs()
@@ -239,7 +239,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 			# Set 'Minimise on launch' checkbox from user prefs
 			# self.minimiseOnAppLaunch = userPrefs.query('main', 'minimiseonlaunch', datatype='bool', default=True)
-			self.minimiseOnAppLaunch = self.prefs.getValue('user', 'minimiseonlaunch', default=True)
+			self.minimiseOnAppLaunch = self.prefs.get_attr('user', 'minimiseonlaunch', default=True)
 			# self.ui.actionMinimise_on_Launch.setChecked(self.minimiseOnAppLaunch)
 			# self.ui.actionMinimise_on_Launch.toggled.connect(self.setMinimiseOnAppLaunch)
 
@@ -258,7 +258,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 			# Set 'Sort by' menu from user prefs
 			# self.sortAppsBy = userPrefs.query('main', 'sortappsby', datatype='str', default="Most used")
-			self.sortAppsBy = self.prefs.getValue('user', 'sortappsby', default="Most used")
+			self.sortAppsBy = self.prefs.get_attr('user', 'sortappsby', default="Most used")
 			# if self.sortAppsBy == "Name":
 			# 	self.ui.actionName.setChecked(True)
 			# elif self.sortAppsBy == "Category":
@@ -319,7 +319,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.user_toolButton.setEnabled(True)
 
 			# Setup app launch icons
-			self.al.setupIconGrid(sortBy=self.sortAppsBy)
+			self.al.setupIconGrid(sort_by=self.sortAppsBy)
 
 			# Store env vars
 			self.environ = dict(os.environ)
@@ -355,7 +355,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			# already.
 			try:
 				# assetType = userPrefs.query('main', 'lastpublishma')
-				assetType = self.prefs.getValue('main', 'lastpublishma')
+				assetType = self.prefs.get_attr('main', 'lastpublishma')
 				for toolButton in self.ui.ma_assetType_frame.children():
 					if isinstance(toolButton, QtWidgets.QToolButton):
 						if toolButton.text() == assetType:
@@ -391,7 +391,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			# # already.
 			# try:
 			# 	# assetType = userPrefs.query('main', 'lastpublishhou')
-			# 	assetType = self.prefs.getValue('main', 'lastpublishhou')
+			# 	assetType = self.prefs.get_attr('main', 'lastpublishhou')
 			# 	for toolButton in self.ui.ma_assetType_frame.children():
 			# 		if isinstance(toolButton, QtWidgets.QToolButton):
 			# 			if toolButton.text() == assetType:
@@ -426,7 +426,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			# already.
 			try:
 				# assetType = userPrefs.query('main', 'lastpublishnk')
-				assetType = self.prefs.getValue('main', 'lastpublishnk')
+				assetType = self.prefs.get_attr('main', 'lastpublishnk')
 				for toolButton in self.ui.nk_assetType_frame.children():
 					if isinstance(toolButton, QtWidgets.QToolButton):
 						if toolButton.text() == assetType:
@@ -482,7 +482,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			os.environ['IC_VERBOSITY'] = "4"
 		else:
 			# os.environ['IC_VERBOSITY'] = userPrefs.query('main', 'verbosity', datatype='str', default="3", create=True)
-			os.environ['IC_VERBOSITY'] = str(self.prefs.getValue('user', 'verbosity', default=3))
+			os.environ['IC_VERBOSITY'] = str(self.prefs.get_attr('user', 'verbosity', default=3))
 
 		os.environ['IC_EXPERT_MODE'] = str(self.expertMode)
 		verbose.message("Expert mode: %s" %self.expertMode)
@@ -581,7 +581,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		# Remember last selection with entry in user prefs
 		# userPrefs.edit('main', 'lastpublishma', assetType)
-		self.prefs.setValue('user', 'lastpublishma', assetType)
+		self.prefs.set_attr('user', 'lastpublishma', assetType)
 
 
 	def adjustPublishOptsNukeUI(self):
@@ -602,7 +602,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		# Remember last selection with entry in user prefs
 		# userPrefs.edit('main', 'lastpublishnk', assetType)
-		self.prefs.setValue('user', 'lastpublishnk', assetType)
+		self.prefs.set_attr('user', 'lastpublishnk', assetType)
 
 
 	def adjustPblTypeUI(self):
@@ -683,7 +683,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		# Reload jobs database
 		if reloadJobs:
-			self.j.loadXML()
+			self.j.reload()
 
 		# Populate combo box with list of jobs
 		if self.expertMode:
@@ -711,7 +711,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.job_comboBox.blockSignals(False)
 
 			# Setup app launch icons
-			# self.al.setupIconGrid(job=last_item, sortBy=self.sortAppsBy)
+			# self.al.setupIconGrid(job=last_item, sort_by=self.sortAppsBy)
 
 		# If no jobs found, disable all launcher / shot setup UI controls
 		else:
@@ -839,17 +839,17 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				self.connectNewSignalsSlots()
 				self.lockJobUI()
 				self.assetRefresh()
-				self.al.setupIconGrid(job=self.job, sortBy=self.sortAppsBy)
+				self.al.setupIconGrid(job=self.job, sort_by=self.sortAppsBy)
 				self.al.setAppEnvVars()
 
 				return True
 
 			else:
-				dialogMsg = 'Unable to load job settings. Default values have been applied.\nPlease review the values in the Job Settings dialog and click Save when done.\n'
+				dialogMsg = "Unable to load job settings. Default values have been applied.\nPlease review the values in the Job Settings dialog and click Save when done.\n"
 				verbose.warning(dialogMsg)
 
 				# Confirmation dialog
-				dialogTitle = 'Job settings not found'
+				dialogTitle = "Job settings not found"
 				dialog = prompt.dialog()
 				dialog.display(dialogMsg, dialogTitle, conf=True)
 
@@ -948,7 +948,6 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.gather_frame.hide()
 		self.ui.setShot_toolButton.setChecked(True)
 		self.ui.shotEnv_toolButton.show()
-		# self.ui.menuLauncher.setEnabled(True)  -- DELETED
 		self.ui.actionJob_settings.setEnabled(True)
 		self.ui.actionShot_settings.setEnabled(True)
 		self.ui.actionJob_Management.setEnabled(False)
@@ -956,7 +955,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.actionShot_Creator.setEnabled(False)
 		self.ui.actionSubmit_render.setEnabled(True)
 
-		verbose.jobSet(self.job, self.shot)
+		verbose.message("Shot set: Now working on %s - %s" % (self.job, self.shot))
 
 
 	def unlockJobUI(self, refreshShots=True):
@@ -978,17 +977,18 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		self.ui.main_tabWidget.removeTab(1)  # Remove publish & assets tab
 		self.ui.main_tabWidget.removeTab(1)  # Remove publish & assets tab
-		self.ui.renderPbl_treeWidget.clear() # Clear the render layer tree view widget
+		self.ui.renderPbl_treeWidget.clear()  # Clear the render layer tree view widget
 		self.ui.dailyPbl_treeWidget.clear()  # Clear the dailies tree view widget
 		self.ui.shotEnv_toolButton.setText('')
 		self.ui.shotEnv_toolButton.hide()
-		# self.ui.menuLauncher.setEnabled(False) -- DELETED
 		self.ui.actionJob_settings.setEnabled(False)
 		self.ui.actionShot_settings.setEnabled(False)
 		self.ui.actionJob_Management.setEnabled(True)
 		self.ui.actionShot_Management.setEnabled(True)
 		self.ui.actionShot_Creator.setEnabled(True)
 		self.ui.actionSubmit_render.setEnabled(False)
+
+		verbose.print_("Shot unset: reverting to clean environment.")
 
 
 	def updateJobLabel(self):
@@ -999,23 +999,6 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.shot = os.environ['IC_SHOT']
 
 		self.ui.shotEnv_toolButton.setText('%s - %s' %(self.job, self.shot))
-
-
-	# def setMinimiseOnAppLaunch(self, state):
-	# 	""" Sets state of minimise on app launch variable.
-	# 	"""
-	# 	self.minimiseOnAppLaunch = state
-	# 	# userPrefs.edit('main', 'minimiseonlaunch', state)
-	# 	self.prefs.setValue('user', 'minimiseonlaunch', state)
-
-
-	# def setSortAppsBy(self, value):
-	# 	""" Stores 'Sort by' value for sorting app grid.
-	# 	"""
-	# 	self.al.setupIconGrid(job=self.job, sortBy=value)
-	# 	self.sortAppsBy = value
-	# 	# userPrefs.edit('main', 'sortappsby', value)
-	# 	self.prefs.setValue('user', 'sortappsby', value)
 
 
 	def printEnvVars(self, allvars=False):
@@ -1078,12 +1061,14 @@ os.environ['IC_VENDOR'])
 		"""
 		if settingsType == "Job":
 			categoryLs = ['job', 'apps', 'units', 'time', 'resolution', 'other']
-			settingsFile = os.path.join(os.environ['IC_JOBDATA'], 'jobData.xml')
+			# settingsFile = os.path.join(os.environ['IC_JOBDATA'], 'jobData.xml')
+			settingsFile = os.path.join(os.environ['IC_JOBDATA'], 'job_settings.json')
 			inherit = None
 		elif settingsType == "Shot":
 			categoryLs = ['shot', 'units', 'time', 'resolution', 'camera']
-			settingsFile = os.path.join(os.environ['IC_SHOTDATA'], 'shotData.xml')
-			inherit = os.path.join(os.environ['IC_JOBDATA'], 'jobData.xml')
+			# settingsFile = os.path.join(os.environ['IC_SHOTDATA'], 'shotData.xml')
+			settingsFile = os.path.join(os.environ['IC_SHOTDATA'], 'shot_settings.json')
+			inherit = os.path.join(os.environ['IC_JOBDATA'], 'job_settings.json')
 		elif settingsType == "User":
 			categoryLs = ['user', ]
 			settingsFile = cfg['prefs_file']  # Use Icarus UI prefs
@@ -1097,7 +1082,8 @@ os.environ['IC_VENDOR'])
 			inherit = None
 		elif settingsType == "App":  # Workaround for apps only dialog
 			categoryLs = ['apps', ]
-			settingsFile = os.path.join(os.environ['IC_JOBDATA'], 'jobData.xml')
+			# settingsFile = os.path.join(os.environ['IC_JOBDATA'], 'jobData.xml')
+			settingsFile = os.path.join(os.environ['IC_JOBDATA'], 'job_settings.json')
 			inherit = None
 
 		if startPanel not in categoryLs:
@@ -1134,13 +1120,13 @@ os.environ['IC_VENDOR'])
 		""" Open user settings dialog wrapper function.
 		"""
 		if self.openSettings("User"):
-			self.prefs.read()
-			self.minimiseOnAppLaunch = self.prefs.getValue('user', 'minimiseonlaunch')
-			self.sortAppsBy = self.prefs.getValue('user', 'sortappsby')
-			os.environ['IC_VERBOSITY'] = str(self.prefs.getValue('user', 'verbosity'))
-			os.environ['IC_NUMRECENTFILES'] = str(self.prefs.getValue('user', 'numrecentfiles'))
+			self.prefs.reload()
+			self.minimiseOnAppLaunch = self.prefs.get_attr('user', 'minimiseonlaunch')
+			self.sortAppsBy = self.prefs.get_attr('user', 'sortappsby')
+			os.environ['IC_VERBOSITY'] = str(self.prefs.get_attr('user', 'verbosity'))
+			os.environ['IC_NUMRECENTFILES'] = str(self.prefs.get_attr('user', 'numrecentfiles'))
 			try:
-				self.al.setupIconGrid(job=self.job, sortBy=self.sortAppsBy)
+				self.al.setupIconGrid(job=self.job, sort_by=self.sortAppsBy)
 			except (AttributeError, KeyError):
 				pass
 
@@ -1986,32 +1972,38 @@ os.environ['IC_VENDOR'])
 		self.assetVersion = self.aVersionCol.currentItem().text()
 		self.gatherPath = os.path.join(self.gatherFrom, self.assetType, self.assetName, self.assetSubType, self.assetVersion)
 
-		from shared import settings_data_xml
-		# Instantiate XML data classes
-		assetData = settings_data_xml.SettingsData()
-		assetDataLoaded = assetData.loadXML(os.path.join(self.gatherPath, 'assetData.xml'))
+		from shared import json_metadata as metadata
+		# Instantiate JSON data classes
+		assetData = metadata.Metadata(
+			os.path.join(self.gatherPath, 'asset_data.json'))
 
-		# --------------------------------------------------------------------
-		# If XML files don't exist, create defaults, and attempt to convert
-		# data from Python data files.
-		# This code may be removed in the future.
-		if not assetDataLoaded:
-			from shared import legacySettings
+		# from shared import xml_metadata as metadata
+		# # Instantiate XML data classes
+		# assetData = metadata.Metadata()
+		# assetDataLoaded = assetData.load(
+		# 	datafile=os.path.join(self.gatherPath, 'assetData.xml'))
 
-			# Try to convert from icData.py to XML (legacy assets)
-			if legacySettings.convertAssetData(self.gatherPath, assetData):
-				assetData.loadXML()
-			else:
-				return False
-		# --------------------------------------------------------------------
+		# # --------------------------------------------------------------------
+		# # If XML files don't exist, create defaults, and attempt to convert
+		# # data from Python data files.
+		# # This code may be removed in the future.
+		# if not assetDataLoaded:
+		# 	from shared import legacySettings
+
+		# 	# Try to convert from icData.py to XML (legacy assets)
+		# 	if legacySettings.convertAssetData(self.gatherPath, assetData):
+		# 		assetData.reload()
+		# 	else:
+		# 		return False
+		# # --------------------------------------------------------------------
 
 		# Print info to text field
 		infoText = ""
-		notes = assetData.getValue('asset', 'notes')
+		notes = assetData.get_attr('asset', 'notes')
 		if notes:
 			infoText += "%s\n\n" % notes
-		infoText += "Published by %s\n%s" % (assetData.getValue('asset', 'user'), assetData.getValue('asset', 'timestamp'))
-		source = assetData.getValue('asset', 'assetSource')
+		infoText += "Published by %s\n%s" % (assetData.get_attr('asset', 'user'), assetData.get_attr('asset', 'timestamp'))
+		source = assetData.get_attr('asset', 'assetSource')
 		if source:
 			infoText += "\nFrom '%s'" % source #os.path.basename(source)
 

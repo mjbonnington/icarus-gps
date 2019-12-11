@@ -470,7 +470,7 @@ def icDataSet(obj, assetData, update=None, drawOverrides=True, addElements=True)
 			mc.select(obj)
 
 		# Create set with selection
-		dataSet = mc.createNode('ICSet', n='ICSet_'+assetData.getValue('asset', 'assetPblName'))
+		dataSet = mc.createNode('ICSet', n='ICSet_'+assetData.get_attr('asset', 'assetPblName'))
 		if addElements:
 			mc.sets(obj, forceElement=dataSet, edit=True)
 		if drawOverrides:
@@ -518,19 +518,19 @@ def icDataSet(obj, assetData, update=None, drawOverrides=True, addElements=True)
 # 			exp = mc.expression(alwaysEvaluate=False, string=expString, name=dataSet+'_exp')
 
 	# Add asset metadata to set
-	assetTag(dataSet, assetData.getValue('asset', 'asset'))
-	referenceTag(dataSet, assetData.getValue('asset', 'assetPblName'))
-	assetTypeTag(dataSet, assetData.getValue('asset', 'assetType'))
-	versionTag(dataSet, assetData.getValue('asset', 'version'))
-	assetExtTag(dataSet, assetData.getValue('asset', 'assetExt'))
-	notesTag(dataSet, assetData.getValue('asset', 'notes'))
+	assetTag(dataSet, assetData.get_attr('asset', 'asset'))
+	referenceTag(dataSet, assetData.get_attr('asset', 'assetPblName'))
+	assetTypeTag(dataSet, assetData.get_attr('asset', 'assetType'))
+	versionTag(dataSet, assetData.get_attr('asset', 'version'))
+	assetExtTag(dataSet, assetData.get_attr('asset', 'assetExt'))
+	notesTag(dataSet, assetData.get_attr('asset', 'notes'))
 
 	try:
-		assetRootDir(dataSet, assetData.getValue('asset', 'assetRootDir'))
+		assetRootDir(dataSet, assetData.get_attr('asset', 'assetRootDir'))
 	except AttributeError:
 		pass
 	try:
-		compatibleTag(dataSet, assetData.getValue('asset', 'compatible'))
+		compatibleTag(dataSet, assetData.get_attr('asset', 'compatible'))
 	except AttributeError:
 		pass
 

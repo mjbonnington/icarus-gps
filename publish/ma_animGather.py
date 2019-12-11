@@ -17,7 +17,7 @@ import maya.cmds as mc
 
 from rsc.maya.scripts import mayaOps
 from shared import prompt
-from shared import settings_data_xml
+from shared import json_metadata as metadata
 from shared import verbose
 
 
@@ -25,15 +25,14 @@ def gather(gatherPath):
 
 	gatherPath = os.path.expandvars(gatherPath)
 
-	# Instantiate XML data classes
-	assetData = settings_data_xml.SettingsData()
-	assetData.loadXML(os.path.join(gatherPath, 'assetData.xml'), quiet=True)
+	# Instantiate data classes
+	assetData = metadata.Metadata(os.path.join(gatherPath, 'asset_data.json'))
 
 	try:
-		assetPblName = assetData.getValue('asset', 'assetPblName')
-		asset = assetData.getValue('asset', 'asset')
-		assetExt = assetData.getValue('asset', 'assetExt')
-		requires = assetData.getValue('asset', 'requires')
+		assetPblName = assetData.get_attr('asset', 'assetPblName')
+		asset = assetData.get_attr('asset', 'asset')
+		assetExt = assetData.get_attr('asset', 'assetExt')
+		requires = assetData.get_attr('asset', 'requires')
 
 		# Check if ICSet for required asset exists in scene
 		if not mc.objExists('ICSet_%s' % requires):

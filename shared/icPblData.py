@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2017 Gramercy Park Studios
+# (c) 2013-2019 Gramercy Park Studios
 #
 # Saves metadata for a published asset.
 
@@ -12,24 +12,35 @@
 import os
 import time
 
-from . import settings_data_xml
+# Import custom modules
 from . import os_wrapper
-from . import verbose
+from . import json_metadata as metadata
 
 
-def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, notes, assetSrc=None, requires=None, compatible=None):
-#def writeData(publishVars):
+#def writeData(**publish_vars):
+def writeData(
+	pblDir, 
+	assetPblName, 
+	assetName, 
+	assetType, 
+	assetExt, 
+	version, 
+	notes, 
+	assetSrc=None, 
+	requires=None, 
+	compatible=None):
 	""" Store asset metadata in file.
-		TODO: pass in list of args to write out, iterate over list
+		TODO: pass in dict of args to write out
 	"""
-	timeFormatStr = "%a, %d %b %Y %H:%M:%S"
-	#timeFormatStr = "%a, %d %b %Y %H:%M:%S +0000" # Format to RFC 2833 standard
-	pblTime = time.strftime(timeFormatStr) # Can be parsed with time.strptime(pblTime, timeFormatStr)
+	timeFormatStr = "%Y/%m/%d %H:%M:%S"
+	#timeFormatStr = "%a, %d %b %Y %H:%M:%S"
+	#timeFormatStr = "%a, %d %b %Y %H:%M:%S +0000"  # Format to RFC 2833 standard
+	pblTime = time.strftime(timeFormatStr)  # Can be parsed with time.strptime(pblTime, timeFormatStr)
 	username = os.environ['IC_USERNAME']
 
-	# Instantiate XML data classes
-	assetData = settings_data_xml.SettingsData()
-	assetData.loadXML(os.path.join(pblDir, 'assetData.xml'), quiet=True)
+	# Instantiate data classes
+	assetData = metadata.Metadata(
+		os.path.join(pblDir, 'asset_data.json'))
 
 	# Parse asset file path, make relative
 	assetRootDir = os_wrapper.relativePath(os.path.split(pblDir)[0], 'IC_JOBPATH')
@@ -41,28 +52,20 @@ def writeData(pblDir, assetPblName, assetName, assetType, assetExt, version, not
 		assetSource = None
 
 	# Store values - TODO: iterate over list of args to make metadata extensible. N.B. variable names will need to be standardised
-#	for key, value in publishVars.iteritems():
-#		assetData.setValue('asset', key, value)
-	assetData.setValue('asset', 'assetRootDir', assetRootDir)
-	assetData.setValue('asset', 'assetPblName', assetPblName)
-	assetData.setValue('asset', 'asset', assetName)
-	assetData.setValue('asset', 'assetType', assetType)
-	assetData.setValue('asset', 'assetExt', assetExt)
-	assetData.setValue('asset', 'version', version)
-	assetData.setValue('asset', 'assetSource', assetSource)
-	assetData.setValue('asset', 'requires', requires)
-	assetData.setValue('asset', 'compatible', compatible)
-	assetData.setValue('asset', 'notes', notes)
-	assetData.setValue('asset', 'user', username)
-	assetData.setValue('asset', 'timestamp', pblTime)
+	# for key, value in publishVars.iteritems():
+	# 	assetData.set_attr('asset', key, value)
+	assetData.set_attr('asset', 'assetRootDir', assetRootDir)
+	assetData.set_attr('asset', 'assetPblName', assetPblName)
+	assetData.set_attr('asset', 'asset', assetName)
+	assetData.set_attr('asset', 'assetType', assetType)
+	assetData.set_attr('asset', 'assetExt', assetExt)
+	assetData.set_attr('asset', 'version', version)
+	assetData.set_attr('asset', 'assetSource', assetSource)
+	assetData.set_attr('asset', 'requires', requires)
+	assetData.set_attr('asset', 'compatible', compatible)
+	assetData.set_attr('asset', 'notes', notes)
+	assetData.set_attr('asset', 'user', username)
+	assetData.set_attr('asset', 'timestamp', pblTime)
 
 	# Save to file
-	assetData.saveXML()
-
-
-	# Legacy code to write out icData.py - remove when XML data is fully working
-	# notes += '\n\n%s %s' % (username, pblTime)
-	# icDataFile = open('%s/icData.py' % pblDir, 'w')
-	# icDataFile.write("assetRootDir = '%s'\nassetPblName = '%s'\nasset = '%s'\nassetType = '%s'\nassetExt = '%s'\nversion = '%s'\nrequires = '%s'\ncompatible = '%s'\nnotes = '''%s''' " % (assetRootDir, assetPblName, assetName, assetType, assetExt, version, requires, compatible, notes))
-	# icDataFile.close()
-
+	assetData.save()

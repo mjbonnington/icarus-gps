@@ -111,7 +111,7 @@ class RenderQueue(xml_data.XMLData):
 				# commandElement = ET.SubElement(taskElement, 'command')
 				# commandElement.text = str(taskCmds[i].replace("\\", "/"))
 
-		self.saveXML()
+		self.save()
 
 
 	def deleteJob(self, jobID):
@@ -124,7 +124,7 @@ class RenderQueue(xml_data.XMLData):
 					return False # ignore in-progress jobs
 				else:
 					self.root.remove(element)
-					self.saveXML()
+					self.save()
 					return True
 
 
@@ -174,7 +174,7 @@ class RenderQueue(xml_data.XMLData):
 		element = self.root.find("./job[@id='%s']/priority" %jobID)
 		if 0 <= priority <= 100:
 			element.text = str(priority)
-		self.saveXML()
+		self.save()
 
 
 	def setStatus(self, jobID, status):
@@ -187,7 +187,7 @@ class RenderQueue(xml_data.XMLData):
 			return
 		else:
 			element.text = str(status)
-			self.saveXML()
+			self.save()
 
 
 	def dequeueJob(self):
@@ -219,7 +219,7 @@ class RenderQueue(xml_data.XMLData):
 			#if element.find('status').text is not "Done":
 			element.find('status').text = "In Progress"
 			element.find('slave').text = str(hostID)
-			self.saveXML()
+			self.save()
 			return element.get('id'), element.find('frames').text
 
 		else:
@@ -234,7 +234,7 @@ class RenderQueue(xml_data.XMLData):
 		if element is not None:
 			if "In Progress" in element.find('status').text: # only update progress for in progress tasks
 				element.find('status').text = "[%d%%] In Progress" %progress
-				self.saveXML()
+				self.save()
 
 
 	def completeTask(self, jobID, taskID, hostID=None, taskTime=0):
@@ -251,7 +251,7 @@ class RenderQueue(xml_data.XMLData):
 				element.find('status').text = "Done"
 				element.find('slave').text = str(hostID)
 				element.find('totalTime').text = str(taskTime)
-				self.saveXML()
+				self.save()
 
 
 	def requeueTask(self, jobID, taskID):
@@ -267,5 +267,5 @@ class RenderQueue(xml_data.XMLData):
 			element.find('status').text = "Queued"
 			element.find('totalTime').text = ""
 			element.find('slave').text = ""
-			self.saveXML()
+			self.save()
 

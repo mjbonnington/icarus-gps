@@ -19,7 +19,7 @@ import maya.mel as mel
 from rsc.maya.scripts import mayaOps
 from shared import os_wrapper
 from shared import prompt
-from shared import settings_data_xml
+from shared import json_metadata as metadata
 from shared import verbose
 
 
@@ -27,15 +27,14 @@ def gather(gatherPath):
 
 	gatherPath = os.path.expandvars(gatherPath)
 
-	# Instantiate XML data classes
-	assetData = settings_data_xml.SettingsData()
-	assetData.loadXML(os.path.join(gatherPath, 'assetData.xml'), quiet=True)
+	# Instantiate data classes
+	assetData = metadata.Metadata(os.path.join(gatherPath, 'asset_data.json'))
 
 	try:
-		assetPblName = assetData.getValue('asset', 'assetPblName')
-		asset = assetData.getValue('asset', 'asset')
-		assetType = assetData.getValue('asset', 'assetType')
-		assetExt = assetData.getValue('asset', 'assetExt')
+		assetPblName = assetData.get_attr('asset', 'assetPblName')
+		asset = assetData.get_attr('asset', 'asset')
+		assetType = assetData.get_attr('asset', 'assetType')
+		assetExt = assetData.get_attr('asset', 'assetExt')
 
 		# Check for preferred .ma or .mb extension
 		for item_ in os.listdir(gatherPath):

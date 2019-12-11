@@ -26,7 +26,7 @@ from . import renderQueue
 from shared import os_wrapper
 from shared import prompt
 from shared import sequence
-# from shared import settings_data_xml
+# from shared import xml_metadata
 from shared import userPrefs
 from shared import verbose
 

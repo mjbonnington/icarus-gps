@@ -15,7 +15,7 @@ import sys
 import maya.cmds as mc
 
 from rsc.maya.scripts import mayaOps
-from shared import settings_data_xml
+from shared import json_metadata as metadata
 from shared import verbose
 
 
@@ -23,15 +23,14 @@ def alembic(ICSet, updatePath):
 
 	updatePath = os.path.expandvars(updatePath)
 
-	# Instantiate XML data classes
-	assetData = settings_data_xml.SettingsData()
-	assetData.loadXML(os.path.join(updatePath, 'assetData.xml'), quiet=True)
+	# Instantiate data classes
+	assetData = metadata.Metadata(os.path.join(updatePath, 'asset_data.json'))
 
-	assetPblName = assetData.getValue('asset', 'assetPblName')
-	asset = assetData.getValue('asset', 'asset')
-	assetExt = assetData.getValue('asset', 'assetExt')
-	version = assetData.getValue('asset', 'version')
-	notes = assetData.getValue('asset', 'notes')
+	assetPblName = assetData.get_attr('asset', 'assetPblName')
+	asset = assetData.get_attr('asset', 'asset')
+	assetExt = assetData.get_attr('asset', 'assetExt')
+	version = assetData.get_attr('asset', 'version')
+	notes = assetData.get_attr('asset', 'notes')
 
 	updatePath = '%s.%s' % (os.path.join(updatePath, assetPblName), assetExt)
 	assetObj = mc.listConnections('%s.dagSetMembers' % ICSet)[0]

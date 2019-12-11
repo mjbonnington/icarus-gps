@@ -224,9 +224,6 @@ def launchAppNotFound(application):
 def launchAppNotSet(application):
 	error("Unable to launch %s - executable path not set. Please set the correct location from the Job Settings dialog." %application)
 
-def jobSet(job, shot):
-	message("Shot set: Now working on %s - %s" %(job, shot))
-
 def lightLinkError(lightRelinkResult):
 	print_('Light link error: The following objects could not be relinked.\n%s' %lightRelinkResult, 1)
 

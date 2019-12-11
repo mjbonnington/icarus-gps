@@ -22,7 +22,6 @@ from rsc.maya.scripts import mayaOps
 from shared import icPblData
 from shared import os_wrapper
 from shared import prompt
-# from shared import settings_data_xml
 from shared import vCtrl
 from shared import verbose
 

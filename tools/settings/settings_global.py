@@ -86,4 +86,4 @@ class helper():
 		if editPathsDialog.display(self.j.win_root, self.j.osx_root, self.j.linux_root, self.j.jobs_path):
 			self.j.setRootPaths(editPathsDialog.winPath, editPathsDialog.osxPath, editPathsDialog.linuxPath, editPathsDialog.jobsRelPath)
 			self.j.getRootPaths()
-			self.j.saveXML()
+			self.j.save()

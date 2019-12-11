@@ -70,11 +70,13 @@ class helper():
 		"""
 		durationFrames = rangeEnd - rangeStart + 1
 
-		fps = self.parent.prefs.getValue('units', 'fps', type='float')
+		# fps = self.parent.prefs.get_attr('units', 'fps', type='float')
+		fps = self.parent.prefs.get_attr('units', 'fps')
 		if fps == None:
 			if self.parent.inherit:
-				fps = self.parent.prefs_inherited.getValue(
-					'units', 'fps', type='float')
+				# fps = self.parent.prefs_inherited.get_attr(
+				# 	'units', 'fps', type='float')
+				fps = self.parent.prefs_inherited.get_attr('units', 'fps')
 		if fps == None:
 			verbose.warning("Undefined FPS.")
 			return durationFrames, ""

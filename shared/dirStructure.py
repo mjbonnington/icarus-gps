@@ -98,7 +98,7 @@ class DirStructure(xml_data.XMLData):
 				dir_elem.set('name', subdir)
 				#dir_elem.set('env', env_var)
 
-		self.saveXML(datafile)
+		self.save()
 
 
 	# def createDefault(self):

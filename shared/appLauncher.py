@@ -2,8 +2,8 @@
 
 # [Icarus] appLauncher.py
 #
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2017-2019 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2017-2019
 #
 # Handles software application launching from Icarus, auto-generates UI,
 # creates folder structures, etc.
@@ -21,9 +21,9 @@ from Qt import QtCore, QtGui, QtWidgets
 from . import appPaths
 from . import dirStructure
 from . import launchApps  # temp?
+from . import json_metadata as metadata
 from . import os_wrapper
 # from . import recentFiles  # for sorting by most used
-from . import settings_data_xml
 from . import userPrefs
 from . import verbose
 
@@ -38,8 +38,8 @@ class AppLauncher(QtWidgets.QDialog):
 		self.parent = parent
 
 		# Instantiate data classes
+		self.jd = metadata.Metadata()  # Job settings
 		self.ap = appPaths.AppPaths()
-		self.jd = settings_data_xml.SettingsData()
 		self.ds = dirStructure.DirStructure()
 
 		# Set OS identifier strings to get correct app executable paths
@@ -57,9 +57,9 @@ class AppLauncher(QtWidgets.QDialog):
 		""" Dynamically generate application environment variables.
 		"""
 		for app in self.ap.getApps():
-			displayName = app.get('name')  # Apps are referenced by their display name
+			displayName = app.get('name')
 			shortName = app.get('id')
-			appVersion = self.jd.getAppVersion(displayName)
+			appVersion = self.jd.getAppVersion(shortName)
 			if app.get('projectFolders') == "True":
 				projectFolders = True
 			else:
@@ -96,14 +96,20 @@ class AppLauncher(QtWidgets.QDialog):
 					verbose.warning(message)
 
 
-	def setupIconGrid(self, job=None, sortBy=None):
+	def setupIconGrid(self, job=None, sort_by=None):
 		""" Dynamically generate grid of tool button icons.
 		"""
-		verbose.print_("Populating app launcher icons...", 4)
+		if sort_by:
+			verbose.print_("Populating app launcher icons sorted by %s..." %sort_by.lower(), 4)
+		else:
+			verbose.print_("Populating app launcher icons...", 4)
 
 		if job is not None:
+			# self.jd.loadXML(os.path.join(os.environ['IC_JOBDATA'], 'jobData.xml'), use_template=False)
+			if not self.jd.load(
+				os.path.join(os.environ['IC_JOBDATA'], 'job_settings.json')):
+				self.jd.clear()
 			self.ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'), use_template=True)
-			self.jd.loadXML(os.path.join(os.environ['IC_JOBDATA'], 'jobData.xml'), use_template=False)
 
 		parentLayout = self.frame.findChildren(QtWidgets.QVBoxLayout, 'launchApp_verticalLayout')[0]
 
@@ -117,17 +123,11 @@ class AppLauncher(QtWidgets.QDialog):
 		# Get apps
 		item_index = 0
 		app_ls = []
-		if job:
-			all_apps = self.ap.getVisibleApps(sortBy=sortBy)
+		if job is not None:
+			all_apps = self.ap.getApps(visible_only=True, sort_by=sort_by)
 			for app in all_apps:
-				# if self.jd.getAppVersion(app.get('id')):  # app.get('name') for backwards-compatibility
-				if self.jd.getAppVersion(app.get('name')):  # app.get('name') for backwards-compatibility
+				if self.jd.getAppVersion(app.get('id')):  # app.get('name') for backwards-compatibility
 					app_ls.append(app)
-			# self.showToolTips = True
-
-		# else:  # If job not specified, show all available apps
-		# 	app_ls = self.ap.getVisibleApps(sortBy=sortBy)
-		# 	# self.showToolTips = False
 
 		# Create icons
 		num_items = len(app_ls)
@@ -188,7 +188,7 @@ class AppLauncher(QtWidgets.QDialog):
 			projectFolders = True
 		else:
 			projectFolders = False
-		appVersion = self.jd.getAppVersion(displayName)
+		appVersion = self.jd.getAppVersion(shortName)
 		appExecutable = self.ap.getPath(displayName, appVersion, self.currentOS)
 		flags = app.findtext('flags')
 		# tooltip = ""

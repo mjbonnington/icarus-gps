@@ -17,7 +17,7 @@ import ui_template as UI
 # Import custom modules
 from shared import jobs
 from shared import os_wrapper
-from shared import settings_data_xml
+from shared import json_metadata as metadata
 from shared import verbose
 
 
@@ -176,32 +176,32 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 				newRowHeaderItem = QtWidgets.QTableWidgetItem(shotName)
 				newItem = QtWidgets.QTableWidgetItem(shotName)
 				self.ui.shots_tableWidget.setVerticalHeaderItem(row, newRowHeaderItem)
-				shotDataPath = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA/shotData.xml" %(jobPath, shotName))
-				shotData = settings_data_xml.SettingsData()
-				shotData.loadXML(shotDataPath)
+				shotDataPath = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA/shot_settings.json" %(jobPath, shotName))
+				shotData = metadata.Metadata()
+				shotData.load(shotDataPath)
 
-				text = "%s-%s" %(shotData.getValue('time', 'rangeStart'), shotData.getValue('time', 'rangeEnd'))
+				text = "%s-%s" %(shotData.get_attr('time', 'rangeStart'), shotData.get_attr('time', 'rangeEnd'))
 				self.ui.shots_tableWidget.setItem(row, 0, QtWidgets.QTableWidgetItem(text))
 
-				text = shotData.getValue('time', 'fps')
+				text = shotData.get_attr('time', 'fps')
 				self.ui.shots_tableWidget.setItem(row, 1, QtWidgets.QTableWidgetItem(text))
 
-				text = "%sx%s" %(shotData.getValue('resolution', 'fullWidth'), shotData.getValue('resolution', 'fullHeight'))
+				text = "%sx%s" %(shotData.get_attr('resolution', 'fullWidth'), shotData.get_attr('resolution', 'fullHeight'))
 				self.ui.shots_tableWidget.setItem(row, 2, QtWidgets.QTableWidgetItem(text))
 
-				text = "%sx%s" %(shotData.getValue('resolution', 'proxyWidth'), shotData.getValue('resolution', 'proxyHeight'))
+				text = "%sx%s" %(shotData.get_attr('resolution', 'proxyWidth'), shotData.get_attr('resolution', 'proxyHeight'))
 				self.ui.shots_tableWidget.setItem(row, 3, QtWidgets.QTableWidgetItem(text))
 
-				text = shotData.getValue('camera', 'camera')
+				text = shotData.get_attr('camera', 'camera')
 				self.ui.shots_tableWidget.setItem(row, 4, QtWidgets.QTableWidgetItem(text))
 
-				text = "%sx%s" %(shotData.getValue('camera', 'filmbackWidth'), shotData.getValue('camera', 'filmbackHeight'))
+				text = "%sx%s" %(shotData.get_attr('camera', 'filmbackWidth'), shotData.get_attr('camera', 'filmbackHeight'))
 				self.ui.shots_tableWidget.setItem(row, 5, QtWidgets.QTableWidgetItem(text))
 
-				text = shotData.getValue('camera', 'focalLength')
+				text = shotData.get_attr('camera', 'focalLength')
 				self.ui.shots_tableWidget.setItem(row, 6, QtWidgets.QTableWidgetItem(text))
 
-				text = shotData.getValue('shot', 'title')
+				text = shotData.get_attr('shot', 'title')
 				self.ui.shots_tableWidget.setItem(row, 7, QtWidgets.QTableWidgetItem(text))
 
 				# self.ui.shots_tableWidget.resizeRowToContents(row)
@@ -229,8 +229,8 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 	# 	for jobElement in self.j.getJobs():
 	# 		#jobID = jobElement.get('id')
 	# 		jobActive = jobElement.get('active')
-	# 		jobName = self.j.getValue(jobElement, 'name')
-	# 		jobPath = self.j.getValue(jobElement, 'path')
+	# 		jobName = self.j.get_attr(jobElement, 'name')
+	# 		jobPath = self.j.get_attr(jobElement, 'path')
 
 	# 		# Populate list view, using filter
 	# 		if jobFilter is not "":
@@ -368,13 +368,13 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 	# 	if editPathsDialog.display(self.j.win_root, self.j.osx_root, self.j.linux_root, self.j.jobs_path):
 	# 		self.j.setRootPaths(editPathsDialog.winPath, editPathsDialog.osxPath, editPathsDialog.linuxPath, editPathsDialog.jobsRelPath)
 	# 		self.j.getRootPaths()
-	# 		#self.j.saveXML()
+	# 		#self.j.save()
 
 
 	# def save(self):
 	# 	""" Save data.
 	# 	"""
-	# 	if self.j.saveXML():
+	# 	if self.j.save():
 	# 		verbose.message("Job database saved.")
 	# 		return True
 	# 	else:

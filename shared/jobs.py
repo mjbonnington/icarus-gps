@@ -27,7 +27,8 @@ class Jobs(xml_data.XMLData):
 	def __init__(self):
 		""" Automatically load datafile on initialisation.
 		"""
-		self.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'jobs.xml'))
+		super(Jobs, self).__init__()  # Execute ancestor constructor
+		self.load(os.path.join(os.environ['IC_CONFIGDIR'], 'jobs.xml'))
 		self.getRootPaths()
 
 
