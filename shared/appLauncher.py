@@ -106,8 +106,8 @@ class AppLauncher(QtWidgets.QDialog):
 
 		if job is not None:
 			# self.jd.loadXML(os.path.join(os.environ['IC_JOBDATA'], 'jobData.xml'), use_template=False)
-			if not self.jd.load(
-				os.path.join(os.environ['IC_JOBDATA'], 'job_settings.json')):
+			if not self.jd.load(os.environ['IC_JOBDATA']):
+			# if not self.jd.reload():
 				self.jd.clear()
 			self.ap.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'), use_template=True)
 

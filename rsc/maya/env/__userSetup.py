@@ -19,8 +19,8 @@ os.environ['IC_ENV'] = 'MAYA'
 # Append pipeline base dir to Python path
 sys.path.append(os.environ['IC_BASEDIR'])
 # from core.app_session import *
-from core import env__init__
-env__init__.append_sys_paths()
+from core import icarus__env__
+icarus__env__.append_sys_paths()
 
 import maya.cmds as mc
 

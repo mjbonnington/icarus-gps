@@ -249,11 +249,11 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		""" Open the edit job dialog to add a new job.
 		"""
 		editJobDialog = edit_job.dialog(parent=self)
-		if editJobDialog.display('', '$IC_JOBSROOT', True):
-			if self.j.addJob(editJobDialog.jobName, editJobDialog.jobPath, editJobDialog.jobActive):
+		if editJobDialog.display('', '$IC_JOBSROOT', os.environ['IC_VERSION'], True):
+			if self.j.addJob(editJobDialog.jobName, editJobDialog.jobPath, editJobDialog.jobVersion, editJobDialog.jobActive):
 				self.reloadJobs(reloadDatabase=False, selectItem=editJobDialog.jobName)
 			else:
-				errorMsg = "Could not create job as a job with the name '%s' already exists." %editJobDialog.jobName
+				errorMsg = "Could not create job as a job with the name '%s' already exists." % editJobDialog.jobName
 				dialogMsg = errorMsg + "\nWould you like to create a job with a different name?"
 				verbose.error(errorMsg)
 
@@ -271,14 +271,15 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		jobName = item.text()
 
 		editJobDialog = edit_job.dialog(parent=self)
-		if editJobDialog.display(jobName, self.j.getPath(jobName), self.j.getEnabled(jobName)):
+		if editJobDialog.display(jobName, self.j.getPath(jobName), self.j.getVersion(jobName), self.j.getEnabled(jobName)):
 			self.j.enableJob(jobName, editJobDialog.jobActive)
+			self.j.setVersion(jobName, editJobDialog.jobVersion)
 			self.j.setPath(jobName, editJobDialog.jobPath)
 			if self.j.renameJob(jobName, editJobDialog.jobName):  # Do this last as jobs are referenced by name
 				self.reloadJobs(reloadDatabase=False, selectItem=editJobDialog.jobName)
 			else:
-				errorMsg = "Could not rename job as a job with the name '%s' already exists." %editJobDialog.jobName
-				dialogMsg = errorMsg + "\nWould you still like to edit the job '%s'?" %jobName
+				errorMsg = "Could not rename job as a job with the name '%s' already exists." % editJobDialog.jobName
+				dialogMsg = errorMsg + "\nWould you still like to edit the job '%s'?" % jobName
 				verbose.error(errorMsg)
 
 				# Confirmation dialog
@@ -367,9 +368,9 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 # 	# Initialise Icarus environment
 # 	sys.path.append(os.environ['IC_WORKINGDIR'])
-# 	import env__init__
-# 	env__init__.set_env()
-# 	#env__init__.append_sys_paths()
+# 	import icarus__env__
+# 	icarus__env__.set_env()
+# 	#icarus__env__.append_sys_paths()
 
 # 	import rsc_rc
 

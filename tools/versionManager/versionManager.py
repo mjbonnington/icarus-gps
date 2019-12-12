@@ -106,10 +106,10 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		# # data from Python data files.
 		# # This code may be removed in the future.
 		# if not assetDataLoaded:
-		# 	from shared import legacySettings
+		# 	from shared import legacy_metadata
 
 		# 	# Try to convert from icData.py to XML (legacy assets)
-		# 	if legacySettings.convertAssetData(assetDir, self.assetData):
+		# 	if legacy_metadata.convertAssetData(assetDir, self.assetData):
 		# 		self.assetData.reload()
 		# 	else:
 		# 		return False

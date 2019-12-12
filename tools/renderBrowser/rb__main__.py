@@ -18,9 +18,9 @@ import os, re, sys
 
 # Initialise Icarus environment
 sys.path.append(os.environ['IC_WORKINGDIR'])
-import env__init__
-env__init__.set_env()
-#env__init__.append_sys_paths()
+import icarus__env__
+icarus__env__.set_env()
+#icarus__env__.append_sys_paths()
 
 import sequence as seq
 import djvOps, os_wrapper

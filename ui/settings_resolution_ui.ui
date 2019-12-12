@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>256</height>
+    <height>215</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -62,82 +62,12 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="1">
-    <layout class="QHBoxLayout" name="full_horizontalLayout">
-     <item>
-      <widget class="QSpinBox" name="fullWidth_spinBox">
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>99999</number>
-       </property>
-       <property name="value">
-        <number>1920</number>
-       </property>
-       <property name="xmlTag" stdset="0">
-        <string>fullWidth</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="fullSep_label">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>x</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QSpinBox" name="fullHeight_spinBox">
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>99999</number>
-       </property>
-       <property name="value">
-        <number>1080</number>
-       </property>
-       <property name="xmlTag" stdset="0">
-        <string>fullHeight</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
    <item row="7" column="0">
     <widget class="QLabel" name="proxyMode_label">
      <property name="text">
       <string>Proxy mode:</string>
      </property>
     </widget>
-   </item>
-   <item row="7" column="1">
-    <layout class="QHBoxLayout" name="proxyMode_horizontalLayout">
-     <item>
-      <widget class="QRadioButton" name="proxyModeScale_radioButton">
-       <property name="text">
-        <string>Scale</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="proxyModeRes_radioButton">
-       <property name="text">
-        <string>Resolution</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
    </item>
    <item row="8" column="0">
     <widget class="QLabel" name="proxyScale_label">
@@ -146,115 +76,12 @@
      </property>
     </widget>
    </item>
-   <item row="8" column="1">
-    <layout class="QHBoxLayout" name="proxyScale_horizontalLayout">
-     <item>
-      <widget class="QDoubleSpinBox" name="proxyScale_doubleSpinBox">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="buttonSymbols">
-        <enum>QAbstractSpinBox::NoButtons</enum>
-       </property>
-       <property name="maximum">
-        <double>1.000000000000000</double>
-       </property>
-       <property name="singleStep">
-        <double>0.010000000000000</double>
-       </property>
-       <property name="value">
-        <double>0.500000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QSlider" name="proxyScale_slider">
-       <property name="minimum">
-        <number>0</number>
-       </property>
-       <property name="maximum">
-        <number>100</number>
-       </property>
-       <property name="singleStep">
-        <number>1</number>
-       </property>
-       <property name="value">
-        <number>50</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="tickPosition">
-        <enum>QSlider::NoTicks</enum>
-       </property>
-       <property name="tickInterval">
-        <number>10</number>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
    <item row="9" column="0">
     <widget class="QLabel" name="proxy_label">
      <property name="text">
       <string>Proxy resolution:</string>
      </property>
     </widget>
-   </item>
-   <item row="9" column="1">
-    <layout class="QHBoxLayout" name="proxy_horizontalLayout">
-     <item>
-      <widget class="QSpinBox" name="proxyWidth_spinBox">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>99999</number>
-       </property>
-       <property name="value">
-        <number>960</number>
-       </property>
-       <property name="xmlTag" stdset="0">
-        <string>proxyWidth</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="proxySep_label">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>x</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QSpinBox" name="proxyHeight_spinBox">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>99999</number>
-       </property>
-       <property name="value">
-        <number>540</number>
-       </property>
-       <property name="xmlTag" stdset="0">
-        <string>proxyHeight</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
    </item>
    <item row="10" column="1">
     <widget class="QPushButton" name="resPrest_pushButton">
@@ -264,6 +91,211 @@
      <property name="text">
       <string>Edit Presets...</string>
      </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QFrame" name="full_frame">
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <layout class="QHBoxLayout" name="full_horizontalLayout">
+      <property name="margin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QSpinBox" name="fullWidth_spinBox">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>99999</number>
+        </property>
+        <property name="value">
+         <number>1920</number>
+        </property>
+        <property name="xmlTag" stdset="0">
+         <string>fullwidth</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="fullSep_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>x</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="fullHeight_spinBox">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>99999</number>
+        </property>
+        <property name="value">
+         <number>1080</number>
+        </property>
+        <property name="xmlTag" stdset="0">
+         <string>fullheight</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <widget class="QFrame" name="proxyMode_frame">
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <layout class="QHBoxLayout" name="proxyMode_horizontalLayout">
+      <property name="margin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QRadioButton" name="proxyModeScale_radioButton">
+        <property name="text">
+         <string>Scale</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="proxyModeRes_radioButton">
+        <property name="text">
+         <string>Resolution</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="8" column="1">
+    <widget class="QFrame" name="proxyScale_frame">
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <layout class="QHBoxLayout" name="proxyScale_horizontalLayout">
+      <property name="margin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QDoubleSpinBox" name="proxyScale_doubleSpinBox">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::NoButtons</enum>
+        </property>
+        <property name="maximum">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.500000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSlider" name="proxyScale_slider">
+        <property name="minimum">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="singleStep">
+         <number>1</number>
+        </property>
+        <property name="value">
+         <number>50</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::NoTicks</enum>
+        </property>
+        <property name="tickInterval">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="9" column="1">
+    <widget class="QFrame" name="proxy_frame">
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <layout class="QHBoxLayout" name="proxy_horizontalLayout">
+      <property name="margin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QSpinBox" name="proxyWidth_spinBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>99999</number>
+        </property>
+        <property name="value">
+         <number>960</number>
+        </property>
+        <property name="xmlTag" stdset="0">
+         <string>proxywidth</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="proxySep_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>x</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="proxyHeight_spinBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>99999</number>
+        </property>
+        <property name="value">
+         <number>540</number>
+        </property>
+        <property name="xmlTag" stdset="0">
+         <string>proxyheight</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>
@@ -279,134 +311,5 @@
   <tabstop>proxyHeight_spinBox</tabstop>
  </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>proxyModeScale_radioButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>proxyScale_doubleSpinBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>154</x>
-     <y>127</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>149</x>
-     <y>156</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>proxyModeScale_radioButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>proxyWidth_spinBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>154</x>
-     <y>127</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>185</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>proxyModeScale_radioButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>proxyHeight_spinBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>154</x>
-     <y>127</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>226</x>
-     <y>185</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>proxyModeRes_radioButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>proxyScale_doubleSpinBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>233</x>
-     <y>127</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>149</x>
-     <y>156</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>proxyModeRes_radioButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>proxyWidth_spinBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>233</x>
-     <y>127</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>185</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>proxyModeRes_radioButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>proxyHeight_spinBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>233</x>
-     <y>127</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>226</x>
-     <y>185</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>proxyModeScale_radioButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>proxyScale_slider</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>130</x>
-     <y>119</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>272</x>
-     <y>146</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>proxyModeRes_radioButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>proxyScale_slider</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>197</x>
-     <y>119</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>272</x>
-     <y>146</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

@@ -176,7 +176,7 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 				newRowHeaderItem = QtWidgets.QTableWidgetItem(shotName)
 				newItem = QtWidgets.QTableWidgetItem(shotName)
 				self.ui.shots_tableWidget.setVerticalHeaderItem(row, newRowHeaderItem)
-				shotDataPath = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA/shot_settings.json" %(jobPath, shotName))
+				shotDataPath = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA/shot_data.json" %(jobPath, shotName))
 				shotData = metadata.Metadata()
 				shotData.load(shotDataPath)
 
@@ -437,9 +437,9 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 # 	# Initialise Icarus environment
 # 	sys.path.append(os.environ['IC_WORKINGDIR'])
-# 	import env__init__
-# 	env__init__.set_env()
-# 	#env__init__.append_sys_paths()
+# 	import icarus__env__
+# 	icarus__env__.set_env()
+# 	#icarus__env__.append_sys_paths()
 
 # 	import rsc_rc
 

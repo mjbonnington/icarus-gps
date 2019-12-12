@@ -263,9 +263,9 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 # if __name__ == "__main__":
 # 	# Initialise Icarus environment - only required when standalone
 # 	# sys.path.append(os.environ['IC_WORKINGDIR'])
-# 	# import env__init__
-# 	# env__init__.set_env()
-# 	# env__init__.append_sys_paths()
+# 	# import icarus__env__
+# 	# icarus__env__.set_env()
+# 	# icarus__env__.append_sys_paths()
 
 # 	app = QtWidgets.QApplication(sys.argv)
 

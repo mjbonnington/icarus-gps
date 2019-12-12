@@ -1,13 +1,13 @@
 #!/usr/bin/python
 
-# [Icarus] legacySettings.py
+# [Icarus] legacy_metadata.py
 #
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2017 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2015-2019 Gramercy Park Studios
 #
 # This module contains functions to retain backwards-compatibility with older
-# types of Icarus metadata. Converts job/shot/asset metadata from Python files
-# (legacy) to XML, if XML files don't exist.
+# types of Icarus metadata. Converts job/shot/asset metadata from Python
+# source and XML files (legacy) to JSON, if JSON files don't exist.
 # It's unwieldy and a bit ugly and hopefully will become redundant in the
 # future.
 
@@ -15,17 +15,61 @@
 import os
 import sys
 
+# Import custom modules
 from . import jobs
 from . import os_wrapper
 from . import verbose
 
+
 j = jobs.Jobs()
 
-try:
-	os.environ['PIPELINE'] = os.environ['IC_BASEDIR']
-except AttributeError:
-	pass
+# Create mappings for environment variables that may have changed...
+# Map the current key name to a list of old equivalents
+environ_map = {
+	'IC_BASEDIR': ['PIPELINE'], 
+	'IC_JOBSROOT': ['JOBSROOT'], 
+	'IC_JOBPATH': ['JOBPATH'], 
+	'IC_SHOTPATH': ['SHOTPATH'], 
+}
 
+# os.environ['PIPELINE'] = os.environ['IC_BASEDIR']
+# os.environ['JOBSROOT'] = os.environ['IC_JOBSROOT']
+# os.environ['JOBPATH'] = os.environ['IC_JOBPATH']
+# os.environ['SHOTPATH'] = os.environ['IC_SHOTPATH']
+
+for key, value in environ_map.items():
+	try:
+		for oldkey in value:
+			os.environ[oldkey] = os.environ[key]
+	except AttributeError:
+		pass
+
+
+def loadLegacyMetadata(xml_datafile, py_datafile, env_var=None):
+	""" If loading metadata failed, look for legacy metadata and attempt to
+		load and/or convert it.
+	"""
+	# Attempt to load XML datafile
+	from shared import xml_metadata
+	data_object = xml_metadata.Metadata()
+	data_object_loaded = data_object.load(xml_datafile)
+
+	if data_object_loaded:
+		if env_var is not None:
+			os.environ[env_var] = xml_datafile  # update env var
+		return data_object_loaded, data_object
+
+	# If XML file doesn't exist, create defaults, and attempt to convert
+	# data from Python data files.
+	else:
+		# Try to convert from icData.py to XML or JSON (legacy assets)
+		data_path = os.path.dirname(xml_datafile)
+		if convertAssetData(data_path, data_object):
+			data_object_loaded = data_object.reload()
+			return data_object_loaded, data_object
+
+		else:
+			return False, None
 
 
 def reloadModule(module):
@@ -50,7 +94,7 @@ def convertAppExecPath(app, path, ap):
 		if ver in path:
 			return ver
 
-	verbose.warning("Could not detect the preferred version of %s.\nPlease set the preferred version in the Job Settings dialog or this app will be unavailable." %app)
+	verbose.warning("Could not detect the preferred version of %s.\nPlease set the preferred version in the Job Settings dialog or this app will be unavailable." % app)
 	return ""
 
 
@@ -270,9 +314,9 @@ def checkAssetPath():
 
 	# Get the paths of the job and all shots within the job
 	paths = [os.environ['IC_JOBPATH'], ]
-	shots = setJob_listShots(os.environ['IC_JOB']) # UPDATE
+	shots = _setJob_listShots(os.environ['IC_JOB']) # UPDATE
 	for shot in shots:
-		paths.append( setJob_getPath(os.environ['IC_JOB'], shot) ) # UPDATE
+		paths.append( _setJob_getPath(os.environ['IC_JOB'], shot) ) # UPDATE
 
 	for path in paths:
 		assetDir = os.path.join(path, '.publish')
@@ -285,7 +329,7 @@ def checkAssetPath():
 			subdirs = next(os.walk(assetDir))[1]
 			if subdirs:
 				for subdir in subdirs:
-					if not subdir.startswith('.'): # ignore directories that start with a dot
+					if not subdir.startswith('.'):  # ignore directories that start with a dot
 						assetTypeDirs.append(subdir)
 
 			if assetTypeDirs:
@@ -294,27 +338,28 @@ def checkAssetPath():
 	return False
 
 
-def setJob_getPath(job, shot=False):
+def _setJob_getPath(job, shot=False):
 	""" Process job and shot names.
 		'job' is mandatory.
-		'shot' is optional, if given return the path to the shot, if not return the path to the job.
+		'shot' is optional, if given return the path to the shot, if not
+		return the path to the job.
 		*** DEPRECATED ***
 	"""
 	jobpath = j.getPath(job, translate=True)
 
 	if shot:
-		path = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s" %(jobpath, shot))
+		path = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s" % (jobpath, shot))
 	else:
-		path = os_wrapper.absolutePath("%s/$IC_SHOTSDIR" %jobpath)
+		path = os_wrapper.absolutePath("%s/$IC_SHOTSDIR" % jobpath)
 
 	return path
 
 
-def setJob_listShots(job):
+def _setJob_listShots(job):
 	""" List all available shots in the specified directory.
 		*** DEPRECATED ***
 	"""
-	shotsPath = setJob_getPath(job)
+	shotsPath = _setJob_getPath(job)
 
 	# Check shot path exists before proceeding...
 	if os.path.exists(shotsPath):
@@ -322,12 +367,13 @@ def setJob_listShots(job):
 		shotLs = []
 
 		for item in dirContents:
-			# Check for shot naming convention to disregard everything else in directory
+			# Check for shot naming convention to disregard everything else in
+			# directory
 			if item.startswith('SH') or item.startswith('PC'):
 				shotPath = os.path.join(shotsPath, item)
 
 				# Check that the directory is a valid shot
-				if setJob_checkShot(shotPath):
+				if _setJob_checkShot(shotPath):
 					shotLs.append(item)
 
 		if len(shotLs):
@@ -344,8 +390,9 @@ def setJob_listShots(job):
 		return False
 
 
-def setJob_checkShot(shotPath):
-	""" Check for jobData and shotData modules to ensure the specified shot is valid.
+def _setJob_checkShot(shotPath):
+	""" Check for jobData and shotData modules to ensure the specified shot is
+		valid.
 		*** DEPRECATED ***
 	"""
 	valid = True
@@ -361,4 +408,3 @@ def setJob_checkShot(shotPath):
 		valid = False
 
 	return valid
-

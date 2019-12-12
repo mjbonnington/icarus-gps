@@ -111,8 +111,7 @@ class gpsCreateCamera():
 		# If the camera to be created is the shot camera, read shot data and apply values
 		if camera == os.environ['IC_SHOT']:
 			from shared import json_metadata as metadata
-			sd = metadata.Metadata(
-				os.path.join(os.environ['IC_SHOTDATA'], 'shot_settings.json'))
+			sd = metadata.Metadata(os.environ['IC_SHOTDATA'])
 
 			mc.setAttr(camSh+'.horizontalFilmAperture', float(sd.get_attr('camera', 'filmbackWidth')) / 25.4)
 			mc.setAttr(camSh+'.verticalFilmAperture', float(sd.get_attr('camera', 'filmbackHeight')) / 25.4)

@@ -14,8 +14,8 @@ import sys
 # Initialise Icarus environment
 # if __name__ == "__main__":
 # 	sys.path.append("J:/dev/icarus/core/run")  # Temporary
-# 	import env__init__
-# 	env__init__.set_env()
+# 	import icarus__env__
+# 	icarus__env__.set_env()
 
 from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
@@ -187,9 +187,9 @@ class ShotCreatorDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 		jobPath = self.j.getPath(self.ui.job_comboBox.currentText(), translate=True)
 		for shot in self.shotLs:
-			path = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA" %(jobPath, shot))
+			path = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA" % (jobPath, shot))
 			os_wrapper.createDir(path)
-			shotData = os.path.join(path, "shot_settings.json")
+			shotData = os.path.join(path, "shot_data.json")
 			if self.sd.load(shotData):
 				existing += 1
 				existingShots += shot + " "
@@ -201,18 +201,18 @@ class ShotCreatorDialog(QtWidgets.QDialog, UI.TemplateUI):
 				failedShots += shot + " "
 
 		if success:
-			message = "%d %s created successfully: " %(success, verbose.pluralise('shot', success))
-			dialogMsg += "%s\n%s\n\n" %(message, createdShots)
+			message = "%d %s created successfully: " % (success, verbose.pluralise('shot', success))
+			dialogMsg += "%s\n%s\n\n" % (message, createdShots)
 			verbose.message(message + createdShots)
 
 		if existing:
-			message = "The following %d shot(s) were not created as they already exist: " %existing
-			dialogMsg += "%s\n%s\n\n" %(message, existingShots)
+			message = "The following %d shot(s) were not created as they already exist: " % existing
+			dialogMsg += "%s\n%s\n\n" % (message, existingShots)
 			verbose.warning(message + existingShots)
 
 		if failure:
-			message = "The following %d shot(s) could not be created - please check write permissions and try again: " %failure
-			dialogMsg += "%s\n%s\n\n" %(message, failedShots)
+			message = "The following %d shot(s) could not be created - please check write permissions and try again: " % failure
+			dialogMsg += "%s\n%s\n\n" % (message, failedShots)
 			verbose.error(message + failedShots)
 
 		# Confirmation dialog

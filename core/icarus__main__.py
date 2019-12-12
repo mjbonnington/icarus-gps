@@ -212,7 +212,8 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				self.ui.publishType_tabWidget.removeTab(0)
 
 			# Initialise app launch icons
-			self.al = appLauncher.AppLauncher(self, self.ui.launchApp_scrollAreaWidgetContents)
+			self.al = appLauncher.AppLauncher(
+				self, self.ui.launchApp_scrollAreaWidgetContents)
 
 			# ----------------------------------------------------------------
 			# Connect signals & slots
@@ -832,15 +833,15 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		if self.j.checkShotExists(self.job, self.shot):
 
-			if self.j.setup(self.job, self.shot):
+			if self.j.setup(self.job, self.shot):  # Set shot environment
 				self.adjustPblTypeUI()
 				self.populateShotLs(self.ui.publishToShot_comboBox)
 				self.populateShotLs(self.ui.gatherFromShot_comboBox)
 				self.connectNewSignalsSlots()
-				self.lockJobUI()
 				self.assetRefresh()
 				self.al.setupIconGrid(job=self.job, sort_by=self.sortAppsBy)
 				self.al.setAppEnvVars()
+				self.lockJobUI()
 
 				return True
 
@@ -1058,32 +1059,27 @@ os.environ['IC_VENDOR'])
 
 	def openSettings(self, settingsType, startPanel=None, autofill=False):
 		""" Open settings dialog.
+			# categoryLs = ['user', 'launcher', 'global', 'test', 'job', 'time', 'resolution', 'units', 'apps', 'other', 'camera']
 		"""
 		if settingsType == "Job":
 			categoryLs = ['job', 'apps', 'units', 'time', 'resolution', 'other']
-			# settingsFile = os.path.join(os.environ['IC_JOBDATA'], 'jobData.xml')
-			settingsFile = os.path.join(os.environ['IC_JOBDATA'], 'job_settings.json')
+			settingsFile = os.environ['IC_JOBDATA']
 			inherit = None
 		elif settingsType == "Shot":
 			categoryLs = ['shot', 'units', 'time', 'resolution', 'camera']
-			# settingsFile = os.path.join(os.environ['IC_SHOTDATA'], 'shotData.xml')
-			settingsFile = os.path.join(os.environ['IC_SHOTDATA'], 'shot_settings.json')
-			inherit = os.path.join(os.environ['IC_JOBDATA'], 'job_settings.json')
+			settingsFile = os.environ['IC_SHOTDATA']
+			inherit = os.environ['IC_JOBDATA']
 		elif settingsType == "User":
 			categoryLs = ['user', ]
-			settingsFile = cfg['prefs_file']  # Use Icarus UI prefs
-			# settingsFile = os.path.join(os.environ['IC_USERPREFS'], 'icarus_prefs.json')
-			# categoryLs = ['user', 'launcher', 'global', 'test', 'job', 'time', 'resolution', 'units', 'apps', 'other', 'camera']
-			# settingsFile = os.path.join(os.environ['IC_USERPREFS'], 'userPrefs.xml')
+			settingsFile = cfg['prefs_file']  # Use Icarus UI prefs - os.path.join(os.environ['IC_USERPREFS'], 'icarus_prefs.json')
 			inherit = None
 		elif settingsType == "Global":
 			categoryLs = ['global', ]
-			settingsFile = os.path.join(os.path.join(os.environ['IC_CONFIGDIR'], 'icarus_globals.json'))
+			settingsFile = os.path.join(os.environ['IC_CONFIGDIR'], 'icarus_globals.json')
 			inherit = None
 		elif settingsType == "App":  # Workaround for apps only dialog
 			categoryLs = ['apps', ]
-			# settingsFile = os.path.join(os.environ['IC_JOBDATA'], 'jobData.xml')
-			settingsFile = os.path.join(os.environ['IC_JOBDATA'], 'job_settings.json')
+			settingsFile = os.environ['IC_JOBDATA']
 			inherit = None
 
 		if startPanel not in categoryLs:
@@ -1098,7 +1094,7 @@ os.environ['IC_VENDOR'])
 			prefs_file=settingsFile, 
 			inherit=inherit, 
 			autofill=autofill)
-		#print(result)
+
 		return result
 
 
@@ -1988,10 +1984,10 @@ os.environ['IC_VENDOR'])
 		# # data from Python data files.
 		# # This code may be removed in the future.
 		# if not assetDataLoaded:
-		# 	from shared import legacySettings
+		# 	from shared import legacy_metadata
 
 		# 	# Try to convert from icData.py to XML (legacy assets)
-		# 	if legacySettings.convertAssetData(self.gatherPath, assetData):
+		# 	if legacy_metadata.convertAssetData(self.gatherPath, assetData):
 		# 		assetData.reload()
 		# 	else:
 		# 		return False

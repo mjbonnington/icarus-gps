@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>416</height>
+    <height>399</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -55,73 +55,6 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
-    <layout class="QHBoxLayout" name="filmback_horizontalLayout">
-     <item>
-      <widget class="QDoubleSpinBox" name="filmbackWidth_doubleSpinBox">
-       <property name="suffix">
-        <string> mm</string>
-       </property>
-       <property name="decimals">
-        <number>2</number>
-       </property>
-       <property name="minimum">
-        <double>0.100000000000000</double>
-       </property>
-       <property name="maximum">
-        <double>1000.000000000000000</double>
-       </property>
-       <property name="singleStep">
-        <double>0.100000000000000</double>
-       </property>
-       <property name="value">
-        <double>23.800000000000001</double>
-       </property>
-       <property name="xmlTag" stdset="0">
-        <string>filmbackWidth</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="filmbackSep_label">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>x</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QDoubleSpinBox" name="filmbackHeight_doubleSpinBox">
-       <property name="suffix">
-        <string> mm</string>
-       </property>
-       <property name="decimals">
-        <number>2</number>
-       </property>
-       <property name="minimum">
-        <double>0.100000000000000</double>
-       </property>
-       <property name="maximum">
-        <double>1000.000000000000000</double>
-       </property>
-       <property name="singleStep">
-        <double>0.100000000000000</double>
-       </property>
-       <property name="value">
-        <double>13.400000000000000</double>
-       </property>
-       <property name="xmlTag" stdset="0">
-        <string>filmbackHeight</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
    <item row="2" column="0">
     <widget class="QLabel" name="shutterAngle_label">
      <property name="text">
@@ -150,7 +83,7 @@
       <double>180.000000000000000</double>
      </property>
      <property name="xmlTag" stdset="0">
-      <string>shutterAngle</string>
+      <string>shutterangle</string>
      </property>
     </widget>
    </item>
@@ -201,7 +134,7 @@
       <double>35.000000000000000</double>
      </property>
      <property name="xmlTag" stdset="0">
-      <string>focalLength</string>
+      <string>focallength</string>
      </property>
     </widget>
    </item>
@@ -247,7 +180,7 @@
    <item row="6" column="1">
     <widget class="QLineEdit" name="clipRef_lineEdit">
      <property name="xmlTag" stdset="0">
-      <string>clipRef</string>
+      <string>clipref</string>
      </property>
     </widget>
    </item>
@@ -279,7 +212,7 @@
       <double>0.100000000000000</double>
      </property>
      <property name="xmlTag" stdset="0">
-      <string>camHeight</string>
+      <string>camheight</string>
      </property>
     </widget>
    </item>
@@ -311,7 +244,7 @@
       <double>1.000000000000000</double>
      </property>
      <property name="xmlTag" stdset="0">
-      <string>camPitch</string>
+      <string>campitch</string>
      </property>
     </widget>
    </item>
@@ -346,7 +279,7 @@
       <double>1.000000000000000</double>
      </property>
      <property name="xmlTag" stdset="0">
-      <string>focusDistance</string>
+      <string>focusdistance</string>
      </property>
     </widget>
    </item>
@@ -381,7 +314,7 @@
       <double>1.000000000000000</double>
      </property>
      <property name="xmlTag" stdset="0">
-      <string>subjectDistance</string>
+      <string>subjectdistance</string>
      </property>
     </widget>
    </item>
@@ -413,6 +346,81 @@
      </property>
     </widget>
    </item>
+   <item row="1" column="1">
+    <widget class="QFrame" name="filmback_frame">
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <layout class="QHBoxLayout" name="filmback_horizontalLayout">
+      <property name="margin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QDoubleSpinBox" name="filmbackWidth_doubleSpinBox">
+        <property name="suffix">
+         <string> mm</string>
+        </property>
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="minimum">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>1000.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>23.800000000000001</double>
+        </property>
+        <property name="xmlTag" stdset="0">
+         <string>filmbackwidth</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="filmbackSep_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>x</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDoubleSpinBox" name="filmbackHeight_doubleSpinBox">
+        <property name="suffix">
+         <string> mm</string>
+        </property>
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="minimum">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>1000.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>13.400000000000000</double>
+        </property>
+        <property name="xmlTag" stdset="0">
+         <string>filmbackheight</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
   </layout>
   <zorder>camera_label</zorder>
   <zorder>camera_comboBox</zorder>
@@ -420,7 +428,7 @@
   <zorder>focalLength_label</zorder>
   <zorder>camHeight_label</zorder>
   <zorder>filmback_label</zorder>
-  <zorder></zorder>
+  <zorder>filmback_frame</zorder>
   <zorder>lensPreset_label</zorder>
   <zorder>lensPreset_comboBox</zorder>
   <zorder>focalLength_doubleSpinBox</zorder>

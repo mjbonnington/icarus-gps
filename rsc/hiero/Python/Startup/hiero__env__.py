@@ -16,8 +16,8 @@ import hiero.core as hc
 # Just like Nuke, Hiero seems to ditch the main root environment where it has
 # been called from so the path needs to be appended again.
 sys.path.append(os.path.join(os.environ['IC_BASEDIR'], 'core', 'run'))
-from core import env__init__
-env__init__.append_sys_paths()
+from core import icarus__env__
+icarus__env__.append_sys_paths()
 
 from shared import os_wrapper
 # from shared import verbose

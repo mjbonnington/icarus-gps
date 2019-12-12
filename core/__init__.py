@@ -8,5 +8,5 @@
 # Initialise Icarus environment and add libs to sys path.
 
 
-from . import env__init__
-env__init__.set_env()
+from . import icarus__env__
+icarus__env__.set_env()

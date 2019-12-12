@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>224</height>
+    <height>242</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -46,71 +46,130 @@
         <property name="text">
          <string>Job name:</string>
         </property>
-        <property name="buddy">
-         <cstring>jobName_lineEdit</cstring>
-        </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <layout class="QHBoxLayout" name="jobName_horizontalLayout">
-        <item>
-         <widget class="QLineEdit" name="jobName_lineEdit">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <widget class="QFrame" name="jobName_frame">
+        <property name="lineWidth">
+         <number>0</number>
+        </property>
+        <layout class="QHBoxLayout" name="jobName_horizontalLayout">
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLineEdit" name="jobName_lineEdit">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="jobPath_label">
         <property name="text">
          <string>Job path:</string>
         </property>
-        <property name="buddy">
-         <cstring>jobPath_lineEdit</cstring>
-        </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <layout class="QHBoxLayout" name="jobPath_horizontalLayout">
-        <item>
-         <widget class="QLineEdit" name="jobPath_lineEdit">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QToolButton" name="jobPathBrowse_toolButton">
-          <property name="text">
-           <string>Browse...</string>
-          </property>
-          <property name="icon">
-           <iconset resource="rsc.qrc">
-            <normaloff>:/icons/icons/icon_folder.png</normaloff>
-            <disabledoff>:/icons/icons/icon_folder_disabled.png</disabledoff>:/icons/icons/icon_folder.png</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>15</width>
-            <height>15</height>
-           </size>
-          </property>
-          <property name="toolButtonStyle">
-           <enum>Qt::ToolButtonIconOnly</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <widget class="QFrame" name="jobPath_frame">
+        <layout class="QHBoxLayout" name="jobPath_horizontalLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLineEdit" name="jobPath_lineEdit">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="jobPathBrowse_toolButton">
+           <property name="text">
+            <string>Browse...</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>15</width>
+             <height>15</height>
+            </size>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonIconOnly</enum>
+           </property>
+           <property name="attach" stdset="0">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </item>
-      <item row="2" column="1">
+      <item row="3" column="1">
        <widget class="QCheckBox" name="jobEnabled_checkBox">
         <property name="text">
          <string>Enabled</string>
         </property>
         <property name="checked">
          <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QFrame" name="jobVersion_frame">
+        <property name="lineWidth">
+         <number>0</number>
+        </property>
+        <layout class="QHBoxLayout" name="version_horizontalLayout">
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLineEdit" name="jobVersion_lineEdit">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="setVersion_toolButton">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the version of the job to the current version of Icarus.&lt;/p&gt;&lt;p&gt;Only jobs whose versions match the current Icarus version will be shown in the UI.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Set to current</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>15</width>
+             <height>15</height>
+            </size>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="jobVersion_label">
+        <property name="text">
+         <string>Version:</string>
+        </property>
+        <property name="buddy">
+         <cstring>jobVersion_lineEdit</cstring>
         </property>
        </widget>
       </item>
@@ -137,40 +196,45 @@
         <property name="text">
          <string>Owner:</string>
         </property>
-        <property name="buddy">
-         <cstring>owner_lineEdit</cstring>
-        </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <layout class="QHBoxLayout" name="owner_horizontalLayout">
-        <item>
-         <widget class="QLineEdit" name="owner_lineEdit">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QToolButton" name="takeOwnership_toolButton">
-          <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the owner of the job to the current user.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <property name="text">
-           <string>Take Ownership</string>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>15</width>
-            <height>15</height>
-           </size>
-          </property>
-          <property name="toolButtonStyle">
-           <enum>Qt::ToolButtonTextOnly</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <widget class="QFrame" name="owner_frame">
+        <property name="lineWidth">
+         <number>0</number>
+        </property>
+        <layout class="QHBoxLayout" name="owner_horizontalLayout">
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLineEdit" name="owner_lineEdit">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="takeOwnership_toolButton">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the owner of the job to the current user.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Take Ownership</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>15</width>
+             <height>15</height>
+            </size>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextOnly</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -201,12 +265,16 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>jobEnabled_checkBox</tabstop>
-  <tabstop>jobPathBrowse_toolButton</tabstop>
-  <tabstop>jobPath_lineEdit</tabstop>
   <tabstop>jobName_lineEdit</tabstop>
+  <tabstop>jobPath_lineEdit</tabstop>
+  <tabstop>jobPathBrowse_toolButton</tabstop>
+  <tabstop>jobEnabled_checkBox</tabstop>
+  <tabstop>jobVersion_lineEdit</tabstop>
+  <tabstop>setVersion_toolButton</tabstop>
   <tabstop>private_groupBox</tabstop>
   <tabstop>owner_lineEdit</tabstop>
+  <tabstop>takeOwnership_toolButton</tabstop>
+  <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources>
   <include location="rsc.qrc"/>
@@ -219,8 +287,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>256</x>
-     <y>215</y>
+     <x>264</x>
+     <y>482</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -235,8 +303,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>324</x>
-     <y>215</y>
+     <x>332</x>
+     <y>482</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>

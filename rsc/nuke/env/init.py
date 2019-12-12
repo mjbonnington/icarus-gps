@@ -44,8 +44,8 @@ nuke.pluginAddPath('../gizmos/pixelfudger')
 # Nuke seems to ditch the main root environment where it has been called from
 # so the path needs to be appended again.
 # sys.path.append(os.environ['IC_WORKINGDIR'])
-from core import env__init__
-env__init__.append_sys_paths()
+from core import icarus__env__
+icarus__env__.append_sys_paths()
 # Nuke opens a entire new Nuke process with 'File>New Script' and doesn't
 # simply create an empty script in the current env.
 # The Icarus env has to be set temporarily as NUKE_TMP to avoid Icarus

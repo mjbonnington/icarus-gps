@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root location="$IC_JOBPATH">
+	<dir name="assets" env="IC_ASSETDIR" />
+	<dir name="plate" />
+</root>

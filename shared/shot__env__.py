@@ -13,12 +13,29 @@ import sys
 
 from . import appPaths
 from . import os_wrapper
-from . import prompt
+# from . import prompt
 from . import json_metadata as metadata
 from . import verbose
 
 
-def set_env(job, shot, shot_path):
+def parseVersion(v_str):
+	""" Parse version string and return a 3-tuple containing the major,
+		minor and point version as integers.
+	"""
+	try:
+		version = v_str.rsplit('-')[0]  # Strip date from version number
+		v_split = version.lstrip('v').split('.')
+		v_major = int(v_split[0])
+		v_minor = int(v_split[1])
+		v_point = int(v_split[2])
+		return v_major, v_minor, v_point
+
+	except (ValueError, KeyError):
+		verbose.warning("Could not parse version string.")
+		return None
+
+
+def set_env(job, shot, job_path, shot_path):
 	""" Set job and shot environment variables.
 	"""
 
@@ -53,36 +70,24 @@ def set_env(job, shot, shot_path):
 	# 	return app_paths.getPath(app, getInheritedValue('apps', app), currentOS)
 
 
-	def parseVersion(v_str):
-		""" Parse version string and return a 3-tuple containing the major,
-			minor and point version as integers.
-		"""
-		try:
-			version = v_str.rsplit('-')[0]  # Strip date from version number
-			v_split = version.lstrip('v').split('.')
-			v_major = int(v_split[0])
-			v_minor = int(v_split[1])
-			v_point = int(v_split[2])
-			return v_major, v_minor, v_point
+	job_path = os_wrapper.absolutePath('%s/$IC_SHOTSDIR' % job_path)  # append 'vfx'
+	shot_path = os_wrapper.absolutePath(shot_path)
+	job_datafile = os_wrapper.absolutePath('%s/$IC_METADATA/job_data.json' % job_path)
+	shot_datafile = os_wrapper.absolutePath('%s/$IC_METADATA/shot_data.json' % shot_path)
 
-		except (ValueError, KeyError):
-			verbose.warning("Could not parse version string.")
-			return None
-
-
-	job_path = os.path.split(shot_path)[0]
-	job_data_path = os.path.join(job_path, os.environ['IC_METADATA'])
-	shot_data_path = os.path.join(shot_path, os.environ['IC_METADATA'])
+	# Create directory for job metadata
+	job_data_dir = os.path.dirname(job_datafile)
+	shot_data_dir = os.path.dirname(shot_datafile)
+	if not os.path.isdir(job_data_dir):
+		os_wrapper.createDir(job_data_dir)
 
 	# Set basic environment variables
 	os.environ['IC_JOB'] = job
 	os.environ['IC_SHOT'] = shot
-	os.environ['IC_JOBPATH'] = os_wrapper.absolutePath(job_path)
-	os.environ['IC_SHOTPATH'] = os_wrapper.absolutePath(shot_path)
-	os.environ['IC_JOBDATA'] = os_wrapper.absolutePath(job_data_path)
-	os.environ['IC_SHOTDATA'] = os_wrapper.absolutePath(shot_data_path)
-
-	os_wrapper.createDir(os.environ['IC_JOBDATA'])
+	os.environ['IC_JOBPATH'] = job_path
+	os.environ['IC_SHOTPATH'] = shot_path
+	os.environ['IC_JOBDATA'] = job_datafile
+	os.environ['IC_SHOTDATA'] = shot_datafile
 
 	# Instantiate job / shot settings classes
 	job_data = metadata.Metadata()
@@ -90,59 +95,80 @@ def set_env(job, shot, shot_path):
 	app_paths = appPaths.AppPaths()
 
 	# Load data
-	# job_data.load(datafile=os.path.join(job_data_path, 'jobData.xml'), use_template=False)
-	# shot_data.load(datafile=os.path.join(shot_data_path, 'shotData.xml'), use_template=False)
-	job_data_loaded = job_data.load(
-		os.path.join(job_data_path, 'job_settings.json'))
-	shot_data_loaded = shot_data.load(
-		os.path.join(shot_data_path, 'shot_settings.json'))
+	job_data_loaded = job_data.load(job_datafile)
+	shot_data_loaded = shot_data.load(shot_datafile)
 	app_paths.loadXML(
 		os.path.join(os.environ['IC_CONFIGDIR'], 'appPaths.xml'), 
 		use_template=True)
 
+	# # Load legacy metadata ---------------------------------------------------
+	# if not job_data_loaded:
+	# 	from . import legacy_metadata
+	# 	xml_datafile = os.path.join(job_data_dir, 'jobData.xml')
+	# 	py_datafile = os.path.join(job_data_dir, 'jobData.py')
+	# 	job_data_loaded, job_data = legacy_metadata.loadLegacyMetadata(xml_datafile, py_datafile, 'IC_JOBDATA')
+
+	# if not shot_data_loaded:
+	# 	from . import legacy_metadata
+	# 	xml_datafile = os.path.join(shot_data_dir, 'shotData.xml')
+	# 	py_datafile = os.path.join(shot_data_dir, 'shotData.py')
+	# 	shot_data_loaded, shot_data = legacy_metadata.loadLegacyMetadata(xml_datafile, py_datafile, 'IC_SHOTDATA')
+	# # ------------------------------------------------------------------------
+
 	verbose.debug("%s job data loaded: %s, %s shot data loaded: %s" % (job, job_data_loaded, shot, shot_data_loaded))
 	# if (not job_data_loaded) or (not shot_data_loaded):
-	if not job_data_loaded:
+	if job_data_loaded:
+		if not shot_data_loaded:
+			pass
+			# print "Create empty shot data"
+	else:  # No job data - open job settings
 		return False
 
-	os.environ['IC_ASSETDIR'] = 'assets'
+	# ------------------------------------------------------------------------
 
-	# Check if the job is using the correct Icarus version
-	v_current = parseVersion(os.environ['IC_VERSION'])
-	icVersion = job_data.get_attr('meta', 'icVersion')
-	if icVersion:
-		v_required = parseVersion(icVersion)
-	else:
-		v_required = (0, 9, 12)  # last incompatible version
+	# # Check if the job is using the correct Icarus version
+	# v_current = parseVersion(os.environ['IC_VERSION'])
+	# icversion = job_data.get_attr('other', 'icversion')
+	# if icversion:
+	# 	v_required = parseVersion(icversion)
+	# else:
+	# 	v_required = (0, 9, 12)  # last incompatible version
 
-	if v_required[:-1] != v_current[:-1]:  # don't compare point version
-		v_str = "v%d.%d.%d" % v_required
-		msg = "This job requires version %s of Icarus. You're currently running %s" % (v_str, os.environ['IC_VERSION'])
-		verbose.warning(msg)
-		dialog = prompt.dialog()
-		title = "Incompatible Version"
-		# msg += "\n\nDo you want to continue?"
-		# msg += "\n\nYou have two options:"
-		# msg += "\n\nRestart with Icarus %s" % v_str
-		# msg += "\n\nUpgrade the job for compatibility with the latest version"
+	# if v_required[:-1] != v_current[:-1]:  # don't compare point versions
+	# 	v_str = "v%d.%d.%d" % v_required
+	# 	msg = "This job requires version %s of Icarus. You're currently running %s" % (v_str, os.environ['IC_VERSION'])
+	# 	verbose.warning(msg)
+	# 	dialog = prompt.dialog()
+	# 	title = "Incompatible Version"
 
-		cwd = os.environ.get('IC_MULTIVERSION', None)
-		if cwd:
-			msg += "\n\nDo you want to restart with Icarus %s?" % v_str
-			if dialog.display(msg, title):
-				# TODO: give the option to restart Icarus with the correct version,
-				# or attempt to upgrade the project for compatibility.
-				# job_data.set_attr('meta', 'icVersion', os.environ['IC_VERSION'])
-				# job_data.save()
-				exec_str = os.path.join(cwd, v_str, 'run.py')
-				flags = " -j %s -s %s" % (job, shot)
-				verbose.print_(exec_str+flags)
-				import subprocess
-				subprocess.call(exec_str+flags, shell=True)
-				sys.exit()
-			else:
-				return False
+	# 	# The IC_MULTIVERSION env var is set if icarus is running from a
+	# 	# multi-version environment. This enables Icarus to spawn itself as a
+	# 	# different version for maximum compatibility with lder jobs.
+	# 	cwd = os.environ.get('IC_MULTIVERSION', None)
+	# 	if cwd:
+	# 		msg += "\n\nDo you want to restart with Icarus %s?" % v_str
+	# 		if dialog.display(msg, title):
+	# 			# TODO: give the option to restart Icarus with the correct version,
+	# 			# or attempt to upgrade the project for compatibility.
+	# 			# job_data.set_attr('other', 'icversion', os.environ['IC_VERSION'])
+	# 			# job_data.save()
+	# 			exec_str = os.path.join(cwd, v_str, 'run.py')
+	# 			flags = " -j %s -s %s" % (job, shot)
+	# 			verbose.print_(exec_str+flags)
+	# 			# import subprocess
+	# 			# subprocess.call(exec_str+flags, shell=True)
+	# 			# sys.exit()
+	# 		else:
+	# 			return False
+	# 	else:
+	# 		msg += "\n\nDo you want to upgrade the job for compatibility with the latest version?"
+	# 		msg += "\n\nWarning: This might break paths which will need to be relinked manually. This operation cannot be undone."
+	# 		if dialog.display(msg, title):
+	# 			print "UPGRADE JOB"
+	# 		else:
+	# 			return False
 
+	# ------------------------------------------------------------------------
 
 	# Terminal / Command Prompt
 	if os.environ['IC_RUNNING_OS'] == "Windows":
@@ -151,6 +177,7 @@ def set_env(job, shot, shot_path):
 		os.environ['IC_SHELL_RC'] = os_wrapper.absolutePath('$IC_WORKINGDIR/shell_rc')
 
 	# Job / shot env
+	# os.environ['IC_ASSETDIR'] = 'assets'
 	#os.environ['IC_GLOBALPUBLISHDIR']  = os_wrapper.absolutePath(getInheritedValue('other', 'assetlib'))  # Path needs to be translated for OS portability
 	os.environ['IC_JOBPUBLISHDIR'] = os_wrapper.absolutePath('$IC_JOBPATH/$IC_ASSETDIR')
 	os.environ['IC_SHOTPUBLISHDIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/$IC_ASSETDIR')
@@ -161,15 +188,15 @@ def set_env(job, shot, shot_path):
 	os.environ['IC_ANGULAR_UNIT'] = getInheritedValue('units', 'angle')
 	os.environ['IC_TIME_UNIT'] = getInheritedValue('units', 'time')
 	os.environ['IC_FPS'] = getInheritedValue('units', 'fps')
-	os.environ['IC_STARTFRAME'] = getInheritedValue('time', 'rangeStart')
-	os.environ['IC_ENDFRAME'] = getInheritedValue('time', 'rangeEnd')
-	os.environ['IC_INFRAME'] = getInheritedValue('time', 'inFrame')
-	os.environ['IC_OUTFRAME'] = getInheritedValue('time', 'outFrame')
-	os.environ['IC_POSTER_FRAME'] = getInheritedValue('time', 'posterFrame')
-	os.environ['IC_RESOLUTION_X'] = getInheritedValue('resolution', 'fullWidth')
-	os.environ['IC_RESOLUTION_Y'] = getInheritedValue('resolution', 'fullHeight')
-	os.environ['IC_PROXY_RESOLUTION_X'] = getInheritedValue('resolution', 'proxyWidth')
-	os.environ['IC_PROXY_RESOLUTION_Y'] = getInheritedValue('resolution', 'proxyHeight')
+	os.environ['IC_STARTFRAME'] = getInheritedValue('time', 'rangestart')
+	os.environ['IC_ENDFRAME'] = getInheritedValue('time', 'rangeend')
+	os.environ['IC_INFRAME'] = getInheritedValue('time', 'inframe')
+	os.environ['IC_OUTFRAME'] = getInheritedValue('time', 'outframe')
+	os.environ['IC_POSTER_FRAME'] = getInheritedValue('time', 'posterframe')
+	os.environ['IC_RESOLUTION_X'] = getInheritedValue('resolution', 'fullwidth')
+	os.environ['IC_RESOLUTION_Y'] = getInheritedValue('resolution', 'fullheight')
+	os.environ['IC_PROXY_RESOLUTION_X'] = getInheritedValue('resolution', 'proxywidth')
+	os.environ['IC_PROXY_RESOLUTION_Y'] = getInheritedValue('resolution', 'proxyheight')
 	os.environ['IC_ASPECT_RATIO'] = str(float(os.environ['IC_RESOLUTION_X']) / float(os.environ['IC_RESOLUTION_Y']))
 	# os.environ['IC_EDITOR'] = getAppExecPath('SublimeText')  # Make dynamic 
 

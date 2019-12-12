@@ -13,7 +13,7 @@ python("os.environ['IC_ENV'] = 'MAYA'");
 
 // Initialise Icarus environment
 python("sys.path.append(os.environ['IC_BASEDIR'])");
-python("from core import env__init__; env__init__.append_sys_paths()");
+python("from core import icarus__env__; icarus__env__.append_sys_paths()");
 python("from core.app_session import *");
 
 // Set up path remapping for cross-platform support

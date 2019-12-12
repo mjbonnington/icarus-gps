@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# [Icarus] env__init__.py
+# [Icarus] icarus__env__.py
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mjbonnington@gmail.com>
@@ -18,7 +18,7 @@ def set_env():
 	""" Set some environment variables for basic operation.
 	"""
 	# Set version string
-	os.environ['IC_VERSION'] = "v0.10.0-20191211"
+	os.environ['IC_VERSION'] = "v0.10.0-20191212"
 
 	# Set vendor strings
 	os.environ['IC_VENDOR'] = "Gramercy Park Studios"
@@ -51,17 +51,21 @@ def set_env():
 	# Hard-coded relative data directories required by Icarus
 	os.environ['IC_SHOTSDIR'] = "Vfx"  # Store in global / job settings
 	os.environ['IC_METADATA'] = ".icarus"  # Where Icarus stores its metadata
+	os.environ['IC_ASSETDIR'] = "assets"  # Where published assets are stored
 
 	# Set up basic paths
 	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
-	# icarusRunDir = 'core'
 	os.environ['IC_WORKINGDIR'] = icarusWorkingDir
-	# os.environ['IC_BASEDIR'] = icarusWorkingDir.replace(icarusRunDir, '')
 	os.environ['IC_BASEDIR'] = os.path.dirname(icarusWorkingDir)
 	os.environ['IC_FORMSDIR'] = os.path.join(os.environ['IC_BASEDIR'], 'ui')
 	os.environ['IC_CONFIGDIR'] = os.path.join(os.environ['IC_BASEDIR'], 'config')
-	os.environ['IC_USERPREFS'] = os.path.join(os.environ['IC_CONFIGDIR'], 'users', os.environ['IC_USERNAME'])  # User prefs stored on server
-	#os.environ['IC_USERPREFS'] = os.path.join(os.environ['IC_USERHOME'], os.environ['IC_METADATA'])  # User prefs stored in user home folder
+
+	userprefs = 'server'
+	if userprefs == 'server':  # User prefs stored on server
+		os.environ['IC_USERPREFS'] = os.path.join(os.environ['IC_CONFIGDIR'], 'users', os.environ['IC_USERNAME'])
+	elif userprefs == 'home':  # User prefs stored in user home folder
+		os.environ['IC_USERPREFS'] = os.path.join(os.environ['IC_USERHOME'], os.environ['IC_METADATA'])
+
 	os.environ['IC_RECENTFILESDIR'] = os.path.join(os.environ['IC_USERPREFS'], 'recentFiles')
 
 	append_sys_paths()

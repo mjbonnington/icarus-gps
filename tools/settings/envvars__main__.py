@@ -15,8 +15,8 @@ import sys
 # Initialise Icarus environment - TEMP BODGE TO ENABLE STANDALONE APP
 if __name__ == "__main__":
 	sys.path.append(os.environ['IC_WORKINGDIR'])
-	import env__init__
-	env__init__.set_env()
+	import icarus__env__
+	icarus__env__.set_env()
 
 from Qt import QtCore, QtGui, QtWidgets
 import ui_template as UI
