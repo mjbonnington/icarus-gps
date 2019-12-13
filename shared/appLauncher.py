@@ -23,7 +23,7 @@ from . import dirStructure
 from . import launchApps  # temp?
 from . import json_metadata as metadata
 from . import os_wrapper
-# from . import recentFiles  # for sorting by most used
+# from . import recent_files  # for sorting by most used
 from . import userPrefs
 from . import verbose
 

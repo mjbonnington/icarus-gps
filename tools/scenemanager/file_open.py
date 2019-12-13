@@ -25,7 +25,7 @@ import ui_template as UI
 
 from . import convention
 from shared import os_wrapper
-# from shared import recentFiles
+# from shared import recent_files
 from shared import verbose
 
 # ----------------------------------------------------------------------------

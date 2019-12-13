@@ -16,7 +16,7 @@ from . import convention
 from . import file_open
 from . import file_save
 from shared import os_wrapper
-from shared import recentFiles
+from shared import recent_files
 
 
 class SceneManager(object):
@@ -53,8 +53,8 @@ class SceneManager(object):
 		""" Open the specified file.
 		"""
 		if self.confirm():
-			recentFiles.updateLs(
-				mc.file(filepath, open=True, force=True, ignoreVersion=True))
+			mc.file(filepath, open=True, force=True, ignoreVersion=True)
+			recent_files.recents.put(filepath)
 			return filepath
 
 		else:
@@ -96,7 +96,7 @@ class SceneManager(object):
 			os_wrapper.createDir(dirname)
 		mc.file(rename=filepath)
 		mc.SaveScene()
-		recentFiles.updateLs(filepath)
+		recent_files.recents.put(filepath)
 		return True
 
 
@@ -167,11 +167,36 @@ class SceneManager(object):
 			return True
 
 
-	def update_recents_menu(self):
+	def update_recents_menu(self, menu):
 		""" Populate the recent files menu or disable it if no recent files
 			in list.
 		"""
-		pass
+		recent_files.recents.reload()  # Force reload of datafile
+		recent_file_list = recent_files.recents.get('maya')
+
+		# Delete all items in the pop-up menu
+		mc.menu(menu, edit=True, deleteAllItems=True)
+
+		# Re-populate the items in the pop-up menu
+		for item in recent_file_list:
+			filepath = os_wrapper.absolutePath(item)
+
+			# Create the menu items...
+			menu_name = os.path.basename(filepath)
+			menu_cmd = str('session.scnmgr.file_open(\"%s\")' % filepath)
+			mc.menuItem(item, label=menu_name, command=menu_cmd, parent=menu)
+
+		# If recent file list contains no entries, disable menu
+		enable = True;
+		if len(recent_file_list) == 0:
+			enable = False
+		if len(recent_file_list) == 1 and recent_file_list[0] == "":
+			enable = False
+
+		try:
+			mc.menuItem(menu, edit=True, enable=enable)
+		except RuntimeError:
+			mc.menu(menu, edit=True, enable=enable)
 
 
 	def set_defaults(self):

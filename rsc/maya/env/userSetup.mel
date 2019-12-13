@@ -40,6 +40,16 @@ if (!$batchMode)
 	// Deploy custom tools
 	python("from rsc.maya.scripts import icDeployTools; icDeployTools.deploy()");
 
+	// Instance the Icarus UI
+	python("from core import icarus; session.icarus = icarus.app(app='maya')");
+
+	// Initialise Scene Manager
+	python("from tools.scenemanager import scenemanager; session.scnmgr = scenemanager.create(app='maya')");
+
+	// Update Maya scene defaults at startup
+	python("session.scnmgr.set_defaults()");
+	//source gpsRenderSetup.mel; gpsRenderSetup.setCommonOptions();
+
 	// Build custom menus
 	source menuBuild;
 
@@ -64,16 +74,6 @@ if (!$batchMode)
 	nameCommand "icIncrementAndSave" -ann ($vendor + "Increment and Save") -c "source menus2Py; menus2Py.incrementAndSave()";
 	hotkey -cmd -alt -k "s" -n "icIncrementAndSave";
 	hotkey -ctl -alt -k "s" -n "icIncrementAndSave";
-
-	// Instance the Icarus UI
-	python("from core import icarus; session.icarus = icarus.app(app='maya')");
-
-	// Initialise Scene Manager
-	python("from tools.scenemanager import scenemanager; session.scnmgr = scenemanager.create(app='maya')");
-
-	// Update Maya scene defaults at startup
-	python("session.scnmgr.set_defaults()");
-	//source gpsRenderSetup.mel; gpsRenderSetup.setCommonOptions();
 }
 
 // Load plugins

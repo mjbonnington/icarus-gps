@@ -42,7 +42,7 @@ def _write():
 			config.write(f)
 
 	except IOError:
-		verbose.recentFiles_notWritten()
+		verbose.warning("Unable to write recent files configuration file.")
 
 
 def _create(env):

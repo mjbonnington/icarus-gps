@@ -321,9 +321,6 @@ def pointCloudParticle():
 def processing(asset=None):
 	message("Processing: %s..." %asset)
 
-def recentFiles_notWritten():
-	warning("Unable to write recent files configuration file.")
-
 def redFields():
 	print_("All fields in red are mandatory", 1)
 

@@ -22,32 +22,14 @@ global proc menus2Py.openScene()
 }
 
 
-global proc menus2Py.openRecent(string $menuSel)
-{
-	global string $recentFile;
-	$recentFile = $menuSel;
-	python "import maya.mel as mel";
-	python "recentFile = mel.eval('$temp=$recentFile')";
-	python("session.scnmgr.file_open(recentFile)");
-}
-
-
 global proc menus2Py.updateRecentFilesMenu(string $menu)
 {
-	// Get the recent file list and store it in an array
-	python( "from shared import recentFiles" );
-	string $fileLs[] = python( "recentFiles.getLs()" );
-
-	// Delete all items in the pop-up menu
-	menu -edit -deleteAllItems $menu;
-
-	// Re-populate the items in the pop-up menu
-	for ( $item in $fileLs )
-	{
-		menuItem -label $item
-		         -command ("menus2Py.openRecent(\"" + `getenv IC_SHOTPATH` + $item + "\")")
-		         -parent $menu $item;
-	}
+	// There must be a better way to pass a variable from mel to python...
+	global string $_menu;
+	$_menu = $menu;
+	python("import maya.mel as mel");
+	python("menu = mel.eval('$temp=$_menu')");
+	python("session.scnmgr.update_recents_menu(menu)");
 }
 
 
@@ -136,17 +118,18 @@ global proc menus2Py.updatePresetCameraMenu(string $menu)
 	// Get the list of cameras and store it in an array
 	python("import os; from shared import camPresets; cp = camPresets.CamPresets(); cp.loadXML(os.path.join(os.environ['IC_CONFIGDIR'], 'camPresets.xml'), use_template=True)");
 	python("shotCam = os.environ['IC_SHOT']");
-	string $camLs[] = python( "[shotCam] + cp.getPresets(activeOnly=True)");
+	string $camLs[] = python("[shotCam] + cp.getPresets(activeOnly=True)");
 
 	// Delete all items in the menu
 	menu -edit -deleteAllItems $menu;
 
 	// Re-populate the items in the menu
-	for ( $item in $camLs )
+	for ($item in $camLs)
 	{
 		menuItem -label $item
 		         -command ("menus2Py.gpsCreateCamera(\"" + $item + "\")")
-		         -parent $menu $item;
+		         -parent $menu
+		         $item;
 	}
 	menuItem -divider true -parent $menu;
 	menuItem -label "Create Camera Rig"

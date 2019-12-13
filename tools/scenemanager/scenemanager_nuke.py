@@ -19,7 +19,7 @@ from . import file_open
 from . import file_save
 from shared import os_wrapper
 from shared import prompt
-from shared import recentFiles
+from shared import recent_files
 
 
 class SceneManager(object):
@@ -72,7 +72,8 @@ class SceneManager(object):
 			try:
 				nuke.scriptClear()
 				nuke.scriptOpen(filepath)
-				recentFiles.updateLs(filepath)
+				recent_files.recents.put(filepath)
+				self.update_recents_menu()
 				return filepath
 
 			except RuntimeError as e:
@@ -135,7 +136,8 @@ class SceneManager(object):
 			if not os.path.isdir(dirname):
 				os_wrapper.createDir(dirname)
 			nuke.scriptSaveAs(filepath)
-			recentFiles.updateLs(filepath)
+			recent_files.recents.put(filepath)
+			self.update_recents_menu()
 			return filepath
 
 		except RuntimeError as e:
@@ -199,49 +201,61 @@ class SceneManager(object):
 			return True
 
 
-	def update_recents_menu(self, menu):
+	def update_recents_menu(self, menu=None):
 		""" Populate the recent files menu or disable it if no recent files
 			in list.
 		"""
-		enable = True;
-		fileLs = recentFiles.getLs('nuke')  # Explicitly stating 'nuke' environment to get around 'nuke_tmp' fix
+		if menu is None:
+			menu = self.icOpenRecentMenu
+		else:
+			self.icOpenRecentMenu = menu  # Store a reference to the menu
+
+		recent_files.recents.reload()  # Force reload of datafile
+		recent_file_list = recent_files.recents.get('nuke')
 
 		# Delete all items in the pop-up menu
 		menu.clearMenu()
 
 		# Re-populate the items in the pop-up menu
-		for item in fileLs:
-			# openRecentCmdStr = 'nuke.scriptOpen(\"%s%s\")' % (os.environ['IC_SHOTPATH'], item)
-			openRecentCmdStr = 'session.scnmgr.file_open(\"%s%s\")' % (os.environ['IC_SHOTPATH'], item)
-			menu.addCommand(item.replace('/', '\/'), openRecentCmdStr.replace('\\', '/'))  # Forward slashes need escaping to prevent Nuke from interpreting them as sub-menus
+		for item in recent_file_list:
+			filepath = os_wrapper.absolutePath(item)
+
+			# Create the menu items...
+			# Forward slashes need escaping to prevent Nuke from interpreting
+			# them as sub-menus.
+			# Cast menu command to string as Nuke gives error if unicode.
+			menu_name = os.path.basename(filepath).replace('/', '\/')
+			menu_cmd = str('session.scnmgr.file_open(\"%s\")' % filepath)
+			menu.addCommand(menu_name, menu_cmd)
 
 		# If recent file list contains no entries, disable menu
-		if len(fileLs) == 0:
+		enable = True;
+		if len(recent_file_list) == 0:
 			enable = False
-		if len(fileLs) == 1 and fileLs[0] == "":
+		if len(recent_file_list) == 1 and recent_file_list[0] == "":
 			enable = False
 
 		menu.setEnabled(enable)
 
 
-	def update_recent_files(self, script=None):
-		""" Adds a script to the recent files list config file. If script is
-			not specified use current script name.
-		"""
-		if script == None:
-			script = os.path.abspath(nuke.value('root.name'))
+	# def update_recent_files(self, script=None):
+	# 	""" Adds a script to the recent files list config file. If script is
+	# 		not specified use current script name.
+	# 	"""
+	# 	if script == None:
+	# 		script = os.path.abspath(nuke.value('root.name'))
 
-		# Add entry to recent files config file
-		recentFiles.updateLs(script, 'nuke')  # Explicitly stating 'nuke' environment to get around 'nuke_tmp' fix
+	# 	# Add entry to recent files config file
+	# 	recent_files.recents.put(script, 'nuke')  # Explicitly stating 'nuke' environment to get around 'nuke_tmp' fix
 
-		# Update custom recent files menu(s) - these are dependent on the
-		# menus defined in menu.py so modify with caution
-		if os.environ['IC_VENDOR_INITIALS']:
-			vendor = os.environ['IC_VENDOR_INITIALS'] + " "
-		else:
-			vendor = ""
-		self.update_recents_menu(nuke.menu('Nuke').menu('File').menu(vendor+'Open Recent'))
-		# self.update_recents_menu(nuke.menu('Nodes').menu('Open').menu('Open Recent'))
+	# 	# Update custom recent files menu(s) - these are dependent on the
+	# 	# menus defined in menu.py so modify with caution
+	# 	if os.environ['IC_VENDOR_INITIALS']:
+	# 		vendor = os.environ['IC_VENDOR_INITIALS'] + " "
+	# 	else:
+	# 		vendor = ""
+
+	# 	self.update_recents_menu(nuke.menu('Nuke').menu('File').menu(vendor+'Open Recent'))
 
 
 	def set_defaults(self):

@@ -346,8 +346,8 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 				comboBox = self.ui.nukeScript_comboBox
 			comboBox.clear()
 
-			from shared import recentFiles
-			for filePath in recentFiles.getLs(self.jobType):
+			from shared import recent_files
+			for filePath in recent_files.recents.get(self.jobType):
 				fullPath = os_wrapper.absolutePath(os.environ['IC_SHOTPATH'] + filePath)
 				relPath = self.makePathRelative(fullPath)
 				if relPath:

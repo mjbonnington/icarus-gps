@@ -17,7 +17,7 @@ from . import file_open
 from . import file_save
 from shared import os_wrapper
 from shared import prompt
-from shared import recentFiles
+from shared import recent_files
 
 
 class SceneManager(object):
@@ -130,7 +130,7 @@ class SceneManager(object):
 			hou.hipFile.save(filepath)
 			self.set_hip_and_job_vars(
 				set_hip_explicit=os.path.dirname(filepath))
-			recentFiles.updateLs(filepath)
+			recent_files.recents.put(filepath)
 			return filepath
 
 		except hou.OperationFailed as e:
@@ -190,13 +190,14 @@ class SceneManager(object):
 			in list.
 			Returns a list to populate the custom recent files menu.
 		"""
-		recent_file_list = recentFiles.getLs('houdini')
+		recent_files.recents.reload()  # Force reload of datafile
+		recent_file_list = recent_files.recents.get('houdini')
 
 		menu_items = []
 		for item in recent_file_list:
-			full_path = os_wrapper.absolutePath('$IC_SHOTPATH/%s' % item)
-			menu_items.append(full_path); menu_items.append(item)
-			# menu_items.append(item); menu_items.append(os.path.basename(item))
+			filepath = os_wrapper.absolutePath(item)
+			menu_name = os.path.basename(filepath)
+			menu_items.append(filepath); menu_items.append(menu_name)
 
 		return menu_items
 

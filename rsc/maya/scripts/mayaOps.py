@@ -17,7 +17,7 @@ import maya.cmds as mc
 import maya.mel as mel
 
 from shared import os_wrapper
-from shared import recentFiles
+from shared import recent_files
 
 
 def applyTransforms(obj, objT, objR, objS):
@@ -629,7 +629,7 @@ def openScene(filePath, extension=None, dialog=True, updateRecentFiles=True):
 			openFolder = [filePath]
 		filename = mc.file(openFolder[0], open=True, force=True, ignoreVersion=True)
 		if updateRecentFiles:
-			recentFiles.updateLs(filename)
+			recent_files.recents.put(filename)
 
 
 ######parent constraints two identical hierarchies########
@@ -850,7 +850,7 @@ def saveFile(fileType, updateRecentFiles=True):
 		fileType = 'mayaBinary'
 	filename = mc.file(options='v=0', force=True, save=True, type=fileType)
 	if updateRecentFiles:
-		recentFiles.updateLs(filename)
+		recent_files.recents.put(filename)
 	os_wrapper.setPermissions(filename)
 	print "\nScene saved: %s" %filename, # print confirmation - the trailing comma make the message visible in Maya's command line output field
 

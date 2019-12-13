@@ -30,26 +30,26 @@ from shared import verbose
 # Environment detection
 # ----------------------------------------------------------------------------
 
-# ENVIRONMENT = os.environ.get('IC_ENV', "STANDALONE")
+ENVIRONMENT = os.environ.get('IC_ENV', "STANDALONE")
 
-# try:
-# 	import maya.cmds as mc
-# 	ENVIRONMENT = "MAYA"
-# except ImportError:
-# 	pass
+try:
+	import maya.cmds as mc
+	ENVIRONMENT = "MAYA"
+except ImportError:
+	pass
 
-# try:
-# 	import hou
-# 	ENVIRONMENT = "HOUDINI"
-# except ImportError:
-# 	pass
+try:
+	import hou
+	ENVIRONMENT = "HOUDINI"
+except ImportError:
+	pass
 
-# try:
-# 	import nuke
-# 	import nukescripts
-# 	ENVIRONMENT = "NUKE"
-# except ImportError:
-# 	pass
+try:
+	import nuke
+	import nukescripts
+	ENVIRONMENT = "NUKE"
+except ImportError:
+	pass
 
 # ----------------------------------------------------------------------------
 # Main window class

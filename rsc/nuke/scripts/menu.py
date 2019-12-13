@@ -53,8 +53,9 @@ job = os.environ['IC_JOB']
 shot = os.environ['IC_SHOT']
 shotInfoStr = job + " - " + shot
 
-
+# ----------------------------------------------------------------------------
 # Command strings
+
 readNode = 'import gpsNodes; gpsNodes.read_create()'
 writeNode = 'import gpsNodes; gpsNodes.write_create()'
 launchNuke = 'from shared import launchApps; launchApps.launch("Nuke", executable="%s", flags=%s)' % (os.environ['IC_NUKE_EXECUTABLE'], nuke_flags)
@@ -81,55 +82,17 @@ versionLatest = 'import switchVersion; switchVersion.versionLatest()'
 submitRender = 'import nukeOps; nukeOps.submitRender()'
 #submitRenderSelected = 'import nukeOps; nukeOps.submitRenderSelected()'
 
+# ----------------------------------------------------------------------------
+# Customise menus
 
+nukeMenu = nuke.menu('Nuke')  # Get Nuke's main menu
 nodesMenu = nuke.menu('Nodes')  # Get Nuke's side menu
 
-# Custom nodes menu
+# Add custom items to nodes menu (toolbar on left-hand side)
 gpsMenu_nodes = nodesMenu.addMenu(os.environ['IC_VENDOR_INITIALS'], icon='gps.png')
 deflickerVelocity_cmd = gpsMenu_nodes.addCommand('Deflicker Velocity', "nuke.createNode('deflickerVelocity')", icon='newScript.png')
 
-# nodesMenu.addSeparator()
-
-# newMenu_nodes = nodesMenu.addCommand('New', newScript, icon='new.png')
-
-# openMenu_nodes = nodesMenu.addMenu('Open', icon='openPopup.png')
-# openMenu_nodes.addCommand('Open...', openScript, icon='open.png')
-# openRecentMenu_nodes = openMenu_nodes.addMenu('Open Recent', icon='open.png')
-
-# saveMenu = nodesMenu.addMenu('Save', icon='savePopup.png')
-# saveMenu.addCommand('Save', saveScript, icon='save.png')
-# saveMenu.addCommand('Save As...', saveScriptAs, icon='saveAs.png')
-# saveMenu.addCommand('Increment and Save', incrementAndSave, icon='saveIncremental.png')
-
-# switchVersionMenu = nodesMenu.addMenu('Switch Version', icon='versionSwitchPopup.png')
-# switchVersionMenu.addCommand('Version to Latest', versionLatest, 'alt+shift+up', icon='versionLatest.png')
-# switchVersionMenu.addCommand('Version Up', versionUp, 'alt+up', icon='versionUp.png')
-# switchVersionMenu.addCommand('Version Down', versionDown, 'alt+down', icon='versionDown.png')
-
-# #submitRenderMenu = nodesMenu.addMenu('Submit to Render Queue', icon='submitRenderPopup.png')
-# #submitRenderMenu.addCommand('Submit render job', submitRender, icon='submitRender.png')
-# #submitRenderMenu.addCommand('Submit render job (selected write node only)', submitRenderSelected, icon='submitRender.png')
-# nodesMenu.addCommand('Submit render job', submitRender, icon='submitRender.png')
-
-# nodesMenu.addCommand('Review read or write node', launchDjv, icon='review.png')
-# # reviewMenu = nodesMenu.addMenu('Review', icon='reviewPopup.png')
-# # reviewMenu.addCommand('djv_view', launchDjv, icon='djv.png')
-# # reviewMenu.addCommand('HieroPlayer', launchHieroPlayer, icon='hieroPlayer.png')
-
-# icarusMenu_nodes = nodesMenu.addCommand('Icarus UI', launchIcarus, icon='icarus.png')
-
-# productionBoardMenu_nodes = nodesMenu.addCommand('Production Board', launchProdBoard, icon='productionBoard.png')
-
-# browseMenu_nodes = nodesMenu.addMenu('Browse', icon='browsePopup.png')
-# browseMenu_nodes.addCommand('Browse Scripts', browseScriptsDir, icon='browse.png')
-# browseMenu_nodes.addCommand('Browse Renders', browseRendersDir, icon='browse.png')
-# browseMenu_nodes.addCommand('Browse Elements', browseElementsDir, icon='browse.png')
-# browseMenu_nodes.addCommand('Browse Shot', browseShotDir, icon='browse.png')
-# browseMenu_nodes.addCommand('Browse Job', browseJobDir, icon='browse.png')
-# browseMenu_nodes.addCommand('Browse Elements Library', browseElementsLibDir, icon='browse.png')
-
-
-nukeMenu = nuke.menu('Nuke')  # Get Nuke's main menu
+# ----------------------------------------------------------------------------
 
 # Custom menu
 icCustomMenu = nukeMenu.addMenu(vendor, index=6)
@@ -148,9 +111,10 @@ icBrowseDirsMenu = icCustomMenu.addMenu('Browse project folders', icon='browse.p
 icBrowseDirsMenu.addCommand('Scripts', browseScriptsDir, icon='browse.png')
 icBrowseDirsMenu.addCommand('Renders', browseRendersDir, icon='browse.png')
 icBrowseDirsMenu.addCommand('Elements', browseElementsDir, icon='browse.png')
+icBrowseDirsMenu.addCommand('Elements Library', browseElementsLibDir, icon='browse.png')
+icBrowseDirsMenu.addSeparator()
 icBrowseDirsMenu.addCommand('Shot - '+shot, browseShotDir, icon='browse.png')
 icBrowseDirsMenu.addCommand('Job - '+job, browseJobDir, icon='browse.png')
-icBrowseDirsMenu.addCommand('Elements Library', browseElementsLibDir, icon='browse.png')
 
 icCustomMenu.addSeparator()
 
@@ -167,6 +131,7 @@ icSwitchVersionMenu.addCommand('Version to Latest', versionLatest, icon='version
 icSwitchVersionMenu.addCommand('Version Up', versionUp, icon='versionUp.png')
 icSwitchVersionMenu.addCommand('Version Down', versionDown, icon='versionDown.png')
 
+# ----------------------------------------------------------------------------
 
 # Image menu
 imageMenu = nodesMenu.menu('Image')
@@ -175,25 +140,27 @@ imageMenu.addCommand(vendor+'Read', readNode, icon='newScript.png', index=0)
 #imageMenu.addCommand(vendor+'Write', writeNode, icon='newScript.png', index=1)
 imageMenu.addCommand(vendor+'Write', writeNode, 'w', icon='newScript.png', index=1)
 
+# ----------------------------------------------------------------------------
 
 # Render menu
 imageMenu = nukeMenu.menu('Render')
 imageMenu.addCommand(vendor+'Submit Render...', submitRender, icon='submitRender.png', index=4)
 #imageMenu.addCommand(vendor+'Submit Render (selected write node only)...', submitRenderSelected, icon='submitRender.png', index=5)
 
+# ----------------------------------------------------------------------------
 
-# File menu
+# Add custom file menu items
 fileMenu = nukeMenu.menu('File')
 
-newMenu_gps = fileMenu.addCommand(vendor+'New', newScript, '^n', icon='new.png', index=0)
-openMenu_gps = fileMenu.addCommand(vendor+'Open...', openScript, '^o', icon='open.png', index=1)
-openRecentMenu_gps = fileMenu.addMenu(vendor+'Open Recent', icon='open.png', index=2)
+icNewMenuItem = fileMenu.addCommand(vendor+'New', newScript, '^n', icon='new.png', index=0)
+icOpenMenuItem = fileMenu.addCommand(vendor+'Open...', openScript, '^o', icon='open.png', index=1)
+icOpenRecentMenu = fileMenu.addMenu(vendor+'Open Recent', icon='open.png', index=2)
 
 fileMenu.addSeparator(index=3)
 
-saveMenu_gps =  fileMenu.addCommand(vendor+'Save', saveScript, '^s', icon='save.png', index=4)
-saveAsMenu_gps =  fileMenu.addCommand(vendor+'Save As...', saveScriptAs, '^shift+s', icon='saveAs.png', index=5)
-saveIncrementalMenu_gps =  fileMenu.addCommand(vendor+'Increment and Save', incrementAndSave, 'alt+shift+s', icon='saveIncremental.png', index=6)
+icSaveMenuItem =  fileMenu.addCommand(vendor+'Save', saveScript, '^s', icon='save.png', index=4)
+icSaveAsMenuItem =  fileMenu.addCommand(vendor+'Save As...', saveScriptAs, '^shift+s', icon='saveAs.png', index=5)
+icIncrementAndSaveMenuItem =  fileMenu.addCommand(vendor+'Increment and Save', incrementAndSave, 'alt+shift+s', icon='saveIncremental.png', index=6)
 
 fileMenu.addSeparator(index=7)
 
@@ -216,9 +183,8 @@ fileMenu.removeItem('Save Comp')
 fileMenu.removeItem('Save Comp As...')
 fileMenu.removeItem('Save New Comp Version')
 
-# Initialise recent files menu...
-session.scnmgr.update_recents_menu(openRecentMenu_gps)
-# session.scnmgr.update_recents_menu(openRecentMenu_nodes)
+# Initialise recent files menu
+session.scnmgr.update_recents_menu(icOpenRecentMenu)
 
-# Add callback function to add script to recent files on script load...
-nuke.addOnScriptLoad(session.scnmgr.update_recent_files)
+# Add callback function to add script to recent files on script load
+# nuke.addOnScriptLoad(session.scnmgr.update_recent_files)

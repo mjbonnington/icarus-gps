@@ -18,7 +18,7 @@ def set_env():
 	""" Set some environment variables for basic operation.
 	"""
 	# Set version string
-	os.environ['IC_VERSION'] = "v0.10.0-20191212"
+	os.environ['IC_VERSION'] = "v0.10.0-20191213"
 
 	# Set vendor strings
 	os.environ['IC_VENDOR'] = "Gramercy Park Studios"
@@ -66,7 +66,7 @@ def set_env():
 	elif userprefs == 'home':  # User prefs stored in user home folder
 		os.environ['IC_USERPREFS'] = os.path.join(os.environ['IC_USERHOME'], os.environ['IC_METADATA'])
 
-	os.environ['IC_RECENTFILESDIR'] = os.path.join(os.environ['IC_USERPREFS'], 'recentFiles')
+	os.environ['IC_RECENTFILESDIR'] = os.path.join(os.environ['IC_USERPREFS'], 'recentfiles')
 
 	append_sys_paths()
 
