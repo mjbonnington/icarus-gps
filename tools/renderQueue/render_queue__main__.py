@@ -18,7 +18,7 @@ import time
 
 # Initialise Icarus environment - TEMP BODGE TO ENABLE STANDALONE APP
 if __name__ == "__main__":
-	sys.path.append(os.environ['IC_WORKINGDIR'])
+	sys.path.append(os.environ['IC_COREDIR'])
 	from core import icarus__env__
 	icarus__env__.set_env()
 

@@ -15,6 +15,7 @@ import xml.etree.ElementTree as ET
 from . import shot__env__
 from . import os_wrapper
 from . import prompt
+from . import recent_shots
 from . import verbose
 from . import xml_data
 
@@ -25,11 +26,14 @@ class Jobs(xml_data.XMLData):
 		properties.
 		Inherits XMLData class.
 	"""
-	def __init__(self):
+	def __init__(self, datafile=None):
 		""" Automatically load datafile on initialisation.
 		"""
 		super(Jobs, self).__init__()  # Execute ancestor constructor
-		self.load(os.path.join(os.environ['IC_CONFIGDIR'], 'jobs.xml'))
+		if datafile is None:
+			self.load(os.path.join(os.environ['IC_CONFIGDIR'], 'jobs.xml'))
+		else:
+			self.load(datafile)
 		self.getRootPaths()
 
 
@@ -47,10 +51,8 @@ class Jobs(xml_data.XMLData):
 
 			# Remember for next time
 			if storeLastJob:
-				from . import userPrefs
-				newEntry = '%s,%s' % (jobName, shotName)
-				# userPrefs.edit('main', 'lastjob', newEntry)
-				userPrefs.updateRecentShots(newEntry)
+				recent_shots.recents.reload()
+				recent_shots.recents.put(jobName, shotName)
 
 			return True
 

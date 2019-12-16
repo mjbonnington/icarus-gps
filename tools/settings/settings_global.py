@@ -13,7 +13,6 @@ import os
 from Qt import QtCore
 
 # Import custom modules
-from . import edit_root_paths
 from shared import jobs
 from shared import os_wrapper
 # from shared import prompt
@@ -27,9 +26,6 @@ class helper():
 		self.frame = frame
 		self.parent = parent
 
-		# # Populate line edit with user name
-		# self.frame.user_lineEdit.setText(os.getenv('IC_USERNAME', ''))
-
 		# Set icons
 		self.frame.configDirBrowse_toolButton.setIcon(parent.iconSet('folder-open.svg'))
 		self.frame.assetLibraryBrowse_toolButton.setIcon(parent.iconSet('folder-open.svg'))
@@ -40,9 +36,17 @@ class helper():
 		self.frame.userPrefsServer_radioButton.toggled.connect(lambda state: self.updateUserPrefsLocation(state, 'server'))
 		self.frame.userPrefsHome_radioButton.toggled.connect(lambda state: self.updateUserPrefsLocation(state, 'home'))
 		self.frame.editPaths_pushButton.clicked.connect(lambda: self.editPaths())  # Only works with a lambda for some reason
+		self.frame.editJobs_pushButton.clicked.connect(lambda: self.editJobs())  # Only works with a lambda for some reason
 
 		# Instantiate jobs class and load data
 		self.j = jobs.Jobs()
+
+		# Display first run message
+		if 'IC_FIRSTRUN' in os.environ:
+			message = "This appears to be the first time Icarus has been started. Basic configuration needs to be set.\n\n%s" % self.frame.message_plainTextEdit.toPlainText()
+			self.frame.message_plainTextEdit.setPlainText(message)
+
+		self.frame.configDir_lineEdit.setText(os_wrapper.relativePath(os.environ['IC_CONFIGDIR'], 'IC_BASEDIR'))
 
 
 	@QtCore.Slot(bool, str)
@@ -82,8 +86,17 @@ class helper():
 		#self.j.loadXML()
 		self.j.getRootPaths()
 
+		from . import edit_root_paths
 		editPathsDialog = edit_root_paths.dialog(parent=self.parent)
 		if editPathsDialog.display(self.j.win_root, self.j.osx_root, self.j.linux_root, self.j.jobs_path):
 			self.j.setRootPaths(editPathsDialog.winPath, editPathsDialog.osxPath, editPathsDialog.linuxPath, editPathsDialog.jobsRelPath)
 			self.j.getRootPaths()
 			self.j.save()
+
+
+	def editJobs(self):
+		""" Open Job Management dialog.
+		"""
+		from . import job_management__main__
+		jobManagementDialog = job_management__main__.JobManagementDialog(parent=self.parent)
+		jobManagementDialog.display()

@@ -436,7 +436,7 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 # 	app = QtWidgets.QApplication(sys.argv)
 
 # 	# Initialise Icarus environment
-# 	sys.path.append(os.environ['IC_WORKINGDIR'])
+# 	sys.path.append(os.environ['IC_COREDIR'])
 # 	import icarus__env__
 # 	icarus__env__.set_env()
 # 	#icarus__env__.append_sys_paths()
@@ -448,7 +448,7 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 # 	# Apply UI style sheet
 # 	if STYLESHEET is not None:
-# 		qss=os.path.join(os.environ['IC_WORKINGDIR'], STYLESHEET)
+# 		qss=os.path.join(os.environ['IC_COREDIR'], STYLESHEET)
 # 		with open(qss, "r") as fh:
 # 			app.setStyleSheet(fh.read())
 

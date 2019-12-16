@@ -2,10 +2,10 @@
 
 # [Icarus] __init__.py
 #
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
+# Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2019 Gramercy Park Studios
 #
-# Initialise Icarus environment and add libs to sys path.
+# Initialise main pipeline environment on package import.
 
 
 from . import icarus__env__

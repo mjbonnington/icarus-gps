@@ -8,6 +8,7 @@
 #
 # Set up shot-related environment variables.
 
+
 import os
 import sys
 
@@ -172,9 +173,9 @@ def set_env(job, shot, job_path, shot_path):
 
 	# Terminal / Command Prompt
 	if os.environ['IC_RUNNING_OS'] == "Windows":
-		os.environ['IC_SHELL_RC'] = os_wrapper.absolutePath('$IC_WORKINGDIR/shell_cmd.bat')
+		os.environ['IC_SHELL_RC'] = os_wrapper.absolutePath('$IC_COREDIR/shell_cmd.bat')
 	else:
-		os.environ['IC_SHELL_RC'] = os_wrapper.absolutePath('$IC_WORKINGDIR/shell_rc')
+		os.environ['IC_SHELL_RC'] = os_wrapper.absolutePath('$IC_COREDIR/shell_rc')
 
 	# Job / shot env
 	# os.environ['IC_ASSETDIR'] = 'assets'

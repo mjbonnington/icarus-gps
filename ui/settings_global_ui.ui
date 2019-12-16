@@ -54,7 +54,7 @@
    <item row="1" column="0">
     <widget class="QLabel" name="label_configDir">
      <property name="text">
-      <string>Config directory:</string>
+      <string>Config folder:</string>
      </property>
      <property name="buddy">
       <cstring>configDir_lineEdit</cstring>
@@ -81,13 +81,16 @@
         <property name="text">
          <string>$IC_BASEDIR/config</string>
         </property>
-        <property name="xmlTag" stdset="0">
-         <string>configdir</string>
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QToolButton" name="configDirBrowse_toolButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>...</string>
         </property>
@@ -136,7 +139,7 @@
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;User preferences will be stored in the config directory specified above. Useful if not using roaming profiles.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
-         <string>Server</string>
+         <string>Config folder</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -164,28 +167,15 @@
         <property name="readOnly">
          <bool>true</bool>
         </property>
-        <property name="xmlTag" stdset="0">
-         <string>userprefsdir</string>
-        </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-   <item row="3" column="1">
-    <widget class="QPushButton" name="editPaths_pushButton">
-     <property name="text">
-      <string>Edit Root Paths...</string>
-     </property>
-     <property name="exec" stdset="0">
-      <string>editPaths</string>
-     </property>
-    </widget>
-   </item>
    <item row="4" column="0">
     <widget class="QLabel" name="metadataDir_label">
      <property name="text">
-      <string>Metadata directory:</string>
+      <string>Metadata folder:</string>
      </property>
      <property name="buddy">
       <cstring>metadataDir_lineEdit</cstring>
@@ -208,7 +198,7 @@
    <item row="5" column="0">
     <widget class="QLabel" name="shotsRelDir_label">
      <property name="text">
-      <string>Shots directory:</string>
+      <string>Shots folder:</string>
      </property>
      <property name="buddy">
       <cstring>shotsRelDir_lineEdit</cstring>
@@ -221,10 +211,33 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The folder (relative to the job root folder) where shots are stored.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
-      <string>vfx</string>
+      <string>Vfx</string>
      </property>
      <property name="xmlTag" stdset="0">
       <string>shotsdir</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="assetsDir_label">
+     <property name="text">
+      <string>Assets folder:</string>
+     </property>
+     <property name="buddy">
+      <cstring>assetsDir_lineEdit</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QLineEdit" name="assetsDir_lineEdit">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The folder where published assets are stored. This will be relative to the shot or job folder.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>assets</string>
+     </property>
+     <property name="xmlTag" stdset="0">
+      <string>assetsdir</string>
      </property>
     </widget>
    </item>
@@ -291,27 +304,42 @@
      </layout>
     </widget>
    </item>
-   <item row="6" column="0">
-    <widget class="QLabel" name="assetsDir_label">
-     <property name="text">
-      <string>Assets directory:</string>
+   <item row="3" column="1">
+    <widget class="QFrame" name="buttons_frame">
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
      </property>
-     <property name="buddy">
-      <cstring>assetsDir_lineEdit</cstring>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
      </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
-    <widget class="QLineEdit" name="assetsDir_lineEdit">
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The folder where published assets are stored. This will be relative to the shot or job folder.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <property name="lineWidth">
+      <number>0</number>
      </property>
-     <property name="text">
-      <string>assets</string>
-     </property>
-     <property name="xmlTag" stdset="0">
-      <string>assetsdir</string>
-     </property>
+     <layout class="QHBoxLayout" name="buttons_horizontalLayout">
+      <property name="margin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="editPaths_pushButton">
+        <property name="text">
+         <string>Edit Root Paths...</string>
+        </property>
+        <property name="exec" stdset="0">
+         <string>editPaths</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="editJobs_pushButton">
+        <property name="text">
+         <string>Edit Jobs...</string>
+        </property>
+        <property name="exec" stdset="0">
+         <string>editJobs</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>
@@ -321,7 +349,6 @@
   <tabstop>configDirBrowse_toolButton</tabstop>
   <tabstop>userPrefsServer_radioButton</tabstop>
   <tabstop>userPrefsHome_radioButton</tabstop>
-  <tabstop>editPaths_pushButton</tabstop>
   <tabstop>metadataDir_lineEdit</tabstop>
   <tabstop>shotsRelDir_lineEdit</tabstop>
   <tabstop>assetsDir_lineEdit</tabstop>

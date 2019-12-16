@@ -6,9 +6,10 @@
 # Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2013-2019 Gramercy Park Studios
 #
-# Initialise main pipeline environment.
+# Initialise main pipeline environment and set global configuration.
 
 
+import json
 import os
 import platform
 import sys
@@ -18,7 +19,7 @@ def set_env():
 	""" Set some environment variables for basic operation.
 	"""
 	# Set version string
-	os.environ['IC_VERSION'] = "v0.10.0-20191213"
+	os.environ['IC_VERSION'] = "v0.10.0-20191216"
 
 	# Set vendor strings
 	os.environ['IC_VENDOR'] = "Gramercy Park Studios"
@@ -28,19 +29,19 @@ def set_env():
 	# Usernames will always be stored as lowercase for compatibility.
 	if platform.system() == "Windows":  # Windows
 		os.environ['IC_RUNNING_OS'] = "Windows"
-		if 'IC_USERNAME' not in os.environ:
-			os.environ['IC_USERNAME'] = os.environ['USERNAME'].lower()
 		os.environ['IC_USERHOME'] = os.environ['USERPROFILE']
+		username = os.environ['USERNAME']
 	elif platform.system() == "Darwin":  # Mac OS
 		os.environ['IC_RUNNING_OS'] = "MacOS"
-		if 'IC_USERNAME' not in os.environ:
-			os.environ['IC_USERNAME'] = os.environ['USER'].lower()
 		os.environ['IC_USERHOME'] = os.environ['HOME']
+		username = os.environ['USER']
 	else:  # Linux
 		os.environ['IC_RUNNING_OS'] = "Linux"
-		if 'IC_USERNAME' not in os.environ:
-			os.environ['IC_USERNAME'] = os.environ['USER'].lower()
 		os.environ['IC_USERHOME'] = os.environ['HOME']
+		username = os.environ['USER']
+
+	if 'IC_USERNAME' not in os.environ:
+		os.environ['IC_USERNAME'] = username.lower()
 
 	# Check for environment awareness
 	try:
@@ -48,25 +49,44 @@ def set_env():
 	except KeyError:
 		os.environ['IC_ENV'] = "STANDALONE"
 
-	# Hard-coded relative data directories required by Icarus
-	os.environ['IC_SHOTSDIR'] = "Vfx"  # Store in global / job settings
-	os.environ['IC_METADATA'] = ".icarus"  # Where Icarus stores its metadata
-	os.environ['IC_ASSETDIR'] = "assets"  # Where published assets are stored
-
 	# Set up basic paths
-	icarusWorkingDir = os.path.dirname(os.path.realpath(__file__))
-	os.environ['IC_WORKINGDIR'] = icarusWorkingDir
-	os.environ['IC_BASEDIR'] = os.path.dirname(icarusWorkingDir)
+	core_working_dir = os.path.dirname(os.path.realpath(__file__))
+	os.environ['IC_COREDIR'] = core_working_dir
+	os.environ['IC_BASEDIR'] = os.path.dirname(core_working_dir)
 	os.environ['IC_FORMSDIR'] = os.path.join(os.environ['IC_BASEDIR'], 'ui')
-	os.environ['IC_CONFIGDIR'] = os.path.join(os.environ['IC_BASEDIR'], 'config')
+	if 'IC_CONFIGDIR' not in os.environ:
+		os.environ['IC_CONFIGDIR'] = os.path.join(os.environ['IC_BASEDIR'], 'config')
 
-	userprefs = 'server'
-	if userprefs == 'server':  # User prefs stored on server
-		os.environ['IC_USERPREFS'] = os.path.join(os.environ['IC_CONFIGDIR'], 'users', os.environ['IC_USERNAME'])
-	elif userprefs == 'home':  # User prefs stored in user home folder
+	# Attempt to load global prefs
+	prefsfile = os.path.join(os.environ['IC_CONFIGDIR'], 'icarus_globals.json')
+	if os.path.isfile(prefsfile):
+		# Load prefs and set defaults
+		with open(prefsfile, 'r') as f:
+			prefs = json.load(f)
+
+	else:
+		# Create empty prefs dir, display global settings settings dialog
+		prefs = {}
+		os.environ['IC_FIRSTRUN'] = "True"
+		if not os.path.isdir(os.environ['IC_CONFIGDIR']):
+			os.makedirs(os.environ['IC_CONFIGDIR'])
+
+	os.environ['IC_METADATA'] = prefs.get('global.metadata', ".icarus")
+	os.environ['IC_SHOTSDIR'] = prefs.get('global.shotsdir', "vfx")
+	os.environ['IC_ASSETDIR'] = prefs.get('global.assetsdir', "assets")
+	os.environ['IC_ASSETLIBRARY'] = prefs.get('global.assetlibrary', "")
+
+	userprefs = prefs.get('global.userprefs')
+	if userprefs == "Home folder":  # User prefs stored in user home folder
 		os.environ['IC_USERPREFS'] = os.path.join(os.environ['IC_USERHOME'], os.environ['IC_METADATA'])
+	else:  # User prefs stored on server
+		os.environ['IC_USERPREFS'] = os.path.join(os.environ['IC_CONFIGDIR'], 'users', os.environ['IC_USERNAME'])
+	if not os.path.isdir(os.environ['IC_USERPREFS']):
+		os.makedirs(os.environ['IC_USERPREFS'])
 
-	os.environ['IC_RECENTFILESDIR'] = os.path.join(os.environ['IC_USERPREFS'], 'recentfiles')
+	os.environ['IC_RECENTFILESDIR'] = os.path.join(os.environ['IC_USERPREFS'], 'recent')
+	if not os.path.isdir(os.environ['IC_RECENTFILESDIR']):
+		os.makedirs(os.environ['IC_RECENTFILESDIR'])
 
 	append_sys_paths()
 

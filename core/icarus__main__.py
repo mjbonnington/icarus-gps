@@ -28,8 +28,8 @@ from shared import appLauncher  # merge these two?
 from shared import openDirs
 from shared import os_wrapper
 from shared import prompt
+from shared import recent_shots
 from shared import sequence
-from shared import userPrefs
 from shared import verbose
 
 # ----------------------------------------------------------------------------
@@ -100,7 +100,11 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# JSON handler out to its own module
 		if 'IC_VERBOSITY' not in os.environ:
 			os.environ['IC_VERBOSITY'] = str(self.prefs.get_attr('user', 'verbosity', default=3))
-		# os.environ['IC_NUMRECENTFILES'] = str(self.prefs.get_attr('user', 'numrecentfiles', default=10))
+		os.environ['IC_NUMRECENTFILES'] = str(self.prefs.get_attr('user', 'numrecentfiles', default=10))
+
+		# If running for the first time, make sure globals are set
+		if 'IC_FIRSTRUN' in os.environ:
+			self.globalSettings()
 
 		# Instantiate jobs class
 		self.j = jobs.Jobs()
@@ -239,7 +243,6 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			# self.ui.launchOptions_toolButton.setMenu(self.ui.menuLauncher)
 
 			# Set 'Minimise on launch' checkbox from user prefs
-			# self.minimiseOnAppLaunch = userPrefs.query('main', 'minimiseonlaunch', datatype='bool', default=True)
 			self.minimiseOnAppLaunch = self.prefs.get_attr('user', 'minimiseonlaunch', default=True)
 			# self.ui.actionMinimise_on_Launch.setChecked(self.minimiseOnAppLaunch)
 			# self.ui.actionMinimise_on_Launch.toggled.connect(self.setMinimiseOnAppLaunch)
@@ -258,7 +261,6 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			# alignmentGroup.addAction(self.ui.actionMostUsed)
 
 			# Set 'Sort by' menu from user prefs
-			# self.sortAppsBy = userPrefs.query('main', 'sortappsby', datatype='str', default="Most used")
 			self.sortAppsBy = self.prefs.get_attr('user', 'sortappsby', default="Most used")
 			# if self.sortAppsBy == "Name":
 			# 	self.ui.actionName.setChecked(True)
@@ -355,8 +357,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			# last selection - 'self.connectNewSignalsSlots()' must be called
 			# already.
 			try:
-				# assetType = userPrefs.query('main', 'lastpublishma')
-				assetType = self.prefs.get_attr('main', 'lastpublishma')
+				assetType = self.prefs.get_attr('maya', 'lastpublishtype')
 				for toolButton in self.ui.ma_assetType_frame.children():
 					if isinstance(toolButton, QtWidgets.QToolButton):
 						if toolButton.text() == assetType:
@@ -391,8 +392,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			# # last selection - 'self.connectNewSignalsSlots()' must be called
 			# # already.
 			# try:
-			# 	# assetType = userPrefs.query('main', 'lastpublishhou')
-			# 	assetType = self.prefs.get_attr('main', 'lastpublishhou')
+			# 	assetType = self.prefs.get_attr('houdini', 'lastpublishtype')
 			# 	for toolButton in self.ui.ma_assetType_frame.children():
 			# 		if isinstance(toolButton, QtWidgets.QToolButton):
 			# 			if toolButton.text() == assetType:
@@ -426,8 +426,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			# last selection - 'self.connectNewSignalsSlots()' must be called
 			# already.
 			try:
-				# assetType = userPrefs.query('main', 'lastpublishnk')
-				assetType = self.prefs.get_attr('main', 'lastpublishnk')
+				assetType = self.prefs.get_attr('nuke', 'lastpublishtype')
 				for toolButton in self.ui.nk_assetType_frame.children():
 					if isinstance(toolButton, QtWidgets.QToolButton):
 						if toolButton.text() == assetType:
@@ -480,9 +479,8 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.expertMode = True
 
 		if self.expertMode:
-			os.environ['IC_VERBOSITY'] = "4"
+			os.environ['IC_VERBOSITY'] = '4'
 		else:
-			# os.environ['IC_VERBOSITY'] = userPrefs.query('main', 'verbosity', datatype='str', default="3", create=True)
 			os.environ['IC_VERBOSITY'] = str(self.prefs.get_attr('user', 'verbosity', default=3))
 
 		os.environ['IC_EXPERT_MODE'] = str(self.expertMode)
@@ -581,8 +579,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.subSet_checkBox.setEnabled(True)
 
 		# Remember last selection with entry in user prefs
-		# userPrefs.edit('main', 'lastpublishma', assetType)
-		self.prefs.set_attr('user', 'lastpublishma', assetType)
+		self.prefs.set_attr('maya', 'lastpublishtype', assetType)
 
 
 	def adjustPublishOptsNukeUI(self):
@@ -602,8 +599,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			# self.lockPublishTo(lock=True)
 
 		# Remember last selection with entry in user prefs
-		# userPrefs.edit('main', 'lastpublishnk', assetType)
-		self.prefs.set_attr('user', 'lastpublishnk', assetType)
+		self.prefs.set_attr('nuke', 'lastpublishtype', assetType)
 
 
 	def adjustPblTypeUI(self):
@@ -670,14 +666,11 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Store last set or current item
 		if setLast:
 			try:
-				# last_item, _ = userPrefs.query('main', 'lastjob').split(',')
-				last_item, _ = userPrefs.getRecentShots(last=True).split(',')  # TODO: move into dedicated module
+				last_job = recent_shots.recents.get(last=True)[0]
 			except:
-				last_item = None
+				last_job = None
 		else:
-			last_item = self.ui.job_comboBox.currentText()
-		# print(last_item)
-		# self.lastjob = last_item
+			last_job = self.ui.job_comboBox.currentText()
 
 		# Remove all items
 		self.ui.job_comboBox.clear()
@@ -696,7 +689,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.job_comboBox.insertItems(0, jobLs)
 
 			# Attempt to set the combo box to remember the last item.
-			if self.setComboBox(self.ui.job_comboBox, last_item):
+			if self.setComboBox(self.ui.job_comboBox, last_job):
 				self.populateShots(setLast=setLast)
 			else:
 				self.populateShots()
@@ -712,7 +705,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.job_comboBox.blockSignals(False)
 
 			# Setup app launch icons
-			# self.al.setupIconGrid(job=last_item, sort_by=self.sortAppsBy)
+			# self.al.setupIconGrid(job=last_job, sort_by=self.sortAppsBy)
 
 		# If no jobs found, disable all launcher / shot setup UI controls
 		else:
@@ -738,7 +731,6 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				self.unlockJobUI(refreshShots=False)
 
 
-
 	def populateShots(self, setLast=False):
 		""" Populates shot drop down menu.
 		"""
@@ -747,13 +739,11 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Store last set or current item
 		if setLast:
 			try:
-				# _, last_item = userPrefs.query('main', 'lastjob').split(',')
-				_, last_item = userPrefs.getRecentShots(last=True).split(',')  # TODO: move into dedicated module
+				last_shot = recent_shots.recents.get(last=True)[1]
 			except:
-				last_item = None
+				last_shot = None
 		else:
-			last_item = self.ui.shot_comboBox.currentText()
-		# print(last_item)
+			last_shot = self.ui.shot_comboBox.currentText()
 
 		# Remove all items
 		self.ui.shot_comboBox.clear()
@@ -765,7 +755,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.shot_comboBox.insertItems(0, shotLs)
 
 			# Attempt to set the combo box to remember the last item.
-			self.setComboBox(self.ui.shot_comboBox, last_item)
+			self.setComboBox(self.ui.shot_comboBox, last_shot)
 
 			self.ui.shot_comboBox.setEnabled(True)
 			self.ui.setShot_label.setEnabled(True)
@@ -899,13 +889,13 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		verbose.print_("Populating recent shots menu...", 4)
 		self.ui.menuRecent_shots.clear()
 
-		userPrefs.read()
-		recentShots = userPrefs.getRecentShots()  # TODO: move into dedicated module
+		recent_shots.recents.reload()
+		recentShots = recent_shots.recents.get()
 		if recentShots:
 			self.ui.menuRecent_shots.setEnabled(True)
 			self.ui.setShot_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 			for i, entry in enumerate(recentShots):
-				job, shot = entry.split(',')
+				job, shot = entry
 				menuName = "%s - %s" %(job, shot)
 				actionName = "action%s" %i
 				action = QtWidgets.QAction(menuName, None)
@@ -1015,7 +1005,6 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# except KeyError:
 		# 	print("Environment variable(s) not set.")
 
-		# import envvars__main__
 		from tools.envvarbrowser import envvar_browser
 		self.envVarsDialog = envvar_browser.EnvVarsDialog(parent=self)
 		self.envVarsDialog.show()
@@ -1131,8 +1120,16 @@ os.environ['IC_VENDOR'])
 		""" Open Icarus global settings dialog wrapper function.
 		"""
 		if self.openSettings("Global"):
-			pass
-			# Add dialog prompt to restart Icarus for changes to take effect
+			from . import icarus__env__
+			icarus__env__.set_env()
+			try:
+				os.environ.pop('IC_FIRSTRUN')
+			except KeyError:
+				pass
+			# Add dialog prompt to restart Icarus for changes to take effect?
+		else:
+			if 'IC_FIRSTRUN' in os.environ:
+				sys.exit()
 
 
 	def appSettings(self):
@@ -2064,7 +2061,7 @@ def get_style():
 	return None
 
 
-def window(app='standalone', parent=None, **kwargs):
+def get_window(app='standalone', parent=None, **kwargs):
 	""" Return main Icarus window - 'parent' will be ignored unless 'app' is
 		'standalone'.
 	"""
@@ -2100,25 +2097,6 @@ def window(app='standalone', parent=None, **kwargs):
 # RUN ICARUS #
 ##############
 
-# Read user prefs config file - if it doesn't exist it will be created
-# userPrefs.read()
-
-# Set verbosity, number of recent files
-# os.environ['IC_VERBOSITY'] = userPrefs.query('main', 'verbosity', datatype='str', default="3", create=True)
-# os.environ['IC_NUMRECENTFILES'] = userPrefs.query('recent', 'numrecentfiles', datatype='str', default="10", create=True)
-# os.environ['IC_NUMRECENTFILES'] = "10"
-
-# # Print launch initialisation message
-# userOverride = True
-# verbose.icarusLaunch(
-# 	name=NAME.upper(), 
-# 	version=os.environ['IC_VERSION'], 
-# 	vendor="%s %s" % (COPYRIGHT, os.environ['IC_VENDOR']), 
-# 	location=os.environ['IC_BASEDIR'], 
-# 	env=os.environ['IC_ENV'], 
-# 	user=os.environ['IC_USERNAME'], 
-# 	userOverride=userOverride)
-
 # Python version check
 try:
 	assert sys.version_info >= (2,7)
@@ -2133,6 +2111,6 @@ except AttributeError:
 
 if __name__ == '__main__':
 	main_app = main_application()
-	icarus = window()
+	icarus = get_window()
 	icarus.show()
 	sys.exit(main_app.exec_())

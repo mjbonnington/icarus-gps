@@ -66,6 +66,7 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		# Connect signals & slots
 		self.accepted.connect(self.save)  # Save settings if dialog accepted
 
+		self.ui.jobImport_toolButton.clicked.connect(self.importJobs)
 		self.ui.jobAdd_toolButton.clicked.connect(self.addJob)
 		self.ui.jobDelete_toolButton.clicked.connect(self.deleteJobs)
 		self.ui.refresh_toolButton.clicked.connect(lambda: self.reloadJobs(reloadDatabase=True))  # Lambda function for PyQt5 compatibility, default keyword argument not supported
@@ -245,6 +246,45 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 			self.j.enableJob(item.text(), False)
 
 
+	def importJobs(self):
+		""" Open a dialog to import an XML jobs data file and merge with the
+			current data.
+		"""
+		datafile = self.fileDialog(
+			os.environ['IC_CONFIGDIR'], fileFilter='XML files (*.xml)')
+		if datafile:
+			j = jobs.Jobs(datafile)
+
+			for jobElement in j.getJobs():
+				jobName = j.getValue(jobElement, 'name')
+				jobPath = j.getValue(jobElement, 'path')
+				jobVersion = j.getValue(jobElement, 'version')
+				jobActive = jobElement.get('active')
+
+				print jobName, jobPath, jobVersion, jobActive
+
+				if '$JOBSROOT' in jobPath:
+					jobPath = jobPath.replace('$JOBSROOT', '$IC_JOBSROOT')
+					verbose.message("Updating job path: %s" % jobPath)
+
+				if self.j.addJob(jobName, jobPath, jobVersion, jobActive):
+					self.reloadJobs(reloadDatabase=False)
+				# else:
+				# 	errorMsg = "A job with the name '%s' already exists." % jobName
+				# 	dialogMsg = errorMsg \
+				# 	+ "\nOld path: %s" % self.j.getPath(jobName) \
+				# 	+ "\nNew path: %s" % jobPath \
+				# 	+ "\nWould you like to replace it?"
+				# 	verbose.warning(errorMsg)
+
+				# 	# Confirmation dialog
+				# 	dialogTitle = 'Job Already Exists'
+				# 	dialog = prompt.dialog()
+				# 	if dialog.display(dialogMsg, dialogTitle):
+				# 		self.j.deleteJob(jobName)
+				# 		self.j.addJob(jobName, jobPath, jobVersion, jobActive)
+
+
 	def addJob(self):
 		""" Open the edit job dialog to add a new job.
 		"""
@@ -367,7 +407,7 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 # 	app = QtWidgets.QApplication(sys.argv)
 
 # 	# Initialise Icarus environment
-# 	sys.path.append(os.environ['IC_WORKINGDIR'])
+# 	sys.path.append(os.environ['IC_COREDIR'])
 # 	import icarus__env__
 # 	icarus__env__.set_env()
 # 	#icarus__env__.append_sys_paths()
@@ -379,7 +419,7 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 # 	# Apply UI style sheet
 # 	if STYLESHEET is not None:
-# 		qss=os.path.join(os.environ['IC_WORKINGDIR'], STYLESHEET)
+# 		qss=os.path.join(os.environ['IC_COREDIR'], STYLESHEET)
 # 		with open(qss, "r") as fh:
 # 			app.setStyleSheet(fh.read())
 

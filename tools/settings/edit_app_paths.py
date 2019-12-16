@@ -262,7 +262,7 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 
 # if __name__ == "__main__":
 # 	# Initialise Icarus environment - only required when standalone
-# 	# sys.path.append(os.environ['IC_WORKINGDIR'])
+# 	# sys.path.append(os.environ['IC_COREDIR'])
 # 	# import icarus__env__
 # 	# icarus__env__.set_env()
 # 	# icarus__env__.append_sys_paths()
@@ -271,7 +271,7 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 
 # 	#app.setStyle('plastique') # Set UI style - you can also use a flag e.g. '-style plastique'
 
-# 	qss=os.path.join(os.environ['IC_WORKINGDIR'], "style.qss")
+# 	qss=os.path.join(os.environ['IC_COREDIR'], "style.qss")
 # 	with open(qss, "r") as fh:
 # 		app.setStyleSheet(fh.read())
 

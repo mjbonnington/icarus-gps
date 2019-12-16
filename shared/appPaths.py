@@ -19,6 +19,12 @@ class AppPaths(xml_data.XMLData):
 	""" Manipulates XML database to store application version paths.
 		Inherits XMLData class.
 	"""
+	def __init__(self, prefs=None):
+		""" Allow prefs data to be passed in on initialisation.
+		"""
+		super(AppPaths, self).__init__()  # Execute ancestor constructor
+		self.prefs = prefs
+
 
 	def getApps(self, visible_only=False, sort_by=None):
 		""" Return all apps as elements.
@@ -56,8 +62,13 @@ class AppPaths(xml_data.XMLData):
 		return elem.findtext('vendor').lower()
 
 	def sortByMostUsed(self, elem):
-		from . import userPrefs
-		return userPrefs.query('launchcounter', elem.get('id'), datatype='int', default=0)
+		if self.prefs is not None:
+			count = self.prefs.get_attr(elem.get('id'), 'launchcount', default=0)
+		else:
+			count = -1
+			verbose.warning("Cannot sort apps by most used - no launch count data.")
+		return count
+
 	# ------------------------------------------------------------------------
 
 

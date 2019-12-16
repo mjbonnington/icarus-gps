@@ -23,8 +23,6 @@ from . import dirStructure
 from . import launchApps  # temp?
 from . import json_metadata as metadata
 from . import os_wrapper
-# from . import recent_files  # for sorting by most used
-from . import userPrefs
 from . import verbose
 
 
@@ -39,7 +37,7 @@ class AppLauncher(QtWidgets.QDialog):
 
 		# Instantiate data classes
 		self.jd = metadata.Metadata()  # Job settings
-		self.ap = appPaths.AppPaths()
+		self.ap = appPaths.AppPaths(prefs=self.parent.prefs)
 		self.ds = dirStructure.DirStructure()
 
 		# Set OS identifier strings to get correct app executable paths
@@ -340,10 +338,11 @@ class AppLauncher(QtWidgets.QDialog):
 		launchApps.launch(displayName, executable, flags)
 
 		# Increase launch counter
-		userPrefs.read()  # Reload user prefs file
-		count = userPrefs.query('launchcounter', shortName, datatype='int', default=0)
+		self.parent.prefs.reload()  # Reload user prefs file
+		count = self.parent.prefs.get_attr(shortName, 'launchcount', default=0)
 		count += 1
-		userPrefs.edit('launchcounter', shortName, count)
+		count = self.parent.prefs.set_attr(shortName, 'launchcount', count)
+		self.parent.prefs.save()
 
 		# Minimise the UI if the option is set
 		if self.parent.minimiseOnAppLaunch:
