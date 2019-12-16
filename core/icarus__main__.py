@@ -1154,11 +1154,11 @@ os.environ['IC_VENDOR'])
 	def launchRenderSubmit(self):
 		""" Open Render Submitter dialog window.
 		"""
-		from tools.renderQueue import render_submit
+		from tools.renderqueue import submit
 		try:
 			self.renderSubmitUI.display()
 		except AttributeError:
-			self.renderSubmitUI = render_submit.RenderSubmitUI(parent=self)
+			self.renderSubmitUI = submit.RenderSubmitUI(parent=self)
 			self.renderSubmitUI.display()
 
 

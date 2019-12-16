@@ -215,7 +215,7 @@ global proc menus2Py.gpsPreviewNoUI()
 
 global proc menus2Py.submitRender()
 {
-	python("from tools.renderQueue import render_submit; render_submit.run_maya()");
+	python("from tools.renderqueue import submit; submit.run_maya(session)");
 }
 
 

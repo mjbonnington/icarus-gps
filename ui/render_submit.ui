@@ -121,15 +121,26 @@
            <string>Nuke</string>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>Generic</string>
+          </property>
+         </item>
         </widget>
        </item>
        <item row="0" column="1">
         <widget class="QComboBox" name="submitTo_comboBox">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="currentIndex">
+          <number>1</number>
          </property>
          <item>
           <property name="text">
@@ -248,7 +259,7 @@
              </property>
              <layout class="QHBoxLayout" name="command_horizontalLayout">
               <property name="spacing">
-               <number>0</number>
+               <number>4</number>
               </property>
               <property name="margin">
                <number>0</number>
@@ -536,7 +547,7 @@
              </property>
              <layout class="QHBoxLayout" name="layers_horizontalLayout">
               <property name="spacing">
-               <number>0</number>
+               <number>4</number>
               </property>
               <property name="margin">
                <number>0</number>
@@ -991,7 +1002,7 @@
              </property>
              <layout class="QHBoxLayout" name="writeNodes_horizontalLayout">
               <property name="spacing">
-               <number>0</number>
+               <number>4</number>
               </property>
               <property name="margin">
                <number>0</number>
@@ -1157,7 +1168,7 @@
              </property>
              <layout class="QHBoxLayout" name="frames_horizontalLayout">
               <property name="spacing">
-               <number>0</number>
+               <number>4</number>
               </property>
               <property name="margin">
                <number>0</number>

@@ -2,8 +2,8 @@
 
 # [Icarus] shot_management__main__.py
 #
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2018 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2018-2019
 #
 # A UI for managing shots.
 
@@ -12,12 +12,12 @@ import os
 import sys
 
 from Qt import QtCore, QtGui, QtWidgets
-import ui_template as UI
 
 # Import custom modules
+import ui_template as UI
 from shared import jobs
-from shared import os_wrapper
 from shared import json_metadata as metadata
+from shared import os_wrapper
 from shared import verbose
 
 
@@ -123,6 +123,17 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 	# 		self.ui.jobDisable_toolButton.setEnabled(True)
 
 
+	def getInheritedValue(self, shot_data, job_data, category, setting):
+		""" First try to get the value from the shot data, if it returns
+			nothing then look in job data instead.
+		"""
+		value = shot_data.get_attr(category, setting)
+		if value is None:
+			value = job_data.get_attr(category, setting)
+
+		return value
+
+
 	def clearFilter(self):
 		""" Clear the search filter field.
 		"""
@@ -176,32 +187,41 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 				newRowHeaderItem = QtWidgets.QTableWidgetItem(shotName)
 				newItem = QtWidgets.QTableWidgetItem(shotName)
 				self.ui.shots_tableWidget.setVerticalHeaderItem(row, newRowHeaderItem)
-				shotDataPath = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA/shot_data.json" %(jobPath, shotName))
-				shotData = metadata.Metadata()
-				shotData.load(shotDataPath)
+				shot_datafile = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA/shot_data.json" % (jobPath, shotName))
+				job_datafile = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/$IC_METADATA/job_data.json" % jobPath)
+				shot_data = metadata.Metadata()
+				job_data = metadata.Metadata()
+				shot_data.load(shot_datafile)
+				job_data.load(job_datafile)
 
-				text = "%s-%s" %(shotData.get_attr('time', 'rangeStart'), shotData.get_attr('time', 'rangeEnd'))
+				rangestart = self.getInheritedValue(shot_data, job_data, 'time', 'rangestart')
+				rangeend = self.getInheritedValue(shot_data, job_data, 'time', 'rangeend')
+				text = "%s-%s" % (rangestart, rangeend)
 				self.ui.shots_tableWidget.setItem(row, 0, QtWidgets.QTableWidgetItem(text))
 
-				text = shotData.get_attr('time', 'fps')
+				text = str(self.getInheritedValue(shot_data, job_data, 'units', 'fps'))
 				self.ui.shots_tableWidget.setItem(row, 1, QtWidgets.QTableWidgetItem(text))
 
-				text = "%sx%s" %(shotData.get_attr('resolution', 'fullWidth'), shotData.get_attr('resolution', 'fullHeight'))
+				w = self.getInheritedValue(shot_data, job_data, 'resolution', 'fullwidth')
+				h = self.getInheritedValue(shot_data, job_data, 'resolution', 'fullheight')
+				text = "%sx%s" % (w, h)
 				self.ui.shots_tableWidget.setItem(row, 2, QtWidgets.QTableWidgetItem(text))
 
-				text = "%sx%s" %(shotData.get_attr('resolution', 'proxyWidth'), shotData.get_attr('resolution', 'proxyHeight'))
+				w = self.getInheritedValue(shot_data, job_data, 'resolution', 'proxywidth')
+				h = self.getInheritedValue(shot_data, job_data, 'resolution', 'proxyheight')
+				text = "%sx%s" % (w, h)
 				self.ui.shots_tableWidget.setItem(row, 3, QtWidgets.QTableWidgetItem(text))
 
-				text = shotData.get_attr('camera', 'camera')
+				text = shot_data.get_attr('camera', 'camera')
 				self.ui.shots_tableWidget.setItem(row, 4, QtWidgets.QTableWidgetItem(text))
 
-				text = "%sx%s" %(shotData.get_attr('camera', 'filmbackWidth'), shotData.get_attr('camera', 'filmbackHeight'))
+				text = "%sx%s" %(shot_data.get_attr('camera', 'filmbackwidth'), shot_data.get_attr('camera', 'filmbackheight'))
 				self.ui.shots_tableWidget.setItem(row, 5, QtWidgets.QTableWidgetItem(text))
 
-				text = shotData.get_attr('camera', 'focalLength')
+				text = str(shot_data.get_attr('camera', 'focallength'))
 				self.ui.shots_tableWidget.setItem(row, 6, QtWidgets.QTableWidgetItem(text))
 
-				text = shotData.get_attr('shot', 'title')
+				text = shot_data.get_attr('shot', 'notes')
 				self.ui.shots_tableWidget.setItem(row, 7, QtWidgets.QTableWidgetItem(text))
 
 				# self.ui.shots_tableWidget.resizeRowToContents(row)

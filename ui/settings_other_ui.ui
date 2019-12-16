@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>120</height>
+    <height>140</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,7 +26,7 @@
    <property name="margin">
     <number>8</number>
    </property>
-   <item row="2" column="0">
+   <item row="3" column="0">
     <widget class="QLabel" name="prodBoard_label">
      <property name="text">
       <string>Production board:</string>
@@ -36,7 +36,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
+   <item row="3" column="1">
     <widget class="QLineEdit" name="prodBoard_lineEdit">
      <property name="text">
       <string>https://trello.com</string>
@@ -46,7 +46,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0">
+   <item row="1" column="0">
     <widget class="QLabel" name="assetsDir_label">
      <property name="text">
       <string>Assets folder:</string>
@@ -56,7 +56,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="2" column="0">
     <widget class="QLabel" name="elementsLib_label">
      <property name="text">
       <string>Elements library:</string>
@@ -66,7 +66,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
+   <item row="1" column="1">
     <widget class="QLineEdit" name="assetsDir_lineEdit">
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The folder where published assets are stored. This will be relative to the shot or job folder.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -79,7 +79,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
+   <item row="4" column="0">
     <widget class="QLabel" name="version_label">
      <property name="text">
       <string>Version:</string>
@@ -89,7 +89,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
+   <item row="4" column="1">
     <widget class="QLineEdit" name="version_lineEdit">
      <property name="readOnly">
       <bool>true</bool>
@@ -99,7 +99,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
+   <item row="2" column="1">
     <widget class="QFrame" name="elementsLib_frame">
      <property name="lineWidth">
       <number>0</number>
@@ -144,6 +144,23 @@
        </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="wipsDir_label">
+     <property name="text">
+      <string>WIPs folder:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLineEdit" name="wipsDir_lineEdit">
+     <property name="text">
+      <string>$IC_JOBPATH/../Deliverables/WIPS</string>
+     </property>
+     <property name="xmlTag" stdset="0">
+      <string>wipsdir</string>
+     </property>
     </widget>
    </item>
   </layout>

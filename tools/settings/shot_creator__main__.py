@@ -2,8 +2,8 @@
 
 # [Icarus] shot_creator__main__.py
 #
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2016-2018 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2016-2019
 #
 # A UI for creating shots.
 
@@ -11,20 +11,21 @@
 import os
 import sys
 
-# Initialise Icarus environment
+# Initialise pipeline environment
 # if __name__ == "__main__":
 # 	sys.path.append("J:/dev/icarus/core/run")  # Temporary
 # 	import icarus__env__
 # 	icarus__env__.set_env()
 
 from Qt import QtCore, QtGui, QtWidgets
-import ui_template as UI
 
 # Import custom modules
+import ui_template as UI
+
 from shared import jobs
+from shared import json_metadata as metadata
 from shared import os_wrapper
 from shared import prompt
-from shared import json_metadata as metadata
 from shared import verbose
 
 
@@ -32,17 +33,20 @@ from shared import verbose
 # Configuration
 # ----------------------------------------------------------------------------
 
+cfg = {}
+
 # Set window title and object names
-WINDOW_TITLE = "Shot Creator"
-WINDOW_OBJECT = "shotCreatorUI"
+cfg['window_title'] = "Shot Creator"
+cfg['window_object'] = "shotCreatorUI"
 
 # Set the UI and the stylesheet
-UI_FILE = "shot_creator_ui.ui"
-STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
+cfg['ui_file'] = 'shot_creator_ui.ui'
+cfg['stylesheet'] = 'style.qss'  # Set to None to use the parent app's stylesheet
 
 # Other options
-STORE_WINDOW_GEOMETRY = True
-
+prefs_location = os.environ['IC_USERPREFS']
+cfg['prefs_file'] = os.path.join(prefs_location, 'shotcreator_prefs.json')
+cfg['store_window_geometry'] = True
 
 # ----------------------------------------------------------------------------
 # Main dialog class
@@ -55,15 +59,7 @@ class ShotCreatorDialog(QtWidgets.QDialog, UI.TemplateUI):
 		super(ShotCreatorDialog, self).__init__(parent)
 		self.parent = parent
 
-		# prefs_file = os.path.join(os.environ['IC_USERPREFS'], 'shotCreator.xml')
-		prefs_file = os.path.join(os.environ['IC_USERPREFS'], 'shotcreator_prefs.json')
-
-		self.setupUI(window_object=WINDOW_OBJECT, 
-		             window_title=WINDOW_TITLE, 
-		             ui_file=UI_FILE, 
-		             stylesheet=STYLESHEET, 
-		             prefs_file=prefs_file, 
-		             store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
+		self.setupUI(**cfg)
 
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Dialog)

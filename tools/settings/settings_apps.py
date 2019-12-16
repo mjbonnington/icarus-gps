@@ -40,7 +40,7 @@ class helper():
 		"""
 		noSelectText = ""
 		# apps = self.ap.getAppNames()  # Get apps and versions
-		app_ls = self.ap.getApps()  # Get apps and versions - sort_by='Most used'
+		app_ls = self.ap.getApps(sort_by='Name')  # Get apps and versions - sort_by='Most used'
 		formLayout = self.frame.findChildren(QtWidgets.QFormLayout, 'formLayout')[0]
 		appPaths_pushButton = self.frame.appPaths_pushButton
 

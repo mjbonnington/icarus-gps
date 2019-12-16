@@ -12,10 +12,11 @@
 import os
 import sys
 
+# Import custom modules
 from . import appPaths
+from . import json_metadata as metadata
 from . import os_wrapper
 # from . import prompt
-from . import json_metadata as metadata
 from . import verbose
 
 
@@ -182,7 +183,8 @@ def set_env(job, shot, job_path, shot_path):
 	#os.environ['IC_GLOBALPUBLISHDIR']  = os_wrapper.absolutePath(getInheritedValue('other', 'assetlib'))  # Path needs to be translated for OS portability
 	os.environ['IC_JOBPUBLISHDIR'] = os_wrapper.absolutePath('$IC_JOBPATH/$IC_ASSETDIR')
 	os.environ['IC_SHOTPUBLISHDIR'] = os_wrapper.absolutePath('$IC_SHOTPATH/$IC_ASSETDIR')
-	os.environ['IC_WIPS_DIR'] = os_wrapper.absolutePath('$IC_JOBPATH/../Deliverables/WIPS')  # Perhaps this shouldn't be hard-coded?
+	# os.environ['IC_WIPS_DIR'] = os_wrapper.absolutePath('$IC_JOBPATH/../Deliverables/WIPS')  # Perhaps this shouldn't be hard-coded?
+	os.environ['IC_WIPS_DIR'] = os_wrapper.absolutePath(getInheritedValue('other', 'wipsdir'))
 	os.environ['IC_ELEMENTS_LIBRARY'] = os_wrapper.absolutePath(getInheritedValue('other', 'elementslib'))  # Path needs to be translated for OS portability
 	os.environ['IC_PRODUCTION_BOARD'] = getInheritedValue('other', 'prodboard')
 	os.environ['IC_LINEAR_UNIT'] = getInheritedValue('units', 'linear')

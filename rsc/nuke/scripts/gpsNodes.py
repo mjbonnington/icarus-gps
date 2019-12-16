@@ -196,9 +196,10 @@ def w_render_submit():
 	else:
 		frameRange = None
 
-	from tools.renderQueue import render_submit
-	render_submit.run_nuke(
-		layers=writeNode.name(),
+	from tools.renderqueue import submit
+	submit.run_nuke(
+		session, 
+		layers=writeNode.name(), 
 		frameRange=frameRange)
 
 

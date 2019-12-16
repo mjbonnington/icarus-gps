@@ -53,7 +53,7 @@ alias dir="ls -l"
 alias ll="ls -ltr"
 alias lseq="$IC_BASEDIR/core/libs/shared/sequenceLs.py"
 alias rseq="$IC_BASEDIR/core/tools/rename/rename__main__.py"
-#alias rb="$IC_BASEDIR/core/tools/renderBrowser/rb__main__.py"
+#alias rb="$IC_BASEDIR/core/tools/renderqueue/browser.py"
 #alias submit="$IC_BASEDIR/core/tools/gpsSubmit/submit__main__.py"
 
 #############################

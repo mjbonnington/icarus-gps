@@ -88,8 +88,8 @@ def resolveNameConflict(name):
 def submitRender(**kwargs):
 	""" Launches GPS Render Submitter dialog.
 	"""
-	from tools.renderQueue import render_submit
-	render_submit.run_nuke(**kwargs)
+	from tools.renderqueue import submit
+	submit.run_nuke(session, **kwargs)
 	# render_submit.run_nuke(flags='-i')
 	# # renderSubmitDialog = render_submit.renderSubmitDialog()
 	# # renderSubmitDialog.display(flags='-i')

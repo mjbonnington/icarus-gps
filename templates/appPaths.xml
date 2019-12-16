@@ -4,25 +4,12 @@
 		<vendor>Autodesk</vendor>
 		<category>3D, DCC</category>
 		<icon />
-		<env-vars>
-			<var>MAYA_DEBUG_ENABLE_CRASH_REPORTING=0</var>
-			<var>MAYA_FORCE_PANEL_FOCUS=0</var>
-		</env-vars>
 		<flagsX>-proj $IC_MAYA_PROJECT_DIR</flagsX>
+		<flagsY>-hideConsole</flagsY>
 		<path version="[template]">
 			<osx>/Applications/Autodesk/maya[ver]/Maya.app/Contents/MacOS/Maya</osx>
 			<linux>/usr/autodesk/maya[ver]-x64/bin/maya[ver]</linux>
 			<win>C:/Program Files/Autodesk/Maya[ver]/bin/maya.exe</win>
-		</path>
-		<path version="2014">
-			<osx>/Applications/Autodesk/maya2014/Maya.app/Contents/MacOS/Maya</osx>
-			<linux>/usr/autodesk/maya2014-x64/bin/maya2014</linux>
-			<win>C:/Program Files/Autodesk/Maya2014/bin/maya.exe</win>
-		</path>
-		<path version="2015">
-			<osx>/Applications/Autodesk/maya2015/Maya.app/Contents/MacOS/Maya</osx>
-			<linux>/usr/autodesk/maya2015-x64/bin/maya2015</linux>
-			<win>C:/Program Files/Autodesk/Maya2015/bin/maya.exe</win>
 		</path>
 		<path version="2016">
 			<osx>/Applications/Autodesk/maya2016/Maya.app/Contents/MacOS/Maya</osx>
@@ -44,6 +31,11 @@
 			<linux>/usr/autodesk/maya2018-x64/bin/maya2018</linux>
 			<win>C:/Program Files/Autodesk/Maya2018/bin/maya.exe</win>
 		</path>
+		<path version="2019">
+			<osx>/Applications/Autodesk/maya2019/Maya.app/Contents/MacOS/Maya</osx>
+			<linux>/usr/autodesk/maya2019-x64/bin/maya2019</linux>
+			<win>C:/Program Files/Autodesk/Maya2019/bin/maya.exe</win>
+		</path>
 	</app>
 	<app id="xsi" name="Softimage" projectFolders="True" visible="True">
 		<vendor>Autodesk</vendor>
@@ -59,9 +51,6 @@
 		<vendor>Autodesk</vendor>
 		<category>3D, Sculpting, Painting</category>
 		<icon />
-		<env-vars>
-			<var>MUDBOX_IDLE_LICENSE_TIME=60</var>
-		</env-vars>
 		<path version="[template]">
 			<osx>/Applications/Autodesk/Mudbox[ver]/Mudbox.app/Contents/MacOS/Mudbox</osx>
 			<linux>/usr/autodesk/mudbox/bin/mudbox</linux>
@@ -92,15 +81,15 @@
 		</submenu>
 		<submenu name="NukeX" visible="True">
 			<flags>--nukex</flags>
-			<icon>$IC_FORMSDIR/rsc/app_icon_nukex.png</icon>
+			<icon>$IC_FORMSDIR/icons/app_icon_nukex.png</icon>
 		</submenu>
 		<submenu name="Nuke Studio" visible="False">
 			<flags>--studio</flags>
-			<icon>$IC_FORMSDIR/rsc/app_icon_nukestudio.png</icon>
+			<icon>$IC_FORMSDIR/icons/app_icon_nukestudio.png</icon>
 		</submenu>
 		<submenu name="Hiero Player" visible="True">
 			<flags>--player --quiet</flags>
-			<icon>$IC_FORMSDIR/rsc/app_icon_hieroplayer.png</icon>
+			<icon>$IC_FORMSDIR/icons/app_icon_hieroplayer.png</icon>
 		</submenu>
 		<path version="[template]">
 			<osx>/Applications/Nuke[ver]/Nuke[ver].app/Contents/MacOS/Nuke[ver]</osx>
@@ -117,11 +106,6 @@
 			<linux>/usr/local/Nuke8.0v4/Nuke8.0</linux>
 			<win>C:/Program Files/Nuke8.0v4/Nuke8.0.exe</win>
 		</path>
-		<path version="9.0v4">
-			<osx>/Applications/Nuke9.0v4/Nuke9.0v4.app/Contents/MacOS/Nuke9.0v4</osx>
-			<linux>/usr/local/Nuke9.0v4/Nuke9.0</linux>
-			<win>C:/Program Files/Nuke9.0v4/Nuke9.0.exe</win>
-		</path>
 		<path version="9.0v7">
 			<osx>/Applications/Nuke9.0v7/Nuke9.0v7.app/Contents/MacOS/Nuke9.0v7</osx>
 			<linux>/usr/local/Nuke9.0v7/Nuke9.0</linux>
@@ -131,11 +115,6 @@
 			<osx>/Applications/Nuke10.0v6/Nuke10.0v6.app/Contents/MacOS/Nuke10.0v6</osx>
 			<linux>/usr/local/Nuke10.0v6/Nuke10.0</linux>
 			<win>C:/Program Files/Nuke10.0v6/Nuke10.0.exe</win>
-		</path>
-		<path version="10.5v2">
-			<osx>/Applications/Nuke10.5v2/Nuke10.5v2.app/Contents/MacOS/Nuke10.5v2</osx>
-			<linux>/usr/local/Nuke10.5v2/Nuke10.5</linux>
-			<win>C:/Program Files/Nuke10.5v2/Nuke10.5.exe</win>
 		</path>
 		<path version="10.5v4">
 			<osx>/Applications/Nuke10.5v4/Nuke10.5v4.app/Contents/MacOS/Nuke10.5v4</osx>
@@ -151,6 +130,11 @@
 			<osx>/Applications/Nuke11.2v1/Nuke11.2v1.app/Contents/MacOS/Nuke11.2v1</osx>
 			<linux>/usr/local/Nuke11.2v1/Nuke11.2</linux>
 			<win>C:/Program Files/Nuke11.2v1/Nuke11.2.exe</win>
+		</path>
+		<path version="11.3v5">
+			<osx>/Applications/Nuke11.3v5/Nuke11.3v5.app/Contents/MacOS/Nuke11.3v5</osx>
+			<linux>/usr/local/Nuke11.3v5/Nuke11.3</linux>
+			<win>C:/Program Files/Nuke11.3v5/Nuke11.3.exe</win>
 		</path>
 	</app>
 	<app id="hieroplayer" name="HieroPlayer" projectFolders="False" visible="True">
@@ -198,18 +182,13 @@
 			<linux>/usr/local/Mari2.5v2/mari</linux>
 			<win>C:/Program Files/Mari2.5v2/Bundle/bin/Mari2.5v2.exe</win>
 		</path>
-		<path version="2.6v4">
-			<osx>/Applications/Mari2.6v4/Contents/MacOS/Mari2.6v4</osx>
-			<linux>/usr/local/Mari2.6v4/mari</linux>
-			<win>C:/Program Files/Mari2.6v4/Bundle/bin/Mari2.6v4.exe</win>
-		</path>
 		<path version="2.6v5">
 			<osx>/Applications/Mari2.6v5/Contents/MacOS/Mari2.6v5</osx>
 			<linux>/usr/local/Mari2.6v5/mari</linux>
 			<win>C:/Program Files/Mari2.6v5/Bundle/bin/Mari2.6v5.exe</win>
 		</path>
 	</app>
-	<app id="ae" name="AfterEffects" projectFolders="True" visible="True">
+	<app id="ae" name="After Effects" projectFolders="True" visible="True">
 		<vendor>Adobe</vendor>
 		<category>2D, Compositing</category>
 		<icon />
@@ -227,6 +206,11 @@
 			<osx />
 			<linux />
 			<win>C:/Program Files/Adobe/Adobe After Effects CC 2017/Support Files/AfterFX.exe</win>
+		</path>
+		<path version="CC 2019">
+			<win>C:/Program Files/Adobe/Adobe After Effects CC 2019/Support Files/AfterFX.exe</win>
+			<osx />
+			<linux />
 		</path>
 	</app>
 	<app id="photoshop" name="Photoshop" projectFolders="True" visible="True">
@@ -247,6 +231,9 @@
 			<osx />
 			<linux />
 			<win>C:/Program Files/Adobe/Adobe Photoshop CC 2017/Photoshop.exe</win>
+		</path>
+		<path version="CC 2019">
+			<win>C:/Program Files/Adobe/Adobe Photoshop CC 2019/Photoshop.exe</win>
 		</path>
 	</app>
 	<app id="bridge" name="Bridge" projectFolders="False" visible="True">
@@ -304,7 +291,7 @@
 			<win>C:/Program Files (x86)/Pixologic/ZBrush 4R7/ZBrush64.exe</win>
 		</path>
 	</app>
-	<app id="c4d" name="Cinema4D" projectFolders="True" visible="True">
+	<app id="c4d" name="Cinema 4D" projectFolders="True" visible="True">
 		<vendor>Maxon</vendor>
 		<category>3D, DCC</category>
 		<icon />
@@ -355,6 +342,11 @@
 			<linux />
 			<win>C:/Program Files/Side Effects Software/Houdini 16.5.496/bin/houdini.exe</win>
 		</path>
+		<path version="17.5.229">
+			<osx>/Library/Frameworks/Houdini.framework/Versions/17.5.229/Resources/bin/houdini</osx>
+			<linux>/usr/local/Houdini/bin/houdini</linux>
+			<win>C:/Program Files/Side Effects Software/Houdini 17.5.229/bin/houdini.exe</win>
+		</path>
 	</app>
 	<app id="pftrack" name="PFTrack" projectFolders="True" visible="True">
 		<vendor>The Pixel Farm</vendor>
@@ -397,15 +389,15 @@
 		<icon />
 		<submenu name="Deadline Monitor" visible="True">
 			<flags>-monitor</flags>
-			<icon>$IC_FORMSDIR/rsc/app_icon_deadlinemonitor.png</icon>
+			<icon>$IC_FORMSDIR/icons/app_icon_deadlinemonitor.png</icon>
 		</submenu>
 		<submenu name="Deadline Slave" visible="True">
 			<flags>-slave</flags>
-			<icon>$IC_FORMSDIR/rsc/app_icon_deadlineslave.png</icon>
+			<icon>$IC_FORMSDIR/icons/app_icon_deadlineslave.png</icon>
 		</submenu>
 		<path version="[template]">
-			<osx />
-			<linux />
+			<osx>/Applications/Thinkbox/Deadline[ver]/DeadlineLauncher[ver].app/Contents/MacOS/DeadlineLauncher[ver]</osx>
+			<linux>/opt/Thinkbox/Deadline[ver]/bin/deadlinelauncher</linux>
 			<win>C:/Program Files/Thinkbox/Deadline[ver]/bin/deadlinelauncher.exe</win>
 		</path>
 		<path version="6">
@@ -448,27 +440,32 @@
 		<path version="[template]">
 			<osx />
 			<linux />
-			<win>Z:/_Library/3D/Redshift/[ver]</win>
+			<win>Z:/_Library/Apps/Windows/Redshift/[ver]</win>
 		</path>
 		<path version="1.3.13">
 			<osx />
 			<linux />
-			<win>Z:/_Library/3D/Redshift/1.3.13</win>
+			<win>Z:/_Library/Apps/Windows/Redshift/1.3.13</win>
 		</path>
 		<path version="2.0.58">
 			<osx />
 			<linux />
-			<win>Z:/_Library/3D/Redshift/2.0.58</win>
+			<win>Z:/_Library/Apps/Windows/Redshift/2.0.58</win>
 		</path>
 		<path version="2.0.78">
 			<osx />
 			<linux />
-			<win>Z:/_Library/3D/Redshift/2.0.78</win>
+			<win>Z:/_Library/Apps/Windows/Redshift/2.0.78</win>
 		</path>
 		<path version="2.5.27">
 			<osx />
 			<linux />
-			<win>Z:/_Library/3D/Redshift/2.5.27</win>
+			<win>Z:/_Library/Apps/Windows/Redshift/2.5.27</win>
+		</path>
+		<path version="2.6.50">
+			<osx />
+			<linux />
+			<win>Z:/_Library/Apps/Windows/Redshift/2.6.50</win>
 		</path>
 	</app>
 	<app id="sublime" name="SublimeText" projectFolders="False" visible="False">
