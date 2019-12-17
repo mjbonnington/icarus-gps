@@ -128,6 +128,17 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.shortcutEnvVars.setKey('Ctrl+E')
 		self.shortcutEnvVars.activated.connect(self.printEnvVars)
 
+		# Set icons
+		self.ui.shotEnv_toolButton.setIcon(self.iconSet('filmgrain.svg'))
+		self.ui.user_toolButton.setIcon(self.iconSet('im-user.svg'))
+		self.ui.toolMenu_toolButton.setIcon(self.iconSet('icon_editor.png'))
+		self.ui.about_toolButton.setIcon(self.iconSet('icon_info.png'))
+
+		self.ui.actionBatchRename.setIcon(self.iconSet('icon_rename.png'))
+		self.ui.actionRenderQueue.setIcon(self.iconSet('icon_render.png'))
+		self.ui.actionRenderSubmitter.setIcon(self.iconSet('icon_render.png'))
+		self.ui.actionAboutIcarus.setIcon(self.iconSet('icon_info.png'))
+
 		# --------------------------------------------------------------------
 		# Connect signals & slots
 		# --------------------------------------------------------------------
@@ -136,27 +147,27 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.assetRefresh_toolButton.clicked.connect(self.assetRefresh)
 
 		# Shot menu
-		self.ui.menuRecent_shots.aboutToShow.connect(self.updateRecentShotsMenu)
-		self.ui.actionJob_settings.triggered.connect(self.jobSettings)
-		self.ui.actionShot_settings.triggered.connect(self.shotSettings)
+		self.ui.menuRecentShots.aboutToShow.connect(self.updateRecentShotsMenu)
+		self.ui.actionJobSettings.triggered.connect(self.jobSettings)
+		self.ui.actionShotSettings.triggered.connect(self.shotSettings)
 
 		# Tools menu
-		self.ui.actionJob_Management.triggered.connect(self.launchJobManagement)
-		self.ui.actionShot_Management.triggered.connect(self.launchShotManagement)
-		self.ui.actionShot_Creator.triggered.connect(self.launchShotCreator)
-		self.ui.actionEnvironment_Variables.triggered.connect(self.printEnvVars)
-		self.ui.actionBatch_Rename.triggered.connect(self.launchBatchRename)
-		self.ui.actionRender_Queue.triggered.connect(self.launchRenderQueue)
-		self.ui.actionSubmit_render.triggered.connect(self.launchRenderSubmit)
+		self.ui.actionJobManagement.triggered.connect(self.launchJobManagement)
+		self.ui.actionShotManagement.triggered.connect(self.launchShotManagement)
+		self.ui.actionShotCreator.triggered.connect(self.launchShotCreator)
+		self.ui.actionEnvironmentVariables.triggered.connect(self.printEnvVars)
+		self.ui.actionBatchRename.triggered.connect(self.launchBatchRename)
+		self.ui.actionRenderQueue.triggered.connect(self.launchRenderQueue)
+		self.ui.actionRenderSubmitter.triggered.connect(self.launchRenderSubmitter)
 
 		self.ui.toolMenu_toolButton.setMenu(self.ui.menuTools)  # Add tools menu to tool button in UI
 
 		# Options menu
-		self.ui.actionUser_settings.triggered.connect(self.userSettings)
-		self.ui.actionGlobal_settings.triggered.connect(self.globalSettings)
+		self.ui.actionUserSettings.triggered.connect(self.userSettings)
+		self.ui.actionGlobalSettings.triggered.connect(self.globalSettings)
 
 		# Help menu
-		self.ui.actionAbout_Icarus.triggered.connect(self.about)
+		self.ui.actionAboutIcarus.triggered.connect(self.about)
 
 		# Header toolbar
 		self.ui.about_toolButton.clicked.connect(self.about)
@@ -230,7 +241,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.setShot_toolButton.toggled.connect(lambda checked: self.setShot(checked))
 
 			# Utility launch buttons (bottom row)
-			self.ui.render_toolButton.clicked.connect(self.launchRenderQueue)
+			self.ui.render_toolButton.clicked.connect(self.launchRenderSubmitter)  # self.launchRenderQueue
 			self.ui.openReview_toolButton.clicked.connect(launchApps.djv)
 			self.ui.openProdBoard_toolButton.clicked.connect(launchApps.prodBoard)
 			self.ui.openTerminal_toolButton.clicked.connect(launchApps.terminal)
@@ -280,10 +291,10 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			# Add context menus to buttons
 			# ----------------------------------------------------------------
 
-			# Render
-			self.ui.render_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-			self.ui.render_toolButton.addAction(self.ui.actionRender_Queue)
-			self.ui.render_toolButton.addAction(self.ui.actionSubmit_render)
+			# # Render
+			# self.ui.render_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+			# self.ui.render_toolButton.addAction(self.ui.actionRenderQueue)
+			# self.ui.render_toolButton.addAction(self.ui.actionRenderSubmitter)
 
 			# Review
 			self.addContextMenu(self.ui.openReview_toolButton, 
@@ -311,13 +322,13 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 			# Apply job/shot settings pop-up menu to shotEnv label (only in standalone mode)
 			self.ui.shotEnv_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-			self.ui.shotEnv_toolButton.addAction(self.ui.actionJob_settings)
-			self.ui.shotEnv_toolButton.addAction(self.ui.actionShot_settings)
+			self.ui.shotEnv_toolButton.addAction(self.ui.actionJobSettings)
+			self.ui.shotEnv_toolButton.addAction(self.ui.actionShotSettings)
 			self.ui.shotEnv_toolButton.setEnabled(True)
 
 			# Apply user settings pop-up menu to user label (only in standalone mode)
 			self.ui.user_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-			self.ui.user_toolButton.addAction(self.ui.actionUser_settings)
+			self.ui.user_toolButton.addAction(self.ui.actionUserSettings)
 			# self.ui.user_toolButton.setText(os.environ['IC_USERNAME'])
 			self.ui.user_toolButton.setEnabled(True)
 
@@ -698,8 +709,8 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.shotSetupButtons_groupBox.setEnabled(True)
 
 			# # Disable Shot Management menu item(s)
-			# self.ui.actionShot_Management.setEnabled(True)
-			# self.ui.actionShot_Creator.setEnabled(True)
+			# self.ui.actionShotManagement.setEnabled(True)
+			# self.ui.actionShotCreator.setEnabled(True)
 
 			# Re-enable signals so that shot list gets repopulated
 			self.ui.job_comboBox.blockSignals(False)
@@ -718,8 +729,8 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.shotSetupButtons_groupBox.setEnabled(False)
 
 			# # Disable Shot Management menu item(s)
-			# self.ui.actionShot_Management.setEnabled(False)
-			# self.ui.actionShot_Creator.setEnabled(False)
+			# self.ui.actionShotManagement.setEnabled(False)
+			# self.ui.actionShotCreator.setEnabled(False)
 
 			# Warning dialog
 			dialogTitle = "No Jobs Found"
@@ -887,12 +898,12 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		""" Updates the recent shots menu.
 		"""
 		verbose.print_("Populating recent shots menu...", 4)
-		self.ui.menuRecent_shots.clear()
+		self.ui.menuRecentShots.clear()
 
 		recent_shots.recents.reload()
 		recentShots = recent_shots.recents.get()
 		if recentShots:
-			self.ui.menuRecent_shots.setEnabled(True)
+			self.ui.menuRecentShots.setEnabled(True)
 			self.ui.setShot_toolButton.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
 			for i, entry in enumerate(recentShots):
 				job, shot = entry
@@ -907,7 +918,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				action.setToolTip(tooltip)
 				action.setStatusTip(tooltip)
 				action.triggered.connect(self.setupRecentJob)
-				self.ui.menuRecent_shots.addAction(action)
+				self.ui.menuRecentShots.addAction(action)
 				self.ui.setShot_toolButton.addAction(action)
 
 				# Make a class-scope reference to this object
@@ -916,7 +927,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				exec(exec_str)
 
 		else:
-			self.ui.menuRecent_shots.setEnabled(False)
+			self.ui.menuRecentShots.setEnabled(False)
 
 
 	def lockJobUI(self):
@@ -939,12 +950,12 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.gather_frame.hide()
 		self.ui.setShot_toolButton.setChecked(True)
 		self.ui.shotEnv_toolButton.show()
-		self.ui.actionJob_settings.setEnabled(True)
-		self.ui.actionShot_settings.setEnabled(True)
-		self.ui.actionJob_Management.setEnabled(False)
-		self.ui.actionShot_Management.setEnabled(False)
-		self.ui.actionShot_Creator.setEnabled(False)
-		self.ui.actionSubmit_render.setEnabled(True)
+		self.ui.actionJobSettings.setEnabled(True)
+		self.ui.actionShotSettings.setEnabled(True)
+		self.ui.actionJobManagement.setEnabled(False)
+		self.ui.actionShotManagement.setEnabled(False)
+		self.ui.actionShotCreator.setEnabled(False)
+		self.ui.actionRenderSubmitter.setEnabled(True)
 
 		verbose.message("Shot set: Now working on %s - %s" % (self.job, self.shot))
 
@@ -972,12 +983,12 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.dailyPbl_treeWidget.clear()  # Clear the dailies tree view widget
 		self.ui.shotEnv_toolButton.setText('')
 		self.ui.shotEnv_toolButton.hide()
-		self.ui.actionJob_settings.setEnabled(False)
-		self.ui.actionShot_settings.setEnabled(False)
-		self.ui.actionJob_Management.setEnabled(True)
-		self.ui.actionShot_Management.setEnabled(True)
-		self.ui.actionShot_Creator.setEnabled(True)
-		self.ui.actionSubmit_render.setEnabled(False)
+		self.ui.actionJobSettings.setEnabled(False)
+		self.ui.actionShotSettings.setEnabled(False)
+		self.ui.actionJobManagement.setEnabled(True)
+		self.ui.actionShotManagement.setEnabled(True)
+		self.ui.actionShotCreator.setEnabled(True)
+		self.ui.actionRenderSubmitter.setEnabled(False)
 
 		verbose.print_("Shot unset: reverting to clean environment.")
 
@@ -1151,7 +1162,7 @@ os.environ['IC_VENDOR'])
 			djvOps.viewer(path)
 
 
-	def launchRenderSubmit(self):
+	def launchRenderSubmitter(self):
 		""" Open Render Submitter dialog window.
 		"""
 		from tools.renderqueue import submit
@@ -1165,12 +1176,12 @@ os.environ['IC_VENDOR'])
 	def launchRenderQueue(self):
 		""" Launch Render Queue Manager window.
 		"""
-		from tools.renderQueue import render_queue__main__
+		from tools.renderqueue import renderqueue
 		try:
 			self.renderQueueApp.show()
 			self.renderQueueApp.raise_()
 		except AttributeError:
-			self.renderQueueApp = render_queue__main__.RenderQueueApp()
+			self.renderQueueApp = renderqueue.RenderQueueApp()
 			self.renderQueueApp.show()
 
 

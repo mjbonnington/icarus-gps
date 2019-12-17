@@ -68,6 +68,9 @@
      <property name="text">
       <string>Frame rate:</string>
      </property>
+     <property name="buddy">
+      <cstring>fps_doubleSpinBox</cstring>
+     </property>
     </widget>
    </item>
    <item row="3" column="0">
@@ -118,7 +121,7 @@
          <number>3</number>
         </property>
         <property name="minimum">
-         <double>1.000000000000000</double>
+         <double>0.001000000000000</double>
         </property>
         <property name="maximum">
          <double>48000.000000000000000</double>

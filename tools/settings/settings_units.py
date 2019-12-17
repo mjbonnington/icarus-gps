@@ -2,11 +2,13 @@
 
 # [Icarus] settings_units.py
 #
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2018 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2015-2019
 #
 # Units settings handler.
 
+
+from Qt import QtCore
 
 # Import custom modules
 from shared import units
@@ -47,14 +49,16 @@ class helper():
 		self.frame.timePreset_comboBox.currentIndexChanged.connect(self.sfps)
 		self.frame.fps_doubleSpinBox.valueChanged.connect(self.stp)
 		self.frame.time_comboBox.currentIndexChanged.connect(self.cfrc)
+		self.frame.timePreset_comboBox.currentIndexChanged.connect(self.frame.time_comboBox.setCurrentIndex)
 
 		# Set FPS spin box to correct value based on time combo box selection
 		self.setFPS(self.frame.timePreset_comboBox.currentIndex())
+		self.frame.time_comboBox.setCurrentIndex(self.frame.timePreset_comboBox.currentIndex())
 		self.frame.time_comboBox.hide()
 		self.setInfoMessage()
 
 
-	# @QtCore.Slot(int)
+	@QtCore.Slot(int)
 	def setFPS(self, current):
 		""" Set FPS spin box value based on time unit combo box.
 		"""
@@ -70,7 +74,7 @@ class helper():
 			self.frame.fps_doubleSpinBox.valueChanged.connect(self.stp)
 
 
-	# @QtCore.Slot(float)
+	@QtCore.Slot(float)
 	def setTimePreset(self, value):
 		""" Set time preset based on FPS setting.
 		"""
@@ -85,7 +89,7 @@ class helper():
 		self.frame.timePreset_comboBox.currentIndexChanged.connect(self.sfps)
 
 
-	# @QtCore.Slot(int)
+	@QtCore.Slot(int)
 	def checkFrameRateCompatibility(self, current):
 		""" Check compatibility of frame rate setting.
 			TODO: Update to reflect compatibility with apps other than Maya.
@@ -95,7 +99,7 @@ class helper():
 		try:
 			fps = units.time[current][2]
 			if (type(fps) == float) or (fps > 6000):
-				message = "The time units setting (%s) is incompatible with Maya 2016 or earlier." %units.time[current][0]
+				message = "The time units setting (%s) is incompatible with Maya 2016 or earlier." % units.time[current][0]
 		except IndexError:
 			message = "The frame rate setting is incompatible with Maya."
 
@@ -114,9 +118,9 @@ class helper():
 		""" Generate a nice name for a time preset.
 		"""
 		if item[1] is "":
-			nice_name = "%s fps" %item[2]
+			nice_name = "%s fps" % item[2]
 		else:
-			nice_name = "%s (%s fps)" %(item[1], item[2])
+			nice_name = "%s (%s fps)" % (item[1], item[2])
 
 		return nice_name
 
@@ -130,4 +134,3 @@ class helper():
 				return self.getNiceName(item)
 
 		return "Custom"
-

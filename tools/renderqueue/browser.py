@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# browser.py
+# [renderqueue] browser.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2016-2019
@@ -19,8 +19,8 @@ import ui_template as UI
 
 # Import custom modules
 #import djvOps
-import oswrapper
-import sequence
+from shared import os_wrapper
+from shared import sequence
 
 
 # ----------------------------------------------------------------------------
@@ -99,7 +99,7 @@ class RenderBrowserUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		outFile = '%s.%s.jpg' % (outPrefix, posterFrame)
 		# if not os.path.isfile(outFile):
 		# 	print("Generating thumbnails...")
-		# 	oswrapper.createDir(os.path.join(imagePath, '.icThumbs'))
+		# 	os_wrapper.createDir(os.path.join(imagePath, '.icThumbs'))
 		# 	djvOps.prcImg(inPrefix, outPrefix, posterFrame, posterFrame, extension.split('.', 1)[1], outExt='jpg', resize=(512,288))
 		return outFile
 
@@ -108,8 +108,8 @@ class RenderBrowserUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		""" Launches sequence viewer when entry is double-clicked.
 		"""
 		#print item.text(column), column
-		#path = sequence.getFirst(oswrapper.absolutePath(item.text(4)))
-		path = oswrapper.absolutePath(item.text(4))
+		#path = sequence.getFirst(os_wrapper.absolutePath(item.text(4)))
+		path = os_wrapper.absolutePath(item.text(4))
 		path = path.replace("#", self.ui.frame_spinBox.text())
 		#print path
 		#djvOps.viewer(path)
@@ -176,7 +176,7 @@ class RenderBrowserUI(QtWidgets.QMainWindow, UI.TemplateUI):
 					renderLayerItem.setText(0, '%s (%d)' % (renderLayerDir, len(renderPasses)))
 					renderLayerItem.setText(1, 'layer')
 					#renderLayerItem.setText(4, os.path.join(renderPath, renderLayerDir))
-					renderLayerItem.setText(4, oswrapper.relativePath(os.path.join(renderPath, renderLayerDir), 'SHOTPATH'))
+					renderLayerItem.setText(4, os_wrapper.relativePath(os.path.join(renderPath, renderLayerDir), 'SHOTPATH'))
 					self.ui.renderBrowser_treeWidget.addTopLevelItem(renderLayerItem)
 					renderLayerItem.setExpanded(True)
 
@@ -193,7 +193,7 @@ class RenderBrowserUI(QtWidgets.QMainWindow, UI.TemplateUI):
 						# if not sequence.check(fr_range):  # Set red text for sequence mismatch
 						# 	renderPassItem.setForeground(2, QtGui.QBrush(QtGui.QColor("#f92672")))
 						#renderPassItem.setText(4, path)
-						renderPassItem.setText(4, oswrapper.relativePath(os.path.join(renderPath, renderLayerDir, renderPass), 'SHOTPATH'))
+						renderPassItem.setText(4, os_wrapper.relativePath(os.path.join(renderPath, renderLayerDir, renderPass), 'SHOTPATH'))
 						self.ui.renderBrowser_treeWidget.addTopLevelItem(renderPassItem)
 
 			# Resize columns

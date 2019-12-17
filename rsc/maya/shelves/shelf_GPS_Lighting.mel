@@ -402,7 +402,7 @@ global proc shelf_GPS_Lighting () {
 		-mi "125% Settings" ( "setTestResolutionVar(7);" )
 		-mi "150% Settings" ( "setTestResolutionVar(8);" )
 	;
-    shelfButton
+    /*shelfButton
         -enableCommandRepeat 1
         -enable 1
         -width 35
@@ -427,7 +427,7 @@ global proc shelf_GPS_Lighting () {
         -sourceType "mel" 
         -commandRepeatable 1
         -flat 1
-    ;
+    ;*/
 	/*shelfButton
 		-enableCommandRepeat 1
 		-enable 1
@@ -462,7 +462,7 @@ global proc shelf_GPS_Lighting () {
 		-manage 1
 		-visible 1
 		-preventOverride 0
-		-annotation "Submit Render" 
+		-annotation "Submit scene to render farm" 
 		-enableBackground 0
 		-align "center" 
 		-label "gpsSubmitRender" 
@@ -475,7 +475,7 @@ global proc shelf_GPS_Lighting () {
 		-style "iconOnly" 
 		-marginWidth 1
 		-marginHeight 1
-		-command "import mayaOps; mayaOps.submitRender()"
+		-command "from tools.renderqueue import submit; submit.run_maya(session)"
 		-sourceType "python" 
 		-commandRepeatable 1
 		-flat 1

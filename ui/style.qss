@@ -103,6 +103,17 @@ QLabel[formLabel="true"] {
 	min-height: 22px;
 }
 
+/* QToolTip
+ * ========
+ */
+
+QToolTip {
+	/*padding: 4px;*/
+	border: 1px solid rgb(0, 0, 0);
+	color: rgb(0, 0, 0);
+	background-color: rgb(255, 255, 204);
+}
+
 
 /* QAbstractScrollArea
  * ===================

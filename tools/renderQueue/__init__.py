@@ -9,17 +9,42 @@
 
 
 import os
-import platform
+#import platform
 
-os.environ['RQ_USER_PREFS_DIR'] = os.environ['IC_USERPREFS']
+os.environ['RQ_USER_PREFS_DIR'] = os.environ.get('IC_USERPREFS', os.path.expanduser('~/.renderqueue'))
 os.environ['RQ_VENDOR'] = os.environ['IC_VENDOR']
 os.environ['RQ_VENDOR_INITIALS'] = os.environ['IC_VENDOR_INITIALS']
-os.environ['RQ_JOB'] = os.environ['IC_JOB']
-os.environ['RQ_SHOT'] = os.environ['IC_SHOT']
 os.environ['RQ_USER'] = os.environ['IC_USERNAME']
+os.environ['RQ_APP'] = os.environ['IC_ENV']
 
+os.environ['RQ_JOB'] = os.environ.get('IC_JOB', '')
+os.environ['RQ_SHOT'] = os.environ.get('IC_SHOT', '')
+# os.environ['RQ_JOBPATH'] = os.environ['IC_JOBPATH']
+# os.environ['RQ_SHOTPATH'] = os.environ['IC_SHOTPATH']
+os.environ['RQ_STARTFRAME'] = os.environ.get('IC_STARTFRAME', '1001')
+os.environ['RQ_ENDFRAME'] = os.environ.get('IC_ENDFRAME', '1100')
+
+# Deadline -------------------------------------------------------------------
 os.environ['RQ_DEADLINECOMMAND'] = os.environ['IC_DEADLINE_CMD_EXECUTABLE']
 os.environ['RQ_DEADLINEMONITOR'] = '"%s" -monitor' % os.environ['IC_DEADLINE_EXECUTABLE']
+
+# Maya -----------------------------------------------------------------------
+os.environ['RQ_MAYA_VERSION'] = os.environ.get('IC_MAYA_VERSION', '2019')
+os.environ['RQ_MAYA_SCENES_DIR'] = os.environ['IC_MAYA_SCENES_DIR']
+os.environ['RQ_MAYA_PROJECT_DIR'] = os.environ['IC_MAYA_PROJECT_DIR']
+
+os.environ['RQ_MAYA_OUTPUT_FORMAT'] = "<Scene>/<RenderLayer>/<Scene>.<RenderLayer>.<RenderPass>"
+os.environ['RQ_MAYA_OUTPUT_FORMAT_VRAY'] = "<Scene>/<Layer>/<Scene>.<Layer>"
+
+# Houdini --------------------------------------------------------------------
+v = os.environ.get('IC_HOUDINI_VERSION', '17.5')
+os.environ['RQ_HOUDINI_VERSION'] = '.'.join(v.split('.')[:2])  # Strip revision
+os.environ['RQ_HOUDINI_SCENES_DIR'] = os.environ['IC_HOUDINI_SCENES_DIR']
+
+# Nuke -----------------------------------------------------------------------
+os.environ['RQ_NUKE_VERSION'] = os.environ.get('IC_NUKE_VERSION', '11.3').split('v')[0]
+os.environ['RQ_NUKE_SCRIPTS_DIR'] = os.environ['IC_NUKE_SCRIPTS_DIR']
+
 
 
 # def setenv():
@@ -64,4 +89,3 @@ os.environ['RQ_DEADLINEMONITOR'] = '"%s" -monitor' % os.environ['IC_DEADLINE_EXE
 # 	os.environ['RQ_HISTORY'] = os.path.join(os.environ['RQ_USERPREFS'], 'history')
 
 # 	appendSysPaths()
-

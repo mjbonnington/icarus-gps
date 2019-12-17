@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# database.py
+# [renderqueue] database.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2016-2019
@@ -17,9 +17,9 @@ import time
 import uuid
 
 # Import custom modules
-import common
-import oswrapper
-# import sequence
+from . import common
+from shared import os_wrapper
+# from shared import sequence
 
 
 class RenderQueue():
@@ -68,7 +68,7 @@ class RenderQueue():
 		""" Create the database directory structure.
 		"""
 		for directory in self.db.values():
-			oswrapper.createDir(directory)
+			os_wrapper.createDir(directory)
 
 
 	def read(self, datafile):
@@ -147,7 +147,7 @@ class RenderQueue():
 			TODO: Also kill processes for tasks that are rendering.
 		"""
 		datafile = os.path.join(self.db['jobs'], '%s.json' %jobID)
-		oswrapper.remove(datafile)
+		os_wrapper.remove(datafile)
 		self.queue_logger.info("Deleted job %s" %jobID)
 
 		# Delete task data files and log files...
@@ -166,7 +166,7 @@ class RenderQueue():
 		filename = os.path.join(self.db['jobs'], '%s.json' %jobID)
 		dst_dir = self.db['archive']
 
-		if oswrapper.move(filename, dst_dir):
+		if os_wrapper.move(filename, dst_dir):
 			self.queue_logger.info("Archived job %s" %jobID)
 
 			# Delete task data files and log files...
@@ -189,7 +189,7 @@ class RenderQueue():
 				# TODO: Deal nicely with tasks that are currently rendering
 				print("Task %s currently rendering." %filename)
 			task_count += 1
-			oswrapper.remove(filename)  # add return value for check
+			os_wrapper.remove(filename)  # add return value for check
 
 		if task_count:
 			self.queue_logger.info("Deleted %d tasks for job %s" %(task_count, jobID))
@@ -205,7 +205,7 @@ class RenderQueue():
 		path = '%s/%s_*.log' %(self.db['logs'], jobID)
 		for logfile in glob.glob(path):
 			log_count += 1
-			oswrapper.remove(logfile)
+			os_wrapper.remove(logfile)
 
 		if log_count:
 			self.queue_logger.info("Deleted %d log files for job %s" %(log_count, jobID))
@@ -220,7 +220,7 @@ class RenderQueue():
 		path = '%s/*/*/%s_*.json' %(self.db['root'], jobID)
 		for filename in glob.glob(path):
 			if 'queued' not in filename:
-				oswrapper.move(filename, self.db['queued'])
+				os_wrapper.move(filename, self.db['queued'])
 				self.queue_logger.info("Requeued job %s" %jobID)
 
 
@@ -378,7 +378,7 @@ class RenderQueue():
 		filename = os.path.join(self.db['queued'], '%s.json' %taskID)
 		dst_dir = os.path.join(self.db['workers'], workerID)
 
-		if oswrapper.move(filename, dst_dir):
+		if os_wrapper.move(filename, dst_dir):
 			dst_filename = os.path.join(dst_dir, '%s.json' %taskID)
 			task = self.read(dst_filename)
 			task['startTime'] = time.time()
@@ -404,7 +404,7 @@ class RenderQueue():
 				# 	task['endTime'] = time.time()
 				# self.write(task, filename)
 
-				if oswrapper.move(filename, self.db['completed']):
+				if os_wrapper.move(filename, self.db['completed']):
 					self.queue_logger.info("Worker %s completed task %s" %(workerID, taskID))
 					return True
 				else:
@@ -424,7 +424,7 @@ class RenderQueue():
 				# 	task['endTime'] = time.time()
 				# self.write(task, filename)
 
-				if oswrapper.move(filename, self.db['failed']):
+				if os_wrapper.move(filename, self.db['failed']):
 					self.queue_logger.info("Worker %s failed task %s" %(workerID, taskID))
 					return True
 				else:
@@ -444,7 +444,7 @@ class RenderQueue():
 				# task.pop('endTime', None)
 				# self.write(task, filename)
 
-				if oswrapper.move(filename, self.db['queued']):
+				if os_wrapper.move(filename, self.db['queued']):
 					self.queue_logger.info("Requeued task %s" %taskID)
 					return True
 				else:
@@ -486,7 +486,7 @@ class RenderQueue():
 
 	# 	# Delete redundant tasks
 	# 	for filename in tasks_to_delete:
-	# 		oswrapper.remove(filename)
+	# 		os_wrapper.remove(filename)
 
 	# 	# Write new task
 	# 	newtaskdata['frames'] = newframerange
@@ -535,7 +535,7 @@ class RenderQueue():
 
 		# Create worker folder and data file
 		workerdir = os.path.join(self.db['workers'], workerID)
-		oswrapper.createDir(workerdir)
+		os_wrapper.createDir(workerdir)
 		datafile = os.path.join(workerdir, 'workerinfo.json')
 		self.write(kwargs, datafile)
 		self.queue_logger.info("Created worker %s (%s)" 
@@ -619,7 +619,7 @@ class RenderQueue():
 		"""
 		path = os.path.join(self.db['workers'], workerID)
 
-		if oswrapper.remove(path)[0]:
+		if os_wrapper.remove(path)[0]:
 			self.queue_logger.info("Deleted worker %s" %workerID)
 			return True
 		else:

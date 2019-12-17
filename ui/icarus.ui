@@ -894,10 +894,6 @@ QToolButton:pressed, QToolButton:checked:pressed {
            <number>0</number>
           </property>
           <widget class="QWidget" name="maAssetPublishTab">
-           <attribute name="icon">
-            <iconset resource="rsc.qrc">
-             <normaloff>:/icons/icons/tab_icon_maya.png</normaloff>:/icons/icons/tab_icon_maya.png</iconset>
-           </attribute>
            <attribute name="title">
             <string>Maya Asset</string>
            </attribute>
@@ -1388,8 +1384,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>164</width>
-                    <height>143</height>
+                    <width>355</width>
+                    <height>331</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -1521,10 +1517,6 @@ QToolButton:pressed, QToolButton:checked:pressed {
            </layout>
           </widget>
           <widget class="QWidget" name="nkAssetPublishTab">
-           <attribute name="icon">
-            <iconset resource="rsc.qrc">
-             <normaloff>:/icons/icons/tab_icon_nuke.png</normaloff>:/icons/icons/tab_icon_nuke.png</iconset>
-           </attribute>
            <attribute name="title">
             <string>Nuke Asset</string>
            </attribute>
@@ -1820,8 +1812,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>136</width>
-                    <height>70</height>
+                    <width>355</width>
+                    <height>332</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -2702,40 +2694,40 @@ QToolButton:pressed, QToolButton:checked:pressed {
     <property name="title">
      <string>Options</string>
     </property>
-    <addaction name="actionUser_settings"/>
-    <addaction name="actionGlobal_settings"/>
+    <addaction name="actionUserSettings"/>
+    <addaction name="actionGlobalSettings"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
      <string>Tools</string>
     </property>
-    <addaction name="actionJob_Management"/>
-    <addaction name="actionShot_Management"/>
-    <addaction name="actionShot_Creator"/>
-    <addaction name="actionEnvironment_Variables"/>
-    <addaction name="actionBatch_Rename"/>
-    <addaction name="actionRender_Queue"/>
-    <addaction name="actionSubmit_render"/>
+    <addaction name="actionJobManagement"/>
+    <addaction name="actionShotManagement"/>
+    <addaction name="actionShotCreator"/>
+    <addaction name="actionEnvironmentVariables"/>
+    <addaction name="actionBatchRename"/>
+    <addaction name="actionRenderQueue"/>
+    <addaction name="actionRenderSubmitter"/>
    </widget>
    <widget class="QMenu" name="menuShot">
     <property name="title">
      <string>Shot</string>
     </property>
-    <widget class="QMenu" name="menuRecent_shots">
+    <widget class="QMenu" name="menuRecentShots">
      <property name="title">
       <string>Recent shots</string>
      </property>
-     <addaction name="actionSet_recent_shot"/>
+     <addaction name="actionSetRecentShot"/>
     </widget>
-    <addaction name="menuRecent_shots"/>
-    <addaction name="actionJob_settings"/>
-    <addaction name="actionShot_settings"/>
+    <addaction name="menuRecentShots"/>
+    <addaction name="actionJobSettings"/>
+    <addaction name="actionShotSettings"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionAbout_Icarus"/>
+    <addaction name="actionAboutIcarus"/>
    </widget>
    <addaction name="menuShot"/>
    <addaction name="menuTools"/>
@@ -2799,22 +2791,22 @@ QToolButton:pressed, QToolButton:checked:pressed {
     <string>Most used</string>
    </property>
   </action>
-  <action name="actionShot_settings">
+  <action name="actionShotSettings">
    <property name="text">
     <string>Shot settings...</string>
    </property>
   </action>
-  <action name="actionJob_settings">
+  <action name="actionJobSettings">
    <property name="text">
     <string>Job settings...</string>
    </property>
   </action>
-  <action name="actionJob_Management">
+  <action name="actionJobManagement">
    <property name="text">
     <string>Job Management...</string>
    </property>
   </action>
-  <action name="actionShot_Management">
+  <action name="actionShotManagement">
    <property name="text">
     <string>Shot Management...</string>
    </property>
@@ -2822,37 +2814,25 @@ QToolButton:pressed, QToolButton:checked:pressed {
     <bool>true</bool>
    </property>
   </action>
-  <action name="actionBatch_Rename">
-   <property name="icon">
-    <iconset resource="rsc.qrc">
-     <normaloff>:/icons/icons/icon_rename.png</normaloff>
-     <disabledoff>:/icons/icons/icon_rename_disabled.png</disabledoff>:/icons/icons/icon_rename.png</iconset>
-   </property>
+  <action name="actionBatchRename">
    <property name="text">
     <string>Batch Rename...</string>
    </property>
   </action>
-  <action name="actionRender_Queue">
-   <property name="icon">
-    <iconset resource="rsc.qrc">
-     <normaloff>:/icons/icons/icon_render.png</normaloff>
-     <disabledoff>:/icons/icons/icon_render_disabled.png</disabledoff>:/icons/icons/icon_render.png</iconset>
+  <action name="actionRenderQueue">
+   <property name="enabled">
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>Render Queue...</string>
    </property>
   </action>
-  <action name="actionAbout_Icarus">
-   <property name="icon">
-    <iconset resource="rsc.qrc">
-     <normaloff>:/icons/icons/icon_info.png</normaloff>
-     <disabledoff>:/icons/icons/icon_info_disabled.png</disabledoff>:/icons/icons/icon_info.png</iconset>
-   </property>
+  <action name="actionAboutIcarus">
    <property name="text">
     <string>About Icarus...</string>
    </property>
   </action>
-  <action name="actionUser_settings">
+  <action name="actionUserSettings">
    <property name="text">
     <string>User settings...</string>
    </property>
@@ -2860,7 +2840,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
     <bool>false</bool>
    </property>
   </action>
-  <action name="actionGlobal_settings">
+  <action name="actionGlobalSettings">
    <property name="text">
     <string>Global settings...</string>
    </property>
@@ -2868,27 +2848,28 @@ QToolButton:pressed, QToolButton:checked:pressed {
     <bool>true</bool>
    </property>
   </action>
-  <action name="actionSet_recent_shot">
+  <action name="actionSetRecentShot">
    <property name="text">
     <string>Set recent shot</string>
    </property>
   </action>
-  <action name="actionSubmit_render">
-   <property name="icon">
-    <iconset resource="rsc.qrc">
-     <normaloff>:/icons/icons/icon_render.png</normaloff>
-     <disabledoff>:/icons/icons/icon_render_disabled.png</disabledoff>:/icons/icons/icon_render.png</iconset>
-   </property>
+  <action name="actionRenderSubmitter">
    <property name="text">
-    <string>Submit render...</string>
+    <string>Render Submitter...</string>
+   </property>
+   <property name="iconText">
+    <string>Submit a scene or script file to the render farm</string>
+   </property>
+   <property name="toolTip">
+    <string>Submit a scene or script file to the render farm</string>
    </property>
   </action>
-  <action name="actionShot_Creator">
+  <action name="actionShotCreator">
    <property name="text">
     <string>Shot Creator...</string>
    </property>
   </action>
-  <action name="actionEnvironment_Variables">
+  <action name="actionEnvironmentVariables">
    <property name="text">
     <string>Environment Variables...</string>
    </property>

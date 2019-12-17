@@ -10,12 +10,12 @@
 
 import os
 
-os.environ['SCNMGR_USER_PREFS_DIR'] = os.environ['IC_USERPREFS']
+os.environ['SCNMGR_USER_PREFS_DIR'] = os.environ.get('IC_USERPREFS', os.path.expanduser('~/.renderqueue'))
 os.environ['SCNMGR_VENDOR_INITIALS'] = os.environ['IC_VENDOR_INITIALS']
-os.environ['SCNMGR_JOB'] = os.environ['IC_JOB']
-os.environ['SCNMGR_SHOT'] = os.environ['IC_SHOT']
 os.environ['SCNMGR_USER'] = os.environ['IC_USERNAME']
 os.environ['SCNMGR_APP'] = os.environ['IC_ENV']
+os.environ['SCNMGR_JOB'] = os.environ['IC_JOB']
+os.environ['SCNMGR_SHOT'] = os.environ['IC_SHOT']
 
 # Define naming conventions.
 # Tokens are defined like so: <token>

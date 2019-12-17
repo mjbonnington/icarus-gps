@@ -79,7 +79,8 @@ launchHieroPlayer = 'from shared import launchApps; launchApps.launch("HieroPlay
 versionUp = 'import switchVersion; switchVersion.versionUp()'
 versionDown = 'import switchVersion; switchVersion.versionDown()'
 versionLatest = 'import switchVersion; switchVersion.versionLatest()'
-submitRender = 'import nukeOps; nukeOps.submitRender()'
+# submitRender = 'import nukeOps; nukeOps.submitRender()'
+submitRender = 'from tools.renderqueue import submit; submit.run_nuke(session)'
 #submitRenderSelected = 'import nukeOps; nukeOps.submitRenderSelected()'
 
 # ----------------------------------------------------------------------------
@@ -124,7 +125,7 @@ icCustomMenu.addSeparator()
 
 # icCustomMenu.addSeparator()
 
-icCustomMenu.addCommand(vendor+'Submit Render...', submitRender, icon='submitRender.png')
+icCustomMenu.addCommand(vendor+'Render Submitter...', submitRender, icon='submitRender.png')
 
 icSwitchVersionMenu = icCustomMenu.addMenu('Switch Version', icon='versionSwitch.png')
 icSwitchVersionMenu.addCommand('Version to Latest', versionLatest, icon='versionLatest.png')
@@ -144,8 +145,8 @@ imageMenu.addCommand(vendor+'Write', writeNode, 'w', icon='newScript.png', index
 
 # Render menu
 imageMenu = nukeMenu.menu('Render')
-imageMenu.addCommand(vendor+'Submit Render...', submitRender, icon='submitRender.png', index=4)
-#imageMenu.addCommand(vendor+'Submit Render (selected write node only)...', submitRenderSelected, icon='submitRender.png', index=5)
+imageMenu.addCommand(vendor+'Render Submitter...', submitRender, icon='submitRender.png', index=4)
+#imageMenu.addCommand(vendor+'Render Submitter (selected write node only)...', submitRenderSelected, icon='submitRender.png', index=5)
 
 # ----------------------------------------------------------------------------
 

@@ -27,7 +27,7 @@ from shared import os_wrapper
 from shared import verbose
 
 # ----------------------------------------------------------------------------
-# Environment detection
+# Environment detection - redundant but keeping this in for compatibility
 # ----------------------------------------------------------------------------
 
 ENVIRONMENT = os.environ.get('IC_ENV', "STANDALONE")

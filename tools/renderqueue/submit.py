@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# submit.py
+# [renderqueue] submit.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2016-2019
@@ -13,8 +13,6 @@ import getpass
 import os
 import re
 import sys
-import time
-import traceback
 
 from Qt import QtCore, QtGui, QtWidgets
 
@@ -44,7 +42,6 @@ try:
 except ImportError:
 	pass
 
-
 # ----------------------------------------------------------------------------
 # Configuration
 # ----------------------------------------------------------------------------
@@ -54,23 +51,20 @@ VERSION = "0.2.11"
 cfg = {}
 
 # Set window title and object names
-cfg['window_title'] = "Submit Render"
 cfg['window_object'] = "renderSubmitUI"
+if os.environ['RQ_VENDOR_INITIALS']:
+	cfg['window_title'] = "%s Render Submitter" % os.environ['RQ_VENDOR_INITIALS']
+else:
+	cfg['window_title'] = "Render Submitter"
 
 # Set the UI and the stylesheet
 cfg['ui_file'] = 'render_submit.ui'
 cfg['stylesheet'] = 'style.qss'  # Set to None to use the parent app's stylesheet
 
 # Other options
-prefs_location = os.environ.get('IC_USERPREFS', os.path.expanduser('~/.submit'))
-cfg['prefs_file'] = os.path.join(prefs_location, 'submit_prefs.json')
+cfg['prefs_file'] = os.path.join(
+	os.environ['RQ_USER_PREFS_DIR'], 'submit_prefs.json')
 cfg['store_window_geometry'] = True
-
-MAYA_OUTPUT_FORMAT = "<Scene>/<RenderLayer>/<Scene>.<RenderLayer>.<RenderPass>"
-MAYA_OUTPUT_FORMAT_VRAY = "<Scene>/<Layer>/<Scene>.<Layer>"
-MAYA_DEFAULT_VERSION = "2018"
-HOUDINI_DEFAULT_VERSION = "16"
-NUKE_DEFAULT_VERSION = "10.0"
 
 # ----------------------------------------------------------------------------
 # Begin main window class
@@ -88,7 +82,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		# Set window icon, flags and other Qt attributes
 		if parent == None:
-			self.setWindowIcon(self.iconSet('clapperboard.png', tintNormal=False))
+			self.setWindowIcon(self.iconSet('icon_render.png', tintNormal=False))
 			self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint)
 			self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 		else:
@@ -101,18 +95,19 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.mayaSceneBrowse_toolButton.setIcon(self.iconSet('folder-open-symbolic.svg'))
 		self.ui.houdiniSceneBrowse_toolButton.setIcon(self.iconSet('folder-open-symbolic.svg'))
 		self.ui.nukeScriptBrowse_toolButton.setIcon(self.iconSet('folder-open-symbolic.svg'))
+		self.ui.commandBrowse_toolButton.setIcon(self.iconSet('folder-open-symbolic.svg'))
 
-		self.ui.getMayaScene_toolButton.setIcon(self.iconSet('view-refresh.svg'))
-		self.ui.getHoudiniScene_toolButton.setIcon(self.iconSet('view-refresh.svg'))
-		self.ui.getNukeScript_toolButton.setIcon(self.iconSet('view-refresh.svg'))
-		self.ui.getCameras_toolButton.setIcon(self.iconSet('view-refresh.svg'))
-		self.ui.getOutputDrivers_toolButton.setIcon(self.iconSet('view-refresh.svg'))
-		self.ui.getPools_toolButton.setIcon(self.iconSet('view-refresh.svg'))
-		self.ui.getGroups_toolButton.setIcon(self.iconSet('view-refresh.svg'))
+		self.ui.getMayaScene_toolButton.setIcon(self.iconSet('icon_refresh.png'))
+		self.ui.getHoudiniScene_toolButton.setIcon(self.iconSet('icon_refresh.png'))
+		self.ui.getNukeScript_toolButton.setIcon(self.iconSet('icon_refresh.png'))
+		self.ui.getCameras_toolButton.setIcon(self.iconSet('icon_refresh.png'))
+		self.ui.getOutputDrivers_toolButton.setIcon(self.iconSet('icon_refresh.png'))
+		self.ui.getPools_toolButton.setIcon(self.iconSet('icon_refresh.png'))
+		self.ui.getGroups_toolButton.setIcon(self.iconSet('icon_refresh.png'))
 
-		self.ui.frameListOptions_toolButton.setIcon(self.iconSet('configure.svg'))
-		self.ui.layerOptions_toolButton.setIcon(self.iconSet('configure.svg'))
-		self.ui.writeNodeOptions_toolButton.setIcon(self.iconSet('configure.svg'))
+		self.ui.frameListOptions_toolButton.setIcon(self.iconSet('icon_settings.png'))
+		self.ui.layerOptions_toolButton.setIcon(self.iconSet('icon_settings.png'))
+		self.ui.writeNodeOptions_toolButton.setIcon(self.iconSet('icon_settings.png'))
 
 		# Connect signals & slots
 		self.ui.jobType_comboBox.currentIndexChanged.connect(self.setJobTypeFromComboBox)
@@ -136,6 +131,8 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.nukeScriptBrowse_toolButton.clicked.connect(self.sceneBrowse)
 		self.ui.getNukeScript_toolButton.clicked.connect(self.getScene)
 
+		self.ui.commandBrowse_toolButton.clicked.connect(self.sceneBrowse)
+
 		self.ui.frames_lineEdit.editingFinished.connect(self.calcFrameList)  # was textChanged
 		self.ui.taskSize_spinBox.valueChanged.connect(self.calcFrameList)
 		self.ui.getPools_toolButton.clicked.connect(self.getPools)
@@ -147,7 +144,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Context menus
 		self.addContextMenu(self.ui.frameListOptions_toolButton, "Clear (auto-detect frame range)", self.ui.frames_lineEdit.clear)
 		self.addContextMenu(self.ui.frameListOptions_toolButton, "Shot default", self.getFrameRangeFromShotSettings)
-		if UI.ENVIRONMENT != "STANDALONE":
+		if os.environ['RQ_APP'] != "STANDALONE":
 			self.addContextMenu(self.ui.frameListOptions_toolButton, "Render settings", self.getFrameRangeFromRenderSettings)
 		self.addContextMenu(self.ui.frameListOptions_toolButton, "Sort ascending", self.setFrameListPreset)
 		#self.addContextMenu(self.ui.frameListOptions_toolButton, "Sort descending", self.setFrameListPreset)
@@ -182,7 +179,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.returnValue = False
 
 		# Set job type from pipeline environment when possible
-		if UI.ENVIRONMENT == "STANDALONE":
+		if os.environ['RQ_APP'] == "STANDALONE":
 			if jobtype:  # Set job type
 				self.jobType = jobtype
 			else:
@@ -207,7 +204,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.writeNodeOptions_toolButton.setEnabled(False)
 			self.setJobType()
 
-		elif UI.ENVIRONMENT == "MAYA":
+		elif os.environ['RQ_APP'] == "MAYA":
 			self.jobType = "Maya"
 			self.ui.jobType_comboBox.setCurrentIndex(self.ui.jobType_comboBox.findText(self.jobType))
 			self.setJobType()
@@ -231,7 +228,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			if layers:
 				self.ui.layers_lineEdit.setText(layers)
 
-		elif UI.ENVIRONMENT == "HOUDINI":
+		elif os.environ['RQ_APP'] == "HOUDINI":
 			self.jobType = "Houdini"
 			self.ui.jobType_comboBox.setCurrentIndex(self.ui.jobType_comboBox.findText(self.jobType))
 			self.setJobType()
@@ -246,7 +243,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			#self.toggleFormField(self.ui.houdini_groupBox, self.ui.houdiniScene_frame, False)
 			self.ui.houdiniSceneBrowse_toolButton.hide()
 
-		elif UI.ENVIRONMENT == "NUKE":
+		elif os.environ['RQ_APP'] == "NUKE":
 			self.jobType = "Nuke"
 			self.ui.jobType_comboBox.setCurrentIndex(self.ui.jobType_comboBox.findText(self.jobType))
 			self.setJobType()
@@ -347,19 +344,24 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 	def sceneBrowse(self):
 		""" Browse for a scene/script file.
 		"""
-		if self.jobType == "Maya":
+		if self.jobType == "Generic":
+			comboBox = self.ui.command_comboBox
+			fileDir = os.environ.get('RQ_JOBPATH', '.')  # Go to current dir if env var is not set
+			fileFilter = "All files (*.*)"
+
+		elif self.jobType == "Maya":
 			comboBox = self.ui.mayaScene_comboBox
-			fileDir = os.environ.get('IC_MAYA_SCENES_DIR', '.')  # Go to current dir if env var is not set
+			fileDir = os.environ.get('RQ_MAYA_SCENES_DIR', '.')  # Go to current dir if env var is not set
 			fileFilter = "Maya files (*.ma *.mb)"
 
 		elif self.jobType == "Houdini":
 			comboBox = self.ui.houdiniScene_comboBox
-			fileDir = os.environ.get('IC_HOUDINI_SCENES_DIR', '.')  # Go to current dir if env var is not set
+			fileDir = os.environ.get('RQ_HOUDINI_SCENES_DIR', '.')  # Go to current dir if env var is not set
 			fileFilter = "Houdini files (*.hip)"
 
 		elif self.jobType == "Nuke":
 			comboBox = self.ui.nukeScript_comboBox
-			fileDir = os.environ.get('IC_NUKE_SCRIPTS_DIR', '.')  # Go to current dir if env var is not set
+			fileDir = os.environ.get('RQ_NUKE_SCRIPTS_DIR', '.')  # Go to current dir if env var is not set
 			fileFilter = "Nuke files (*.nk)"
 
 		currentDir = os.path.dirname(comboBox.currentText())
@@ -394,8 +396,8 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		"""
 		try:
 			# Check pipeline environment variables
-			start_frame = int(os.environ['IC_STARTFRAME'])
-			end_frame = int(os.environ['IC_ENDFRAME'])
+			start_frame = int(os.environ['RQ_STARTFRAME'])
+			end_frame = int(os.environ['RQ_ENDFRAME'])
 
 			frame_range = "%d-%d" % (start_frame, end_frame)
 			self.ui.frames_lineEdit.setText(frame_range)
@@ -408,11 +410,11 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 	def getFrameRangeFromRenderSettings(self, update_field=True):
 		""" Get frame range from DCC app settings.
 		"""
-		if UI.ENVIRONMENT == "MAYA":
+		if os.environ['RQ_APP'] == "MAYA":
 			start_frame = int(mc.getAttr('defaultRenderGlobals.startFrame'))
 			end_frame = int(mc.getAttr('defaultRenderGlobals.endFrame'))
 
-		elif UI.ENVIRONMENT == "HOUDINI":
+		elif os.environ['RQ_APP'] == "HOUDINI":
 			# Attempt to get the frame range from the selected output driver.
 			# If no output driver is selected, get the time slider (playbar)
 			# range.
@@ -424,7 +426,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 				start_frame = hou.playbar.playbackRange()[0]
 				end_frame = hou.playbar.playbackRange()[1]
 
-		elif UI.ENVIRONMENT == "NUKE":
+		elif os.environ['RQ_APP'] == "NUKE":
 			start_frame = nuke.Root()['first_frame'].getValue()
 			end_frame = nuke.Root()['last_frame'].getValue()
 
@@ -439,11 +441,11 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		""" Get current Maya render layer or selected Nuke write nodes and
 			populate widget.
 		"""
-		if UI.ENVIRONMENT == "MAYA":
+		if os.environ['RQ_APP'] == "MAYA":
 			currentLayer = mc.editRenderLayerGlobals(query=True, currentRenderLayer=True)
 			self.ui.layers_lineEdit.setText(currentLayer)
 
-		elif UI.ENVIRONMENT == "NUKE":
+		elif os.environ['RQ_APP'] == "NUKE":
 			writeNodeStr = ", ".join(n for n in self.getWriteNodes(selected=True))
 			self.ui.writeNodes_lineEdit.setText(writeNodeStr)
 
@@ -451,7 +453,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 	def getRenderLayers(self):
 		""" Get Maya render layers or Nuke write nodes and populate widget.
 		"""
-		if UI.ENVIRONMENT == "MAYA":
+		if os.environ['RQ_APP'] == "MAYA":
 			layerStr = ", ".join(n for n in self.getRenderableLayers())
 			self.ui.layers_lineEdit.setText(layerStr)
 
@@ -460,7 +462,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			checkBox.setChecked(not self.getCheckBoxValue(checkBox))  # Toggle value to force update
 			checkBox.setChecked(mc.optionVar(query="renderSetupEnable"))
 
-		elif UI.ENVIRONMENT == "NUKE":
+		elif os.environ['RQ_APP'] == "NUKE":
 			writeNodeStr = ", ".join(n for n in self.getWriteNodes(selected=False))
 			self.ui.writeNodes_lineEdit.setText(writeNodeStr)
 
@@ -499,7 +501,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		no_select_text = ""
 		camera_list = [no_select_text, ]
 
-		if UI.ENVIRONMENT == "MAYA":
+		if os.environ['RQ_APP'] == "MAYA":
 			persp_cameras = mc.listCameras(perspective=True)
 			ortho_cameras = mc.listCameras(orthographic=True)
 			cameras = persp_cameras + ortho_cameras
@@ -521,7 +523,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		no_select_text = ""
 		rop_list = [no_select_text, ]
 
-		if UI.ENVIRONMENT == "HOUDINI":
+		if os.environ['RQ_APP'] == "HOUDINI":
 			for rop_node in hou.node('/').recursiveGlob('*', hou.nodeTypeFilter.Rop):
 				rop_list.append(rop_node.path())
 
@@ -532,39 +534,44 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		""" Check if we're working in an unsaved scene, if not get the current
 			scene/script file path and populate combo box.
 		"""
-		if UI.ENVIRONMENT == "STANDALONE":
+		if os.environ['RQ_APP'] == "STANDALONE":
 			pass  # Do nothing
 
-		elif UI.ENVIRONMENT == "MAYA":
+		elif os.environ['RQ_APP'] == "MAYA":
 			scenePath = mc.file(query=True, sceneName=True)
 			if scenePath:
 				self.addSceneEntry(self.ui.mayaScene_comboBox, scenePath)
 				self.ui.submit_pushButton.setEnabled(True)
+				# self.setDynamicProperty(self.ui.mayaScene_comboBox, "warning", False)
 			else:
 				msg = "Please save scene before submitting render."
 				mc.warning(msg)
 				self.addSceneEntry(self.ui.mayaScene_comboBox, msg)
 				self.ui.submit_pushButton.setToolTip(msg)
 				self.ui.submit_pushButton.setEnabled(False)
+				# self.setDynamicProperty(self.ui.mayaScene_comboBox, "warning", True)
 
-		elif UI.ENVIRONMENT == "HOUDINI":
+		elif os.environ['RQ_APP'] == "HOUDINI":
 			sceneName = hou.hipFile.name()
 			scenePath = hou.hipFile.path()
 			if sceneName != 'untitled.hip':
 				self.addSceneEntry(self.ui.houdiniScene_comboBox, scenePath)
 				self.ui.submit_pushButton.setEnabled(True)
+				# self.setDynamicProperty(self.ui.houdiniScene_comboBox, "warning", False)
 			else:
 				msg = "Please save scene before submitting render."
 				print("Warning: %s" % msg)
 				self.addSceneEntry(self.ui.houdiniScene_comboBox, msg)
 				self.ui.submit_pushButton.setToolTip(msg)
 				self.ui.submit_pushButton.setEnabled(False)
+				# self.setDynamicProperty(self.ui.houdiniScene_comboBox, "warning", True)
 
-		elif UI.ENVIRONMENT == "NUKE":
+		elif os.environ['RQ_APP'] == "NUKE":
 			scriptPath = nuke.value('root.name')
 			if scriptPath:
 				self.addSceneEntry(self.ui.nukeScript_comboBox, scriptPath)
 				self.ui.submit_pushButton.setEnabled(True)
+				# self.setDynamicProperty(self.ui.nukeScript_comboBox, "warning", False)
 			else:
 				msg = "Please save script before submitting render."
 				#nuke.warning(msg) #nuke.message(msg)
@@ -572,6 +579,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 				self.addSceneEntry(self.ui.nukeScript_comboBox, msg)
 				self.ui.submit_pushButton.setToolTip(msg)
 				self.ui.submit_pushButton.setEnabled(False)
+				# self.setDynamicProperty(self.ui.nukeScript_comboBox, "warning", True)
 
 
 	def getAppVersion(self, app):
@@ -579,22 +587,13 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			environment variables.
 		"""
 		if app == 'Maya':
-			try:
-				ver = os.environ['IC_MAYA_VERSION']
-			except:
-				ver = MAYA_DEFAULT_VERSION
+			ver = os.environ['RQ_MAYA_VERSION']
 
 		elif app == 'Houdini':
-			try:
-				ver = os.environ['IC_HOUDINI_VERSION'].split('.')[0]
-			except:
-				ver = HOUDINI_DEFAULT_VERSION
+			ver = os.environ['RQ_HOUDINI_VERSION']
 
 		elif app == 'Nuke':
-			try:
-				ver = os.environ['IC_NUKE_VERSION']
-			except:
-				ver = NUKE_DEFAULT_VERSION
+			ver = os.environ['RQ_NUKE_VERSION']
 
 		return ver
 
@@ -727,7 +726,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			maya_project = mc.workspace(q=True, active=True)
 		except NameError:
 			try:  # Project is implicit if job is set
-				maya_project = os.environ['IC_MAYA_PROJECT_DIR']
+				maya_project = os.environ['RQ_MAYA_PROJECT_DIR']
 			except KeyError:
 				try:  # Make a guess
 					scene_path = scene_path.replace("\\", "/")
@@ -877,13 +876,13 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			try:
 				prefix = mc.getAttr("vraySettings.fileNamePrefix")
 			except:  # Make a guess
-				prefix = MAYA_OUTPUT_FORMAT_VRAY
+				prefix = os.environ['RQ_MAYA_OUTPUT_FORMAT_VRAY']
 
 		else:
 			try:
 				prefix = mc.getAttr("defaultRenderGlobals.imageFilePrefix")
 			except:  # Make a guess
-				prefix = MAYA_OUTPUT_FORMAT
+				prefix = os.environ['RQ_MAYA_OUTPUT_FORMAT']
 
 		return prefix
 
@@ -947,20 +946,20 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		"""
 		outputs = {}
 
-		if UI.ENVIRONMENT == "MAYA":
+		if os.environ['RQ_APP'] == "MAYA":
 			for entry in self.getRenderableLayers(allLayers=False):
 				output = self.getMayaRenderOutput(entry)
 				if self.getRenderer() != "vray":
 					output = output.replace("<RenderPass>", "beauty")
 				outputs[entry] = os.path.split(output)
 
-		elif UI.ENVIRONMENT == "HOUDINI":
+		elif os.environ['RQ_APP'] == "HOUDINI":
 			output_driver = self.ui.outputDriver_comboBox.currentText()
 			output = self.getHoudiniRenderOutput(output_driver)
 			outputs['main'] = os.path.split(output)
 			print output
 
-		elif UI.ENVIRONMENT == "NUKE":
+		elif os.environ['RQ_APP'] == "NUKE":
 			for entry in self.getWriteNodes(selected=False):
 				outputs[entry] = os.path.split(self.getNukeRenderOutput(entry))
 
@@ -1015,56 +1014,53 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 	def saveScene(self):
 		""" Save the current scene/script if it has been modified.
 		"""
-		if UI.ENVIRONMENT == "STANDALONE":
+		if os.environ['RQ_APP'] == "STANDALONE":
 			pass  # Do nothing
 
-		elif UI.ENVIRONMENT == "MAYA":
+		elif os.environ['RQ_APP'] == "MAYA":
 			# Check if scene is modified before saving, as Maya scene files
 			# can be quite large and saving can be slow.
 			if mc.file(q=True, modified=True):
 				mc.file(save=True)
 
-		elif UI.ENVIRONMENT == "HOUDINI":
+		elif os.environ['RQ_APP'] == "HOUDINI":
 			hou.hipFile.save()
 
-		elif UI.ENVIRONMENT == "NUKE":
+		elif os.environ['RQ_APP'] == "NUKE":
 			nuke.scriptSave()
 
 
-	def incrementScene(self):
-		""" Increment the minor version number. For Maya, don't save as this
-			can be slow for large scenes. Instead copy the previous scene
-			file via the OS.
-		"""
-		if UI.ENVIRONMENT == "STANDALONE":
-			pass  # Do nothing
+	# def incrementScene(self):
+	# 	""" Increment the minor version number. For Maya, don't save as this
+	# 		can be slow for large scenes. Instead copy the previous scene
+	# 		file via the OS.
+	# 	"""
+	# 	if os.environ['RQ_APP'] == "STANDALONE":
+	# 		pass  # Do nothing
 
-		elif UI.ENVIRONMENT == "MAYA":
-			# As the scene will have just been saved, we create a copy of the
-			# scene and increment the minor version, and point the Maya file
-			# to the updated scene file. This gives us a performance gain by
-			# avoiding the overhead of a second save operation, which can be
-			# slow for large Maya ASCII scenes.
-			from u_vfx.u_maya.scripts.python import sceneManager
-			current_scene = mc.file(query=True, expandName=True)
-			ext = os.path.splitext(current_scene)[1]
-			updated_scene = sceneManager.versionUp(saveScene=False)
-			if updated_scene:
-				updated_scene += ext
-				os_wrapper.copy(current_scene, updated_scene)
-				mc.file(rename=updated_scene)
-				# self.addSceneEntry(self.ui.mayaScene_comboBox, updated_scene)
-				self.getScene()
+	# 	elif os.environ['RQ_APP'] == "MAYA":
+	# 		# As the scene will have just been saved, we create a copy of the
+	# 		# scene and increment the minor version, and point the Maya file
+	# 		# to the updated scene file. This gives us a performance gain by
+	# 		# avoiding the overhead of a second save operation, which can be
+	# 		# slow for large Maya ASCII scenes.
+	# 		current_scene = mc.file(query=True, expandName=True)
+	# 		ext = os.path.splitext(current_scene)[1]
+	# 		updated_scene = session.scnmgr.convention.version_up()
+	# 		if updated_scene:
+	# 			updated_scene += ext
+	# 			os_wrapper.copy(current_scene, updated_scene)
+	# 			mc.file(rename=updated_scene)
+	# 			# self.addSceneEntry(self.ui.mayaScene_comboBox, updated_scene)
+	# 			self.getScene()
 
-		elif UI.ENVIRONMENT == "HOUDINI":
-			from u_vfx.u_houdini.scripts import sceneManager
-			if sceneManager.versionUp():
-				self.getScene()
+	# 	elif os.environ['RQ_APP'] == "HOUDINI":
+	# 		if session.scnmgr.convention.version_up():
+	# 			self.getScene()
 
-		elif UI.ENVIRONMENT == "NUKE":
-			from u_vfx.u_nuke.scripts import compManager
-			if compManager.versionUp():
-				self.getScene()
+	# 	elif os.environ['RQ_APP'] == "NUKE":
+	# 		if session.scnmgr.convention.version_up():
+	# 			self.getScene()
 
 
 	def about(self):
@@ -1085,7 +1081,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 %s
 v%s
 
-A unified tool for submitting render jobs to Deadline.
+A unified tool for submitting render jobs to a render queue manager.
 
 Developer: Mike Bonnington
 (c) 2016-2019
@@ -1097,7 +1093,7 @@ Developer: Mike Bonnington
 		aboutDialog.display(
 			bg_color=QtGui.QColor('#5b6368'), 
 			icon_pixmap=self.iconTint(
-				'clapperboard.png', 
+				'icon_render.png', 
 				tint=QtGui.QColor('#6e777d')), 
 			message=about_msg)
 
@@ -1114,7 +1110,7 @@ Developer: Mike Bonnington
 			if submit_args['frames']:
 				frames_msg = ""
 			else:
-				if UI.ENVIRONMENT == "STANDALONE":
+				if os.environ['RQ_APP'] == "STANDALONE":
 					submit_args['frames'] = "Unknown"
 					frames_msg = "Warning: No frame range specified.\n"
 				else:
@@ -1189,7 +1185,7 @@ Developer: Mike Bonnington
 			submit_args['outputFilePrefix'] = self.getOutputFilePrefix(submit_args['renderer'])
 
 			# File output location(s)...
-			if UI.ENVIRONMENT == "STANDALONE":
+			if os.environ['RQ_APP'] == "STANDALONE":
 				pass
 				# submit_args['output'] = self.guessOutputs(self.jobType, **submit_args)
 			else:
@@ -1214,7 +1210,7 @@ Developer: Mike Bonnington
 			submit_args['jobName'] = self.getJobName(scene)
 
 			# File output location(s)...
-			if UI.ENVIRONMENT == "STANDALONE":
+			if os.environ['RQ_APP'] == "STANDALONE":
 				pass
 				# submit_args['output'] = self.guessOutputs(self.jobType, **submit_args)
 			else:
@@ -1241,7 +1237,7 @@ Developer: Mike Bonnington
 			submit_args['jobName'] = self.getJobName(scene)
 
 			# File output location(s)...
-			if UI.ENVIRONMENT == "STANDALONE":
+			if os.environ['RQ_APP'] == "STANDALONE":
 				pass
 				# submit_args['output'] = self.guessOutputs(self.jobType, **submit_args)
 			else:

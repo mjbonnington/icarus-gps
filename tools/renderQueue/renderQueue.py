@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# renderqueue.py
+# [renderqueue] renderqueue.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2016-2019
@@ -26,36 +26,37 @@ import icons_rc
 import ui_template as UI
 
 # Import custom modules
-import about
-import database
-import oswrapper
-#import outputparser
-import sequence
-#import verbose
-import worker
+from . import about
+from . import database
+# from . import outputparser
+from . import worker
+from shared import os_wrapper
+from shared import sequence
+# from shared import verbose
 
 
 # ----------------------------------------------------------------------------
 # Configuration
 # ----------------------------------------------------------------------------
 
-VENDOR = ""
 COPYRIGHT = "(c) 2015-2019"
 DEVELOPERS = "Mike Bonnington"
 os.environ['RQ_VERSION'] = "0.2.1"
 
+cfg = {}
+
 # Set window title and object names
-WINDOW_TITLE = "Render Queue"
-WINDOW_OBJECT = "RenderQueueUI"
+cfg['window_title'] = "Render Queue"
+cfg['window_object'] = "RenderQueueUI"
 
 # Set the UI and the stylesheet
-UI_FILE = 'render_queue.ui'
-STYLESHEET = 'style.qss'  # Set to None to use the parent app's stylesheet
+cfg['ui_file'] = 'render_queue.ui'
+cfg['stylesheet'] = 'style.qss'  # Set to None to use the parent app's stylesheet
 
 # Other options
-PREFS_FILE = os.path.join(os.environ['HOME'], '.renderqueue', 'userprefs.json')
-STORE_WINDOW_GEOMETRY = True
-
+cfg['prefs_file'] = os.path.join(
+	os.environ['RQ_USER_PREFS_DIR'], 'renderqueue_prefs.json')
+cfg['store_window_geometry'] = True
 
 # ----------------------------------------------------------------------------
 # Begin main application class
@@ -69,7 +70,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.parent = parent
 
 		# Set up logging (TEST)
-		# task_log_path = oswrapper.absolutePath('$RQ_DATADIR/test.log')
+		# task_log_path = os_wrapper.absolutePath('$RQ_DATADIR/test.log')
 		# logging.basicConfig(level=logging.DEBUG, filename=task_log_path, filemode="a+",
 		#                     format="%(asctime)-15s %(levelname)-8s %(message)s")
 
@@ -80,17 +81,11 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.selection = []
 		self.expandedJobs = {}
 
-		self.setupUI(
-			window_object=WINDOW_OBJECT,
-			window_title=WINDOW_TITLE,
-			ui_file=UI_FILE,
-			stylesheet=STYLESHEET,
-			prefs_file=PREFS_FILE,
-			store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
+		self.setupUI(**cfg)
 
 		# Set window flags
 		self.setWindowFlags(QtCore.Qt.Window)
-		self.setWindowTitle("%s - %s" %(WINDOW_TITLE, self.localhost.split(".")[0]))
+		self.setWindowTitle("%s - %s" %(cfg['window_title'], self.localhost.split(".")[0]))
 
 		# Set other Qt attributes
 		#self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
@@ -109,18 +104,18 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.colWhite     = QtGui.QColor("#ffffff")  # white
 		self.colBorder    = QtGui.QColor("#222222")  # dark grey
 		self.colNormal    = self.col['text']  #QtGui.QColor("#cccccc")  # light grey
-		self.colActive    = QtGui.QColor(self.prefs.getValue('user', 'colorActive', "#00ffbb"))
-		self.colInactive  = QtGui.QColor(self.prefs.getValue('user', 'colorInactive', "#808080"))
-		self.colCompleted = QtGui.QColor(self.prefs.getValue('user', 'colorSuccess', "#00bbff"))
-		self.colError     = QtGui.QColor(self.prefs.getValue('user', 'colorFailure', "#ff5533"))
+		self.colActive    = QtGui.QColor(self.prefs.get_attr('user', 'colorActive', "#00ffbb"))
+		self.colInactive  = QtGui.QColor(self.prefs.get_attr('user', 'colorInactive', "#808080"))
+		self.colCompleted = QtGui.QColor(self.prefs.get_attr('user', 'colorSuccess', "#00bbff"))
+		self.colError     = QtGui.QColor(self.prefs.get_attr('user', 'colorFailure', "#ff5533"))
 
 		# Instantiate render queue class and load data
-		# databaseLocation = oswrapper.translatePath(
-		# 	self.prefs.getValue('user', 'databaseLocation', './rq_database'), 
+		# databaseLocation = os_wrapper.translatePath(
+		# 	self.prefs.get_attr('user', 'databaseLocation', './rq_database'), 
 		# 	'L:', '/Volumes/Library', '/mnt/Library')
 		try:
-			databaseLocation = oswrapper.translatePath(
-				self.prefs.getValue('user', 'databaseLocation'), 
+			databaseLocation = os_wrapper.translatePath(
+				self.prefs.get_attr('user', 'databaseLocation'), 
 				'L:', '/Volumes/Library', '/mnt/Library')
 		except:
 			databaseLocation = None
@@ -135,8 +130,8 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.openSettings()
 
 			# databaseLocation = self.folderDialog('.')
-			# self.prefs.setValue('user', 'databaseLocation', databaseLocation)
-			# self.prefs.write()
+			# self.prefs.set_attr('user', 'databaseLocation', databaseLocation)
+			# self.prefs.save()
 
 		self.rq = database.RenderQueue(databaseLocation)
 
@@ -320,7 +315,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 	def launchRenderSubmit(self, **kwargs):
 		""" Launch Render Submitter window.
 		"""
-		import submit
+		from . import submit
 		try:
 			self.renderSubmitUI.display(**kwargs)
 		except AttributeError:
@@ -350,7 +345,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# hackery to get this functional...
 		os.environ['MAYADIR'] = mayaproj
 		for key in output.keys():
-			directory = oswrapper.absolutePath(output[key][0])
+			directory = os_wrapper.absolutePath(output[key][0])
 			directory = os.path.split(directory)[:-1][0]
 		print(directory)
 
@@ -362,7 +357,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		"""
 		directory, frameRange = self.getOutputDir()
 
-		import browser
+		from . import browser
 		try:
 			self.renderBrowserUI.display(
 				directory=directory, frameRange=frameRange)
@@ -382,18 +377,18 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 	def openSettings(self):
 		""" Open settings dialog.
 		"""
-		import settings
+		from . import settings  # Duplicate of shared.settings
 		self.settingsEditor = settings.SettingsDialog(parent=self)
 		result = self.settingsEditor.display(
-			settingsType=WINDOW_TITLE, 
-			categoryLs=['user', 'database'], 
-			startPanel=None, 
-			datafile='config/userprefs.json', 
+			settings_type=cfg['window_title'], 
+			category_list=['user', 'database'], 
+			start_panel=None, 
+			prefs_file=cfg['prefs_file'] , 
 			inherit=None, 
-			autoFill=False)
+			autofill=False)
 
 		if result:  # Dialog accepted
-			self.prefs.read()
+			self.prefs.reload()
 			self.refreshViews()  # Update view to refresh colours
 
 
@@ -413,7 +408,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 				args = ['ping', '-c', '1', workerIP]
 				# args = ['ping', '-n', '1', workerIP]  # Windows
-				result, output = oswrapper.execute(args)
+				result, output = os_wrapper.execute(args)
 				if result == True:
 					print("%s is Online" %workerName)
 					print(output)
@@ -447,7 +442,7 @@ class RenderQueueApp(QtWidgets.QMainWindow, UI.TemplateUI):
 	# 				if workerType == "Remote":  # Only remote workers
 	# 					args = ['ping', '-c', '1', workerIP]
 	# 					# args = ['ping', '-n', '1', workerIP]  # Windows
-	# 					result, output = oswrapper.execute(args)
+	# 					result, output = os_wrapper.execute(args)
 
 	# 					if not result: # != 0:
 	# 						pass
@@ -500,7 +495,7 @@ Developers: %s
 %s %s
 
 %s
-""" %(WINDOW_TITLE, os.environ['RQ_VERSION'], DEVELOPERS, COPYRIGHT, VENDOR, info_str)
+""" %(cfg['window_title'], os.environ['RQ_VERSION'], DEVELOPERS, COPYRIGHT, os.environ['RQ_VENDOR'], info_str)
 
 		aboutDialog = about.AboutDialog(parent=self)
 		aboutDialog.display(image='config/splash/scott-goodwill-408543-unsplash.jpg', message=about_msg)
@@ -603,17 +598,17 @@ Developers: %s
 		widgets = [self.ui.queue_treeWidget, self.ui.workers_treeWidget]
 
 		# Instantiate render queue class and load data
-		databaseLocation = oswrapper.translatePath(
-			self.prefs.getValue('user', 'databaseLocation'), 
+		databaseLocation = os_wrapper.translatePath(
+			self.prefs.get_attr('user', 'databaseLocation'), 
 			'L:', '/Volumes/Library', '/mnt/Library')
 
 		self.rq = database.RenderQueue(databaseLocation)
 
 		# Set custom colours
-		self.colActive    = QtGui.QColor(self.prefs.getValue('user', 'colorActive',   "#00ffbb"))
-		self.colInactive  = QtGui.QColor(self.prefs.getValue('user', 'colorInactive', "#808080"))
-		self.colCompleted = QtGui.QColor(self.prefs.getValue('user', 'colorSuccess',  "#00bbff"))
-		self.colError     = QtGui.QColor(self.prefs.getValue('user', 'colorFailure',  "#ff5533"))
+		self.colActive    = QtGui.QColor(self.prefs.get_attr('user', 'colorActive',   "#00ffbb"))
+		self.colInactive  = QtGui.QColor(self.prefs.get_attr('user', 'colorInactive', "#808080"))
+		self.colCompleted = QtGui.QColor(self.prefs.get_attr('user', 'colorSuccess',  "#00bbff"))
+		self.colError     = QtGui.QColor(self.prefs.get_attr('user', 'colorFailure',  "#ff5533"))
 
 		for widget in widgets:
 			# Clear widgets
@@ -1339,16 +1334,16 @@ Developers: %s
 	# 		for item in self.ui.queue_treeWidget.selectedItems():
 	# 			if not item.parent(): # if item has no parent then it must be a top level item, and therefore also a job
 
-	# 				jobName = self.rq.getValue(item, 'name')
-	# 				jobType = self.rq.getValue(item, 'type')
-	# 				priority = self.rq.getValue(item, 'priority')
-	# 				frames = self.rq.getValue(item, 'frames')
-	# 				taskSize = self.rq.getValue(item, 'taskSize')
+	# 				jobName = self.rq.get_attr(item, 'name')
+	# 				jobType = self.rq.get_attr(item, 'type')
+	# 				priority = self.rq.get_attr(item, 'priority')
+	# 				frames = self.rq.get_attr(item, 'frames')
+	# 				taskSize = self.rq.get_attr(item, 'taskSize')
 
-	# 				mayaScene = self.rq.getValue(item, 'mayaScene')
-	# 				mayaProject = self.rq.getValue(item, 'mayaProject')
-	# 				mayaFlags = self.rq.getValue(item, 'mayaFlags')
-	# 				mayaRenderCmd = self.rq.getValue(item, 'mayaRenderCmd')
+	# 				mayaScene = self.rq.get_attr(item, 'mayaScene')
+	# 				mayaProject = self.rq.get_attr(item, 'mayaProject')
+	# 				mayaFlags = self.rq.get_attr(item, 'mayaFlags')
+	# 				mayaRenderCmd = self.rq.get_attr(item, 'mayaRenderCmd')
 
 	# 				taskList = []
 
@@ -1835,8 +1830,8 @@ if __name__ == "__main__":
 		app.setStyle('Fusion')
 
 	# # Apply UI style sheet
-	# if STYLESHEET is not None:
-	# 	qss=os.path.join(os.environ['IC_FORMSDIR'], STYLESHEET)
+	# if cfg['stylesheet'] is not None:
+	# 	qss=os.path.join(os.environ['IC_FORMSDIR'], cfg['stylesheet'])
 	# 	with open(qss, "r") as fh:
 	# 		app.setStyleSheet(fh.read())
 

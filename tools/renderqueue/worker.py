@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# worker.py
+# [renderqueue] worker.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2016-2019
@@ -16,9 +16,9 @@ import subprocess
 from Qt import QtCore
 
 # Import custom modules
-import common
-import oswrapper
-import sequence
+from . import common
+from shared import os_wrapper
+from shared import sequence
 
 
 # ----------------------------------------------------------------------------
@@ -212,7 +212,7 @@ class WorkerThread(QtCore.QThread):
 		# renderProcess = QtCore.QProcess(self)
 		# renderProcess.start(args[0], args[1:])
 
-		#result, output = oswrapper.execute(args)
+		#result, output = os_wrapper.execute(args)
 		#self.task_logger.info("Result: %s", result)
 		#self.task_logger.info(output)
 
@@ -310,7 +310,7 @@ class WorkerThread(QtCore.QThread):
 # 		else:
 # 			line = str(self.renderProcess.readAllStandardOutput(), 'utf-8')
 
-# 		# task_log_path = oswrapper.absolutePath('$IC_CONFIGDIR/renderqueue/%s.log' %self.localhost)
+# 		# task_log_path = os_wrapper.absolutePath('$IC_CONFIGDIR/renderqueue/%s.log' %self.localhost)
 # 		# with open(task_log_path, 'a') as fh:
 # 		# 	fh.write(line)
 # 		# 	#print(line, file=fh)

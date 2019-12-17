@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# submit_deadline.py
+# [renderqueue] submit_deadline.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2016-2019
@@ -19,6 +19,7 @@ import traceback
 
 # Import custom modules
 from shared import os_wrapper
+from shared import verbose
 
 
 def monitor():
@@ -27,7 +28,7 @@ def monitor():
 	try:
 		subprocess.Popen(os.environ['RQ_DEADLINEMONITOR'], shell=True)
 	except:
-		print("Warning: Could not open Deadline Monitor.")
+		verbose.warning("Could not open Deadline Monitor.")
 
 
 def get_pools():
@@ -37,7 +38,7 @@ def get_pools():
 		pools = os_wrapper.execute([os.environ['RQ_DEADLINECOMMAND'], '-pools'])[1]
 		return pools.splitlines()
 	except:
-		print("Warning: Could not retrieve Deadline pools.")
+		verbose.warning("Could not retrieve Deadline pools.")
 		return None
 
 
@@ -48,7 +49,7 @@ def get_groups():
 		groups = os_wrapper.execute([os.environ['RQ_DEADLINECOMMAND'], '-groups'])[1]
 		return groups.splitlines()
 	except:
-		print("Warning: Could not retrieve Deadline groups.")
+		verbose.warning("Could not retrieve Deadline groups.")
 		return None
 
 
@@ -110,13 +111,13 @@ def generate_job_info_file(**kwargs):
 					fh.write("OutputDirectory%d=%s\n" % (i, output_path[0]))
 					fh.write("OutputFilename%d=%s\n" % (i, output_path[1]))
 		except:
-			print("Warning: Could not determine render output path(s).")
+			verbose.warning("Could not determine render output path(s).")
 
 		for i, key in enumerate(kwargs['envVars']):
 			try:
 				fh.write("EnvironmentKeyValue%d=%s=%s\n" % (i, key, os.environ[key]))
 			except KeyError:
-				print("Warning: Environment variable '%s' not set." % key)
+				verbose.warning("Environment variable '%s' not set." % key)
 
 		try:
 			fh.write("ExtraInfo0=%s\n" % os.environ['RQ_JOB'])
@@ -249,8 +250,8 @@ def submit_job(**kwargs):
 
 		if cmd_result:
 			result = True
-			print(cmd_output) #.decode())
-			print(result_msg)
+			verbose.print_(cmd_output) #.decode())
+			verbose.message(result_msg)
 		else:
 			raise RuntimeError(cmd_output)
 
@@ -259,7 +260,7 @@ def submit_job(**kwargs):
 		exc_type, exc_value, exc_traceback = sys.exc_info()
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		result_msg = "Failed to submit job to Deadline."
-		print(result_msg)
+		verbose.error(result_msg)
 		if (exc_type == RuntimeError) and cmd_output:
 			result_msg += "\n" + cmd_output
 		else:

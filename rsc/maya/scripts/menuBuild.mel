@@ -212,18 +212,18 @@ RenRenderMenu($renderMenu);
 
 // Add custom entries
 setParent -menu $renderMenu;
-	// Render Submit
+	// Render Submitter
 	menuItem
 		-divider true
 		icRenderDivider1;
 
 	menuItem
 		-insertAfter icRenderDivider1
-		-label ($vendor + "Submit Render...")
+		-label ($vendor + "Render Submitter...")
+		-annotation "Submit scene to render farm"
 		-command "source menus2Py; menus2Py.submitRender"
-		-annotation "Submit Render"
 		-image "gpsSubmitRender.png"
-		icSubmitRenderItem;
+		icRenderSubmitterItem;
 
 
 //////////////////////
@@ -369,13 +369,13 @@ setParent -menu $custom_menu;
 		-command "source menus2Py; menus2Py.gpsPreview"
 		icPreviewDialogItem;
 
-	// Submit Render
+	// Render Submitter
 	menuItem
-		-label ($vendor + "Submit Render...")
-		-annotation "Submit Render"
+		-label ($vendor + "Render Submitter...")
+		-annotation "Submit scene to render farm"
 		-command "source menus2Py; menus2Py.submitRender"
 		-image "gpsSubmitRender.png"
-		icSubmitRenderItem;
+		icRenderSubmitterItem;
 
 	// Open common editors
 	menuItem

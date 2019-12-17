@@ -165,7 +165,7 @@ return label
 			</separatorItem>
 
 			<scriptItem id="h.ic_submit_render">
-				<label>Submit Render...</label>
+				<label>Render Submitter...</label>
 				<scriptCode>from tools.renderqueue import submit; submit.run_houdini(hou.session)</scriptCode>
 				<insertAfter>h.ic_custom_menu_sep_3</insertAfter>
 			</scriptItem>
