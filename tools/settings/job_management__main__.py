@@ -261,7 +261,7 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 				jobVersion = j.getValue(jobElement, 'version')
 				jobActive = jobElement.get('active')
 
-				print jobName, jobPath, jobVersion, jobActive
+				# print(jobName, jobPath, jobVersion, jobActive)
 
 				if '$JOBSROOT' in jobPath:
 					jobPath = jobPath.replace('$JOBSROOT', '$IC_JOBSROOT')

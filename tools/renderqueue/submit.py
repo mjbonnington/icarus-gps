@@ -957,7 +957,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 			output_driver = self.ui.outputDriver_comboBox.currentText()
 			output = self.getHoudiniRenderOutput(output_driver)
 			outputs['main'] = os.path.split(output)
-			print output
+			# print(output)
 
 		elif os.environ['RQ_APP'] == "NUKE":
 			for entry in self.getWriteNodes(selected=False):
@@ -971,7 +971,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 	# 		This is all a bit hacky right now.
 	# 	"""
 	# 	outputs = {}
-	# 	print layers
+	# 	print(layers)
 
 	# 	for layer in layers:
 	# 		prefix2 = prefix

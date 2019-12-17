@@ -92,7 +92,7 @@
 			<icon>$IC_FORMSDIR/icons/app_icon_hieroplayer.png</icon>
 		</submenu>
 		<path version="[template]">
-			<osx>/Applications/Nuke[ver]/Nuke[ver].app/Contents/MacOS/Nuke[ver]</osx>
+			<osx>/Applications/Nuke[ver]/Nuke[ver].app/Contents/MacOS/Nuke[ver-major]</osx>
 			<linux>/usr/local/Nuke[ver]/Nuke[ver-major]</linux>
 			<win>C:/Program Files/Nuke[ver]/Nuke[ver-major].exe</win>
 		</path>
@@ -135,6 +135,11 @@
 			<osx>/Applications/Nuke11.3v5/Nuke11.3v5.app/Contents/MacOS/Nuke11.3v5</osx>
 			<linux>/usr/local/Nuke11.3v5/Nuke11.3</linux>
 			<win>C:/Program Files/Nuke11.3v5/Nuke11.3.exe</win>
+		</path>
+		<path version="12.0v3">
+			<osx>/Applications/Nuke12.0v3/Nuke12.0v3.app/Contents/MacOS/Nuke12.0</osx>
+			<linux>/usr/local/Nuke12.0v3/Nuke12.0</linux>
+			<win>C:/Program Files/Nuke12.0v3/Nuke12.0.exe</win>
 		</path>
 	</app>
 	<app id="hieroplayer" name="HieroPlayer" projectFolders="False" visible="True">
@@ -255,6 +260,9 @@
 			<linux />
 			<win>C:/Program Files/Adobe/Adobe Bridge CC 2017/Bridge.exe</win>
 		</path>
+		<path version="CC 2019">
+			<win>C:/Program Files/Adobe/Adobe Bridge CC 2019/Bridge.exe</win>
+		</path>
 	</app>
 	<app id="realflow" name="RealFlow" projectFolders="True" visible="True">
 		<vendor>Next Limit</vendor>
@@ -328,18 +336,18 @@
 			<win>C:/Program Files/Side Effects Software/Houdini [ver]/bin/houdini.exe</win>
 		</path>
 		<path version="15.0.475">
-			<osx />
-			<linux />
+			<osx>/Library/Frameworks/Houdini.framework/Versions/15.0.475/Resources/bin/houdini</osx>
+			<linux>/usr/local/Houdini/bin/houdini</linux>
 			<win>C:/Program Files/Side Effects Software/Houdini 15.0.475/bin/houdini.exe</win>
 		</path>
 		<path version="16.0.557">
-			<osx />
-			<linux />
+			<osx>/Library/Frameworks/Houdini.framework/Versions/16.0.557/Resources/bin/houdini</osx>
+			<linux>/usr/local/Houdini/bin/houdini</linux>
 			<win>C:/Program Files/Side Effects Software/Houdini 16.0.557/bin/houdini.exe</win>
 		</path>
 		<path version="16.5.496">
-			<osx />
-			<linux />
+			<osx>/Library/Frameworks/Houdini.framework/Versions/16.5.496/Resources/bin/houdini</osx>
+			<linux>/usr/local/Houdini/bin/houdini</linux>
 			<win>C:/Program Files/Side Effects Software/Houdini 16.5.496/bin/houdini.exe</win>
 		</path>
 		<path version="17.5.229">
@@ -401,23 +409,28 @@
 			<win>C:/Program Files/Thinkbox/Deadline[ver]/bin/deadlinelauncher.exe</win>
 		</path>
 		<path version="6">
-			<osx />
-			<linux />
+			<osx>/Applications/Thinkbox/Deadline6/DeadlineLauncher6.app/Contents/MacOS/DeadlineLauncher6</osx>
+			<linux>/opt/Thinkbox/Deadline6/bin/deadlinelauncher</linux>
 			<win>C:/Program Files/Thinkbox/Deadline6/bin/deadlinelauncher.exe</win>
 		</path>
 		<path version="7">
-			<osx />
-			<linux />
+			<osx>/Applications/Thinkbox/Deadline7/DeadlineLauncher7.app/Contents/MacOS/DeadlineLauncher7</osx>
+			<linux>/opt/Thinkbox/Deadline7/bin/deadlinelauncher</linux>
 			<win>C:/Program Files/Thinkbox/Deadline7/bin/deadlinelauncher.exe</win>
 		</path>
 		<path version="8">
-			<osx />
-			<linux />
+			<osx>/Applications/Thinkbox/Deadline8/DeadlineLauncher8.app/Contents/MacOS/DeadlineLauncher8</osx>
+			<linux>/opt/Thinkbox/Deadline8/bin/deadlinelauncher</linux>
 			<win>C:/Program Files/Thinkbox/Deadline8/bin/deadlinelauncher.exe</win>
+		</path>
+		<path version="9">
+			<osx>/Applications/Thinkbox/Deadline9/DeadlineLauncher9.app/Contents/MacOS/DeadlineLauncher9</osx>
+			<linux>/opt/Thinkbox/Deadline9/bin/deadlinelauncher</linux>
+			<win>C:/Program Files/Thinkbox/Deadline9/bin/deadlinelauncher.exe</win>
 		</path>
 		<path version="10">
 			<osx>/Applications/Thinkbox/Deadline10/DeadlineLauncher10.app/Contents/MacOS/DeadlineLauncher10</osx>
-			<linux />
+			<linux>/opt/Thinkbox/Deadline10/bin/deadlinelauncher</linux>
 			<win>C:/Program Files/Thinkbox/Deadline10/bin/deadlinelauncher.exe</win>
 		</path>
 	</app>
@@ -468,7 +481,7 @@
 			<win>Z:/_Library/Apps/Windows/Redshift/2.6.50</win>
 		</path>
 	</app>
-	<app id="sublime" name="SublimeText" projectFolders="False" visible="False">
+	<app id="sublime" name="Sublime Text" projectFolders="False" visible="False">
 		<category>Text Editor</category>
 		<path version="[template]">
 			<osx />
