@@ -11,12 +11,6 @@
 import os
 import sys
 
-# Initialise pipeline environment
-# if __name__ == "__main__":
-# 	sys.path.append("J:/dev/icarus/core/run")  # Temporary
-# 	import icarus__env__
-# 	icarus__env__.set_env()
-
 from Qt import QtCore, QtGui, QtWidgets
 
 # Import custom modules
@@ -27,7 +21,6 @@ from shared import json_metadata as metadata
 from shared import os_wrapper
 from shared import prompt
 from shared import verbose
-
 
 # ----------------------------------------------------------------------------
 # Configuration
