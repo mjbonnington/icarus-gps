@@ -84,9 +84,9 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		# self.ui.shots_tableWidget.itemChanged.connect(lambda item: self.itemChecked(item))
 
 		self.ui.seq_comboBox.currentIndexChanged.connect(self.updateShotsPreview)
-		self.ui.seq_comboBox.textChanged.connect(self.updateShotsPreview)
+		self.ui.seq_comboBox.editTextChanged.connect(self.updateShotsPreview)
 		self.ui.prefix_comboBox.currentIndexChanged.connect(self.updateShotsPreview)
-		self.ui.prefix_comboBox.textChanged.connect(self.updateShotsPreview)
+		self.ui.prefix_comboBox.editTextChanged.connect(self.updateShotsPreview)
 		self.ui.shotCount_spinBox.valueChanged.connect(self.updateShotsPreview)
 		self.ui.start_spinBox.valueChanged.connect(self.updateShotsPreview)
 		self.ui.increment_spinBox.valueChanged.connect(self.updateShotsPreview)
@@ -159,7 +159,7 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 			self.ui.shotSettings_toolButton.setEnabled(True)
 			row = widget.currentItem().row()
 			self.shot = widget.verticalHeaderItem(row).text()
-			print self.shot
+			# print self.shot
 
 		# More than one item selected...
 		else:

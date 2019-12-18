@@ -2,8 +2,8 @@
 
 # [Icarus] jobs.py
 #
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2015-2017 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2015-2019
 #
 # Manipulates the database of jobs running in the CG department.
 
@@ -412,11 +412,10 @@ class Jobs(xml_data.XMLData):
 				for name in dirnames:
 					if name == os.environ['IC_METADATA']:
 						dirname = os.path.join(dirpath, name)
-						shotdir = os.path.dirname(dirname).lstrip(shotsPath)
-						shotdir = shotdir.replace("\\", "/").lstrip("/")
-						# print shotdir
-						if shotdir:
-							shotLs.append(shotdir)
+						shotdir = os.path.dirname(dirname).replace(shotsPath, "")
+						shotname = shotdir.replace("\\", "/").lstrip("/")
+						if shotname:
+							shotLs.append(shotname)
 
 			if len(shotLs):
 				shotLs.sort()
