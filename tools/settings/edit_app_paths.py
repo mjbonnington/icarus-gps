@@ -310,3 +310,10 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 		if event.key() == QtCore.Qt.Key_Return \
 		or event.key() == QtCore.Qt.Key_Enter:
 			return
+
+
+	def hideEvent(self, event):
+		""" Event handler for when window is hidden.
+		"""
+		# self.save()  # Save settings
+		self.storeWindow()  # Store window geometry

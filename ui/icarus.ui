@@ -1384,8 +1384,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>355</width>
-                    <height>331</height>
+                    <width>164</width>
+                    <height>143</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -1812,8 +1812,8 @@ QToolButton:pressed, QToolButton:checked:pressed {
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>355</width>
-                    <height>332</height>
+                    <width>136</width>
+                    <height>70</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -2704,6 +2704,7 @@ QToolButton:pressed, QToolButton:checked:pressed {
     <addaction name="actionJobManagement"/>
     <addaction name="actionShotManagement"/>
     <addaction name="actionShotCreator"/>
+    <addaction name="actionEditAppPaths"/>
     <addaction name="actionEnvironmentVariables"/>
     <addaction name="actionBatchRename"/>
     <addaction name="actionRenderQueue"/>
@@ -2875,6 +2876,11 @@ QToolButton:pressed, QToolButton:checked:pressed {
    </property>
    <property name="expert" stdset="0">
     <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionEditAppPaths">
+   <property name="text">
+    <string>Edit Application Paths...</string>
    </property>
   </action>
  </widget>

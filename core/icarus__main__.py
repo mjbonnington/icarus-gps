@@ -126,7 +126,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 		self.shortcutEnvVars = QtWidgets.QShortcut(self)
 		self.shortcutEnvVars.setKey('Ctrl+E')
-		self.shortcutEnvVars.activated.connect(self.printEnvVars)
+		self.shortcutEnvVars.activated.connect(self.openEnvVarEditor)
 
 		# Set icons
 		self.ui.shotEnv_toolButton.setIcon(self.iconSet('filmgrain.svg'))
@@ -152,13 +152,14 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.actionShotSettings.triggered.connect(self.shotSettings)
 
 		# Tools menu
-		self.ui.actionJobManagement.triggered.connect(self.launchJobManagement)
-		self.ui.actionShotManagement.triggered.connect(self.launchShotManagement)
-		self.ui.actionShotCreator.triggered.connect(self.launchShotCreator)
-		self.ui.actionEnvironmentVariables.triggered.connect(self.printEnvVars)
-		self.ui.actionBatchRename.triggered.connect(self.launchBatchRename)
-		self.ui.actionRenderQueue.triggered.connect(self.launchRenderQueue)
-		self.ui.actionRenderSubmitter.triggered.connect(self.launchRenderSubmitter)
+		self.ui.actionJobManagement.triggered.connect(self.openJobManagement)
+		self.ui.actionShotManagement.triggered.connect(self.openShotManagement)
+		self.ui.actionShotCreator.triggered.connect(self.openShotCreator)
+		self.ui.actionEnvironmentVariables.triggered.connect(self.openEnvVarEditor)
+		self.ui.actionEditAppPaths.triggered.connect(self.openAppPathsEditor)
+		self.ui.actionBatchRename.triggered.connect(self.openBatchRename)
+		self.ui.actionRenderQueue.triggered.connect(self.openRenderQueue)
+		self.ui.actionRenderSubmitter.triggered.connect(self.openRenderSubmitter)
 
 		self.ui.toolMenu_toolButton.setMenu(self.ui.menuTools)  # Add tools menu to tool button in UI
 
@@ -241,7 +242,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.setShot_toolButton.toggled.connect(lambda checked: self.setShot(checked))
 
 			# Utility launch buttons (bottom row)
-			self.ui.render_toolButton.clicked.connect(self.launchRenderSubmitter)  # self.launchRenderQueue
+			self.ui.render_toolButton.clicked.connect(self.openRenderSubmitter)  # self.openRenderQueue
 			self.ui.openReview_toolButton.clicked.connect(launchApps.djv)
 			self.ui.openProdBoard_toolButton.clicked.connect(launchApps.prodBoard)
 			self.ui.openTerminal_toolButton.clicked.connect(launchApps.terminal)
@@ -737,7 +738,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			dialogMsg = "No active jobs were found. Would you like to set up some jobs now?"
 			dialog = prompt.dialog()
 			if dialog.display(dialogMsg, dialogTitle):
-				self.launchJobManagement()
+				self.openJobManagement()
 			else:
 				self.unlockJobUI(refreshShots=False)
 
@@ -784,7 +785,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			dialogMsg = "No shots were found for the job '%s'. Would you like to create some shots now?" %selJob
 			dialog = prompt.dialog()
 			if dialog.display(dialogMsg, dialogTitle):
-				self.launchShotCreator()
+				self.openShotCreator()
 			else:
 				pass
 
@@ -1003,24 +1004,6 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.shotEnv_toolButton.setText('%s - %s' %(self.job, self.shot))
 
 
-	def printEnvVars(self, allvars=False):
-		""" Print Icarus environment variables - used for debugging.
-			Open Icarus environment variables dialog.
-		"""
-		# try:
-		# 	for key in os.environ.keys():
-		# 		if allvars:
-		# 			print("%30s = %s" %(key, os.environ[key]))
-		# 		elif key.startswith("IC"):
-		# 			print("%30s = %s" %(key, os.environ[key]))
-		# except KeyError:
-		# 	print("Environment variable(s) not set.")
-
-		from tools.envvarbrowser import envvar_browser
-		self.envVarsDialog = envvar_browser.EnvVarsDialog(parent=self)
-		self.envVarsDialog.show()
-
-
 	def about(self):
 		""" Show about dialog.
 		"""
@@ -1062,22 +1045,27 @@ os.environ['IC_VENDOR'])
 			# categoryLs = ['user', 'launcher', 'global', 'test', 'job', 'time', 'resolution', 'units', 'apps', 'other', 'camera']
 		"""
 		if settingsType == "Job":
+			selfName = os.environ['IC_JOB']
 			categoryLs = ['job', 'apps', 'units', 'time', 'resolution', 'other']
 			settingsFile = os.environ['IC_JOBDATA']
 			inherit = None
 		elif settingsType == "Shot":
+			selfName = os.environ['IC_SHOT']
 			categoryLs = ['shot', 'units', 'time', 'resolution', 'camera']
 			settingsFile = os.environ['IC_SHOTDATA']
 			inherit = os.environ['IC_JOBDATA']
 		elif settingsType == "User":
+			selfName = os.environ['IC_USERNAME']
 			categoryLs = ['user', ]
 			settingsFile = cfg['prefs_file']  # Use Icarus UI prefs - os.path.join(os.environ['IC_USERPREFS'], 'icarus_prefs.json')
 			inherit = None
 		elif settingsType == "Global":
+			selfName = ""
 			categoryLs = ['global', ]
 			settingsFile = os.path.join(os.environ['IC_CONFIGDIR'], 'icarus_globals.json')
 			inherit = None
 		elif settingsType == "App":  # Workaround for apps only dialog
+			selfName = os.environ['IC_JOB']
 			categoryLs = ['apps', ]
 			settingsFile = os.environ['IC_JOBDATA']
 			inherit = None
@@ -1089,6 +1077,7 @@ os.environ['IC_VENDOR'])
 		self.settingsEditor = settings.SettingsDialog(parent=self)
 		result = self.settingsEditor.display(
 			settings_type=settingsType, 
+			self_name=selfName, 
 			category_list=categoryLs, 
 			start_panel=startPanel, 
 			prefs_file=settingsFile, 
@@ -1162,38 +1151,53 @@ os.environ['IC_VENDOR'])
 			djvOps.viewer(path)
 
 
-	def launchRenderSubmitter(self):
-		""" Open Render Submitter dialog window.
+	def openJobManagement(self):
+		""" Open Job Management window.
 		"""
-		from tools.renderqueue import submit
-		try:
-			self.renderSubmitUI.display()
-		except AttributeError:
-			self.renderSubmitUI = submit.RenderSubmitUI(parent=self)
-			self.renderSubmitUI.display()
+		from tools.settings import job_management__main__
+		jobManagementDialog = job_management__main__.JobManagementDialog(parent=self)
+		if jobManagementDialog.display():  # Return True if user clicked Save, False for Cancel
+			self.populateJobs()
 
 
-	def launchRenderQueue(self):
-		""" Launch Render Queue Manager window.
+	def openShotManagement(self):
+		""" Open Shot Management window.
+			THIS IS THE NEW (WIP) SHOT MANAGEMENT EDITOR...
 		"""
-		from tools.renderqueue import renderqueue
-		try:
-			self.renderQueueApp.show()
-			self.renderQueueApp.raise_()
-		except AttributeError:
-			self.renderQueueApp = renderqueue.RenderQueueApp()
-			self.renderQueueApp.show()
+		from tools.settings import shot_management__main__
+		shotManagementDialog = shot_management__main__.ShotManagementDialog(parent=self)
+		shotManagementDialog.display(job=self.ui.job_comboBox.currentText())
+		self.populateJobs()
 
 
-	# def launchRenderBrowser(self):
-	# 	""" Launch Render Browser window.
-	# 	"""
-	# 	import rb__main__
-	# 	# reload(rb__main__)  # Python 3 doesn't like this
+	def openShotCreator(self):
+		""" Open Shot Creator dialog. (will be deprecated)
+		"""
+		from tools.settings import shot_creator__main__
+		shotCreatorDialog = shot_creator__main__.ShotCreatorDialog(parent=self)
+		shotCreatorDialog.display(job=self.ui.job_comboBox.currentText())
+		self.populateJobs()
 
 
-	def launchBatchRename(self):
-		""" Launch Batch Rename tool.
+	def openAppPathsEditor(self):
+		""" Open the application paths editor dialog.
+		"""
+		from tools.settings import edit_app_paths
+		editAppPathsDialog = edit_app_paths.dialog(parent=self)
+		if editAppPathsDialog.display():
+			self.setupJob()
+
+
+	def openEnvVarEditor(self, allvars=False):
+		""" Open environment variables editor.
+		"""
+		from tools.envvarbrowser import envvar_browser
+		self.envVarsDialog = envvar_browser.EnvVarsDialog(parent=self)
+		self.envVarsDialog.show()
+
+
+	def openBatchRename(self):
+		""" Open Batch Rename tool.
 		"""
 		from tools.sequencerename import sequencerename
 		try:
@@ -1204,32 +1208,34 @@ os.environ['IC_VENDOR'])
 			self.batchRenameApp.show()
 
 
-	def launchJobManagement(self):
-		""" Launch Job Management dialog.
+	def openRenderQueue(self):
+		""" Open Render Queue Manager window.
 		"""
-		from tools.settings import job_management__main__
-		jobManagementDialog = job_management__main__.JobManagementDialog(parent=self)
-		if jobManagementDialog.display():  # Return True if user clicked Save, False for Cancel
-			self.populateJobs()
+		from tools.renderqueue import renderqueue
+		try:
+			self.renderQueueApp.show()
+			self.renderQueueApp.raise_()
+		except AttributeError:
+			self.renderQueueApp = renderqueue.RenderQueueApp()
+			self.renderQueueApp.show()
 
 
-	def launchShotManagement(self):
-		""" Launch Shot Management dialog.
-			THIS IS THE NEW (WIP) SHOT MANAGEMENT EDITOR...
+	def openRenderSubmitter(self):
+		""" Open Render Submitter dialog window.
 		"""
-		from tools.settings import shot_management__main__
-		shotManagementDialog = shot_management__main__.ShotManagementDialog(parent=self)
-		shotManagementDialog.display(job=self.ui.job_comboBox.currentText())
-		self.populateJobs()
+		from tools.renderqueue import submit
+		try:
+			self.renderSubmitUI.display()
+		except AttributeError:
+			self.renderSubmitUI = submit.RenderSubmitUI(parent=self)
+			self.renderSubmitUI.display()
 
 
-	def launchShotCreator(self):
-		""" Launch Shot Creator dialog. (deprecated)
-		"""
-		from tools.settings import shot_creator__main__
-		shotCreatorDialog = shot_creator__main__.ShotCreatorDialog(parent=self)
-		shotCreatorDialog.display(job=self.ui.job_comboBox.currentText())
-		self.populateJobs()
+	# def openRenderBrowser(self):
+	# 	""" Open Render Browser window.
+	# 	"""
+	# 	import rb__main__
+	# 	# reload(rb__main__)  # Python 3 doesn't like this
 
 
 	# def launchGenericDialog(self, module_name, class_name, modal=True):

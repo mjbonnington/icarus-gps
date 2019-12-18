@@ -100,9 +100,9 @@
        <number>8</number>
       </property>
       <item row="0" column="0">
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="seq_label">
         <property name="text">
-         <string>Sequence/episode</string>
+         <string>Sequence/episode:</string>
         </property>
        </widget>
       </item>
@@ -123,12 +123,12 @@
         </property>
         <item>
          <property name="text">
-          <string>SH</string>
+          <string>sh</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>PC</string>
+          <string>pc</string>
          </property>
         </item>
        </widget>
@@ -230,8 +230,14 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="comboBox">
+       <widget class="QComboBox" name="seq_comboBox">
         <property name="editable">
+         <bool>true</bool>
+        </property>
+        <property name="xmlTag" stdset="0">
+         <string>sequence</string>
+        </property>
+        <property name="storeHistory" stdset="0">
          <bool>true</bool>
         </property>
         <item>
@@ -315,8 +321,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>257</x>
-     <y>351</y>
+     <x>265</x>
+     <y>503</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -331,8 +337,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>325</x>
-     <y>351</y>
+     <x>333</x>
+     <y>503</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -347,12 +353,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>146</x>
-     <y>106</y>
+     <x>238</x>
+     <y>236</y>
     </hint>
     <hint type="destinationlabel">
-     <x>122</x>
-     <y>132</y>
+     <x>156</x>
+     <y>288</y>
     </hint>
    </hints>
   </connection>
@@ -363,12 +369,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>181</x>
-     <y>105</y>
+     <x>238</x>
+     <y>236</y>
     </hint>
     <hint type="destinationlabel">
-     <x>51</x>
-     <y>123</y>
+     <x>77</x>
+     <y>288</y>
     </hint>
    </hints>
   </connection>
@@ -379,12 +385,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>199</x>
-     <y>104</y>
+     <x>238</x>
+     <y>236</y>
     </hint>
     <hint type="destinationlabel">
-     <x>138</x>
-     <y>159</y>
+     <x>156</x>
+     <y>314</y>
     </hint>
    </hints>
   </connection>
@@ -395,12 +401,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>186</x>
-     <y>107</y>
+     <x>238</x>
+     <y>236</y>
     </hint>
     <hint type="destinationlabel">
-     <x>39</x>
-     <y>152</y>
+     <x>95</x>
+     <y>314</y>
     </hint>
    </hints>
   </connection>
@@ -411,12 +417,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>211</x>
-     <y>104</y>
+     <x>238</x>
+     <y>236</y>
     </hint>
     <hint type="destinationlabel">
-     <x>140</x>
-     <y>82</y>
+     <x>156</x>
+     <y>262</y>
     </hint>
    </hints>
   </connection>
@@ -427,12 +433,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>182</x>
-     <y>106</y>
+     <x>238</x>
+     <y>236</y>
     </hint>
     <hint type="destinationlabel">
-     <x>41</x>
-     <y>82</y>
+     <x>69</x>
+     <y>262</y>
     </hint>
    </hints>
   </connection>

@@ -3,7 +3,7 @@
 # [Icarus] settings.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
-# (c) 2015-2019 Gramercy Park Studios
+# (c) 2015-2019
 #
 # Modular settings editor dialog.
 # Provides a skeleton dialog which can be extended with load-in panels, each
@@ -20,7 +20,6 @@ import ui_template as UI
 
 from shared import verbose
 
-
 # ----------------------------------------------------------------------------
 # Configuration
 # ----------------------------------------------------------------------------
@@ -32,12 +31,10 @@ cfg['window_title'] = "Settings"
 cfg['window_object'] = "settingsUI"
 
 # Set the UI and the stylesheet
-cfg['ui_file'] = 'settings_ui.ui'
+cfg['ui_file'] = 'settings.ui'
 cfg['stylesheet'] = 'style.qss'  # Set to None to use the parent app's stylesheet
 
 # Other options
-# prefs_location = os.environ['IC_USERPREFS']
-# cfg['prefs_file'] = os.path.join(prefs_location, '_prefs.json')
 cfg['store_window_geometry'] = True
 
 # ----------------------------------------------------------------------------
@@ -70,7 +67,8 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 
 	def display(self, 
-		settings_type="Generic", 
+		settings_type="Generic",
+		self_name="", 
 		category_list=[], 
 		start_panel=None, 
 		prefs_file=None, 
@@ -79,6 +77,7 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		""" Display the dialog.
 
 			'settings_type' is the name given to the settings dialog.
+			'self_name' e.g. the name of the job or shot.
 			'category_list' is a list of categories, should correspond to a
 			page of properties defined by a .ui file.
 			'start_panel' if set will jump straight to the named panel.
@@ -95,6 +94,7 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 			self.currentCategory = ""
 
 		self.settings_type = settings_type
+		self.self_name = self_name
 		self.category_list = category_list
 		self.prefs_file = prefs_file
 		self.inherit = inherit
@@ -102,17 +102,13 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 		self.reset()
 
-		# Set window title - TODO: pass in as keyword arg
-		if settings_type == "User":
-			title_suffix = ": " + os.environ['IC_USERNAME']
-		elif settings_type == "Job":
-			title_suffix = ": " + os.environ['IC_JOB']
-		elif settings_type == "Shot":
-			title_suffix = ": " + os.environ['IC_SHOT']
+		# Set window title
+		if self_name != "":
+			self.setWindowTitle(
+				"%s %s: %s" % (settings_type, cfg['window_title'], self_name))
 		else:
-			title_suffix = ""
-		self.setWindowTitle(
-			"%s %s%s" % (settings_type, cfg['window_title'], title_suffix))
+			self.setWindowTitle(
+				"%s %s" % (settings_type, cfg['window_title']))
 
 		return self.exec_()
 
@@ -167,16 +163,18 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		if self.loadPanel(category):
 			if (self.inherit is not None) \
 			and self.ui.settings_frame.property('inheritable'):
-				verbose.print_("Category: %s (values inheritable)" %category)
-				self.setupWidgets(self.ui.settings_frame, 
-				                  forceCategory=category, 
-				                  inherit=self.prefs_inherited, 
-				                  storeProperties=False)
+				verbose.print_("Category: %s (values inheritable)" % category)
+				self.setupWidgets(
+					self.ui.settings_frame, 
+					forceCategory=category, 
+					inherit=self.prefs_inherited, 
+					storeProperties=False)
 			else:
-				verbose.print_("Category: %s" %category)
-				self.setupWidgets(self.ui.settings_frame, 
-				                  forceCategory=category, 
-				                  storeProperties=storeProperties)
+				verbose.print_("Category: %s" % category)
+				self.setupWidgets(
+					self.ui.settings_frame, 
+					forceCategory=category, 
+					storeProperties=storeProperties)
 
 
 	def loadPanel(self, category):
@@ -185,8 +183,8 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 			exec is not allowed in function because it contains a nested
 			function with free variables' with Python 2.x.
 		"""
-		ui_file = "settings_%s_ui.ui" %category
-		helper_module = 'settings_%s' %category
+		ui_file = "settings_%s_ui.ui" % category
+		helper_module = 'settings_%s' % category
 		panel_ui_loaded = False
 		helper_module_loaded = False
 
@@ -198,18 +196,18 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 			self.ui.settings_verticalLayout.addWidget(self.ui.settings_frame)
 			panel_ui_loaded = True
 		except FileNotFoundError:
-			message = "Could not open '%s' properties panel UI. " %category
+			message = "Could not open '%s' properties panel UI. " % category
 			verbose.error(message)
 
 		# Load helper module
 		try:
-			exec_str = 'from . import %s as sh; helper = sh.helper(self, self.ui.settings_frame)' %helper_module
+			exec_str = 'from . import %s as sh; helper = sh.helper(self, self.ui.settings_frame)' % helper_module
 			# print(exec_str)
 			exec(exec_str)
 			helper_module_loaded = True
 		except ImportError:
-			message = "Could not import '%s' module. " %helper_module
-			verbose.warning(message)
+			message = "Could not import '%s' module. " % helper_module
+			verbose.debug(message)
 
 		if panel_ui_loaded: # and helper_module_loaded:
 			return True
@@ -250,7 +248,8 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 		""" Override function to prevent Enter / Esc keypresses triggering
 			OK / Cancel buttons.
 		"""
-		if event.key() == QtCore.Qt.Key_Return or event.key() == QtCore.Qt.Key_Enter:
+		if event.key() == QtCore.Qt.Key_Return \
+		or event.key() == QtCore.Qt.Key_Enter:
 			return
 
 
@@ -265,4 +264,3 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 	# 	"""
 	# 	#self.save()  # Save settings
 	# 	#self.storeWindow()  # Store window geometry
-

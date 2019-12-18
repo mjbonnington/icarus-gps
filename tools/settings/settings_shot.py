@@ -19,4 +19,4 @@ class helper():
 		self.frame = frame
 
 		# Populate line edit with shot name
-		self.frame.shot_lineEdit.setText(os.getenv('IC_SHOT', ''))
+		self.frame.shot_lineEdit.setText(parent.self_name)

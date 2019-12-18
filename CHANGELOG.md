@@ -1,5 +1,6 @@
 v0.10.0 (--)
 -	[Icarus] Major update may break compatibility with older jobs. Only compatible jobs will be displayed in the Icarus UI.
+-	[Icarus] Shots can be given arbitrary names and belong to groupings such as sequences, episodes, edits etc.
 -	[Icarus] Added support for Houdini.
 -	[Icarus] Implemented unified open/save system for DCC apps.
 -	[Icarus] Moved toolbar icons in Maya, Nuke and Houdini to a new 'GPS' menu in pursuit of a more consistent user experience.

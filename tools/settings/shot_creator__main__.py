@@ -72,7 +72,7 @@ class ShotCreatorDialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.ui.shotCreator_buttonBox.button(QtWidgets.QDialogButtonBox.Apply).clicked.connect(self.createShots)
 
 		# Set input validators
-		alphanumeric_validator = QtGui.QRegExpValidator( QtCore.QRegExp(r'[\w]+'), self.ui.suffix_lineEdit)
+		alphanumeric_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w]+'), self.ui.suffix_lineEdit)
 		self.ui.suffix_lineEdit.setValidator(alphanumeric_validator)
 
 		# Instantiate jobs class and load data

@@ -123,7 +123,7 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 
 		self.setWindowTitle("%s - %s" % (cfg['window_title'], os.environ['SCNMGR_JOB']))
 
-		self.ui.shot_lineEdit.setText(os.environ['SCNMGR_SHOT'])
+		self.ui.shot_lineEdit.setText(os.environ['SCNMGR_SHOT'].replace('/', '_'))
 		self.ui.shot_toolButton.setEnabled(False)  # temp until implemented
 
 		self.populateComboBox(self.ui.artist_comboBox, self.getArtists(), blockSignals=True)

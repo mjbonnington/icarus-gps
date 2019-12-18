@@ -9,33 +9,38 @@
 
 
 import os
+import re
 import sys
 
 from Qt import QtCore, QtGui, QtWidgets
 
 # Import custom modules
 import ui_template as UI
+
 from shared import jobs
 from shared import json_metadata as metadata
 from shared import os_wrapper
+from shared import prompt
 from shared import verbose
-
 
 # ----------------------------------------------------------------------------
 # Configuration
 # ----------------------------------------------------------------------------
 
+cfg = {}
+
 # Set window title and object names
-WINDOW_TITLE = "Shot Management"
-WINDOW_OBJECT = "shotManagementUI"
+cfg['window_title'] = "Shot Management"
+cfg['window_object'] = "shotManagementUI"
 
 # Set the UI and the stylesheet
-UI_FILE = "shot_management_ui.ui"
-STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
+cfg['ui_file'] = 'shot_management.ui'
+cfg['stylesheet'] = 'style.qss'  # Set to None to use the parent app's stylesheet
 
 # Other options
-STORE_WINDOW_GEOMETRY = True
-
+prefs_location = os.environ['IC_USERPREFS']
+cfg['prefs_file'] = os.path.join(prefs_location, 'shot_management_prefs.json')
+cfg['store_window_geometry'] = True
 
 # ----------------------------------------------------------------------------
 # Main dialog class
@@ -48,79 +53,118 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		super(ShotManagementDialog, self).__init__(parent)
 		self.parent = parent
 
-		self.setupUI(window_object=WINDOW_OBJECT, 
-		             window_title=WINDOW_TITLE, 
-		             ui_file=UI_FILE, 
-		             stylesheet=STYLESHEET, 
-		             store_window_geometry=STORE_WINDOW_GEOMETRY)  # re-write as **kwargs ?
+		self.setupUI(**cfg)
+		self.conformFormLayoutLabels(self.ui.sidebar_frame)
 
-		# Set window flags
+		# Set window icon, flags and other Qt attributes
+		self.setWindowIcon(self.iconSet('filmgrain.svg', tintNormal=False))
 		self.setWindowFlags(QtCore.Qt.Dialog)
-
-		# Set other Qt attributes
 		self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
+		# Restore splitter size state
+		try:
+			self.ui.splitter.restoreState(self.settings.value("splitterSizes")) #.toByteArray())
+			self.ui.shots_tableWidget.horizontalHeader().restoreState(self.settings.value("shotsTableView")) #.toByteArray())
+		except:
+			pass
+
 		# Connect signals & slots
-		# self.accepted.connect(self.save)  # Save settings if dialog accepted
+		self.ui.job_comboBox.currentIndexChanged.connect(lambda: self.populateShots())
 
-		self.ui.job_comboBox.currentIndexChanged.connect(self.populateShots)
-
-		# self.ui.shotAdd_toolButton.clicked.connect(self.addShot)
+		self.ui.shotCreate_toolButton.toggled.connect(lambda checked: self.toggleSidebar(checked))
 		# self.ui.shotDelete_toolButton.clicked.connect(self.deleteShots)
-		self.ui.refresh_toolButton.clicked.connect(self.populateShots)
-		# self.ui.jobEdit_toolButton.clicked.connect(self.editJob)
-		# self.ui.jobEnable_toolButton.clicked.connect(self.enableJobs)
-		# self.ui.jobDisable_toolButton.clicked.connect(self.disableJobs)
-		# self.ui.editPaths_toolButton.clicked.connect(self.editPaths)
+		self.ui.shotSettings_toolButton.clicked.connect(self.shotSettings)
+		self.ui.refresh_toolButton.clicked.connect(lambda: self.populateShots())
 
-		# self.ui.searchFilter_lineEdit.textChanged.connect(lambda text: self.reloadJobs(reloadDatabase=False, jobFilter=text))
-		# self.ui.searchFilterClear_toolButton.clicked.connect(self.clearFilter)
+		self.ui.searchFilter_lineEdit.textChanged.connect(lambda text: self.populateShots(shot_filter=text))
+		self.ui.searchFilterClear_toolButton.clicked.connect(self.clearFilter)
 
-		# self.ui.jobs_listWidget.itemSelectionChanged.connect(self.updateToolbarUI)
-		# self.ui.jobs_listWidget.itemDoubleClicked.connect(self.editJob)
-		# self.ui.jobs_listWidget.itemChanged.connect(lambda item: self.itemChecked(item))
+		self.ui.shots_tableWidget.itemSelectionChanged.connect(self.updateToolbarUI)
+		# self.ui.shots_tableWidget.itemDoubleClicked.connect(self.editJob)
+		# self.ui.shots_tableWidget.itemChanged.connect(lambda item: self.itemChecked(item))
 
-		# self.ui.main_buttonBox.button(QtWidgets.QDialogButtonBox.Save).clicked.connect(self.accept)
-		# self.ui.main_buttonBox.button(QtWidgets.QDialogButtonBox.Cancel).clicked.connect(self.reject)
+		self.ui.seq_comboBox.currentIndexChanged.connect(self.updateShotsPreview)
+		self.ui.seq_comboBox.textChanged.connect(self.updateShotsPreview)
+		self.ui.prefix_comboBox.currentIndexChanged.connect(self.updateShotsPreview)
+		self.ui.prefix_comboBox.textChanged.connect(self.updateShotsPreview)
+		self.ui.shotCount_spinBox.valueChanged.connect(self.updateShotsPreview)
+		self.ui.start_spinBox.valueChanged.connect(self.updateShotsPreview)
+		self.ui.increment_spinBox.valueChanged.connect(self.updateShotsPreview)
+		# self.ui.suffix_lineEdit.textChanged.connect(self.updateShotsPreview)
+
+		self.ui.create_pushButton.clicked.connect(self.createShots)
+
+		self.ui.main_buttonBox.button(QtWidgets.QDialogButtonBox.Close).clicked.connect(self.accept)
+
+		# Set input validators
+		seq_pattern = r'\w*'
+		seq_pattern_validator = QtGui.QRegExpValidator(QtCore.QRegExp(seq_pattern), self.ui.seq_comboBox.lineEdit())
+		self.ui.seq_comboBox.lineEdit().setValidator(seq_pattern_validator)
+
+		shot_pattern = r'^\w+#{0,8}\w*$'
+		shot_pattern_validator = QtGui.QRegExpValidator(QtCore.QRegExp(shot_pattern), self.ui.prefix_comboBox.lineEdit())
+		self.ui.prefix_comboBox.lineEdit().setValidator(shot_pattern_validator)
+
+		# alphanumeric_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w]+'), self.ui.suffix_lineEdit)
+		# self.ui.suffix_lineEdit.setValidator(alphanumeric_validator)
 
 		# Instantiate jobs class and load data
 		self.j = jobs.Jobs()
+		self.sd = metadata.Metadata()
 
 
 	def display(self, job=None):
 		""" Display the dialog.
 		"""
 		self.job = job
+		self.shot = None
 
 		# self.reloadJobs(reloadDatabase=False)
 		self.populateJobs(reloadDatabase=False)
 		self.populateShots()
-		# self.updateShotsPreview()
+		# self.populateComboBox(self.ui.seq_comboBox, ['shots', 'build'], replace=False)
+		# self.populateComboBox(self.ui.prefix_comboBox, ['sh###'], replace=False)
+
+		self.toggleSidebar(False)
 
 		return self.exec_()
 
 
-	# def updateToolbarUI(self):
-	# 	""" Update the toolbar UI based on the current selection.
-	# 	"""
-	# 	# No items selected...
-	# 	if len(self.ui.jobs_listWidget.selectedItems()) == 0:
-	# 		self.ui.jobDelete_toolButton.setEnabled(False)
-	# 		self.ui.jobEdit_toolButton.setEnabled(False)
-	# 		self.ui.jobEnable_toolButton.setEnabled(False)
-	# 		self.ui.jobDisable_toolButton.setEnabled(False)
-	# 	# One item selected...
-	# 	elif len(self.ui.jobs_listWidget.selectedItems()) == 1:
-	# 		self.ui.jobDelete_toolButton.setEnabled(True)
-	# 		self.ui.jobEdit_toolButton.setEnabled(True)
-	# 		self.ui.jobEnable_toolButton.setEnabled(True)
-	# 		self.ui.jobDisable_toolButton.setEnabled(True)
-	# 	# More than one item selected...
-	# 	else:
-	# 		self.ui.jobDelete_toolButton.setEnabled(True)
-	# 		self.ui.jobEdit_toolButton.setEnabled(False)
-	# 		self.ui.jobEnable_toolButton.setEnabled(True)
-	# 		self.ui.jobDisable_toolButton.setEnabled(True)
+	@QtCore.Slot(bool)
+	def toggleSidebar(self, visible):
+		""" Toggle the visibility of the Create Shot sidebar UI.
+		"""
+		if visible:
+			self.ui.sidebar_frame.show()
+			self.updateShotsPreview()
+
+		else:
+			self.ui.sidebar_frame.hide()
+
+
+	def updateToolbarUI(self):
+		""" Update the toolbar UI based on the current selection.
+		"""
+		widget = self.ui.shots_tableWidget
+		self.shot = None
+
+		# No items selected...
+		if len(widget.selectedItems()) == 0:
+			self.ui.shotDelete_toolButton.setEnabled(False)
+			self.ui.shotSettings_toolButton.setEnabled(False)
+
+		# One item selected...
+		elif len(widget.selectedItems()) == 1:
+			self.ui.shotDelete_toolButton.setEnabled(True)
+			self.ui.shotSettings_toolButton.setEnabled(True)
+			row = widget.currentItem().row()
+			self.shot = widget.verticalHeaderItem(row).text()
+			print self.shot
+
+		# More than one item selected...
+		else:
+			self.ui.shotDelete_toolButton.setEnabled(True)
+			self.ui.shotSettings_toolButton.setEnabled(False)
 
 
 	def getInheritedValue(self, shot_data, job_data, category, setting):
@@ -168,11 +212,13 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 			else:
 				self.ui.job_comboBox.setCurrentIndex(0)
 
+		self.updateToolbarUI()
+
 		# Re-enable signals
 		self.ui.job_comboBox.blockSignals(False)
 
 
-	def populateShots(self):
+	def populateShots(self, shot_filter=""):
 		""" Update the shots view table widget.
 		"""
 		currentJob = self.ui.job_comboBox.currentText()
@@ -184,140 +230,74 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		if shotLs:
 			self.ui.shots_tableWidget.setRowCount(len(shotLs))
 			for row, shotName in enumerate(shotLs):
-				newRowHeaderItem = QtWidgets.QTableWidgetItem(shotName)
-				newItem = QtWidgets.QTableWidgetItem(shotName)
-				self.ui.shots_tableWidget.setVerticalHeaderItem(row, newRowHeaderItem)
-				shot_datafile = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA/shot_data.json" % (jobPath, shotName))
-				job_datafile = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/$IC_METADATA/job_data.json" % jobPath)
-				shot_data = metadata.Metadata()
-				job_data = metadata.Metadata()
-				shot_data.load(shot_datafile)
-				job_data.load(job_datafile)
+				# Populate list view, using filter
+				if shot_filter is not "":
+					if shot_filter.lower() in shotName.lower():  # Case-insensitive
+						item = self.addShotEntry(row, shotName, jobPath)
+					self.ui.searchFilterClear_toolButton.setEnabled(True)
 
-				rangestart = self.getInheritedValue(shot_data, job_data, 'time', 'rangestart')
-				rangeend = self.getInheritedValue(shot_data, job_data, 'time', 'rangeend')
-				text = "%s-%s" % (rangestart, rangeend)
-				self.ui.shots_tableWidget.setItem(row, 0, QtWidgets.QTableWidgetItem(text))
-
-				text = str(self.getInheritedValue(shot_data, job_data, 'units', 'fps'))
-				self.ui.shots_tableWidget.setItem(row, 1, QtWidgets.QTableWidgetItem(text))
-
-				w = self.getInheritedValue(shot_data, job_data, 'resolution', 'fullwidth')
-				h = self.getInheritedValue(shot_data, job_data, 'resolution', 'fullheight')
-				text = "%sx%s" % (w, h)
-				self.ui.shots_tableWidget.setItem(row, 2, QtWidgets.QTableWidgetItem(text))
-
-				w = self.getInheritedValue(shot_data, job_data, 'resolution', 'proxywidth')
-				h = self.getInheritedValue(shot_data, job_data, 'resolution', 'proxyheight')
-				text = "%sx%s" % (w, h)
-				self.ui.shots_tableWidget.setItem(row, 3, QtWidgets.QTableWidgetItem(text))
-
-				text = shot_data.get_attr('camera', 'camera')
-				self.ui.shots_tableWidget.setItem(row, 4, QtWidgets.QTableWidgetItem(text))
-
-				text = "%sx%s" %(shot_data.get_attr('camera', 'filmbackwidth'), shot_data.get_attr('camera', 'filmbackheight'))
-				self.ui.shots_tableWidget.setItem(row, 5, QtWidgets.QTableWidgetItem(text))
-
-				text = str(shot_data.get_attr('camera', 'focallength'))
-				self.ui.shots_tableWidget.setItem(row, 6, QtWidgets.QTableWidgetItem(text))
-
-				text = shot_data.get_attr('shot', 'notes')
-				self.ui.shots_tableWidget.setItem(row, 7, QtWidgets.QTableWidgetItem(text))
-
-				# self.ui.shots_tableWidget.resizeRowToContents(row)
+				else:
+					item = self.addShotEntry(row, shotName, jobPath)
+					self.ui.searchFilterClear_toolButton.setEnabled(False)
 
 		self.ui.shots_tableWidget.resizeRowsToContents()
 
 
-	# def reloadJobs(self, reloadDatabase=True, selectItem=None, jobFilter=""):
-	# 	""" Refresh the jobs list view.
+	def addShotEntry(self, row, shotName, jobPath):
+		""" Add an entry to the shot list table view.
+			TODO: optimise - currently very inefficient
+		"""
+		newRowHeaderItem = QtWidgets.QTableWidgetItem(shotName)
+		newItem = QtWidgets.QTableWidgetItem(shotName)
+		self.ui.shots_tableWidget.setVerticalHeaderItem(row, newRowHeaderItem)
+		shot_datafile = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA/shot_data.json" % (jobPath, shotName))
+		job_datafile = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/$IC_METADATA/job_data.json" % jobPath)  # only read when switching jobs?
+		shot_data = metadata.Metadata()
+		job_data = metadata.Metadata()
+		shot_data.load(shot_datafile)
+		job_data.load(job_datafile)
 
-	# 		'reloadDatabase' will reload the XML data first.
-	# 		'selectItem' specifies an item by name that will be selected
-	# 		automatically.
-	# 		'jobFilter' is a search string to filter the list.
-	# 	"""
-	# 	if reloadDatabase:
-	# 		self.j.loadXML(quiet=True)  # Reload XML data
+		rangestart = self.getInheritedValue(shot_data, job_data, 'time', 'rangestart')
+		rangeend = self.getInheritedValue(shot_data, job_data, 'time', 'rangeend')
+		text = "%s-%s" % (rangestart, rangeend)
+		self.ui.shots_tableWidget.setItem(row, 0, QtWidgets.QTableWidgetItem(text))
 
-	# 	# Stop the widget from emitting signals
-	# 	self.ui.jobs_listWidget.blockSignals(True)
+		text = str(self.getInheritedValue(shot_data, job_data, 'units', 'fps'))
+		self.ui.shots_tableWidget.setItem(row, 1, QtWidgets.QTableWidgetItem(text))
 
-	# 	# Clear tree widget
-	# 	self.ui.jobs_listWidget.clear()
+		w = self.getInheritedValue(shot_data, job_data, 'resolution', 'fullwidth')
+		h = self.getInheritedValue(shot_data, job_data, 'resolution', 'fullheight')
+		text = "%sx%s" % (w, h)
+		self.ui.shots_tableWidget.setItem(row, 2, QtWidgets.QTableWidgetItem(text))
 
-	# 	for jobElement in self.j.getJobs():
-	# 		#jobID = jobElement.get('id')
-	# 		jobActive = jobElement.get('active')
-	# 		jobName = self.j.get_attr(jobElement, 'name')
-	# 		jobPath = self.j.get_attr(jobElement, 'path')
+		w = self.getInheritedValue(shot_data, job_data, 'resolution', 'proxywidth')
+		h = self.getInheritedValue(shot_data, job_data, 'resolution', 'proxyheight')
+		text = "%sx%s" % (w, h)
+		self.ui.shots_tableWidget.setItem(row, 3, QtWidgets.QTableWidgetItem(text))
 
-	# 		# Populate list view, using filter
-	# 		if jobFilter is not "":
-	# 			if jobFilter.lower() in jobName.lower():  # Case-insensitive
-	# 				item = self.addJobEntry(jobActive, jobName, jobPath)
-	# 			self.ui.searchFilterClear_toolButton.setEnabled(True)
+		text = shot_data.get_attr('camera', 'camera')
+		self.ui.shots_tableWidget.setItem(row, 4, QtWidgets.QTableWidgetItem(text))
 
-	# 		else:
-	# 			item = self.addJobEntry(jobActive, jobName, jobPath)
-	# 			self.ui.searchFilterClear_toolButton.setEnabled(False)
+		text = "%sx%s" %(shot_data.get_attr('camera', 'filmbackwidth'), shot_data.get_attr('camera', 'filmbackheight'))
+		self.ui.shots_tableWidget.setItem(row, 5, QtWidgets.QTableWidgetItem(text))
 
-	# 		if selectItem == jobName:
-	# 			selectedItem = item
+		text = str(shot_data.get_attr('camera', 'focallength'))
+		self.ui.shots_tableWidget.setItem(row, 6, QtWidgets.QTableWidgetItem(text))
 
-	# 	self.updateToolbarUI()
-	# 	self.checkRootPaths()
+		text = shot_data.get_attr('shot', 'notes')
+		self.ui.shots_tableWidget.setItem(row, 7, QtWidgets.QTableWidgetItem(text))
 
-	# 	# Re-enable signals
-	# 	self.ui.jobs_listWidget.blockSignals(False)
+		# self.ui.shots_tableWidget.resizeRowToContents(row)
 
-	# 	# Set selection - view will also scroll to show selection
-	# 	if selectItem is not None:
-	# 		self.ui.jobs_listWidget.setCurrentItem(selectedItem)
-
-
-	# def addJobEntry(self, jobActive, jobName, jobPath):
-	# 	""" Add an entry to the jobs list view.
-	# 	"""
-	# 	item = QtWidgets.QListWidgetItem(self.ui.jobs_listWidget)
-	# 	item.setText(jobName)
-
-	# 	# Check active entries
-	# 	if jobActive == 'True':
-	# 		item.setCheckState(QtCore.Qt.Checked)
-	# 	else:
-	# 		item.setCheckState(QtCore.Qt.Unchecked)
-
-	# 	# Grey out entries that don't exist on disk
-	# 	if not os.path.isdir(os_wrapper.translatePath(jobPath)):
-	# 		item.setForeground(QtGui.QColor(102,102,102))
-	# 		item.setToolTip("Job path not found")
-
-	# 	return item
+		return newItem
 
 
 	# def deleteJobs(self):
 	# 	""" Delete the selected job(s).
 	# 	"""
-	# 	for item in self.ui.jobs_listWidget.selectedItems():
+	# 	for item in self.ui.shots_tableWidget.selectedItems():
 	# 		self.j.deleteJob(item.text())
-	# 		self.ui.jobs_listWidget.takeItem(self.ui.jobs_listWidget.row(item))
-
-
-	# def enableJobs(self):
-	# 	""" Enable the selected job(s).
-	# 	"""
-	# 	for item in self.ui.jobs_listWidget.selectedItems():
-	# 		item.setCheckState(QtCore.Qt.Checked)
-	# 		# self.j.enableJob(item.text(), True)  # Already called via signals/slots
-
-
-	# def disableJobs(self):
-	# 	""" Disable the selected job(s).
-	# 	"""
-	# 	for item in self.ui.jobs_listWidget.selectedItems():
-	# 		item.setCheckState(QtCore.Qt.Unchecked)
-	# 		# self.j.enableJob(item.text(), False)  # Already called via signals/slots
+	# 		self.ui.shots_tableWidget.takeItem(self.ui.shots_tableWidget.row(item))
 
 
 	# def itemChecked(self, item):
@@ -330,149 +310,180 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 	# 		self.j.enableJob(item.text(), False)
 
 
-	# def addJob(self):
-	# 	""" Open the edit job dialog to add a new job.
-	# 	"""
-	# 	import edit_job
-	# 	editJobDialog = edit_job.dialog(parent=self)
-	# 	if editJobDialog.display('', '$IC_JOBSROOT', True):
-	# 		if self.j.addJob(editJobDialog.jobName, editJobDialog.jobPath, editJobDialog.jobActive):
-	# 			self.reloadJobs(reloadDatabase=False, selectItem=editJobDialog.jobName)
-	# 		else:
-	# 			errorMsg = "Could not create job as a job with the name '%s' already exists." %editJobDialog.jobName
-	# 			dialogMsg = errorMsg + "\nWould you like to create a job with a different name?"
-	# 			verbose.error(errorMsg)
+	def openSettings(self, settingsType):
+		""" Open settings dialog.
+		"""
+		jobPath = self.j.getPath(self.job, translate=True)
+		shot_datafile = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA/shot_data.json" % (jobPath, self.shot))
+		job_datafile = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/$IC_METADATA/job_data.json" % jobPath)
 
-	# 			# Confirmation dialog
-	# 			import prompt
-	# 			dialogTitle = 'Job Not Created'
-	# 			dialog = prompt.dialog()
-	# 			if dialog.display(dialogMsg, dialogTitle):
-	# 				self.addJob()
+		if settingsType == "Job":
+			selfName = self.job
+			categoryLs = ['job', 'apps', 'units', 'time', 'resolution', 'other']
+			settingsFile = job_datafile
+			inherit = None
+		elif settingsType == "Shot":
+			selfName = self.shot
+			categoryLs = ['shot', 'units', 'time', 'resolution', 'camera']
+			settingsFile = shot_datafile
+			inherit = job_datafile
 
+		from tools.settings import settings
+		self.settingsEditor = settings.SettingsDialog(parent=self)
+		result = self.settingsEditor.display(
+			settings_type=settingsType, 
+			self_name=selfName, 
+			category_list=categoryLs, 
+			prefs_file=settingsFile, 
+			inherit=inherit)
 
-	# def editJob(self):
-	# 	""" Open edit job dialog.
-	# 	"""
-	# 	item = self.ui.jobs_listWidget.selectedItems()[0]
-	# 	jobName = item.text()
-
-	# 	import edit_job
-	# 	editJobDialog = edit_job.dialog(parent=self)
-	# 	if editJobDialog.display(jobName, self.j.getPath(jobName), self.j.getEnabled(jobName)):
-	# 		self.j.enableJob(jobName, editJobDialog.jobActive)
-	# 		self.j.setPath(jobName, editJobDialog.jobPath)
-	# 		if self.j.renameJob(jobName, editJobDialog.jobName):  # Do this last as jobs are referenced by name
-	# 			self.reloadJobs(reloadDatabase=False, selectItem=editJobDialog.jobName)
-	# 		else:
-	# 			errorMsg = "Could not rename job as a job with the name '%s' already exists." %editJobDialog.jobName
-	# 			dialogMsg = errorMsg + "\nWould you still like to edit the job '%s'?" %jobName
-	# 			verbose.error(errorMsg)
-
-	# 			# Confirmation dialog
-	# 			import prompt
-	# 			dialogTitle = 'Job Not Created'
-	# 			dialog = prompt.dialog()
-	# 			if dialog.display(dialogMsg, dialogTitle):
-	# 				self.editJob()
+		return result
 
 
-	# def editPaths(self):
-	# 	""" Open edit paths dialog.
-	# 	"""
-	# 	#self.j.loadXML()
-	# 	self.j.getRootPaths()
-
-	# 	import edit_root_paths
-	# 	editPathsDialog = edit_root_paths.dialog(parent=self)
-	# 	if editPathsDialog.display(self.j.win_root, self.j.osx_root, self.j.linux_root, self.j.jobs_path):
-	# 		self.j.setRootPaths(editPathsDialog.winPath, editPathsDialog.osxPath, editPathsDialog.linuxPath, editPathsDialog.jobsRelPath)
-	# 		self.j.getRootPaths()
-	# 		#self.j.save()
+	def jobSettings(self):
+		""" Open job settings dialog wrapper function.
+		"""
+		if self.openSettings("Job"):
+			self.populateShots()
 
 
-	# def save(self):
-	# 	""" Save data.
-	# 	"""
-	# 	if self.j.save():
-	# 		verbose.message("Job database saved.")
-	# 		return True
-	# 	else:
-	# 		verbose.error("Job database could not be saved.")
-	# 		return False
+	def shotSettings(self):
+		""" Open shot settings dialog wrapper function.
+		"""
+		if self.openSettings("Shot"):
+			self.populateShots()
 
 
-	# def saveAndExit(self):
-	# 	""" Save data and exit.
-	# 	"""
-	# 	if self.save():
-	# 		# self.ui.hide()
-	# 		self.returnValue = True
-	# 		self.ui.accept()
-	# 	else:
-	# 		self.returnValue = False
-	# 		# self.exit()
-	# 		self.ui.accept()
+	def updateShotsPreview(self):
+		""" Update the preview field showing the shot directories to be
+			created.
+		"""
+		multi_ui = [
+			'shotCount_label', 'shotCount_spinBox', 
+			'start_label', 'start_spinBox', 
+			'increment_label', 'increment_spinBox']
+		self.shots_to_create = []
+		shotSeq = self.ui.seq_comboBox.currentText()
+		if shotSeq != "":
+			shotSeq += '/'
+
+		shotName = self.ui.prefix_comboBox.currentText()
+
+		count = self.ui.shotCount_spinBox.value()
+		index = self.ui.start_spinBox.value()
+		step = self.ui.increment_spinBox.value()
+		re_digits_pattern = re.compile(r'#+')
+		match = re.findall(re_digits_pattern, shotName)
+
+		# Create multiple shots
+		if match:
+			hashes = str(match[0])
+			padding = len(hashes)
+			for shot in range(count):
+				self.shots_to_create.append(
+					shotSeq + shotName.replace(hashes, str(index).zfill(padding)))
+				index += step
+			for widget in multi_ui:
+				eval('self.ui.%s.setEnabled(True)' % widget)
+
+		# Create single shot
+		else:
+			verbose.warning("Cannot create multiple shots as there are no hashes (#) in shot name pattern.")
+			self.shots_to_create.append(shotSeq + shotName)
+			for widget in multi_ui:
+				eval('self.ui.%s.setEnabled(False)' % widget)
+
+		# Update UI elements
+		self.ui.shotPreview_listWidget.clear()
+		self.ui.shotPreview_listWidget.addItems(self.shots_to_create)
+		num_shots = len(self.shots_to_create)
+		if num_shots and shotName != "":
+			self.ui.create_pushButton.setEnabled(True)
+			self.ui.create_pushButton.setText(
+				"Create %d %s" % (num_shots, verbose.pluralise('Shot', num_shots)))
+		else:
+			self.ui.create_pushButton.setEnabled(False)
+			self.ui.create_pushButton.setText("Create")
 
 
-	# def exit(self):
-	# 	""" Exit the dialog.
-	# 	"""
-	# 	# self.ui.hide()
-	# 	self.returnValue = False
-	# 	self.ui.reject()
+	def createShots(self):
+		""" Create the shot(s).
+
+		"""
+		success = 0
+		existing = 0
+		failure = 0
+		createdShots = ""
+		existingShots = ""
+		failedShots = ""
+		dialogMsg = ""
+
+		jobPath = self.j.getPath(self.ui.job_comboBox.currentText(), translate=True)
+		for shot in self.shots_to_create:
+			path = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA" % (jobPath, shot))
+			os_wrapper.createDir(path)
+			shotData = os.path.join(path, "shot_data.json")
+			if self.sd.load(shotData):
+				existing += 1
+				existingShots += shot + " "
+			elif self.sd.save():
+				success += 1
+				createdShots += shot + " "
+			else:
+				failure += 1
+				failedShots += shot + " "
+
+		if success:
+			message = "%d %s created successfully: " % (success, verbose.pluralise('shot', success))
+			dialogMsg += "%s\n%s\n\n" % (message, createdShots)
+			verbose.message(message + createdShots)
+
+		if existing:
+			message = "The following %d shot(s) were not created as they already exist: " % existing
+			dialogMsg += "%s\n%s\n\n" % (message, existingShots)
+			verbose.warning(message + existingShots)
+
+		if failure:
+			message = "The following %d shot(s) could not be created - please check write permissions and try again: " % failure
+			dialogMsg += "%s\n%s\n\n" % (message, failedShots)
+			verbose.error(message + failedShots)
+
+		# Confirmation dialog
+		dialogTitle = "Shot Creator Results"
+		dialog = prompt.dialog()
+		dialog.display(dialogMsg, dialogTitle, conf=True)
+
+		self.populateShots()
 
 
 	def keyPressEvent(self, event):
 		""" Override function to prevent Enter / Esc keypresses triggering
 			OK / Cancel buttons.
 		"""
-		if event.key() == QtCore.Qt.Key_Return or event.key() == QtCore.Qt.Key_Enter:
+		if event.key() == QtCore.Qt.Key_Return \
+		or event.key() == QtCore.Qt.Key_Enter:
 			return
 
 
 	def hideEvent(self, event):
 		""" Event handler for when window is hidden.
 		"""
+		self.save()  # Save settings
 		self.storeWindow()  # Store window geometry
 
-
-	# def closeEvent(self, event):
-	# 	""" Event handler for when window is closed.
-	# 	"""
-	# 	#self.save()  # Save settings
-	# 	self.storeWindow()  # Store window geometry
+		# Store splitter size state
+		self.settings.setValue("splitterSizes", self.ui.splitter.saveState())
+		self.settings.setValue("shotsTableView", self.ui.shots_tableWidget.horizontalHeader().saveState())
 
 # ----------------------------------------------------------------------------
 # End of main dialog class
-# ----------------------------------------------------------------------------
-
-
-# ----------------------------------------------------------------------------
+# ============================================================================
 # Run as standalone app
 # ----------------------------------------------------------------------------
 
-# if __name__ == "__main__":
-# 	app = QtWidgets.QApplication(sys.argv)
+if __name__ == "__main__":
+	app = QtWidgets.QApplication(sys.argv)
 
-# 	# Initialise Icarus environment
-# 	sys.path.append(os.environ['IC_COREDIR'])
-# 	import icarus__env__
-# 	icarus__env__.set_env()
-# 	#icarus__env__.append_sys_paths()
-
-# 	import rsc_rc
-
-# 	# Set UI style - you can also use a flag e.g. '-style plastique'
-# 	#app.setStyle('fusion')
-
-# 	# Apply UI style sheet
-# 	if STYLESHEET is not None:
-# 		qss=os.path.join(os.environ['IC_COREDIR'], STYLESHEET)
-# 		with open(qss, "r") as fh:
-# 			app.setStyleSheet(fh.read())
-
-# 	myApp = ShotManagementDialog()
-# 	myApp.show()
-# 	sys.exit(app.exec_())
-
+	myApp = ShotManagementDialog()
+	myApp.show()
+	sys.exit(app.exec_())

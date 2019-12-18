@@ -109,7 +109,7 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 
 		self.setWindowTitle("%s - %s" % (cfg['window_title'], os.environ['SCNMGR_JOB']))
 
-		self.ui.shot_lineEdit.setText(os.environ['SCNMGR_SHOT'])
+		self.ui.shot_lineEdit.setText(os.environ['SCNMGR_SHOT'].replace('/', '_'))
 		self.ui.shot_toolButton.setEnabled(False)  # temp until implemented
 		self.ui.version_spinBox.hide()
 
@@ -150,6 +150,7 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 		ignore_list = ["[any]", "[please select]", "", None]
 
 		shot = self.ui.shot_lineEdit.text()
+		shot = shot.replace('/', '_')
 		discipline = self.ui.discipline_comboBox.currentText()
 		description = self.ui.description_comboBox.currentText()
 

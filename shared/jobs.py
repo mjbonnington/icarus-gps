@@ -397,21 +397,26 @@ class Jobs(xml_data.XMLData):
 		if os.path.exists(shotsPath):
 			shotLs = []
 
-			dirContents = os.listdir(shotsPath)
-			for item in dirContents:
-				# Check for shot naming convention to disregard everything
-				# else in directory
-				if item.startswith('SH') or item.startswith('PC'):
-					# Check that the directory is a valid shot by checking for
-					# the existence of the '.icarus' subdirectory
-					if os.path.isdir(os_wrapper.absolutePath("%s/%s/$IC_METADATA" % (shotsPath, item))):
-						shotLs.append(item)
+			# dirContents = os.listdir(shotsPath)
+			# for item in dirContents:
+			# 	# Check for shot naming convention to disregard everything
+			# 	# else in directory
+			# 	if item.startswith('SH') or item.startswith('PC') \
+			# 	or item.startswith('sh') or item.startswith('pc'):
+			# 		# Check that the directory is a valid shot by checking for
+			# 		# the existence of the '.icarus' subdirectory
+			# 		if os.path.isdir(os_wrapper.absolutePath("%s/%s/$IC_METADATA" % (shotsPath, item))):
+			# 			shotLs.append(item)
 
-			# subdirs = next(os.walk(shotsPath))[1]
-			# if subdirs:
-			# 	for subdir in subdirs:
-			# 		if not subdir.startswith('.'): # ignore directories that start with a dot
-			# 			shotLs.append(subdir)
+			for dirpath, dirnames, filenames in os.walk(shotsPath):
+				for name in dirnames:
+					if name == os.environ['IC_METADATA']:
+						dirname = os.path.join(dirpath, name)
+						shotdir = os.path.dirname(dirname).lstrip(shotsPath)
+						shotdir = shotdir.replace("\\", "/").lstrip("/")
+						# print shotdir
+						if shotdir:
+							shotLs.append(shotdir)
 
 			if len(shotLs):
 				shotLs.sort()
