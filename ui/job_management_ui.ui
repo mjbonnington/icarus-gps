@@ -49,6 +49,9 @@
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Import jobs&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Import jobs from an existing database.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
+        <property name="statusTip">
+         <string>Import jobs from an existing database</string>
+        </property>
         <property name="text">
          <string>Import</string>
         </property>
@@ -78,6 +81,9 @@
         </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Add a new job&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Add a job to the jobs database.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="statusTip">
+         <string>Add a new job</string>
         </property>
         <property name="text">
          <string>Add</string>
@@ -109,6 +115,9 @@
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Remove job(s)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Remove the selected job(s) from the jobs database.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
+        <property name="statusTip">
+         <string>Remove selected job(s)</string>
+        </property>
         <property name="text">
          <string>Remove</string>
         </property>
@@ -138,6 +147,9 @@
         </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Refresh&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Reload the jobs database and update the view. Any unsaved changes will be lost.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="statusTip">
+         <string>Refresh the jobs view</string>
         </property>
         <property name="text">
          <string>Refresh</string>
@@ -169,6 +181,9 @@
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Edit job&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Modify the selected job settings.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
+        <property name="statusTip">
+         <string>Edit the selected job</string>
+        </property>
         <property name="text">
          <string>Edit</string>
         </property>
@@ -198,6 +213,9 @@
         </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Enable job(s)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;The selected job(s) will be marked as enabled. They will appear in the main UI.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="statusTip">
+         <string>Enable selected job(s)</string>
         </property>
         <property name="text">
          <string>Enable</string>
@@ -229,6 +247,9 @@
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Disable job(s)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;The selected job(s) will be marked as disabled. They will not appear in the main UI.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
+        <property name="statusTip">
+         <string>Disable selected job(s)</string>
+        </property>
         <property name="text">
          <string>Disable</string>
         </property>
@@ -258,6 +279,9 @@
         </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Edit paths&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Set up the root filesystem paths where jobs and other data will be stored. This enables portability between different operating systems.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="statusTip">
+         <string>Edit root filesystem paths</string>
         </property>
         <property name="text">
          <string>Paths</string>
@@ -314,18 +338,15 @@
       </property>
       <item>
        <widget class="QLineEdit" name="searchFilter_lineEdit">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Search filter box&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
         <property name="placeholderText">
-         <string>Search filter</string>
+         <string>Filter jobs...</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QToolButton" name="searchFilterClear_toolButton">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Clear the search filter box&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>Clear the search filter box</string>
         </property>
         <property name="text">
          <string>...</string>

@@ -389,6 +389,7 @@ class Jobs(xml_data.XMLData):
 	def listShots(self, jobName):
 		""" Return a list of all available shots belonging to the specified
 			job.
+			TODO: Optimise as currently very slow.
 		"""
 		jobPath = self.getPath(jobName, translate=True)
 		shotsPath = os_wrapper.absolutePath("%s/$IC_SHOTSDIR" % jobPath)

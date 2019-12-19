@@ -22,6 +22,7 @@ import ui_template as UI
 from publish import pblChk
 # from publish import pblOptsPrc
 
+from shared import disciplines
 from shared import jobs
 from shared import launchApps   # merge these two?
 from shared import appLauncher  # merge these two?
@@ -187,6 +188,11 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.dailyPblAdd_pushButton.clicked.connect(self.dailyTableAdd)
 		self.ui.publish_pushButton.clicked.connect(self.initPublish)
 
+		self.populateComboBox(
+			self.ui.dailyPblType_comboBox, 
+			disciplines.disciplines, 
+			replace=False, 
+			blockSignals=True)
 
 		######################################
 		# Adapt UI for environment awareness #
@@ -1541,13 +1547,14 @@ os.environ['IC_VENDOR'])
 
 	def dailyPblBrowse(self):
 		""" Browse for dailies to publish.
+			TODO: improve discipline filtering
 		"""
 		shot_dir = os.environ['IC_SHOTPATH']
-		if self.dailyType in ('modeling', 'texturing', 'animation', 'anim', 'fx', 'previs', 'tracking', 'rigging'):
+		if self.dailyType in ('previs', 'postvis', 'techvis', 'model', 'texturing', 'animation', 'anim', 'fx', 'previs', 'matchmove', 'tracking', 'rigging'):
 			start_dir = os.environ.get('IC_MAYA_PLAYBLASTS_DIR', shot_dir)
 		elif self.dailyType in ('lighting', 'shading', 'lookdev'):
 			start_dir = os.environ.get('IC_MAYA_RENDERS_DIR', shot_dir)
-		elif self.dailyType in ('comp', ):
+		elif self.dailyType in ('roto', 'prep', 'precomp', 'comp'):
 			start_dir = os.environ.get('IC_NUKE_RENDERS_DIR', shot_dir)
 		else:
 			start_dir = shot_dir

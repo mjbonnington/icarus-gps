@@ -66,7 +66,7 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 		self.setWindowFlags(QtCore.Qt.Dialog)
 
 		# Set icons
-		self.ui.shot_toolButton.setIcon(self.iconSet('icon_settings.png'))
+		self.ui.shot_toolButton.setIcon(self.iconSet('filmgrain.svg'))
 		self.ui.nativeDialog_toolButton.setIcon(self.iconSet('folder-open.svg'))
 
 		# Connect signals & slots
@@ -109,9 +109,14 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 
 		self.setWindowTitle("%s - %s" % (cfg['window_title'], os.environ['SCNMGR_JOB']))
 
-		self.ui.shot_lineEdit.setText(os.environ['SCNMGR_SHOT'].replace('/', '_'))
+		self.ui.shot_lineEdit.setText(os.environ['SCNMGR_SHOT'])  #.replace('/', '_')
 		self.ui.shot_toolButton.setEnabled(False)  # temp until implemented
 		self.ui.version_spinBox.hide()
+
+		self.populateComboBox(
+			self.ui.discipline_comboBox, 
+			self.getDisciplines(), 
+			blockSignals=True)
 
 		self.file_ext = os.environ['SCNMGR_FILE_EXT'].split(os.pathsep)
 
@@ -120,7 +125,7 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 		presets = convention.parse(self.session.get_current_name())
 		if presets is not None:
 			try:
-				self.ui.shot_lineEdit.setText(presets['<shot>'])
+				# self.ui.shot_lineEdit.setText(presets['<shot>'])
 				self.ui.discipline_comboBox.setCurrentIndex(
 					self.ui.discipline_comboBox.findText(
 						presets['<discipline>']))
@@ -144,13 +149,19 @@ class FileSaveUI(QtWidgets.QDialog, UI.TemplateUI):
 		return self.returnValue
 
 
+	def getDisciplines(self):
+		""" Return a list of disciplines.
+		"""
+		from shared import disciplines
+		return ["[please select]"] + disciplines.disciplines
+
+
 	def updateFilename(self):
 		""" Update the filename field based on the other inputs.
 		"""
 		ignore_list = ["[any]", "[please select]", "", None]
 
-		shot = self.ui.shot_lineEdit.text()
-		shot = shot.replace('/', '_')
+		shot = self.ui.shot_lineEdit.text().replace('/', '_')
 		discipline = self.ui.discipline_comboBox.currentText()
 		description = self.ui.description_comboBox.currentText()
 

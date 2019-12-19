@@ -27,6 +27,8 @@ from shared import verbose
 # Configuration
 # ----------------------------------------------------------------------------
 
+VERSION = "0.2.0"
+
 cfg = {}
 
 # Set window title and object names
@@ -53,11 +55,14 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		super(ShotManagementDialog, self).__init__(parent)
 		self.parent = parent
 
+		# Show initialisation message
+		verbose.message("%s v%s" % (cfg['window_title'], VERSION))
+
 		self.setupUI(**cfg)
 		self.conformFormLayoutLabels(self.ui.sidebar_frame)
 
 		# Set window icon, flags and other Qt attributes
-		self.setWindowIcon(self.iconSet('filmgrain.svg', tintNormal=False))
+		# self.setWindowIcon(self.iconSet('filmgrain.svg', tintNormal=False))
 		self.setWindowFlags(QtCore.Qt.Dialog)
 		self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
@@ -68,11 +73,21 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		except:
 			pass
 
+		# Set icons
+		self.ui.shotCreate_toolButton.setIcon(self.iconSet('filmgrain.svg'))
+		self.ui.shotDelete_toolButton.setIcon(self.iconSet('edit-delete.svg'))
+		self.ui.shotSettings_toolButton.setIcon(self.iconSet('configure.svg'))
+		self.ui.refresh_toolButton.setIcon(self.iconSet('icon_refresh.png'))
+		self.ui.import_toolButton.setIcon(self.iconSet('icon_arrow_down.png'))
+		self.ui.export_toolButton.setIcon(self.iconSet('icon_arrow_up.png'))
+
+		self.ui.searchFilterClear_toolButton.setIcon(self.iconSet('clear.svg'))
+
 		# Connect signals & slots
-		self.ui.job_comboBox.currentIndexChanged.connect(lambda: self.populateShots())
+		self.ui.job_comboBox.currentIndexChanged.connect(self.reloadJobData)
 
 		self.ui.shotCreate_toolButton.toggled.connect(lambda checked: self.toggleSidebar(checked))
-		# self.ui.shotDelete_toolButton.clicked.connect(self.deleteShots)
+		self.ui.shotDelete_toolButton.clicked.connect(self.deleteShots)
 		self.ui.shotSettings_toolButton.clicked.connect(self.shotSettings)
 		self.ui.refresh_toolButton.clicked.connect(lambda: self.populateShots())
 
@@ -80,7 +95,7 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.ui.searchFilterClear_toolButton.clicked.connect(self.clearFilter)
 
 		self.ui.shots_tableWidget.itemSelectionChanged.connect(self.updateToolbarUI)
-		# self.ui.shots_tableWidget.itemDoubleClicked.connect(self.editJob)
+		# self.ui.shots_tableWidget.itemDoubleClicked.connect(lambda: self.editCell)
 		# self.ui.shots_tableWidget.itemChanged.connect(lambda item: self.itemChecked(item))
 
 		self.ui.seq_comboBox.currentIndexChanged.connect(self.updateShotsPreview)
@@ -90,7 +105,6 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.ui.shotCount_spinBox.valueChanged.connect(self.updateShotsPreview)
 		self.ui.start_spinBox.valueChanged.connect(self.updateShotsPreview)
 		self.ui.increment_spinBox.valueChanged.connect(self.updateShotsPreview)
-		# self.ui.suffix_lineEdit.textChanged.connect(self.updateShotsPreview)
 
 		self.ui.create_pushButton.clicked.connect(self.createShots)
 
@@ -105,12 +119,10 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		shot_pattern_validator = QtGui.QRegExpValidator(QtCore.QRegExp(shot_pattern), self.ui.prefix_comboBox.lineEdit())
 		self.ui.prefix_comboBox.lineEdit().setValidator(shot_pattern_validator)
 
-		# alphanumeric_validator = QtGui.QRegExpValidator(QtCore.QRegExp(r'[\w]+'), self.ui.suffix_lineEdit)
-		# self.ui.suffix_lineEdit.setValidator(alphanumeric_validator)
-
-		# Instantiate jobs class and load data
+		# Instantiate jobs and metadata classes
 		self.j = jobs.Jobs()
-		self.sd = metadata.Metadata()
+		self.job_data = metadata.Metadata()
+		self.shot_data = metadata.Metadata()
 
 
 	def display(self, job=None):
@@ -119,9 +131,21 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.job = job
 		self.shot = None
 
-		# self.reloadJobs(reloadDatabase=False)
-		self.populateJobs(reloadDatabase=False)
-		self.populateShots()
+		self.columns = [
+			'time.rangestart', 
+			'time.rangeend', 
+			'units.fps', 
+			'resolution.fullwidth', 
+			'resolution.fullheight', 
+			'camera.filmbackwidth', 
+			'camera.filmbackheight', 
+			'camera.focallength', 
+			'camera.clipref',
+			'shot.notes']
+
+		# self.reloadJobs(reload_database=False)
+		self.populateJobs(reload_database=False)
+		self.reloadJobData()
 		# self.populateComboBox(self.ui.seq_comboBox, ['shots', 'build'], replace=False)
 		# self.populateComboBox(self.ui.prefix_comboBox, ['sh###'], replace=False)
 
@@ -153,41 +177,65 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 			self.ui.shotDelete_toolButton.setEnabled(False)
 			self.ui.shotSettings_toolButton.setEnabled(False)
 
-		# One item selected...
-		elif len(widget.selectedItems()) == 1:
+		# # One item selected...
+		# elif len(widget.selectedItems()) == 1:
+		# 	self.ui.shotDelete_toolButton.setEnabled(True)
+		# 	self.ui.shotSettings_toolButton.setEnabled(True)
+		# 	row = widget.currentItem().row()
+		# 	self.shot = widget.verticalHeaderItem(row).text()
+		# 	# print(self.shot)
+
+		# # More than one item selected...
+		# else:
+		# 	self.ui.shotDelete_toolButton.setEnabled(True)
+		# 	self.ui.shotSettings_toolButton.setEnabled(False)
+
+		else:
 			self.ui.shotDelete_toolButton.setEnabled(True)
 			self.ui.shotSettings_toolButton.setEnabled(True)
 			row = widget.currentItem().row()
 			self.shot = widget.verticalHeaderItem(row).text()
-			# print self.shot
-
-		# More than one item selected...
-		else:
-			self.ui.shotDelete_toolButton.setEnabled(True)
-			self.ui.shotSettings_toolButton.setEnabled(False)
-
-
-	def getInheritedValue(self, shot_data, job_data, category, setting):
-		""" First try to get the value from the shot data, if it returns
-			nothing then look in job data instead.
-		"""
-		value = shot_data.get_attr(category, setting)
-		if value is None:
-			value = job_data.get_attr(category, setting)
-
-		return value
 
 
 	def clearFilter(self):
 		""" Clear the search filter field.
 		"""
 		self.ui.searchFilter_lineEdit.clear()
+		self.ui.searchFilterClear_toolButton.setEnabled(False)
 
 
-	def populateJobs(self, reloadDatabase=True):
+	def getInheritedValue(self, shot_data, category, setting):
+		""" First try to get the value from the shot data, if it returns
+			nothing then look in job data instead.
+		"""
+		inherited = False
+		value = shot_data.get_attr(category, setting)
+		if value is None:
+			value = self.job_data.get_attr(category, setting)
+			inherited = True
+
+		if value is None:
+			return "", inherited
+		else:
+			return value, inherited
+
+
+	def getJobDatafile(self):
+		""" Return the path to the JSON metadata file for the current job.
+		"""
+		return os_wrapper.absolutePath("%s/$IC_SHOTSDIR/$IC_METADATA/job_data.json" % self.job_path)
+
+
+	def getShotDatafile(self, shot_name):
+		""" Return the path to the JSON metadata file for the specified shot.
+		"""
+		return os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA/shot_data.json" % (self.job_path, shot_name))
+
+
+	def populateJobs(self, reload_database=True):
 		""" Populate the jobs combo box.
 		"""
-		if reloadDatabase:
+		if reload_database:
 			self.j.loadXML(quiet=True)  # Reload XML data
 
 		# Stop the widget from emitting signals
@@ -196,17 +244,16 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		# Clear combo box
 		self.ui.job_comboBox.clear()
 
-		jobLs = self.j.getActiveJobs()
-		if jobLs:
-			jobLs = sorted(jobLs, reverse=True)
+		joblist = self.j.getActiveJobs()
+		if joblist:
+			joblist = sorted(joblist, reverse=True)
 
-			for job in jobLs:
+			for job in joblist:
 				self.ui.job_comboBox.insertItem(0, job)
 
 			# Attempt to set the combo box to the current job
-			if self.job in jobLs:
+			if self.job in joblist:
 				self.ui.job_comboBox.setCurrentIndex(self.ui.job_comboBox.findText(self.job))
-				#self.ui.job_comboBox.setEnabled(False)
 
 			# Set the combo box to the first item
 			else:
@@ -218,115 +265,135 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.ui.job_comboBox.blockSignals(False)
 
 
+	def reloadJobData(self):
+		""" Reload job data when job combobox value is changed.
+		"""
+		self.job = self.ui.job_comboBox.currentText()
+		self.job_path = self.j.getPath(self.job, translate=True)
+		self.job_data.load(self.getJobDatafile())
+
+		self.populateShots()
+
+
 	def populateShots(self, shot_filter=""):
 		""" Update the shots view table widget.
+			TODO: optimise - currently very inefficient
 		"""
-		currentJob = self.ui.job_comboBox.currentText()
-		jobPath = self.j.getPath(currentJob, translate=True)
-		shotLs = self.j.listShots(currentJob)
+		shotlist = self.j.listShots(self.job)  # S L O W
 
-		self.ui.shots_tableWidget.clearContents()
+		widget = self.ui.shots_tableWidget
+		widget.clearContents()
+		widget.setColumnCount(len(self.columns))
+		for col, attr in enumerate(self.columns):
+			category, attribute = attr.split('.')
+			newColHeaderItem = QtWidgets.QTableWidgetItem(attribute)
+			widget.setHorizontalHeaderItem(col, newColHeaderItem)
 
-		if shotLs:
-			self.ui.shots_tableWidget.setRowCount(len(shotLs))
-			for row, shotName in enumerate(shotLs):
+		if shotlist:
+			widget.setRowCount(len(shotlist))
+			for row, shot_name in enumerate(shotlist):
 				# Populate list view, using filter
 				if shot_filter is not "":
-					if shot_filter.lower() in shotName.lower():  # Case-insensitive
-						item = self.addShotEntry(row, shotName, jobPath)
+					if shot_filter.lower() in shot_name.lower():  # Case-insensitive
+						item = self.addShotEntry(row, shot_name)
 					self.ui.searchFilterClear_toolButton.setEnabled(True)
 
 				else:
-					item = self.addShotEntry(row, shotName, jobPath)
+					item = self.addShotEntry(row, shot_name)
 					self.ui.searchFilterClear_toolButton.setEnabled(False)
 
-		self.ui.shots_tableWidget.resizeRowsToContents()
+		# widget.resizeColumnsToContents()
 
 
-	def addShotEntry(self, row, shotName, jobPath):
+	def addShotEntry(self, row, shot_name):
 		""" Add an entry to the shot list table view.
 			TODO: optimise - currently very inefficient
 		"""
-		newRowHeaderItem = QtWidgets.QTableWidgetItem(shotName)
-		newItem = QtWidgets.QTableWidgetItem(shotName)
-		self.ui.shots_tableWidget.setVerticalHeaderItem(row, newRowHeaderItem)
-		shot_datafile = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA/shot_data.json" % (jobPath, shotName))
-		job_datafile = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/$IC_METADATA/job_data.json" % jobPath)  # only read when switching jobs?
+		widget = self.ui.shots_tableWidget
+		newRowHeaderItem = QtWidgets.QTableWidgetItem(shot_name)
+		# newItem = QtWidgets.QTableWidgetItem(shot_name)
+		widget.setVerticalHeaderItem(row, newRowHeaderItem)
+
+		shot_datafile = self.getShotDatafile(shot_name)
 		shot_data = metadata.Metadata()
-		job_data = metadata.Metadata()
 		shot_data.load(shot_datafile)
-		job_data.load(job_datafile)
 
-		rangestart = self.getInheritedValue(shot_data, job_data, 'time', 'rangestart')
-		rangeend = self.getInheritedValue(shot_data, job_data, 'time', 'rangeend')
-		text = "%s-%s" % (rangestart, rangeend)
-		self.ui.shots_tableWidget.setItem(row, 0, QtWidgets.QTableWidgetItem(text))
+		for col, attr in enumerate(self.columns):
+			category, attribute = attr.split('.')
+			value, inherited = self.getInheritedValue(shot_data, category, attribute)
+			item = QtWidgets.QTableWidgetItem(str(value))
+			if inherited:
+				item.setForeground(self.col['disabled'])
+			widget.setItem(row, col, item)
 
-		text = str(self.getInheritedValue(shot_data, job_data, 'units', 'fps'))
-		self.ui.shots_tableWidget.setItem(row, 1, QtWidgets.QTableWidgetItem(text))
+		# rangestart = self.getInheritedValue(shot_data, 'time', 'rangestart')
+		# rangeend = self.getInheritedValue(shot_data, 'time', 'rangeend')
+		# text = "%s-%s" % (rangestart, rangeend)
+		# widget.setItem(row, 0, QtWidgets.QTableWidgetItem(text))
 
-		w = self.getInheritedValue(shot_data, job_data, 'resolution', 'fullwidth')
-		h = self.getInheritedValue(shot_data, job_data, 'resolution', 'fullheight')
-		text = "%sx%s" % (w, h)
-		self.ui.shots_tableWidget.setItem(row, 2, QtWidgets.QTableWidgetItem(text))
+		# text = str(self.getInheritedValue(shot_data, 'units', 'fps'))
+		# widget.setItem(row, 1, QtWidgets.QTableWidgetItem(text))
 
-		w = self.getInheritedValue(shot_data, job_data, 'resolution', 'proxywidth')
-		h = self.getInheritedValue(shot_data, job_data, 'resolution', 'proxyheight')
-		text = "%sx%s" % (w, h)
-		self.ui.shots_tableWidget.setItem(row, 3, QtWidgets.QTableWidgetItem(text))
+		# w = self.getInheritedValue(shot_data, 'resolution', 'fullwidth')
+		# h = self.getInheritedValue(shot_data, 'resolution', 'fullheight')
+		# text = "%sx%s" % (w, h)
+		# widget.setItem(row, 2, QtWidgets.QTableWidgetItem(text))
 
-		text = shot_data.get_attr('camera', 'camera')
-		self.ui.shots_tableWidget.setItem(row, 4, QtWidgets.QTableWidgetItem(text))
+		# w = self.getInheritedValue(shot_data, 'resolution', 'proxywidth')
+		# h = self.getInheritedValue(shot_data, 'resolution', 'proxyheight')
+		# text = "%sx%s" % (w, h)
+		# widget.setItem(row, 3, QtWidgets.QTableWidgetItem(text))
 
-		text = "%sx%s" %(shot_data.get_attr('camera', 'filmbackwidth'), shot_data.get_attr('camera', 'filmbackheight'))
-		self.ui.shots_tableWidget.setItem(row, 5, QtWidgets.QTableWidgetItem(text))
+		# text = str(self.getInheritedValue(shot_data, 'camera', 'camera'))
+		# widget.setItem(row, 4, QtWidgets.QTableWidgetItem(text))
 
-		text = str(shot_data.get_attr('camera', 'focallength'))
-		self.ui.shots_tableWidget.setItem(row, 6, QtWidgets.QTableWidgetItem(text))
+		# w = self.getInheritedValue(shot_data, 'camera', 'filmbackwidth')
+		# h = self.getInheritedValue(shot_data, 'camera', 'filmbackheight')
+		# text = "%sx%s" % (w, h)
+		# widget.setItem(row, 5, QtWidgets.QTableWidgetItem(text))
 
-		text = shot_data.get_attr('shot', 'notes')
-		self.ui.shots_tableWidget.setItem(row, 7, QtWidgets.QTableWidgetItem(text))
+		# text = str(self.getInheritedValue(shot_data, 'camera', 'focallength'))
+		# widget.setItem(row, 6, QtWidgets.QTableWidgetItem(text))
 
-		# self.ui.shots_tableWidget.resizeRowToContents(row)
+		# text = str(self.getInheritedValue(shot_data, 'shot', 'notes'))
+		# widget.setItem(row, 7, QtWidgets.QTableWidgetItem(text))
 
-		return newItem
+		widget.resizeRowToContents(row)
 
-
-	# def deleteJobs(self):
-	# 	""" Delete the selected job(s).
-	# 	"""
-	# 	for item in self.ui.shots_tableWidget.selectedItems():
-	# 		self.j.deleteJob(item.text())
-	# 		self.ui.shots_tableWidget.takeItem(self.ui.shots_tableWidget.row(item))
+		# return newItem
 
 
-	# def itemChecked(self, item):
-	# 	""" Set the active status of the job correctly when the checkbox state
-	# 		changes.
-	# 	"""
-	# 	if item.checkState() == QtCore.Qt.Checked:
-	# 		self.j.enableJob(item.text(), True)
-	# 	else:
-	# 		self.j.enableJob(item.text(), False)
+	def deleteShots(self):
+		""" Delete the selected shot(s).
+			TODO: implement properly
+		"""
+		# Confirmation dialog
+		dialog_title = "Delete shot: %s" % self.shot
+		dialog_msg = "Are you sure?"
+		dialog = prompt.dialog()
+		if dialog.display(dialog_msg, dialog_title):
+			shot_path = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s" % (self.job_path, self.shot))
+			result, msg = os_wrapper.remove(shot_path)
+			if result:
+				verbose.message("Shot '%s' deleted: %s" % (self.shot, self.job_path))
+				self.populateShots()
+			else:
+				dialog.display(msg, "Failed to delete shot", conf=True)
 
 
 	def openSettings(self, settingsType):
 		""" Open settings dialog.
 		"""
-		jobPath = self.j.getPath(self.job, translate=True)
-		shot_datafile = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA/shot_data.json" % (jobPath, self.shot))
-		job_datafile = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/$IC_METADATA/job_data.json" % jobPath)
-
 		if settingsType == "Job":
 			selfName = self.job
 			categoryLs = ['job', 'apps', 'units', 'time', 'resolution', 'other']
-			settingsFile = job_datafile
+			settingsFile = self.getJobDatafile()
 			inherit = None
 		elif settingsType == "Shot":
 			selfName = self.shot
 			categoryLs = ['shot', 'units', 'time', 'resolution', 'camera']
-			settingsFile = shot_datafile
-			inherit = job_datafile
+			settingsFile = self.getShotDatafile(self.shot)
+			inherit = self.getJobDatafile()
 
 		from tools.settings import settings
 		self.settingsEditor = settings.SettingsDialog(parent=self)
@@ -362,18 +429,20 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 			'shotCount_label', 'shotCount_spinBox', 
 			'start_label', 'start_spinBox', 
 			'increment_label', 'increment_spinBox']
-		self.shots_to_create = []
-		shotSeq = self.ui.seq_comboBox.currentText()
-		if shotSeq != "":
-			shotSeq += '/'
 
-		shotName = self.ui.prefix_comboBox.currentText()
+		self.shots_to_create = []
+
+		seq_name = self.ui.seq_comboBox.currentText()
+		if seq_name != "":
+			seq_name += '/'
+
+		shot_name = self.ui.prefix_comboBox.currentText()
 
 		count = self.ui.shotCount_spinBox.value()
 		index = self.ui.start_spinBox.value()
 		step = self.ui.increment_spinBox.value()
 		re_digits_pattern = re.compile(r'#+')
-		match = re.findall(re_digits_pattern, shotName)
+		match = re.findall(re_digits_pattern, shot_name)
 
 		# Create multiple shots
 		if match:
@@ -381,7 +450,7 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 			padding = len(hashes)
 			for shot in range(count):
 				self.shots_to_create.append(
-					shotSeq + shotName.replace(hashes, str(index).zfill(padding)))
+					seq_name + shot_name.replace(hashes, str(index).zfill(padding)))
 				index += step
 			for widget in multi_ui:
 				eval('self.ui.%s.setEnabled(True)' % widget)
@@ -389,7 +458,7 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		# Create single shot
 		else:
 			verbose.warning("Cannot create multiple shots as there are no hashes (#) in shot name pattern.")
-			self.shots_to_create.append(shotSeq + shotName)
+			self.shots_to_create.append(seq_name + shot_name)
 			for widget in multi_ui:
 				eval('self.ui.%s.setEnabled(False)' % widget)
 
@@ -397,7 +466,7 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		self.ui.shotPreview_listWidget.clear()
 		self.ui.shotPreview_listWidget.addItems(self.shots_to_create)
 		num_shots = len(self.shots_to_create)
-		if num_shots and shotName != "":
+		if num_shots and shot_name != "":
 			self.ui.create_pushButton.setEnabled(True)
 			self.ui.create_pushButton.setText(
 				"Create %d %s" % (num_shots, verbose.pluralise('Shot', num_shots)))
@@ -413,45 +482,44 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		success = 0
 		existing = 0
 		failure = 0
-		createdShots = ""
-		existingShots = ""
-		failedShots = ""
-		dialogMsg = ""
+		shots_created = ""
+		shots_existing = ""
+		shots_failed = ""
+		dialog_msg = ""
 
-		jobPath = self.j.getPath(self.ui.job_comboBox.currentText(), translate=True)
 		for shot in self.shots_to_create:
-			path = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s/$IC_METADATA" % (jobPath, shot))
-			os_wrapper.createDir(path)
-			shotData = os.path.join(path, "shot_data.json")
-			if self.sd.load(shotData):
+			shot_datafile = self.getShotDatafile(shot)
+			os_wrapper.createDir(os.path.dirname(shot_datafile))
+
+			if self.shot_data.load(shot_datafile):
 				existing += 1
-				existingShots += shot + " "
-			elif self.sd.save():
+				shots_existing += shot + "\n"
+			elif self.shot_data.save():
 				success += 1
-				createdShots += shot + " "
+				shots_created += shot + "\n"
 			else:
 				failure += 1
-				failedShots += shot + " "
+				shots_failed += shot + "\n"
 
 		if success:
 			message = "%d %s created successfully: " % (success, verbose.pluralise('shot', success))
-			dialogMsg += "%s\n%s\n\n" % (message, createdShots)
-			verbose.message(message + createdShots)
+			dialog_msg += "%s\n%s\n" % (message, shots_created)
+			verbose.message(message + shots_created)
 
 		if existing:
 			message = "The following %d shot(s) were not created as they already exist: " % existing
-			dialogMsg += "%s\n%s\n\n" % (message, existingShots)
-			verbose.warning(message + existingShots)
+			dialog_msg += "%s\n%s\n" % (message, shots_existing)
+			verbose.warning(message + shots_existing)
 
 		if failure:
 			message = "The following %d shot(s) could not be created - please check write permissions and try again: " % failure
-			dialogMsg += "%s\n%s\n\n" % (message, failedShots)
-			verbose.error(message + failedShots)
+			dialog_msg += "%s\n%s\n" % (message, shots_failed)
+			verbose.error(message + shots_failed)
 
 		# Confirmation dialog
-		dialogTitle = "Shot Creator Results"
+		dialog_title = "Shot Creator Results"
 		dialog = prompt.dialog()
-		dialog.display(dialogMsg, dialogTitle, conf=True)
+		dialog.display(dialog_msg, dialog_title, conf=True)
 
 		self.populateShots()
 

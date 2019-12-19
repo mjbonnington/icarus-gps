@@ -63,6 +63,18 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		# Set other Qt attributes
 		self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
 
+		# Set icons
+		self.ui.jobImport_toolButton.setIcon(self.iconSet('icon_arrow_down.png'))
+		self.ui.jobAdd_toolButton.setIcon(self.iconSet('icon_add.png'))
+		self.ui.jobDelete_toolButton.setIcon(self.iconSet('icon_minus.png'))
+		self.ui.refresh_toolButton.setIcon(self.iconSet('icon_refresh.png'))
+		self.ui.jobEdit_toolButton.setIcon(self.iconSet('edit.svg'))
+		self.ui.jobEnable_toolButton.setIcon(self.iconSet('icon_tick.png'))
+		self.ui.jobDisable_toolButton.setIcon(self.iconSet('icon_cross.png'))
+		self.ui.editPaths_toolButton.setIcon(self.iconSet('folder-symbolic.svg'))
+
+		self.ui.searchFilterClear_toolButton.setIcon(self.iconSet('clear.svg'))
+
 		# Connect signals & slots
 		self.accepted.connect(self.save)  # Save settings if dialog accepted
 
@@ -143,6 +155,7 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		""" Clear the search filter field.
 		"""
 		self.ui.searchFilter_lineEdit.clear()
+		self.ui.searchFilterClear_toolButton.setEnabled(False)
 
 
 	def reloadJobs(self, reloadDatabase=True, selectItem=None, jobFilter=""):

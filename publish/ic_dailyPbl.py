@@ -41,7 +41,8 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 	subsetName = dailyType
 	assetExt = ''
 	assetPblName = '%s%s%s' % (prefix, convention, suffix)
-	assetName = assetPblName 
+	assetName = assetPblName
+	shotSaneName = os.environ['IC_SHOT'].replace('/', '_')
 
 	# Process asset publish options
 	assetPblName, assetDir, pblDir = pblOptsPrc.prc(pblTo, subsetName, assetType, prefix, convention, suffix)
@@ -54,7 +55,7 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 	# Confirmation dialog
 	dialogMsg = ''
 	dialogTitle = 'Publishing'
-	dialogMsg += 'Name:\t%s_%s\n\nVersion:\t%s\n\nNotes:\t%s' % (os.environ['IC_SHOT'], subsetName, version, pblNotes)
+	dialogMsg += 'Name:\t%s_%s\n\nVersion:\t%s\n\nNotes:\t%s' % (shotSaneName, subsetName, version, pblNotes)
 	dialog = prompt.dialog()
 	if not dialog.display(dialogMsg, dialogTitle):
 		return
@@ -86,7 +87,7 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 		posterFrame = str(posterFrame_).zfill(padding)
 
 		# Pass arguments to djv to process the files in djvOps
-		dailyFileBody = '%s_dailies_%s' % (os.environ['IC_SHOT'], subsetName)
+		dailyFileBody = '%s_dailies_%s' % (shotSaneName, subsetName)
 		dailyFile = '%s.%s.jpg' % (dailyFileBody, startFrame)
 		inFile = os.path.join(dailyPath, nameBody)
 		#print(inFile)
@@ -97,7 +98,7 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 		# Hard linking daily to dated folder in wips dir
 		dailyFileLs = os.listdir(pblDir)
 		dailyDateDir = time.strftime('%Y_%m_%d')
-		dailyDatePath = os.path.join(os.environ['IC_WIPS_DIR'], 'CGI', dailyDateDir, '%s_%s_%s' % (os.environ['IC_SHOT'], subsetName, version))
+		dailyDatePath = os.path.join(os.environ['IC_WIPS_DIR'], 'CGI', dailyDateDir, '%s_%s_%s' % (shotSaneName, subsetName, version))
 		os_wrapper.createDir(dailyDatePath)
 		excludeLs = ['in_progress.tmp']
 		for file_ in dailyFileLs:
@@ -124,6 +125,8 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 		# Published asset check
 		pblDirResult = pblChk.success(os.path.join(pblDir, dailyFile))
 		dailyDirResult = pblChk.success(os.path.join(dailyDatePath, dailyFile))
+		print(os.path.join(pblDir, dailyFile))
+		print(os.path.join(dailyDatePath, dailyFile))
 		pblResult = 'SUCCESS'
 		if pblDirResult != pblResult or dailyDirResult != pblResult:
 			pblResult = 'FAILED'

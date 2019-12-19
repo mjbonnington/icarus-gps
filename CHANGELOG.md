@@ -1,18 +1,19 @@
 v0.10.0 (--)
 -	[Icarus] Major update may break compatibility with older jobs. Only compatible jobs will be displayed in the Icarus UI.
 -	[Icarus] Shots can be given arbitrary names and belong to groupings such as sequences, episodes, edits etc.
--	[Icarus] Added support for Houdini.
+-	[Icarus] Shot Creator has been replaced with Shot Management: an dialog allowing an at-a-glance method of creating, editing and deleting shots.
 -	[Icarus] Implemented unified open/save system for DCC apps.
 -	[Icarus] Moved toolbar icons in Maya, Nuke and Houdini to a new 'GPS' menu in pursuit of a more consistent user experience.
 -	[Icarus] Restructured code into Python packages.
 -	[Icarus] All Icarus-set environment variables now prefixed with 'IC_'. This helps avoid conflicts with existing variables which may have the same name.
 -	[Icarus] Preferences files and metadata for jobs, shots, assets, etc. now stored as JSON files.
 -	[Icarus] Added fallback for systems that do not support hardlinks: the file(s) will be copied instead. This fixes an issue that could potentially break the publishing system.
--	[Icarus] Found a workaround for an issue which was preventing Nuke 11.x from starting.
 -	[Icarus] Improved Linux compatibility.
--	[Preview] Added ability to output TIFF images (with alpha channel).
+-	[Nuke] Found a workaround for an issue which was preventing Nuke 11.x from starting.
+-	[Houdini] Added support for Houdini.
+-	[Preview] Added ability to output playblasts as TIFF images (with alpha channel).
 -	[Preview] Revised burn-in HUD.
--	[Preview] Enabled dailies publishing direct from preview.
+-	[Preview] Enabled dailies publishing direct from Preview.
 -	[Render Queue] Added secondary pool field to submitter for Deadline jobs.
 
 v0.9.12 (2018-04-27)

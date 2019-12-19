@@ -74,7 +74,7 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		self.setWindowFlags(QtCore.Qt.Dialog)
 
 		# Set icons
-		self.ui.shot_toolButton.setIcon(self.iconSet('icon_settings.png'))
+		self.ui.shot_toolButton.setIcon(self.iconSet('filmgrain.svg'))
 		self.ui.refresh_toolButton.setIcon(self.iconSet('icon_refresh.png'))
 		self.ui.nativeDialog_toolButton.setIcon(self.iconSet('folder-open.svg'))
 
@@ -123,10 +123,19 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 
 		self.setWindowTitle("%s - %s" % (cfg['window_title'], os.environ['SCNMGR_JOB']))
 
-		self.ui.shot_lineEdit.setText(os.environ['SCNMGR_SHOT'].replace('/', '_'))
+		self.ui.shot_lineEdit.setText(os.environ['SCNMGR_SHOT'])  #.replace('/', '_')
 		self.ui.shot_toolButton.setEnabled(False)  # temp until implemented
 
-		self.populateComboBox(self.ui.artist_comboBox, self.getArtists(), blockSignals=True)
+		self.populateComboBox(
+			self.ui.discipline_comboBox, 
+			self.getDisciplines(), 
+			blockSignals=True)
+
+		self.populateComboBox(
+			self.ui.artist_comboBox, 
+			self.getArtists(), 
+			blockSignals=True)
+
 		self.updateFilters()
 		# self.updateView()  # already called from updateFilters()
 		self.updateSelection()
@@ -154,7 +163,7 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 		""" Update the search filter arguments when the widgets' values are
 			modified.
 		"""
-		shot = self.ui.shot_lineEdit.text()
+		shot = self.ui.shot_lineEdit.text().replace('/', '_')
 		discipline = self.ui.discipline_comboBox.currentText()
 		artist = self.ui.artist_comboBox.currentText()
 
@@ -185,7 +194,7 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 			convention.match_files(
 				self.base_dir, 
 				convention.generate_filter(
-					shot=self.ui.shot_lineEdit.text())))
+					shot=self.ui.shot_lineEdit.text().replace('/', '_'))))
 
 		# Get list of files that match filters
 		# matches = self.matchFiles(self.file_filter)
@@ -221,6 +230,13 @@ class FileOpenUI(QtWidgets.QDialog, UI.TemplateUI):
 
 		# Sort by submit time column - move this somewhere else?
 		# self.ui.fileBrowser_treeWidget.sortByColumn(2, QtCore.Qt.DescendingOrder)
+
+
+	def getDisciplines(self):
+		""" Return a list of disciplines.
+		"""
+		from shared import disciplines
+		return ["[any]"] + disciplines.disciplines
 
 
 	def getArtists(self):

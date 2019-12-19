@@ -1246,8 +1246,9 @@ Developer: Mike Bonnington
 			# Environment variables...
 			# (exporting the entire pipeline env works best in this case)
 			for key in os.environ.keys():
-				if 'NUKE' in key.upper():
-					envVarKeys.append(key)
+				# if 'NUKE' in key.upper():
+				# 	envVarKeys.append(key)
+				envVarKeys.append('NUKE_PATH')
 				if key.upper().startswith('IC'):
 					envVarKeys.append(key)
 

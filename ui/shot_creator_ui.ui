@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>512</height>
+    <height>477</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -100,20 +100,13 @@
        <number>8</number>
       </property>
       <item row="0" column="0">
-       <widget class="QLabel" name="seq_label">
-        <property name="text">
-         <string>Sequence/episode:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
        <widget class="QLabel" name="prefix_label">
         <property name="text">
          <string>Prefix:</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="0" column="1">
        <widget class="QComboBox" name="prefix_comboBox">
         <property name="editable">
          <bool>true</bool>
@@ -133,14 +126,27 @@
         </item>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="1" column="1">
+       <widget class="QCheckBox" name="createSeq_checkBox">
+        <property name="text">
+         <string>Create multiple shots</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <property name="xmlTag" stdset="0">
+         <string>createsequence</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
        <widget class="QLabel" name="start_label">
         <property name="text">
          <string>Numbering start:</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="2" column="1">
        <widget class="QSpinBox" name="start_spinBox">
         <property name="maximum">
          <number>999</number>
@@ -153,14 +159,14 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
+      <item row="3" column="0">
        <widget class="QLabel" name="shotCount_label">
         <property name="text">
          <string>Number of shots:</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
+      <item row="3" column="1">
        <widget class="QSpinBox" name="shotCount_spinBox">
         <property name="minimum">
          <number>1</number>
@@ -176,14 +182,14 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
+      <item row="4" column="0">
        <widget class="QLabel" name="increment_label">
         <property name="text">
          <string>Increment:</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="1">
+      <item row="4" column="1">
        <widget class="QSpinBox" name="increment_spinBox">
         <property name="minimum">
          <number>1</number>
@@ -199,14 +205,14 @@
         </property>
        </widget>
       </item>
-      <item row="7" column="0">
+      <item row="6" column="0">
        <widget class="QLabel" name="suffix_label">
         <property name="text">
          <string>Suffix:</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="1">
+      <item row="6" column="1">
        <widget class="QLineEdit" name="suffix_lineEdit">
         <property name="text">
          <string/>
@@ -214,42 +220,6 @@
         <property name="xmlTag" stdset="0">
          <string>suffix</string>
         </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QCheckBox" name="createSeq_checkBox">
-        <property name="text">
-         <string>Create multiple shots</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-        <property name="xmlTag" stdset="0">
-         <string>createsequence</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="seq_comboBox">
-        <property name="editable">
-         <bool>true</bool>
-        </property>
-        <property name="xmlTag" stdset="0">
-         <string>sequence</string>
-        </property>
-        <property name="storeHistory" stdset="0">
-         <bool>true</bool>
-        </property>
-        <item>
-         <property name="text">
-          <string>build</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>shots</string>
-         </property>
-        </item>
        </widget>
       </item>
      </layout>

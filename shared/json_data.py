@@ -23,7 +23,7 @@ class JSONData(object):
 		""" Initialise class. If datafile is not specified, create bare
 			class. The data should then be loaded with the load() method.
 		"""
-		verbose.debug("Class: %s" % self)
+		verbose.debug("%s" % self)
 
 		self.prefs_dict = {}
 		if datafile is not None:
