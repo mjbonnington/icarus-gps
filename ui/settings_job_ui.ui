@@ -34,6 +34,9 @@
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
+     <property name="buddy">
+      <cstring>job_lineEdit</cstring>
+     </property>
     </widget>
    </item>
    <item row="0" column="1">
@@ -54,6 +57,9 @@
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
+     <property name="buddy">
+      <cstring>jobnum_lineEdit</cstring>
+     </property>
     </widget>
    </item>
    <item row="2" column="0">
@@ -63,6 +69,9 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>client_lineEdit</cstring>
      </property>
     </widget>
    </item>
@@ -81,6 +90,9 @@
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
+     <property name="buddy">
+      <cstring>agency_lineEdit</cstring>
+     </property>
     </widget>
    </item>
    <item row="3" column="1">
@@ -97,6 +109,9 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>brand_lineEdit</cstring>
      </property>
     </widget>
    </item>
@@ -115,6 +130,9 @@
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
+     <property name="buddy">
+      <cstring>title_lineEdit</cstring>
+     </property>
     </widget>
    </item>
    <item row="5" column="1">
@@ -132,6 +150,9 @@
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
+     <property name="buddy">
+      <cstring>deliverable_lineEdit</cstring>
+     </property>
     </widget>
    </item>
    <item row="6" column="1">
@@ -146,6 +167,9 @@
      <property name="text">
       <string>Notes:</string>
      </property>
+     <property name="buddy">
+      <cstring>notes_plainTextEdit</cstring>
+     </property>
     </widget>
    </item>
    <item row="8" column="1">
@@ -158,7 +182,7 @@
    <item row="1" column="1">
     <widget class="QLineEdit" name="jobnum_lineEdit">
      <property name="xmlTag" stdset="0">
-      <UInt>0</UInt>
+      <string>jobnum</string>
      </property>
     </widget>
    </item>
@@ -166,6 +190,7 @@
  </widget>
  <tabstops>
   <tabstop>job_lineEdit</tabstop>
+  <tabstop>jobnum_lineEdit</tabstop>
   <tabstop>client_lineEdit</tabstop>
   <tabstop>agency_lineEdit</tabstop>
   <tabstop>brand_lineEdit</tabstop>
