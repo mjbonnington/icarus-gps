@@ -9,6 +9,7 @@
 
 
 import os
+
 from Qt import QtCore, QtGui, QtWidgets
 
 
@@ -33,6 +34,9 @@ class AboutDialog(QtWidgets.QDialog):
 		self.message_label.setGeometry(QtCore.QRect(16, 16, 608, 288))
 		self.message_label.setStyleSheet("background: transparent; color: #FFF;")
 
+		self.icon_label = QtWidgets.QLabel(self)
+		self.icon_label.setGeometry(QtCore.QRect(0, 0, 256, 256))
+
 		# Add dropshadow to text
 		effect = QtWidgets.QGraphicsDropShadowEffect()
 		effect.setColor(QtGui.QColor(0, 0, 0))
@@ -41,13 +45,18 @@ class AboutDialog(QtWidgets.QDialog):
 		self.message_label.setGraphicsEffect(effect)
 
 
-	def display(self, bg_image=None, bg_color=None, icon_pixmap=None, message=""):
+	def display(
+		self, 
+		bg_image=None, 
+		bg_color=None, 
+		icon_pixmap=None, 
+		message=""):
 		""" Display message in about dialog.
 		"""
 		if bg_image:
 			pixmap = QtGui.QPixmap(bg_image)
 			self.bg_label.setPixmap(pixmap.scaled(
-				self.bg_label.size(), QtCore.Qt.KeepAspectRatioByExpanding,
+				self.bg_label.size(), QtCore.Qt.KeepAspectRatioByExpanding, 
 				QtCore.Qt.SmoothTransformation))
 			self.bg_label.setAlignment(QtCore.Qt.AlignCenter)
 
@@ -55,12 +64,12 @@ class AboutDialog(QtWidgets.QDialog):
 			self.bg_label.setStyleSheet("background: %s" % bg_color.name())
 
 		if icon_pixmap:
+			# Offset message from centre to make space for icon
 			self.message_label.setGeometry(QtCore.QRect(256, 16, 368, 288))
 
-			# self.icon_label = QtWidgets.QLabel(self)
-			# self.icon_label.setGeometry(QtCore.QRect(0, 0, 256, 256))
-
-			self.bg_label.setPixmap(icon_pixmap)
+			self.icon_label = QtWidgets.QLabel(self)
+			self.icon_label.setGeometry(QtCore.QRect(0, 32, 256, 256))
+			self.icon_label.setPixmap(icon_pixmap)
 
 		if message:
 			self.message_label.setText(message)
@@ -70,7 +79,6 @@ class AboutDialog(QtWidgets.QDialog):
 		screen = desktop.screenNumber(desktop.cursor().pos())
 		self.move(desktop.screenGeometry(screen).center() - self.frameGeometry().center())
 
-		#self.show()
 		self.exec_()  # Make the dialog modal
 
 

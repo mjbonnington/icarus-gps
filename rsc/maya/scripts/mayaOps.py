@@ -531,7 +531,7 @@ def icDataSet(obj, assetData, update=None, drawOverrides=True, addElements=True)
 		pass
 	try:
 		compatibleTag(dataSet, assetData.get_attr('asset', 'compatible'))
-	except AttributeError:
+	except (AttributeError, RuntimeError):
 		pass
 
 	# Clear gather selection and restore original selection

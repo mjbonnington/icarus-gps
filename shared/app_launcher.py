@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# [Icarus] appLauncher.py
+# [Icarus] app_launcher.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2017-2019
@@ -20,8 +20,8 @@ from Qt import QtCore, QtGui, QtWidgets
 # Import custom modules
 from . import appPaths
 from . import dirStructure
-from . import launchApps  # temp?
 from . import json_metadata as metadata
+from . import launchApps  # temp?
 from . import os_wrapper
 from . import verbose
 
@@ -149,7 +149,7 @@ class AppLauncher(QtWidgets.QDialog):
 			self.parent.ui.appPlaceholder_toolButton.show()
 
 
-	def getIcon(self, element, appName=None):
+	def getIcon(self, element, appName=None, tint=False):
 		""" Get icon.
 		"""
 		if appName is None:
@@ -158,21 +158,24 @@ class AppLauncher(QtWidgets.QDialog):
 		if appIcon is None:
 			appIcon = ""
 
-		icon = QtGui.QIcon()
-
-		iconPath = ":/icons/icons/icon_editor"
-		searchPaths = [os_wrapper.absolutePath(os.path.splitext(appIcon)[0]), 
-		               os_wrapper.absolutePath("$IC_BASEDIR/rsc/%s/icons/app_icon_%s" % (appName, appName)), 
-		               os_wrapper.absolutePath("$IC_FORMSDIR/icons/app_icon_%s" % appName), 
-		              ]
+		iconPath = ':/icons/icons/icon_editor'  # Default icon
+		searchPaths = [
+			os_wrapper.absolutePath(os.path.splitext(appIcon)[0]), 
+			os_wrapper.absolutePath('$IC_BASEDIR/rsc/%s/icons/app_icon_%s' % (appName, appName)), 
+			os_wrapper.absolutePath('$IC_FORMSDIR/icons/app_icon_%s' % appName), 
+		]
 
 		for searchPath in searchPaths:
-			if os.path.isfile(searchPath + ".png"):
+			if os.path.isfile(searchPath + '.png'):
 				iconPath = searchPath
 				break
 
-		icon.addPixmap(QtGui.QPixmap(iconPath + ".png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-		icon.addPixmap(QtGui.QPixmap(iconPath + "_disabled.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+		if tint:
+			icon = self.parent.iconSet(iconPath + '.png', tintNormal=False)
+		else:
+			icon = QtGui.QIcon()
+			icon.addPixmap(QtGui.QPixmap(iconPath + '.png'), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+			icon.addPixmap(QtGui.QPixmap(iconPath + '_disabled.png'), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
 
 		return icon
 
@@ -235,7 +238,7 @@ class AppLauncher(QtWidgets.QDialog):
 				actionName = "action%s" % menuName.replace(" ", "")
 
 				action = QtWidgets.QAction(menuName, None)
-				action.setIcon(self.getIcon(entry, shortName))
+				action.setIcon(self.getIcon(entry, appName=shortName, tint=True))
 				action.setObjectName(actionName)
 				action.setProperty('shortName', shortName)
 				action.setProperty('displayName', displayName)

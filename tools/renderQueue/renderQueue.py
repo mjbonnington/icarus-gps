@@ -26,10 +26,10 @@ import icons_rc
 import ui_template as UI
 
 # Import custom modules
-from . import about
 from . import database
 # from . import outputparser
 from . import worker
+from shared import about
 from shared import os_wrapper
 from shared import sequence
 # from shared import verbose

@@ -24,8 +24,8 @@ from publish import pblChk
 
 from shared import disciplines
 from shared import jobs
+from shared import app_launcher  # merge these two?
 from shared import launchApps   # merge these two?
-from shared import appLauncher  # merge these two?
 from shared import openDirs
 from shared import os_wrapper
 from shared import prompt
@@ -135,6 +135,9 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.toolMenu_toolButton.setIcon(self.iconSet('icon_editor.png'))
 		self.ui.about_toolButton.setIcon(self.iconSet('icon_info.png'))
 
+		self.ui.actionJobManagement.setIcon(self.iconSet('filmgrain.svg'))
+		self.ui.actionShotManagement.setIcon(self.iconSet('filmgrain.svg'))
+		self.ui.actionEditAppPaths.setIcon(self.iconSet('edit.svg'))
 		self.ui.actionBatchRename.setIcon(self.iconSet('icon_rename.png'))
 		self.ui.actionRenderQueue.setIcon(self.iconSet('icon_render.png'))
 		self.ui.actionRenderSubmitter.setIcon(self.iconSet('icon_render.png'))
@@ -155,7 +158,6 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# Tools menu
 		self.ui.actionJobManagement.triggered.connect(self.openJobManagement)
 		self.ui.actionShotManagement.triggered.connect(self.openShotManagement)
-		self.ui.actionShotCreator.triggered.connect(self.openShotCreator)
 		self.ui.actionEnvironmentVariables.triggered.connect(self.openEnvVarEditor)
 		self.ui.actionEditAppPaths.triggered.connect(self.openAppPathsEditor)
 		self.ui.actionBatchRename.triggered.connect(self.openBatchRename)
@@ -234,7 +236,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 				self.ui.publishType_tabWidget.removeTab(0)
 
 			# Initialise app launch icons
-			self.al = appLauncher.AppLauncher(
+			self.al = app_launcher.AppLauncher(
 				self, self.ui.launchApp_scrollAreaWidgetContents)
 
 			# ----------------------------------------------------------------
@@ -475,9 +477,9 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		# self.ui.shot_toolButton.clicked.connect(self.setDropDownToShotEnv)
 		# self.ui.comp_toolButton.clicked.connect(self.setDropDownToShotEnv) #self.adjustPblTypeUI
 
-		self.ui.gatherFromShot_radioButton.clicked.connect(self.adjustMainUI)
-		self.ui.gatherFromShot_comboBox.currentIndexChanged.connect(self.adjustMainUI)
-		self.ui.gatherFromJob_radioButton.clicked.connect(self.adjustMainUI)
+		self.ui.gatherFromShot_radioButton.clicked.connect(self.assetRefresh)
+		self.ui.gatherFromShot_comboBox.currentIndexChanged.connect(self.assetRefresh)
+		self.ui.gatherFromJob_radioButton.clicked.connect(self.assetRefresh)
 		self.ui.gather_pushButton.clicked.connect(self.initGather)
 
 		self.ui.assetType_listWidget.itemClicked.connect(self.updateAssetNameCol) # currentItemChanged?
@@ -529,8 +531,6 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		""" Allows state of asset browser to be preserved even if the current
 			tab changes. TODO: improve!
 		"""
-		# mainTabName = self.getCurrentTab(self.ui.main_tabWidget)[1]
-		# if mainTabName == 'Gather' or mainTabName == 'Assets':
 		self.defineColumns()
 		self.updateAssetTypeCol()
 
@@ -715,10 +715,6 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.shotSetup_groupBox.setEnabled(True)
 			self.ui.shotSetupButtons_groupBox.setEnabled(True)
 
-			# # Disable Shot Management menu item(s)
-			# self.ui.actionShotManagement.setEnabled(True)
-			# self.ui.actionShotCreator.setEnabled(True)
-
 			# Re-enable signals so that shot list gets repopulated
 			self.ui.job_comboBox.blockSignals(False)
 
@@ -734,10 +730,6 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			self.ui.shot_comboBox.insertItem(0, '[None]')
 			self.ui.shotSetup_groupBox.setEnabled(False)
 			self.ui.shotSetupButtons_groupBox.setEnabled(False)
-
-			# # Disable Shot Management menu item(s)
-			# self.ui.actionShotManagement.setEnabled(False)
-			# self.ui.actionShotCreator.setEnabled(False)
 
 			# Warning dialog
 			dialogTitle = "No Jobs Found"
@@ -791,7 +783,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			dialogMsg = "No shots were found for the job '%s'. Would you like to create some shots now?" %selJob
 			dialog = prompt.dialog()
 			if dialog.display(dialogMsg, dialogTitle):
-				self.openShotCreator()
+				self.openShotManagement()
 			else:
 				pass
 
@@ -961,7 +953,6 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.actionShotSettings.setEnabled(True)
 		self.ui.actionJobManagement.setEnabled(False)
 		self.ui.actionShotManagement.setEnabled(False)
-		self.ui.actionShotCreator.setEnabled(False)
 		self.ui.actionRenderSubmitter.setEnabled(True)
 
 		verbose.message("Shot set: Now working on %s - %s" % (self.job, self.shot))
@@ -994,7 +985,6 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 		self.ui.actionShotSettings.setEnabled(False)
 		self.ui.actionJobManagement.setEnabled(True)
 		self.ui.actionShotManagement.setEnabled(True)
-		self.ui.actionShotCreator.setEnabled(True)
 		self.ui.actionRenderSubmitter.setEnabled(False)
 
 		verbose.print_("Shot unset: reverting to clean environment.")
@@ -1013,37 +1003,40 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 	def about(self):
 		""" Show about dialog.
 		"""
-		from Qt import __binding__, __binding_version__
+		from shared import about
 
-		python_ver_str = "%d.%d.%d" %(sys.version_info[0], sys.version_info[1], sys.version_info[2])
-		pyside_ver_str = "%s %s" %(__binding__, __binding_version__)
-		qt_ver_str = QtCore.qVersion()
+		info_ls1 = []
+		info_ls2 = []
+		sep = " | "
+		for key, value in self.getInfo().items():
+			if key in ['Environment', 'OS']:
+				info_ls1.append("{}: {}".format(key, value))
+			else:
+				info_ls2.append("{} {}".format(key, value))
+		info_str1 = sep.join(info_ls1)
+		info_str2 = sep.join(info_ls2)
 
-		about_msg = """
+		about_msg = \
+"""
 %s
 
 %s
-
-Python %s | %s | Qt %s | %s
-Environment: %s
 
 Developers: %s
 %s %s
-""" % ("   ".join(NAME.upper()),
-os.environ['IC_VERSION'],
-python_ver_str,
-pyside_ver_str,
-qt_ver_str,
-os.environ['IC_RUNNING_OS'],
-os.environ['IC_ENV'],
-DEVELOPERS,
-COPYRIGHT,
-os.environ['IC_VENDOR'])
 
-		from . import about
-		about = about.dialog(parent=self)
-		about.display(about_msg)
-		# verbose.print_(about_msg, 4)
+%s
+%s
+""" % ("   ".join(NAME.upper()), os.environ['IC_VERSION'], 
+DEVELOPERS, COPYRIGHT, os.environ['IC_VENDOR'], 
+info_str1, info_str2)
+
+		aboutDialog = about.AboutDialog(parent=self)
+		aboutDialog.display(
+			bg_image=os_wrapper.absolutePath('$IC_FORMSDIR/icons/icarus_splash.jpg'), 
+			# bg_color=QtGui.QColor('#5b6368'), 
+			# icon_pixmap=self.iconTint('icarus.png'), 
+			message=about_msg)
 
 
 	def openSettings(self, settingsType, startPanel=None, autofill=False):
@@ -1176,15 +1169,6 @@ os.environ['IC_VENDOR'])
 		self.populateJobs()
 
 
-	def openShotCreator(self):
-		""" Open Shot Creator dialog. (will be deprecated)
-		"""
-		from tools.settings import shot_creator__main__
-		shotCreatorDialog = shot_creator__main__.ShotCreatorDialog(parent=self)
-		shotCreatorDialog.display(job=self.ui.job_comboBox.currentText())
-		self.populateJobs()
-
-
 	def openAppPathsEditor(self):
 		""" Open the application paths editor dialog.
 		"""
@@ -1234,6 +1218,10 @@ os.environ['IC_VENDOR'])
 			self.renderSubmitUI.display()
 		except AttributeError:
 			self.renderSubmitUI = submit.RenderSubmitUI(parent=self)
+			self.renderSubmitUI.display()
+		except KeyError:
+			from tools.renderqueue import rq__env__
+			rq__env__.set_env()
 			self.renderSubmitUI.display()
 
 
@@ -1581,7 +1569,8 @@ os.environ['IC_VENDOR'])
 			if self.slShot == os.environ['IC_SHOT']: # publish to current shot
 				self.pblTo = os.environ['IC_SHOTPUBLISHDIR']
 			else: # publish to user-specified shot
-				self.pblTo = os.path.join(os.environ['IC_JOBPATH'], self.slShot, os.environ['IC_ASSETDIR'])
+				# self.pblTo = os.path.join(os.environ['IC_JOBPATH'], self.slShot, os.environ['IC_ASSETDIR'])
+				self.pblTo = os_wrapper.absolutePath('$IC_JOBPATH/%s/$IC_ASSETDIR' % self.slShot)
 		elif self.ui.publishToJob_radioButton.isChecked() == 1: # publish to job
 			self.pblTo = os.environ['IC_JOBPUBLISHDIR']
 		elif self.ui.publishToLibrary_radioButton.isChecked() == 1: # publish to library
@@ -1683,52 +1672,52 @@ os.environ['IC_VENDOR'])
 			elif self.ui.model_toolButton.isChecked() == True:
 				from publish import ma_mdlPbl
 				subtype = self.ui.assetSubType_comboBox.currentText()
-				ma_mdlPbl.publish(self.pblTo, self.slShot, subtype, self.textures, self.pblNotes)
+				ma_mdlPbl.publish(self.pblTo, self.slShot.replace('/', '_'), subtype, self.textures, self.pblNotes)
 				#assetPublish.publish(genericOpts, 'ma_model', assetTypeOpts)
 
 			# Rig
 			elif self.ui.rig_toolButton.isChecked() == True:
 				from publish import ma_rigPbl
 				subtype = self.ui.assetSubType_comboBox.currentText()
-				ma_rigPbl.publish(self.pblTo, self.slShot, subtype, self.textures, self.pblNotes)
+				ma_rigPbl.publish(self.pblTo, self.slShot.replace('/', '_'), subtype, self.textures, self.pblNotes)
 
 			# Camera
 			if self.ui.camera_toolButton.isChecked() == True:
 				from publish import ma_camPbl
 				subtype = self.ui.assetSubType_comboBox.currentText()
-				ma_camPbl.publish(self.pblTo, self.slShot, subtype, self.pblNotes)
+				ma_camPbl.publish(self.pblTo, self.slShot.replace('/', '_'), subtype, self.pblNotes)
 
 			# Geo
 			elif self.ui.geo_toolButton.isChecked() == True:
 				from publish import ma_geoPbl
 				subtype = self.ui.assetSubType_comboBox.currentText()
-				ma_geoPbl.publish(self.pblTo, self.slShot, subtype, self.textures, self.pblNotes)
+				ma_geoPbl.publish(self.pblTo, self.slShot.replace('/', '_'), subtype, self.textures, self.pblNotes)
 
 			# Geo cache
 			elif self.ui.geoCache_toolButton.isChecked() == True:
 				from publish import ma_geoChPbl
 				subtype = self.ui.assetSubType_comboBox.currentText()
-				ma_geoChPbl.publish(self.pblTo, self.slShot, subtype, self.pblNotes)
+				ma_geoChPbl.publish(self.pblTo, self.slShot.replace('/', '_'), subtype, self.pblNotes)
 
 			# Animation
 			elif self.ui.animation_toolButton.isChecked() == True:
 				from publish import ma_animPbl
-				ma_animPbl.publish(self.pblTo, self.slShot, self.pblNotes)
+				ma_animPbl.publish(self.pblTo, self.slShot.replace('/', '_'), self.pblNotes)
 
 			# Shader
 			elif self.ui.shader_toolButton.isChecked() == True:
 				from publish import ma_shdPbl
-				ma_shdPbl.publish(self.pblTo, self.slShot, self.subsetName, self.textures, self.pblNotes)
+				ma_shdPbl.publish(self.pblTo, self.slShot.replace('/', '_'), self.subsetName, self.textures, self.pblNotes)
 
 			# FX
 			elif self.ui.fx_toolButton.isChecked() == True:
 				from publish import ma_fxPbl
-				ma_fxPbl.publish(self.pblTo, self.slShot, self.subsetName, self.textures, self.pblNotes)
+				ma_fxPbl.publish(self.pblTo, self.slShot.replace('/', '_'), self.subsetName, self.textures, self.pblNotes)
 
 			# Point cloud
 			elif self.ui.ma_pointCloud_toolButton.isChecked() == True:
 				from publish import ma_pointCloudPbl
-				ma_pointCloudPbl.publish(self.pblTo, self.slShot, self.subsetName, self.textures, self.pblNotes)
+				ma_pointCloudPbl.publish(self.pblTo, self.slShot.replace('/', '_'), self.subsetName, self.textures, self.pblNotes)
 
 			# Shot
 			elif self.ui.shot_toolButton.isChecked() == True:
@@ -1738,13 +1727,13 @@ os.environ['IC_VENDOR'])
 			# Scene
 			elif self.ui.scene_toolButton.isChecked() == True:
 				from publish import ma_scnPbl
-				ma_scnPbl.publish(self.pblTo, self.slShot, self.sceneName, self.subsetName, self.textures, self.pblNotes)
+				ma_scnPbl.publish(self.pblTo, self.slShot.replace('/', '_'), self.sceneName, self.subsetName, self.textures, self.pblNotes)
 
 			# Node
 			elif self.ui.ma_node_toolButton.isChecked() == True:
 				from publish import ma_nodePbl
 				subtype = self.ui.assetSubType_comboBox.currentText()
-				ma_nodePbl.publish(self.pblTo, self.slShot, subtype, self.textures, self.pblNotes)
+				ma_nodePbl.publish(self.pblTo, self.slShot.replace('/', '_'), subtype, self.textures, self.pblNotes)
 
 		###############
 		# NUKE ASSETS #
@@ -1759,19 +1748,19 @@ os.environ['IC_VENDOR'])
 			if self.ui.card_toolButton.isChecked() == True:
 				from publish import nk_setupPbl
 				self.pblType = 'card'
-				nk_setupPbl.publish(self.pblTo, self.slShot, self.pblType, self.pblName, self.pblNotes)
+				nk_setupPbl.publish(self.pblTo, self.slShot.replace('/', '_'), self.pblType, self.pblName, self.pblNotes)
 
 			# Point cloud
 			elif self.ui.nk_pointCloud_toolButton.isChecked() == True:
 				from publish import nk_setupPbl
 				self.pblType = 'pointCloud'
-				nk_setupPbl.publish(self.pblTo, self.slShot, self.pblType, self.pblName, self.pblNotes)
+				nk_setupPbl.publish(self.pblTo, self.slShot.replace('/', '_'), self.pblType, self.pblName, self.pblNotes)
 
 			# Node
 			elif self.ui.nk_node_toolButton.isChecked() == True:
 				from publish import nk_setupPbl
 				self.pblType = 'node'
-				nk_setupPbl.publish(self.pblTo, self.slShot, self.pblType, self.pblName, self.pblNotes)
+				nk_setupPbl.publish(self.pblTo, self.slShot.replace('/', '_'), self.pblType, self.pblName, self.pblNotes)
 
 			# Comp
 			elif self.ui.comp_toolButton.isChecked() == True:
@@ -1780,19 +1769,19 @@ os.environ['IC_VENDOR'])
 				# 	return
 				from publish import nk_compPbl
 				self.pblType = 'comp'
-				nk_compPbl.publish(self.pblTo, self.slShot, self.pblType, self.pblNotes)
+				nk_compPbl.publish(self.pblTo, self.slShot.replace('/', '_'), self.pblType, self.pblNotes)
 
 			# Pre-comp
 			elif self.ui.precomp_toolButton.isChecked() == True:
 				from publish import nk_setupPbl
 				self.pblType = 'preComp'
-				nk_setupPbl.publish(self.pblTo, self.slShot, self.pblType, self.pblName, self.pblNotes)
+				nk_setupPbl.publish(self.pblTo, self.slShot.replace('/', '_'), self.pblType, self.pblName, self.pblNotes)
 
 			# Setup
 			elif self.ui.setup_toolButton.isChecked() == True:
 				from publish import nk_setupPbl
 				self.pblType = 'setup'
-				nk_setupPbl.publish(self.pblTo, self.slShot, self.pblType, self.pblName, self.pblNotes)	
+				nk_setupPbl.publish(self.pblTo, self.slShot.replace('/', '_'), self.pblType, self.pblName, self.pblNotes)	
 
 		###########
 		# DAILIES #
@@ -1871,7 +1860,11 @@ os.environ['IC_VENDOR'])
 	#populates columns
 	def fillColumn(self, column, searchPath):
 		envPrefix = self.getAssetEnvPrefix()
-		itemLs = os.listdir(searchPath); itemLs.sort()
+		try:
+			itemLs = os.listdir(searchPath)
+			itemLs.sort()
+		except:
+			itemLs = []
 		#making in progress publishes not visible
 		if column == self.aVersionCol:
 			for item in itemLs:
@@ -2036,7 +2029,8 @@ os.environ['IC_VENDOR'])
 				ma_animGather.gather(self.gatherPath)
 			else:
 				from publish import ma_assetGather
-				ma_assetGather.gather(self.gatherPath)
+				if ma_assetGather.gather(self.gatherPath):
+					verbose.message("Successfully gathered asset.")
 
 		elif os.environ['IC_ENV'] == 'NUKE':
 			if self.assetType in ('ic_geo', 'ic_pointCloud'):

@@ -183,7 +183,7 @@ class SettingsDialog(QtWidgets.QDialog, UI.TemplateUI):
 			exec is not allowed in function because it contains a nested
 			function with free variables' with Python 2.x.
 		"""
-		ui_file = "settings_%s_ui.ui" % category
+		ui_file = "settings_%s.ui" % category
 		helper_module = 'settings_%s' % category
 		panel_ui_loaded = False
 		helper_module_loaded = False

@@ -31,7 +31,7 @@ cfg['window_title'] = "Edit Job"
 cfg['window_object'] = "editJobUI"
 
 # Set the UI and the stylesheet
-cfg['ui_file'] = 'edit_job_ui.ui'
+cfg['ui_file'] = 'edit_job.ui'
 cfg['stylesheet'] = None  # Set to None to use the parent app's stylesheet
 
 # Other options

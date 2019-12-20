@@ -2,8 +2,8 @@
 
 # [Icarus] edit_root_paths.py
 #
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2016-2018 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2016-2018
 #
 # A dialog for editing filesystem root paths.
 # This provides a mechanism for OS portability.
@@ -28,7 +28,7 @@ WINDOW_TITLE = "Edit Root Paths"
 WINDOW_OBJECT = "editRootPathsUI"
 
 # Set the UI and the stylesheet
-UI_FILE = "edit_root_paths_ui.ui"
+UI_FILE = "edit_root_paths.ui"
 STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
 
 # Other options

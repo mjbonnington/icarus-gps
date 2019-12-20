@@ -2658,7 +2658,6 @@ QToolButton:pressed, QToolButton:checked:pressed {
     </property>
     <addaction name="actionJobManagement"/>
     <addaction name="actionShotManagement"/>
-    <addaction name="actionShotCreator"/>
     <addaction name="actionEditAppPaths"/>
     <addaction name="actionEnvironmentVariables"/>
     <addaction name="actionBatchRename"/>

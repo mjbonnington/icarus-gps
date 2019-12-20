@@ -113,8 +113,8 @@ class RenderBrowserUI(QtWidgets.QMainWindow, UI.TemplateUI):
 		path = path.replace("#", self.ui.frame_spinBox.text())
 		#print path
 		#djvOps.viewer(path)
-		# from u_vfx.core import Launch
-		# Launch.djvView(path)
+		# from shared import launchApps
+		# launchApps.djv(path)
 		os.system('/usr/local/djv-1.1.0-Linux-64/bin/djv_view.sh %s' %path)
 
 

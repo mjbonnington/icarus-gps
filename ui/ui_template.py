@@ -564,7 +564,7 @@ class TemplateUI(object):
 
 
 	def iconTint(self, icon_name, tint=None):
-		""" Return a QIcon using the specified PNG image.
+		""" Return a QIcon using the specified PNG or SVG image.
 			If tint (QColor) is given, tint the image with the given color.
 		"""
 		search_locations = [

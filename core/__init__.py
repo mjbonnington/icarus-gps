@@ -3,7 +3,7 @@
 # [Icarus] __init__.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
-# (c) 2019 Gramercy Park Studios
+# (c) 2019
 #
 # Initialise main pipeline environment on package import.
 

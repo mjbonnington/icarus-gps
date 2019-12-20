@@ -2,8 +2,8 @@
 
 # [Icarus] job_management__main__.py
 #
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2016-2018 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2016-2018
 #
 # A UI for managing jobs.
 
@@ -33,7 +33,7 @@ WINDOW_TITLE = "Job Management"
 WINDOW_OBJECT = "jobManagementUI"
 
 # Set the UI and the stylesheet
-UI_FILE = "job_management_ui.ui"
+UI_FILE = "job_management.ui"
 STYLESHEET = "style.qss"  # Set to None to use the parent app's stylesheet
 
 # Other options

@@ -65,10 +65,6 @@
          <property name="text">
           <string>Monitor</string>
          </property>
-         <property name="icon">
-          <iconset>
-           <normaloff>../../uhub_dev/u_vfx/u_submit/icons/deadlinemonitor.png</normaloff>../../uhub_dev/u_vfx/u_submit/icons/deadlinemonitor.png</iconset>
-         </property>
          <property name="toolButtonStyle">
           <enum>Qt::ToolButtonTextBesideIcon</enum>
          </property>
@@ -81,10 +77,6 @@
          </property>
          <property name="text">
           <string>About...</string>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normaloff>../../uhub_dev/u_vfx/u_submit/icons/about.png</normaloff>../../uhub_dev/u_vfx/u_submit/icons/about.png</iconset>
          </property>
         </widget>
        </item>
@@ -1666,9 +1658,7 @@
   <tabstop>submit_pushButton</tabstop>
   <tabstop>close_pushButton</tabstop>
  </tabstops>
- <resources>
-  <include location="../../uhub_dev/u_vfx/u_submit/rsc.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>taskSize_spinBox</sender>

@@ -47,7 +47,7 @@ def gather(gatherPath):
 		assetPath = os.path.join(gatherPath, '%s.%s' % (assetPblName, assetExt))
 		if not os.path.isfile(assetPath):
 			verbose.noAsset()
-			return
+			return False
 
 		# Load the appropriate plugin if needed
 		if assetExt == 'abc':
@@ -62,7 +62,8 @@ def gather(gatherPath):
 		if assetType == 'ma_shot':
 			mayaOps.openScene(assetPath, dialog=False, updateRecentFiles=False)
 			mayaOps.redirectScene(os.path.join(os.environ['IC_MAYA_SCENES_DIR'], 'untitled'))
-			return
+			return False
+
 		elif assetExt == 'vrmesh':
 			chkNameConflict(asset)
 			mel.eval('vrayCreateProxy -node "%s" -dir "%s" -existing -createProxyNode;' % (asset, assetPath))
@@ -106,6 +107,7 @@ def gather(gatherPath):
 			drawOverrides = False
 			mayaOps.icDataSet(icSetAsset, assetData, update=None, drawOverrides=drawOverrides, addElements=False)
 
+		return True
 
 	except:
 		exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -114,6 +116,7 @@ def gather(gatherPath):
 		dialogMsg = 'Errors occured during asset update.\nPlease check console for more information.\n\n%s' % traceback.format_exc()
 		dialog = prompt.dialog()
 		dialog.display(dialogMsg, dialogTitle, conf=True)
+		return False
 
 
 def chkNameConflict(obj):

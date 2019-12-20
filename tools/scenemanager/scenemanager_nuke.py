@@ -289,10 +289,9 @@ class SceneManager(object):
 	# 		# to the updated scene file. This gives us a performance gain by
 	# 		# avoiding the overhead of a second save operation, which can be
 	# 		# slow for large Maya ASCII scenes.
-	# 		from u_vfx.u_maya.scripts.python import sceneManager
 	# 		current_scene = mc.file(query=True, expandName=True)
 	# 		ext = os.path.splitext(current_scene)[1]
-	# 		updated_scene = sceneManager.versionUp(saveScene=False)
+	# 		updated_scene = convention.version_up(current_scene)
 	# 		if updated_scene:
 	# 			updated_scene += ext
 	# 			oswrapper.copy(current_scene, updated_scene)
@@ -301,11 +300,9 @@ class SceneManager(object):
 	# 			self.getScene()
 
 	# 	elif os.environ['SCNMGR_APP'] == "HOUDINI":
-	# 		from u_vfx.u_houdini.scripts import sceneManager
-	# 		if sceneManager.versionUp():
+	# 		if convention.version_up():
 	# 			self.getScene()
 
 	# 	elif os.environ['SCNMGR_APP'] == "NUKE":
-	# 		from u_vfx.u_nuke.scripts import compManager
-	# 		if compManager.versionUp():
+	# 		if convention.version_up():
 	# 			self.getScene()

@@ -293,7 +293,7 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 			widget.setRowCount(len(shotlist))
 			for row, shot_name in enumerate(shotlist):
 				# Populate list view, using filter
-				if shot_filter is not "":
+				if shot_filter != "":
 					if shot_filter.lower() in shot_name.lower():  # Case-insensitive
 						item = self.addShotEntry(row, shot_name)
 					self.ui.searchFilterClear_toolButton.setEnabled(True)

@@ -103,7 +103,7 @@ def launch(app=None, executable=None, flags=None):
 	verbose.print_(cmdStr, 4)
 
 
-def djv():
+def djv(path=None):
 	""" Launch djv_view.
 		Note this is a special case due to djv_view being required by many
 		internal functions and is therefore the app is bundled with Icarus,
@@ -112,7 +112,7 @@ def djv():
 	verbose.launchApp('djv_view')
 	from . import djvOps
 	# djvOps.viewer(os.environ['IC_SHOTPATH'])
-	djvOps.viewer()
+	djvOps.viewer(path)
 
 
 def terminal():

@@ -1066,7 +1066,7 @@ class RenderSubmitUI(QtWidgets.QMainWindow, UI.TemplateUI):
 	def about(self):
 		""" Show about dialog.
 		"""
-		from . import about
+		from shared import about
 
 		info_ls = []
 		sep = " | "
