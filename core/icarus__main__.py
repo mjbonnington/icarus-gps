@@ -1181,7 +1181,7 @@ info_str1, info_str2)
 	def openEnvVarEditor(self, allvars=False):
 		""" Open environment variables editor.
 		"""
-		from tools.envvarbrowser import envvar_browser
+		from tools.envvarbrowser import envvarbrowser
 		self.envVarsDialog = envvar_browser.EnvVarsDialog(parent=self)
 		self.envVarsDialog.show()
 

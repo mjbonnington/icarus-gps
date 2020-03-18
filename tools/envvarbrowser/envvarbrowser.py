@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-# envvar_browser.py
+# envvarbrowser.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
-# (c) 2018-2019
+# (c) 2018-2020
 #
 # Environment Variables Browser
 # A tool for viewing and editing environment variables.
