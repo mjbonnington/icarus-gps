@@ -3,8 +3,8 @@
 # [Icarus] ma_versionUpdate.py
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2019 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2013-2020
 #
 # Loads Version Manager and updates asset.
 
@@ -14,8 +14,8 @@ import os
 
 def update(ICSet):
 	from rsc.maya.scripts import mayaOps
-	from tools.versionManager import versionManager
-	reload(versionManager)
+	from tools.versionmanager import versionmanager
+	reload(versionmanager)
 
 	ICSetAttrDic = mayaOps.getICSetAttrs(ICSet)
 	vManagerDialog = versionManager.dialog()

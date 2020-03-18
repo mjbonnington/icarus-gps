@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
-# [Icarus] versionManager.py
+# [Icarus] versionmanager.py
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
-# Mike Bonnington <mike.bonnington@gps-ldn.com>
-# (c) 2013-2019 Gramercy Park Studios
+# Mike Bonnington <mjbonnington@gmail.com>
+# (c) 2013-2020
 #
 # Launches and controls the Icarus Version Manager UI.
 
