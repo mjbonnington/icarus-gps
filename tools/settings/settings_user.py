@@ -50,7 +50,7 @@ class helper():
 	def clearRecentFiles(self):
 		""" Clear all recent files.
 		"""
-		dialog = prompt.dialog()
+		dialog = prompt.Dialog()
 		message = "About to delete all recent files information. Are you sure?"
 		if dialog.display(message, "Confirm"):
 			success, msg = os_wrapper.remove(os.environ['IC_RECENTFILESDIR'])

@@ -157,7 +157,7 @@ class dialog(QtWidgets.QDialog, UI.TemplateUI):
 				# Warning dialog
 				dialogTitle = "Path contains illegal characters"
 				dialogMsg = "The path \"%s\" contains illegal characters. File and folder names must be formed of alphanumeric characters, underscores, hyphens and dots only." %dialogPath
-				dialog = prompt.dialog()
+				dialog = prompt.Dialog()
 				dialog.display(dialogMsg, dialogTitle, conf=True)
 
 		# return dialogPath

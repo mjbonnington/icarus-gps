@@ -56,7 +56,7 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 	dialogMsg = ''
 	dialogTitle = 'Publishing'
 	dialogMsg += 'Name:\t%s_%s\n\nVersion:\t%s\n\nNotes:\t%s' % (shotSaneName, subsetName, version, pblNotes)
-	dialog = prompt.dialog()
+	dialog = prompt.Dialog()
 	if not dialog.display(dialogMsg, dialogTitle):
 		return
 
@@ -146,6 +146,6 @@ def publish(dailyPblOpts, pblTo, pblNotes):
 	# Show publish result dialog
 	dialogTitle = "Publish Report"
 	dialogMsg = "Render:\t%s\n\nVersion:\t%s\n\n%s" % (assetPblName, version, pblResult)
-	dialog = prompt.dialog()
+	dialog = prompt.Dialog()
 	dialog.display(dialogMsg, dialogTitle, conf=True)
 

@@ -734,7 +734,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			# Warning dialog
 			dialogTitle = "No Jobs Found"
 			dialogMsg = "No active jobs were found. Would you like to set up some jobs now?"
-			dialog = prompt.dialog()
+			dialog = prompt.Dialog()
 			if dialog.display(dialogMsg, dialogTitle):
 				self.openJobManagement()
 			else:
@@ -781,7 +781,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 			# Warning dialog
 			dialogTitle = "No Shots Found"
 			dialogMsg = "No shots were found for the job '%s'. Would you like to create some shots now?" %selJob
-			dialog = prompt.dialog()
+			dialog = prompt.Dialog()
 			if dialog.display(dialogMsg, dialogTitle):
 				self.openShotManagement()
 			else:
@@ -851,7 +851,7 @@ class IcarusApp(QtWidgets.QMainWindow, UI.TemplateUI):
 
 				# Confirmation dialog
 				dialogTitle = "Job settings not found"
-				dialog = prompt.dialog()
+				dialog = prompt.Dialog()
 				dialog.display(dialogMsg, dialogTitle, conf=True)
 
 				if self.openSettings("Job", autofill=True):

@@ -4,7 +4,7 @@
 #
 # Nuno Pereira <nuno.pereira@gps-ldn.com>
 # Mike Bonnington <mjbonnington@gmail.com>
-# (c) 2013-2019 Gramercy Park Studios
+# (c) 2013-2020
 #
 # Initialise main pipeline environment and set global configuration.
 

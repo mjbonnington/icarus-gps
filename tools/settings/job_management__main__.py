@@ -145,7 +145,7 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 			# Confirmation dialog
 			dialogTitle = "Root Paths Not Set"
-			dialog = prompt.dialog()
+			dialog = prompt.Dialog()
 			dialog.display(dialogMsg, dialogTitle, conf=True)
 
 			self.editPaths()
@@ -292,7 +292,7 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 				# 	# Confirmation dialog
 				# 	dialogTitle = 'Job Already Exists'
-				# 	dialog = prompt.dialog()
+				# 	dialog = prompt.Dialog()
 				# 	if dialog.display(dialogMsg, dialogTitle):
 				# 		self.j.deleteJob(jobName)
 				# 		self.j.addJob(jobName, jobPath, jobVersion, jobActive)
@@ -312,7 +312,7 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 				# Confirmation dialog
 				dialogTitle = 'Job Not Created'
-				dialog = prompt.dialog()
+				dialog = prompt.Dialog()
 				if dialog.display(dialogMsg, dialogTitle):
 					self.addJob()
 
@@ -337,7 +337,7 @@ class JobManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 				# Confirmation dialog
 				dialogTitle = 'Job Not Created'
-				dialog = prompt.dialog()
+				dialog = prompt.Dialog()
 				if dialog.display(dialogMsg, dialogTitle):
 					self.editJob()
 

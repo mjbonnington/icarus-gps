@@ -73,12 +73,12 @@ class SceneManager(object):
 			return filepath
 
 		except hou.OperationFailed as e:
-			dialog = prompt.dialog()
+			dialog = prompt.Dialog()
 			dialog.display(str(e), "Error Opening File", conf=True)
 			return False
 
 		except hou.LoadWarning as e:
-			dialog = prompt.dialog()
+			dialog = prompt.Dialog()
 			dialog.display(str(e), "Warning", conf=True)
 			return False
 
@@ -134,7 +134,7 @@ class SceneManager(object):
 			return filepath
 
 		except hou.OperationFailed as e:
-			dialog = prompt.dialog()
+			dialog = prompt.Dialog()
 			dialog.display(str(e), "Error Saving File", conf=True)
 			return False
 

@@ -112,6 +112,6 @@ def gather(gatherPath):
 		traceback.print_exception(exc_type, exc_value, exc_traceback)
 		dialogTitle = 'Gather Warning'
 		dialogMsg = 'Errors occured during asset update.\nPlease check console for more information.\n\n%s' % traceback.format_exc()
-		dialog = prompt.dialog()
+		dialog = prompt.Dialog()
 		dialog.display(dialogMsg, dialogTitle, conf=True)
 

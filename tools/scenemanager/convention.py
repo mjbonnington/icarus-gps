@@ -99,7 +99,6 @@ def parse(
 		if filepath.startswith('/'):
 			filepath = filepath.replace('/', '', 1)  # Remove leading slash
 
-
 	# Find optional parts in naming convention
 	# (only one optional section is allowed, if there are more, all optional
 	# parts will be ignored.)
@@ -179,9 +178,14 @@ def same_structure(a, b):
 
 def version_to_int(v_str):
 	""" Convert a version string in the format 'v###' to an integer.
+		TODO: fail elegantly if v_str is not in the correct format.
 	"""
 	# if v_str.startswith('v'):
-	return int(v_str.replace('v', '', 1))
+	try:
+		return int(v_str.replace('v', '', 1))
+	except:
+		verbose.warning("Malformed version string: %s" % v_str)
+		return -1  # Hack to deal with malformed version strings
 
 
 def version_to_str(v_int):

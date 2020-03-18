@@ -14,7 +14,7 @@ from shared import prompt
 
 
 def show():
-	dialog = prompt.dialog()
+	dialog = prompt.Dialog()
 	title = '%s - %s' % (os.environ['IC_JOB'], os.environ['IC_SHOT'])
 	message = """Shot info:
 

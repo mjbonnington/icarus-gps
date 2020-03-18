@@ -87,7 +87,7 @@ class Jobs(xml_data.XMLData):
 			# v_str = "v%d.%d.%d" % v_required
 			# msg = "This job requires version %s of Icarus. You're currently running %s" % (v_str, os.environ['IC_VERSION'])
 			# verbose.warning(msg)
-			# dialog = prompt.dialog()
+			# dialog = prompt.Dialog()
 			# title = "Incompatible Version"
 
 			# # The IC_MULTIVERSION env var is set if icarus is running from a

@@ -18,19 +18,28 @@
 			<removeItem id="file_menu_sep_2"/>
 
 			<scriptItem id="h.ic_new">
-				<label>GPS New</label>
+				<labelExpression><![CDATA[
+import os
+return '%s New' % os.environ['IC_VENDOR_INITIALS']
+]]></labelExpression>
 				<scriptCode>from core.app_session import *; session.scnmgr.file_new()</scriptCode>
 				<insertBefore />
 			</scriptItem>
 
 			<scriptItem id="h.ic_open">
-				<label>GPS Open...</label>
+				<labelExpression><![CDATA[
+import os
+return '%s Open...' % os.environ['IC_VENDOR_INITIALS']
+]]></labelExpression>
 				<scriptCode>from core.app_session import *; session.scnmgr.file_open_dialog()</scriptCode>
 				<insertAfter>h.ic_new</insertAfter>
 			</scriptItem>
 
 			<subMenu id="h.ic_recent_files">
-				<label>GPS Open Recent</label>
+				<labelExpression><![CDATA[
+import os
+return '%s Open Recent' % os.environ['IC_VENDOR_INITIALS']
+]]></labelExpression>
 				<scriptMenuStripDynamic id="myUniqueDynamicStripId">
 					<contentsScriptCode><![CDATA[
 #from core.app_session import *
@@ -62,19 +71,28 @@ except (AttributeError, NameError):
 			</separatorItem>
 
 			<scriptItem id="h.ic_save">
-				<label>GPS Save</label>
+				<labelExpression><![CDATA[
+import os
+return '%s Save' % os.environ['IC_VENDOR_INITIALS']
+]]></labelExpression>
 				<scriptCode>from core.app_session import *; session.scnmgr.file_save()</scriptCode>
 				<insertAfter>h.ic_file_menu_sep_1</insertAfter>
 			</scriptItem>
 
 			<scriptItem id="h.ic_save_as">
-				<label>GPS Save As...</label>
+				<labelExpression><![CDATA[
+import os
+return '%s Save As...' % os.environ['IC_VENDOR_INITIALS']
+]]></labelExpression>
 				<scriptCode>from core.app_session import *; session.scnmgr.file_save_dialog()</scriptCode>
 				<insertAfter>h.ic_save</insertAfter>
 			</scriptItem>
 
 			<scriptItem id="h.ic_increment_and_save">
-				<label>GPS Increment and Save</label>
+				<labelExpression><![CDATA[
+import os
+return '%s Increment and Save' % os.environ['IC_VENDOR_INITIALS']
+]]></labelExpression>
 				<scriptCode>from core.app_session import *; session.scnmgr.file_save_new_version()</scriptCode>
 				<insertAfter>h.ic_save_as</insertAfter>
 			</scriptItem>

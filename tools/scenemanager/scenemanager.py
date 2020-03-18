@@ -3,7 +3,7 @@
 # [scenemanager] scenemanager.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
-# (c) 2019
+# (c) 2019-2020
 #
 # Scene Manager for DCC apps
 # - Automatically handle file save locations, naming conventions and versions.

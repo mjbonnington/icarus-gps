@@ -94,7 +94,7 @@ def publish(pblTo, slShot, subtype, textures, pblNotes):
 	# Confirmation dialog
 	dialogTitle = 'Publishing %s' % convention
 	dialogMsg = 'Asset:\t%s\n\nVersion:\t%s\n\nSubset:\t%s\n\nNotes:\t%s' % (assetPblName, version, subsetName, pblNotes)
-	dialog = prompt.dialog()
+	dialog = prompt.Dialog()
 	if not dialog.display(dialogMsg, dialogTitle):
 		return
 
@@ -159,6 +159,6 @@ def publish(pblTo, slShot, subtype, textures, pblNotes):
 	# Show publish result dialog
 	dialogTitle = 'Publish Report'
 	dialogMsg = 'Asset:\t%s\n\nVersion:\t%s\n\nSubset:\t%s\n\n\n%s' % (assetPblName, version, subsetName, pblResult)
-	dialog = prompt.dialog()
+	dialog = prompt.Dialog()
 	dialog.display(dialogMsg, dialogTitle, conf=True)
 

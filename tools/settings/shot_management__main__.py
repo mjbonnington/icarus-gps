@@ -370,7 +370,7 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 		# Confirmation dialog
 		dialog_title = "Delete shot: %s" % self.shot
 		dialog_msg = "Are you sure?"
-		dialog = prompt.dialog()
+		dialog = prompt.Dialog()
 		if dialog.display(dialog_msg, dialog_title):
 			shot_path = os_wrapper.absolutePath("%s/$IC_SHOTSDIR/%s" % (self.job_path, self.shot))
 			result, msg = os_wrapper.remove(shot_path)
@@ -518,7 +518,7 @@ class ShotManagementDialog(QtWidgets.QDialog, UI.TemplateUI):
 
 		# Confirmation dialog
 		dialog_title = "Shot Creator Results"
-		dialog = prompt.dialog()
+		dialog = prompt.Dialog()
 		dialog.display(dialog_msg, dialog_title, conf=True)
 
 		self.populateShots()

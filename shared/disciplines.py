@@ -14,6 +14,7 @@ disciplines = [
 	'postvis', 
 	'techvis', 
 	'matchmove', 
+	'layout', 
 	'model', 
 	'texturing', 
 	'lookdev', 
