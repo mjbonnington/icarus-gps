@@ -3,7 +3,7 @@
 # [renderqueue] submit.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
-# (c) 2016-2019
+# (c) 2016-2020
 #
 # Render Submitter
 # A UI for creating render jobs to send to a render queue manager.

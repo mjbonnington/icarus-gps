@@ -3,7 +3,7 @@
 # [Icarus] settings.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
-# (c) 2015-2019 Gramercy Park Studios
+# (c) 2015-2020
 #
 # Modular settings editor dialog.
 # Provides a skeleton dialog which can be extended with load-in panels, each

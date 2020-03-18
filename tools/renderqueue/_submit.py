@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# submit.py
+# _submit.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2016-2019

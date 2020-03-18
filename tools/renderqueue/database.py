@@ -3,7 +3,7 @@
 # [renderqueue] database.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
-# (c) 2016-2019
+# (c) 2016-2020
 #
 # Interface for the Render Queue database.
 # Manages jobs, tasks and workers.

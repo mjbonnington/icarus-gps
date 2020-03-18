@@ -6,6 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from Qt import QtCore
 
 qt_resource_data = b"\

@@ -3,7 +3,7 @@
 # [renderqueue] submit_deadline.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
-# (c) 2016-2019
+# (c) 2016-2020
 #
 # Render Submitter (Deadline)
 # This module contains functions specifically for submitting jobs to Deadline.

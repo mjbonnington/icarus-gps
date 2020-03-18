@@ -3,7 +3,7 @@
 # [renderqueue] rq__env__.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
-# (c) 2019
+# (c) 2019-2020
 #
 # Initialise Render Queue environment.
 
@@ -29,25 +29,27 @@ def set_env():
 	os.environ['RQ_ENDFRAME'] = os.environ.get('IC_ENDFRAME', '1100')
 
 	# Deadline -------------------------------------------------------------------
-	os.environ['RQ_DEADLINECOMMAND'] = os.environ['IC_DEADLINE_CMD_EXECUTABLE']
-	os.environ['RQ_DEADLINEMONITOR'] = '"%s" -monitor' % os.environ['IC_DEADLINE_EXECUTABLE']
+	os.environ['RQ_DEADLINECOMMAND'] = os.environ.get('IC_DEADLINE_CMD_EXECUTABLE', '')
+	os.environ['RQ_DEADLINEMONITOR'] = '"%s" -monitor' % os.environ.get('IC_DEADLINE_EXECUTABLE', '')
 
 	# Maya -----------------------------------------------------------------------
-	os.environ['RQ_MAYA_VERSION'] = os.environ.get('IC_MAYA_VERSION', '2019')
-	os.environ['RQ_MAYA_SCENES_DIR'] = os.environ['IC_MAYA_SCENES_DIR']
-	os.environ['RQ_MAYA_PROJECT_DIR'] = os.environ['IC_MAYA_PROJECT_DIR']
+	v = os.environ.get('IC_MAYA_VERSION', '2018')
+	os.environ['RQ_MAYA_VERSION'] = v
+	os.environ['RQ_MAYA_SCENES_DIR'] = os.environ.get('IC_MAYA_SCENES_DIR', '')
+	os.environ['RQ_MAYA_PROJECT_DIR'] = os.environ.get('IC_MAYA_PROJECT_DIR', '')
 
 	os.environ['RQ_MAYA_OUTPUT_FORMAT'] = "<Scene>/<RenderLayer>/<Scene>.<RenderLayer>.<RenderPass>"
 	os.environ['RQ_MAYA_OUTPUT_FORMAT_VRAY'] = "<Scene>/<Layer>/<Scene>.<Layer>"
 
 	# Houdini --------------------------------------------------------------------
-	v = os.environ.get('IC_HOUDINI_VERSION', '17.5')
+	v = os.environ.get('IC_HOUDINI_VERSION', '18.0')
 	os.environ['RQ_HOUDINI_VERSION'] = '.'.join(v.split('.')[:2])  # Strip revision
-	os.environ['RQ_HOUDINI_SCENES_DIR'] = os.environ['IC_HOUDINI_SCENES_DIR']
+	os.environ['RQ_HOUDINI_SCENES_DIR'] = os.environ.get('IC_HOUDINI_SCENES_DIR', '')
 
 	# Nuke -----------------------------------------------------------------------
-	os.environ['RQ_NUKE_VERSION'] = os.environ.get('IC_NUKE_VERSION', '11.3').split('v')[0]
-	os.environ['RQ_NUKE_SCRIPTS_DIR'] = os.environ['IC_NUKE_SCRIPTS_DIR']
+	v = os.environ.get('IC_NUKE_VERSION', '11.3')
+	os.environ['RQ_NUKE_VERSION'] = v.split('v')[0]  # Strip revision
+	os.environ['RQ_NUKE_SCRIPTS_DIR'] = os.environ.get('IC_NUKE_SCRIPTS_DIR', '')
 
 
 # def setenv():

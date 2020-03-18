@@ -3,7 +3,7 @@
 # render_output_parser.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
-# (c) 2018
+# (c) 2018-2020
 #
 # Render Output Parser
 # This module processes output line-by-line and checks for known error

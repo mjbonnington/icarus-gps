@@ -3,7 +3,7 @@
 # [renderqueue] common.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
-# (c) 2016-2019
+# (c) 2016-2020
 #
 # This module contains some common functions for the rendering modules.
 

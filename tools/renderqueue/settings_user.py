@@ -3,7 +3,7 @@
 # settings_user.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
-# (c) 2018-2019
+# (c) 2018-2020
 #
 # User settings handler.
 

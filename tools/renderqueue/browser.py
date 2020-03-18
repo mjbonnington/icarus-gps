@@ -3,7 +3,7 @@
 # [renderqueue] browser.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
-# (c) 2016-2019
+# (c) 2016-2020
 #
 # Render Browser
 # A UI to browse render folders and provide at-a-glance review of layers,

@@ -3,7 +3,7 @@
 # [renderqueue] worker.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
-# (c) 2016-2019
+# (c) 2016-2020
 #
 # Render Worker - this module constructs the command(s) to be run by a worker
 # and interfaces with the various plugins.
