@@ -39,11 +39,11 @@ STORE_WINDOW_GEOMETRY = True
 # Main dialog class
 # ----------------------------------------------------------------------------
 
-class dialog(QtWidgets.QDialog, UI.TemplateUI):
+class Dialog(QtWidgets.QDialog, UI.TemplateUI):
 	""" Version Manager dialog class.
 	"""
 	def __init__(self, parent=None):
-		super(dialog, self).__init__(parent)
+		super(Dialog, self).__init__(parent)
 		self.parent = parent
 
 		self.setupUI(window_object=WINDOW_OBJECT, 

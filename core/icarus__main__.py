@@ -1182,7 +1182,7 @@ info_str1, info_str2)
 		""" Open environment variables editor.
 		"""
 		from tools.envvarbrowser import envvarbrowser
-		self.envVarsDialog = envvar_browser.EnvVarsDialog(parent=self)
+		self.envVarsDialog = envvarbrowser.EnvVarsDialog(parent=self)
 		self.envVarsDialog.show()
 
 

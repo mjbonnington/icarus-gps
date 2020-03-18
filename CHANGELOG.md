@@ -1,4 +1,7 @@
-v0.10.0 (--)
+v0.10.1 (YYYY-MM-DD)
+-	
+
+v0.10.0 (2019-12-20)
 -	[Icarus] Major update may break compatibility with older jobs. Only compatible jobs will be displayed in the Icarus UI.
 -	[Icarus] Shots can be given arbitrary names and belong to groupings such as sequences, episodes, edits etc.
 -	[Icarus] Shot Creator has been replaced with Shot Management: an dialog allowing an at-a-glance method of creating, editing and deleting shots.

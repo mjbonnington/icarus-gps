@@ -39,7 +39,7 @@ cfg['store_window_geometry'] = False
 # Main dialog class
 # ----------------------------------------------------------------------------
 
-class dialog(QtWidgets.QDialog, UI.TemplateUI):
+class Dialog(QtWidgets.QDialog, UI.TemplateUI):
 	""" Prompt dialog class.
 	"""
 	def __init__(self, parent=None):
